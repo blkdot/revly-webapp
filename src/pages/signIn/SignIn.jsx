@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Card } from '@mui/material';
 
 import './SignIn.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
 import AuthForm from '../../components/forms/authForm/AuthForm';
+import CardKit from '../../kits/card/CardKit';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '' });
@@ -42,7 +42,7 @@ const SignIn = () => {
 
   return (
     <div className="signin">
-      <Card variant="outlined" className="card-signin">
+      <CardKit variant="outlined" className="card-signin">
         <h2>Sign in to your account</h2>
         <p>
           Don't have an account yet? <Link to='/signup'> Sign up.</Link>
@@ -54,7 +54,7 @@ const SignIn = () => {
           onGoogleSubmit={handleGoogleSubmit}
           disabled={!value.email || !value.password}
         />
-      </Card>
+      </CardKit>
     </div>
   );
 };
