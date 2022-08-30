@@ -42,6 +42,9 @@ const SignUp = () => {
   return (
     <div className='signup'>
       {renderAlert()}
+      <div className="signup-cover">
+        <img src="/images/cover.png" alt="cover" width={300} />
+      </div>
       <Card className='card-signup' variant='outlined'>
         <h2>Sign up to your account</h2>
         <p>

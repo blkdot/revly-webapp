@@ -59,6 +59,9 @@ const SignIn = () => {
   return (
     <div className='signin'>
       {renderAlert()}
+      <div className="signin-cover">
+        <img src="/images/cover.png" alt="cover" width={300} />
+      </div>
       <CardKit variant='outlined' className='card-signin'>
         <h2>Sign in to your account</h2>
         <p>
