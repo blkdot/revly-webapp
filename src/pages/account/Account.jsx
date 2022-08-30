@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '@mui/material';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../Navbar/Navbar';
+import Navbar from '../../components/navbar/Navbar';
 
 const Account = () => {
     const { user, logOut } = useUserAuth();

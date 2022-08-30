@@ -1,0 +1,12 @@
+.auth-form {
+  margin-top: 1rem;
+
+  .auth-form__input {
+    margin-top: 1rem;
+
+    &.__google {
+      width: 100% !important;
+      text-align: center;
+    }
+  }
+}
