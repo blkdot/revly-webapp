@@ -13,6 +13,8 @@ const AuthForm = (props) => {
     onSubmit,
     onGoogleSubmit,
     disabled,
+    errorEmail,
+    errorPassword,
   } = props;
 
   const renderGoogleButton = () => {
@@ -23,8 +25,8 @@ const AuthForm = (props) => {
 
   return (
     <FormcontrolKit className="auth-form" fullWidth>
-      <TextfieldKit label='Email address' onChange={(e) => onChangeEmail(e.target.value)} className="auth-form__input" fullWidth />
-      <TextfieldKit label='Password' type="password" onChange={(e) => onChangePassword(e.target.value)} className="auth-form__input" fullWidth />
+      <TextfieldKit error={errorEmail} label='Email address' onChange={(e) => onChangeEmail(e.target.value)} className="auth-form__input" fullWidth />
+      <TextfieldKit error={errorPassword} label='Password' type="password" onChange={(e) => onChangePassword(e.target.value)} className="auth-form__input" fullWidth />
       <ButtonKit variant='contained' onClick={onSubmit} className="auth-form__input" disabled={disabled} size="large">
         Sign In
       </ButtonKit>
