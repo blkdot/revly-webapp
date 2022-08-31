@@ -21,7 +21,7 @@ const SignUp = () => {
     e.preventDefault();
     try {
       await signUp(value.email, value.password);
-      navigate('/account');
+      navigate('/onboarding');
       console.log(`${value.email} successfully registered as a new user`);
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;

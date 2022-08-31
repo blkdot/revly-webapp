@@ -22,7 +22,7 @@ const SignIn = () => {
     e.preventDefault();
     try {
       await signIn(value.email, value.password);
-      navigate('/account');
+      navigate('/onboarding');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
@@ -39,7 +39,7 @@ const SignIn = () => {
     e.preventDefault();
     try {
       await googleSignIn();
-      navigate('/account');
+      navigate('/onboarding');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
