@@ -6,9 +6,14 @@ import './SignUp.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
 import AuthForm from '../../components/forms/authForm/AuthForm';
+import useAlert from '../../hooks/useAlert';
+import firebaseCodeError from '../../data/firebaseCodeError';
 
 const SignUp = () => {
   const [value, setValue] = useState({ email: '', password: '' });
+  const { setAlertShow, setAlertMessage, renderAlert } = useAlert('error');
+  const [errorData, setErrorData] = useState({ email: false, password: false });
+
   const { signUp } = useUserAuth();
   const navigate = useNavigate();
 
@@ -19,8 +24,14 @@ const SignUp = () => {
       navigate('/account');
       console.log(`${value.email} successfully registered as a new user`);
     } catch (e) {
-      console.log(e.message);
-      console.log(e.code);
+      const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
+
+      if (firebaseCodeError[e.code].field) {
+        setErrorData({ [firebaseCodeError[e.code].field]: true });
+      }
+
+      setAlertMessage(message)
+      setAlertShow(true);
     }
   };
 
@@ -30,6 +41,10 @@ const SignUp = () => {
 
   return (
     <div className='signup'>
+      {renderAlert()}
+      <div className="signup-cover">
+        <img src="/images/cover.png" alt="cover" width={300} />
+      </div>
       <Card className='card-signup' variant='outlined'>
         <h2>Sign up to your account</h2>
         <p>
@@ -38,6 +53,8 @@ const SignUp = () => {
         <AuthForm
           onChangeEmail={handleChange('email')}
           onChangePassword={handleChange('password')}
+          errorEmail={errorData.email}
+          errorPassword={errorData.password}
           onSubmit={handleSubmit}
           disabled={!value.email || !value.password}
         />

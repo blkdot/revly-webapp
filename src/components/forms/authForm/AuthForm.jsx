@@ -1,8 +1,11 @@
 import React from 'react';
-import { FormControl, TextField, Button } from '@mui/material';
-import GoogleButton from 'react-google-button';
 
 import './AuthForm.scss'
+
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
+import ButtonKit from '../../../kits/button/ButtonKit';
+import ButtonGoogleKit from '../../../kits/button/ButtonGoogleKit';
 const AuthForm = (props) => {
   const {
     onChangeEmail,
@@ -10,23 +13,25 @@ const AuthForm = (props) => {
     onSubmit,
     onGoogleSubmit,
     disabled,
+    errorEmail,
+    errorPassword,
   } = props;
 
   const renderGoogleButton = () => {
     if (!onGoogleSubmit) return null;
 
-    return <GoogleButton onClick={onGoogleSubmit} className="auth-form__input __google" />;
+    return <ButtonGoogleKit onClick={onGoogleSubmit} className="auth-form__input __google" />;
   };
 
   return (
-    <FormControl className="auth-form" fullWidth>
-      <TextField label='Email address' onChange={(e) => onChangeEmail(e.target.value)} className="auth-form__input" fullWidth />
-      <TextField label='Password' type="password" onChange={(e) => onChangePassword(e.target.value)} className="auth-form__input" fullWidth />
-      <Button variant='contained' onClick={onSubmit} className="auth-form__input" disabled={disabled} size="large">
+    <FormcontrolKit className="auth-form" fullWidth>
+      <TextfieldKit error={errorEmail} label='Email address' onChange={(e) => onChangeEmail(e.target.value)} className="auth-form__input" fullWidth />
+      <TextfieldKit error={errorPassword} label='Password' type="password" onChange={(e) => onChangePassword(e.target.value)} className="auth-form__input" fullWidth />
+      <ButtonKit variant='contained' onClick={onSubmit} className="auth-form__input" disabled={disabled} size="large">
         Sign In
-      </Button>
+      </ButtonKit>
       {renderGoogleButton()}
-    </FormControl>
+    </FormcontrolKit>
   );
 };
 
