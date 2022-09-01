@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import './OnBoarding.scss';
 
@@ -6,7 +7,7 @@ import OnBoardingForm from '../../components/forms/onBoardingForm/OnBoardingForm
 import ButtonKit from '../../kits/button/ButtonKit';
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
-import useAccessToken from '../../hooks/useAccessToken';
+import usePlatform from '../../hooks/usePlatform';
 import useAlert from '../../hooks/useAlert';
 
 const defaultValue = {
@@ -18,7 +19,8 @@ const OnBoarding = () => {
   const [deliverooValue, setDeliverooValue] = useState(defaultValue);
   const [talabatValue, setTalabatValue] = useState(defaultValue);
   const [zomatoValue, setZomatoValue] = useState(defaultValue);
-  const { setPlatformToken, setIsOnBoarded } = useAccessToken();
+  const navigate = useNavigate();
+  const { setPlatformToken } = usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
   const { setAlertShow, setAlertMessage, renderAlert } = useAlert('error');
@@ -53,7 +55,7 @@ const OnBoarding = () => {
     }
 
     setPlatformToken(res.response);
-    setIsOnBoarded(true);
+    navigate('/account');
   };
 
   return (
