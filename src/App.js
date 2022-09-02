@@ -3,6 +3,7 @@ import SignIn from './pages/signIn/SignIn';
 import SignUp from './pages/signUp/SignUp';
 import Account from './pages/account/Account';
 import OnBoarding from './pages/onBoarding/OnBoarding';
+import Settings from './pages/settings/Settings';
 import { AuthContextProvider } from './contexts/AuthContext';
 import { PlatformProvider } from './contexts/PlatformContext';
 import { ProtectedRoutes } from './routes/ProtectedRoutes';
@@ -20,6 +21,7 @@ function App() {
               <Route element={<ProtectedRoutes />}>
                 <Route element={<ProtectedOnboardRoutes />}>
                   <Route path='/account' element={<Account />} />
+                  <Route path='/settings' element={<Settings />} />
                 </Route>
                 <Route path='/onboarding' element={<OnBoarding />} />
               </Route>
