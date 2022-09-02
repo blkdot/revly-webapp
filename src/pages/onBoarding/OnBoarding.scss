@@ -1,0 +1,12 @@
+.onboarding {
+  padding: 1rem;
+  
+  .onboarding__form {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .onboarding__submit {
+    margin-top: 0.5rem;
+  }
+}
