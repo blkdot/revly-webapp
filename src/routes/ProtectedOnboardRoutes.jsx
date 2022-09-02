@@ -11,7 +11,6 @@ export const ProtectedOnboardRoutes = () => {
   const { loginAll } = useApi();
   const { setPlatformToken } = usePlatform();
   const flag = useRef(false);
-  console.log(user);
   const getOnBoardingData = useCallback(async () => {
     const res = await loginAll({ master_email: user.email, access_token: user.accessToken });
 
