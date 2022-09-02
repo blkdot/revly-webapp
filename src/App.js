@@ -1,7 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 import SignIn from './pages/signIn/SignIn';
 import SignUp from './pages/signUp/SignUp';
-import Dashboard from './pages/account/Account'; //TO-DO change path
+import Dashboard from './pages/dashboard/Dashboard';
 import OnBoarding from './pages/onBoarding/OnBoarding';
 import Settings from './pages/settings/Settings';
 import { AuthContextProvider } from './contexts/AuthContext';
@@ -13,6 +16,7 @@ import './App.scss';
 function App() {
   return (
     <div className="App">
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <AuthContextProvider>
           <PlatformProvider>
             <Routes>
@@ -29,6 +33,7 @@ function App() {
             </Routes>
           </PlatformProvider>
         </AuthContextProvider>
+      </LocalizationProvider>
     </div>
   );
 }

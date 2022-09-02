@@ -1,0 +1,9 @@
+.dates {
+  display: flex;
+  justify-content: flex-end;
+  grid-gap: 40px;
+  margin-bottom: 40px;
+}
+.MuiCalendarPicker-root button.Mui-selected.Mui-selected { // TODO: avoid changing directly MUI class
+  background: #823aa8 ;
+}

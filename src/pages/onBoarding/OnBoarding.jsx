@@ -55,7 +55,7 @@ const OnBoarding = () => {
     }
 
     setPlatformToken(res.response);
-    navigate('/account');
+    navigate('/dashboard');
   };
 
   return (

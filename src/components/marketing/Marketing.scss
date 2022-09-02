@@ -1,0 +1,29 @@
+.cardsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 15px;
+  margin: 30px 0;
+}
+
+.block {
+  margin: 50px 0;
+}
+
+@media(max-width: 1260px) {
+  .cardsWrapper {
+    grid-gap: 20px;
+    justify-content: space-between;
+  }
+}
+
+@media(max-width: 960px) {
+  .cardsWrapper {
+    grid-gap: 25px;
+  }
+}
+
+@media(max-width: 840px) {
+  .cardsWrapper {
+    grid-gap: 15px;
+  }
+}

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import config from '../setup/config';
-import { onBoardingResponse } from '../data/fakeData'; // TODO: remove this when we can use the API fully on dev mode or in production
+import { onBoardingResponse } from '../data/fakeDataOnboarding'; // TODO: remove this when we can use the API fully on dev mode or in production
 
 const useApi = () => {
   const { apiUrl } = config;

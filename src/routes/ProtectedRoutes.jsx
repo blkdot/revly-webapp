@@ -1,8 +1,10 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import { useUserAuth } from '../contexts/AuthContext';
 
+import { useUserAuth } from '../contexts/AuthContext';
 import SpinnerKit from '../kits/spinner/SpinnerKit';
+import ContainerKit from '../kits/container/ContainerKit';
+import Navbar from '../components/navbar/Navbar';
 
 export const ProtectedRoutes = () => {
   const { user } = useUserAuth();
@@ -17,5 +19,14 @@ export const ProtectedRoutes = () => {
     );
   }
 
-  return user ? <Outlet /> : <Navigate to='/' />;
+  const renderLayout = () => (
+    <div className="user-page">
+      <Navbar />
+      <ContainerKit>
+        <Outlet />
+      </ContainerKit>
+    </div>
+  );
+
+  return user ? renderLayout() : <Navigate to='/' />;
 };

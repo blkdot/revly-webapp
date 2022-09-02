@@ -1,0 +1,94 @@
+.table_evolution {
+  display: flex;
+  width: 90px;
+  align-items: center;
+  grid-gap: 5px;
+  padding: 0 5px;
+  border-radius: 15px;
+}
+
+.table_evolution span {
+  color: white;
+  font-size: 12px;
+}
+
+.table_increased {
+  background: #54d62c;
+}
+
+.table_decreased {
+  background: #ff4842;
+}
+
+.table_decreased svg {
+  transform: scale(1, -1);
+}
+
+.table-paper-wrapper {
+  width: 100%;
+  margin-bottom: 2px;
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+    0 2px 4px -1px rgb(145 158 171 / 24%);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.table-row.table-row {
+
+  >th,
+  td {
+    border: none;
+    font-weight: 600;
+    border-bottom: none;
+    font-size: 13px;
+    text-transform: capitalize;
+    position: relative;
+  }
+}
+
+.table-head {
+  background: rgb(244, 246, 248);
+}
+
+.enchanced-table-cell.enchanced-table-cell {
+  border: none;
+  font-weight: 600;
+  border-bottom: none;
+  min-width: 0;
+  max-width: 100%;
+  width: 25%;
+  font-size: 15px;
+  color: rgb(99, 115, 129);
+}
+
+.table-total.table-total {
+
+  >th,
+  td {
+    font-size: 15px;
+  }
+
+  .table_evolution {
+    font-size: 13px;
+  }
+}
+
+.table-img {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  top: -3px;
+  left: 80px;
+}
+
+@media(max-width: 1000px) {
+  .table.table {
+    width: 150%;
+  }
+}
+@media(max-width: 800px) {
+  .table.table {
+    width: 170%;
+  }
+}

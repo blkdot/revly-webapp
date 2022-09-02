@@ -1,0 +1,23 @@
+.restaurant-dropdown_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+
+  .Mui-focused.Mui-focused fieldset {
+    border-color: #823aa8
+  }
+}
+
+.restaurant-dropdown-input.restaurant-dropdown-input {
+  display: flex;
+  align-items: center;
+
+  &.Mui-focused.Mui-focused {
+    color: #823aa8
+  }
+
+  &.Mui-focused.Mui-focused svg {
+    fill: #823aa8
+  }
+}
