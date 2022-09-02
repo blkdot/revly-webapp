@@ -5,12 +5,14 @@ import { useUserAuth } from '../contexts/AuthContext';
 import SpinnerKit from '../kits/spinner/SpinnerKit';
 import useApi from '../hooks/useApi';
 import usePlatform from '../hooks/usePlatform';
+import config from '../setup/config';
 
 export const ProtectedOnboardRoutes = () => {
   const { user } = useUserAuth();
   const { loginAll } = useApi();
   const { setPlatformToken } = usePlatform();
   const flag = useRef(false);
+  const { timeRefreshToken } = config;
   const getOnBoardingData = useCallback(async () => {
     const res = await loginAll({ master_email: user.email, access_token: user.accessToken });
 
@@ -19,12 +21,15 @@ export const ProtectedOnboardRoutes = () => {
       return;
     }
 
+    flag.current = true;
     setPlatformToken(res.response);
   }, [loginAll, user, setPlatformToken]);
 
   useEffect(() => {
     const unsubscribe = () => {
-      getOnBoardingData();
+      if (flag.current === false) {
+        getOnBoardingData();
+      }
     };
 
     return () => {
@@ -32,13 +37,22 @@ export const ProtectedOnboardRoutes = () => {
     };
   }, [getOnBoardingData]);
 
-  if (!flag) {
+  useEffect(() => {
+    const autoRefresh = setInterval(() => {
+      getOnBoardingData();
+    }, timeRefreshToken);
+    return () => {
+      clearInterval(autoRefresh);
+    };
+  });
+
+  if (flag.current === false) {
     return (
       <div style={{ marginTop: '20rem' }}>
         <SpinnerKit />
       </div>
     );
   }
-
+  console.log(`FLAG => ${flag.current}`);
   return flag.current instanceof Error ? <Navigate to='/onboarding' /> : <Outlet /> ;
 };

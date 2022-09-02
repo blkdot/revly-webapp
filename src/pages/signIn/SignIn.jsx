@@ -11,7 +11,7 @@ import firebaseCodeError from '../../data/firebaseCodeError';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '' });
-  const { setAlertShow, setAlertMessage, renderAlert } = useAlert('error');
+  const { showAlert, setAlertMessage } = useAlert();
   const [errorData, setErrorData] = useState({ email: false, password: false });
 
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const SignIn = () => {
       }
 
       setAlertMessage(message);
-      setAlertShow(true);
+      showAlert();
     }
   };
 
@@ -48,7 +48,7 @@ const SignIn = () => {
       }
 
       setAlertMessage(message);
-      setAlertShow(true);
+      showAlert();
     }
   };
 
@@ -58,7 +58,6 @@ const SignIn = () => {
 
   return (
     <div className='signin'>
-      {renderAlert()}
       <div className="signin-cover">
         <img src="/images/cover.png" alt="cover" width={300} />
       </div>

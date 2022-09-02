@@ -9,8 +9,6 @@ import Navbar from '../components/navbar/Navbar';
 export const ProtectedRoutes = () => {
   const { user } = useUserAuth();
 
-  console.log(`User Protected: ${user}`, typeof user);
-
   if (typeof user === 'boolean' && user) {
     return (
       <div style={{ marginTop: '20rem' }}>

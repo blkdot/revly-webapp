@@ -23,7 +23,7 @@ const OnBoarding = () => {
   const { setPlatformToken } = usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
-  const { setAlertShow, setAlertMessage, renderAlert } = useAlert('error');
+  const { showAlert, setAlertMessage } = useAlert('error');
 
   const handleChangeDeliveroo = (k) => (v) => {
     setDeliverooValue({ ...deliverooValue, [k]: v });
@@ -50,7 +50,7 @@ const OnBoarding = () => {
 
     if (res instanceof Error) {
       setAlertMessage(res.message);
-      setAlertShow(true);
+      showAlert();
       return;
     }
 
@@ -60,7 +60,6 @@ const OnBoarding = () => {
 
   return (
     <div className='onboarding'>
-      {renderAlert()}
       <div className='onboarding__form'>
         <div className='onboarding__form-card'>
           <OnBoardingForm
