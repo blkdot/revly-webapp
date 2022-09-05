@@ -11,7 +11,7 @@ import firebaseCodeError from '../../data/firebaseCodeError';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '' });
-  const [processing, setProcessing] = useState(false);
+  const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { showAlert, setAlertMessage } = useAlert();
   const [errorData, setErrorData] = useState({ email: false, password: false });
 

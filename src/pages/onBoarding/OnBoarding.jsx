@@ -1,51 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Modal from '@mui/material/Modal';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 
 import './OnBoarding.scss';
 
-import OnBoardingForm from '../../components/forms/onBoardingForm/OnBoardingForm';
-import ButtonKit from '../../kits/button/ButtonKit';
+import OnBoardingForm from '../../components/onboarding/OnBoarding';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import Dates from '../../components/dates/Dates';
+import Finance from '../../components/finance/Finance';
+
+import BoxKit from '../../kits/box/BoxKit';
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
 import usePlatform from '../../hooks/usePlatform';
 import useAlert from '../../hooks/useAlert';
 
-const defaultValue = {
-  email: '',
-  password: '',
-};
+const steps = ['Greetings', 'Select delivery platform', 'Start your adventure'];
 
 const OnBoarding = () => {
-  const [deliverooValue, setDeliverooValue] = useState(defaultValue);
-  const [talabatValue, setTalabatValue] = useState(defaultValue);
-  const [zomatoValue, setZomatoValue] = useState(defaultValue);
+  
   const navigate = useNavigate();
   const { setPlatformToken } = usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
   const { showAlert, setAlertMessage } = useAlert('error');
 
-  const handleChangeDeliveroo = (k) => (v) => {
-    setDeliverooValue({ ...deliverooValue, [k]: v });
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    backgroundColor: '#ffffff',
+    borderRadius: '0.4rem',
+    boxShadow: 24,
+    padding: '1rem',
   };
 
-  const handleChangeTalabat = (k) => (v) => {
-    setTalabatValue({ ...talabatValue, [k]: v });
-  };
-
-  const handleChangeZomato = (k) => (v) => {
-    setZomatoValue({ ...zomatoValue, [k]: v });
-  };
-
-  const handleSubmitLoginInfo = async () => {
+  const handleSubmitLoginInfo = async (data) => {
     const res = await initLogin({
       master_email: user.email,
       access_token: user.accessToken,
-      data: [
-        { platform: 'deliveroo', ...deliverooValue },
-        { platform: 'talabat', ...talabatValue },
-        { platform: 'zomato', ...zomatoValue },
-      ].filter((el) => el.email && el.password),
+      data
     });
 
     if (res instanceof Error) {
@@ -60,34 +59,21 @@ const OnBoarding = () => {
 
   return (
     <div className='onboarding'>
-      <div className='onboarding__form'>
-        <div className='onboarding__form-card'>
-          <OnBoardingForm
-            onChangeEmail={handleChangeDeliveroo('email')}
-            onChangePassword={handleChangeDeliveroo('password')}
-            title='Deliveroo'
-          />
-        </div>
-        <div className='onboarding__form-card'>
-          <OnBoardingForm
-            onChangeEmail={handleChangeTalabat('email')}
-            onChangePassword={handleChangeTalabat('password')}
-            title='Talabat'
-          />
-        </div>
-        <div className='onboarding__form-card'>
-          <OnBoardingForm
-            onChangeEmail={handleChangeZomato('email')}
-            onChangePassword={handleChangeZomato('password')}
-            title='Zomato'
-          />
-        </div>
-      </div>
-      <div className='onboarding__submit'>
-        <ButtonKit variant='contained' onClick={handleSubmitLoginInfo}>
-          Submit
-        </ButtonKit>
-      </div>
+      <RestaurantDropdown names={[]} />
+      <Dates />
+      <Finance />
+      <Modal open aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+        <BoxKit style={style}>
+          <Stepper activeStep={0} alternativeLabel>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <OnBoardingForm onSubmit={handleSubmitLoginInfo} />
+        </BoxKit>
+      </Modal>
     </div>
   );
 };
