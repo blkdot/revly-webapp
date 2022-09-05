@@ -11,6 +11,7 @@ import firebaseCodeError from '../../data/firebaseCodeError';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '' });
+  const [processing, setProcessing] = useState(false);
   const { showAlert, setAlertMessage } = useAlert();
   const [errorData, setErrorData] = useState({ email: false, password: false });
 
@@ -20,6 +21,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setProcessing(true);
     try {
       await signIn(value.email, value.password);
       navigate('/dashboard');
@@ -32,11 +34,13 @@ const SignIn = () => {
 
       setAlertMessage(message);
       showAlert();
+      setProcessing(false);
     }
   };
 
   const handleGoogleSubmit = async (e) => {
     e.preventDefault();
+    setProcessing(true);
     try {
       await googleSignIn();
       navigate('/dashboard');
@@ -49,6 +53,7 @@ const SignIn = () => {
 
       setAlertMessage(message);
       showAlert();
+      setProcessing(false);
     }
   };
 
@@ -73,7 +78,7 @@ const SignIn = () => {
           errorPassword={errorData.password}
           onSubmit={handleSubmit}
           onGoogleSubmit={handleGoogleSubmit}
-          disabled={!value.email || !value.password}
+          disabled={!value.email || !value.password || processing}
         />
       </CardKit>
     </div>

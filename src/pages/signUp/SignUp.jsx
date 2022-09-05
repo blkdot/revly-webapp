@@ -11,6 +11,7 @@ import firebaseCodeError from '../../data/firebaseCodeError';
 
 const SignUp = () => {
   const [value, setValue] = useState({ email: '', password: '' });
+  const [processing, setProcessing] = useState(false);
   const { showAlert, setAlertMessage } = useAlert();
   const [errorData, setErrorData] = useState({ email: false, password: false });
 
@@ -19,6 +20,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setProcessing(true);
     try {
       await signUp(value.email, value.password);
       navigate('/onboarding');
@@ -32,6 +34,7 @@ const SignUp = () => {
 
       setAlertMessage(message)
       showAlert();
+      setProcessing(false);
     }
   };
 
@@ -55,7 +58,7 @@ const SignUp = () => {
           errorEmail={errorData.email}
           errorPassword={errorData.password}
           onSubmit={handleSubmit}
-          disabled={!value.email || !value.password}
+          disabled={!value.email || !value.password || processing}
         />
       </Card>
     </div>

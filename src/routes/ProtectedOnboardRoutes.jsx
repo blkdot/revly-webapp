@@ -53,6 +53,6 @@ export const ProtectedOnboardRoutes = () => {
       </div>
     );
   }
-  console.log(`FLAG => ${flag.current}`);
+  
   return flag.current instanceof Error ? <Navigate to='/onboarding' /> : <Outlet /> ;
 };
