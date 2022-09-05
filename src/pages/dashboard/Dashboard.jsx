@@ -9,8 +9,10 @@ import { restaurantNames } from "../../data/fakeDataDashboard";
 const Dashboard = () => {
   return (
     <div className="wrapper">
-      <RestaurantDropdown names={restaurantNames} />
-      <Dates />
+      <div className="top-inputs">
+        <RestaurantDropdown names={restaurantNames} />
+        <Dates />
+      </div>
       <Finance />
       <Marketing />
     </div>
