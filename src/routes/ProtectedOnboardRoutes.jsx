@@ -26,7 +26,7 @@ export const ProtectedOnboardRoutes = () => {
   }, [loginAll, setPlatformToken, user.email, user.accessToken]);
 
   const checkIfRegistered = useCallback(async () => {
-    console.log(isOnboarded);
+
     if (isOnboarded) return;
 
     const res = await loginExist({ master_email: user.email, access_token: user.accessToken });
