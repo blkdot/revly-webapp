@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import config from '../setup/config';
-import { onBoardingResponse } from '../data/fakeDataOnboarding'; // TODO: remove this when we can use the API fully on dev mode or in production
+import { onBoardingResponse, loginExistResponse } from '../data/fakeDataOnboarding'; // TODO: remove this when we can use the API fully on dev mode or in production
 import useAlert from './useAlert';
 
 const useApi = () => {
@@ -45,6 +45,25 @@ const useApi = () => {
     }
   };
 
+  const loginExist = async (body) => {
+    try {
+      const response = await axios.post(`${apiUrl}/login/exist`, body);
+
+      // TODO: uncomment if you want to use on real response
+      // if (response.status !== 200) {
+      //   throw new Error(response.message);
+      // }
+
+      return { success: true, response: loginExistResponse }; // TODO: replace the simulation response
+    } catch (error) {
+      // TODO: uncomment if want to use on real response
+      // return error;
+
+      // TODO: Remove if want to test with fake response
+      return { success: true, response: loginExistResponse }; 
+    }
+  };
+
   const loginPlatform = async (platform, body) => {
     try {
       const response = await axios.post(`${apiUrl}/login/${platform}`, body);
@@ -65,6 +84,7 @@ const useApi = () => {
     initLogin,
     loginAll,
     loginPlatform,
+    loginExist
   };
 };
 

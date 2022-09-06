@@ -13,3 +13,8 @@ export const onBoardingResponse = [
     platform: 'talabat',
   },
 ];
+
+export const loginExistResponse = {
+  registered: false,
+  platforms: onBoardingResponse
+};
