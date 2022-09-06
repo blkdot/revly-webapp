@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import './App.scss';
 
@@ -15,28 +16,38 @@ import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctiona
 import { ProtectedRoutes } from './routes/ProtectedRoutes';
 import { ProtectedOnboardRoutes } from './routes/ProtectedOnboardRoutes';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#4d2681',
+    },
+  }
+});
+
 function App() {
   return (
     <div className="App">
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <GlobalFunctionalitiesContextProvider>
-          <AuthContextProvider>
-            <PlatformProvider>
-              <Routes>
-                <Route path='/' element={<SignIn />} />
-                <Route path='/signup' element={<SignUp />} />
-                <Route element={<ProtectedRoutes />}>
-                  <Route element={<ProtectedOnboardRoutes />}>
-                    {/*<Route path='/account' element={<Account />} />*/}
-                    <Route path='/dashboard' element={<Dashboard />} />
-                    <Route path='/settings' element={<Settings />} />
+        <ThemeProvider theme={theme}>
+          <GlobalFunctionalitiesContextProvider>
+            <AuthContextProvider>
+              <PlatformProvider>
+                <Routes>
+                  <Route path='/' element={<SignIn />} />
+                  <Route path='/signup' element={<SignUp />} />
+                  <Route element={<ProtectedRoutes />}>
+                    <Route element={<ProtectedOnboardRoutes />}>
+                      {/*<Route path='/account' element={<Account />} />*/}
+                      <Route path='/dashboard' element={<Dashboard />} />
+                      <Route path='/settings' element={<Settings />} />
+                    </Route>
+                    <Route path='/onboarding' element={<OnBoarding />} />
                   </Route>
-                  <Route path='/onboarding' element={<OnBoarding />} />
-                </Route>
-              </Routes>
-            </PlatformProvider>
-          </AuthContextProvider>
-        </GlobalFunctionalitiesContextProvider>
+                </Routes>
+              </PlatformProvider>
+            </AuthContextProvider>
+          </GlobalFunctionalitiesContextProvider>
+        </ThemeProvider>
       </LocalizationProvider>
     </div>
   );
