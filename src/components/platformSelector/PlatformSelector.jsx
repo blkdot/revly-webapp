@@ -30,11 +30,5 @@ const PlatformSelector = (props) => {
     </div>
   );
 };
-// <div className="onboarding-platform__selector-item">
-//   <img src={imageDeliveroo} alt="deliveroo" width="100" style={{ objectFit: 'contain' }} />
-// </div>
-// <div className="onboarding-platform__selector-item __active">
-//   <img src={imageTalabat} alt="talabat" width="100" style={{ objectFit: 'contain' }} />
-// </div>
 
 export default PlatformSelector;

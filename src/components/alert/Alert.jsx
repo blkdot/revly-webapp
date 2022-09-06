@@ -11,7 +11,7 @@ const Alert = (props) => {
 
   return (
     <div className="alert-component">
-      <AlertKit severity={severity} variant="filled">{children}</AlertKit>
+      <AlertKit severity={severity}>{children}</AlertKit>
     </div>
   );
 };

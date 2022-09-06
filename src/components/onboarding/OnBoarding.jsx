@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
+
 import OnBoardingForm from '../forms/onBoardingForm/OnBoardingForm';
-import ButtonKit from '../../kits/button/ButtonKit';
+
+import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
+
+import talabatImage from '../../assets/images/talabat.png';
+import deliverooImage from '../../assets/images/deliveroo.png';
 
 const defaultValue = {
   email: '',
   password: '',
 };
 
-const OnBoarding = ({ onSubmit }) => {
+const OnBoarding = ({ onSend, activeForm, isLoading }) => {
   const [deliverooValue, setDeliverooValue] = useState(defaultValue);
   const [talabatValue, setTalabatValue] = useState(defaultValue);
   const [zomatoValue, setZomatoValue] = useState(defaultValue);
@@ -31,25 +36,41 @@ const OnBoarding = ({ onSubmit }) => {
       { platform: 'zomato', ...zomatoValue },
     ].filter((el) => el.email && el.password);
 
-    onSubmit(data);
+    onSend(data);
   };
 
-  return (
-    <div className='onboarding__form'>
+  const renderDeliverooForm = () => {
+    if (!activeForm.deliveroo) return null;
+
+    return (
       <div className='onboarding__form-card'>
         <OnBoardingForm
           onChangeEmail={handleChangeDeliveroo('email')}
           onChangePassword={handleChangeDeliveroo('password')}
-          title='Deliveroo'
+          title={<img src={deliverooImage} alt="deliveroo" height="50" />}
         />
       </div>
+    );
+  };
+
+  const renderTalabatForm = () => {
+    if (!activeForm.talabat) return null;
+
+    return (
       <div className='onboarding__form-card'>
         <OnBoardingForm
           onChangeEmail={handleChangeTalabat('email')}
           onChangePassword={handleChangeTalabat('password')}
-          title='Talabat'
+          title={<img src={talabatImage} alt="talabat" width="100" />}
         />
       </div>
+    );
+  };
+
+  const renderZomatoForm = () => {
+    if (!activeForm.zomato) return null;
+
+    return (
       <div className='onboarding__form-card'>
         <OnBoardingForm
           onChangeEmail={handleChangeZomato('email')}
@@ -57,10 +78,26 @@ const OnBoarding = ({ onSubmit }) => {
           title='Zomato'
         />
       </div>
+    );
+  };
+
+  const isDisabledSend = () => {
+    const isDeliverooValide = activeForm.deliveroo ? deliverooValue.email && deliverooValue.password : true;
+    const isTalabatValide = activeForm.talabat ? talabatValue.email && talabatValue.password : true;
+    const isZomatoValide = activeForm.zomato ? zomatoValue.email && zomatoValue.password : true;
+
+    return !isDeliverooValide || !isTalabatValide || !isZomatoValide;
+  };
+
+  return (
+    <div className='onboarding__form'>
+      {renderDeliverooForm()}
+      {renderTalabatForm()}
+      {renderZomatoForm()}
       <div className='onboarding__submit'>
-        <ButtonKit variant='contained' onClick={handleSubmitLoginInfo}>
-          Submit
-        </ButtonKit>
+        <ButtonLoadingKit variant='contained' onClick={handleSubmitLoginInfo} loading={isLoading} disabled={isDisabledSend()}>
+          Send
+        </ButtonLoadingKit>
       </div>
     </div>
   );

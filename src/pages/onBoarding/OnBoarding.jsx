@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Confetti from "react-confetti";
 
 import './OnBoarding.scss';
 
@@ -8,6 +8,7 @@ import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDr
 import Dates from '../../components/dates/Dates';
 import Finance from '../../components/finance/Finance';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
+import Congrats from '../../components/congrats/Congrats';
 
 import ModalKit from '../../kits/modal/ModalKit';
 import StepperKit from '../../kits/stepper/StepperKit';
@@ -36,13 +37,14 @@ const defaultSelected = {
 };
 
 const OnBoarding = () => {
-  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
+  const [registered, setRegistered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { setPlatformToken } = usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
-  const { showAlert, setAlertMessage } = useAlert('error');
+  const { showAlert, setAlertMessage, setAlertTheme } = useAlert('error');
 
   const style = {
     position: 'absolute',
@@ -58,6 +60,7 @@ const OnBoarding = () => {
   };
 
   const handleSubmitLoginInfo = async (data) => {
+    setIsLoading(true);
     const res = await initLogin({
       master_email: user.email,
       access_token: user.accessToken,
@@ -66,12 +69,18 @@ const OnBoarding = () => {
 
     if (res instanceof Error) {
       setAlertMessage(res.message);
+      setAlertTheme('error');
       showAlert();
+      setIsLoading(false);
       return;
     }
 
+    setAlertMessage('Registered with success !');
+    setAlertTheme('success');
+    showAlert();
     setPlatformToken(res.response);
-    navigate('/dashboard');
+    setRegistered(true);
+    setIsLoading(false);
   };
 
   const handlePlatformClick = (key) => {
@@ -90,14 +99,29 @@ const OnBoarding = () => {
     }
 
     if (step === 1) {
-      return <OnBoardingForm onSubmit={handleSubmitLoginInfo} />;
+      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={selectedPlatform} isLoading={isLoading} />;
     }
+
+    return <Congrats />
+  };
+
+  const isNextDisabled = () => {
+    if (step === 0) {
+      return !selectedPlatform.deliveroo && !selectedPlatform.talabat;
+    }
+
+    if (step === 1) {
+      return !registered;
+    }
+
+    return true;
   };
   
-  // TODO: step checker validation function
+  const isBackDisabled = () => step === 0 || step === 2;
 
   return (
     <div className='onboarding'>
+      <Confetti gravity={0.1} run={step === 2} style={{ zIndex: 1301 }} />
       <RestaurantDropdown names={[]} />
       <Dates />
       <Finance />
@@ -113,10 +137,10 @@ const OnBoarding = () => {
           {renderStepScreens()}
           <div className="onboarding-actions">
             <div>
-              <ButtonKit variant="outlined" color="error" disabled={step < 1} onClick={() => setStep(step - 1)}>Back</ButtonKit>
+              <ButtonKit variant="outlined" color="error" disabled={isBackDisabled()} onClick={() => setStep(step - 1)}>Back</ButtonKit>
             </div>
             <div>
-              <ButtonKit variant="outlined" disabled={step === 1} onClick={() => setStep(step + 1)}>Next</ButtonKit>
+              <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={() => setStep(step + 1)}>Next</ButtonKit>
             </div>
           </div>
         </div>
