@@ -15,7 +15,7 @@ const Widget = ({ procent, title, setTable, table }) => (
     onClick={() => setTable(title)}
   >
     <CardContentKit>
-      <TypographyKit sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <TypographyKit component="div" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <TypographyKit variant='subtitle2' className='card-typography' component='div'>
             {title}

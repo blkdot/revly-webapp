@@ -4,9 +4,11 @@
   grid-gap: 40px;
   align-items: center;
 }
-.date-input-wrapper{
+
+.date-input-wrapper {
   position: relative;
 }
+
 .date-input.date-input {
   position: relative;
   cursor: pointer;
@@ -73,6 +75,7 @@
     overflow: hidden;
     z-index: 1001;
     display: flex;
+    
   }
 
   .rdrStaticRanges.rdrStaticRanges {
@@ -80,21 +83,21 @@
     padding-left: 5px;
   }
 
-  .rdrInRange,
-  .rdrEndEdge,
-  .rdrStartEdge {
-    color: #4d2681 !important;
-  }
+  // .rdrInRange,
+  // .rdrEndEdge,
+  // .rdrStartEdge {
+  //   color: #4d2681 !important;
+  // }
 
-  .rdrDayStartPreview,
-  .rdrDayInPreview,
-  .rdrDayEndPreview {
-    border-color: #4d2681;
-  }
+  // .rdrDayStartPreview,
+  // .rdrDayInPreview,
+  // .rdrDayEndPreview {
+  //   border-color: #4d2681;
+  // }
 
-  .rdrDayToday .rdrDayNumber span:after {
-    background: #4d2681;
-  }
+  // .rdrDayToday .rdrDayNumber span:after {
+  //   background: #4d2681;
+  // }
 
   .rdrDefinedRangesWrapper {
     display: none;
@@ -144,7 +147,8 @@
   border-radius: 12px 0 0 12px;
   display: flex;
   flex-direction: column;
-  grid-gap: 15px;
+  grid-gap: 5px;
+  box-shadow: none;
 
   .navbar-accordion.navbar-accordion {
     &::before {
@@ -157,7 +161,18 @@
   }
 
   span {
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+
+  .navbar-button-kit.navbar-button-kit {
+    font-size: 12px;
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    span {
+      width: 100%;
+      opacity: 1;
+    }
   }
 
   .date-accordion-details {
@@ -167,9 +182,15 @@
     grid-gap: 7px;
     padding: 8px 16px 0 16px;
 
-    span {
-      cursor: pointer;
-      padding: 5px 0;
-    }
+.navbar-button-kit.navbar-button-kit{
+  font-size: 10px;
+}
+  }
+}
+
+@media(max-width: 960px) {
+  .dates {
+    flex-direction: column;
+    grid-gap: 10px;
   }
 }

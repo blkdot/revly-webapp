@@ -168,14 +168,15 @@
   box-shadow: none;
 }
 
-.navbar-accordion-details {
+.navbar-accordion-details.navbar-accordion-details {
   margin-left: 25px;
   position: relative;
+  padding: 8px 16px 0px 16px;
 
   &::before {
     content: "";
     position: absolute;
-    height: 80%;
+    height: 90%;
     left: 5%;
     width: 1.5px;
     background: rgba($color: rgb(190, 190, 190), $alpha: 0.4);

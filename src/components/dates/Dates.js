@@ -14,6 +14,8 @@ import AccordionSummaryKit from "../../kits/accordionSummary/AccordionSummaryKit
 import AccordionKit from "../../kits/accordion/AccordionKit";
 import AccordionDetailsKit from "../../kits/accordionDetails/AccordionDetails";
 
+
+
 const DateSelect = ({ type, setSelections, setRightDate }) => {
   const getDate = (type) => {
     const date = new Date()
@@ -48,24 +50,30 @@ const DateSelect = ({ type, setSelections, setRightDate }) => {
   }
   return (
     <AccordionKit className="navbar-accordion">
-      <AccordionSummaryKit className="accordion-sum" expandIcon={<ExpandMoreIcon />}>
-        <TypographyKit sx={{ display: "flex", alignItems: "center", gridGap: "5px", fontSize: "16px" }}>
-          <span>{type}</span>
-        </TypographyKit>
-      </AccordionSummaryKit>
+      <ButtonKit className="navbar-button-kit">
+        <AccordionSummaryKit className="accordion-sum" expandIcon={<ExpandMoreIcon />}>
+          <TypographyKit sx={{ display: "flex", alignItems: "center", gridGap: "5px", fontSize: "16px" }}>
+            <span>{type}</span>
+          </TypographyKit>
+        </AccordionSummaryKit>
+      </ButtonKit>
       <AccordionDetailsKit className="date-accordion-details">
-        <span onClick={() => getDate(type === "day" ? "today" : type)}>Current {type}</span>
-        <span onClick={() => getDate(type === "day" ? "yesterday" : "last " + type)}>{type === "day" ? "yesterday" : "last " + type}</span>
-        <span>Custom {type}</span>
+        <ButtonKit className="navbar-button-kit" onClick={() => getDate(type === "day" ? "today" : type)}>Current {type}</ButtonKit>
+        <ButtonKit className="navbar-button-kit" onClick={() => getDate(type === "day" ? "yesterday" : "last " + type)}>{type === "day" ? "yesterday" : "last " + type}</ButtonKit>
       </AccordionDetailsKit>
     </AccordionKit>
   )
 }
 
-const RightDateSelect = ({ setRightDate, leftDate, selected }) => {
+const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight }) => {
   const startDate = new Date(leftDate[0].startDate);
   const endDate = new Date(leftDate[0].endDate);
   const date = new Date();
+
+  const openRight = () => {
+    setRightDate([{ startDate: new Date(), endDate: new Date(), key: "selection" }])
+    setOpenedRight(true)
+  }
   return (
     <PaperKit className={"date-select " + (selected ? "selected" : "")}>
       {
@@ -88,7 +96,7 @@ const RightDateSelect = ({ setRightDate, leftDate, selected }) => {
                 }]
               )}
             >Same day last week</ButtonKit>
-            <ButtonKit>Custom day</ButtonKit>
+            <ButtonKit onClick={openRight}>Custom Date</ButtonKit>
           </div> : getWeek(startDate, 1) === getWeek(endDate, 1) && startDate.getDay() === 0 && endDate.getDay() >= date.getDay() && endDate.getDay() <= 6 ? <div>
             <ButtonKit
               onClick={() => setRightDate(
@@ -107,8 +115,8 @@ const RightDateSelect = ({ setRightDate, leftDate, selected }) => {
                 }]
               )}
             >Weekly Avg of the previous month</ButtonKit>
-            <ButtonKit>Custom Week</ButtonKit>
-          </div > : startDate.getDate() === 1 && endDate.getDate() === lastDayOfMonth(endDate, 1).getDate() ? <div>
+            <ButtonKit onClick={openRight}>Custom Date</ButtonKit>
+          </div > : startDate.getDate() === 1 && endDate.getDate() >= date.getDate() && endDate.getDate() <= lastDayOfMonth(endDate, 1) ? <div>
             <ButtonKit
               onClick={() => setRightDate(
                 [{
@@ -118,8 +126,18 @@ const RightDateSelect = ({ setRightDate, leftDate, selected }) => {
                 }]
               )}>Month - 1</ButtonKit>
 
-            <ButtonKit>Custom Month</ButtonKit>
-          </div> : ""
+            <ButtonKit onClick={openRight}>Custom Date</ButtonKit>
+            </div> : <div>
+              <ButtonKit
+                onClick={() => setRightDate(
+                  [{
+                    startDate: subDays(startDate, startDate.getDate() + endDate.getDate() - 1),
+                    endDate: subDays(endDate, startDate.getDate() + endDate.getDate() - 1),
+                    key: "selection"
+                  }]
+                )}>Date - 1</ButtonKit>
+              <ButtonKit onClick={openRight}>Custom Date</ButtonKit>
+            </div>
       }
     </PaperKit >
   )
@@ -134,6 +152,7 @@ const Dates = () => {
     }
   ]);
   const [opened, setOpened] = useState(false);
+  const [openedRight, setOpenedRight] = useState(false);
   const [selected, setSelected] = useState(false)
   const [rightDate, setRightDate] = useState([{
     startDate: new Date(),
@@ -141,32 +160,33 @@ const Dates = () => {
     key: "selection"
   }])
 
-
+  const handleOnChangeRight = ranges => {
+    const { selection } = ranges;
+    setRightDate([selection]);
+  }
 
   const handleOnChange = ranges => {
     const { selection } = ranges;
     setLeftDate([selection]);
-    setRightDate([selection])
   }
-
   return (
     <div className="dates">
-      <PaperKit onClick={() => setOpened(true)} className="date-input">
+      <PaperKit component="div" onClick={() => setOpened(true)} className="date-input">
         <TypographyKit className="date-typography">
           <CalendarMonthIcon />
           <span>{new Date(leftDate[0].startDate).toLocaleDateString() + " - " + new Date(leftDate[0].endDate).toLocaleDateString()}</span>
         </TypographyKit>
         <ExpandMoreIcon />
       </PaperKit>
-      <TypographyKit className="date-input-wrapper">
+      <TypographyKit component="div" className="date-input-wrapper">
         <PaperKit onClick={() => setSelected(!selected)} className={"date-input " + (selected ? "selected" : "")}>
-          <TypographyKit className="date-typography">
+          <TypographyKit component="div" className="date-typography">
             <CalendarMonthIcon />
             <span>{new Date(rightDate[0].startDate).toLocaleDateString() + " - " + new Date(rightDate[0].endDate).toLocaleDateString()}</span>
           </TypographyKit>
           <ExpandMoreIcon />
         </PaperKit>
-        <RightDateSelect setRightDate={setRightDate} selected={selected} leftDate={leftDate} />
+        <RightDateSelect setOpenedRight={setOpenedRight} setRightDate={setRightDate} selected={selected} leftDate={leftDate} />
       </TypographyKit>
 
       <div className={"date-range-overlay " + (opened ? "opened" : "")} onClick={() => setOpened(false)}>
@@ -187,7 +207,26 @@ const Dates = () => {
           />
         </div>
       </div>
+      <div className={"date-range-overlay " + (openedRight ? "opened" : "")} onClick={() => setOpenedRight(false)}>
+        <div className="date-range" onClick={(e) => e.stopPropagation()}>
+          <PaperKit className="date-picker">
+            <DateSelect type={"day"} setSelections={setLeftDate} setRightDate={setRightDate} />
+            <DateSelect type={"week"} setSelections={setLeftDate} setRightDate={setRightDate} />
+            <DateSelect type={"month"} setSelections={setLeftDate} setRightDate={setRightDate} />
+          </PaperKit>
+          <DatePickerKit
+            maxDate={new Date()}
+            onChange={handleOnChangeRight}
+            showSelectionPreview={true}
+            moveRangeOnFirstSelection={false}
+            months={1}
+            ranges={rightDate}
+            direction="horizontal"
+          />
+        </div>
+      </div>
     </div>
+
   );
 };
 
