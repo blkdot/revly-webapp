@@ -15,6 +15,6 @@ export const onBoardingResponse = [
 ];
 
 export const loginExistResponse = {
-  registered: false,
+  registered: true,
   platforms: onBoardingResponse
 };
