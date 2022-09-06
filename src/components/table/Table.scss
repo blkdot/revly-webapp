@@ -1,3 +1,5 @@
+@import '../../library.scss';
+
 .table_evolution {
   display: flex;
   width: 90px;
@@ -13,11 +15,11 @@
 }
 
 .table_increased {
-  background: #54d62c;
+  background: $color-green;
 }
 
 .table_decreased {
-  background: #ff4842;
+  background: $color-red;
 }
 
 .table_decreased svg {
@@ -58,7 +60,7 @@
   max-width: 100%;
   width: 25%;
   font-size: 15px;
-  color: rgb(99, 115, 129);
+  color: $color-arrow;
 }
 
 .table-total.table-total {
