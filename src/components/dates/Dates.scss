@@ -4,7 +4,9 @@
   grid-gap: 40px;
   align-items: center;
 }
-
+.date-input-wrapper{
+  position: relative;
+}
 .date-input.date-input {
   position: relative;
   cursor: pointer;
@@ -71,7 +73,6 @@
     overflow: hidden;
     z-index: 1001;
     display: flex;
-    height: 65vh;
   }
 
   .rdrStaticRanges.rdrStaticRanges {
@@ -101,29 +102,35 @@
 }
 
 .date-select.date-select {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   position: absolute;
   top: 52px;
   left: 0;
   z-index: 100;
-  width: 100%;
   padding: 15px;
   opacity: 0;
   visibility: hidden;
   transition: .4s;
   box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
     0 2px 4px -1px rgb(145 158 171 / 24%);
+  width: 100%;
 
-  >button {
-    color: grey;
+  >div {
     width: 100%;
     display: flex;
-    justify-content: flex-start;
-    text-align: left;
-    font-size: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+
+    >button {
+      color: grey;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      text-align: left;
+      font-size: 12px;
+    }
   }
+
+
 
   &.selected {
     opacity: 1;

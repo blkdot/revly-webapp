@@ -75,7 +75,7 @@
   .Navbar-footer.Navbar-footer {
     position: absolute;
     bottom: 25px;
-
+    width: 90%;
   }
 }
 
@@ -222,15 +222,17 @@
     }
   }
 }
-@media(max-width: 900px){
- .navbar_wrapper{
-  &.opened{
-    width: 330px;
+
+@media(max-width: 900px) {
+  .navbar_wrapper {
+    &.opened {
+      width: 330px;
+    }
   }
- } 
- .Navbar.Navbar{
-  &.opened{
-    width: 230px;
+
+  .Navbar.Navbar {
+    &.opened {
+      width: 230px;
+    }
   }
- }
 }
