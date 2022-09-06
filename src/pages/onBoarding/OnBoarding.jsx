@@ -41,7 +41,7 @@ const OnBoarding = () => {
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
   const [registered, setRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setPlatformToken } = usePlatform();
+  const { setPlatformToken, setIsOnboarded } = usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert('error');
@@ -61,6 +61,7 @@ const OnBoarding = () => {
 
   const handleSubmitLoginInfo = async (data) => {
     setIsLoading(true);
+
     const res = await initLogin({
       master_email: user.email,
       access_token: user.accessToken,
@@ -80,6 +81,7 @@ const OnBoarding = () => {
     showAlert();
     setPlatformToken(res.response);
     setRegistered(true);
+    setIsOnboarded(true);
     setIsLoading(false);
   };
 

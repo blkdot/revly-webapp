@@ -14,7 +14,12 @@ export const onBoardingResponse = [
   },
 ];
 
+export const loginNotExistResponse = {
+  registered: false,
+  platforms: []
+};
+
 export const loginExistResponse = {
   registered: true,
-  platforms: onBoardingResponse
+  platforms: ['deliveroo', 'talabat']
 };

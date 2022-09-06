@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import config from '../setup/config';
-import { onBoardingResponse, loginExistResponse } from '../data/fakeDataOnboarding'; // TODO: remove this when we can use the API fully on dev mode or in production
+import { onBoardingResponse, loginExistResponse, loginNotExistResponse } from '../data/fakeDataOnboarding'; // TODO: remove this when we can use the API fully on dev mode or in production
 import useAlert from './useAlert';
 
 const useApi = () => {
@@ -54,13 +54,13 @@ const useApi = () => {
       //   throw new Error(response.message);
       // }
 
-      return { success: true, response: loginExistResponse }; // TODO: replace the simulation response
+      return { success: true, response: loginNotExistResponse }; // TODO: replace the simulation response
     } catch (error) {
       // TODO: uncomment if want to use on real response
       // return error;
 
       // TODO: Remove if want to test with fake response
-      return { success: true, response: loginExistResponse }; 
+      return { success: true, response: loginNotExistResponse }; 
     }
   };
 
