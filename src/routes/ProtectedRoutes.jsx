@@ -11,7 +11,7 @@ export const ProtectedRoutes = () => {
 
   if (typeof user === 'boolean' && user) {
     return (
-      <div style={{ marginTop: '20rem' }}>
+      <div style={{ marginTop: '20rem', marginLeft: '45%' }}>
         <SpinnerKit />
       </div>
     );

@@ -1,7 +1,11 @@
 .signup {
   text-align: center;
   text-align: -webkit-center;
+  text-align: -moz-center;
   margin: auto;
+  display:flex;
+  justify-content:center;
+  flex-direction: column;
 
   .signup-cover {
     margin-top: 10%;
@@ -10,6 +14,7 @@
   .card-signup {
     width: 30rem;
     text-align: start;
-    padding: 0rem 1rem 1rem;
+    padding: 1rem 1rem 1rem;
+    margin: auto;
   }
 }

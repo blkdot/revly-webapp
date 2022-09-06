@@ -1,58 +1,73 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useUserAuth } from '../contexts/AuthContext';
 
-import SpinnerKit from '../kits/spinner/SpinnerKit';
 import useApi from '../hooks/useApi';
 import usePlatform from '../hooks/usePlatform';
+
 import config from '../setup/config';
 
 export const ProtectedOnboardRoutes = () => {
+  const [flag, setFlag] = useState(false);
   const { user } = useUserAuth();
-  const { loginAll } = useApi();
-  const { setPlatformToken } = usePlatform();
-  const flag = useRef(false);
+  const { loginExist, loginAll } = useApi();
+  const { setPlatformToken, setIsOnboarded, isOnboarded } = usePlatform();
   const { timeRefreshToken } = config;
-  const getOnBoardingData = useCallback(async () => {
+
+  const getPlatformToken = useCallback(async () => {
     const res = await loginAll({ master_email: user.email, access_token: user.accessToken });
 
     if (res instanceof Error) {
-      flag.current = res;
+      setFlag(res);
       return;
     }
 
-    flag.current = true;
     setPlatformToken(res.response);
-  }, [loginAll, user, setPlatformToken]);
+  }, [loginAll, setPlatformToken, user.email, user.accessToken]);
+
+  const checkIfRegistered = useCallback(async () => {
+
+    if (isOnboarded) return;
+
+    const res = await loginExist({ master_email: user.email, access_token: user.accessToken });
+
+    if (res instanceof Error) {
+      setFlag(res);
+      return;
+    }
+
+    if (!res.response.registered) {
+      setFlag(new Error('Not registered'));
+      return;
+    }
+
+    setFlag(true);
+    setIsOnboarded(true);
+    getPlatformToken();
+  }, [loginExist, user, getPlatformToken, setIsOnboarded, isOnboarded]);
 
   useEffect(() => {
     const unsubscribe = () => {
-      if (flag.current === false) {
-        getOnBoardingData();
+      if (flag === false || !isOnboarded) {
+        checkIfRegistered();
       }
     };
 
     return () => {
       unsubscribe();
     };
-  }, [getOnBoardingData]);
+  }, [checkIfRegistered, flag, isOnboarded]);
 
   useEffect(() => {
     const autoRefresh = setInterval(() => {
-      getOnBoardingData();
+      if (flag) {
+        getPlatformToken();
+      }
     }, timeRefreshToken);
     return () => {
       clearInterval(autoRefresh);
     };
   });
 
-  if (flag.current === false) {
-    return (
-      <div style={{ marginTop: '20rem' }}>
-        <SpinnerKit />
-      </div>
-    );
-  }
-  console.log(`FLAG => ${flag.current}`);
-  return flag.current instanceof Error ? <Navigate to='/onboarding' /> : <Outlet /> ;
+  return flag instanceof Error ? <Navigate to='/onboarding' /> : <Outlet />;
 };
