@@ -1,5 +1,5 @@
-import { InputLabel } from "@mui/material";
+import { InputLabel } from '@mui/material';
 
-const InputLabelKit = (props) => <InputLabel {...props} />
+const InputLabelKit = (props) => <InputLabel {...props} />;
 
-export default InputLabelKit
+export default InputLabelKit;

@@ -1,5 +1,7 @@
+@import '../../library.scss';
+
 .wrapper {
-  color: #212B36;
+  color: $color-wrapper;
 }
 .top-inputs{
   display: flex;
