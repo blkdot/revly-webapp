@@ -3,6 +3,8 @@ import axios from 'axios';
 import config from '../setup/config';
 import useAlert from './useAlert';
 
+// import { loginExistResponse } from '../data/fakeDataOnboarding';
+
 const useApi = () => {
   const { apiUrl } = config;
   const { showAlert, setAlertMessage } = useAlert();
@@ -14,7 +16,7 @@ const useApi = () => {
 
     return res;
   };
-
+  
   const handleError = (err, alert = true) => {
     const message = new Error(err.response.data.detail || err.message);
 
