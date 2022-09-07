@@ -37,11 +37,11 @@
   }
 
   &:hover {
-    background-color: #ebdbeb;
-    color: #4d2681;
+    background-color: #F0ECF4;
+    color: #823aa8;
 
     svg {
-      fill: #4d2681;
+      fill: #823aa8;
     }
   }
 }
@@ -75,7 +75,7 @@
     overflow: hidden;
     z-index: 1001;
     display: flex;
-    
+
   }
 
   .rdrStaticRanges.rdrStaticRanges {
@@ -83,21 +83,38 @@
     padding-left: 5px;
   }
 
-  // .rdrInRange,
-  // .rdrEndEdge,
-  // .rdrStartEdge {
-  //   color: #4d2681 !important;
-  // }
+  .rdrInRange,
+  .rdrEndEdge,
+  .rdrStartEdge {
+    color: #704cfc !important;
+  }
 
-  // .rdrDayStartPreview,
-  // .rdrDayInPreview,
-  // .rdrDayEndPreview {
-  //   border-color: #4d2681;
-  // }
+  .rdrDayStartPreview,
+  .rdrDayInPreview,
+  .rdrDayEndPreview {
+    border-color: #704cfc;
+  }
 
-  // .rdrDayToday .rdrDayNumber span:after {
-  //   background: #4d2681;
-  // }
+  .rdrDayToday .rdrDayNumber span:after {
+    background: #704cfc;
+  }
+
+  .rdrDateDisplayWrapper {
+    background: #fff;
+  }
+
+  .rdrDateDisplay.rdrDateDisplay {
+    color: #704cfc !important;
+
+    >span {
+      box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+        0 2px 4px -1px rgb(145 158 171 / 24%);
+    }
+  }
+
+  .rdrDayPassive .rdrDayNumber span {
+    color: #aeb9bf;
+  }
 
   .rdrDefinedRangesWrapper {
     display: none;
@@ -169,6 +186,7 @@
     font-size: 12px;
     width: 100%;
     padding: 5px 10px 5px 10px;
+
     span {
       width: 100%;
       opacity: 1;
@@ -182,9 +200,24 @@
     grid-gap: 7px;
     padding: 8px 16px 0 16px;
 
-.navbar-button-kit.navbar-button-kit{
-  font-size: 10px;
+    .navbar-button-kit.navbar-button-kit {
+      font-size: 10px;
+    }
+  }
 }
+
+.date-btn-wrapper {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  .date-save-btn.date-save-btn {
+    width: 100%;
+    background: #704cfc;
+    font-size: 12px;
+
+    &:hover {
+      background: #704cfc;
+    }
   }
 }
 

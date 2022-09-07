@@ -9,7 +9,7 @@ import { FinanceData, TableFinanceData } from "../../data/fakeDataDashboard";
 
 const Finance = () => {
   const [table, setTable] = useState("Revenue");
-
+  
   return (
     <div className="block">
       <TypographyKit variant="h4">Finance</TypographyKit>
