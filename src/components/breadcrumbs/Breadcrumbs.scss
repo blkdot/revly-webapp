@@ -1,0 +1,44 @@
+@import '../../library.scss';
+
+.breadcrumbs {
+
+  .breadcrumbs__box {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: $color-border;
+  }
+
+  .breadcrumbs__active-last {
+    max-width: 260px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: $color-gray;
+    text-overflow: ellipsis;
+  }
+
+  .breadcrumbs__link {
+    line-height: 2;
+    display: flex;
+    align-items: center;
+    color: $color-main;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    & > div {
+      display: inherit;
+    }
+
+    .breadcrumbs__link-box {
+      margin-right: 1px;
+
+      & svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}

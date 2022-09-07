@@ -1,3 +1,5 @@
+@import '../../library.scss';
+
 .restaurant-dropdown_wrapper {
   display: flex;
   align-items: center;
@@ -14,7 +16,7 @@
   }
 
   .Mui-focused.Mui-focused fieldset {
-    border: 1px solid #823aa8
+    border-color: $color-border
   }
 }
 
@@ -23,10 +25,10 @@
   align-items: center;
 
   &.Mui-focused.Mui-focused {
-    color: #823aa8
+    color: $color-border
   }
 
   &.Mui-focused.Mui-focused svg {
-    fill: #823aa8
+    fill: $color-border
   }
 }

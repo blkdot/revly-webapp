@@ -1,5 +1,5 @@
-import { TableRow } from "@mui/material";
+import { TableRow } from '@mui/material';
 
-const TableRowKit = (props) => <TableRow {...props} />
+const TableRowKit = (props) => <TableRow {...props} />;
 
 export default TableRowKit;
