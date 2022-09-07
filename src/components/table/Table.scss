@@ -78,8 +78,13 @@
   width: 60px;
   height: 60px;
   object-fit: contain;
+  object-position: 0%;
   top: -3px;
-  left: 80px;
+  left: 10px;
+
+  &.img-del {
+    left: 5px;
+  }
 }
 
 @media(max-width: 1000px) {
@@ -87,6 +92,7 @@
     width: 150%;
   }
 }
+
 @media(max-width: 800px) {
   .table.table {
     width: 170%;

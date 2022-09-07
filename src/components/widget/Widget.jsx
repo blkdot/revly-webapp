@@ -15,7 +15,7 @@ const Widget = ({ procent, title, setTable, table }) => (
     onClick={() => setTable(title)}
   >
     <CardContentKit>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <TypographyKit component="div" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <TypographyKit variant='subtitle2' className='card-typography' component='div'>
             {title}
@@ -24,10 +24,10 @@ const Widget = ({ procent, title, setTable, table }) => (
             17
           </TypographyKit>
         </div>
-        <div className='card-typography'>
+        <TypographyKit className='card-typography'>
           <MonetizationOnIcon sx={{ fontSize: '50px' }} />
-        </div>
-      </div>
+        </TypographyKit>
+      </TypographyKit>
       <div className='card_bottom'>
         <PaperKit className={'icon-paper ' + (procent >= 0 ? 'active-bg' : '')}>
           <MovingIcon className={procent >= 0 ? 'increased' : 'decreased'} />

@@ -173,7 +173,7 @@ export default function EnhancedTable({ rows, type }) {
               rowCount={rows.length}
               headCells={headCells}
             />
-            <TableBodyKit>
+            <TableBodyKit className="table-body">
               {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
                 const isItemSelected = isSelected(row.name);
                 const labelId = `enhanced-table-checkbox-${index}`;
@@ -187,8 +187,7 @@ export default function EnhancedTable({ rows, type }) {
                     className='table-row'
                   >
                     <TableCellKit component='th' id={labelId} scope='row'>
-                      <span>{row.name}</span>
-                      <img className='table-img' src={row.img} alt={row.name} />
+                      <img className={'table-img ' + (row.name === 'deliveroo' ? 'img-del' : '')} src={row.img} alt={row.name} />
                     </TableCellKit>
                     <TableCellKit>{row.week}</TableCellKit>
                     <TableCellKit>{row.week1}</TableCellKit>

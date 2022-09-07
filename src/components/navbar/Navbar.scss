@@ -75,7 +75,7 @@
   .Navbar-footer.Navbar-footer {
     position: absolute;
     bottom: 25px;
-
+    width: 90%;
   }
 }
 
@@ -168,14 +168,15 @@
   box-shadow: none;
 }
 
-.navbar-accordion-details {
+.navbar-accordion-details.navbar-accordion-details {
   margin-left: 25px;
   position: relative;
+  padding: 8px 16px 0px 16px;
 
   &::before {
     content: "";
     position: absolute;
-    height: 80%;
+    height: 90%;
     left: 5%;
     width: 1.5px;
     background: rgba($color: rgb(190, 190, 190), $alpha: 0.4);
@@ -222,15 +223,17 @@
     }
   }
 }
-@media(max-width: 900px){
- .navbar_wrapper{
-  &.opened{
-    width: 330px;
+
+@media(max-width: 900px) {
+  .navbar_wrapper {
+    &.opened {
+      width: 330px;
+    }
   }
- } 
- .Navbar.Navbar{
-  &.opened{
-    width: 230px;
+
+  .Navbar.Navbar {
+    &.opened {
+      width: 230px;
+    }
   }
- }
 }

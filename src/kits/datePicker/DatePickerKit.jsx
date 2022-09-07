@@ -1,6 +1,6 @@
 import React from 'react';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DateRangePicker } from 'react-date-range';
 
-const DatePickerKit = (props) => <DesktopDatePicker {...props} />;
+const DatePickerKit = (props) => <DateRangePicker {...props} />;
 
 export default DatePickerKit;
