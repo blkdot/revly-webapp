@@ -4,8 +4,228 @@
   display: flex;
   justify-content: flex-end;
   grid-gap: 40px;
-  margin-bottom: 40px;
+  align-items: center;
 }
-.MuiCalendarPicker-root button.Mui-selected.Mui-selected { // TODO: avoid changing directly MUI class
-  background: $color-border ;
+
+.date-input-wrapper {
+  position: relative;
+}
+
+.date-input.date-input {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  width: 300px;
+  padding: 16px 10px;
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+    0 2px 4px -1px rgb(145 158 171 / 24%);
+  transition: .4s;
+
+  .date-typography {
+    display: flex;
+    align-items: center;
+    grid-gap: 10px;
+
+    span {
+      text-transform: capitalize;
+    }
+
+    >svg {
+      transition: .4s;
+      fill: grey;
+    }
+  }
+
+  &:hover {
+    background-color: #F0ECF4;
+    color: #823aa8;
+
+    svg {
+      fill: #823aa8;
+    }
+  }
+}
+
+.date-range-overlay {
+  opacity: 0;
+  visibility: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  transition: .3s;
+  background: rgba($color: grey, $alpha: 0.2);
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.opened {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .rdrInputRanges.rdrInputRanges {
+    display: none;
+  }
+
+  .date-range.date-range {
+    border-radius: 0px 12px 12px 0;
+    overflow: hidden;
+    z-index: 1001;
+    display: flex;
+
+  }
+
+  .rdrStaticRanges.rdrStaticRanges {
+    margin-top: 10px;
+    padding-left: 5px;
+  }
+
+  .rdrInRange,
+  .rdrEndEdge,
+  .rdrStartEdge {
+    color: #704cfc !important;
+  }
+
+  .rdrDayStartPreview,
+  .rdrDayInPreview,
+  .rdrDayEndPreview {
+    border-color: #704cfc;
+  }
+
+  .rdrDayToday .rdrDayNumber span:after {
+    background: #704cfc;
+  }
+
+  .rdrDateDisplayWrapper {
+    background: #fff;
+  }
+
+  .rdrDateDisplay.rdrDateDisplay {
+    color: #704cfc !important;
+
+    >span {
+      box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+        0 2px 4px -1px rgb(145 158 171 / 24%);
+    }
+  }
+
+  .rdrDayPassive .rdrDayNumber span {
+    color: #aeb9bf;
+  }
+
+  .rdrDefinedRangesWrapper {
+    display: none;
+  }
+}
+
+.date-select.date-select {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  z-index: 100;
+  padding: 15px;
+  opacity: 0;
+  visibility: hidden;
+  transition: .4s;
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+    0 2px 4px -1px rgb(145 158 171 / 24%);
+  width: 100%;
+
+  >div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    >button {
+      color: grey;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      text-align: left;
+      font-size: 12px;
+    }
+  }
+
+
+
+  &.selected {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.date-picker.date-picker {
+  width: 200px;
+  padding: 10px 15px;
+  border-radius: 12px 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 5px;
+  box-shadow: none;
+
+  .navbar-accordion.navbar-accordion {
+    &::before {
+      opacity: 0;
+    }
+  }
+
+  .Mui-expanded.Mui-expanded {
+    margin: 0;
+  }
+
+  span {
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+
+  .navbar-button-kit.navbar-button-kit {
+    font-size: 12px;
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+
+    span {
+      width: 100%;
+      opacity: 1;
+    }
+  }
+
+  .date-accordion-details {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    grid-gap: 7px;
+    padding: 8px 16px 0 16px;
+
+    .navbar-button-kit.navbar-button-kit {
+      font-size: 10px;
+    }
+  }
+}
+
+.date-btn-wrapper {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  .date-save-btn.date-save-btn {
+    width: 100%;
+    background: #704cfc;
+    font-size: 12px;
+
+    &:hover {
+      background: #704cfc;
+    }
+  }
+}
+
+@media(max-width: 960px) {
+  .dates {
+    flex-direction: column;
+    grid-gap: 10px;
+  }
 }
