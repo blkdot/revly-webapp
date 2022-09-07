@@ -14,6 +14,7 @@ import { PlatformProvider } from './contexts/PlatformContext';
 import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
 import { ProtectedRoutes } from './routes/ProtectedRoutes';
 import { ProtectedOnboardRoutes } from './routes/ProtectedOnboardRoutes';
+import DateContextProvider from './contexts/DateContext';
 
 function App() {
   return (
@@ -22,18 +23,20 @@ function App() {
         <GlobalFunctionalitiesContextProvider>
           <AuthContextProvider>
             <PlatformProvider>
-              <Routes>
-                <Route path='/' element={<SignIn />} />
-                <Route path='/signup' element={<SignUp />} />
-                <Route element={<ProtectedRoutes />}>
-                  <Route element={<ProtectedOnboardRoutes />}>
-                    {/*<Route path='/account' element={<Account />} />*/}
-                    <Route path='/dashboard' element={<Dashboard />} />
-                    <Route path='/settings' element={<Settings />} />
+              <DateContextProvider>
+                <Routes>
+                  <Route path='/' element={<SignIn />} />
+                  <Route path='/signup' element={<SignUp />} />
+                  <Route element={<ProtectedRoutes />}>
+                    <Route element={<ProtectedOnboardRoutes />}>
+                      {/*<Route path='/account' element={<Account />} />*/}
+                      <Route path='/dashboard' element={<Dashboard />} />
+                      <Route path='/settings' element={<Settings />} />
+                    </Route>
+                    <Route path='/onboarding' element={<OnBoarding />} />
                   </Route>
-                  <Route path='/onboarding' element={<OnBoarding />} />
-                </Route>
-              </Routes>
+                </Routes>
+              </DateContextProvider>
             </PlatformProvider>
           </AuthContextProvider>
         </GlobalFunctionalitiesContextProvider>
