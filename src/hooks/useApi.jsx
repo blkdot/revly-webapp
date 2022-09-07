@@ -1,90 +1,60 @@
-/* eslint-disable no-unused-vars */
 import axios from 'axios';
 
 import config from '../setup/config';
-import { onBoardingResponse, loginExistResponse, loginNotExistResponse } from '../data/fakeDataOnboarding'; // TODO: remove this when we can use the API fully on dev mode or in production
 import useAlert from './useAlert';
 
 const useApi = () => {
   const { apiUrl } = config;
   const { showAlert, setAlertMessage } = useAlert();
-  const initLogin = async (body) => {
-    try {
-      const response = await axios.post(`${apiUrl}/login/master`, body);
 
-      if (response.status !== 200) {
-        throw new Error(response.message);
-      }
+  const handleResponse = (res, alert = true) => {
+    if (res.status !== 200) {
+      handleError(new Error(res.detail || res.message), alert);
+    }
 
-      return { success: true, response: onBoardingResponse }; // TODO: replace the simulation response
-    } catch (error) {
-      setAlertMessage(error.message);
+    return res;
+  };
+
+  const handleError = (err, alert = true) => {
+    const message = new Error(err.response.data.detail || err.message);
+
+    if (alert) {
+      setAlertMessage(message);
       showAlert();
-      return error;
     }
+
+    return message;
   };
 
-  const loginAll = async (body) => {
-    try {
-      const response = await axios.post(`${apiUrl}/login`, body);
+  const initLogin = (body) =>
+    axios
+      .post(`${apiUrl}/login/master`, body)
+      .then((res) => handleResponse(res))
+      .catch((err) => handleError(err));
 
-      // TODO: uncomment if you want to use on real response
-      // if (response.status !== 200) {
-      //   throw new Error(response.message);
-      // }
+  const loginAll = async (body) =>
+    axios
+      .post(`${apiUrl}/login`, body)
+      .then((res) => handleResponse(res))
+      .catch((err) => handleError(err));
 
-      return { success: true, response: onBoardingResponse }; // TODO: replace the simulation response
-    } catch (error) {
-      // TODO: uncomment if want to use on real response
-      // return error;
-      setAlertMessage(error.message);
-      showAlert();
+  const loginExist = async (body) =>
+    axios
+      .post(`${apiUrl}/login/exist`, body)
+      .then((res) => handleResponse(res, false))
+      .catch((err) => handleError(err, false));
 
-      // TODO: Remove if want to test with fake response
-      return { success: true, response: onBoardingResponse }; 
-    }
-  };
-
-  const loginExist = async (body) => {
-    try {
-      const response = await axios.post(`${apiUrl}/login/exist`, body);
-
-      // TODO: uncomment if you want to use on real response
-      // if (response.status !== 200) {
-      //   throw new Error(response.message);
-      // }
-
-      return { success: true, response: loginNotExistResponse }; // TODO: replace the simulation response
-    } catch (error) {
-      // TODO: uncomment if want to use on real response
-      // return error;
-
-      // TODO: Remove if want to test with fake response
-      return { success: true, response: loginNotExistResponse }; 
-    }
-  };
-
-  const loginPlatform = async (platform, body) => {
-    try {
-      const response = await axios.post(`${apiUrl}/login/${platform}`, body);
-
-      if (response.status !== 200) {
-        throw new Error(response.message);
-      }
-
-      return { success: true, response: onBoardingResponse[0] }; // TODO: replace the simulation response
-    } catch (error) {
-      setAlertMessage(error.message);
-      showAlert();
-      return error;
-    }
-  };
+  const loginPlatform = async (platform, body) =>
+    axios
+      .post(`${apiUrl}/login/${platform}`, body)
+      .then((res) => handleResponse(res))
+      .catch((err) => handleError(err));
 
   return {
     initLogin,
     loginAll,
     loginPlatform,
-    loginExist
+    loginExist,
   };
 };
 

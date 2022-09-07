@@ -79,6 +79,7 @@ const SignIn = () => {
           onSubmit={handleSubmit}
           onGoogleSubmit={handleGoogleSubmit}
           disabled={!value.email || !value.password || processing}
+          isSignin
         />
       </CardKit>
     </div>
