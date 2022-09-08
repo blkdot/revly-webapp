@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
 import { FaUserAlt, FaCreditCard, FaTruck } from 'react-icons/fa';
+import { BsKeyFill } from 'react-icons/bs';
 
 import './SettingAccount.scss';
 
 import HeaderBreadcrumbs from '../../../components/headerBreadcrumbs/HeaderBreadcrumbs';
+import SettingsOnboarding from '../../../components/settings/onboarding/SettingsOnboarding';
 
 import TabKit from '../../../kits/tab/TabKit';
 import TabsKit from '../../../kits/tabs/TabsKit';
@@ -30,7 +32,12 @@ const SettingAccount = () => {
     {
       value: 'onboarding',
       icon: <FaTruck width={20} height={20} style={{ marginRight: 5 }} />,
-      component: <div>Onboarding content here</div>,
+      component: <SettingsOnboarding />,
+    },
+    {
+      value: 'reset_password',
+      icon: <BsKeyFill width={20} height={20} style={{ marginRight: 5 }} />,
+      component: <div>Reset Password</div>,
     },
   ];
 
@@ -61,7 +68,7 @@ const SettingAccount = () => {
             className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}
             disableRipple
             key={tab.value}
-            label={tab.value}
+            label={tab.value.replace('_', ' ')}
             icon={tab.icon}
             value={tab.value}
           />

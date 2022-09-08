@@ -2,24 +2,14 @@ import React from 'react';
 
 import './PlatformSelector.scss';
 
+import PlatformBoxSelector from '../platformBoxSelector/PlatformBoxSelector';
+
 const PlatformSelector = (props) => {
   const { items, onClickItem, state } = props;
 
-  const getState = (n) => (state[n] === true ? '__active' : '');
+  const getState = (n) => (state[n] === true);
 
-  const renderItems = () =>
-    items.map((item) => (
-      <div
-        key={item.name}
-        className={`onboarding-platform__selector-item ${getState(item.name)}`}
-        onClick={() => onClickItem(item.name)}
-        onKeyDown={() => onClickItem(item.name)}
-        role="button"
-        tabIndex="0"
-      >
-        <img src={item.src} alt={item.name} width='100' />
-      </div>
-    ));
+  const renderItems = () => items.map((item) => <PlatformBoxSelector key={item.name} item={item} onClickItem={onClickItem} classActive={getState(item.name)} />);
 
   return (
     <div className='onboarding-platform'>

@@ -81,6 +81,9 @@ const SignIn = () => {
           disabled={!value.email || !value.password || processing}
           isSignin
         />
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <Link to="/forgot-password">Forgot password ?</Link>
+        </div>
       </CardKit>
     </div>
   );

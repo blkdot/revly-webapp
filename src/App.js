@@ -11,6 +11,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import OnBoarding from './pages/onBoarding/OnBoarding';
 import Settings from './pages/settings/Settings';
 import SettingAccount from './pages/settings/account/SettingAccount';
+import ForgotPassword from './pages/forgotPassword/ForgotPassword';
 import { AuthContextProvider } from './contexts/AuthContext';
 import { PlatformProvider } from './contexts/PlatformContext';
 import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
@@ -36,6 +37,7 @@ function App() {
                 <Routes>
                   <Route path='/' element={<SignIn />} />
                   <Route path='/signup' element={<SignUp />} />
+                  <Route path='/forgot-password' element={<ForgotPassword />} />
                   <Route element={<ProtectedRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
                       {/*<Route path='/account' element={<Account />} />*/}
