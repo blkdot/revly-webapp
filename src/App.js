@@ -10,7 +10,6 @@ import SignUp from './pages/signUp/SignUp';
 import Dashboard from './pages/dashboard/Dashboard';
 import OnBoarding from './pages/onBoarding/OnBoarding';
 import Settings from './pages/settings/Settings';
-import SettingAccount from './pages/settings/account/SettingAccount';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
 import { AuthContextProvider } from './contexts/AuthContext';
 import { PlatformProvider } from './contexts/PlatformContext';
@@ -43,7 +42,6 @@ function App() {
                       {/*<Route path='/account' element={<Account />} />*/}
                       <Route path='/dashboard' element={<Dashboard />} />
                       <Route path='/settings' element={<Settings />} />
-                      <Route path='/settings/account' element={<SettingAccount />} />
                     </Route>
                     <Route path='/onboarding' element={<OnBoarding />} />
                   </Route>
