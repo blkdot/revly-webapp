@@ -2,7 +2,7 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import "./Dates.scss"
 import React from "react";
-import { endOfMonth, getWeek, subDays, subMonths, subWeeks, getMonth, getDate } from "date-fns";
+import { endOfMonth, getWeek, subDays, subMonths, subWeeks, getMonth } from "date-fns";
 import PaperKit from "../../kits/paper/PaperKit";
 import ButtonKit from "../../kits/button/ButtonKit";
 
@@ -21,7 +21,7 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight }) =
 
 
   const openRight = () => {
-    setRightDate([{ startDate: new Date(), endDate: new Date(), key: "selection" }])
+    setRightDate([{ startDate: startDate, endDate: endDate, key: "selection" }])
     setOpenedRight(true)
   }
 
@@ -31,23 +31,21 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight }) =
         <ButtonKit
           className="navbar-button-kit"
           onClick={() => setRightDate(
-            [{
+            {
               startDate: subDays(startDate, 1),
               endDate: subDays(endDate, 1),
-              key: "selection"
-            }]
+            }
           )}>Day - 1</ButtonKit>
         <ButtonKit
           className="navbar-button-kit"
           onClick={() => setRightDate(
-            [{
+            {
               startDate: subWeeks(startDate, 1),
               endDate: subWeeks(endDate, 1),
-              key: "selection"
-            }]
+            }
           )}
         >Same day last week</ButtonKit>
-        <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Date</ButtonKit>
+        <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Day</ButtonKit>
       </div>
     )
   }
@@ -57,13 +55,12 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight }) =
         <ButtonKit
           className="navbar-button-kit"
           onClick={() => setRightDate(
-            [{
+            {
               startDate: subWeeks(startDate, 1),
               endDate: subWeeks(endDate, 1),
-              key: "selection"
-            }]
+            }
           )}>Week - 1</ButtonKit>
-        <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Date</ButtonKit>
+        <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Week</ButtonKit>
       </div >
     )
   }
@@ -73,30 +70,13 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight }) =
         <ButtonKit
           className="navbar-button-kit"
           onClick={() => setRightDate(
-            [{
+            {
               startDate: subMonths(startDate, 1),
               endDate: subMonths(endDate, 1),
-              key: "selection"
-            }]
+            }
           )}>Month - 1</ButtonKit>
 
-        <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Date</ButtonKit>
-      </div>
-    )
-  }
-  const DateCustom = () => {
-    return (
-      <div>
-        <ButtonKit
-          className="navbar-button-kit"
-          onClick={() => setRightDate(
-            [{
-              startDate: subDays(startDate, (getDate(endDate) - getDate(startDate) + 1)),
-              endDate: subDays(endDate, (getDate(endDate) - getDate(startDate) + 1)),
-              key: "selection"
-            }]
-          )}>Date - 1</ButtonKit>
-        <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Date</ButtonKit>
+        <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Month</ButtonKit>
       </div>
     )
   }
@@ -114,7 +94,6 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight }) =
         startGetDate === 1 && endGetDate >= dateGetDate &&
         endGetDate <= endOfMonth(endDate).getDate()
       ) return <Month />
-      return <DateCustom />
     }
     else if (startLocal === endLocal) return <Day />
     else if (
@@ -125,15 +104,12 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight }) =
       getMonth(startDate) === getMonth(endDate) &&
       startGetDate === 1 && endGetDate === endOfMonth(endDate, 1).getDate()
     ) return <Month />
-    return <DateCustom />
   }
   return (
     <PaperKit className={"date-select " + (selected ? "selected" : "")}>
-      {
-        render()
-      }
+      {render()}
     </PaperKit >
   )
 }
 
-export default RightDateSelect
+export default React.memo(RightDateSelect)

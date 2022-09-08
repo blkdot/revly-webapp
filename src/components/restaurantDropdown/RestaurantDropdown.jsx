@@ -47,7 +47,7 @@ export default function RestaurantDropdown({names}) {
           multiple
           value={personName}
           onChange={handleChange}
-          input={<OutlindeInputKit label="___Vendors" />}
+          input={<OutlindeInputKit label="_Vendors" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
         >

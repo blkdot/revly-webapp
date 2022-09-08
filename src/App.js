@@ -17,6 +17,8 @@ import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctiona
 import { ProtectedRoutes } from './routes/ProtectedRoutes';
 import { ProtectedOnboardRoutes } from './routes/ProtectedOnboardRoutes';
 import DateContextProvider from './contexts/DateContext';
+import Planning from './pages/planning/Planning';
+import Competition from './pages/competition/Competition';
 
 const theme = createTheme({
   palette: {
@@ -42,6 +44,8 @@ function App() {
                       <Route element={<ProtectedOnboardRoutes />}>
                         {/*<Route path='/account' element={<Account />} />*/}
                         <Route path='/dashboard' element={<Dashboard />} />
+                        <Route path='/planning' element={<Planning />} />
+                        <Route path='/competition' element={<Competition />} />
                         <Route path='/settings' element={<Settings />} />
                         <Route path='/settings/account' element={<SettingAccount />} />
                       </Route>
