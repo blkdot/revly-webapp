@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 import './ForgotPassword.scss';
 
@@ -19,16 +20,23 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     setIsLoading(true);
-    console.log('SEND EMAIL => ', email);
 
-    // TODO: link to the API here, this is an API call simulation
-    setTimeout(() => {
-      setIsLoading(false);
-      setAlertTheme('success');
-      showAlert();
-      setAlertMessage('An email was sent to your email address');
-      navigate('/');
-    }, 3000);
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        setIsLoading(false);
+        setAlertTheme('success');
+        showAlert();
+        setAlertMessage('An email was sent to your email address');
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+        setAlertTheme('error');
+        showAlert();
+        setAlertMessage(error.message);
+      });
   };
 
   return (
