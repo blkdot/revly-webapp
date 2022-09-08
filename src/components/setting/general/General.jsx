@@ -39,10 +39,6 @@ const General = () => {
     const [isPublic, setIsPublic] = useState(true);
     const { showAlert, setAlertMessage } = useAlert();
 
-    const getData = async () => {
-        // get data here
-    }
-
     const onDropAvatar = useCallback((file) => {
         const src = file[0];
 
