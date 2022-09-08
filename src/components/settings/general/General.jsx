@@ -6,10 +6,10 @@ import AvatarUpload from '../../avatarUpload/AvatarUpload';
 import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
 
 import SwitchKit from '../../../kits/switch/SwitchKit';
-import CardKit from '../../../kits/card/CardKit';
 
 import useAlert from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';
+import PaperKit from '../../../kits/paper/PaperKit';
 
 
 const General = () => {
@@ -66,7 +66,7 @@ const General = () => {
 
     return (
         <div className="general">
-            <CardKit className="general__avatar-block">
+            <PaperKit className="general__avatar-block">
                 <AvatarUpload file={avatarFile} onDrop={onDropAvatar} onError={onFileError} />
                 <p className="general__avatar-block__allow-text">
                   Allowed *.jpeg, *.jpg, *.png
@@ -76,8 +76,8 @@ const General = () => {
                     <p>Pubic Profile</p>
                     <SwitchKit checked={isPublic} onChange={onSwitchChange} />
                 </div>
-            </CardKit>
-            <CardKit className="general__input-block">
+            </PaperKit>
+            <PaperKit className="general__input-block">
                 <AccountSettingForm
                     valueName={{ value: inputValue.name, error: inputError.name}}
                     valuePhone={{ value: inputValue.phone, error: inputError.phone}}
@@ -91,7 +91,7 @@ const General = () => {
                     handleInputChange={handleInputChange}
                     onSave={onSave}
                 />
-            </CardKit>
+            </PaperKit>
         </div>
     );
 }

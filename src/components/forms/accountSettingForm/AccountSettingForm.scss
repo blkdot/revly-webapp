@@ -11,14 +11,31 @@
         .account-form__flex__block-1, .account-form__flex__block-2 {
             width: 48%;
             .account-form__flex__block-1__input, .account-form__flex__block-2__input {
-                margin: 12px 0;
+                margin: 10px 0;
             }
         }
     }
 
     .account-form__button {
         position: relative;
-        left: 30%;
-        top: 8px;
+        left: 33%;
+        top: 15px;
+    }
+
+    .account-form__textarea {
+        margin-top: 8px;
+    }
+    
+    @media(max-width: 576px) {
+        .account-form__flex {
+            display: block;
+            .account-form__flex__block-1, .account-form__flex__block-2 {
+                width: 100%;
+            }
+        }
+
+        .account-form__button {
+            left: 25%;
+        }
     }
 }
