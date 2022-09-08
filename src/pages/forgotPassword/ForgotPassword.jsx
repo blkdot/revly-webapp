@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 import './ForgotPassword.scss';
 
@@ -10,13 +10,19 @@ import CardKit from '../../kits/card/CardKit';
 
 import useAlert from '../../hooks/useAlert';
 
+import firebaseCodeError from '../../data/firebaseCodeError';
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
   const navigate = useNavigate();
 
-  const handleChange = (v) => setEmail(v);
+  const handleChange = (v) => {
+    setIsError(false);
+    setEmail(v);
+  };
 
   const handleSubmit = () => {
     setIsLoading(true);
@@ -30,12 +36,13 @@ const ForgotPassword = () => {
         setAlertMessage('An email was sent to your email address');
         navigate('/');
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((e) => {
+        const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
         setIsLoading(false);
         setAlertTheme('error');
         showAlert();
-        setAlertMessage(error.message);
+        setAlertMessage(message);
+        setIsError(true);
       });
   };
 
@@ -55,6 +62,7 @@ const ForgotPassword = () => {
           onSubmit={handleSubmit}
           disabled={!email}
           isLoading={isLoading}
+          error={isError}
         />
         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
           <Link to='/'>Go back</Link>
