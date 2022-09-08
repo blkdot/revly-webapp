@@ -14,6 +14,9 @@ export const onBoardingResponse = [
   },
 ];
 
+export const onBoardingResponseDeliveroo = onBoardingResponse[0];
+export const onBoardingResponseTalabat = onBoardingResponse[1];
+
 export const loginNotExistResponse = {
   registered: false,
   platforms: []
