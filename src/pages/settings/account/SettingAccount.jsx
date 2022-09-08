@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { FaUserAlt, FaCreditCard, FaTruck } from 'react-icons/fa';
+import { BsKeyFill } from 'react-icons/bs';
 
 import './SettingAccount.scss';
 
@@ -31,6 +32,11 @@ const SettingAccount = () => {
       icon: <FaTruck width={20} height={20} style={{ marginRight: 5 }} />,
       component: <SettingsOnboarding />,
     },
+    {
+      value: 'reset_password',
+      icon: <BsKeyFill width={20} height={20} style={{ marginRight: 5 }} />,
+      component: <div>Reset Password</div>,
+    },
   ];
 
   const handleTabChange = (_, v) => {
@@ -60,7 +66,7 @@ const SettingAccount = () => {
             className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}
             disableRipple
             key={tab.value}
-            label={tab.value}
+            label={tab.value.replace('_', ' ')}
             icon={tab.icon}
             value={tab.value}
           />
