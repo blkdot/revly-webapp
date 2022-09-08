@@ -49,7 +49,7 @@ export const ProtectedOnboardRoutes = () => {
   useEffect(() => {
     const unsubscribe = () => {
       if (flag === false || !isOnboarded) {
-        checkIfRegistered();
+        // checkIfRegistered();
       }
     };
 

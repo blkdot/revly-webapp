@@ -1,0 +1,30 @@
+@import '../../library.scss';
+
+.image-upload {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    border: 0.7px $color-border;
+    padding: 10px;
+
+    &__dragActive {
+        opacity: 0.7;
+    }
+
+    .image-upload__avatar {
+        height: 80px;
+        width: 80px;
+    }
+
+    .image-upload__placholder {
+        display: flex;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: $color-main-light;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
