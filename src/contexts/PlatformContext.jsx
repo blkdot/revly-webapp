@@ -5,6 +5,7 @@ export const PlatformContext = createContext();
 export const PlatformProvider = ({ children }) => {
   const [platformToken, setPlatformToken] = useState([]);
   const [isOnboarded, setIsOnboarded] = useState(false);
+  const [platformOnboarded, setPlatformOnboarded] = useState([]);
 
   return (
     <PlatformContext.Provider
@@ -12,7 +13,9 @@ export const PlatformProvider = ({ children }) => {
         platformToken,
         setPlatformToken,
         isOnboarded,
-        setIsOnboarded
+        setIsOnboarded,
+        platformOnboarded,
+        setPlatformOnboarded,
       }}
     >
       {children}

@@ -60,6 +60,9 @@ const SignUp = () => {
           onSubmit={handleSubmit}
           disabled={!value.email || !value.password || processing}
         />
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <Link to="/forgot-password">Forgot password ?</Link>
+        </div>
       </Card>
     </div>
   );

@@ -11,7 +11,7 @@ const OnBoardingForm = (props) => {
   
   return (
     <CardKit variant='outlined' className="onboarding-form">
-      <h2>{title}</h2>
+      {title ? <h2>{title}</h2> : null}
       <FormcontrolKit className='auth-form' fullWidth>
         <TextfieldKit
           label='Email address'

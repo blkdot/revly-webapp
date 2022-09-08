@@ -5,6 +5,7 @@ import { FaUserAlt, FaCreditCard, FaTruck } from 'react-icons/fa';
 import './SettingAccount.scss';
 
 import HeaderBreadcrumbs from '../../../components/headerBreadcrumbs/HeaderBreadcrumbs';
+import SettingsOnboarding from '../../../components/settings/onboarding/SettingsOnboarding';
 
 import TabKit from '../../../kits/tab/TabKit';
 import TabsKit from '../../../kits/tabs/TabsKit';
@@ -28,7 +29,7 @@ const SettingAccount = () => {
     {
       value: 'onboarding',
       icon: <FaTruck width={20} height={20} style={{ marginRight: 5 }} />,
-      component: <div>Onboarding content here</div>,
+      component: <SettingsOnboarding />,
     },
   ];
 
