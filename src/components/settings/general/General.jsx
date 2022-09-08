@@ -6,10 +6,10 @@ import AvatarUpload from '../../avatarUpload/AvatarUpload';
 import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
 
 import SwitchKit from '../../../kits/switch/SwitchKit';
+import PaperKit from '../../../kits/paper/PaperKit';
 
 import useAlert from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';
-import PaperKit from '../../../kits/paper/PaperKit';
 
 
 const General = () => {
