@@ -13,6 +13,8 @@ import TabsKit from '../../../kits/tabs/TabsKit';
 import BoxKit from '../../../kits/box/BoxKit';
 import ContainerKit from '../../../kits/container/ContainerKit';
 
+import General from '../../../components/setting/general/General';
+
 const SettingAccount = () => {
   const [currentTab, setCurrentTab] = useState('general');
 
@@ -20,7 +22,7 @@ const SettingAccount = () => {
     {
       value: 'general',
       icon: <FaUserAlt width={20} height={20} style={{ marginRight: 5 }} />,
-      component: <div>General Content here</div>,
+      component: <General />,
     },
     {
       value: 'billing',

@@ -1,0 +1,24 @@
+
+.account-form {
+
+    padding: 15px;
+
+    .account-form__flex {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        .account-form__flex__block-1, .account-form__flex__block-2 {
+            width: 48%;
+            .account-form__flex__block-1__input, .account-form__flex__block-2__input {
+                margin: 12px 0;
+            }
+        }
+    }
+
+    .account-form__button {
+        position: relative;
+        left: 30%;
+        top: 8px;
+    }
+}
