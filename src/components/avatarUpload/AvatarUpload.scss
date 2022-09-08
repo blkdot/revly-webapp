@@ -1,30 +1,55 @@
 @import '../../library.scss';
 
-.image-upload {
-    width: 125px;
-    height: 125px;
+.image-upload-container {
     border-radius: 50%;
-    border: 0.7px $color-border;
-    padding: 10px;
+    border: 0.3px dashed $color-border;
+    padding: 6px;
+    height: 124px;
+    width: 124px;
 
-    &__dragActive {
-        opacity: 0.7;
-    }
-
-    .image-upload__avatar {
-        height: 80px;
-        width: 80px;
-    }
-
-    .image-upload__placholder {
+    .image-upload {
+        height: 100%;
         display: flex;
-        position: absolute;
-        justify-content: center;
         align-items: center;
-        flex-direction: column;
-        background-color: $color-main-light;
+        justify-content: center;
+
         &:hover {
-            opacity: 0.8;
+            cursor: pointer;
+            & .image-upload__placeholder  {
+                &.__withfile {
+                    cursor: pointer;
+                    opacity: .6;
+                    background-color: $color-wrapper;
+                }
+            }
+        }
+
+        .image-upload__avatar {
+            height: 110px;
+            width: 110px;
+        }
+
+
+        .image-upload__placeholder {
+            position: absolute;
+            height: 110px;
+            width: 110px;
+            border-radius: 50%;
+            display: flex;
+            transition: .3s;
+            align-items: center;
+            color: $color-third;
+            flex-direction: column;
+            justify-content: center;
+            background-color: $color-arrow;
+            &.__withfile {
+                opacity: 0;
+            }
+
+            .image-upload__placeholder__text {
+                font-weight: bold;
+                font-size: 12px;
+            }
         }
     }
 }
