@@ -62,6 +62,7 @@ const Billing = () => {
                     address="Address"
                     phone="00000"
                 />
+                <ButtonKit startIcon={<Add />}>Add New Address</ButtonKit>
             </PaperKit>
           </div>
           <div className="billing__invoice">
