@@ -3,7 +3,7 @@ import "react-date-range/dist/theme/default.css";
 import "./Dates.scss"
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { endOfMonth, endOfWeek, getWeek, getMonth, lastDayOfMonth, startOfWeek, startOfMonth } from "date-fns";
+import { endOfMonth, endOfWeek, getWeek, getMonth, lastDayOfMonth, startOfWeek, startOfMonth, subDays, subWeeks, subMonths } from "date-fns";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PaperKit from "../../kits/paper/PaperKit";
@@ -48,6 +48,68 @@ const Dates = () => {
     setOpened(false)
     setLeft({ startDate: startDate, endDate: endDate })
     setRightDateBtn({ startDate: startDate, endDate: endDate })
+
+    const date = new Date()
+
+    const startLocal = startDate.toLocaleDateString();
+    const endLocal = endDate.toLocaleDateString();
+    const startGetDate = startDate.getDate();
+    const endGetDate = endDate.getDate();
+    const startGetDay = startDate.getDay();
+    const endGetDay = endDate.getDay();
+    const dateGetDay = date.getDay();
+    const dateGetDate = date.getDate();
+    const dateLocal = date.toLocaleDateString();
+
+    if (startLocal === endLocal) {
+      if (startLocal === dateLocal) {
+        setTitle("today")
+      }
+      else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
+        setTitle("yesterday")
+      }
+      else {
+        setTitle("custom")
+      }
+    }
+    else if (
+      getWeek(startDate, 1) === getWeek(endDate, 1)) {
+      if (endGetDay === dateGetDay && startGetDay === 0) {
+        setTitle("current week")
+      }
+      else if (startGetDay === 0 && endGetDay === 6 && getWeek(startDate) === getWeek(subWeeks(date, 1))) {
+        setTitle("last week")
+      }
+      else {
+        setTitle("custom")
+      }
+    }
+    else if (
+      getMonth(startDate, 1) === getMonth(date, 1)
+    ) {
+
+      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
+        setTitle("current month")
+      }
+      else if (startGetDate === 1 && endGetDate === dateGetDate) {
+        setTitle("last month")
+      }
+      else {
+        setTitle("custom")
+      }
+    }
+    else {
+      if (startGetDate === 1 && endGetDate <= dateGetDate && endGetDate === endOfMonth(endDate).getDate()) {
+        setTitle("current month")
+      }
+      else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+        setTitle("last month")
+      }
+      else {
+        setTitle("custom")
+      }
+    }
+
   };
   const handleClickRight = () => {
     const startDate = new Date(rightDate[0].startDate);
@@ -56,6 +118,66 @@ const Dates = () => {
     setOpenedRight(false)
     setSelected(false)
     setRight({ startDate: startDate, endDate: endDate })
+    const date = new Date()
+    const startLocal = startDate.toLocaleDateString();
+    const endLocal = endDate.toLocaleDateString();
+    const startGetDate = startDate.getDate();
+    const endGetDate = endDate.getDate();
+    const startGetDay = startDate.getDay();
+    const endGetDay = endDate.getDay();
+    const dateGetDay = date.getDay();
+    const dateGetDate = date.getDate();
+    const dateLocal = date.toLocaleDateString();
+
+    if (startLocal === endLocal) {
+      if (startLocal === dateLocal) {
+        setTitleRight("today")
+      }
+      else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
+        setTitleRight("yesterday")
+      }
+      else {
+        setTitleRight("custom")
+      }
+    }
+    else if (
+      getWeek(startDate, 1) === getWeek(endDate, 1)) {
+      if (endGetDay === dateGetDay && startGetDay === 0) {
+        setTitleRight("current week")
+      }
+      else if (startGetDay === 0 && endGetDay === 6 && getWeek(startDate) === getWeek(subWeeks(date, 1))) {
+        setTitleRight("last week")
+      }
+      else {
+        setTitleRight("custom")
+      }
+    }
+    else if (
+      getMonth(startDate, 1) === getMonth(date, 1)
+    ) {
+
+      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
+        setTitleRight("current month")
+      }
+      else if (startGetDate === 1 && endGetDate === dateGetDate) {
+        setTitleRight("last month")
+      }
+      else {
+        setTitleRight("custom")
+      }
+    }
+    else {
+      if (startGetDate === 1 && endGetDate <= dateGetDate && endGetDate === endOfMonth(endDate).getDate()) {
+        setTitleRight("current month")
+      }
+      else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+        setTitleRight("last month")
+      }
+      else {
+        setTitleRight("custom")
+      }
+    }
+
   }
 
   const handleOnChangeRight = ranges => {
@@ -209,8 +331,10 @@ const Dates = () => {
             <CalendarMonthIcon />
             <span>{
               title === "custom" ?
-                new Date(leftDateBtn.startDate).toLocaleDateString() +
-                " - " + new Date(leftDateBtn.endDate).toLocaleDateString() :
+                new Date(leftDateBtn.startDate).toLocaleDateString() ===
+                  new Date(leftDateBtn.endDate).toLocaleDateString() ? new Date(leftDateBtn.startDate).toLocaleDateString()
+                  : new Date(leftDateBtn.startDate).toLocaleDateString() +
+                  " - " + new Date(leftDateBtn.endDate).toLocaleDateString() :
                 title
             }</span>
           </TypographyKit>
@@ -232,7 +356,6 @@ const Dates = () => {
               setSelections={setLeftDate}
               setTypeDate={setTypeDate}
               leftDate={leftDate}
-              setTitle={setTitle}
             />
             <DateSelect
               expanded={expanded}
@@ -242,7 +365,6 @@ const Dates = () => {
               setSelections={setLeftDate}
               setTypeDate={setTypeDate}
               leftDate={leftDate}
-              setTitle={setTitle}
             />
             <DateSelect
               expanded={expanded}
@@ -252,7 +374,6 @@ const Dates = () => {
               setSelections={setLeftDate}
               setTypeDate={setTypeDate}
               leftDate={leftDate}
-              setTitle={setTitle}
             />
             <div className="date-btn-wrapper">
               <ButtonKit
@@ -293,6 +414,7 @@ const Dates = () => {
           }
         </div>
       </div>
+      <span>Compare to</span>
       <div className="date-picker_wrapper">
         <TypographyKit component="div" className="date-input-wrapper">
           <PaperKit onClick={() => setSelected(!selected)} className={"date-input " + (selected ? "selected" : "")}>
@@ -301,8 +423,11 @@ const Dates = () => {
               <span>
                 {
                   titleRight === "custom" ?
-                    new Date(rightDateBtn.startDate).toLocaleDateString() +
-                    " - " + new Date(rightDateBtn.endDate).toLocaleDateString() :
+                    new Date(rightDateBtn.startDate).toLocaleDateString() ===
+                      new Date(rightDateBtn.endDate).toLocaleDateString() ?
+                      new Date(rightDateBtn.startDate).toLocaleDateString() :
+                      new Date(rightDateBtn.startDate).toLocaleDateString() +
+                      " - " + new Date(rightDateBtn.endDate).toLocaleDateString() :
                     titleRight
                 }
               </span>
@@ -316,6 +441,7 @@ const Dates = () => {
             setRightDate={setRightDate}
             selected={selected}
             leftDate={leftDateBtn}
+            setTitleRight={setTitleRight}
           />
         </TypographyKit>
         <div
@@ -333,7 +459,6 @@ const Dates = () => {
               setSelections={setRightDate}
               setTypeDate={setTypeDate}
               leftDate={rightDate}
-              setTitle={setTitleRight}
             />
             <DateSelect
               expanded={expanded}
@@ -343,7 +468,6 @@ const Dates = () => {
               setSelections={setRightDate}
               setTypeDate={setTypeDate}
               leftDate={rightDate}
-              setTitle={setTitleRight}
             />
             <DateSelect
               expanded={expanded}
@@ -353,7 +477,6 @@ const Dates = () => {
               setSelections={setRightDate}
               setTypeDate={setTypeDate}
               leftDate={rightDate}
-              setTitle={setTitleRight}
             />
             <div className="date-btn-wrapper">
               <ButtonKit

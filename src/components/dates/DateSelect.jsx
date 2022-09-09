@@ -1,7 +1,7 @@
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import "./Dates.scss"
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { endOfMonth, endOfWeek, getMonth, getWeek, startOfMonth, startOfWeek, subDays, subMonths, subWeeks } from "date-fns";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TypographyKit from "../../kits/typography/TypographyKit";
@@ -10,7 +10,7 @@ import AccordionSummaryKit from "../../kits/accordionSummary/AccordionSummaryKit
 import AccordionKit from "../../kits/accordion/AccordionKit";
 import AccordionDetailsKit from "../../kits/accordionDetails/AccordionDetails";
 
-export const DateSelect = React.memo(({ type, setSelections, setTypeDate, expanded, setExpanded, index, leftDate, setTitle }) => {
+export const DateSelect = React.memo(({ type, setSelections, setTypeDate, expanded, setExpanded, index, leftDate }) => {
   const getDate = (type) => {
     const date = new Date()
     switch (type) {
@@ -34,9 +34,11 @@ export const DateSelect = React.memo(({ type, setSelections, setTypeDate, expand
     }
   }
 
-  const [active, setActive] = useState("current")
 
-  useEffect(() => {
+
+
+  const getActive = () => {
+
     const date = new Date()
     const startDate = new Date(leftDate[0].startDate);
     const endDate = new Date(leftDate[0].endDate);
@@ -50,78 +52,60 @@ export const DateSelect = React.memo(({ type, setSelections, setTypeDate, expand
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
 
-    const getActive = () => {
-      if (type === "day") {
-        if (startLocal === endLocal) {
-          if (startLocal === dateLocal) {
-            setTitle("today")
-            setActive("current")
-          }
-          else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
-            setTitle("yesterday")
-            setActive("last")
-          }
-          else {
-            setTitle("custom")
-            setActive("custom")
-          }
+    if (type === "day") {
+      if (startLocal === endLocal) {
+        if (startLocal === dateLocal) {
+          return "current"
         }
-      }
-      else if (type === "week") {
-        if (
-          getWeek(startDate, 1) === getWeek(endDate, 1) &&
-          startGetDay === 0 && endGetDay >= dateGetDay && startGetDay <= 6
-        ) {
-          if (endGetDay === dateGetDay && startGetDay === 0) {
-            setTitle("current week")
-            setActive("current")
-          }
-          else if (getWeek(startDate, 1) === getWeek(subWeeks(date, 1))) {
-            setTitle("last week")
-            setActive("last")
-          }
-          else {
-            setTitle("custom")
-            setActive("custom")
-          }
-        }
-      }
-      else {
-        if (
-          getMonth(startDate, 1) === getMonth(date, 1)
-        ) {
-
-          if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-            setTitle("current month")
-            setActive("current")
-          }
-          else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-            setTitle("last month")
-            setActive("last")
-          }
-          else {
-            setTitle("custom")
-            setActive("custom")
-          }
+        else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
+          return "last"
         }
         else {
-          if (startGetDate === 1 && endGetDate <= dateGetDate && endGetDate === endOfMonth(endDate).getDate()) {
-            setTitle("current month")
-            setActive("current")
-          }
-          else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-            setTitle("last month")
-            setActive("last")
-          }
-          else {
-            setTitle("custom")
-            setActive("custom")
-          }
+          return "custom"
         }
       }
     }
-    getActive()
-  }, [leftDate])
+    else if (type === "week") {
+      if (
+        getWeek(startDate, 1) === getWeek(endDate, 1) &&
+        startGetDay === 0 && endGetDay >= dateGetDay && startGetDay <= 6
+      ) {
+        if (endGetDay === dateGetDay && startGetDay === 0) {
+          return "current"
+        }
+        else if (getWeek(startDate, 1) === getWeek(subWeeks(date, 1))) {
+          return "last"
+        }
+        else {
+          return "custom"
+        }
+      }
+    }
+    else {
+      if (
+        getMonth(startDate, 1) === getMonth(date, 1)
+      ) {
+
+        if (startGetDate === 1 && endGetDate >= dateGetDate) {
+          return "current"
+        }
+        else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1)) && endDate === endOfMonth(startDate, 1)) {
+          return "last"
+        }
+        else {
+          return "custom"
+        }
+      }
+      else {
+        if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+          return "last"
+        }
+        else {
+          return "custom"
+        }
+      }
+    }
+  }
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -155,17 +139,17 @@ export const DateSelect = React.memo(({ type, setSelections, setTypeDate, expand
       </ButtonKit>
       <AccordionDetailsKit className="date-accordion-details">
         <ButtonKit
-          className={"navbar-button-kit " + (active === "current" ? "active" : "")}
+          className={"navbar-button-kit " + (getActive() === "current" ? "active" : "")}
           onClick={() => getDate(type === "day" ? "today" : type)}>
           Current {type}
         </ButtonKit>
         <ButtonKit
-          className={"navbar-button-kit " + (active === "last" ? "active" : "")}
+          className={"navbar-button-kit " + (getActive() === "last" ? "active" : "")}
           onClick={() => getDate(type === "day" ? "yesterday" : "last " + type)}>
           {type === "day" ? "yesterday" : "last " + type}
         </ButtonKit>
         <ButtonKit
-          className={"navbar-button-kit " + (active === "custom" ? "active" : "")}
+          className={"navbar-button-kit " + (getActive() === "custom" ? "active" : "")}
           onClick={() => setTypeDate(type)}>
           Custom {type}
         </ButtonKit>

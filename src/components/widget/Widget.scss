@@ -12,6 +12,10 @@
     transition: 0.3s;
     color: #4d2681;
 
+    img {
+      filter: invert(13%) sepia(53%) saturate(3527%) hue-rotate(255deg) brightness(101%) contrast(92%);
+    }
+
     .card-week {
       color: $color-gray;
     }
@@ -20,16 +24,31 @@
   &.active {
     background: $color-third;
     color: #4d2681;
+
+    img {
+      filter: invert(13%) sepia(53%) saturate(3527%) hue-rotate(255deg) brightness(101%) contrast(92%);
+    }
   }
 
   .card-typography {
     font-weight: 600;
   }
 
+  .card-icon {
+
+    svg,
+    img {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      height: 50px;
+      width: 50px;
+    }
+  }
+
   .icon-paper.icon-paper {
     position: relative;
     display: flex;
-    align-items: center;
     justify-content: center;
     width: 20px;
     height: 20px;
@@ -41,7 +60,7 @@
       background-color: $color-icon-active;
     }
 
-    > svg {
+    >svg {
       width: 70%;
       height: 70%;
       object-fit: cover;
@@ -71,16 +90,19 @@
     color: $color-arrow;
   }
 }
+
 @media (max-width: 2560px) {
   .card_wrapper.card_wrapper {
     width: 23%;
   }
 }
+
 @media (max-width: 1260px) {
   .card_wrapper.card_wrapper {
     width: 48%;
   }
 }
+
 @media (max-width: 930px) {
   .card_wrapper.card_wrapper {
     width: 100%;
