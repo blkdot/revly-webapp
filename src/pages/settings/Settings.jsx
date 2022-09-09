@@ -8,6 +8,7 @@ import './Settings.scss';
 import HeaderBreadcrumbs from '../../components/headerBreadcrumbs/HeaderBreadcrumbs';
 import SettingsOnboarding from '../../components/settings/onboarding/SettingsOnboarding';
 import General from '../../components/settings/general/General';
+import ChangePassword from '../../components/settings/changePassword/ChangePassword';
 
 import TabKit from '../../kits/tab/TabKit';
 import TabsKit from '../../kits/tabs/TabsKit';
@@ -35,9 +36,9 @@ const Settings = () => {
       component: <SettingsOnboarding />,
     },
     {
-      value: 'reset_password',
+      value: 'change_password',
       icon: <BsKeyFill width={20} height={20} style={{ marginRight: 5 }} />,
-      component: <div>Reset Password</div>,
+      component: <ChangePassword />,
     },
   ];
 
