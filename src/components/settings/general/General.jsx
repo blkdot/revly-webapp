@@ -16,7 +16,7 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 
 
 const General = () => {
-    const { user, phoneNumberVerify, reCaptcha } = useUserAuth();
+    const { user } = useUserAuth();
     const [inputValue, setInputValue] = useState({
         name: user.displayName || '',
         phone: user.phoneNumber || '',
