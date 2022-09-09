@@ -6,8 +6,6 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 
@@ -39,18 +37,13 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  const reAuth = (password) => {
-    const credentials = EmailAuthProvider.credential(user.email, password);
-    return reauthenticateWithCredential(user, credentials);
-  };
-
   const googleSignIn = () => {
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
   };
 
   return (
-    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn, reAuth }}>
+    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn }}>
       {children}
     </UserAuthContext.Provider>
   );

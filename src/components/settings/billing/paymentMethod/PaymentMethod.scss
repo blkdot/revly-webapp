@@ -1,0 +1,50 @@
+@import '../../../../library.scss';
+@import '../../../../responsiveness.scss';
+
+.payment-method {
+    border: 1px solid $color-border;
+    padding: 10px 13px 10px 13px;
+    border-radius: 6px;
+    margin: 13px 0;
+    display: flex;
+    justify-content: space-between;
+    width: 48%;
+
+
+    .payment-method__btn {
+        border-radius: 50%;
+        border: none;
+        background-color: transparent;
+        align-self: flex-start;
+        width: 30px;
+        height: 30px;
+        transition: .3s;
+        color: $color-gray;
+        &:hover {
+            background-color: $color-second;
+            cursor: pointer;
+        }
+    }
+
+    p {
+        margin: 15px 0;
+    }
+
+    .payment-method__text {
+        margin-top: -6px;
+        .payment-method__text__type {
+            font-size: 20px;
+        }
+
+        .payment-method__text__cvv {
+            font-weight: bolder;
+            font-size: 16px;
+        }
+    }
+}
+
+@include mobileBreakpoint {
+    .payment-method {
+        width: 100%;
+    }
+}
