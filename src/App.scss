@@ -8,6 +8,10 @@
   outline: none;
 } 
 
+body{
+  overflow-x: hidden;
+}
+
 .user-page {
   display: flex;
   min-height: calc(100vh - 70px);
@@ -20,4 +24,18 @@
 h2 {
   font-size: 18px;
   padding: 0.3rem 0;
+}
+
+.top-inputs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  grid-gap: 10px;
+}
+
+@media(max-width: 1260px) {
+  .top-inputs {
+    align-items: flex-end;
+    flex-direction: column;
+  }
 }

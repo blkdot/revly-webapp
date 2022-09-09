@@ -6,17 +6,21 @@
   justify-content: flex-end;
 
   >div {
-    box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+    box-shadow: 0 0 0px 0 rgb(145 158 171 / 48%),
       0 2px 4px -1px rgb(145 158 171 / 24%);
-      border-radius: 4px;
-      margin: 0;
-      fieldset{
-        border: none;
-      }
+    border-radius: 4px;
+    margin: 0;
+
+    fieldset {
+      border: none;
+    }
   }
 
   .Mui-focused.Mui-focused fieldset {
-    border-color: $color-border
+    border: 2px solid $color-border;
+    legend{
+      background: #fff;
+    }
   }
 }
 
