@@ -16,7 +16,6 @@ import { PlatformProvider } from './contexts/PlatformContext';
 import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
 import { ProtectedRoutes } from './routes/ProtectedRoutes';
 import { ProtectedOnboardRoutes } from './routes/ProtectedOnboardRoutes';
-import DateContextProvider from './contexts/DateContext';
 import Planning from './pages/planning/Planning';
 import Competition from './pages/competition/Competition';
 
@@ -36,23 +35,21 @@ function App() {
           <GlobalFunctionalitiesContextProvider>
             <AuthContextProvider>
               <PlatformProvider>
-                <DateContextProvider>
-                  <Routes>
-                    <Route path='/' element={<SignIn />} />
-                    <Route path='/signup' element={<SignUp />} />
-                    <Route element={<ProtectedRoutes />}>
-                      <Route element={<ProtectedOnboardRoutes />}>
-                        {/*<Route path='/account' element={<Account />} />*/}
-                        <Route path='/dashboard' element={<Dashboard />} />
-                        <Route path='/planning' element={<Planning />} />
-                        <Route path='/competition' element={<Competition />} />
-                        <Route path='/settings' element={<Settings />} />
-                        <Route path='/settings/account' element={<SettingAccount />} />
-                      </Route>
-                      <Route path='/onboarding' element={<OnBoarding />} />
+                <Routes>
+                  <Route path='/' element={<SignIn />} />
+                  <Route path='/signup' element={<SignUp />} />
+                  <Route element={<ProtectedRoutes />}>
+                    <Route element={<ProtectedOnboardRoutes />}>
+                      {/*<Route path='/account' element={<Account />} />*/}
+                      <Route path='/dashboard' element={<Dashboard />} />
+                      <Route path='/planning' element={<Planning />} />
+                      <Route path='/competition' element={<Competition />} />
+                      <Route path='/settings' element={<Settings />} />
+                      <Route path='/settings/account' element={<SettingAccount />} />
                     </Route>
-                  </Routes>
-                </DateContextProvider>
+                    <Route path='/onboarding' element={<OnBoarding />} />
+                  </Route>
+                </Routes>
               </PlatformProvider>
             </AuthContextProvider>
           </GlobalFunctionalitiesContextProvider>

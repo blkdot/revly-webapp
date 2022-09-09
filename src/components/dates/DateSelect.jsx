@@ -31,6 +31,8 @@ export const DateSelect = React.memo(({ type, setSelections, setTypeDate, expand
         break;
       case "last month":
         setSelections([{ startDate: startOfMonth(subMonths(date, 1)), endDate: endOfMonth(subMonths(date, 1)), key: "selection" }])
+        break;
+      default:
     }
   }
 

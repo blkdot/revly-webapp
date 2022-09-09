@@ -69,5 +69,5 @@ export const ProtectedOnboardRoutes = () => {
     };
   });
 
-  return false ? <Navigate to='/onboarding' /> : <Outlet />;
+  return flag instanceof Error ? <Navigate to='/onboarding' /> : <Outlet />;
 };
