@@ -18,7 +18,7 @@ const Billing = () => {
         cardExpire: '',
         cardCvv: ''
     })
-    const [showAddForm, setShowAddForm] = useState(true);
+    const [showAddForm, setShowAddForm] = useState(false);
 
     const handleInputChange= (e) => setCardValue({ ...cardValue, [e.target.name]: e.target.value });
 
