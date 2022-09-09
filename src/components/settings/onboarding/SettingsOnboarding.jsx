@@ -38,8 +38,7 @@ const defaultStateValues = listPlatform.reduce(
 
 const SettingsOnboarding = () => {
   const [values, setValues] = useState(defaultStateValues);
-
-  const { platformOnboarded } = usePlatform();
+  const { platformOnboarded, setPlatformOnboarded } = usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
 
@@ -65,6 +64,7 @@ const SettingsOnboarding = () => {
 
   const handleClickEdit = (p) => () => {
     setValues({ ...values, [p]: { ...values[p], isOnboarded: false } });
+    
     setPlatformOnboarded(platformOnboarded.filter((v) => v !== p));
   };
 
@@ -90,6 +90,8 @@ const SettingsOnboarding = () => {
     }
 
     setValues({ ...values, [p]: { ...values[p], isLoading: false, isOnboarded: true } });
+
+    setPlatformOnboarded([...platformOnboarded, p]);
   };
 
   const isDisabled = (p) => {
