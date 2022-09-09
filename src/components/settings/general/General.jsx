@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { updateEmail, updatePhoneNumber, updateProfile } from 'firebase/auth';
 
 import './General.scss';
 
@@ -11,14 +12,17 @@ import PaperKit from '../../../kits/paper/PaperKit';
 import useAlert from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';
 
+import { useUserAuth } from '../../../contexts/AuthContext';
+
 
 const General = () => {
+    const { user, phoneNumberVerify, reCaptcha } = useUserAuth();
     const [inputValue, setInputValue] = useState({
-        name: '',
-        phone: '',
+        name: user.displayName || '',
+        phone: user.phoneNumber || '',
         country: '',
         city: '',
-        email: '',
+        email: user.email,
         address: '',
         state: '',
         zip: '',
@@ -35,15 +39,17 @@ const General = () => {
         zip: false,
         about: false
     })
-    const [avatarFile, setAvatarFile] = useState('');
+    const [avatarFile, setAvatarFile] = useState(user.photoURL);
     const [isPublic, setIsPublic] = useState(true);
-    const { showAlert, setAlertMessage } = useAlert();
+    const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const onDropAvatar = useCallback((file) => {
+    const onDropAvatar = useCallback(async (file) => {
         const src = file[0];
 
         if (src) {
-            setAvatarFile(URL.createObjectURL(src));
+            const url = URL.createObjectURL(src);
+            setAvatarFile(url);
         }
     }, [setAvatarFile]);
 
@@ -59,13 +65,42 @@ const General = () => {
 
     const onSwitchChange = (e) => setIsPublic(e.target.checked);
 
-    const onSave = () => {
-        // save change
-        console.log(inputError);
+    const disableSave = () => {
+        return Object.keys(inputError).map((v) => inputError[v]).includes(true) || (!!user.displayName === !!inputValue.name.trim() && avatarFile === user.photoURL && user.email === inputValue.email && (!!inputValue.phone === !!user.phoneNumber)) || isLoading;
+    }
+
+    const onSave = async () => {
+        setIsLoading(true);
+        try {
+
+            await updateProfile(user, {
+                ...(inputValue.name.trim() !== user.displayName && { displayName: inputValue.name }),
+                ...(avatarFile !== user.photoURL && { photoURL: avatarFile })
+            })
+
+            if (inputValue.phone) {
+                    // const credential = phoneNumberVerify(inputValue.phone);
+                    // console.log(credential);
+                    // await updatePhoneNumber(user, credential);
+            }
+
+            if (inputValue.email !== user.email) {
+                await updateEmail(user, inputValue.email);
+            }
+
+            setAlertTheme('success');
+            setAlertMessage(' Information changed');
+            showAlert();
+            setIsLoading(false)
+        } catch (err) {
+            setIsLoading(false)
+            console.log(err);
+        }
     };
 
+
     return (
-        <div className="general">
+        <div id="recaptcha" className="general">
             <PaperKit className="general__avatar-block">
                 <AvatarUpload file={avatarFile} onDrop={onDropAvatar} onError={onFileError} />
                 <p className="general__avatar-block__allow-text">
@@ -90,6 +125,8 @@ const General = () => {
                     valueAbout={inputValue.about}
                     handleInputChange={handleInputChange}
                     onSave={onSave}
+                    disableSave={disableSave()}
+                    disableEmail={user.providerData[0].providerId === 'google.com'}
                 />
             </PaperKit>
         </div>

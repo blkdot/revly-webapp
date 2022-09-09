@@ -8,6 +8,8 @@ import {
   signInWithPopup,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  RecaptchaVerifier,
+  PhoneAuthProvider,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 
@@ -44,13 +46,33 @@ export const AuthContextProvider = ({ children }) => {
     return reauthenticateWithCredential(user, credentials);
   };
 
+  const reCaptcha = (container, callback) => {
+    window.reCaptchaVerifier = new RecaptchaVerifier(container, {
+      size: 'invisible',
+      callback
+    });
+
+  }
+
+  const phoneNumberVerify = async (phone) => {
+    const applicationVerifier = new RecaptchaVerifier('recaptcha', {
+      size: 'invisible'
+    }).verify()
+    console.log(applicationVerifier);
+    // const provider = new PhoneAuthProvider(auth)
+    // const verificationId = await provider.verifyPhoneNumber(phone, applicationVerifier);
+    // const code = window.prompt('Enter the code :');
+    // const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
+    return ''
+  }
+
   const googleSignIn = () => {
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
   };
 
   return (
-    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn, reAuth }}>
+    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn, reAuth, phoneNumberVerify, reCaptcha }}>
       {children}
     </UserAuthContext.Provider>
   );
