@@ -29,13 +29,15 @@ const Billing = () => {
           <div className="billing__block-1">
             <PaperKit className="billing__plan">
                 <div className="billing__plan__flex">
-                    <p>YOUR PLAN</p>
+                    <div>
+                        <p>YOUR PLAN</p>
+                        <p className="billing__plan__flex__text">Premium</p>
+                    </div>
                     <div className="billing__plan__flex__btn">
                         <ButtonKit sx={{ marginRight: 2 }} size="small" variant="outlined">Cancel Plan</ButtonKit>
                         <ButtonKit className="billing__plan__flex__btn__upgrade" size="small" variant="outlined">Upgrade Plan</ButtonKit>
                     </div>
                 </div>
-                <p className="billing__plan__flex__text">Premium</p>
             </PaperKit>
             <PaperKit className="billing__payment">
                 <p>PAYMENT METHOD</p>

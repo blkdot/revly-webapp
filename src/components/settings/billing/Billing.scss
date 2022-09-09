@@ -66,6 +66,15 @@
                     display: block;
                 }
             }
+
+            .billing__plan {
+                .billing__plan__flex {
+                    display: block;
+                    .billing__plan__flex__btn {
+                        margin-top: 15px;
+                    }
+                }
+            }
         }
     }
 }
