@@ -95,8 +95,8 @@ const OnBoarding = ({ onSend, activeForm, isLoading }) => {
       {renderTalabatForm()}
       {renderZomatoForm()}
       <div className='onboarding__submit'>
-        <ButtonLoadingKit variant='contained' onClick={handleSubmitLoginInfo} loading={isLoading} disabled={isDisabledSend()}>
-          Send
+        <ButtonLoadingKit variant='contained' onClick={handleSubmitLoginInfo} loading={isLoading} disabled={isDisabledSend()} fullWidth>
+          Connect
         </ButtonLoadingKit>
       </div>
     </div>
