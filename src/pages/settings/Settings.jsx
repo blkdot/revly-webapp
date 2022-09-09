@@ -8,6 +8,7 @@ import './Settings.scss';
 import HeaderBreadcrumbs from '../../components/headerBreadcrumbs/HeaderBreadcrumbs';
 import SettingsOnboarding from '../../components/settings/onboarding/SettingsOnboarding';
 import General from '../../components/settings/general/General';
+import Billing from '../../components/settings/billing/Billing';
 
 import TabKit from '../../kits/tab/TabKit';
 import TabsKit from '../../kits/tabs/TabsKit';
@@ -27,7 +28,7 @@ const Settings = () => {
     {
       value: 'billing',
       icon: <FaCreditCard width={20} height={20} style={{ marginRight: 5 }} />,
-      component: <div>Billing content here</div>,
+      component: <Billing />,
     },
     {
       value: 'onboarding',
