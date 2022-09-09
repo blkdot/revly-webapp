@@ -1,20 +1,24 @@
 @import '../../library.scss';
 
-.setting-account__tabs {
+.setting-account {
+  margin-top: 12rem;
+
+  .setting-account__tabs {
+    
+    .setting-account__tabs-tab {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      color: $color-gray;
+      font-size: 14px;
   
-  .setting-account__tabs-tab {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    color: $color-gray;
-    font-size: 11px;
-
-    &.__active {
-      color: $color-main;
-    }
-
-    &:hover {
-      color: $color-main;
+      &.__active {
+        color: $color-main;
+      }
+  
+      &:hover {
+        color: $color-main;
+      }
     }
   }
 }

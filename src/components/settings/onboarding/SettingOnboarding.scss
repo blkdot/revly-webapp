@@ -34,4 +34,13 @@
     top: 1.5rem;
     right: 1rem;
   }
+
+  .settings-onboarding__block {
+    padding: 1rem;
+    margin: 1rem auto 0.5rem;
+    width: 100%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+  }
 }
