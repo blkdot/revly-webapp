@@ -5,16 +5,15 @@ import { BsKeyFill } from 'react-icons/bs';
 
 import './Settings.scss';
 
-import HeaderBreadcrumbs from '../../components/headerBreadcrumbs/HeaderBreadcrumbs';
 import SettingsOnboarding from '../../components/settings/onboarding/SettingsOnboarding';
 import General from '../../components/settings/general/General';
 import Billing from '../../components/settings/billing/Billing';
 import ChangePassword from '../../components/settings/changePassword/ChangePassword';
 
+import TypographyKit from '../../kits/typography/TypographyKit';
 import TabKit from '../../kits/tab/TabKit';
 import TabsKit from '../../kits/tabs/TabsKit';
 import BoxKit from '../../kits/box/BoxKit';
-import ContainerKit from '../../kits/container/ContainerKit';
 
 
 const Settings = () => {
@@ -48,15 +47,8 @@ const Settings = () => {
   }
 
   return (
-    <ContainerKit>
-      <HeaderBreadcrumbs
-        heading='Account Settings'
-        links={[
-          { name: 'Dashboard', href: '/dashboard' },
-          { name: 'Settings', href: '/settings' },
-          { name: 'Account Settings' },
-        ]}
-      />
+    <div className="setting-account">
+      <TypographyKit variant="h4">Settings</TypographyKit>
       <TabsKit
         allowScrollButtonsMobile
         variant='scrollable'
@@ -81,7 +73,7 @@ const Settings = () => {
         const isMatched = tab.value === currentTab;
         return isMatched && <BoxKit key={tab.value}>{tab.component}</BoxKit>;
       })}
-    </ContainerKit>
+    </div>
   );
 };
 

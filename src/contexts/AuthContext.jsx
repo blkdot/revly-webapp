@@ -41,10 +41,6 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  const reAuth = (password) => {
-    const credentials = EmailAuthProvider.credential(user.email, password);
-    return reauthenticateWithCredential(user, credentials);
-  };
 
   const reCaptcha = (container, callback) => {
     window.reCaptchaVerifier = new RecaptchaVerifier(container, {
@@ -57,18 +53,24 @@ export const AuthContextProvider = ({ children }) => {
   const phoneNumberVerify = async (phone) => {
     const applicationVerifier = new RecaptchaVerifier('recaptcha', {
       size: 'invisible'
-    }).verify()
+    })
     console.log(applicationVerifier);
-    // const provider = new PhoneAuthProvider(auth)
-    // const verificationId = await provider.verifyPhoneNumber(phone, applicationVerifier);
-    // const code = window.prompt('Enter the code :');
-    // const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
-    return ''
+    const provider = new PhoneAuthProvider(auth)
+    const verificationId = await provider.verifyPhoneNumber(phone, applicationVerifier);
+    const code = window.prompt('Enter the code :');
+    const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
+    return phoneCredential;
   }
 
   const googleSignIn = () => {
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
+  };
+
+  const reAuth = (password) => {
+    const credentials = EmailAuthProvider.credential(user.email, password);
+
+    return reauthenticateWithCredential(user, credentials);
   };
 
   return (
