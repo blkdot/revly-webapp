@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { updateEmail, updatePhoneNumber, updateProfile } from 'firebase/auth';
+import { updateEmail, updateProfile } from 'firebase/auth';
 
 import './General.scss';
 
