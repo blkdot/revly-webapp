@@ -7,7 +7,8 @@ import './OnBoarding.scss';
 import OnBoardingForm from '../../components/onboarding/OnBoarding';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import Dates from '../../components/dates/Dates';
-import Finance from '../../components/finance/Finance';
+import FinanceEmpty from '../../components/finance/FinanceEmpty';
+import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
 import Congrats from '../../components/congrats/Congrats';
 
@@ -167,7 +168,8 @@ const OnBoarding = () => {
       <Confetti gravity={0.1} run={step === 2} style={{ zIndex: 1301 }} />
       <RestaurantDropdown names={[]} />
       <Dates />
-      <Finance />
+      <FinanceEmpty />
+      <MarketingEmpty />
       <ModalKit open aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
         <div style={style}>
           <StepperKit activeStep={step} alternativeLabel>
