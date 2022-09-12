@@ -17,9 +17,9 @@
   display: flex;
   justify-content: space-between;
   align-self: center;
-  width: 300px;
+  width: 250px;
   padding: 16px 10px;
-  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+  box-shadow: 0 0 0px 0 rgb(145 158 171 / 48%),
     0 2px 4px -1px rgb(145 158 171 / 24%);
   transition: .4s;
 
@@ -48,36 +48,61 @@
   }
 }
 
-.date-range-overlay {
+.date-picker_wrapper {
+  position: relative;
+}
+
+.date-range.date-range {
   opacity: 0;
   visibility: hidden;
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  transition: .3s;
-  background: rgba($color: grey, $alpha: 0.2);
-  left: 0;
-  top: 0;
-  z-index: 1000;
+  overflow: hidden;
+  z-index: 800;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 55px;
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+    0 2px 4px -1px rgb(145 158 171 / 24%);
+  right: -270px;
+  transition: .4s;
 
   &.opened {
     opacity: 1;
     visibility: visible;
   }
 
-  .rdrInputRanges.rdrInputRanges {
-    display: none;
+  &.month {
+    right: 0px;
   }
 
-  .date-range.date-range {
-    border-radius: 0px 12px 12px 0;
-    overflow: hidden;
-    z-index: 1001;
-    display: flex;
+  &.range-right {
+    right: 0;
+  }
 
+  .month_picker {
+    padding: 0 15px;
+    margin: 0;
+    height: 300px;
+    background: #fff;
+    z-index: 800;
+    position: relative;
+
+    .Mui-selected {
+      background-color: #704cfc;
+      box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+        0px 2px 2px 0px rgb(0 0 0 / 14%),
+        0px 1px 5px 0px rgb(0 0 0 / 12%);
+      transition: .4s;
+
+      &:hover {
+        box-shadow: 0px 2px 1px 1px rgb(0 0 0 / 20%),
+          0px 1px 1px 0px rgb(0 0 0 / 14%),
+          0px 1px 5px 0px rgb(0 0 0 / 12%);
+      }
+    }
+  }
+
+  .rdrInputRanges.rdrInputRanges {
+    display: none;
   }
 
   .rdrStaticRanges.rdrStaticRanges {
@@ -123,9 +148,27 @@
   }
 }
 
+.date-range-overlay {
+  opacity: 0;
+  visibility: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  transition: .3s;
+  left: 0;
+  top: 0;
+  z-index: 799;
+
+  &.opened {
+    opacity: 1;
+    visibility: visible;
+  }
+
+}
+
 .date-select.date-select {
   position: absolute;
-  top: 52px;
+  top: 55px;
   left: 0;
   z-index: 100;
   padding: 15px;
@@ -189,6 +232,11 @@
     width: 100%;
     padding: 5px 10px 5px 10px;
 
+    &.active {
+      background-color: #ebdbeb;
+      color: #704cfc;
+    }
+
     span {
       width: 100%;
       opacity: 1;
@@ -212,10 +260,17 @@
   display: flex;
   align-items: flex-end;
   height: 100%;
+  padding-bottom: 18px;
+
   .date-save-btn.date-save-btn {
     width: 100%;
     background: #704cfc;
     font-size: 12px;
+
+    &.date-disabled-btn {
+      cursor: not-allowed;
+      background: grey;
+    }
 
     &:hover {
       background: #704cfc;

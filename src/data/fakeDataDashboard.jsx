@@ -5,21 +5,25 @@ export const FinanceData = [
   {
     title: 'Revenue',
     procent: 2.6,
+    coin: 15,
     id: 1,
   },
   {
     title: 'Orders',
     procent: -2.6,
+    coin: 15,
     id: 2,
   },
   {
     title: 'Profit',
     procent: 0.01,
+    coin: 15,
     id: 3,
   },
   {
     title: 'Avg.Basket',
     procent: 4.8,
+    coin: 15,
     id: 4,
   },
 ];
@@ -118,11 +122,13 @@ export const MarketingData = [
   {
     title: 'Marketing Express',
     procent: 2.6,
+    coin: 15,
     id: 1,
   },
   {
     title: 'Roi',
     procent: -2.6,
+    coin: 15,
     id: 2,
   },
 ];

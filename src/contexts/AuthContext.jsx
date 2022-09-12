@@ -6,6 +6,10 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  RecaptchaVerifier,
+  PhoneAuthProvider,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 
@@ -37,13 +41,40 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
+
+  const reCaptcha = (container, callback) => {
+    window.reCaptchaVerifier = new RecaptchaVerifier(container, {
+      size: 'invisible',
+      callback
+    });
+
+  }
+
+  const phoneNumberVerify = async (phone) => {
+    const applicationVerifier = new RecaptchaVerifier('recaptcha', {
+      size: 'invisible'
+    })
+    console.log(applicationVerifier);
+    const provider = new PhoneAuthProvider(auth)
+    const verificationId = await provider.verifyPhoneNumber(phone, applicationVerifier);
+    const code = window.prompt('Enter the code :');
+    const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
+    return phoneCredential;
+  }
+
   const googleSignIn = () => {
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
   };
 
+  const reAuth = (password) => {
+    const credentials = EmailAuthProvider.credential(user.email, password);
+
+    return reauthenticateWithCredential(user, credentials);
+  };
+
   return (
-    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn }}>
+    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn, reAuth, phoneNumberVerify, reCaptcha }}>
       {children}
     </UserAuthContext.Provider>
   );

@@ -12,6 +12,9 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('error');
 
+  const [leftDate, setLeft] = useState({ startDate: new Date(), endDate: new Date() });
+  const [rightDate, setRight] = useState({ startDate: new Date(), endDate: new Date() });
+
   useEffect(() => {
     if (isShowing) {
       setTimeout(() => {
@@ -39,7 +42,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   );
 
   return (
-    <GlobalFunctionalitiesContext.Provider value={{ setAlertTheme, setAlertMessage, showAlert }}>
+    <GlobalFunctionalitiesContext.Provider value={{ setAlertTheme, setAlertMessage, showAlert, leftDate, rightDate, setLeft, setRight }}>
       {renderAlert()}
       {children}
     </GlobalFunctionalitiesContext.Provider>
