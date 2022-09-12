@@ -1,12 +1,10 @@
-import { useCallback, useState } from 'react';
-import { updateEmail, updateProfile } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import {  updateEmail, updateProfile } from 'firebase/auth';
 
 import './General.scss';
 
-import AvatarUpload from '../../avatarUpload/AvatarUpload';
 import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
 
-import SwitchKit from '../../../kits/switch/SwitchKit';
 import PaperKit from '../../../kits/paper/PaperKit';
 
 import useAlert from '../../../hooks/useAlert';
@@ -16,17 +14,15 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 
 
 const General = () => {
-    const { user } = useUserAuth();
+    const { user, emailVerify, logOut } = useUserAuth();
     const [inputValue, setInputValue] = useState({
         name: user.displayName || '',
         phone: user.phoneNumber || '',
         country: '',
         city: '',
         email: user.email,
-        address: '',
-        state: '',
-        zip: '',
-        about: ''
+        restoName: '',
+        role: ''
     })
     const [inputError, setInputError] = useState({
         name: false,
@@ -34,98 +30,80 @@ const General = () => {
         country: false,
         city: false,
         email: false,
-        address: false,
-        state: false,
-        zip: false,
-        about: false
+        restoName: false,
+        role: false
     })
-    const [avatarFile, setAvatarFile] = useState(user.photoURL);
-    const [isPublic, setIsPublic] = useState(true);
     const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
     const [isLoading, setIsLoading] = useState(false);
 
-    const onDropAvatar = useCallback(async (file) => {
-        const src = file[0];
-
-        if (src) {
-            const url = URL.createObjectURL(src);
-            setAvatarFile(url);
+    const updateInfo = (field, inequalTo, updateFunc) => {
+        if (!inputError[field] && inputValue[field] && (inputValue[field].trim() !== inequalTo)) {
+            setTimeout(() => {
+                try {
+                    updateFunc();
+                    setAlertTheme('success');
+                    setAlertMessage(`${field} changed`);
+                    showAlert();
+                } catch (err) {
+                    setAlertMessage(err.message);
+                    showAlert();
+                }
+            }, 500)
         }
-    }, [setAvatarFile]);
+    }
+
+    useEffect(() => {
+       updateInfo('name', user.displayName, async () => {
+        await updateProfile(user, { displayName: inputValue.name.trim() });
+       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inputValue.name])
 
     const handleInputChange = (e, is) => {
         setInputError({ ...inputError, [e.target.name]: !validator[is](e.target.value)});
         setInputValue({ ...inputValue, [e.target.name]: e.target.value });
     }
 
-    const onFileError = (error) => {
-        setAlertMessage(error[0].errors[0].message);
-        showAlert();
-    };
-
-    const onSwitchChange = (e) => setIsPublic(e.target.checked);
-
-    const disableSave = () => {
-        return Object.keys(inputError).map((v) => inputError[v]).includes(true) || (!!user.displayName === !!inputValue.name.trim() && avatarFile === user.photoURL && user.email === inputValue.email && (!!inputValue.phone === !!user.phoneNumber)) || isLoading;
-    }
-
-    const onSave = async () => {
+    const onChangeEmail = async () => {
         setIsLoading(true);
-        try {
-
-            await updateProfile(user, {
-                ...(inputValue.name.trim() !== user.displayName && { displayName: inputValue.name }),
-                ...(avatarFile !== user.photoURL && { photoURL: avatarFile })
-            })
-
-            if (inputValue.phone) {
-                    // const credential = phoneNumberVerify(inputValue.phone);
-                    // console.log(credential);
-                    // await updatePhoneNumber(user, credential);
-            }
-
-            if (inputValue.email !== user.email) {
+        if (!inputError.email && (inputValue.email.trim() !== user.email)) {
+           try {
                 await updateEmail(user, inputValue.email);
-            }
+                await emailVerify();
+                setAlertTheme('success');
+                setAlertMessage(`E-mail changed, verification link sent !`);
+                showAlert();
+                setIsLoading(false);
+           } catch (err) {
+                if (err.code === 'auth/requires-recent-login') {
+                    logOut();
+                    window.location.assign('/');
+                }
 
-            setAlertTheme('success');
-            setAlertMessage(' Information changed');
-            showAlert();
-            setIsLoading(false)
-        } catch (err) {
-            setIsLoading(false)
-            console.log(err);
+                setAlertTheme('error');
+                setAlertMessage(err.message);
+                showAlert();
+                setIsLoading(false);
+           }
+
         }
     };
 
 
     return (
-        <div id="recaptcha" className="general">
-            <PaperKit className="general__avatar-block">
-                <AvatarUpload file={avatarFile} onDrop={onDropAvatar} onError={onFileError} />
-                <p className="general__avatar-block__allow-text">
-                  Allowed *.jpeg, *.jpg, *.png
-                  <br /> max size of 3.1 mb
-                </p>
-                <div className="general__avatar-block__switch-text">
-                    <p>Pubic Profile</p>
-                    <SwitchKit checked={isPublic} onChange={onSwitchChange} />
-                </div>
-            </PaperKit>
+        <div className="general">
+            <div id="recaptcha" ></div>
             <PaperKit className="general__input-block">
                 <AccountSettingForm
-                    valueName={{ value: inputValue.name, error: inputError.name}}
-                    valuePhone={{ value: inputValue.phone, error: inputError.phone}}
-                    valueCountry={{ value: inputValue.country, error: inputError.country}}
-                    valueCity={{ value: inputValue.city, error: inputError.city}}
-                    valueEmail={{ value: inputValue.email, error: inputError.email}}
-                    valueAddress={{ value: inputValue.address, error: inputError.address}}
-                    valueState={{ value: inputValue.state, error: inputError.state}}
-                    valueZip={{ value: inputValue.zip, error: inputError.zip}}
-                    valueAbout={inputValue.about}
+                    valueName={{ value: inputValue.name, error: inputError.name }}
+                    valuePhone={{ value: inputValue.phone, error: inputError.phone }}
+                    valueCountry={{ value: inputValue.country, error: inputError.country }}
+                    valueCity={{ value: inputValue.city, error: inputError.city }}
+                    valueRole={{ value: inputValue.role, error: inputError.role }}
+                    valueEmail={{ value: inputValue.email, error: inputError.email }}
+                    valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
                     handleInputChange={handleInputChange}
-                    onSave={onSave}
-                    disableSave={disableSave()}
+                    onChangeEmail={isLoading ? undefined : onChangeEmail}
                     disableEmail={user.providerData[0].providerId === 'google.com'}
                 />
             </PaperKit>

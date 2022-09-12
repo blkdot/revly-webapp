@@ -16,10 +16,12 @@
         }
     }
 
-    .account-form__button {
-        position: relative;
-        left: 33%;
-        top: 15px;
+    .account-form__email-block {
+        margin-top: 20px;
+        .account-form__email-block__input {
+            margin: 15px 0;
+            width: 40%;
+        }   
     }
 
     .account-form__textarea {
@@ -34,8 +36,11 @@
             }
         }
 
-        .account-form__button {
-            left: 25%;
+        .account-form__email-block {
+            .account-form__email-block__input {
+                width: 100%;
+            }   
         }
+    
     }
 }
