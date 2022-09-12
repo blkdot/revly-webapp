@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+
 import { updatePassword } from 'firebase/auth';
 
 import './ChangePassword.scss';
 
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+
 import PaperKit from '../../../kits/paper/PaperKit';
+
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
+
 import TypographyKit from '../../../kits/typography/TypographyKit';
 
 import useAlert from '../../../hooks/useAlert';
@@ -16,15 +20,21 @@ import firebaseCodeError from '../../../data/firebaseCodeError';
 
 const defaultValues = {
   password: '',
+
   newPassword: '',
+
   confirmPassword: '',
 };
 
 const ChangePassword = () => {
   const [values, setValues] = useState(defaultValues);
+
   const [errors, setErrors] = useState({ password: false, confirm: false });
+
   const [isLoading, setIsLoading] = useState(false);
+
   const { user, reAuth } = useUserAuth();
+
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
 
   const checkIfConfirmed = (v) => {
@@ -35,6 +45,7 @@ const ChangePassword = () => {
       values.confirmPassword !== v
     ) {
       setErrors({ ...errors, confirm: true });
+
       return;
     }
 
@@ -53,24 +64,31 @@ const ChangePassword = () => {
 
   const handleClickSubmit = async () => {
     setIsLoading(true);
+
     try {
       await reAuth(values.password);
 
       await updatePassword(user, values.newPassword);
 
       setAlertMessage('Password changed');
+
       setAlertTheme('success');
+
       showAlert();
     } catch (e) {
       setAlertTheme('error');
+
       if (e.code === 'auth/wrong-password') {
         setErrors({ ...errors, password: true });
       }
 
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
+
       setAlertMessage(message);
+
       showAlert();
     }
+
     setIsLoading(false);
   };
 
@@ -90,6 +108,7 @@ const ChangePassword = () => {
             onChange={handleChange('password')}
           />
         </div>
+
         <div className='change-password__field'>
           <TextfieldKit
             type='password'
@@ -99,6 +118,7 @@ const ChangePassword = () => {
             onChange={handleChange('newPassword')}
           />
         </div>
+
         <div className='change-password__field'>
           <TextfieldKit
             type='password'
@@ -108,6 +128,7 @@ const ChangePassword = () => {
             onChange={handleChange('confirmPassword')}
           />
         </div>
+
         <div className='change-password__button'>
           <ButtonLoadingKit variant='contained' loading={isLoading} onClick={handleClickSubmit}>
             Save change

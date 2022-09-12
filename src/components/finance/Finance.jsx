@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-
 import "./Finance.scss";
-
 import Widget from '../widget/Widget';
 import Table from '../table/Table';
 import TypographyKit from '../../kits/typography/TypographyKit';
@@ -9,7 +7,6 @@ import { FinanceData, TableFinanceData } from "../../data/fakeDataDashboard";
 
 const Finance = () => {
   const [table, setTable] = useState("Revenue");
-  
   return (
     <div className="block">
       <TypographyKit variant="h4">Finance</TypographyKit>

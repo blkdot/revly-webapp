@@ -1,6 +1,5 @@
 import React from 'react';
 import MovingIcon from '@mui/icons-material/Moving';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 import './Widget.scss';
 
@@ -8,8 +7,14 @@ import PaperKit from '../../kits/paper/PaperKit';
 import CardKit from '../../kits/card/CardKit';
 import CardContentKit from '../../kits/cardContent/CardContentKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
+import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
+import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import RedeemOutlinedIcon from '@mui/icons-material/RedeemOutlined';
+import RoiIcon from "../../assets/images/roi.png"
 
-const Widget = ({ procent, title, setTable, table }) => (
+const Widget = ({ procent, title, setTable, table, coin }) => (
   <CardKit
     className={'card_wrapper ' + (table === title ? 'active' : '')}
     onClick={() => setTable(title)}
@@ -21,11 +26,17 @@ const Widget = ({ procent, title, setTable, table }) => (
             {title}
           </TypographyKit>
           <TypographyKit variant='h3' className='card-typography'>
-            17
+            {coin}
           </TypographyKit>
         </div>
-        <TypographyKit className='card-typography'>
-          <MonetizationOnIcon sx={{ fontSize: '50px' }} />
+        <TypographyKit className='card-typography card-icon'>
+          {
+            title === "Revenue" ? <PaymentsOutlinedIcon /> : title === "Orders" ?
+              <ShoppingBasketOutlinedIcon /> : title === "Profit" ? <AccountBalanceWalletOutlinedIcon /> :
+                title === "Avg.Basket" ? <ShoppingBagOutlinedIcon /> :
+                  title === "Marketing Express" ? <RedeemOutlinedIcon /> :
+                    <img src={RoiIcon} alt={title} />
+          }
         </TypographyKit>
       </TypographyKit>
       <div className='card_bottom'>

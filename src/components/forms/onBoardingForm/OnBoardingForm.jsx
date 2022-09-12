@@ -27,11 +27,11 @@ const OnBoardingForm = (props) => {
   };
 
   return (
-    <PaperKit className='onboarding-form' elevation={3}>
+    <PaperKit className='onboarding-form'>
       {title ? <h2>{title}</h2> : null}
       <FormcontrolKit className='auth-form' fullWidth>
         <TextfieldKit
-          label='Email / Login'
+          label='Email address'
           size='small'
           onChange={(e) => onChangeEmail(e.target.value)}
           className='auth-form__input'
