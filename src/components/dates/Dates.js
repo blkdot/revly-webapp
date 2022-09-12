@@ -321,7 +321,7 @@ const Dates = () => {
       }
     }
   }
-  const minDate = dayjs('2020-01-01T00:00:00.000');
+  const minDate = dayjs('2021-01-01T00:00:00.000');
   const maxDate = new Date()
   return (
     <div className="dates">
@@ -340,79 +340,79 @@ const Dates = () => {
           </TypographyKit>
           <ExpandMoreIcon />
         </PaperKit>
-        <div
-          className={
-            "date-range " + (opened ? "opened " : "") +
-            (typeDate === "month" ? "month" : "")
-          }
-          onClick={(e) => e.stopPropagation()}
-        >
-          <PaperKit className="date-picker">
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index={"1"}
-              type={"day"}
-              setSelections={setLeftDate}
-              setTypeDate={setTypeDate}
-              leftDate={leftDate}
-            />
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index={"2"}
-              type={"week"}
-              setSelections={setLeftDate}
-              setTypeDate={setTypeDate}
-              leftDate={leftDate}
-            />
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index={"3"}
-              type={"month"}
-              setSelections={setLeftDate}
-              setTypeDate={setTypeDate}
-              leftDate={leftDate}
-            />
-            <div className="date-btn-wrapper">
-              <ButtonKit
-                onClick={handleClick}
-                className={"date-save-btn "} variant={"contained"}>
-                Ok
-              </ButtonKit>
-            </div>
-          </PaperKit>
-          {
-            typeDate === "month" ?
-              <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-                <MonthPickerKit
-                  className="month_picker"
-                  date={dayjs(leftDate[0].startDate)}
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  onChange={(newDateMonth) => setLeftDate([{
-                    startDate: startOfMonth(new Date(newDateMonth)),
-                    endDate: endOfMonth(new Date(newDateMonth)),
-                    key: "selection"
-                  }])}
-                />
-              </LocalizationProviderKit>
-              :
-              <DatePickerKit
-                onRangeFocusChange={(e) => { return e }}
-                minDate={new Date("01.01.2021")}
-                maxDate={new Date()}
-                onChange={handleOnChange}
-                showSelectionPreview={true}
-                moveRangeOnFirstSelection={false}
-                months={2}
-                ranges={leftDate}
-                direction="horizontal"
-                dragSelectionEnabled={false}
+
+      </div>
+      <div
+        className={
+          "date-range " + (opened ? "opened " : "") +
+          (typeDate === "month" ? "month" : "")
+        }
+        onClick={(e) => e.stopPropagation()}
+      >
+        <PaperKit className="date-picker">
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index={"1"}
+            type={"day"}
+            setSelections={setLeftDate}
+            setTypeDate={setTypeDate}
+            leftDate={leftDate}
+          />
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index={"2"}
+            type={"week"}
+            setSelections={setLeftDate}
+            setTypeDate={setTypeDate}
+            leftDate={leftDate}
+          />
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index={"3"}
+            type={"month"}
+            setSelections={setLeftDate}
+            setTypeDate={setTypeDate}
+            leftDate={leftDate}
+          />
+          <div className="date-btn-wrapper">
+            <ButtonKit
+              onClick={handleClick}
+              className={"date-save-btn "} variant={"contained"}>
+              Ok
+            </ButtonKit>
+          </div>
+        </PaperKit>
+        {
+          typeDate === "month" ?
+            <LocalizationProviderKit dateAdapter={AdapterDayjs}>
+              <MonthPickerKit
+                className="month_picker"
+                date={dayjs(leftDate[0].startDate)}
+                minDate={minDate}
+                maxDate={maxDate}
+                onChange={(newDateMonth) => setLeftDate([{
+                  startDate: startOfMonth(new Date(newDateMonth)),
+                  endDate: endOfMonth(new Date(newDateMonth)),
+                  key: "selection"
+                }])}
               />
-          }
-        </div>
+            </LocalizationProviderKit>
+            :
+            <DatePickerKit
+              minDate={new Date(minDate)}
+              maxDate={new Date()}
+              onChange={handleOnChange}
+              showSelectionPreview={true}
+              moveRangeOnFirstSelection={false}
+              months={2}
+              ranges={leftDate}
+              direction="horizontal"
+              dragSelectionEnabled={false}
+            />
+        }
       </div>
       <span>Compare to</span>
       <div className="date-picker_wrapper">
@@ -444,78 +444,79 @@ const Dates = () => {
             setTitleRight={setTitleRight}
           />
         </TypographyKit>
-        <div
-          className={
-            "date-range range-right " +
-            (openedRight ? "opened" : "")}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <PaperKit className="date-picker">
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index={"1"}
-              type={"day"}
-              setSelections={setRightDate}
-              setTypeDate={setTypeDate}
-              leftDate={rightDate}
-            />
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index={"2"}
-              type={"week"}
-              setSelections={setRightDate}
-              setTypeDate={setTypeDate}
-              leftDate={rightDate}
-            />
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index={"3"}
-              type={"month"}
-              setSelections={setRightDate}
-              setTypeDate={setTypeDate}
-              leftDate={rightDate}
-            />
-            <div className="date-btn-wrapper">
-              <ButtonKit
-                disabled={getRightDate() ? false : true}
-                onClick={handleClickRight}
-                className={"date-save-btn " + (getRightDate() ? "" : "date-disabled-btn")} variant={"contained"}>
-                Ok
-              </ButtonKit>
-            </div>
-          </PaperKit>
-          {
-            typeDate === "month" ?
-              <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-                <MonthPickerKit
-                  className="month_picker"
-                  date={dayjs(rightDate[0].startDate)}
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  onChange={(newDateMonth) => setRightDate([{
-                    startDate: startOfMonth(new Date(newDateMonth)),
-                    endDate: endOfMonth(new Date(newDateMonth)),
-                    key: "selection"
-                  }])}
-                />
-              </LocalizationProviderKit>
-              :
-              <DatePickerKit
-                onRangeFocusChange={(e) => { return e }}
-                maxDate={new Date()}
-                onChange={handleOnChangeRight}
-                showSelectionPreview={true}
-                moveRangeOnFirstSelection={false}
-                months={2}
-                ranges={rightDate}
-                direction="horizontal"
-                dragSelectionEnabled={false}
+
+      </div>
+      <div
+        className={
+          "date-range range-right " +
+          (openedRight ? "opened" : "")}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <PaperKit className="date-picker">
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index={"1"}
+            type={"day"}
+            setSelections={setRightDate}
+            setTypeDate={setTypeDate}
+            leftDate={rightDate}
+          />
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index={"2"}
+            type={"week"}
+            setSelections={setRightDate}
+            setTypeDate={setTypeDate}
+            leftDate={rightDate}
+          />
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index={"3"}
+            type={"month"}
+            setSelections={setRightDate}
+            setTypeDate={setTypeDate}
+            leftDate={rightDate}
+          />
+          <div className="date-btn-wrapper">
+            <ButtonKit
+              disabled={getRightDate() ? false : true}
+              onClick={handleClickRight}
+              className={"date-save-btn " + (getRightDate() ? "" : "date-disabled-btn")} variant={"contained"}>
+              Ok
+            </ButtonKit>
+          </div>
+        </PaperKit>
+        {
+          typeDate === "month" ?
+            <LocalizationProviderKit dateAdapter={AdapterDayjs}>
+              <MonthPickerKit
+                className="month_picker"
+                date={dayjs(rightDate[0].startDate)}
+                minDate={minDate}
+                maxDate={maxDate}
+                onChange={(newDateMonth) => setRightDate([{
+                  startDate: startOfMonth(new Date(newDateMonth)),
+                  endDate: endOfMonth(new Date(newDateMonth)),
+                  key: "selection"
+                }])}
               />
-          }
-        </div>
+            </LocalizationProviderKit>
+            :
+            <DatePickerKit
+              minDate={new Date(minDate)}
+              maxDate={new Date()}
+              onChange={handleOnChangeRight}
+              showSelectionPreview={true}
+              moveRangeOnFirstSelection={false}
+              months={2}
+              ranges={rightDate}
+              direction="horizontal"
+              dragSelectionEnabled={false}
+            />
+        }
       </div>
       <div className={"date-range-overlay " + (opened ? "opened" : "")} onClick={() => setOpened(false)}></div>
       <div className={"date-range-overlay " + (openedRight ? "opened" : "")} onClick={() => setOpenedRight(false)}></div>
