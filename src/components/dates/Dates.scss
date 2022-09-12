@@ -147,6 +147,9 @@
   .rdrDefinedRangesWrapper {
     display: none;
   }
+  .rdrDay.rdrDay{
+    height: 49.7px;
+  }
 }
 
 .date-range-overlay {
@@ -172,7 +175,7 @@
   top: 55px;
   left: 0;
   z-index: 100;
-  padding: 15px;
+  padding: 25px 15px;
   opacity: 0;
   visibility: hidden;
   transition: .4s;

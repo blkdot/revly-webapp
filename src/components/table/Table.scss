@@ -2,24 +2,26 @@
 
 .table_evolution {
   display: flex;
-  width: 90px;
+  width: 60px;
   align-items: center;
+  justify-content: center;
   grid-gap: 5px;
-  padding: 0 5px;
-  border-radius: 15px;
+  padding: 5px 5px;
+  border-radius: 12px;
 }
 
 .table_evolution span {
-  color: white;
   font-size: 12px;
 }
 
 .table_increased {
-  background: $color-green;
+  color: $color-green;
+  background: $color-evolution-green;
 }
 
 .table_decreased {
-  background: $color-red;
+  color: $color-red;
+  background: $color-evolution-red;
 }
 
 .table_decreased svg {
