@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import Confetti from "react-confetti";
 
 import './OnBoarding.scss';
@@ -6,7 +7,8 @@ import './OnBoarding.scss';
 import OnBoardingForm from '../../components/onboarding/OnBoarding';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import Dates from '../../components/dates/Dates';
-import Finance from '../../components/finance/Finance';
+import FinanceEmpty from '../../components/finance/FinanceEmpty';
+import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
 import Congrats from '../../components/congrats/Congrats';
 
@@ -41,7 +43,7 @@ const OnBoarding = () => {
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
   const [registered, setRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setPlatformToken, setIsOnboarded } = usePlatform();
+  const { setPlatformToken, setIsOnboarded, platformOnboarded, setPlatformOnboarded } = usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert('error');
@@ -58,6 +60,14 @@ const OnBoarding = () => {
     padding: '1rem',
     border: '0'
   };
+
+  useEffect(() => {
+    if (step === 0) {
+      setRegistered(false);
+      setIsOnboarded(false);
+      setPlatformOnboarded([]);
+    }
+  }, [step]);
 
   const handleSubmitLoginInfo = async (data) => {
     setIsLoading(true);
@@ -80,13 +90,35 @@ const OnBoarding = () => {
     setAlertTheme('success');
     showAlert();
     setPlatformToken(res.response);
-    setRegistered(true);
-    setIsOnboarded(true);
     setIsLoading(false);
+    const currentPlatform = [...platformOnboarded, ...data.map((d) => d.platform)];
+    setPlatformOnboarded(currentPlatform);
+    isOnboardingCompleted(currentPlatform);
   };
 
   const handlePlatformClick = (key) => {
     setSelectedPlatform({ ...selectedPlatform, [key]: !selectedPlatform[key] });
+  };
+
+  const returnFormOrder = () => {
+    if (selectedPlatform.deliveroo && !platformOnboarded.includes('deliveroo')) {
+      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={{ deliveroo: true }} isLoading={isLoading} />;
+    }
+
+    if (selectedPlatform.talabat && !platformOnboarded.includes('talabat')) {
+      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={{ talabat: true }} isLoading={isLoading} />;
+    }
+  };
+
+  const isOnboardingCompleted = (currentPlatform) => {
+
+    const deliverooOnboarded = !selectedPlatform.deliveroo ? true : currentPlatform.includes('deliveroo');
+    const talabatOnboarded = !selectedPlatform.talabat ? true : currentPlatform.includes('talabat');
+
+    setRegistered(deliverooOnboarded && talabatOnboarded);
+    setIsOnboarded(deliverooOnboarded && talabatOnboarded);
+
+    return (deliverooOnboarded && talabatOnboarded);
   };
 
   const renderStepScreens = () => {
@@ -101,7 +133,17 @@ const OnBoarding = () => {
     }
 
     if (step === 1) {
-      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={selectedPlatform} isLoading={isLoading} />;
+      return (
+        <>
+          <PlatformSelector
+            items={defaultSelections}
+            state={selectedPlatform}
+            onClickItem={() => null}
+            validated={platformOnboarded}
+          />
+          {returnFormOrder()}
+        </>
+      )
     }
 
     return <Congrats />
@@ -126,7 +168,8 @@ const OnBoarding = () => {
       <Confetti gravity={0.1} run={step === 2} style={{ zIndex: 1301 }} />
       <RestaurantDropdown names={[]} />
       <Dates />
-      <Finance />
+      <FinanceEmpty />
+      <MarketingEmpty />
       <ModalKit open aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
         <div style={style}>
           <StepperKit activeStep={step} alternativeLabel>
