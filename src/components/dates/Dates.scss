@@ -55,14 +55,13 @@
 .date-range.date-range {
   opacity: 0;
   visibility: hidden;
-  overflow: hidden;
   z-index: 800;
   display: flex;
   position: absolute;
+  justify-content: center;
+  width: 100%;
   top: 55px;
-  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
-    0 2px 4px -1px rgb(145 158 171 / 24%);
-  right: -270px;
+
   transition: .4s;
 
   &.opened {
@@ -70,13 +69,8 @@
     visibility: visible;
   }
 
-  &.month {
-    right: 0px;
-  }
 
-  &.range-right {
-    right: 0;
-  }
+
 
   .month_picker {
     padding: 0 15px;
@@ -139,12 +133,22 @@
     }
   }
 
+  >div:nth-of-type(2) {
+    overflow: hidden;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+      0 2px 4px 0px rgb(145 158 171 / 24%);
+  }
+
   .rdrDayPassive .rdrDayNumber span {
     color: #aeb9bf;
   }
 
   .rdrDefinedRangesWrapper {
     display: none;
+  }
+  .rdrDay.rdrDay{
+    height: 49.7px;
   }
 }
 
@@ -171,7 +175,7 @@
   top: 55px;
   left: 0;
   z-index: 100;
-  padding: 15px;
+  padding: 25px 15px;
   opacity: 0;
   visibility: hidden;
   transition: .4s;
@@ -210,7 +214,8 @@
   display: flex;
   flex-direction: column;
   grid-gap: 5px;
-  box-shadow: none;
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+    0 2px 4px -1px rgb(145 158 171 / 24%);
 
   .navbar-accordion.navbar-accordion {
     &::before {
@@ -278,9 +283,27 @@
   }
 }
 
+@media(max-width: 1260px) {
+  .date-range.date-range {
+    top: 120px;
+
+    .rdrMonths {
+      >div:nth-of-type(2) {
+        display: none;
+      }
+    }
+  }
+}
+
 @media(max-width: 960px) {
   .dates {
     flex-direction: column;
     grid-gap: 10px;
+  }
+
+  .date-range.date-range {
+    &.range-right {
+      top: 210px;
+    }
   }
 }

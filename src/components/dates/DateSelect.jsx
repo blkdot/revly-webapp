@@ -132,7 +132,7 @@ export const DateSelect = React.memo(({ type, setSelections, setTypeDate, expand
       expanded={expanded === ("panel" + index)}
       onChange={handleChange("panel" + index)}
       className="navbar-accordion">
-      <ButtonKit onClick={changeSelect} className="navbar-button-kit">
+      <ButtonKit onClick={changeSelect} className={"navbar-button-kit " + (expanded === "panel" + index ? "active" : "")}>
         <AccordionSummaryKit className="accordion-sum" expandIcon={<ExpandMoreIcon />}>
           <TypographyKit sx={{ display: "flex", alignItems: "center", gridGap: "5px", fontSize: "16px" }}>
             <span>{type}</span>
