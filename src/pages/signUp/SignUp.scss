@@ -5,18 +5,19 @@
   text-align: -webkit-center;
   text-align: -moz-center;
   display:flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 
   .signup-cover {
-    width: 50%;
+    width: 40%;
+    text-align: center;
   }
 
   .card-signup {
     width: 50%;
     text-align: center;
     padding: 2rem;
-    margin: auto;
+    transform: scale(0.8);
   }
 
   @include breakpoint($breakpoint-xs, $breakpoint-lg)  {
@@ -27,6 +28,7 @@
     }
 
     .card-signup {
+      transform: scale(1);
       width: 100%;
     }
   }
