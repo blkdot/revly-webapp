@@ -50,7 +50,7 @@ export const ProtectedOnboardRoutes = () => {
     const unsubscribe = () => {
       if (flag === false || !isOnboarded) {
         // TODO: uncomment to test in real case
-        // checkIfRegistered();
+        checkIfRegistered();
       }
     };
 

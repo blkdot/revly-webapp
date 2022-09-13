@@ -5,11 +5,11 @@ import './PlatformSelector.scss';
 import PlatformBoxSelector from '../platformBoxSelector/PlatformBoxSelector';
 
 const PlatformSelector = (props) => {
-  const { items, onClickItem, state } = props;
+  const { items, onClickItem, state, validated } = props;
 
   const getState = (n) => (state[n] === true);
 
-  const renderItems = () => items.map((item) => <PlatformBoxSelector key={item.name} item={item} onClickItem={onClickItem} classActive={getState(item.name)} />);
+  const renderItems = () => items.map((item) => <PlatformBoxSelector key={item.name} item={item} onClickItem={onClickItem} classActive={getState(item.name)} validated={validated} />);
 
   return (
     <div className='onboarding-platform'>
