@@ -20,9 +20,9 @@ import AccordionDetailsKit from "../../kits/accordionDetails/AccordionDetails";
 import TypographyKit from "../../kits/typography/TypographyKit";
 import ButtonKit from "../../kits/button/ButtonKit";
 
-const Link = ({ path, title, children }) => {
+const Link = ({ path, title, children, secondPath }) => {
   return (
-    <NavLink to={path}>
+    <NavLink to={path + (secondPath ? secondPath : "")} className={path === "/planning" ? "active" : ""}>
       <ButtonKit className="navbar-button-kit">
         {children}
         <span>{title}</span>
@@ -67,7 +67,7 @@ function Navbar() {
           <Link title={"Dashboard"} path={"/dashboard"}>
             <DashboardIcon />
           </Link>
-          <Link title={"Planning"} path={"/planning"}>
+          <Link title={"Planning"} path={"/planning"} secondPath={"/offers"}>
             <CalendarMonthIcon />
           </Link>
           <AccordionKit onClick={() => setExpanded(!expanded)} className="navbar-accordion" expanded={opened || open ? expanded : false}>
