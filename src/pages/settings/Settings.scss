@@ -1,7 +1,15 @@
 @import '../../library.scss';
 
 .setting-account {
-  margin-top: 12rem;
+  margin-top: 7.5rem;
+  
+  @include tabletBreakpoint {
+    margin-top: 11.5rem;
+  }
+
+  @include mobileBreakpoint {
+    margin-top: 18rem;
+  }
 
   .setting-account__tabs {
     

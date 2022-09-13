@@ -50,30 +50,32 @@ const Settings = () => {
   return (
     <div className="setting-account">
       <TypographyKit variant="h4">Settings</TypographyKit>
-      <TabsKit
-        allowScrollButtonsMobile
-        variant='scrollable'
-        scrollButtons='auto'
-        value={currentTab}
-        onChange={handleTabChange}
-        className='setting-account__tabs'
-      >
-        {ACCOUNT_TABS.map((tab) => (
-          <TabKit
-            className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}
-            disableRipple
-            key={tab.value}
-            label={tab.value.replace('_', ' ')}
-            icon={tab.icon}
-            value={tab.value}
-          />
-        ))}
-      </TabsKit>
-      <BoxKit sx={{ mb: 5 }} />
-      {ACCOUNT_TABS.map((tab) => {
-        const isMatched = tab.value === currentTab;
-        return isMatched && <BoxKit key={tab.value}>{tab.component}</BoxKit>;
-      })}
+      <div>
+        <TabsKit
+          allowScrollButtonsMobile
+          variant='scrollable'
+          scrollButtons='auto'
+          value={currentTab}
+          onChange={handleTabChange}
+          className='setting-account__tabs'
+        >
+          {ACCOUNT_TABS.map((tab) => (
+            <TabKit
+              className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}
+              disableRipple
+              key={tab.value}
+              label={tab.value.replace('_', ' ')}
+              icon={tab.icon}
+              value={tab.value}
+            />
+          ))}
+        </TabsKit>
+        <BoxKit sx={{ mb: 5 }} />
+        {ACCOUNT_TABS.map((tab) => {
+          const isMatched = tab.value === currentTab;
+          return isMatched && <BoxKit key={tab.value}>{tab.component}</BoxKit>;
+        })}
+      </div>
     </div>
   );
 };
