@@ -51,7 +51,7 @@ export const ProtectedOnboardRoutes = () => {
       console.log(isOnboarded);
       if (flag === false || !isOnboarded) {
         // TODO: uncomment to test in real case
-        checkIfRegistered();
+        // checkIfRegistered();
       }
     };
 
