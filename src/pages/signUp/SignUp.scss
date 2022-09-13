@@ -35,5 +35,8 @@
 
   @include desktopBreakpoint {
     height: 100vh;
+    .card-signup {
+      transform: scale(1);
+    }
   }
 }
