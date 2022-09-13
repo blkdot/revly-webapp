@@ -15,10 +15,13 @@ import {
 import { auth } from '../firebase-config';
 import config from '../setup/config';
 
+import usePlatform from '../hooks/usePlatform';
+
 const UserAuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(true);
+  const { clearToken } = usePlatform();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -40,6 +43,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logOut = () => {
+    clearToken();
     return signOut(auth);
   };
 
