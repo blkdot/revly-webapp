@@ -4,14 +4,19 @@ import { pascalCase } from 'change-case';
 import './PlatformSettingsBox.scss';
 
 import SwitchKit from '../../kits/switch/SwitchKit';
+import ButtonKit from '../../kits/button/ButtonKit';
 
 const PlatformSettingsBox = (props) => {
-  const { active, src, type, registered, onChangeSwitch } = props;
+  const { active, src, type, registered, onChangeSwitch, onClick } = props;
 
   const renderFooter = () => {
     if (!active || !registered) return null;
 
-    return <div className='__footer-action'></div>;
+    return (
+      <div className='__footer-action'>
+        <ButtonKit onClick={onClick}>Change Credentials</ButtonKit>
+      </div>
+    );
   };
 
   return (
