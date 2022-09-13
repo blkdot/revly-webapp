@@ -1,20 +1,37 @@
+@import '../../responsiveness.scss';
+
 .signup {
   text-align: center;
   text-align: -webkit-center;
   text-align: -moz-center;
-  margin: auto;
   display:flex;
-  justify-content:center;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 
   .signup-cover {
-    margin-top: 10%;
+    width: 50%;
   }
 
   .card-signup {
-    width: 30rem;
-    text-align: start;
-    padding: 1rem 1rem 1rem;
+    width: 50%;
+    text-align: center;
+    padding: 2rem;
     margin: auto;
+  }
+
+  @include breakpoint($breakpoint-xs, $breakpoint-lg)  {
+    display: block;
+
+    .signup-cover {
+      width: 100%;
+    }
+
+    .card-signup {
+      width: 100%;
+    }
+  }
+
+  @include desktopBreakpoint {
+    height: 100vh;
   }
 }
