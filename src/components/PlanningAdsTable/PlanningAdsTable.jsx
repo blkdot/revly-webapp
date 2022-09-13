@@ -8,7 +8,7 @@ import TableCellKit from '../../kits/tablecell/TableCellKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
 import PaperKit from '../../kits/paper/PaperKit';
 
-export default function PlanningOffersTable({rows}) {
+export default function PlanningAdsTable({ rows }) {
   return (
     <TableContainerKit className="planning_offers-table-container" component={PaperKit}>
       <TableKit sx={{ minWidth: 650 }} aria-label="simple table">
@@ -19,9 +19,8 @@ export default function PlanningOffersTable({rows}) {
             <TableCellKit>platform</TableCellKit>
             <TableCellKit>Day</TableCellKit>
             <TableCellKit>slot</TableCellKit>
-            <TableCellKit>Discount type</TableCellKit>
-            <TableCellKit>%</TableCellKit>
-            <TableCellKit>Min. Order</TableCellKit>
+            <TableCellKit>Bid</TableCellKit>
+            <TableCellKit>Budget</TableCellKit>
             <TableCellKit>Target</TableCellKit>
             <TableCellKit>Status</TableCellKit>
 
@@ -40,9 +39,8 @@ export default function PlanningOffersTable({rows}) {
               <TableCellKit>{row.platform}</TableCellKit>
               <TableCellKit>{row.day.toLocaleDateString()}</TableCellKit>
               <TableCellKit>{row.slot}</TableCellKit>
-              <TableCellKit>{row.discountType}</TableCellKit>
-              <TableCellKit>{row.procent}</TableCellKit>
-              <TableCellKit>{row.minOrder}</TableCellKit>
+              <TableCellKit>{row.bid}</TableCellKit>
+              <TableCellKit>{row.budget}</TableCellKit>
               <TableCellKit>{row.target}</TableCellKit>
               <TableCellKit>{row.status}</TableCellKit>
             </TableRow>

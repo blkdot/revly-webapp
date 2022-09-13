@@ -1,8 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Dates from "../../components/dates/Dates";
+import PlanningAdsTable from "../../components/PlanningAdsTable/PlanningAdsTable";
 import RestaurantDropdown from "../../components/restaurantDropdown/RestaurantDropdown";
-import { restaurantNames } from "../../data/fakeDataDashboard";
+import { PlanningAdsData, restaurantNames } from "../../data/fakeDataDashboard";
 import "./Planning.scss";
 
 const PlanningAds = () => {
@@ -16,6 +17,7 @@ const PlanningAds = () => {
         <NavLink to={"/planning/offers"}>Offers</NavLink>
         <NavLink to={"/planning/ads"}>Ads</NavLink>
       </div>
+      <PlanningAdsTable rows={PlanningAdsData}/>
     </div>
   );
 }

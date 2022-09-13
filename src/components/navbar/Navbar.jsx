@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -20,9 +20,9 @@ import AccordionDetailsKit from "../../kits/accordionDetails/AccordionDetails";
 import TypographyKit from "../../kits/typography/TypographyKit";
 import ButtonKit from "../../kits/button/ButtonKit";
 
-const Link = ({ path, title, children, secondPath }) => {
+const Link = ({ path, title, children, className }) => {
   return (
-    <NavLink to={path + (secondPath ? secondPath : "")} className={path === "/planning" ? "active" : ""}>
+    <NavLink to={path} className={className}>
       <ButtonKit className="navbar-button-kit">
         {children}
         <span>{title}</span>
@@ -38,7 +38,8 @@ function Navbar() {
 
   const { user, logOut } = useUserAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  
   const handleLogout = async () => {
     try {
       await logOut();
@@ -67,7 +68,14 @@ function Navbar() {
           <Link title={"Dashboard"} path={"/dashboard"}>
             <DashboardIcon />
           </Link>
-          <Link title={"Planning"} path={"/planning"} secondPath={"/offers"}>
+          <Link
+            title={"Planning"} path={"/planning/offers"}
+            className={
+              location.pathname === "/planning/offers" ||
+                location.pathname === "/planning/ads" ?
+                "active" : ""
+            }
+          >
             <CalendarMonthIcon />
           </Link>
           <AccordionKit onClick={() => setExpanded(!expanded)} className="navbar-accordion" expanded={opened || open ? expanded : false}>
