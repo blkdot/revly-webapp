@@ -111,7 +111,7 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight, set
     ) return <Month />
   }
   return (
-    <PaperKit className={"date-select " + (selected ? "selected" : "")}>
+    <PaperKit style={{ background: '#fff' }} className={"date-select " + (selected ? "selected" : "")}>
       {render()}
     </PaperKit >
   )

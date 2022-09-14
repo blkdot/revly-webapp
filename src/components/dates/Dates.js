@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import LocalizationProviderKit from "../../kits/localizationProvider/LocalizationProviderkit";
 import MonthPickerKit from "../../kits/monthPicker/MonthPickerKit";
+import { useLocation } from "react-router-dom";
 
 const Dates = () => {
   const { setLeft, setRight, leftDate: left, rightDate: right, setTitleDate, titleDate, setTitleRightDate, titleRightDate } = useDate();
@@ -25,6 +26,8 @@ const Dates = () => {
   const [selected, setSelected] = useState(false)
   const [expanded, setExpanded] = useState("panel1")
   const [typeDate, setTypeDate] = useState("day");
+  const [title, setTitle] = useState(titleDate);
+  const [leftDateBtn, setLeftDateBtn] = useState({ startDate: left.startDate, endDate: left.endDate })
   const [leftDate, setLeftDate] = useState([
     {
       startDate: new Date(),
@@ -38,13 +41,20 @@ const Dates = () => {
     key: "selection"
   }]);
 
+  const location = useLocation();
+
   const handleClick = () => { // handleClick happens when you click on button "OK" on Left date picker
     const startDate = new Date(leftDate[0].startDate);
     const endDate = new Date(leftDate[0].endDate);
     setOpened(false) // Closing Left date picker
-    setLeft({ startDate: startDate, endDate: endDate }); // Sending data to context state
-    setRight({ startDate: startDate, endDate: endDate }); // Sending data to context state
-    
+    if (location.pathname === "/dashboard") {
+      setLeft({ startDate: startDate, endDate: endDate }); // Sending data to context state
+      setRight({ startDate: startDate, endDate: endDate }); // Sending data to context state
+    }
+    else {
+      setLeftDateBtn({ startDate: startDate, endDate: endDate });
+    }
+
     const date = new Date();
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
@@ -56,64 +66,116 @@ const Dates = () => {
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
 
-    if (startLocal === endLocal) { // It checks that what date is currently selected in Left date picker
-      if (startLocal === dateLocal) {
-        setTitleDate("today") // Sending data to state which will be needed for the introduction in the left input
-        setTitleRightDate("today") // Sending data to state which will be needed for the introduction in the right input
+    if (location.pathname === "/dashboard") {
+      if (startLocal === endLocal) { // It checks that what date is currently selected in Left date picker
+        if (startLocal === dateLocal) {
+          setTitleDate("today") // Sending data to state which will be needed for the introduction in the left input
+          setTitleRightDate("today") // Sending data to state which will be needed for the introduction in the right input
+        }
+        else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
+          setTitleDate("yesterday")
+          setTitleRightDate("yesterday")
+        }
+        else {
+          setTitleDate("custom")
+          setTitleRightDate("csutom")
+        }
       }
-      else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
-        setTitleDate("yesterday")
-        setTitleRightDate("yesterday")
+      else if (
+        getWeek(startDate, 1) === getWeek(endDate, 1)) {
+        if (endGetDay === dateGetDay && startGetDay === 0) {
+          setTitleDate("current week")
+          setTitleRightDate("current week")
+        }
+        else if (startGetDay === 0 && endGetDay === 6 && getWeek(startDate) === getWeek(subWeeks(date, 1))) {
+          setTitleDate("last week")
+          setTitleRightDate("last week")
+        }
+        else {
+          setTitleDate("custom")
+          setTitleRightDate("custom")
+        }
       }
-      else {
-        setTitleDate("custom")
-        setTitleRightDate("csutom")
-      }
-    }
-    else if (
-      getWeek(startDate, 1) === getWeek(endDate, 1)) {
-      if (endGetDay === dateGetDay && startGetDay === 0) {
-        setTitleDate("current week")
-        setTitleRightDate("current week")
-      }
-      else if (startGetDay === 0 && endGetDay === 6 && getWeek(startDate) === getWeek(subWeeks(date, 1))) {
-        setTitleDate("last week")
-        setTitleRightDate("last week")
-      }
-      else {
-        setTitleDate("custom")
-        setTitleRightDate("custom")
-      }
-    }
-    else if (
-      getMonth(startDate, 1) === getMonth(date, 1)
-    ) {
+      else if (
+        getMonth(startDate, 1) === getMonth(date, 1)
+      ) {
 
-      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-        setTitleDate("current month")
-        setTitleRightDate("current month")
-      }
-      else if (startGetDate === 1 && endGetDate === dateGetDate) {
-        setTitleDate("last month")
-        setTitleRightDate("last month")
+        if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
+          setTitleDate("current month")
+          setTitleRightDate("current month")
+        }
+        else if (startGetDate === 1 && endGetDate === dateGetDate) {
+          setTitleDate("last month")
+          setTitleRightDate("last month")
+        }
+        else {
+          setTitleDate("custom")
+          setTitleRightDate("custom")
+        }
       }
       else {
-        setTitleDate("custom")
-        setTitleRightDate("custom")
+        if (startGetDate === 1 && endGetDate <= dateGetDate && endGetDate === endOfMonth(endDate).getDate()) {
+          setTitleDate("current month")
+          setTitleRightDate("current month")
+        }
+        else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+          setTitleDate("last month")
+          setTitleRightDate("last month")
+        }
+        else {
+          setTitleDate("custom")
+          setTitleRightDate("custom")
+        }
       }
     }
     else {
-      if (startGetDate === 1 && endGetDate <= dateGetDate && endGetDate === endOfMonth(endDate).getDate()) {
-        setTitleDate("current month")
-        setTitleRightDate("current month")
+      if (startLocal === endLocal) { // It checks that what date is currently selected in Left date picker
+        if (startLocal === dateLocal) {
+          setTitle("today") // Sending data to state which will be needed for the introduction in the left input
+        }
+        else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
+          setTitle("yesterday")
+        }
+        else {
+          setTitle("custom")
+        }
       }
-      else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-        setTitleDate("last month")
-        setTitleRightDate("last month")
+      else if (
+        getWeek(startDate, 1) === getWeek(endDate, 1)) {
+        if (endGetDay === dateGetDay && startGetDay === 0) {
+          setTitle("current week")
+        }
+        else if (startGetDay === 0 && endGetDay === 6 && getWeek(startDate) === getWeek(subWeeks(date, 1))) {
+          setTitle("last week")
+        }
+        else {
+          setTitle("custom")
+        }
+      }
+      else if (
+        getMonth(startDate, 1) === getMonth(date, 1)
+      ) {
+
+        if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
+          setTitle("current month")
+        }
+        else if (startGetDate === 1 && endGetDate === dateGetDate) {
+          setTitle("last month")
+        }
+        else {
+          setTitle("custom")
+        }
       }
       else {
-        setTitleDate("custom")
-        setTitleRightDate("custom")
+        if (startGetDate === 1 && endGetDate <= dateGetDate && endGetDate === endOfMonth(endDate).getDate()) {
+          setTitle("current month")
+        }
+        else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+          setTitle("last month")
+        }
+        else {
+          setTitle("custom")
+        }
       }
     }
 
@@ -335,17 +397,24 @@ const Dates = () => {
   return (
     <div className="dates">
       <div className="date-picker_wrapper">
-        <PaperKit component="div" onClick={() => setOpened(true)} className="date-input">
+        <PaperKit style={{ background: '#fff' }} component="div" onClick={() => setOpened(true)} className="date-input">
           <TypographyKit className="date-typography">
             <CalendarMonthIcon />
             <span>{
-              titleDate === "custom" ? // if titleDate === "custom"  i return the date
+              location.pathname === "/dashboard" ? titleDate === "custom" ? // if titleDate === "custom"  i return the date
                 new Date(left.startDate).toLocaleDateString() ===
                   new Date(left.endDate).toLocaleDateString() ?
                   new Date(left.startDate).toLocaleDateString() :
                   new Date(left.startDate).toLocaleDateString() +
                   " - " + new Date(left.endDate).toLocaleDateString() :
-                titleDate // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
+                titleDate // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc) 
+                : title === "custom" ? // if title === "custom"  i return the date
+                  new Date(leftDateBtn.startDate).toLocaleDateString() ===
+                    new Date(leftDateBtn.endDate).toLocaleDateString() ?
+                    new Date(leftDateBtn.startDate).toLocaleDateString() :
+                    new Date(leftDateBtn.startDate).toLocaleDateString() +
+                    " - " + new Date(leftDateBtn.endDate).toLocaleDateString() :
+                  title // if title !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
             }</span>
           </TypographyKit>
           <ExpandMoreIcon />
@@ -359,7 +428,7 @@ const Dates = () => {
         }
         onClick={(e) => e.stopPropagation()}
       >
-        <PaperKit className="date-picker">
+        <PaperKit style={{ background: '#fff' }} className="date-picker">
           <DateSelect
             expanded={expanded}
             setExpanded={setExpanded}
@@ -425,110 +494,115 @@ const Dates = () => {
             />
         }
       </div>
-      <span>Compare to</span>
-      <div className="date-picker_wrapper">
-        <TypographyKit component="div" className="date-input-wrapper">
-          <PaperKit onClick={() => setSelected(!selected)} className={"date-input " + (selected ? "selected" : "")}>
-            <TypographyKit component="div" className="date-typography">
-              <CalendarMonthIcon />
-              <span>
-                {
-                  titleRightDate === "custom" ? // if titleRightDate === "custom"  i return the date
-                    new Date(right.startDate).toLocaleDateString() ===
-                      new Date(right.endDate).toLocaleDateString() ?
-                      new Date(right.startDate).toLocaleDateString() :
-                      new Date(right.startDate).toLocaleDateString() +
-                      " - " + new Date(right.endDate).toLocaleDateString() :
-                    titleRightDate // if titleRightDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
-                }
-              </span>
-            </TypographyKit>
-            <ExpandMoreIcon />
-          </PaperKit>
-          <RightDateSelect
-            setRightDateBtn={setRight}
-            setOpenedRight={setOpenedRight}
-            setRightDate={setRightDate}
-            selected={selected}
-            leftDate={left}
-            setTitleRight={setTitleRightDate}
-          />
-        </TypographyKit>
+      {
+        location.pathname === "/dashboard" ?
+          <div className="dashboard-date">
+            <span>Compare to</span>
+            <div className="date-picker_wrapper">
+              <TypographyKit component="div" className="date-input-wrapper">
+                <PaperKit style={{ background: '#fff' }} onClick={() => setSelected(!selected)} className={"date-input " + (selected ? "selected" : "")}>
+                  <TypographyKit component="div" className="date-typography">
+                    <CalendarMonthIcon />
+                    <span>
+                      {
+                        titleRightDate === "custom" ? // if titleRightDate === "custom"  i return the date
+                          new Date(right.startDate).toLocaleDateString() ===
+                            new Date(right.endDate).toLocaleDateString() ?
+                            new Date(right.startDate).toLocaleDateString() :
+                            new Date(right.startDate).toLocaleDateString() +
+                            " - " + new Date(right.endDate).toLocaleDateString() :
+                          titleRightDate // if titleRightDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
+                      }
+                    </span>
+                  </TypographyKit>
+                  <ExpandMoreIcon />
+                </PaperKit>
+                <RightDateSelect
+                  setRightDateBtn={setRight}
+                  setOpenedRight={setOpenedRight}
+                  setRightDate={setRightDate}
+                  selected={selected}
+                  leftDate={left}
+                  setTitleRight={setTitleRightDate}
+                />
+              </TypographyKit>
 
-      </div>
-      <div
-        className={
-          "date-range range-right " +
-          (openedRight ? "opened" : "")}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <PaperKit className="date-picker">
-          <DateSelect
-            expanded={expanded}
-            setExpanded={setExpanded}
-            index={"1"}
-            type={"day"}
-            setSelections={setRightDate}
-            setTypeDate={setTypeDate}
-            leftDate={rightDate}
-          />
-          <DateSelect
-            expanded={expanded}
-            setExpanded={setExpanded}
-            index={"2"}
-            type={"week"}
-            setSelections={setRightDate}
-            setTypeDate={setTypeDate}
-            leftDate={rightDate}
-          />
-          <DateSelect
-            expanded={expanded}
-            setExpanded={setExpanded}
-            index={"3"}
-            type={"month"}
-            setSelections={setRightDate}
-            setTypeDate={setTypeDate}
-            leftDate={rightDate}
-          />
-          <div className="date-btn-wrapper">
-            <ButtonKit
-              disabled={getRightDate() ? false : true}
-              onClick={handleClickRight}
-              className={"date-save-btn " + (getRightDate() ? "" : "date-disabled-btn")} variant={"contained"}>
-              Ok
-            </ButtonKit>
-          </div>
-        </PaperKit>
-        {
-          typeDate === "month" ?
-            <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-              <MonthPickerKit
-                className="month_picker"
-                date={dayjs(rightDate[0].startDate)}
-                minDate={minDate}
-                maxDate={maxDate}
-                onChange={(newDateMonth) => setRightDate([{
-                  startDate: startOfMonth(new Date(newDateMonth)),
-                  endDate: endOfMonth(new Date(newDateMonth)),
-                  key: "selection"
-                }])}
-              />
-            </LocalizationProviderKit>
-            :
-            <DatePickerKit
-              onRangeFocusChange={(e) => { return e }}
-              minDate={new Date(minDate)}
-              maxDate={new Date()}
-              onChange={handleOnChangeRight}
-              showSelectionPreview={true}
-              moveRangeOnFirstSelection={false}
-              months={2}
-              ranges={rightDate}
-              direction="horizontal"
-              dragSelectionEnabled={false}
-            />
-        }
-      </div>
+            </div>
+            <div
+              className={
+                "date-range range-right " +
+                (openedRight ? "opened" : "")}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <PaperKit style={{ background: '#fff' }} className="date-picker">
+                <DateSelect
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  index={"1"}
+                  type={"day"}
+                  setSelections={setRightDate}
+                  setTypeDate={setTypeDate}
+                  leftDate={rightDate}
+                />
+                <DateSelect
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  index={"2"}
+                  type={"week"}
+                  setSelections={setRightDate}
+                  setTypeDate={setTypeDate}
+                  leftDate={rightDate}
+                />
+                <DateSelect
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  index={"3"}
+                  type={"month"}
+                  setSelections={setRightDate}
+                  setTypeDate={setTypeDate}
+                  leftDate={rightDate}
+                />
+                <div className="date-btn-wrapper">
+                  <ButtonKit
+                    disabled={getRightDate() ? false : true}
+                    onClick={handleClickRight}
+                    className={"date-save-btn " + (getRightDate() ? "" : "date-disabled-btn")} variant={"contained"}>
+                    Ok
+                  </ButtonKit>
+                </div>
+              </PaperKit>
+              {
+                typeDate === "month" ?
+                  <LocalizationProviderKit dateAdapter={AdapterDayjs}>
+                    <MonthPickerKit
+                      className="month_picker"
+                      date={dayjs(rightDate[0].startDate)}
+                      minDate={minDate}
+                      maxDate={maxDate}
+                      onChange={(newDateMonth) => setRightDate([{
+                        startDate: startOfMonth(new Date(newDateMonth)),
+                        endDate: endOfMonth(new Date(newDateMonth)),
+                        key: "selection"
+                      }])}
+                    />
+                  </LocalizationProviderKit>
+                  :
+                  <DatePickerKit
+                    onRangeFocusChange={(e) => { return e }}
+                    minDate={new Date(minDate)}
+                    maxDate={new Date()}
+                    onChange={handleOnChangeRight}
+                    showSelectionPreview={true}
+                    moveRangeOnFirstSelection={false}
+                    months={2}
+                    ranges={rightDate}
+                    direction="horizontal"
+                    dragSelectionEnabled={false}
+                  />
+              }
+            </div>
+          </div> : ""
+      }
       <div className={"date-range-overlay " + (opened ? "opened" : "")} onClick={() => setOpened(false)}></div>
       <div className={"date-range-overlay " + (openedRight ? "opened" : "")} onClick={() => setOpenedRight(false)}></div>
     </div>

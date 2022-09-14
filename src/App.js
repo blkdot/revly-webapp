@@ -17,8 +17,7 @@ import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctiona
 import { ProtectedRoutes } from './routes/ProtectedRoutes';
 import { ProtectedOnboardRoutes } from './routes/ProtectedOnboardRoutes';
 import Competition from './pages/competition/Competition';
-import PlanningAds from './pages/planning/PlanningAds';
-import PlanningOffers from './pages/planning/PlanningOffers';
+import Planning from './pages/planning/Planning';
 
 const theme = createTheme({
   palette: {
@@ -44,8 +43,7 @@ function App() {
                     <Route element={<ProtectedOnboardRoutes />}>
                       {/*<Route path='/account' element={<Account />} />*/}
                       <Route path='/dashboard' element={<Dashboard />} />
-                      <Route path='/planning/ads' element={<PlanningAds />} />
-                      <Route path='/planning/offers' element={<PlanningOffers />} />
+                      <Route path='/planning' element={<Planning />} />
                       <Route path='/competition' element={<Competition />} />
                       <Route path='/settings' element={<Settings />} />
                     </Route>

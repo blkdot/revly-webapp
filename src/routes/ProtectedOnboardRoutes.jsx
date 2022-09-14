@@ -11,7 +11,7 @@ export const ProtectedOnboardRoutes = () => {
   const [flag, setFlag] = useState(false);
   const { user } = useUserAuth();
   const { loginExist, loginAll } = useApi();
-  const { setPlatformToken, setIsOnboarded, isOnboarded, setPlatformOnboarded } = usePlatform();
+  const { setPlatformToken, setIsOnboarded, isOnboarded } = usePlatform();
   const { timeRefreshToken } = config;
 
   const getPlatformToken = useCallback(async () => {
@@ -26,6 +26,7 @@ export const ProtectedOnboardRoutes = () => {
   }, [loginAll, setPlatformToken, user.email, user.accessToken]);
 
   const checkIfRegistered = useCallback(async () => {
+
     if (isOnboarded) return;
 
     const res = await loginExist({ master_email: user.email, access_token: user.accessToken });
@@ -43,13 +44,11 @@ export const ProtectedOnboardRoutes = () => {
     setFlag(true);
     setIsOnboarded(true);
     getPlatformToken();
-    setPlatformOnboarded(res.response.platforms);
-  }, [loginExist, user, getPlatformToken, setIsOnboarded, isOnboarded, setPlatformOnboarded]);
+  }, [loginExist, user, getPlatformToken, setIsOnboarded, isOnboarded]);
 
   useEffect(() => {
     const unsubscribe = () => {
       if (flag === false || !isOnboarded) {
-        // TODO: uncomment to test in real case
         checkIfRegistered();
       }
     };
