@@ -7,13 +7,28 @@
   z-index: 1;
   box-shadow: 0 0 1px 0 #919eab7a, 0 2px 4px -1px #919eab3d;
 
+  .card-icon {
+
+    svg,
+    img {
+      filter: invert(58%) sepia(0%) saturate(671%) hue-rotate(147deg) brightness(87%) contrast(84%);
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      height: 40px;
+      width: 40px;
+    }
+  }
+
   &:hover {
     background: $color-third;
     transition: 0.3s;
     color: #4d2681;
-
+    svg{
+      filter: none;
+    }
     img {
-      filter: invert(13%) sepia(53%) saturate(3527%) hue-rotate(255deg) brightness(101%) contrast(92%);
+      filter: invert(13%) sepia(33%) saturate(5910%) hue-rotate(257deg) brightness(96%) contrast(91%);
     }
 
     .card-week {
@@ -25,6 +40,9 @@
     background: $color-third;
     color: #4d2681;
 
+    svg{
+      filter: none;
+    }
     img {
       filter: invert(13%) sepia(53%) saturate(3527%) hue-rotate(255deg) brightness(101%) contrast(92%);
     }
@@ -34,16 +52,7 @@
     font-weight: 600;
   }
 
-  .card-icon {
-    svg,
-    img {
-      position: absolute;
-      top: 15px;
-      right: 10px;
-      height: 50px;
-      width: 50px;
-    }
-  }
+
 
   .icon-paper.icon-paper {
     position: relative;

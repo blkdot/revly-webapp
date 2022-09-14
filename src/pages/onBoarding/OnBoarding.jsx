@@ -91,7 +91,8 @@ const OnBoarding = () => {
     showAlert();
     setPlatformToken(res.response);
     setIsLoading(false);
-    const currentPlatform = [...platformOnboarded, ...data.map((d) => d.platform)];
+
+    const currentPlatform = [...data.map((d) => d.platform)];
     setPlatformOnboarded(currentPlatform);
     isOnboardingCompleted(currentPlatform);
   };
@@ -140,6 +141,7 @@ const OnBoarding = () => {
             state={selectedPlatform}
             onClickItem={() => null}
             validated={platformOnboarded}
+            noText
           />
           {returnFormOrder()}
         </>
