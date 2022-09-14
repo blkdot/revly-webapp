@@ -24,8 +24,6 @@ const Dates = () => {
   const [openedRight, setOpenedRight] = useState(false);
   const [selected, setSelected] = useState(false)
   const [expanded, setExpanded] = useState("panel1")
-  const [leftDateBtn, setLeftDateBtn] = useState({ startDate: new Date(), endDate: new Date() })
-  const [rightDateBtn, setRightDateBtn] = useState({ startDate: new Date(), endDate: new Date() })
   const [typeDate, setTypeDate] = useState("day");
   const [leftDate, setLeftDate] = useState([
     {
@@ -39,16 +37,15 @@ const Dates = () => {
     endDate: new Date(),
     key: "selection"
   }]);
-  const handleClick = () => {
+
+  const handleClick = () => { // handleClick happens when you click on button "OK" on Left date picker
     const startDate = new Date(leftDate[0].startDate);
     const endDate = new Date(leftDate[0].endDate);
-    setLeftDateBtn({ startDate: startDate, endDate: endDate })
-    setOpened(false)
-    setLeft({ startDate: startDate, endDate: endDate })
-    setRightDateBtn({ startDate: startDate, endDate: endDate })
-
-    const date = new Date()
-
+    setOpened(false) // Closing Left date picker
+    setLeft({ startDate: startDate, endDate: endDate }); // Sending data to context state
+    setRight({ startDate: startDate, endDate: endDate }); // Sending data to context state
+    
+    const date = new Date();
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
     const startGetDate = startDate.getDate();
@@ -59,27 +56,33 @@ const Dates = () => {
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
 
-    if (startLocal === endLocal) {
+    if (startLocal === endLocal) { // It checks that what date is currently selected in Left date picker
       if (startLocal === dateLocal) {
-        setTitleDate("today")
+        setTitleDate("today") // Sending data to state which will be needed for the introduction in the left input
+        setTitleRightDate("today") // Sending data to state which will be needed for the introduction in the right input
       }
       else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
         setTitleDate("yesterday")
+        setTitleRightDate("yesterday")
       }
       else {
         setTitleDate("custom")
+        setTitleRightDate("csutom")
       }
     }
     else if (
       getWeek(startDate, 1) === getWeek(endDate, 1)) {
       if (endGetDay === dateGetDay && startGetDay === 0) {
         setTitleDate("current week")
+        setTitleRightDate("current week")
       }
       else if (startGetDay === 0 && endGetDay === 6 && getWeek(startDate) === getWeek(subWeeks(date, 1))) {
         setTitleDate("last week")
+        setTitleRightDate("last week")
       }
       else {
         setTitleDate("custom")
+        setTitleRightDate("custom")
       }
     }
     else if (
@@ -88,34 +91,40 @@ const Dates = () => {
 
       if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
         setTitleDate("current month")
+        setTitleRightDate("current month")
       }
       else if (startGetDate === 1 && endGetDate === dateGetDate) {
         setTitleDate("last month")
+        setTitleRightDate("last month")
       }
       else {
         setTitleDate("custom")
+        setTitleRightDate("custom")
       }
     }
     else {
       if (startGetDate === 1 && endGetDate <= dateGetDate && endGetDate === endOfMonth(endDate).getDate()) {
         setTitleDate("current month")
+        setTitleRightDate("current month")
       }
       else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
         setTitleDate("last month")
+        setTitleRightDate("last month")
       }
       else {
         setTitleDate("custom")
+        setTitleRightDate("custom")
       }
     }
 
   };
-  const handleClickRight = () => {
+  const handleClickRight = () => {// handleClickRight happens when you click on button "OK" on Right date picker
     const startDate = new Date(rightDate[0].startDate);
     const endDate = new Date(rightDate[0].endDate);
-    setRightDateBtn({ startDate: startDate, endDate: endDate })
-    setOpenedRight(false)
-    setSelected(false)
-    setRight({ startDate: startDate, endDate: endDate })
+    setOpenedRight(false) // Closing Right date picker
+    setSelected(false) // Closing Right Select 
+    setRight({ startDate: startDate, endDate: endDate }) // Sending data to context state
+
     const date = new Date()
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
@@ -127,8 +136,8 @@ const Dates = () => {
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
 
-    if (startLocal === endLocal) {
-      if (startLocal === dateLocal) {
+    if (startLocal === endLocal) { // It checks that what date is currently selected in Right date picker
+      if (startLocal === dateLocal) { // Sending data to state which will be needed for the introduction in the right input
         setTitleRightDate("today")
       }
       else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
@@ -178,16 +187,16 @@ const Dates = () => {
 
   }
 
-  const handleOnChangeRight = ranges => {
+  const handleOnChangeRight = ranges => { // handleOnChagneRight happens when you click on some day on Right date picker
     const { selection } = ranges;
-    if (getMonth(selection.startDate) === getMonth(new Date())) {
-      if (typeDate === "day") {
+    if (getMonth(selection.startDate) === getMonth(new Date())) { // This will check if today's month is equal to the month of the clicked day
+      if (typeDate === "day") { // These checks the typeDate
         setRightDate([selection]);
       }
       else if (typeDate === "week") {
         setRightDate([{
-          startDate: startOfWeek(selection.startDate),
-          endDate: getWeek(new Date()) === getWeek(selection.startDate) ? new Date() : endOfWeek(selection.startDate),
+          startDate: startOfWeek(selection.startDate), // here we send start of week
+          endDate: getWeek(new Date()) === getWeek(selection.startDate) ? new Date() : endOfWeek(selection.startDate), // here we compare if the week of today is equal to the week of the clicked day
           key: "selection"
         }])
       }
@@ -198,24 +207,24 @@ const Dates = () => {
       }
       else if (typeDate === "week") {
         setRightDate([{
-          startDate: startOfWeek(selection.startDate),
-          endDate: endOfWeek(selection.startDate),
+          startDate: startOfWeek(selection.startDate), // here we send start of week
+          endDate: endOfWeek(selection.startDate), // here we send end of week
           key: "selection"
         }])
       }
     }
   }
 
-  const handleOnChange = ranges => {
+  const handleOnChange = ranges => { // handleOnChagne happens when you click on some day on Left date picker
     const { selection } = ranges;
-    if (getMonth(selection.startDate) === getMonth(new Date())) {
-      if (typeDate === "day") {
+    if (getMonth(selection.startDate) === getMonth(new Date())) { // This will check if today's month is equal to the month of the clicked day
+      if (typeDate === "day") { // These checks the typeDate
         setLeftDate([selection]);
       }
       else if (typeDate === "week") {
         setLeftDate([{
-          startDate: startOfWeek(selection.startDate),
-          endDate: getWeek(new Date()) === getWeek(selection.startDate) ? new Date() : endOfWeek(selection.startDate),
+          startDate: startOfWeek(selection.startDate), // here we send start of week
+          endDate: getWeek(new Date()) === getWeek(selection.startDate) ? new Date() : endOfWeek(selection.startDate), // here we compare if the week of today is equal to the week of the clicked day
           key: "selection"
         }])
       }
@@ -226,18 +235,18 @@ const Dates = () => {
       }
       else if (typeDate === "week") {
         setLeftDate([{
-          startDate: startOfWeek(selection.startDate),
-          endDate: endOfWeek(selection.startDate),
+          startDate: startOfWeek(selection.startDate), // here we send start of week
+          endDate: endOfWeek(selection.startDate), // here we send end of week
           key: "selection"
         }])
       }
     }
   }
 
-  const getRightDate = () => {
+  const getRightDate = () => {// This function should check if the date of the left date is the same as the date of the right date
     const date = new Date()
-    const startDate = new Date(leftDateBtn.startDate);
-    const endDate = new Date(leftDateBtn.endDate);
+    const startDate = new Date(left.startDate);
+    const endDate = new Date(left.endDate);
     const startDateRight = new Date(rightDate[0].startDate)
     const endDateRight = new Date(rightDate[0].endDate)
     const startLocalRight = startDateRight.toLocaleDateString();
@@ -319,8 +328,10 @@ const Dates = () => {
       }
     }
   }
+
   const minDate = dayjs('2021-01-01T00:00:00.000');
   const maxDate = new Date()
+
   return (
     <div className="dates">
       <div className="date-picker_wrapper">
@@ -328,13 +339,13 @@ const Dates = () => {
           <TypographyKit className="date-typography">
             <CalendarMonthIcon />
             <span>{
-              titleDate === "custom" ?
+              titleDate === "custom" ? // if titleDate === "custom"  i return the date
                 new Date(left.startDate).toLocaleDateString() ===
                   new Date(left.endDate).toLocaleDateString() ?
                   new Date(left.startDate).toLocaleDateString() :
                   new Date(left.startDate).toLocaleDateString() +
                   " - " + new Date(left.endDate).toLocaleDateString() :
-                titleDate
+                titleDate // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
             }</span>
           </TypographyKit>
           <ExpandMoreIcon />
@@ -422,25 +433,24 @@ const Dates = () => {
               <CalendarMonthIcon />
               <span>
                 {
-                  titleRightDate === "custom" ?
+                  titleRightDate === "custom" ? // if titleRightDate === "custom"  i return the date
                     new Date(right.startDate).toLocaleDateString() ===
                       new Date(right.endDate).toLocaleDateString() ?
                       new Date(right.startDate).toLocaleDateString() :
                       new Date(right.startDate).toLocaleDateString() +
                       " - " + new Date(right.endDate).toLocaleDateString() :
-                    titleRightDate
+                    titleRightDate // if titleRightDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
                 }
               </span>
             </TypographyKit>
             <ExpandMoreIcon />
           </PaperKit>
           <RightDateSelect
-            setRight={setRight}
-            setRightDateBtn={setRightDateBtn}
+            setRightDateBtn={setRight}
             setOpenedRight={setOpenedRight}
             setRightDate={setRightDate}
             selected={selected}
-            leftDate={leftDateBtn}
+            leftDate={left}
             setTitleRight={setTitleRightDate}
           />
         </TypographyKit>

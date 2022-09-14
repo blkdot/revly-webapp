@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MovingIcon from '@mui/icons-material/Moving';
 import { visuallyHidden } from '@mui/utils';
 
 import './Table.scss';
