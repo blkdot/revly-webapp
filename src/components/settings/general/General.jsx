@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {  updateProfile } from 'firebase/auth';
 
 import './General.scss';
@@ -20,7 +20,6 @@ const General = () => {
         phone: user.phoneNumber || '',
         country: '',
         city: '',
-        email: user.email,
         restoName: '',
         role: ''
     })
@@ -29,7 +28,6 @@ const General = () => {
         phone: false,
         country: false,
         city: false,
-        email: false,
         restoName: false,
         role: false
     })
@@ -37,26 +35,25 @@ const General = () => {
 
     const updateInfo = (field, inequalTo, updateFunc) => {
         if (!inputError[field] && inputValue[field] && (inputValue[field].trim() !== inequalTo)) {
-            setTimeout(() => {
-                try {
-                    updateFunc();
-                    setAlertTheme('success');
-                    setAlertMessage(`${field} changed`);
-                    showAlert();
-                } catch (err) {
-                    setAlertMessage(err.message);
-                    showAlert();
-                }
-            }, 500)
+            try {
+                updateFunc();
+                setAlertTheme('success');
+                setAlertMessage('Information changed');
+                showAlert();
+            } catch (err) {
+                setAlertTheme('error');
+                setAlertMessage(err.code);
+                showAlert();
+            }
         }
     }
 
-    useEffect(() => {
-       updateInfo('name', user.displayName, async () => {
-        await updateProfile(user, { displayName: inputValue.name.trim() });
-       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inputValue.name])
+    const handleSave = () => {
+        updateInfo('name', user.displayName, async () => {
+            await updateProfile(user, { displayName: inputValue.name.trim() })
+        });
+    }
+
 
     const handleInputChange = (e, is) => {
         setInputError({ ...inputError, [e.target.name]: !validator[is](e.target.value)});
@@ -74,10 +71,10 @@ const General = () => {
                     valueCountry={{ value: inputValue.country, error: inputError.country }}
                     valueCity={{ value: inputValue.city, error: inputError.city }}
                     valueRole={{ value: inputValue.role, error: inputError.role }}
-                    valueEmail={{ value: inputValue.email, error: inputError.email }}
                     valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
                     handleInputChange={handleInputChange}
-                    disableEmail={true}
+                    onSave={handleSave}
+                    disableSave={Object.keys(inputError).map((v) => inputError[v]).includes(true) || inputValue.name === user.displayName}
                 />
             </PaperKit>
         </div>
