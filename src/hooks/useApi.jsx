@@ -28,11 +28,11 @@ const useApi = () => {
     return message;
   };
 
-  const initLogin = (body) =>
+  const initLogin = (body, showAlert = false) =>
     axios
       .post(`${apiUrl}/login/master`, body)
-      .then((res) => handleResponse(res))
-      .catch((err) => handleError(err));
+      .then((res) => handleResponse(res, showAlert))
+      .catch((err) => handleError(err, showAlert));
 
   const loginAll = async (body) =>
     axios
