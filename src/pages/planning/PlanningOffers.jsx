@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Dates from "../../components/dates/Dates";
-import PlanningOffersTable from "../../components/PlanningOfferTable/PlanningOffersTable";
+import PlanningOffersTable from "../../components/planningOffersTable/PlanningOffersTable";
 import RestaurantDropdown from "../../components/restaurantDropdown/RestaurantDropdown";
 import { PlanningOffersData, restaurantNames } from "../../data/fakeDataDashboard";
 import "./Planning.scss";
