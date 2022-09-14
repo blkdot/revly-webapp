@@ -11,6 +11,7 @@ import {
   RecaptchaVerifier,
   PhoneAuthProvider,
   sendEmailVerification,
+  reauthenticateWithPopup,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import config from '../setup/config';
@@ -73,6 +74,11 @@ export const AuthContextProvider = ({ children }) => {
     return signInWithPopup(auth, googleAuthProvider);
   };
 
+  const reAuthGoogle = () => {
+    const googleAuthProvider = new GoogleAuthProvider();
+    return reauthenticateWithPopup(user, googleAuthProvider);
+  }
+
   const reAuth = (password) => {
     const credentials = EmailAuthProvider.credential(user.email, password);
 
@@ -80,7 +86,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn, reAuth, phoneNumberVerify, emailVerify }}>
+    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn, reAuth, phoneNumberVerify, emailVerify, reAuthGoogle }}>
       {children}
     </UserAuthContext.Provider>
   );
