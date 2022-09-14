@@ -43,7 +43,7 @@ const OnBoarding = ({ onSend, activeForm, isLoading }) => {
     if (!activeForm.deliveroo) return null;
 
     return (
-      <div className='onboarding__form-card'>
+      <div className="onboarding__form-card">
         <OnBoardingForm
           onChangeEmail={handleChangeDeliveroo('email')}
           onChangePassword={handleChangeDeliveroo('password')}
@@ -57,7 +57,7 @@ const OnBoarding = ({ onSend, activeForm, isLoading }) => {
     if (!activeForm.talabat) return null;
 
     return (
-      <div className='onboarding__form-card'>
+      <div className="onboarding__form-card">
         <OnBoardingForm
           onChangeEmail={handleChangeTalabat('email')}
           onChangePassword={handleChangeTalabat('password')}
@@ -71,18 +71,20 @@ const OnBoarding = ({ onSend, activeForm, isLoading }) => {
     if (!activeForm.zomato) return null;
 
     return (
-      <div className='onboarding__form-card'>
+      <div className="onboarding__form-card">
         <OnBoardingForm
           onChangeEmail={handleChangeZomato('email')}
           onChangePassword={handleChangeZomato('password')}
-          title='Zomato'
+          title="Zomato"
         />
       </div>
     );
   };
 
   const isDisabledSend = () => {
-    const isDeliverooValide = activeForm.deliveroo ? deliverooValue.email && deliverooValue.password : true;
+    const isDeliverooValide = activeForm.deliveroo
+      ? deliverooValue.email && deliverooValue.password
+      : true;
     const isTalabatValide = activeForm.talabat ? talabatValue.email && talabatValue.password : true;
     const isZomatoValide = activeForm.zomato ? zomatoValue.email && zomatoValue.password : true;
 
@@ -90,12 +92,16 @@ const OnBoarding = ({ onSend, activeForm, isLoading }) => {
   };
 
   return (
-    <div className='onboarding__form'>
+    <div className="onboarding__form">
       {renderDeliverooForm()}
       {renderTalabatForm()}
       {renderZomatoForm()}
-      <div className='onboarding__submit'>
-        <ButtonLoadingKit variant='contained' onClick={handleSubmitLoginInfo} loading={isLoading} disabled={isDisabledSend()}>
+      <div className="onboarding__submit">
+        <ButtonLoadingKit
+          variant="contained"
+          onClick={handleSubmitLoginInfo}
+          loading={isLoading}
+          disabled={isDisabledSend()}>
           Send
         </ButtonLoadingKit>
       </div>

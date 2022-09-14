@@ -3,11 +3,11 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useUserAuth } from '../contexts/AuthContext';
 
 import useApi from '../hooks/useApi';
-import usePlatform from '../hooks/usePlatform';
+import { usePlatform } from '../hooks/usePlatform';
 
 import config from '../setup/config';
 
-export const ProtectedOnboardRoutes = () => {
+const ProtectedOnboardRoutes = () => {
   const [flag, setFlag] = useState(false);
   const { user } = useUserAuth();
   const { loginExist, loginAll } = useApi();
@@ -15,7 +15,10 @@ export const ProtectedOnboardRoutes = () => {
   const { timeRefreshToken } = config;
 
   const getPlatformToken = useCallback(async () => {
-    const res = await loginAll({ master_email: user.email, access_token: user.accessToken });
+    const res = await loginAll({
+      master_email: user.email,
+      access_token: user.accessToken,
+    });
 
     if (res instanceof Error) {
       setFlag(res);
@@ -28,7 +31,10 @@ export const ProtectedOnboardRoutes = () => {
   const checkIfRegistered = useCallback(async () => {
     if (isOnboarded) return;
 
-    const res = await loginExist({ master_email: user.email, access_token: user.accessToken });
+    const res = await loginExist({
+      master_email: user.email,
+      access_token: user.accessToken,
+    });
 
     if (res instanceof Error) {
       setFlag(res);
@@ -70,5 +76,7 @@ export const ProtectedOnboardRoutes = () => {
     };
   });
 
-  return flag instanceof Error ? <Navigate to='/onboarding' /> : <Outlet />;
+  return flag instanceof Error ? <Navigate to="/onboarding" /> : <Outlet />;
 };
+
+export default ProtectedOnboardRoutes;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import config from '../setup/config';
-import useAlert from './useAlert';
+import { useAlert } from './useAlert';
 
 // import { onBoardingResponseTalabat } from '../data/fakeDataOnboarding';
 
@@ -16,7 +16,7 @@ const useApi = () => {
 
     return res;
   };
-  
+
   const handleError = (err, alert = true) => {
     const message = new Error(err.response.data.detail || err.message);
 
@@ -28,11 +28,11 @@ const useApi = () => {
     return message;
   };
 
-  const initLogin = (body, showAlert = false) =>
+  const initLogin = (body, showAlertOnError = false) =>
     axios
       .post(`${apiUrl}/login/master`, body)
-      .then((res) => handleResponse(res, showAlert))
-      .catch((err) => handleError(err, showAlert));
+      .then((res) => handleResponse(res, showAlertOnError))
+      .catch((err) => handleError(err, showAlertOnError));
 
   const loginAll = async (body) =>
     axios

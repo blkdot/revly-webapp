@@ -19,10 +19,10 @@ export const onBoardingResponseTalabat = onBoardingResponse[1];
 
 export const loginNotExistResponse = {
   registered: false,
-  platforms: []
+  platforms: [],
 };
 
 export const loginExistResponse = {
   registered: true,
-  platforms: ['deliveroo', 'talabat']
+  platforms: ['deliveroo', 'talabat'],
 };

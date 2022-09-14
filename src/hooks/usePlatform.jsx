@@ -2,8 +2,6 @@ import { useContext } from 'react';
 
 import { PlatformContext } from '../contexts/PlatformContext';
 
-export const usePlatform = () => {
-  return useContext(PlatformContext);
-};
+export const usePlatform = () => useContext(PlatformContext);
 
 export default usePlatform;

@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import Confetti from "react-confetti";
+import Confetti from 'react-confetti';
 
 import './OnBoarding.scss';
 
@@ -20,8 +19,8 @@ import ButtonKit from '../../kits/button/ButtonKit';
 
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
-import usePlatform from '../../hooks/usePlatform';
-import useAlert from '../../hooks/useAlert';
+import { usePlatform } from '../../hooks/usePlatform';
+import { useAlert } from '../../hooks/useAlert';
 
 import imageDeliveroo from '../../assets/images/deliveroo.png';
 import imageTalabat from '../../assets/images/talabat.png';
@@ -43,7 +42,8 @@ const OnBoarding = () => {
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
   const [registered, setRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setPlatformToken, setIsOnboarded, platformOnboarded, setPlatformOnboarded } = usePlatform();
+  const { setPlatformToken, setIsOnboarded, platformOnboarded, setPlatformOnboarded } =
+    usePlatform();
   const { initLogin } = useApi();
   const { user } = useUserAuth();
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert('error');
@@ -58,7 +58,7 @@ const OnBoarding = () => {
     borderRadius: '0.4rem',
     boxShadow: 24,
     padding: '1rem',
-    border: '0'
+    border: '0',
   };
 
   useEffect(() => {
@@ -103,23 +103,38 @@ const OnBoarding = () => {
 
   const returnFormOrder = () => {
     if (selectedPlatform.deliveroo && !platformOnboarded.includes('deliveroo')) {
-      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={{ deliveroo: true }} isLoading={isLoading} />;
+      return (
+        <OnBoardingForm
+          onSend={handleSubmitLoginInfo}
+          activeForm={{ deliveroo: true }}
+          isLoading={isLoading}
+        />
+      );
     }
 
     if (selectedPlatform.talabat && !platformOnboarded.includes('talabat')) {
-      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={{ talabat: true }} isLoading={isLoading} />;
+      return (
+        <OnBoardingForm
+          onSend={handleSubmitLoginInfo}
+          activeForm={{ talabat: true }}
+          isLoading={isLoading}
+        />
+      );
     }
+
+    return null;
   };
 
   const isOnboardingCompleted = (currentPlatform) => {
-
-    const deliverooOnboarded = !selectedPlatform.deliveroo ? true : currentPlatform.includes('deliveroo');
+    const deliverooOnboarded = !selectedPlatform.deliveroo
+      ? true
+      : currentPlatform.includes('deliveroo');
     const talabatOnboarded = !selectedPlatform.talabat ? true : currentPlatform.includes('talabat');
 
     setRegistered(deliverooOnboarded && talabatOnboarded);
     setIsOnboarded(deliverooOnboarded && talabatOnboarded);
 
-    return (deliverooOnboarded && talabatOnboarded);
+    return deliverooOnboarded && talabatOnboarded;
   };
 
   const renderStepScreens = () => {
@@ -145,10 +160,10 @@ const OnBoarding = () => {
           />
           {returnFormOrder()}
         </>
-      )
+      );
     }
 
-    return <Congrats />
+    return <Congrats />;
   };
 
   const isNextDisabled = () => {
@@ -162,21 +177,21 @@ const OnBoarding = () => {
 
     return true;
   };
-  
+
   const isBackDisabled = () => step === 0 || step === 2;
 
   return (
-    <div className='onboarding'>
+    <div className="onboarding">
       <Confetti gravity={0.1} run={step === 2} style={{ zIndex: 1301 }} />
       <RestaurantDropdown names={[]} />
       <Dates />
       <FinanceEmpty />
       <MarketingEmpty />
-      <ModalKit open aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+      <ModalKit open aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <div style={style}>
           <StepperKit activeStep={step} alternativeLabel>
-            {steps.map((step) => (
-              <StepKit key={step}>
+            {steps.map((s) => (
+              <StepKit key={s}>
                 <StepLabelKit />
               </StepKit>
             ))}
@@ -184,10 +199,21 @@ const OnBoarding = () => {
           {renderStepScreens()}
           <div className="onboarding-actions">
             <div>
-              <ButtonKit variant="outlined" color="error" disabled={isBackDisabled()} onClick={() => setStep(step - 1)}>Back</ButtonKit>
+              <ButtonKit
+                variant="outlined"
+                color="error"
+                disabled={isBackDisabled()}
+                onClick={() => setStep(step - 1)}>
+                Back
+              </ButtonKit>
             </div>
             <div>
-              <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={() => setStep(step + 1)}>Next</ButtonKit>
+              <ButtonKit
+                variant="outlined"
+                disabled={isNextDisabled()}
+                onClick={() => setStep(step + 1)}>
+                Next
+              </ButtonKit>
             </div>
           </div>
         </div>

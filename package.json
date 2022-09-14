@@ -9,6 +9,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/lab": "^5.0.0-alpha.97",
     "@mui/material": "^5.10.3",
+    "@mui/system": "^5.10.5",
     "@mui/x-date-pickers": "^5.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
@@ -17,7 +18,12 @@
     "change-case": "^4.1.2",
     "date-fns": "^2.29.2",
     "dayjs": "^1.11.5",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.28.0",
     "firebase": "^9.9.3",
+    "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-confetti": "^6.1.0",
     "react-date-range": "^1.4.0",
@@ -32,9 +38,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "set REACT_APP_ENV=development && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:fix": "eslint . --ext .ts,.js,.tsx,.jsx --fix",
+    "lint": "eslint . --ext .ts,.js,.tsx,.jsx"
   },
   "eslintConfig": {
     "extends": [
@@ -53,5 +62,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react-hooks": "^4.3.0"
   }
 }

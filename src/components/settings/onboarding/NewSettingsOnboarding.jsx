@@ -10,7 +10,7 @@ import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useApi from '../../../hooks/useApi';
-import usePlatform from '../../../hooks/usePlatform';
+import { usePlatform } from '../../../hooks/usePlatform';
 
 import imageDeliveroo from '../../../assets/images/deliveroo.png';
 import imageTalabat from '../../../assets/images/talabat.png';
@@ -50,10 +50,8 @@ const NewSettingsOnboarding = () => {
       if (values[type].active && !values[type].registered) {
         SetPlatformActiveModal(type);
         setIsOpenModal(true);
-        return;
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.deliveroo.active, values.talabat.active]);
 
   useEffect(() => {
@@ -79,29 +77,36 @@ const NewSettingsOnboarding = () => {
     if (!values[platformActiveModal].registered) {
       setValues({
         ...values,
-        [platformActiveModal]: { ...values[platformActiveModal], active: false },
+        [platformActiveModal]: {
+          ...values[platformActiveModal],
+          active: false,
+        },
       });
     }
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    
-    const res = await initLogin({
-      master_email: user.email,
-      access_token: user.accessToken,
-      data: [
-        {
-          platform: platformActiveModal,
-          email: formData.email,
-          password: formData.password,
-        },
-      ],
-    }, true);
+
+    const res = await initLogin(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        data: [
+          {
+            platform: platformActiveModal,
+            email: formData.email,
+            password: formData.password,
+          },
+        ],
+      },
+      true,
+    );
 
     setIsLoading(false);
 
     if (res instanceof Error) {
+      // eslint-disable-next-line no-console
       console.error(res);
       return;
     }
@@ -128,41 +133,42 @@ const NewSettingsOnboarding = () => {
       <ModalKit
         open={isOpenModal}
         onClose={closeWithoutConnecting}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
         <div style={style}>
-          <PaperKit className='onboarding-form'>
+          <PaperKit className="onboarding-form">
             <FormcontrolKit
-              className='auth-form'
+              className="auth-form"
               fullWidth
-              style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-beetween' }}
-            >
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-beetween',
+              }}>
               <TextfieldKit
-                label='Email'
-                size='small'
+                label="Email"
+                size="small"
                 onChange={(e) => handleChangeFormData('email', e.target.value)}
-                className='auth-form__input'
+                className="auth-form__input"
                 fullWidth
                 style={{ margin: '1rem 0.5rem' }}
               />
               <TextfieldKit
-                label='Password'
-                type='password'
-                size='small'
+                label="Password"
+                type="password"
+                size="small"
                 onChange={(e) => handleChangeFormData('password', e.target.value)}
-                className='auth-form__input'
+                className="auth-form__input"
                 fullWidth
               />
             </FormcontrolKit>
             <div style={{ margin: 'auto', textAlign: 'center' }}>
               <ButtonLoadingKit
-                className='auth-form__input'
-                variant='contained'
+                className="auth-form__input"
+                variant="contained"
                 disabled={!formData.email || !formData.password}
                 onClick={handleSubmit}
-                loading={isLoading}
-              >
+                loading={isLoading}>
                 Confirm
               </ButtonLoadingKit>
             </div>

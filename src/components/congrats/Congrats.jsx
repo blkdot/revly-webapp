@@ -7,9 +7,9 @@ const Congrats = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(()=> {
-      navigate('/dashboard')
-     }, 5000);
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 5000);
   });
 
   return (

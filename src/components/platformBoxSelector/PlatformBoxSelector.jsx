@@ -9,7 +9,8 @@ const PlatformBoxSelector = (props) => {
   const { name, src } = item;
 
   const renderIcon = () => {
-    if (validated && validated.includes(name)) return <FcCheckmark className='onboarding-platform__selector-item__state-icon' />;
+    if (validated && validated.includes(name))
+      return <FcCheckmark className="onboarding-platform__selector-item__state-icon" />;
 
     return null;
   };
@@ -20,10 +21,9 @@ const PlatformBoxSelector = (props) => {
       onClick={() => onClickItem(name)}
       onKeyDown={() => onClickItem(name)}
       role="button"
-      tabIndex="0"
-    >
+      tabIndex="0">
       {renderIcon()}
-      <img src={src} alt={name} width='100' />
+      <img src={src} alt={name} width="100" />
     </div>
   );
 };

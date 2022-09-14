@@ -15,35 +15,34 @@ const OnBoardingForm = (props) => {
 
     return (
       <ButtonLoadingKit
-        className='auth-form__input'
+        className="auth-form__input"
         onClick={onSubmit}
-        variant='contained'
+        variant="contained"
         disabled={disabled}
-        loading={isLoading}
-      >
+        loading={isLoading}>
         Onboard
       </ButtonLoadingKit>
     );
   };
 
   return (
-    <PaperKit className='onboarding-form'>
+    <PaperKit className="onboarding-form">
       {title ? <h2>{title}</h2> : null}
-      <FormcontrolKit className='auth-form' fullWidth>
+      <FormcontrolKit className="auth-form" fullWidth>
         <TextfieldKit
-          label='Email address'
-          size='small'
+          label="Email address"
+          size="small"
           onChange={(e) => onChangeEmail(e.target.value)}
-          className='auth-form__input'
+          className="auth-form__input"
           fullWidth
           error={isError}
         />
         <TextfieldKit
-          label='Password'
-          type='password'
-          size='small'
+          label="Password"
+          type="password"
+          size="small"
           onChange={(e) => onChangePassword(e.target.value)}
-          className='auth-form__input'
+          className="auth-form__input"
           error={isError}
           fullWidth
         />

@@ -5,9 +5,9 @@ import './SignIn.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
 import AuthForm from '../../components/forms/authForm/AuthForm';
-import useAlert from '../../hooks/useAlert';
+import { useAlert } from '../../hooks/useAlert';
 import CardKit from '../../kits/card/CardKit';
-import firebaseCodeError from '../../data/firebaseCodeError';
+import { firebaseCodeError } from '../../data/firebaseCodeError';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '' });
@@ -19,8 +19,8 @@ const SignIn = () => {
 
   const { signIn, googleSignIn } = useUserAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setProcessing(true);
     try {
       await signIn(value.email, value.password);
@@ -38,8 +38,8 @@ const SignIn = () => {
     }
   };
 
-  const handleGoogleSubmit = async (e) => {
-    e.preventDefault();
+  const handleGoogleSubmit = async (event) => {
+    event.preventDefault();
     setProcessing(true);
     try {
       await googleSignIn();
@@ -62,14 +62,14 @@ const SignIn = () => {
   };
 
   return (
-    <div className='signin'>
+    <div className="signin">
       <div className="signin-cover">
         <img src="/images/cover.png" alt="cover" width={300} />
       </div>
-      <CardKit variant='outlined' className='card-signin'>
+      <CardKit variant="outlined" className="card-signin">
         <h2>Sign in to your account</h2>
         <p>
-          Don't have an account yet? <Link to='/signup'> Sign up.</Link>
+          Don&apos;t have an account yet? <Link to="/signup"> Sign up.</Link>
         </p>
         <AuthForm
           onChangeEmail={handleChange('email')}

@@ -185,10 +185,10 @@ export const PlanningOffersData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "talabat",
+    platform: 'talabat',
     day: new Date(),
     slot: 25,
-    discountType: "some type",
+    discountType: 'some type',
     procent: 25,
     minOrder: 88,
     target: 99,
@@ -198,10 +198,10 @@ export const PlanningOffersData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "talabat",
+    platform: 'talabat',
     day: new Date(),
     slot: 25,
-    discountType: "some type",
+    discountType: 'some type',
     procent: 25,
     minOrder: 88,
     target: 99,
@@ -211,10 +211,10 @@ export const PlanningOffersData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "talabat",
+    platform: 'talabat',
     day: new Date(),
     slot: 25,
-    discountType: "some type",
+    discountType: 'some type',
     procent: 25,
     minOrder: 88,
     target: 99,
@@ -224,10 +224,10 @@ export const PlanningOffersData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "talabat",
+    platform: 'talabat',
     day: new Date(),
     slot: 25,
-    discountType: "some type",
+    discountType: 'some type',
     procent: 25,
     minOrder: 88,
     target: 99,
@@ -237,22 +237,22 @@ export const PlanningOffersData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "talabat",
+    platform: 'talabat',
     day: new Date(),
     slot: 25,
-    discountType: "some type",
+    discountType: 'some type',
     procent: 25,
     minOrder: 88,
     target: 99,
     status: 88,
     id: 5,
   },
-]
+];
 export const PlanningAdsData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "deliveroo",
+    platform: 'deliveroo',
     day: new Date(),
     slot: 5,
     bid: 33,
@@ -264,7 +264,7 @@ export const PlanningAdsData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "deliveroo",
+    platform: 'deliveroo',
     day: new Date(),
     slot: 5,
     bid: 33,
@@ -276,7 +276,7 @@ export const PlanningAdsData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "deliveroo",
+    platform: 'deliveroo',
     day: new Date(),
     slot: 5,
     bid: 33,
@@ -288,7 +288,7 @@ export const PlanningAdsData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "deliveroo",
+    platform: 'deliveroo',
     day: new Date(),
     slot: 5,
     bid: 33,
@@ -300,7 +300,7 @@ export const PlanningAdsData = [
   {
     date: new Date(),
     branche: 15,
-    platform: "deliveroo",
+    platform: 'deliveroo',
     day: new Date(),
     slot: 5,
     bid: 33,
@@ -309,4 +309,4 @@ export const PlanningAdsData = [
     status: 77,
     id: 5,
   },
-]
+];
