@@ -156,7 +156,7 @@ export default function EnhancedTable({ rows, type }) {
   ];
 
   const getTotal = (key) => {
-    return rows.reduce((a, b) => a + (b[key] || 0), 0);
+    return Math.ceil(rows.reduce((a, b) => a + (b[key] || 0), 0))
   };
 
   return (
@@ -198,8 +198,7 @@ export default function EnhancedTable({ rows, type }) {
                           (row.evolution >= 0 ? 'table_increased' : 'table_decreased')
                         }
                       >
-                        <MovingIcon sx={{ color: '#fff', width: '15px' }} />
-                        <span>{row.evolution > 0 ? '+' + row.evolution : row.evolution} %</span>
+                        <span>{row.evolution > 0 ? '+' + Math.ceil(row.evolution) : Math.ceil(row.evolution)} %</span>
                       </div>
                     </TableCellKit>
                   </TableRowKit>
@@ -220,7 +219,6 @@ export default function EnhancedTable({ rows, type }) {
                       (getTotal('evolution') >= 0 ? 'table_increased' : 'table_decreased')
                     }
                   >
-                    <MovingIcon sx={{ color: '#fff', width: '15px' }} />
                     <span>
                       {getTotal('evolution') > 0
                         ? '+' + getTotal('evolution')

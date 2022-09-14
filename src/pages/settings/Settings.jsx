@@ -5,7 +5,8 @@ import { BsKeyFill } from 'react-icons/bs';
 
 import './Settings.scss';
 
-import SettingsOnboarding from '../../components/settings/onboarding/SettingsOnboarding';
+// import SettingsOnboarding from '../../components/settings/onboarding/SettingsOnboarding';
+import NewSettingsOnboarding from '../../components/settings/onboarding/NewSettingsOnboarding';
 import General from '../../components/settings/general/General';
 import Billing from '../../components/settings/billing/Billing';
 import ChangePassword from '../../components/settings/changePassword/ChangePassword';
@@ -33,7 +34,7 @@ const Settings = () => {
     {
       value: 'onboarding',
       icon: <FaTruck width={20} height={20} style={{ marginRight: 5 }} />,
-      component: <SettingsOnboarding />,
+      component: <NewSettingsOnboarding />,
     },
     {
       value: 'change_password',
@@ -49,30 +50,32 @@ const Settings = () => {
   return (
     <div className="setting-account">
       <TypographyKit variant="h4">Settings</TypographyKit>
-      <TabsKit
-        allowScrollButtonsMobile
-        variant='scrollable'
-        scrollButtons='auto'
-        value={currentTab}
-        onChange={handleTabChange}
-        className='setting-account__tabs'
-      >
-        {ACCOUNT_TABS.map((tab) => (
-          <TabKit
-            className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}
-            disableRipple
-            key={tab.value}
-            label={tab.value.replace('_', ' ')}
-            icon={tab.icon}
-            value={tab.value}
-          />
-        ))}
-      </TabsKit>
-      <BoxKit sx={{ mb: 5 }} />
-      {ACCOUNT_TABS.map((tab) => {
-        const isMatched = tab.value === currentTab;
-        return isMatched && <BoxKit key={tab.value}>{tab.component}</BoxKit>;
-      })}
+      <div>
+        <TabsKit
+          allowScrollButtonsMobile
+          variant='scrollable'
+          scrollButtons='auto'
+          value={currentTab}
+          onChange={handleTabChange}
+          className='setting-account__tabs'
+        >
+          {ACCOUNT_TABS.map((tab) => (
+            <TabKit
+              className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}
+              disableRipple
+              key={tab.value}
+              label={tab.value.replace('_', ' ')}
+              icon={tab.icon}
+              value={tab.value}
+            />
+          ))}
+        </TabsKit>
+        <BoxKit sx={{ mb: 5 }} />
+        {ACCOUNT_TABS.map((tab) => {
+          const isMatched = tab.value === currentTab;
+          return isMatched && <BoxKit key={tab.value}>{tab.component}</BoxKit>;
+        })}
+      </div>
     </div>
   );
 };
