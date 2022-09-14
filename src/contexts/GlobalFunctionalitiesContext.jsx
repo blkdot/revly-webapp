@@ -14,6 +14,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
 
   const [leftDate, setLeft] = useState({ startDate: new Date(), endDate: new Date() });
   const [rightDate, setRight] = useState({ startDate: new Date(), endDate: new Date() });
+  const [titleDate, setTitleDate] = useState('today');
+  const [titleRightDate, setTitleRightDate] = useState('today');
 
   useEffect(() => {
     if (isShowing) {
@@ -42,7 +44,16 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   );
 
   return (
-    <GlobalFunctionalitiesContext.Provider value={{ setAlertTheme, setAlertMessage, showAlert, leftDate, rightDate, setLeft, setRight }}>
+    <GlobalFunctionalitiesContext.Provider
+      value={{
+        setAlertTheme, setAlertMessage,
+        showAlert, leftDate,
+        rightDate, setLeft,
+        setRight, setTitleDate,
+        titleDate, setTitleRightDate,
+        titleRightDate
+      }}
+    >
       {renderAlert()}
       {children}
     </GlobalFunctionalitiesContext.Provider>

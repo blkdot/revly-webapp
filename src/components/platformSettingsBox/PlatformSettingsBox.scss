@@ -1,0 +1,38 @@
+.platform-settings-box {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.8rem;
+  background-color: white;
+  border: 2px solid black;
+  margin: 0.5rem auto;
+
+  .platform-settings-box__content {
+    display: flex;
+    justify-content: space-between;
+
+    .__content__image {
+      img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+      }
+      width: 100px;
+    }
+
+    .__content__label {
+      align-self: center;
+      width: 100%;
+      margin-left: 0.5rem;
+    }
+
+    .__content__switch {
+      width: 100px;
+      align-self: center;
+    }
+  }
+
+  .platform-settings-box__footer {
+    margin: auto;
+    text-align: center;
+  }
+}

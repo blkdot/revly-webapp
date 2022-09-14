@@ -7,6 +7,16 @@ export const PlatformProvider = ({ children }) => {
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [platformOnboarded, setPlatformOnboarded] = useState([]);
 
+  console.log('Platform Tokens => ', platformToken);
+  console.log('Is onboarded => ', isOnboarded);
+  console.log('List platform onboarded => ', platformOnboarded);
+
+  const clearToken = () => {
+    setPlatformToken([]);
+    setIsOnboarded(false);
+    setPlatformOnboarded([]);
+  };
+
   return (
     <PlatformContext.Provider
       value={{
@@ -16,6 +26,7 @@ export const PlatformProvider = ({ children }) => {
         setIsOnboarded,
         platformOnboarded,
         setPlatformOnboarded,
+        clearToken,
       }}
     >
       {children}

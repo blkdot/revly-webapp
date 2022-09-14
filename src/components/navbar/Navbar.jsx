@@ -46,7 +46,7 @@ function Navbar() {
       navigate("/");
       console.log(`${user.email} is logged out`);
     } catch (e) {
-      console.log(e.message);
+      console.error(e.message);
     }
   };
 

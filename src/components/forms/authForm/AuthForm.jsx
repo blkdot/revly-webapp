@@ -6,6 +6,7 @@ import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import ButtonKit from '../../../kits/button/ButtonKit';
 import ButtonGoogleKit from '../../../kits/button/ButtonGoogleKit';
+
 const AuthForm = (props) => {
   const {
     onChangeEmail,

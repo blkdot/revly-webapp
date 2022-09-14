@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -25,17 +25,17 @@ const theme = createTheme({
     primary: {
       main: '#4d2681',
     },
-  }
+  },
 });
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <GlobalFunctionalitiesContextProvider>
-            <AuthContextProvider>
-              <PlatformProvider>
+            <PlatformProvider>
+              <AuthContextProvider>
                 <Routes>
                   <Route path='/' element={<SignIn />} />
                   <Route path='/signup' element={<SignUp />} />
@@ -52,8 +52,8 @@ function App() {
                     <Route path='/onboarding' element={<OnBoarding />} />
                   </Route>
                 </Routes>
-              </PlatformProvider>
-            </AuthContextProvider>
+              </AuthContextProvider>
+            </PlatformProvider>
           </GlobalFunctionalitiesContextProvider>
         </ThemeProvider>
       </LocalizationProvider>
