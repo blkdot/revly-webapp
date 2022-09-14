@@ -39,6 +39,7 @@ const NewSettingsOnboarding = () => {
   });
   const [platformActiveModal, SetPlatformActiveModal] = useState('');
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { initLogin } = useApi();
   const { user } = useUserAuth();
@@ -68,7 +69,7 @@ const NewSettingsOnboarding = () => {
     setIsOpenModal(true);
   };
 
-  const handleChangeFormData = (k) => (v) => {
+  const handleChangeFormData = (k, v) => {
     setFormData({ ...formData, [k]: v });
   };
 
@@ -84,17 +85,26 @@ const NewSettingsOnboarding = () => {
   };
 
   const handleSubmit = async () => {
-    await initLogin({
+    setIsLoading(true);
+    
+    const res = await initLogin({
       master_email: user.email,
       access_token: user.accessToken,
       data: [
         {
           platform: platformActiveModal,
-          email: values[platformActiveModal].email,
-          password: values[platformActiveModal].password,
+          email: formData.email,
+          password: formData.password,
         },
       ],
-    });
+    }, true);
+
+    setIsLoading(false);
+
+    if (res instanceof Error) {
+      console.error(res);
+      return;
+    }
 
     setPlatformOnboarded([...platformOnboarded, platformActiveModal]);
   };
@@ -111,8 +121,6 @@ const NewSettingsOnboarding = () => {
         onClick={handleClick(p.type)}
       />
     ));
-
-  const isDisabled = () => formData.email && formData.password;
 
   return (
     <div>
@@ -131,7 +139,7 @@ const NewSettingsOnboarding = () => {
               style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-beetween' }}
             >
               <TextfieldKit
-                label='Email address'
+                label='Email'
                 size='small'
                 onChange={(e) => handleChangeFormData('email', e.target.value)}
                 className='auth-form__input'
@@ -151,8 +159,9 @@ const NewSettingsOnboarding = () => {
               <ButtonLoadingKit
                 className='auth-form__input'
                 variant='contained'
-                disabled={!isDisabled()}
+                disabled={!formData.email || !formData.password}
                 onClick={handleSubmit}
+                loading={isLoading}
               >
                 Confirm
               </ButtonLoadingKit>
