@@ -8,7 +8,13 @@ import { fakeSettingsOnboardPlatform } from '../data/fakeDataOnboarding';
 const { apiUrl, environment } = config;
 
 export const settingsOnboardPlatform = (body, platform) => {
-  if (environment === 'dev') return fakeSettingsOnboardPlatform;
+  if (environment === 'dev') {
+    if (body.credentials.email === 'test') {
+      return fakeSettingsOnboardPlatform;
+    }
+
+    return new Error("Fake response: try with 'test' in the 'email' field ");
+  }
 
   return axios
     .post(`${apiUrl}/settings/onboard/${platform}`, body)
