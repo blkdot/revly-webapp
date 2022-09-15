@@ -5,11 +5,11 @@ import { FcCheckmark } from 'react-icons/fc';
 import './PlatformBoxSelector.scss';
 
 const PlatformBoxSelector = (props) => {
-  const { item, onClickItem, classActive, validated } = props;
+  const { item, onClickItem, classActive, platforms } = props;
   const { name, src } = item;
 
   const renderIcon = () => {
-    if (validated && validated.includes(name))
+    if (platforms && platforms[name].registered)
       return <FcCheckmark className="onboarding-platform__selector-item__state-icon" />;
 
     return null;

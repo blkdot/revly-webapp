@@ -5,7 +5,7 @@ import './PlatformSelector.scss';
 import PlatformBoxSelector from '../platformBoxSelector/PlatformBoxSelector';
 
 const PlatformSelector = (props) => {
-  const { items, onClickItem, state, validated, noText } = props;
+  const { items, onClickItem, state, platforms, noText } = props;
 
   const getState = (n) => state[n] === true;
 
@@ -16,7 +16,7 @@ const PlatformSelector = (props) => {
         item={item}
         onClickItem={onClickItem}
         classActive={getState(item.name)}
-        validated={validated}
+        platforms={platforms}
       />
     ));
 

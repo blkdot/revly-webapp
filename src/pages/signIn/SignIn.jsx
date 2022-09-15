@@ -24,7 +24,7 @@ const SignIn = () => {
     setProcessing(true);
     try {
       await signIn(value.email, value.password);
-      navigate('/dashboard');
+      navigate('/check');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
@@ -43,7 +43,7 @@ const SignIn = () => {
     setProcessing(true);
     try {
       await googleSignIn();
-      navigate('/dashboard');
+      navigate('/check');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 

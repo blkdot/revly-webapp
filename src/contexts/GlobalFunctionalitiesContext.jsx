@@ -45,6 +45,18 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
     setSeverity(t);
   };
 
+  const triggerAlertWithMessageError = (m) => {
+    setMessage(m);
+    setIsShowing(true);
+    setSeverity('error');
+  };
+
+  const triggerAlertWithMessageSuccess = (m) => {
+    setMessage(m);
+    setIsShowing(true);
+    setSeverity('success');
+  };
+
   const renderAlert = () => (
     <Alert severity={severity} visible={isShowing}>
       {message}
@@ -65,6 +77,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         titleDate,
         setTitleRightDate,
         titleRightDate,
+        triggerAlertWithMessageError,
+        triggerAlertWithMessageSuccess,
       }}>
       {renderAlert()}
       {children}

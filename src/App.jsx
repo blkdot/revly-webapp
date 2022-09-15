@@ -6,20 +6,22 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import './App.scss';
 
+import { AuthContextProvider } from './contexts/AuthContext';
+import { PlatformProvider } from './contexts/PlatformContext';
+import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
+
 import SignIn from './pages/signIn/SignIn';
 import SignUp from './pages/signUp/SignUp';
 import Dashboard from './pages/dashboard/Dashboard';
 import OnBoarding from './pages/onBoarding/OnBoarding';
 import Settings from './pages/settings/Settings';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
-import { AuthContextProvider } from './contexts/AuthContext';
-import { PlatformProvider } from './contexts/PlatformContext';
-import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import ProtectedOnboardRoutes from './routes/ProtectedOnboardRoutes';
 import Competition from './pages/competition/Competition';
 import PlanningAds from './pages/planning/PlanningAds';
 import PlanningOffers from './pages/planning/PlanningOffers';
+import Check from './pages/check/Check';
 
 const theme = createTheme({
   palette: {
@@ -50,6 +52,7 @@ const App = () => (
                     <Route path="/settings" element={<Settings />} />
                   </Route>
                   <Route path="/onboarding" element={<OnBoarding />} />
+                  <Route path="/check" element={<Check />} />
                 </Route>
               </Routes>
             </AuthContextProvider>

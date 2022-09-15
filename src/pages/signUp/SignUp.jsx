@@ -41,7 +41,7 @@ const SignUp = () => {
       await updateProfile(credential.user, {
         displayName: `${value.fname} ${value.lname}`,
       });
-      navigate('/onboarding');
+      navigate('/check');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 

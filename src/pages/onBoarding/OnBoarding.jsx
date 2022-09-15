@@ -22,79 +22,65 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { usePlatform } from '../../hooks/usePlatform';
 import { useAlert } from '../../hooks/useAlert';
 
-import imageDeliveroo from '../../assets/images/deliveroo.png';
-import imageTalabat from '../../assets/images/talabat.png';
+import { platformList } from '../../data/platformList';
 
 const steps = [1, 2, 3];
 
-const defaultSelections = [
-  { src: imageDeliveroo, name: 'deliveroo' },
-  { src: imageTalabat, name: 'talabat' },
-];
+const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: false }), {});
 
-const defaultSelected = {
-  deliveroo: false,
-  talabat: false,
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  backgroundColor: '#ffffff',
+  borderRadius: '0.4rem',
+  boxShadow: 24,
+  padding: '1rem',
+  border: '0',
 };
 
 const OnBoarding = () => {
   const [step, setStep] = useState(0);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
-  const [registered, setRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setPlatformToken, setIsOnboarded, platformOnboarded, setPlatformOnboarded } =
-    usePlatform();
-  const { initLogin } = useApi();
+  const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
+  const { settingsOnboardPlatform } = useApi();
   const { user } = useUserAuth();
-  const { showAlert, setAlertMessage, setAlertTheme } = useAlert('error');
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    backgroundColor: '#ffffff',
-    borderRadius: '0.4rem',
-    boxShadow: 24,
-    padding: '1rem',
-    border: '0',
-  };
+  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
 
   useEffect(() => {
-    if (step === 0) {
-      setRegistered(false);
-      setIsOnboarded(false);
-      setPlatformOnboarded([]);
-    }
+    if (step > 0) return;
+
+    cleanPlatformData();
   }, [step]);
 
-  const handleSubmitLoginInfo = async (data) => {
+  const handleSubmitLoginInfo = async (credentials, platform) => {
     setIsLoading(true);
 
-    const res = await initLogin({
-      master_email: user.email,
-      access_token: user.accessToken,
-      data,
-    });
+    const res = await settingsOnboardPlatform(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        credentials,
+      },
+      platform,
+    );
+
+    setIsLoading(false);
 
     if (res instanceof Error) {
-      setAlertMessage(res.message);
-      setAlertTheme('error');
-      showAlert();
-      setIsLoading(false);
+      triggerAlertWithMessageError(res.message);
       return;
     }
 
-    setAlertMessage('Registered with success !');
-    setAlertTheme('success');
-    showAlert();
-    setPlatformToken(res.response);
-    setIsLoading(false);
+    triggerAlertWithMessageSuccess('Registered with success !');
 
-    const currentPlatform = [...data.map((d) => d.platform)];
-    setPlatformOnboarded(currentPlatform);
-    isOnboardingCompleted(currentPlatform);
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [platform]: res },
+    });
   };
 
   const handlePlatformClick = (key) => {
@@ -102,46 +88,26 @@ const OnBoarding = () => {
   };
 
   const returnFormOrder = () => {
-    if (selectedPlatform.deliveroo && !platformOnboarded.includes('deliveroo')) {
-      return (
-        <OnBoardingForm
-          onSend={handleSubmitLoginInfo}
-          activeForm={{ deliveroo: true }}
-          isLoading={isLoading}
-        />
-      );
-    }
+    const currentPlatformInsertion = platformList.filter(
+      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
+    );
 
-    if (selectedPlatform.talabat && !platformOnboarded.includes('talabat')) {
-      return (
-        <OnBoardingForm
-          onSend={handleSubmitLoginInfo}
-          activeForm={{ talabat: true }}
-          isLoading={isLoading}
-        />
-      );
-    }
+    if (!currentPlatformInsertion[0]) return null;
 
-    return null;
-  };
-
-  const isOnboardingCompleted = (currentPlatform) => {
-    const deliverooOnboarded = !selectedPlatform.deliveroo
-      ? true
-      : currentPlatform.includes('deliveroo');
-    const talabatOnboarded = !selectedPlatform.talabat ? true : currentPlatform.includes('talabat');
-
-    setRegistered(deliverooOnboarded && talabatOnboarded);
-    setIsOnboarded(deliverooOnboarded && talabatOnboarded);
-
-    return deliverooOnboarded && talabatOnboarded;
+    return (
+      <OnBoardingForm
+        onSend={handleSubmitLoginInfo}
+        platform={currentPlatformInsertion[0]}
+        isLoading={isLoading}
+      />
+    );
   };
 
   const renderStepScreens = () => {
     if (step === 0) {
       return (
         <PlatformSelector
-          items={defaultSelections}
+          items={platformList}
           state={selectedPlatform}
           onClickItem={handlePlatformClick}
         />
@@ -152,10 +118,10 @@ const OnBoarding = () => {
       return (
         <>
           <PlatformSelector
-            items={defaultSelections}
+            items={platformList}
             state={selectedPlatform}
             onClickItem={() => null}
-            validated={platformOnboarded}
+            platforms={userPlatformData.platforms}
             noText
           />
           {returnFormOrder()}
@@ -167,15 +133,20 @@ const OnBoarding = () => {
   };
 
   const isNextDisabled = () => {
-    if (step === 0) {
-      return !selectedPlatform.deliveroo && !selectedPlatform.talabat;
-    }
+    switch (step) {
+      case 0:
+        return Object.values(selectedPlatform).every((v) => !v);
 
-    if (step === 1) {
-      return !registered;
-    }
+      case 1:
+        return !Object.keys(selectedPlatform).reduce((acc, cur) => {
+          if (!selectedPlatform[cur]) return acc;
 
-    return true;
+          return userPlatformData.platforms[cur].registered;
+        }, true);
+
+      default:
+        return true;
+    }
   };
 
   const isBackDisabled = () => step === 0 || step === 2;

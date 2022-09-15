@@ -8,7 +8,17 @@ import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
 const OnBoardingForm = (props) => {
-  const { onChangeEmail, onChangePassword, title, onSubmit, disabled, isLoading, isError } = props;
+  const {
+    onChangeEmail,
+    onChangePassword,
+    title,
+    onSubmit,
+    disabled,
+    isLoading,
+    isError,
+    valueMail,
+    valuePassword,
+  } = props;
 
   const renderButton = () => {
     if (!onSubmit) return null;
@@ -35,6 +45,7 @@ const OnBoardingForm = (props) => {
           onChange={(e) => onChangeEmail(e.target.value)}
           className="auth-form__input"
           fullWidth
+          value={valueMail}
           error={isError}
         />
         <TextfieldKit
@@ -44,6 +55,7 @@ const OnBoardingForm = (props) => {
           onChange={(e) => onChangePassword(e.target.value)}
           className="auth-form__input"
           error={isError}
+          value={valuePassword}
           fullWidth
         />
         {renderButton()}

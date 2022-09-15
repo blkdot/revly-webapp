@@ -1,32 +1,46 @@
-// TODO: fix all linter problem
-/* eslint-disable react/jsx-no-constructed-context-values */
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useMemo, useEffect } from 'react';
+
+import { platformContexDefaultFormat } from '../data/platformList';
+
+import config from '../setup/config';
 
 export const PlatformContext = createContext();
 
-export const PlatformProvider = ({ children }) => {
-  const [platformToken, setPlatformToken] = useState([]);
-  const [isOnboarded, setIsOnboarded] = useState(false);
-  const [platformOnboarded, setPlatformOnboarded] = useState([]);
+const { environment } = config;
 
-  const clearToken = () => {
-    setPlatformToken([]);
-    setIsOnboarded(false);
-    setPlatformOnboarded([]);
+const defaultState = () => {
+  if (environment !== 'dev') return platformContexDefaultFormat;
+
+  const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
+
+  if (!stringFakeOnboarding) return platformContexDefaultFormat;
+
+  return JSON.parse(stringFakeOnboarding);
+};
+
+export const PlatformProvider = ({ children }) => {
+  const [userPlatformData, setUserPlatformData] = useState(defaultState());
+
+  useEffect(() => {
+    if (environment !== 'dev') return;
+
+    localStorage.setItem('fakeOnboarding', JSON.stringify(userPlatformData));
+  }, [userPlatformData]);
+
+  const cleanPlatformData = () => {
+    if (JSON.stringify(userPlatformData) === JSON.stringify(platformContexDefaultFormat)) return;
+
+    setUserPlatformData(platformContexDefaultFormat);
   };
 
-  return (
-    <PlatformContext.Provider
-      value={{
-        platformToken,
-        setPlatformToken,
-        isOnboarded,
-        setIsOnboarded,
-        platformOnboarded,
-        setPlatformOnboarded,
-        clearToken,
-      }}>
-      {children}
-    </PlatformContext.Provider>
+  const PlatformWrapper = useMemo(
+    () => ({
+      userPlatformData,
+      setUserPlatformData,
+      cleanPlatformData,
+    }),
+    [userPlatformData],
   );
+
+  return <PlatformContext.Provider value={PlatformWrapper}>{children}</PlatformContext.Provider>;
 };
