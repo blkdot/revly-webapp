@@ -18,6 +18,8 @@ import { ProtectedRoutes } from './routes/ProtectedRoutes';
 import { ProtectedOnboardRoutes } from './routes/ProtectedOnboardRoutes';
 import Competition from './pages/competition/Competition';
 import Planning from './pages/planning/Planning';
+import MarketingAds from './pages/marketing/MarketingAds';
+import MarketingOffer from './pages/marketing/MarketingOffer';
 
 const theme = createTheme({
   palette: {
@@ -46,6 +48,8 @@ function App() {
                       <Route path='/planning' element={<Planning />} />
                       <Route path='/competition' element={<Competition />} />
                       <Route path='/settings' element={<Settings />} />
+                      <Route path='/marketing/offer' element={<MarketingOffer />} />
+                      <Route path='/marketing/ads' element={<MarketingAds />} />
                     </Route>
                     <Route path='/onboarding' element={<OnBoarding />} />
                   </Route>

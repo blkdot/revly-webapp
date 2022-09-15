@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -38,7 +38,8 @@ function Navbar() {
 
   const { user, logOut } = useUserAuth();
   const navigate = useNavigate();
-  
+  const { pathname } = useLocation();
+
   const handleLogout = async () => {
     try {
       await logOut();
@@ -72,7 +73,7 @@ function Navbar() {
             <CalendarMonthIcon />
           </Link>
           <AccordionKit onClick={() => setExpanded(!expanded)} className="navbar-accordion" expanded={opened || open ? expanded : false}>
-            <ButtonKit className="navbar-button-kit">
+            <ButtonKit className={"navbar-button-kit " + (pathname === "/marketing/offer" || pathname === "/marketing/ads" ? "active" : "")}>
               <AccordionSummaryKit className="accordion-sum" expandIcon={opened || open ? <ExpandMoreIcon /> : ""}>
                 <TypographyKit sx={{ display: "flex", alignItems: "center", gridGap: "5px", fontSize: "14px" }}>
                   <StackedLineChartIcon />
@@ -81,8 +82,8 @@ function Navbar() {
               </AccordionSummaryKit>
             </ButtonKit>
             <AccordionDetailsKit className="navbar-accordion-details">
-              <Link path={"/offer"}>Offer</Link>
-              <Link path={"/ads"}>Ads</Link>
+              <Link path={"/marketing/offer"}>Offer</Link>
+              <Link path={"/marketing/ads"}>Ads</Link>
             </AccordionDetailsKit>
           </AccordionKit>
           <Link title={"Competition"} path={"/competition"}>
