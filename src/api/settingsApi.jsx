@@ -16,6 +16,32 @@ export const settingsOnboardPlatform = (body, platform) => {
     .catch(handleResponse);
 };
 
+export const settingsOnboardPlatformStatus = (body, platform) => {
+  if (environment === 'dev') {
+    const fakeOnboarding = JSON.parse(localStorage.getItem('fakeOnboarding'));
+
+    const newFakeOnboarding = {
+      ...fakeOnboarding,
+      platforms: {
+        ...fakeOnboarding.platforms,
+        [platform]: {
+          ...fakeOnboarding.platforms[platform],
+          active_status: body.active_status,
+        },
+      },
+    };
+
+    localStorage.setItem('fakeOnboarding', JSON.stringify(newFakeOnboarding));
+
+    return newFakeOnboarding;
+  }
+
+  return axios
+    .put(`${apiUrl}/settings/onboard/${platform}/status`, body)
+    .then(handleResponse)
+    .catch(handleResponse);
+};
+
 export const settingsOnboarded = (param) => {
   if (environment === 'dev') {
     const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');

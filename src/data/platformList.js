@@ -11,7 +11,12 @@ export const platformContexDefaultFormat = {
   platforms: platformList.reduce(
     (acc, { name }) => ({
       ...acc,
-      [name]: { registered: false, status: false, access_token: null, access_token_bis: null },
+      [name]: {
+        registered: false,
+        active_status: false,
+        access_token: null,
+        access_token_bis: null,
+      },
     }),
     {},
   ),

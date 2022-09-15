@@ -9,16 +9,10 @@ import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
-import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';
+import useApi from '../../../hooks/useApi';
 
-import imageDeliveroo from '../../../assets/images/deliveroo.png';
-import imageTalabat from '../../../assets/images/talabat.png';
-
-const platformList = [
-  { src: imageDeliveroo, type: 'deliveroo' },
-  { src: imageTalabat, type: 'talabat' },
-];
+import { platformList } from '../../../data/platformList';
 
 const style = {
   position: 'absolute',
@@ -32,34 +26,48 @@ const style = {
   padding: '1rem',
   border: '0',
 };
+
 const NewSettingsOnboarding = () => {
-  const [values, setValues] = useState({
-    deliveroo: { active: true, registered: true },
-    talabat: { active: false, registered: false },
-  });
   const [platformActiveModal, SetPlatformActiveModal] = useState('');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const { initLogin } = useApi();
+  const { settingsOnboardPlatformStatus, settingsOnboardPlatform } = useApi();
   const { user } = useUserAuth();
-  const { platformOnboarded, setPlatformOnboarded } = usePlatform();
+  const { userPlatformData, setUserPlatformData } = usePlatform();
 
   useEffect(() => {
-    platformList.forEach(({ type }) => {
-      if (values[type].active && !values[type].registered) {
-        SetPlatformActiveModal(type);
+    platformList.forEach(({ name }) => {
+      if (
+        userPlatformData.platforms[name].active_status &&
+        !userPlatformData.platforms[name].registered
+      ) {
+        SetPlatformActiveModal(name);
         setIsOpenModal(true);
       }
     });
-  }, [values.deliveroo.active, values.talabat.active]);
+  }, [JSON.stringify(userPlatformData.platforms)]);
 
   useEffect(() => {
     setFormData({ email: '', password: '' });
   }, [isOpenModal]);
 
-  const handleSwitchChange = (k) => (v) => {
-    setValues({ ...values, [k]: { ...values[k], active: v } });
+  const handleSwitchChange = (k) => async (v) => {
+    const res = await settingsOnboardPlatformStatus(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        active_status: v,
+      },
+      k,
+    );
+
+    if (res instanceof Error) {
+      console.error(res);
+      return;
+    }
+
+    setUserPlatformData(res);
   };
 
   const handleClick = (type) => () => {
@@ -73,57 +81,45 @@ const NewSettingsOnboarding = () => {
 
   const closeWithoutConnecting = () => {
     setIsOpenModal(false);
-
-    if (!values[platformActiveModal].registered) {
-      setValues({
-        ...values,
-        [platformActiveModal]: {
-          ...values[platformActiveModal],
-          active: false,
-        },
-      });
-    }
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    const res = await initLogin(
+    const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
         access_token: user.accessToken,
-        data: [
-          {
-            platform: platformActiveModal,
-            email: formData.email,
-            password: formData.password,
-          },
-        ],
+        credentials: {
+          email: formData.email,
+          password: formData.password,
+        },
       },
-      true,
+      platformActiveModal,
     );
 
     setIsLoading(false);
 
     if (res instanceof Error) {
-      // eslint-disable-next-line no-console
       console.error(res);
       return;
     }
 
-    setPlatformOnboarded([...platformOnboarded, platformActiveModal]);
+    setUserPlatformData(res);
   };
+
+  console.log(userPlatformData);
 
   const renderPlatform = () =>
     platformList.map((p) => (
       <PlatformSettingsBox
-        key={p.type}
+        key={p.name}
         src={p.src}
-        type={p.type}
-        onChangeSwitch={handleSwitchChange(p.type)}
-        active={values[p.type].active}
-        registered={values[p.type].registered}
-        onClick={handleClick(p.type)}
+        type={p.name}
+        onChangeSwitch={handleSwitchChange(p.name)}
+        active={userPlatformData.platforms[p.name].active_status}
+        registered={userPlatformData.platforms[p.name].registered}
+        onClick={handleClick(p.name)}
       />
     ));
 
