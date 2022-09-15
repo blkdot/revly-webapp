@@ -12,6 +12,7 @@ import {
   PhoneAuthProvider,
   sendEmailVerification,
   reauthenticateWithPopup,
+  updatePhoneNumber,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import config from '../setup/config';
@@ -57,16 +58,30 @@ export const AuthContextProvider = ({ children }) => {
     return sendEmailVerification(user, actionCodeSettings);
   }
 
+  const createRecaptcha = () => {
+    const existDiv = document.getElementById('recaptcha');
 
-  const phoneNumberVerify = async (container, phone) => {
-    const applicationVerifier = new RecaptchaVerifier(container, {
-      size: 'invisible'
+    if (existDiv) {
+      existDiv.remove();
+    }
+
+    const div = document.createElement('div');
+    div.id = 'recaptcha';
+    div.style.display = 'none';
+    document.body.appendChild(div);
+
+    window.applicationVerifier = new RecaptchaVerifier('recaptcha', {
+      size: 'invisible',
     }, auth);
-    const provider = new PhoneAuthProvider(auth)
-    const verificationId = await provider.verifyPhoneNumber(phone, applicationVerifier);
-    // const code = window.prompt('Enter the code we sent you : ')
-    // const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
-    return Promise.resolve(verificationId);
+  }
+
+  const updatePhone = async (phone) => {  
+    const provider = new PhoneAuthProvider(auth);
+    const verificationId = await provider.verifyPhoneNumber(phone, window.applicationVerifier)
+    const code = window.prompt('Enter the code we sent to the phone number : ')
+    const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
+
+    return updatePhoneNumber(user, phoneCredential);
   }
 
   const googleSignIn = () => {
@@ -86,7 +101,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <UserAuthContext.Provider value={{ user, signUp, signIn, logOut, googleSignIn, reAuth, phoneNumberVerify, emailVerify, reAuthGoogle }}>
+    <UserAuthContext.Provider value={{ createRecaptcha, user, signUp, signIn, logOut, googleSignIn, reAuth, updatePhone, emailVerify, reAuthGoogle }}>
       {children}
     </UserAuthContext.Provider>
   );

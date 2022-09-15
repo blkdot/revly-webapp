@@ -23,6 +23,20 @@ export const firebaseCodeError = {
     field: 'email',
     message: 'Email already in used',
   },
+  'auth/missing-code': {
+    field: 'code',
+    message: 'Invalid verification code'
+  },
+  'auth/too-many-requests': {
+    message: 'Too many attempts, try again later'
+  },
+  'auth/invalid-phone-number': {
+    field: 'phone',
+    message: 'Invalid phone number'
+  },
+  'auth/quota-exceeded': {
+    message: 'Limit reached for sending verification code'
+  }
 };
 
 export default firebaseCodeError;

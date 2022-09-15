@@ -55,6 +55,9 @@ const SignUp = () => {
         <img src="/images/cover.png" alt="cover" width={300} />
       </div>
       <CardKit className='card-signup' variant='outlined'>
+        <p style={{ margin: '2rem 0', textAlign: 'right' }}>
+          Already have an account yet? <Link to='/'> Sign in.</Link>
+        </p>
         <h2>Sign up</h2>
         
         <SignUpForm
@@ -72,10 +75,6 @@ const SignUp = () => {
           onSubmit={handleSubmit}
           disabled={isDisabled()}
         />
-  
-        <p style={{ marginTop: '2rem' }}>
-          Already have an account yet? <Link to='/'> Sign in.</Link>
-        </p>
       </CardKit>
     </div>
   );
