@@ -2,7 +2,6 @@ import React from 'react';
 
 import './OnBoardingForm.scss';
 
-import PaperKit from '../../../kits/paper/PaperKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
@@ -36,7 +35,7 @@ const OnBoardingForm = (props) => {
   };
 
   return (
-    <PaperKit className="onboarding-form">
+    <div className="onboarding-form">
       {title ? <h2>{title}</h2> : null}
       <FormcontrolKit className="auth-form" fullWidth>
         <TextfieldKit
@@ -60,7 +59,7 @@ const OnBoardingForm = (props) => {
         />
         {renderButton()}
       </FormcontrolKit>
-    </PaperKit>
+    </div>
   );
 };
 

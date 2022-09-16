@@ -25,7 +25,6 @@
             "namedComponents": "arrow-function", 
             "unnamedComponents": "arrow-function"
           }
-        ],
-        "react/no-unknown-property": 0
+        ]
     }
 }

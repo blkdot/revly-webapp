@@ -8,69 +8,75 @@ import { fakeSettingsOnboardPlatform } from '../data/fakeDataOnboarding';
 const { apiUrl, environment } = config;
 
 export const settingsOnboardPlatform = (body, platform) => {
-  if (environment === 'dev') {
-    if (body.credentials.email === 'test') {
-      return fakeSettingsOnboardPlatform;
-    }
-
-    return new Error("Fake response: try with 'test' in the 'email' field ");
+  if (environment !== 'dev') {
+    return axios
+      .post(`${apiUrl}/settings/onboard/${platform}`, { body })
+      .then(handleResponse)
+      .catch(handleResponse);
   }
 
-  return axios
-    .post(`${apiUrl}/settings/onboard/${platform}`, body)
-    .then(handleResponse)
-    .catch(handleResponse);
+  if (body.credentials.email === 'test') {
+    return fakeSettingsOnboardPlatform;
+  }
+
+  return new Error("Fake response: try with 'test' in the 'email' field ");
 };
 
 export const settingsOnboardPlatformStatus = (body, platform) => {
-  if (environment === 'dev') {
-    const fakeOnboarding = JSON.parse(localStorage.getItem('fakeOnboarding'));
+  if (environment !== 'dev') {
+    return axios
+      .put(`${apiUrl}/settings/onboard/${platform}/status`, { body })
+      .then(handleResponse)
+      .catch(handleResponse);
+  }
 
-    const newFakeOnboarding = {
-      ...fakeOnboarding,
-      platforms: {
-        ...fakeOnboarding.platforms,
-        [platform]: {
-          ...fakeOnboarding.platforms[platform],
-          active_status: body.active_status,
-        },
+  const fakeOnboarding = JSON.parse(localStorage.getItem('fakeOnboarding'));
+
+  const newFakeOnboarding = {
+    ...fakeOnboarding,
+    platforms: {
+      ...fakeOnboarding.platforms,
+      [platform]: {
+        ...fakeOnboarding.platforms[platform],
+        active_status: body.active_status,
       },
-    };
+    },
+  };
 
-    localStorage.setItem('fakeOnboarding', JSON.stringify(newFakeOnboarding));
+  localStorage.setItem('fakeOnboarding', JSON.stringify(newFakeOnboarding));
 
-    return newFakeOnboarding;
-  }
-
-  return axios
-    .put(`${apiUrl}/settings/onboard/${platform}/status`, body)
-    .then(handleResponse)
-    .catch(handleResponse);
+  return {
+    ...fakeOnboarding.platforms[platform],
+    active_status: body.active_status,
+  };
 };
 
-export const settingsOnboarded = (param) => {
-  if (environment === 'dev') {
-    const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
-
-    if (!stringFakeOnboarding) return fakeSettingsOnboardPlatform;
-
-    return JSON.parse(stringFakeOnboarding);
+export const settingsOnboarded = (body) => {
+  if (environment !== 'dev') {
+    return axios
+      .post(`${apiUrl}/settings/onboarded`, { body })
+      .then(handleResponse)
+      .catch(handleResponse);
   }
 
-  return axios
-    .get(`${apiUrl}/settings/onboarded`, param)
-    .then(handleResponse)
-    .catch(handleResponse);
+  const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
+
+  if (!stringFakeOnboarding) return fakeSettingsOnboardPlatform;
+
+  return JSON.parse(stringFakeOnboarding);
 };
 
-export const settingsLogin = (param) => {
-  if (environment === 'dev') {
-    const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
-
-    if (!stringFakeOnboarding) return fakeSettingsOnboardPlatform;
-
-    return JSON.parse(stringFakeOnboarding);
+export const settingsLogin = (body) => {
+  if (environment !== 'dev') {
+    return axios
+      .post(`${apiUrl}/settings/login`, { body })
+      .then(handleResponse)
+      .catch(handleResponse);
   }
 
-  return axios.get(`${apiUrl}/settings/login`, param).then(handleResponse).catch(handleResponse);
+  const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
+
+  if (!stringFakeOnboarding) return fakeSettingsOnboardPlatform;
+
+  return JSON.parse(stringFakeOnboarding);
 };

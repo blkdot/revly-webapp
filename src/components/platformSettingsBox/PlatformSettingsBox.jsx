@@ -1,6 +1,8 @@
 import React from 'react';
 import { pascalCase } from 'change-case';
 
+import { AiFillEdit } from 'react-icons/ai';
+
 import './PlatformSettingsBox.scss';
 
 import SwitchKit from '../../kits/switch/SwitchKit';
@@ -14,7 +16,10 @@ const PlatformSettingsBox = (props) => {
 
     return (
       <div className="__footer-action">
-        <ButtonKit onClick={onClick}>Change Credentials</ButtonKit>
+        <ButtonKit onClick={onClick}>
+          <AiFillEdit />
+          &nbsp;Edit
+        </ButtonKit>
       </div>
     );
   };
@@ -31,8 +36,8 @@ const PlatformSettingsBox = (props) => {
         <div className="__content__switch">
           <SwitchKit checked={active} onChange={({ target }) => onChangeSwitch(target.checked)} />
         </div>
+        {renderFooter()}
       </div>
-      <div className="platform-settings-box__footer">{renderFooter()}</div>
     </div>
   );
 };

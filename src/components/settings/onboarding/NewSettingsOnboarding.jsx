@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { pascalCase } from 'change-case';
+
+import './SettingOnboarding.scss';
 
 import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
 
 import ModalKit from '../../../kits/modal/ModalKit';
-import PaperKit from '../../../kits/paper/PaperKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
+import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';
 
 import { platformList } from '../../../data/platformList';
@@ -35,6 +38,7 @@ const NewSettingsOnboarding = () => {
   const { settingsOnboardPlatformStatus, settingsOnboardPlatform } = useApi();
   const { user } = useUserAuth();
   const { userPlatformData, setUserPlatformData } = usePlatform();
+  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
 
   useEffect(() => {
     platformList.forEach(({ name }) => {
@@ -48,10 +52,6 @@ const NewSettingsOnboarding = () => {
     });
   }, [JSON.stringify(userPlatformData.platforms)]);
 
-  useEffect(() => {
-    setFormData({ email: '', password: '' });
-  }, [isOpenModal]);
-
   const handleSwitchChange = (k) => async (v) => {
     const res = await settingsOnboardPlatformStatus(
       {
@@ -63,11 +63,15 @@ const NewSettingsOnboarding = () => {
     );
 
     if (res instanceof Error) {
-      console.error(res);
+      triggerAlertWithMessageError(res.message);
       return;
     }
 
-    setUserPlatformData(res);
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [k]: res },
+    });
+    triggerAlertWithMessageSuccess(`State changed to ${v ? 'active' : 'inactive'}`);
   };
 
   const handleClick = (type) => () => {
@@ -79,8 +83,32 @@ const NewSettingsOnboarding = () => {
     setFormData({ ...formData, [k]: v });
   };
 
-  const closeWithoutConnecting = () => {
+  const closeWithoutConnecting = async () => {
+    if (userPlatformData.platforms[platformActiveModal].registered) {
+      setIsOpenModal(false);
+      return;
+    }
+
+    const res = await settingsOnboardPlatformStatus(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        active_status: false,
+      },
+      platformActiveModal,
+    );
+
+    if (res instanceof Error) {
+      triggerAlertWithMessageError(res.message);
+      return;
+    }
+
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [platformActiveModal]: res },
+    });
     setIsOpenModal(false);
+    triggerAlertWithMessageSuccess('State changed to inactive');
   };
 
   const handleSubmit = async () => {
@@ -101,14 +129,17 @@ const NewSettingsOnboarding = () => {
     setIsLoading(false);
 
     if (res instanceof Error) {
-      console.error(res);
+      triggerAlertWithMessageError(res.message);
       return;
     }
 
-    setUserPlatformData(res);
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [platformActiveModal]: res },
+    });
+    triggerAlertWithMessageSuccess('Registered successfully');
+    setIsOpenModal(false);
   };
-
-  console.log(userPlatformData);
 
   const renderPlatform = () =>
     platformList.map((p) => (
@@ -132,7 +163,10 @@ const NewSettingsOnboarding = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <div style={style}>
-          <PaperKit className="onboarding-form">
+          <div className="settings-onboarding__form">
+            <span>
+              Connect your {pascalCase(platformActiveModal)} account to your Revly account
+            </span>
             <FormcontrolKit
               className="auth-form"
               fullWidth
@@ -168,7 +202,7 @@ const NewSettingsOnboarding = () => {
                 Confirm
               </ButtonLoadingKit>
             </div>
-          </PaperKit>
+          </div>
         </div>
       </ModalKit>
     </div>

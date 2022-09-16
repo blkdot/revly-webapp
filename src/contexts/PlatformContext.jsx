@@ -15,7 +15,6 @@ const defaultState = () => {
 
   if (!stringFakeOnboarding) return platformContexDefaultFormat;
 
-  console.log(stringFakeOnboarding);
   return JSON.parse(stringFakeOnboarding);
 };
 

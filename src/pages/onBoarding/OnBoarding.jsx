@@ -16,6 +16,7 @@ import StepperKit from '../../kits/stepper/StepperKit';
 import StepKit from '../../kits/step/StepKit';
 import StepLabelKit from '../../kits/stepLabel/StepLabel';
 import ButtonKit from '../../kits/button/ButtonKit';
+import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
 
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
@@ -24,7 +25,7 @@ import { useAlert } from '../../hooks/useAlert';
 
 import { platformList } from '../../data/platformList';
 
-const steps = [1, 2, 3];
+const steps = ['Welcome to Revly', 'Connect to the delivery platforms', 'Congratulation'];
 
 const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: false }), {});
 
@@ -43,6 +44,8 @@ const style = {
 
 const OnBoarding = () => {
   const [step, setStep] = useState(0);
+  const [formValues, setFormValues] = useState({ email: '', password: '' });
+  const [currentPlatform, setCurrentPlatform] = useState(null);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
   const [isLoading, setIsLoading] = useState(false);
   const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
@@ -56,16 +59,31 @@ const OnBoarding = () => {
     cleanPlatformData();
   }, [step]);
 
-  const handleSubmitLoginInfo = async (credentials, platform) => {
+  useEffect(() => {
+    const currentPlatformInsertion = platformList.filter(
+      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
+    );
+
+    if (!currentPlatformInsertion[0]) {
+      setCurrentPlatform(null);
+      return;
+    }
+
+    setCurrentPlatform(currentPlatformInsertion[0]);
+  }, [JSON.stringify(userPlatformData.platforms), JSON.stringify(selectedPlatform)]);
+
+  const handleSubmitLoginInfo = async () => {
+    if (!currentPlatform) return;
+
     setIsLoading(true);
 
     const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
         access_token: user.accessToken,
-        credentials,
+        credentials: formValues,
       },
-      platform,
+      currentPlatform.name,
     );
 
     setIsLoading(false);
@@ -79,8 +97,10 @@ const OnBoarding = () => {
 
     setUserPlatformData({
       ...userPlatformData,
-      platforms: { ...userPlatformData.platforms, [platform]: res },
+      platforms: { ...userPlatformData.platforms, [currentPlatform.name]: res },
     });
+
+    setFormValues({ email: '', password: '' });
   };
 
   const handlePlatformClick = (key) => {
@@ -88,17 +108,13 @@ const OnBoarding = () => {
   };
 
   const returnFormOrder = () => {
-    const currentPlatformInsertion = platformList.filter(
-      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
-    );
-
-    if (!currentPlatformInsertion[0]) return null;
+    if (!currentPlatform) return null;
 
     return (
       <OnBoardingForm
-        onSend={handleSubmitLoginInfo}
-        platform={currentPlatformInsertion[0]}
-        isLoading={isLoading}
+        platform={currentPlatform}
+        setFormValue={(v) => setFormValues(v)}
+        formValue={formValues}
       />
     );
   };
@@ -149,6 +165,20 @@ const OnBoarding = () => {
     }
   };
 
+  const renderSendButton = () => {
+    if (step !== 1) return null;
+
+    return (
+      <ButtonLoadingKit
+        variant="contained"
+        onClick={handleSubmitLoginInfo}
+        loading={isLoading}
+        disabled={!isNextDisabled() || !currentPlatform}>
+        Send
+      </ButtonLoadingKit>
+    );
+  };
+
   const isBackDisabled = () => step === 0 || step === 2;
 
   return (
@@ -163,7 +193,7 @@ const OnBoarding = () => {
           <StepperKit activeStep={step} alternativeLabel>
             {steps.map((s) => (
               <StepKit key={s}>
-                <StepLabelKit />
+                <StepLabelKit>{s}</StepLabelKit>
               </StepKit>
             ))}
           </StepperKit>
@@ -178,6 +208,7 @@ const OnBoarding = () => {
                 Back
               </ButtonKit>
             </div>
+            <div>{renderSendButton()}</div>
             <div>
               <ButtonKit
                 variant="outlined"

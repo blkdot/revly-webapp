@@ -1,46 +1,11 @@
 @import '../../../library.scss';
 
-.settings-onboarding {
-  display: flex;
-  width: 100%;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-
-  .settings-onboarding__item {
-    position: relative;
-    display: flex;
-    text-align: center;
-    text-align: -webkit-center;
-    margin: 0.5rem;
-    width: 25rem;
-
-    @include tabletBreakpoint {
-      width: 100%;
-    }
-
-    @include mobileBreakpoint {
-      width: 100%;
-      margin: 0.5rem auto;
-    }
-
-    .onboarding-form {
-      width: 100%;
-    }
-  }
-
-  .settings-onboarding__state-icon {
-    font-size: 25px;
-    position: absolute;
-    top: 1.5rem;
-    right: 1rem;
-  }
-
-  .settings-onboarding__block {
-    padding: 1rem;
-    margin: 1rem auto 0.5rem;
-    width: 100%;
-    display: flex;
-    text-align: center;
-    flex-direction: column;
+.settings-onboarding__form {
+  padding: 1rem;
+  margin: 1rem auto 0.5rem;
+  text-align: center;
+  
+  span {
+    font-weight: bold;
   }
 }

@@ -24,7 +24,7 @@ const UserAuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(true);
-  const { clearToken } = usePlatform();
+  const { cleanPlatformData } = usePlatform();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -43,7 +43,7 @@ export const AuthContextProvider = ({ children }) => {
   const signIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
 
   const logOut = () => {
-    clearToken();
+    cleanPlatformData();
     return signOut(auth);
   };
 
