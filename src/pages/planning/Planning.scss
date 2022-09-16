@@ -1,14 +1,17 @@
 @import "../../library.scss";
 
 .planning_top-nav {
+  position: relative;
   display: flex;
-  grid-gap: 25px;
+  grid-gap: 35px;
   margin-top: 50px;
   margin-bottom: 40px;
 
-  a {
+  > h4 {
+    
+    cursor: pointer;
     text-decoration: none;
-    color: $color-wrapper;
+    color: $color-gray;
     font-size: 2.125rem;
     transition: .4s;
 
@@ -18,6 +21,21 @@
 
     &:hover {
       color: $color-main;
+    }
+  }
+  &::before{
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 2px;
+    background: $color-main;
+    bottom: -5px;
+    left: -5px;
+    transition: .4s;
+  }
+  &.active{
+    &::before{
+      left: 100px;
     }
   }
 }

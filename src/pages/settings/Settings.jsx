@@ -16,7 +16,6 @@ import TabKit from '../../kits/tab/TabKit';
 import TabsKit from '../../kits/tabs/TabsKit';
 import BoxKit from '../../kits/box/BoxKit';
 
-
 const Settings = () => {
   const [currentTab, setCurrentTab] = useState('general');
 
@@ -45,7 +44,7 @@ const Settings = () => {
 
   const handleTabChange = (_, v) => {
     setCurrentTab(v);
-  }
+  };
 
   return (
     <div className="setting-account">
@@ -53,12 +52,11 @@ const Settings = () => {
       <div>
         <TabsKit
           allowScrollButtonsMobile
-          variant='scrollable'
-          scrollButtons='auto'
+          variant="scrollable"
+          scrollButtons="auto"
           value={currentTab}
           onChange={handleTabChange}
-          className='setting-account__tabs'
-        >
+          className="setting-account__tabs">
           {ACCOUNT_TABS.map((tab) => (
             <TabKit
               className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}

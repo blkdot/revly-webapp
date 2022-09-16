@@ -72,6 +72,18 @@
       text-decoration: none;
     }
 
+    .navbar-button-kit.navbar-button-kit.active {
+      background-color: #ebdbeb;
+      color: #4d2681;
+      transition: .4s;
+
+      &:hover {
+        background-color: #ebdbeb;
+        color: #4d2681;
+        transition: .4s;
+      }
+    }
+
   }
 
   .Navbar-footer.Navbar-footer {
@@ -175,6 +187,9 @@
   margin-left: 25px;
   position: relative;
   padding: 8px 16px 0px 16px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
 
   &::before {
     content: "";
@@ -237,6 +252,22 @@
   .Navbar.Navbar {
     &.opened {
       width: 230px;
+    }
+  }
+}
+
+@media(min-width: 1450px) {
+  .navbar_wrapper {
+    &.opened {
+      width:320px;
+    }
+  }
+}
+
+@media(min-width: 1500px) {
+  .navbar_wrapper {
+    &.opened {
+      width:260px;
     }
   }
 }

@@ -5,18 +5,13 @@ import { updatePassword } from 'firebase/auth';
 import './ChangePassword.scss';
 
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-
 import PaperKit from '../../../kits/paper/PaperKit';
-
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
-import TypographyKit from '../../../kits/typography/TypographyKit';
-
-import useAlert from '../../../hooks/useAlert';
-
+import { useAlert } from '../../../hooks/useAlert';
 import { useUserAuth } from '../../../contexts/AuthContext';
 
-import firebaseCodeError from '../../../data/firebaseCodeError';
+import { firebaseCodeError } from '../../../data/firebaseCodeError';
 
 const defaultValues = {
   password: '',
@@ -33,7 +28,7 @@ const ChangePassword = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, reAuth } = useUserAuth();
+  const { user, reAuth, reAuthGoogle } = useUserAuth();
 
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
 
@@ -62,13 +57,21 @@ const ChangePassword = () => {
     setValues({ ...values, [k]: e.target.value });
   };
 
+  const isOnlyGoogle = () => !user.providerData.some((v) => v.providerId === 'password');
+
   const handleClickSubmit = async () => {
     setIsLoading(true);
 
     try {
-      await reAuth(values.password);
+      if (isOnlyGoogle()) {
+        await reAuthGoogle();
+      } else {
+        await reAuth(values.password);
+      }
 
       await updatePassword(user, values.newPassword);
+
+      setValues(defaultValues);
 
       setAlertMessage('Password changed');
 
@@ -92,54 +95,42 @@ const ChangePassword = () => {
     setIsLoading(false);
   };
 
-  const renderForm = () => {
-    if (user.providerData[0].providerId === 'google.com') {
-      return <TypographyKit>You are currently connected with your google account.</TypographyKit>;
-    }
-
-    return (
-      <>
-        <div className='change-password__field'>
+  const renderForm = () => (
+    <>
+      {!isOnlyGoogle() && (
+        <div className="change-password__field">
           <TextfieldKit
-            type='password'
+            type="password"
+            value={values.password}
             error={errors.password}
-            label='Old password'
+            label="Old password"
             fullWidth
             onChange={handleChange('password')}
           />
         </div>
+      )}
 
-        <div className='change-password__field'>
-          <TextfieldKit
-            type='password'
-            error={errors.confirm}
-            label='New password'
-            fullWidth
-            onChange={handleChange('newPassword')}
-          />
-        </div>
+      <div className="change-password__field">
+        <TextfieldKit
+          type="password"
+          value={values.confirmPassword}
+          error={errors.confirm}
+          label="Confirm new password"
+          fullWidth
+          onChange={handleChange('confirmPassword')}
+        />
+      </div>
 
-        <div className='change-password__field'>
-          <TextfieldKit
-            type='password'
-            error={errors.confirm}
-            label='Confirm new password'
-            fullWidth
-            onChange={handleChange('confirmPassword')}
-          />
-        </div>
-
-        <div className='change-password__button'>
-          <ButtonLoadingKit variant='contained' loading={isLoading} onClick={handleClickSubmit}>
-            Save change
-          </ButtonLoadingKit>
-        </div>
-      </>
-    );
-  };
+      <div className="change-password__button">
+        <ButtonLoadingKit variant="contained" loading={isLoading} onClick={handleClickSubmit}>
+          Save
+        </ButtonLoadingKit>
+      </div>
+    </>
+  );
 
   return (
-    <PaperKit className='change-password' elevation={0}>
+    <PaperKit className="change-password" elevation={0}>
       {renderForm()}
     </PaperKit>
   );
