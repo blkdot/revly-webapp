@@ -37,7 +37,7 @@ const Check = () => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [JSON.stringify(user)]);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
