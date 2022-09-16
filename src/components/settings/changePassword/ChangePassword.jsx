@@ -138,7 +138,7 @@ const ChangePassword = () => {
 
         <div className='change-password__button'>
           <ButtonLoadingKit variant='contained' loading={isLoading} onClick={handleClickSubmit}>
-            Save change
+            Save
           </ButtonLoadingKit>
         </div>
       </>

@@ -1,3 +1,4 @@
+@import '../../../library.scss';
 
 .account-form {
 
@@ -8,11 +9,46 @@
         justify-content: space-between;
         width: 100%;
 
-        .account-form__flex__block-1, .account-form__flex__block-2 {
+        .account-form__flex__block {
             width: 48%;
-            .account-form__flex__block-1__input, .account-form__flex__block-2__input {
+            .account-form__flex__block__input {
                 margin: 10px 0;
+            }
 
+            .account-form__flex__block__input-phone {
+                margin: 10px 0;
+                input {
+                    width: 100%;
+                    height: 1.4375em;
+                    background-color: transparent;
+
+                    &:focus {
+                        border: 1.5px solid $color-main;
+                        box-shadow: none;
+                    }
+                }
+                .special-label {
+                    color: $color-gray;
+                    font-size: 10px;
+                }
+            }
+
+
+            .account-form__flex__block__autocomplete {
+                margin: 10px 0;
+                .MuiAutocomplete-inputRoot {
+                    height: 2.7em;
+                }
+                label {
+                    margin-top: -8px;
+
+                    &[data-shrink="true"] {
+                        margin-top: 0;
+                    }
+                }
+                input {
+                    margin-top: -8px;
+                }
             }
         }
     }
@@ -25,7 +61,7 @@
     @media(max-width: 576px) {
         .account-form__flex {
             display: block;
-            .account-form__flex__block-1, .account-form__flex__block-2 {
+            .account-form__flex__block {
                 width: 100%;
             }
         }

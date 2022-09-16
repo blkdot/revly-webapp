@@ -12,7 +12,6 @@ import validator from '../../../utlls/input/validator';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import firebaseCodeError from '../../../data/firebaseCodeError';
-import country from '../../../data/country.json';
 
 
 const General = () => {
@@ -20,15 +19,14 @@ const General = () => {
     const [inputValue, setInputValue] = useState({
         name: user.displayName || '',
         phone: user.phoneNumber || '',
-        country: 'AF',
+        country: {},
+        email: user.email,
         city: '',
         restoName: '',
         role: ''
     })
     const [inputError, setInputError] = useState({
         name: false,
-        phone: false,
-        country: false,
         restoName: false,
         role: false
     })
@@ -42,6 +40,8 @@ const General = () => {
     }
 
     const handleSave = async () => {
+
+
 
         setIsLoading(true);
             try {
@@ -65,10 +65,6 @@ const General = () => {
                     setInputValue({ ...inputValue, phone: '' })
                 }
 
-                if (firebaseCodeError[e.code] && firebaseCodeError[e.code].field) {
-                    setInputError({ ...inputError, [firebaseCodeError[e.code].field]: true })
-                }
-
                 setIsLoading(false);
                 setAlertTheme('error');
                 setAlertMessage(message);
@@ -78,12 +74,14 @@ const General = () => {
 
 
     const handleInputChange = (e, is) => {
-        setInputError({ ...inputError, [e.target.name]: !validator[is](e.target.value)});
+        if (validator[is]) {
+            setInputError({ ...inputError, [e.target.name]: !validator[is](e.target.value)});
+        }
         setInputValue({ ...inputValue, [e.target.name]: e.target.value });
     }
 
-    const handleSelectCountry = (e) => {
-        console.log(e.target.value);
+    const handleSelectCountry = (e, newValue) => {
+        setInputValue({ ...inputValue, country: { name: newValue.name, value: newValue.code } });
     }
 
 
@@ -92,16 +90,16 @@ const General = () => {
             <PaperKit className="general__input-block">
                 <AccountSettingForm
                     valueName={{ value: inputValue.name, error: inputError.name }}
-                    valuePhone={{ value: inputValue.phone, error: inputError.phone }}
-                    valueCountry={{ value: inputValue.country }}
+                    valuePhone={inputValue.phone}
+                    valueCountry={inputValue.country}
                     valueCity={{ value: inputValue.city, error: inputError.city }}
                     valueRole={{ value: inputValue.role, error: inputError.role }}
                     valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
                     handleInputChange={handleInputChange}
+                    valueEmail={inputValue.email}
                     onSave={handleSave}
                     disableSave={disableSave()}
-                    countryList={country}
-                    handleSelectChange={handleSelectCountry}
+                    handleCountryChange={handleSelectCountry}
                 />
             </PaperKit>
         </div>

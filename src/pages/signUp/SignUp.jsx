@@ -8,11 +8,10 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import useAlert from '../../hooks/useAlert';
 import firebaseCodeError from '../../data/firebaseCodeError';
 
-import CardKit from '../../kits/card/CardKit';
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 
 const SignUp = () => {
-  const [value, setValue] = useState({ email: '', password: '', fname: '', lname: '', restoName: '', isAgree: false });
+  const [value, setValue] = useState({ email: '', password: '', phone: '', fname: '', lname: '', restoName: '', isAgree: false });
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { showAlert, setAlertMessage } = useAlert();
   const [errorData, setErrorData] = useState({ email: false, password: false, fname: false, lname: false, restoName: false });
@@ -27,7 +26,6 @@ const SignUp = () => {
       const credential = await signUp(value.email, value.password);
       await updateProfile(credential.user, { displayName: `${value.fname} ${value.lname}` });
       navigate('/onboarding');
-      console.log(`${value.email} successfully registered as a new user`);
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
@@ -42,6 +40,7 @@ const SignUp = () => {
   };
 
   const handleChange = (k) => (v) => {
+    setErrorData({ ...errorData, [k]: false})
     setValue({ ...value, [k]: v });
   };
 
@@ -52,30 +51,36 @@ const SignUp = () => {
   return (
     <div className='signup'>
       <div className="signup-cover">
-        <img src="/images/cover.png" alt="cover" width={300} />
+        <h1>Text</h1>
+        <h1>Text</h1>
+        <h1>Text</h1>
       </div>
-      <CardKit className='card-signup' variant='outlined'>
-        <p style={{ margin: '2rem 0', textAlign: 'right' }}>
-          Already have an account yet? <Link to='/'> Sign in.</Link>
+      <div className='card-signup'>
+        <p className='card-signup__signin-text'>
+          Already have an account yet ? <Link to='/'> Sign in.</Link>
         </p>
-        <h2>Sign up</h2>
         
-        <SignUpForm
-          onChangeEmail={handleChange('email')}
-          onChangeFName={handleChange('fname')}
-          onChangeLName={handleChange('lname')}
-          onChangeRestoName={handleChange('restoName')}
-          onChangePassword={handleChange('password')}
-          onChangeAgree={handleChange('isAgree')}
-          errorFName={errorData.fname}
-          errorLName={errorData.lname}
-          errorRestoName={errorData.restoName}
-          errorEmail={errorData.email}
-          errorPassword={errorData.password}
-          onSubmit={handleSubmit}
-          disabled={isDisabled()}
-        />
-      </CardKit>
+        <div className="card-signup__form">
+          <img className='card-signup__form__logo' src="/images/cover.png" alt="cover" width={300} />
+          <h2>Sign up</h2>
+          <SignUpForm
+            onChangeEmail={handleChange('email')}
+            onChangeFName={handleChange('fname')}
+            onChangeLName={handleChange('lname')}
+            onChangeRestoName={handleChange('restoName')}
+            onChangePassword={handleChange('password')}
+            onChangePhone={handleChange('phone')}
+            onChangeAgree={handleChange('isAgree')}
+            errorFName={errorData.fname}
+            errorLName={errorData.lname}
+            errorRestoName={errorData.restoName}
+            errorEmail={errorData.email}
+            errorPassword={errorData.password}
+            onSubmit={handleSubmit}
+            disabled={isDisabled()}
+          />
+        </div>
+      </div>
     </div>
   );
 };
