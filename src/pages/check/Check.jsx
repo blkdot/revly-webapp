@@ -30,14 +30,8 @@ const Check = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = () => {
-      getPlatformData();
-    };
-
-    return () => {
-      unsubscribe();
-    };
-  }, [JSON.stringify(user)]);
+    getPlatformData();
+  }, []);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
