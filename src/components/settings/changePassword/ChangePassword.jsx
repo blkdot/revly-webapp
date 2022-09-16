@@ -107,27 +107,27 @@ const ChangePassword = () => {
             fullWidth
             onChange={handleChange('password')}
           />
-        </div> )
-      }
-
-        <div className='change-password__field'>
-          <TextfieldKit
-            type='password'
-            value={values.confirmPassword}
-            error={errors.confirm}
-            label='Confirm new password'
-            fullWidth
-            onChange={handleChange('confirmPassword')}
-          />
         </div>
+      )}
 
-        <div className='change-password__button'>
-          <ButtonLoadingKit variant='contained' loading={isLoading} onClick={handleClickSubmit}>
-            Save
-          </ButtonLoadingKit>
-        </div>
-      </>
-    );
+      <div className="change-password__field">
+        <TextfieldKit
+          type="password"
+          value={values.confirmPassword}
+          error={errors.confirm}
+          label="Confirm new password"
+          fullWidth
+          onChange={handleChange('confirmPassword')}
+        />
+      </div>
+
+      <div className="change-password__button">
+        <ButtonLoadingKit variant="contained" loading={isLoading} onClick={handleClickSubmit}>
+          Save
+        </ButtonLoadingKit>
+      </div>
+    </>
+  );
 
   return (
     <PaperKit className="change-password" elevation={0}>

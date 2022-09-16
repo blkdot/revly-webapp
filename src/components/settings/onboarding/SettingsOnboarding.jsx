@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 
 import { FcHighPriority, FcCheckmark } from 'react-icons/fc';
@@ -12,7 +11,7 @@ import PaperKit from '../../../kits/paper/PaperKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 
-import usePlatform from '../../../hooks/usePlatform';
+import { usePlatform } from '../../../hooks/usePlatform';
 import useApi from '../../../hooks/useApi';
 
 import imageDeliveroo from '../../../assets/images/deliveroo.png';
@@ -33,7 +32,7 @@ const listPlatform = [
 
 const defaultStateValues = listPlatform.reduce(
   (acc, cur) => ({ ...acc, [cur.name]: defaultValue }),
-  {}
+  {},
 );
 
 const SettingsOnboarding = () => {
@@ -49,22 +48,31 @@ const SettingsOnboarding = () => {
   }, []);
 
   const renderImage = (src, alt) => (
-    <img src={src} alt={alt} width={100} height={50} style={{ objectFit: 'contain', margin: 'auto' }} />
+    <img
+      src={src}
+      alt={alt}
+      width={100}
+      height={50}
+      style={{ objectFit: 'contain', margin: 'auto' }}
+    />
   );
 
   const renderIcon = (isOnboarded) => {
-    if (!isOnboarded) return <FcHighPriority className='settings-onboarding__state-icon' />;
+    if (!isOnboarded) return <FcHighPriority className="settings-onboarding__state-icon" />;
 
-    return <FcCheckmark className='settings-onboarding__state-icon' />;
+    return <FcCheckmark className="settings-onboarding__state-icon" />;
   };
 
   const handleChangeValues = (p, k) => (v) => {
-    setValues({ ...values, [p]: { ...values[p], [k]: v, isError: false, isOnboarded: false } });
+    setValues({
+      ...values,
+      [p]: { ...values[p], [k]: v, isError: false, isOnboarded: false },
+    });
   };
 
   const handleClickEdit = (p) => () => {
     setValues({ ...values, [p]: { ...values[p], isOnboarded: false } });
-    
+
     setPlatformOnboarded(platformOnboarded.filter((v) => v !== p));
   };
 
@@ -84,12 +92,18 @@ const SettingsOnboarding = () => {
     });
 
     if (res instanceof Error) {
-      setValues({ ...values, [p]: { ...values[p], isLoading: false, isError: true } });
+      setValues({
+        ...values,
+        [p]: { ...values[p], isLoading: false, isError: true },
+      });
       setPlatformOnboarded(platformOnboarded.filter((v) => v !== p));
       return;
     }
 
-    setValues({ ...values, [p]: { ...values[p], isLoading: false, isOnboarded: true } });
+    setValues({
+      ...values,
+      [p]: { ...values[p], isLoading: false, isOnboarded: true },
+    });
 
     setPlatformOnboarded([...platformOnboarded, p]);
   };
@@ -101,17 +115,21 @@ const SettingsOnboarding = () => {
   };
 
   const renderEditor = (l) => (
-    <PaperKit className='settings-onboarding__block' elevation={3}>
+    <PaperKit className="settings-onboarding__block" elevation={3}>
       {renderImage(l.src, l.name)}
-      <ButtonKit variant='text' onClick={handleClickEdit(l.name)}>Edit</ButtonKit>
+      <ButtonKit variant="text" onClick={handleClickEdit(l.name)}>
+        Edit
+      </ButtonKit>
     </PaperKit>
   );
 
   const renderForms = () =>
     listPlatform.map((l) => (
-      <div className='settings-onboarding__item' key={l.name}>
+      <div className="settings-onboarding__item" key={l.name}>
         {renderIcon(values[l.name].isOnboarded)}
-        {values[l.name].isOnboarded ? renderEditor(l) : (
+        {values[l.name].isOnboarded ? (
+          renderEditor(l)
+        ) : (
           <OnBoardingForm
             onChangeEmail={handleChangeValues(l.name, 'email')}
             onChangePassword={handleChangeValues(l.name, 'password')}
@@ -125,7 +143,7 @@ const SettingsOnboarding = () => {
       </div>
     ));
 
-  return <div className='settings-onboarding'>{renderForms()}</div>;
+  return <div className="settings-onboarding">{renderForms()}</div>;
 };
 
 export default SettingsOnboarding;

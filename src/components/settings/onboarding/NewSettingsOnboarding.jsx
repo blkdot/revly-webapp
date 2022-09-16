@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { pascalCase } from 'change-case';
+
+import './SettingOnboarding.scss';
 
 import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
 
 import ModalKit from '../../../kits/modal/ModalKit';
-import PaperKit from '../../../kits/paper/PaperKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
+import { usePlatform } from '../../../hooks/usePlatform';
+import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';
-import usePlatform from '../../../hooks/usePlatform';
 
-import imageDeliveroo from '../../../assets/images/deliveroo.png';
-import imageTalabat from '../../../assets/images/talabat.png';
-
-const platformList = [
-  { src: imageDeliveroo, type: 'deliveroo' },
-  { src: imageTalabat, type: 'talabat' },
-];
+import { platformList } from '../../../data/platformList';
 
 const style = {
   position: 'absolute',
@@ -32,36 +29,49 @@ const style = {
   padding: '1rem',
   border: '0',
 };
+
 const NewSettingsOnboarding = () => {
-  const [values, setValues] = useState({
-    deliveroo: { active: true, registered: true },
-    talabat: { active: false, registered: false },
-  });
   const [platformActiveModal, SetPlatformActiveModal] = useState('');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const { initLogin } = useApi();
+  const { settingsOnboardPlatformStatus, settingsOnboardPlatform } = useApi();
   const { user } = useUserAuth();
-  const { platformOnboarded, setPlatformOnboarded } = usePlatform();
+  const { userPlatformData, setUserPlatformData } = usePlatform();
+  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
 
   useEffect(() => {
-    platformList.forEach(({ type }) => {
-      if (values[type].active && !values[type].registered) {
-        SetPlatformActiveModal(type);
+    platformList.forEach(({ name }) => {
+      if (
+        userPlatformData.platforms[name].active_status &&
+        !userPlatformData.platforms[name].registered
+      ) {
+        SetPlatformActiveModal(name);
         setIsOpenModal(true);
-        return;
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values.deliveroo.active, values.talabat.active]);
+  }, [JSON.stringify(userPlatformData.platforms)]);
 
-  useEffect(() => {
-    setFormData({ email: '', password: '' });
-  }, [isOpenModal]);
+  const handleSwitchChange = (k) => async (v) => {
+    const res = await settingsOnboardPlatformStatus(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        active_status: v,
+      },
+      k,
+    );
 
-  const handleSwitchChange = (k) => (v) => {
-    setValues({ ...values, [k]: { ...values[k], active: v } });
+    if (res instanceof Error) {
+      triggerAlertWithMessageError(res.message);
+      return;
+    }
+
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [k]: res },
+    });
+    triggerAlertWithMessageSuccess(`State changed to ${v ? 'active' : 'inactive'}`);
   };
 
   const handleClick = (type) => () => {
@@ -73,52 +83,74 @@ const NewSettingsOnboarding = () => {
     setFormData({ ...formData, [k]: v });
   };
 
-  const closeWithoutConnecting = () => {
-    setIsOpenModal(false);
-
-    if (!values[platformActiveModal].registered) {
-      setValues({
-        ...values,
-        [platformActiveModal]: { ...values[platformActiveModal], active: false },
-      });
+  const closeWithoutConnecting = async () => {
+    if (userPlatformData.platforms[platformActiveModal].registered) {
+      setIsOpenModal(false);
+      return;
     }
+
+    const res = await settingsOnboardPlatformStatus(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        active_status: false,
+      },
+      platformActiveModal,
+    );
+
+    if (res instanceof Error) {
+      triggerAlertWithMessageError(res.message);
+      return;
+    }
+
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [platformActiveModal]: res },
+    });
+    setIsOpenModal(false);
+    triggerAlertWithMessageSuccess('State changed to inactive');
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    
-    const res = await initLogin({
-      master_email: user.email,
-      access_token: user.accessToken,
-      data: [
-        {
-          platform: platformActiveModal,
+
+    const res = await settingsOnboardPlatform(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        credentials: {
           email: formData.email,
           password: formData.password,
         },
-      ],
-    }, true);
+      },
+      platformActiveModal,
+    );
 
     setIsLoading(false);
 
     if (res instanceof Error) {
-      console.error(res);
+      triggerAlertWithMessageError(res.message);
       return;
     }
 
-    setPlatformOnboarded([...platformOnboarded, platformActiveModal]);
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [platformActiveModal]: res },
+    });
+    triggerAlertWithMessageSuccess('Registered successfully');
+    setIsOpenModal(false);
   };
 
   const renderPlatform = () =>
     platformList.map((p) => (
       <PlatformSettingsBox
-        key={p.type}
+        key={p.name}
         src={p.src}
-        type={p.type}
-        onChangeSwitch={handleSwitchChange(p.type)}
-        active={values[p.type].active}
-        registered={values[p.type].registered}
-        onClick={handleClick(p.type)}
+        type={p.name}
+        onChangeSwitch={handleSwitchChange(p.name)}
+        active={userPlatformData.platforms[p.name].active_status}
+        registered={userPlatformData.platforms[p.name].registered}
+        onClick={handleClick(p.name)}
       />
     ));
 
@@ -128,45 +160,49 @@ const NewSettingsOnboarding = () => {
       <ModalKit
         open={isOpenModal}
         onClose={closeWithoutConnecting}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
         <div style={style}>
-          <PaperKit className='onboarding-form'>
+          <div className="settings-onboarding__form">
+            <span>
+              Connect your {pascalCase(platformActiveModal)} account to your Revly account
+            </span>
             <FormcontrolKit
-              className='auth-form'
+              className="auth-form"
               fullWidth
-              style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-beetween' }}
-            >
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-beetween',
+              }}>
               <TextfieldKit
-                label='Email'
-                size='small'
+                label="Email"
+                size="small"
                 onChange={(e) => handleChangeFormData('email', e.target.value)}
-                className='auth-form__input'
+                className="auth-form__input"
                 fullWidth
                 style={{ margin: '1rem 0.5rem' }}
               />
               <TextfieldKit
-                label='Password'
-                type='password'
-                size='small'
+                label="Password"
+                type="password"
+                size="small"
                 onChange={(e) => handleChangeFormData('password', e.target.value)}
-                className='auth-form__input'
+                className="auth-form__input"
                 fullWidth
               />
             </FormcontrolKit>
             <div style={{ margin: 'auto', textAlign: 'center' }}>
               <ButtonLoadingKit
-                className='auth-form__input'
-                variant='contained'
+                className="auth-form__input"
+                variant="contained"
                 disabled={!formData.email || !formData.password}
                 onClick={handleSubmit}
-                loading={isLoading}
-              >
+                loading={isLoading}>
                 Confirm
               </ButtonLoadingKit>
             </div>
-          </PaperKit>
+          </div>
         </div>
       </ModalKit>
     </div>

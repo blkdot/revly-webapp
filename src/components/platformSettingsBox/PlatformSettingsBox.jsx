@@ -1,6 +1,8 @@
 import React from 'react';
 import { pascalCase } from 'change-case';
 
+import { AiFillEdit } from 'react-icons/ai';
+
 import './PlatformSettingsBox.scss';
 
 import SwitchKit from '../../kits/switch/SwitchKit';
@@ -13,26 +15,29 @@ const PlatformSettingsBox = (props) => {
     if (!active || !registered) return null;
 
     return (
-      <div className='__footer-action'>
-        <ButtonKit onClick={onClick}>Change Credentials</ButtonKit>
+      <div className="__footer-action">
+        <ButtonKit onClick={onClick}>
+          <AiFillEdit />
+          &nbsp;Edit
+        </ButtonKit>
       </div>
     );
   };
 
   return (
-    <div className='platform-settings-box'>
-      <div className='platform-settings-box__content'>
-        <div className='__content__image'>
+    <div className="platform-settings-box">
+      <div className="platform-settings-box__content">
+        <div className="__content__image">
           <img src={src} alt={type} />
         </div>
-        <div className='__content__label'>
+        <div className="__content__label">
           <span>Connect your {pascalCase(type)} account to your Revly account</span>
         </div>
-        <div className='__content__switch'>
+        <div className="__content__switch">
           <SwitchKit checked={active} onChange={({ target }) => onChangeSwitch(target.checked)} />
         </div>
+        {renderFooter()}
       </div>
-      <div className='platform-settings-box__footer'>{renderFooter()}</div>
     </div>
   );
 };

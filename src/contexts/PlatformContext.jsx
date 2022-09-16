@@ -1,35 +1,46 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useMemo, useEffect } from 'react';
+
+import { platformContexDefaultFormat } from '../data/platformList';
+
+import config from '../setup/config';
 
 export const PlatformContext = createContext();
 
+const { environment } = config;
+
+const defaultState = () => {
+  if (environment !== 'dev') return platformContexDefaultFormat;
+
+  const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
+
+  if (!stringFakeOnboarding) return platformContexDefaultFormat;
+
+  return JSON.parse(stringFakeOnboarding);
+};
+
 export const PlatformProvider = ({ children }) => {
-  const [platformToken, setPlatformToken] = useState([]);
-  const [isOnboarded, setIsOnboarded] = useState(false);
-  const [platformOnboarded, setPlatformOnboarded] = useState([]);
+  const [userPlatformData, setUserPlatformData] = useState(defaultState());
 
-  console.log('Platform Tokens => ', platformToken);
-  console.log('Is onboarded => ', isOnboarded);
-  console.log('List platform onboarded => ', platformOnboarded);
+  useEffect(() => {
+    if (environment !== 'dev') return;
 
-  const clearToken = () => {
-    setPlatformToken([]);
-    setIsOnboarded(false);
-    setPlatformOnboarded([]);
+    localStorage.setItem('fakeOnboarding', JSON.stringify(userPlatformData));
+  }, [userPlatformData]);
+
+  const cleanPlatformData = () => {
+    if (JSON.stringify(userPlatformData) === JSON.stringify(platformContexDefaultFormat)) return;
+
+    setUserPlatformData(platformContexDefaultFormat);
   };
 
-  return (
-    <PlatformContext.Provider
-      value={{
-        platformToken,
-        setPlatformToken,
-        isOnboarded,
-        setIsOnboarded,
-        platformOnboarded,
-        setPlatformOnboarded,
-        clearToken,
-      }}
-    >
-      {children}
-    </PlatformContext.Provider>
+  const PlatformWrapper = useMemo(
+    () => ({
+      userPlatformData,
+      setUserPlatformData,
+      cleanPlatformData,
+    }),
+    [userPlatformData],
   );
+
+  return <PlatformContext.Provider value={PlatformWrapper}>{children}</PlatformContext.Provider>;
 };

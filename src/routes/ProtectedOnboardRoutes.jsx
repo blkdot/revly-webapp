@@ -1,74 +1,64 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
+
+import SpinnerKit from '../kits/spinner/SpinnerKit';
+
 import { useUserAuth } from '../contexts/AuthContext';
 
 import useApi from '../hooks/useApi';
-import usePlatform from '../hooks/usePlatform';
+import { usePlatform } from '../hooks/usePlatform';
 
 import config from '../setup/config';
 
-export const ProtectedOnboardRoutes = () => {
-  const [flag, setFlag] = useState(false);
+const ProtectedOnboardRoutes = () => {
+  const [allowed, setAllowed] = useState(false);
   const { user } = useUserAuth();
-  const { loginExist, loginAll } = useApi();
-  const { setPlatformToken, setIsOnboarded, isOnboarded, setPlatformOnboarded } = usePlatform();
+  const { settingsLogin } = useApi();
+  const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
   const { timeRefreshToken } = config;
 
-  const getPlatformToken = useCallback(async () => {
-    const res = await loginAll({ master_email: user.email, access_token: user.accessToken });
-
-    if (res instanceof Error) {
-      setFlag(res);
-      return;
-    }
-
-    setPlatformToken(res.response);
-  }, [loginAll, setPlatformToken, user.email, user.accessToken]);
-
-  const checkIfRegistered = useCallback(async () => {
-    if (isOnboarded) return;
-
-    const res = await loginExist({ master_email: user.email, access_token: user.accessToken });
-
-    if (res instanceof Error) {
-      setFlag(res);
-      return;
-    }
-
-    if (!res.response.registered) {
-      setFlag(new Error('Not registered'));
-      return;
-    }
-
-    setFlag(true);
-    setIsOnboarded(true);
-    getPlatformToken();
-    setPlatformOnboarded(res.response.platforms);
-  }, [loginExist, user, getPlatformToken, setIsOnboarded, isOnboarded, setPlatformOnboarded]);
-
   useEffect(() => {
-    const unsubscribe = () => {
-      if (flag === false || !isOnboarded) {
-        // TODO: uncomment to test in real case
-        checkIfRegistered();
-      }
-    };
+    if (!userPlatformData.onboarded) {
+      setAllowed(new Error(''));
+    }
 
-    return () => {
-      unsubscribe();
-    };
-  }, [checkIfRegistered, flag, isOnboarded]);
+    setAllowed(true);
+  }, []);
+
+  const reccurentLogin = async () => {
+    const res = await settingsLogin({
+      master_email: user.email,
+      access_token: user.accessToken,
+    });
+
+    if (res instanceof Error || !res.onboarded) {
+      cleanPlatformData();
+      setAllowed(new Error(''));
+      return;
+    }
+
+    setUserPlatformData(res);
+    setAllowed(true);
+  };
 
   useEffect(() => {
     const autoRefresh = setInterval(() => {
-      if (flag) {
-        getPlatformToken();
-      }
+      reccurentLogin();
     }, timeRefreshToken);
     return () => {
       clearInterval(autoRefresh);
     };
   });
 
-  return flag instanceof Error ? <Navigate to='/onboarding' /> : <Outlet />;
+  if (!allowed) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+        <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
+      </div>
+    );
+  }
+
+  return allowed instanceof Error ? <Navigate to="/onboarding" /> : <Outlet />;
 };
+
+export default ProtectedOnboardRoutes;

@@ -11,7 +11,15 @@ import { firebaseCodeError } from '../../data/firebaseCodeError';
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 
 const SignUp = () => {
-  const [value, setValue] = useState({ email: '', password: '', phone: '', fname: '', lname: '', restoName: '', isAgree: false });
+  const [value, setValue] = useState({
+    email: '',
+    password: '',
+    phone: '',
+    fname: '',
+    lname: '',
+    restoName: '',
+    isAgree: false,
+  });
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { showAlert, setAlertMessage } = useAlert();
   const [errorData, setErrorData] = useState({
@@ -48,7 +56,7 @@ const SignUp = () => {
   };
 
   const handleChange = (k) => (v) => {
-    setErrorData({ ...errorData, [k]: false})
+    setErrorData({ ...errorData, [k]: false });
     setValue({ ...value, [k]: v });
   };
 
@@ -62,13 +70,18 @@ const SignUp = () => {
         <h1>Text</h1>
         <h1>Text</h1>
       </div>
-      <div className='card-signup'>
-        <p className='card-signup__signin-text'>
-          Already have an account yet ? <Link to='/'> Sign in.</Link>
+      <div className="card-signup">
+        <p className="card-signup__signin-text">
+          Already have an account yet ? <Link to="/"> Sign in.</Link>
         </p>
-        
+
         <div className="card-signup__form">
-          <img className='card-signup__form__logo' src="/images/cover.png" alt="cover" width={300} />
+          <img
+            className="card-signup__form__logo"
+            src="/images/cover.png"
+            alt="cover"
+            width={300}
+          />
           <h2>Sign up</h2>
           <SignUpForm
             onChangeEmail={handleChange('email')}

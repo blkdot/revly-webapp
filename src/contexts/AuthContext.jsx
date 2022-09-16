@@ -55,7 +55,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     return sendEmailVerification(user, actionCodeSettings);
-  }
+  };
 
   const createRecaptcha = () => {
     const existDiv = document.getElementById('recaptcha');
@@ -69,19 +69,23 @@ export const AuthContextProvider = ({ children }) => {
     div.style.display = 'none';
     document.body.appendChild(div);
 
-    window.applicationVerifier = new RecaptchaVerifier('recaptcha', {
-      size: 'invisible',
-    }, auth);
-  }
+    window.applicationVerifier = new RecaptchaVerifier(
+      'recaptcha',
+      {
+        size: 'invisible',
+      },
+      auth,
+    );
+  };
 
-  const updatePhone = async (phone) => {  
+  const updatePhone = async (phone) => {
     const provider = new PhoneAuthProvider(auth);
-    const verificationId = await provider.verifyPhoneNumber(phone, window.applicationVerifier)
-    const code = window.prompt('Enter the code we sent to the phone number : ')
+    const verificationId = await provider.verifyPhoneNumber(phone, window.applicationVerifier);
+    const code = window.prompt('Enter the code we sent to the phone number : ');
     const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
 
     return updatePhoneNumber(user, phoneCredential);
-  }
+  };
 
   const googleSignIn = () => {
     const googleAuthProvider = new GoogleAuthProvider();
@@ -100,7 +104,19 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <UserAuthContext.Provider value={{ createRecaptcha, user, signUp, signIn, logOut, googleSignIn, reAuth, updatePhone, emailVerify, reAuthGoogle }}>
+    <UserAuthContext.Provider
+      value={{
+        createRecaptcha,
+        user,
+        signUp,
+        signIn,
+        logOut,
+        googleSignIn,
+        reAuth,
+        updatePhone,
+        emailVerify,
+        reAuthGoogle,
+      }}>
       {children}
     </UserAuthContext.Provider>
   );
