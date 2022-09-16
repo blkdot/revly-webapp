@@ -8,13 +8,13 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 
-import CardKit from '../../kits/card/CardKit';
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 
 const SignUp = () => {
   const [value, setValue] = useState({
     email: '',
     password: '',
+    phone: '',
     fname: '',
     lname: '',
     restoName: '',
@@ -56,6 +56,7 @@ const SignUp = () => {
   };
 
   const handleChange = (k) => (v) => {
+    setErrorData({ ...errorData, [k]: false });
     setValue({ ...value, [k]: v });
   };
 
@@ -65,31 +66,41 @@ const SignUp = () => {
   return (
     <div className="signup">
       <div className="signup-cover">
-        <img src="/images/cover.png" alt="cover" width={300} />
+        <h1>Text</h1>
+        <h1>Text</h1>
+        <h1>Text</h1>
       </div>
-      <CardKit className="card-signup" variant="outlined">
-        <h2>Sign up</h2>
-
-        <SignUpForm
-          onChangeEmail={handleChange('email')}
-          onChangeFName={handleChange('fname')}
-          onChangeLName={handleChange('lname')}
-          onChangeRestoName={handleChange('restoName')}
-          onChangePassword={handleChange('password')}
-          onChangeAgree={handleChange('isAgree')}
-          errorFName={errorData.fname}
-          errorLName={errorData.lname}
-          errorRestoName={errorData.restoName}
-          errorEmail={errorData.email}
-          errorPassword={errorData.password}
-          onSubmit={handleSubmit}
-          disabled={isDisabled()}
-        />
-
-        <p style={{ marginTop: '2rem' }}>
-          Already have an account yet? <Link to="/"> Sign in.</Link>
+      <div className="card-signup">
+        <p className="card-signup__signin-text">
+          Already have an account yet ? <Link to="/"> Sign in.</Link>
         </p>
-      </CardKit>
+
+        <div className="card-signup__form">
+          <img
+            className="card-signup__form__logo"
+            src="/images/cover.png"
+            alt="cover"
+            width={300}
+          />
+          <h2>Sign up</h2>
+          <SignUpForm
+            onChangeEmail={handleChange('email')}
+            onChangeFName={handleChange('fname')}
+            onChangeLName={handleChange('lname')}
+            onChangeRestoName={handleChange('restoName')}
+            onChangePassword={handleChange('password')}
+            onChangePhone={handleChange('phone')}
+            onChangeAgree={handleChange('isAgree')}
+            errorFName={errorData.fname}
+            errorLName={errorData.lname}
+            errorRestoName={errorData.restoName}
+            errorEmail={errorData.email}
+            errorPassword={errorData.password}
+            onSubmit={handleSubmit}
+            disabled={isDisabled()}
+          />
+        </div>
+      </div>
     </div>
   );
 };

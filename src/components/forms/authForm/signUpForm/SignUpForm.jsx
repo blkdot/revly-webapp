@@ -6,6 +6,7 @@ import './SignUpForm.scss';
 
 import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 import ButtonKit from '../../../../kits/button/ButtonKit';
+import PhoneInputKit from '../../../../kits/phoneInput/PhoneInputKit';
 
 const SignUpForm = (props) => {
   const {
@@ -22,25 +23,34 @@ const SignUpForm = (props) => {
     onChangeAgree,
     errorEmail,
     errorPassword,
+    onChangePhone,
   } = props;
 
   return (
     <div className="signup-form" fullWidth>
       <div className="signup-form__flex">
         <TextfieldKit
+          size="small"
           error={errorFName}
           label="First Name"
           onChange={(e) => onChangeFName(e.target.value)}
           className="signup-form__flex__input"
         />
         <TextfieldKit
+          size="small"
           error={errorLName}
           label="Last Name"
           onChange={(e) => onChangeLName(e.target.value)}
           className="signup-form__flex__input"
         />
       </div>
+      <PhoneInputKit
+        country="ae"
+        onChange={(v) => onChangePhone(`+${v}`)}
+        containerClass="signup-form__input-phone"
+      />
       <TextfieldKit
+        size="small"
         error={errorRestoName}
         label="Restaurant name"
         onChange={(e) => onChangeRestoName(e.target.value)}
@@ -48,6 +58,7 @@ const SignUpForm = (props) => {
         fullWidth
       />
       <TextfieldKit
+        size="small"
         error={errorEmail}
         label="Email address"
         onChange={(e) => onChangeEmail(e.target.value)}
@@ -55,6 +66,7 @@ const SignUpForm = (props) => {
         fullWidth
       />
       <TextfieldKit
+        size="small"
         error={errorPassword}
         label="Password"
         type="password"
@@ -62,6 +74,11 @@ const SignUpForm = (props) => {
         className="signup-form__input"
         fullWidth
       />
+      <div className="signup-form__check">
+        <input type="checkbox" onChange={(e) => onChangeAgree(e.target.checked)} />
+        &nbsp; &nbsp; I agree to the <Link to="/term-of-use">Term of Use</Link> and{' '}
+        <Link to="/privacy-policy">Privacy Policy</Link>
+      </div>
       <ButtonKit
         variant="contained"
         onClick={onSubmit}
@@ -70,11 +87,6 @@ const SignUpForm = (props) => {
         size="large">
         Sign Up
       </ButtonKit>
-      <div className="signup-form__check">
-        <input type="checkbox" onChange={(e) => onChangeAgree(e.target.checked)} />
-        &nbsp; &nbsp; I agree to the <Link to="/term-of-use">Term of Use</Link> and{' '}
-        <Link to="/privacy-policy">Privacy Policy</Link>
-      </div>
     </div>
   );
 };

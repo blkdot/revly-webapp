@@ -113,17 +113,6 @@ const ChangePassword = () => {
       <div className="change-password__field">
         <TextfieldKit
           type="password"
-          value={values.newPassword}
-          error={errors.confirm}
-          label="New password"
-          fullWidth
-          onChange={handleChange('newPassword')}
-        />
-      </div>
-
-      <div className="change-password__field">
-        <TextfieldKit
-          type="password"
           value={values.confirmPassword}
           error={errors.confirm}
           label="Confirm new password"
@@ -134,7 +123,7 @@ const ChangePassword = () => {
 
       <div className="change-password__button">
         <ButtonLoadingKit variant="contained" loading={isLoading} onClick={handleClickSubmit}>
-          Save change
+          Save
         </ButtonLoadingKit>
       </div>
     </>

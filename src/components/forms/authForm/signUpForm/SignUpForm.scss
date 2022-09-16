@@ -1,4 +1,5 @@
 @import '../../../../responsiveness.scss';
+@import '../../../../library.scss';
 
 .signup-form {
     .signup-form__flex {
@@ -23,8 +24,30 @@
         margin-top: 1rem;
     }
 
+    .signup-form__input-phone {
+        margin-top: 1rem;
+
+        input {
+            width: 100%;
+            height: 1.4em;
+            background-color: transparent;
+            &:focus {
+                border: 1.5px solid $color-main;
+                box-shadow: none;
+            }
+        }
+
+        .special-label {
+            color: $color-gray;
+            font-size: 10px;
+            background-color: #ebdbeb;
+        }
+    }
+
+
     .signup-form__check {
-        margin-top: 2rem;
+        margin-bottom: 1rem;
+        margin-top: 1.5rem;
 
         input {
             vertical-align: middle;
