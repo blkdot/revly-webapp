@@ -10,7 +10,7 @@ const { apiUrl, environment } = config;
 export const settingsOnboardPlatform = (body, platform) => {
   if (environment !== 'dev') {
     return axios
-      .post(`${apiUrl}/settings/onboard/${platform}`, { body })
+      .post(`${apiUrl}/settings/onboard/${platform}`, body)
       .then(handleResponse)
       .catch(handleResponse);
   }
@@ -25,7 +25,7 @@ export const settingsOnboardPlatform = (body, platform) => {
 export const settingsOnboardPlatformStatus = (body, platform) => {
   if (environment !== 'dev') {
     return axios
-      .put(`${apiUrl}/settings/onboard/${platform}/status`, { body })
+      .put(`${apiUrl}/settings/onboard/${platform}/status`, body)
       .then(handleResponse)
       .catch(handleResponse);
   }
@@ -54,7 +54,7 @@ export const settingsOnboardPlatformStatus = (body, platform) => {
 export const settingsOnboarded = (body) => {
   if (environment !== 'dev') {
     return axios
-      .post(`${apiUrl}/settings/onboarded`, { body })
+      .post(`${apiUrl}/settings/onboarded`, body)
       .then(handleResponse)
       .catch(handleResponse);
   }
@@ -68,10 +68,7 @@ export const settingsOnboarded = (body) => {
 
 export const settingsLogin = (body) => {
   if (environment !== 'dev') {
-    return axios
-      .post(`${apiUrl}/settings/login`, { body })
-      .then(handleResponse)
-      .catch(handleResponse);
+    return axios.post(`${apiUrl}/settings/login`, body).then(handleResponse).catch(handleResponse);
   }
 
   const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
