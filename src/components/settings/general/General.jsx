@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import {  updateProfile } from 'firebase/auth';
+import React, { useState } from 'react';
+import { updateProfile } from 'firebase/auth';
 
 import './General.scss';
 
@@ -7,12 +7,11 @@ import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingFor
 
 import PaperKit from '../../../kits/paper/PaperKit';
 
-import useAlert from '../../../hooks/useAlert';
+import { useAlert } from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import firebaseCodeError from '../../../data/firebaseCodeError';
-
 
 const General = () => {
     const { user, updatePhone, createRecaptcha } = useUserAuth();

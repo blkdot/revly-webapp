@@ -1,3 +1,5 @@
+// TODO: fix linter problem
+/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
@@ -17,16 +19,17 @@ import {
 import { auth } from '../firebase-config';
 import config from '../setup/config';
 
-import usePlatform from '../hooks/usePlatform';
+import { usePlatform } from '../hooks/usePlatform';
 
 const UserAuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(true);
-  const { clearToken } = usePlatform();
+  const { cleanPlatformData } = usePlatform();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      // eslint-disable-next-line no-console
       console.log('User: ', currentUser);
       setUser(currentUser);
     });
@@ -36,21 +39,17 @@ export const AuthContextProvider = ({ children }) => {
     };
   }, []);
 
-  const signUp = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
+  const signUp = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 
-  const signIn = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  };
+  const signIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
 
   const logOut = () => {
-    clearToken();
+    cleanPlatformData();
     return signOut(auth);
   };
 
   const emailVerify = () => {
-    const  actionCodeSettings = {
+    const actionCodeSettings = {
       url: `${config.frontUrl}`,
       handleCodeInApp: true,
     };
@@ -92,7 +91,7 @@ export const AuthContextProvider = ({ children }) => {
   const reAuthGoogle = () => {
     const googleAuthProvider = new GoogleAuthProvider();
     return reauthenticateWithPopup(user, googleAuthProvider);
-  }
+  };
 
   const reAuth = (password) => {
     const credentials = EmailAuthProvider.credential(user.email, password);
@@ -107,6 +106,4 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-export const useUserAuth = () => {
-  return useContext(UserAuthContext);
-};
+export const useUserAuth = () => useContext(UserAuthContext);

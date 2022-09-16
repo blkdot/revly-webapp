@@ -8,10 +8,10 @@ import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import PaperKit from '../../../kits/paper/PaperKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
-import useAlert from '../../../hooks/useAlert';
+import { useAlert } from '../../../hooks/useAlert';
 import { useUserAuth } from '../../../contexts/AuthContext';
 
-import firebaseCodeError from '../../../data/firebaseCodeError';
+import { firebaseCodeError } from '../../../data/firebaseCodeError';
 
 const defaultValues = {
   password: '',
@@ -57,9 +57,7 @@ const ChangePassword = () => {
     setValues({ ...values, [k]: e.target.value });
   };
 
-  const isOnlyGoogle = () => {
-    return !user.providerData.some(v => v.providerId === 'password');
-  }
+  const isOnlyGoogle = () => !user.providerData.some((v) => v.providerId === 'password');
 
   const handleClickSubmit = async () => {
     setIsLoading(true);
@@ -97,33 +95,20 @@ const ChangePassword = () => {
     setIsLoading(false);
   };
 
-  const renderForm = () => {
-
-    return (
-      <>
-        {!isOnlyGoogle() && (
-          <div className='change-password__field'>
-            <TextfieldKit
-              type='password'
-              value={values.password}
-              error={errors.password}
-              label='Old password'
-              fullWidth
-              onChange={handleChange('password')}
-            />
-          </div>
-        )}
-
-        <div className='change-password__field'>
+  const renderForm = () => (
+    <>
+      {!isOnlyGoogle() && (
+        <div className="change-password__field">
           <TextfieldKit
-            type='password'
-            value={values.newPassword}
-            error={errors.confirm}
-            label='New password'
+            type="password"
+            value={values.password}
+            error={errors.password}
+            label="Old password"
             fullWidth
-            onChange={handleChange('newPassword')}
+            onChange={handleChange('password')}
           />
-        </div>
+        </div> )
+      }
 
         <div className='change-password__field'>
           <TextfieldKit
@@ -143,10 +128,9 @@ const ChangePassword = () => {
         </div>
       </>
     );
-  };
 
   return (
-    <PaperKit className='change-password' elevation={0}>
+    <PaperKit className="change-password" elevation={0}>
       {renderForm()}
     </PaperKit>
   );

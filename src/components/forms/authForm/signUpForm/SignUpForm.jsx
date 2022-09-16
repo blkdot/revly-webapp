@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Link } from 'react-router-dom';
 
 import './SignUpForm.scss';
@@ -24,7 +26,6 @@ const SignUpForm = (props) => {
     onChangePhone
   } = props;
 
-
   return (
     <div className="signup-form" fullWidth>
       <div className="signup-form__flex">
@@ -36,10 +37,9 @@ const SignUpForm = (props) => {
       <TextfieldKit size="small" error={errorEmail} label='Email address' onChange={(e) => onChangeEmail(e.target.value)} className="signup-form__input" fullWidth />
       <TextfieldKit size="small" error={errorPassword} label='Password' type="password" onChange={(e) => onChangePassword(e.target.value)} className="signup-form__input" fullWidth />
       <div className="signup-form__check">
-          <input type="checkbox" onChange={(e) => onChangeAgree(e.target.checked)} />
-          &nbsp;
-          &nbsp; 
-          I agree to the <Link to="/term-of-use">Term of Use</Link> and <Link to="/privacy-policy">Privacy Policy</Link>
+        <input type="checkbox" onChange={(e) => onChangeAgree(e.target.checked)} />
+        &nbsp; &nbsp; I agree to the <Link to="/term-of-use">Term of Use</Link> and{' '}
+        <Link to="/privacy-policy">Privacy Policy</Link>
       </div>
       <ButtonKit variant='contained' onClick={onSubmit} className="signup-form__input" disabled={disabled} size="large">
         Sign Up

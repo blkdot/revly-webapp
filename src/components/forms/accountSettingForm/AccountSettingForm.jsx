@@ -1,3 +1,5 @@
+import React from 'react';
+
 import './AccountSettingForm.scss';
 
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
@@ -59,7 +61,7 @@ const AccountSettingForm = (props) => {
                 <ButtonKit disabled={disableSave} variant="contained" onClick={onSave}>Save changes</ButtonKit>
             </div>
         </div>
-    );
-}
+  );
+};
 
 export default AccountSettingForm;

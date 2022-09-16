@@ -5,8 +5,8 @@ import { updateProfile } from 'firebase/auth';
 import './SignUp.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
-import useAlert from '../../hooks/useAlert';
-import firebaseCodeError from '../../data/firebaseCodeError';
+import { useAlert } from '../../hooks/useAlert';
+import { firebaseCodeError } from '../../data/firebaseCodeError';
 
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 
@@ -14,18 +14,26 @@ const SignUp = () => {
   const [value, setValue] = useState({ email: '', password: '', phone: '', fname: '', lname: '', restoName: '', isAgree: false });
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { showAlert, setAlertMessage } = useAlert();
-  const [errorData, setErrorData] = useState({ email: false, password: false, fname: false, lname: false, restoName: false });
+  const [errorData, setErrorData] = useState({
+    email: false,
+    password: false,
+    fname: false,
+    lname: false,
+    restoName: false,
+  });
 
   const { signUp } = useUserAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setProcessing(true);
     try {
       const credential = await signUp(value.email, value.password);
-      await updateProfile(credential.user, { displayName: `${value.fname} ${value.lname}` });
-      navigate('/onboarding');
+      await updateProfile(credential.user, {
+        displayName: `${value.fname} ${value.lname}`,
+      });
+      navigate('/check');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
@@ -33,7 +41,7 @@ const SignUp = () => {
         setErrorData({ [firebaseCodeError[e.code].field]: true });
       }
 
-      setAlertMessage(message)
+      setAlertMessage(message);
       showAlert();
       setProcessing(false);
     }
@@ -44,12 +52,11 @@ const SignUp = () => {
     setValue({ ...value, [k]: v });
   };
 
-  const isDisabled = () => {
-    return !value.email || !value.password || processing || !value.fname || !value.lname || !value.isAgree;
-  }
+  const isDisabled = () =>
+    !value.email || !value.password || processing || !value.fname || !value.lname || !value.isAgree;
 
   return (
-    <div className='signup'>
+    <div className="signup">
       <div className="signup-cover">
         <h1>Text</h1>
         <h1>Text</h1>
