@@ -11,7 +11,7 @@ import { useAlert } from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
-import firebaseCodeError from '../../../data/firebaseCodeError';
+import { firebaseCodeError } from '../../../data/firebaseCodeError';
 
 const General = () => {
   const { user, updatePhone, createRecaptcha } = useUserAuth();
@@ -37,8 +37,12 @@ const General = () => {
       ? inputValue[field].trim() !== inequalTo
       : !!inputValue[field] !== !!inequalTo;
 
-  const disableSave = () => Object.keys(inputError).map((v) => inputError[v]).includes(true) || (!isValid('name', user.displayName) && !isValid('phone', user.phoneNumber)) || isLoading
-
+  const disableSave = () =>
+    Object.keys(inputError)
+      .map((v) => inputError[v])
+      .includes(true) ||
+    (!isValid('name', user.displayName) && !isValid('phone', user.phoneNumber)) ||
+    isLoading;
 
   const handleSave = async () => {
     setIsLoading(true);
