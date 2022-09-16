@@ -22,7 +22,7 @@ const Check = () => {
       access_token: user.accessToken,
     });
 
-    if (res instanceof Error || !res.onboarded) return navigate('/onboarding');
+    if (res instanceof Error || !res.onboarded || !res) return navigate('/onboarding');
 
     setUserPlatformData(res);
 

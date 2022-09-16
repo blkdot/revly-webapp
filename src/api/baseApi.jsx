@@ -1,7 +1,9 @@
 import { AxiosError } from 'axios';
 
 export const handleResponse = (res) => {
-  if (res.data.status_code > 399) return new Error(res.data.detail);
+  if (!res.data) return new Error('No response');
+
+  if (res.data.status_code && res.data.status_code > 399) return new Error(res.data.detail);
 
   if (res.status > 399 || res instanceof Error || res instanceof AxiosError) {
     return formatInstanceError(res);
