@@ -25,14 +25,16 @@ import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import ButtonKit from '../../kits/button/ButtonKit';
 
-const Link = ({ path, title, children, className }) => (
-  <NavLink to={path} className={className}>
-    <ButtonKit className="navbar-button-kit">
-      {children}
-      <span>{title}</span>
-    </ButtonKit>
-  </NavLink>
-);
+const Link = ({ path, title, children }) => {
+  return (
+    <NavLink to={path}>
+      <ButtonKit className="navbar-button-kit">
+        {children}
+        <span>{title}</span>
+      </ButtonKit>
+    </NavLink>
+  )
+}
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);
@@ -41,7 +43,7 @@ const Navbar = () => {
 
   const { user, logOut } = useUserAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -76,38 +78,21 @@ const Navbar = () => {
             <DashboardIcon />
           </Link>
           <Link
-            title="Planning"
-            path="/planning/offers"
-            className={
-              location.pathname === '/planning/offers' || location.pathname === '/planning/ads'
-                ? 'active'
-                : ''
-            }>
+            title={"Planning"} path={"/planning"}>
             <CalendarMonthIcon />
           </Link>
-          <AccordionKit
-            onClick={() => setExpanded(!expanded)}
-            className="navbar-accordion"
-            expanded={opened || open ? expanded : false}>
-            <ButtonKit className="navbar-button-kit">
-              <AccordionSummaryKit
-                className="accordion-sum"
-                expandIcon={opened || open ? <ExpandMoreIcon /> : ''}>
-                <TypographyKit
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gridGap: '5px',
-                    fontSize: '14px',
-                  }}>
+          <AccordionKit onClick={() => setExpanded(!expanded)} className="navbar-accordion" expanded={opened || open ? expanded : false}>
+            <ButtonKit className={"navbar-button-kit " + (pathname === "/marketing/offer" || pathname === "/marketing/ads" ? "active" : "")}>
+              <AccordionSummaryKit className="accordion-sum" expandIcon={opened || open ? <ExpandMoreIcon /> : ""}>
+                <TypographyKit sx={{ display: "flex", alignItems: "center", gridGap: "5px", fontSize: "14px" }}>
                   <StackedLineChartIcon />
                   <span>Marketing</span>
                 </TypographyKit>
               </AccordionSummaryKit>
             </ButtonKit>
             <AccordionDetailsKit className="navbar-accordion-details">
-              <Link path="/offer">Offer</Link>
-              <Link path="/ads">Ads</Link>
+              <Link path={"/marketing/offer"}>Offer</Link>
+              <Link path={"/marketing/ads"}>Ads</Link>
             </AccordionDetailsKit>
           </AccordionKit>
           <Link title="Competition" path="/competition">

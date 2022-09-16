@@ -27,6 +27,7 @@
 .restaurant-dropdown-input.restaurant-dropdown-input {
   display: flex;
   align-items: center;
+  grid-gap: 10px;
 
   &.Mui-focused.Mui-focused {
     color: $color-border

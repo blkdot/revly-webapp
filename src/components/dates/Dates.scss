@@ -3,8 +3,18 @@
 .dates {
   display: flex;
   justify-content: flex-end;
-  grid-gap: 40px;
+  grid-gap: 20px;
   align-items: center;
+
+  .dashboard-date {
+    display: flex;
+    align-items: center;
+    grid-gap: 20px;
+
+    >span {
+      width: 80px;
+    }
+  }
 }
 
 .date-input-wrapper {
@@ -30,6 +40,8 @@
 
     span {
       text-transform: capitalize;
+      color: $color-gray;
+      transition: .4s;
     }
 
     >svg {
@@ -41,6 +53,10 @@
   &:hover {
     background-color: #F0ECF4;
     color: #823aa8;
+
+    span {
+      color: #823aa8;
+    }
 
     svg {
       fill: #823aa8;
@@ -147,7 +163,8 @@
   .rdrDefinedRangesWrapper {
     display: none;
   }
-  .rdrDay.rdrDay{
+
+  .rdrDay.rdrDay {
     height: 49.7px;
   }
 }
@@ -171,10 +188,11 @@
 }
 
 .date-select.date-select {
+  background: #fff;
   position: absolute;
   top: 55px;
   left: 0;
-  z-index: 100;
+  z-index: 400;
   padding: 25px 15px;
   opacity: 0;
   visibility: hidden;
@@ -208,6 +226,8 @@
 }
 
 .date-picker.date-picker {
+  z-index: 500;
+  background: #fff;
   width: 200px;
   padding: 10px 15px;
   border-radius: 12px 0 0 12px;

@@ -129,7 +129,13 @@ const RightDateSelect = ({
     )
       return <Month />;
   };
-  return <PaperKit className={`date-select ${selected ? 'selected' : ''}`}>{render()}</PaperKit>;
+  return (
+    <PaperKit
+      style={{ background: '#fff' }}
+      className={`date-select ${selected ? 'selected' : ''}`}>
+      {render()}
+    </PaperKit>
+  );
 };
 
 export default React.memo(RightDateSelect);
