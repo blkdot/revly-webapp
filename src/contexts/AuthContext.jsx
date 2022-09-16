@@ -81,6 +81,7 @@ export const AuthContextProvider = ({ children }) => {
   const updatePhone = async (phone) => {
     const provider = new PhoneAuthProvider(auth);
     const verificationId = await provider.verifyPhoneNumber(phone, window.applicationVerifier);
+    // eslint-disable-next-line no-alert
     const code = window.prompt('Enter the code we sent to the phone number : ');
     const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
 
