@@ -1,3 +1,7 @@
+// TODO: fix all linter problem
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable no-unused-vars */
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { visuallyHidden } from '@mui/utils';
@@ -42,29 +46,27 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead(props) {
+const EnhancedTableHead = (props) => {
   const { order, orderBy, onRequestSort, headCells } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   return (
-    <TableHeadKit className='table-head'>
+    <TableHeadKit className="table-head">
       <TableRowKit>
         {headCells.map((headCell) => (
           <TableCellKit
-            className='enchanced-table-cell'
+            className="enchanced-table-cell"
             key={headCell.id}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
+            sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabelKit
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
+              onClick={createSortHandler(headCell.id)}>
               {headCell.label}
               {orderBy === headCell.id ? (
-                <BoxKit component='span' sx={visuallyHidden}>
+                <BoxKit component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </BoxKit>
               ) : null}
@@ -74,7 +76,7 @@ function EnhancedTableHead(props) {
       </TableRowKit>
     </TableHeadKit>
   );
-}
+};
 
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
@@ -85,7 +87,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({ rows, type }) {
+const EnhancedTable = ({ rows, type }) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -118,7 +120,7 @@ export default function EnhancedTable({ rows, type }) {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+        selected.slice(selectedIndex + 1),
       );
     }
 
@@ -154,15 +156,13 @@ export default function EnhancedTable({ rows, type }) {
     },
   ];
 
-  const getTotal = (key) => {
-    return Math.ceil(rows.reduce((a, b) => a + (b[key] || 0), 0))
-  };
+  const getTotal = (key) => Math.ceil(rows.reduce((a, b) => a + (b[key] || 0), 0));
 
   return (
     <BoxKit sx={{ width: '100%' }}>
-      <PaperKit className='table-paper-wrapper'>
+      <PaperKit className="table-paper-wrapper">
         <TableContainerKit>
-          <TableKit className='table' aria-labelledby='tableTitle' size={'medium'}>
+          <TableKit className="table" aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -183,21 +183,27 @@ export default function EnhancedTable({ rows, type }) {
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.name}
-                    className='table-row'
-                  >
-                    <TableCellKit component='th' id={labelId} scope='row'>
-                      <img className={'table-img ' + (row.name === 'deliveroo' ? 'img-del' : '')} src={row.img} alt={row.name} />
+                    className="table-row">
+                    <TableCellKit component="th" id={labelId} scope="row">
+                      <img
+                        className={`table-img ${row.name === 'deliveroo' ? 'img-del' : ''}`}
+                        src={row.img}
+                        alt={row.name}
+                      />
                     </TableCellKit>
                     <TableCellKit>{row.week}</TableCellKit>
                     <TableCellKit>{row.week1}</TableCellKit>
                     <TableCellKit>
                       <div
-                        className={
-                          'table_evolution ' +
-                          (row.evolution >= 0 ? 'table_increased' : 'table_decreased')
-                        }
-                      >
-                        <span>{row.evolution > 0 ? '+' + Math.ceil(row.evolution) : Math.ceil(row.evolution)} %</span>
+                        className={`table_evolution ${
+                          row.evolution >= 0 ? 'table_increased' : 'table_decreased'
+                        }`}>
+                        <span>
+                          {row.evolution > 0
+                            ? `+${Math.ceil(row.evolution)}`
+                            : Math.ceil(row.evolution)}{' '}
+                          %
+                        </span>
                       </div>
                     </TableCellKit>
                   </TableRowKit>
@@ -205,22 +211,20 @@ export default function EnhancedTable({ rows, type }) {
               })}
             </TableBodyKit>
             <TableHeadKit>
-              <TableRowKit className='table-row table-total'>
-                <TableCellKit component='th' scope='row'>
+              <TableRowKit className="table-row table-total">
+                <TableCellKit component="th" scope="row">
                   Total
                 </TableCellKit>
                 <TableCellKit>{getTotal('week')}</TableCellKit>
                 <TableCellKit>{getTotal('week1')}</TableCellKit>
                 <TableCellKit>
                   <div
-                    className={
-                      'table_evolution ' +
-                      (getTotal('evolution') >= 0 ? 'table_increased' : 'table_decreased')
-                    }
-                  >
+                    className={`table_evolution ${
+                      getTotal('evolution') >= 0 ? 'table_increased' : 'table_decreased'
+                    }`}>
                     <span>
                       {getTotal('evolution') > 0
-                        ? '+' + getTotal('evolution')
+                        ? `+${getTotal('evolution')}`
                         : getTotal('evolution')}{' '}
                       %
                     </span>
@@ -233,4 +237,6 @@ export default function EnhancedTable({ rows, type }) {
       </PaperKit>
     </BoxKit>
   );
-}
+};
+
+export default EnhancedTable;

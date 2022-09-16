@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import Confetti from "react-confetti";
+import Confetti from 'react-confetti';
 
 import './OnBoarding.scss';
 
@@ -17,84 +16,91 @@ import StepperKit from '../../kits/stepper/StepperKit';
 import StepKit from '../../kits/step/StepKit';
 import StepLabelKit from '../../kits/stepLabel/StepLabel';
 import ButtonKit from '../../kits/button/ButtonKit';
+import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
 
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
-import usePlatform from '../../hooks/usePlatform';
-import useAlert from '../../hooks/useAlert';
+import { usePlatform } from '../../hooks/usePlatform';
+import { useAlert } from '../../hooks/useAlert';
 
-import imageDeliveroo from '../../assets/images/deliveroo.png';
-import imageTalabat from '../../assets/images/talabat.png';
+import { platformList } from '../../data/platformList';
 
-const steps = [1, 2, 3];
+const steps = ['Welcome to Revly', 'Connect to the delivery platforms', 'Congratulation'];
 
-const defaultSelections = [
-  { src: imageDeliveroo, name: 'deliveroo' },
-  { src: imageTalabat, name: 'talabat' },
-];
+const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: false }), {});
 
-const defaultSelected = {
-  deliveroo: false,
-  talabat: false,
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  backgroundColor: '#ffffff',
+  borderRadius: '0.4rem',
+  boxShadow: 24,
+  padding: '1rem',
+  border: '0',
 };
 
 const OnBoarding = () => {
   const [step, setStep] = useState(0);
+  const [formValues, setFormValues] = useState({ email: '', password: '' });
+  const [currentPlatform, setCurrentPlatform] = useState(null);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
-  const [registered, setRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setPlatformToken, setIsOnboarded, platformOnboarded, setPlatformOnboarded } = usePlatform();
-  const { initLogin } = useApi();
+  const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
+  const { settingsOnboardPlatform } = useApi();
   const { user } = useUserAuth();
-  const { showAlert, setAlertMessage, setAlertTheme } = useAlert('error');
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    backgroundColor: '#ffffff',
-    borderRadius: '0.4rem',
-    boxShadow: 24,
-    padding: '1rem',
-    border: '0'
-  };
+  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
 
   useEffect(() => {
-    if (step === 0) {
-      setRegistered(false);
-      setIsOnboarded(false);
-      setPlatformOnboarded([]);
-    }
+    if (step > 0) return;
+
+    cleanPlatformData();
   }, [step]);
 
-  const handleSubmitLoginInfo = async (data) => {
-    setIsLoading(true);
+  useEffect(() => {
+    const currentPlatformInsertion = platformList.filter(
+      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
+    );
 
-    const res = await initLogin({
-      master_email: user.email,
-      access_token: user.accessToken,
-      data,
-    });
-
-    if (res instanceof Error) {
-      setAlertMessage(res.message);
-      setAlertTheme('error');
-      showAlert();
-      setIsLoading(false);
+    if (!currentPlatformInsertion[0]) {
+      setCurrentPlatform(null);
       return;
     }
 
-    setAlertMessage('Registered with success !');
-    setAlertTheme('success');
-    showAlert();
-    setPlatformToken(res.response);
+    setCurrentPlatform(currentPlatformInsertion[0]);
+  }, [JSON.stringify(userPlatformData.platforms), JSON.stringify(selectedPlatform)]);
+
+  const handleSubmitLoginInfo = async () => {
+    if (!currentPlatform) return;
+
+    setIsLoading(true);
+
+    const res = await settingsOnboardPlatform(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        credentials: formValues,
+      },
+      currentPlatform.name,
+    );
+
     setIsLoading(false);
 
-    const currentPlatform = [...data.map((d) => d.platform)];
-    setPlatformOnboarded(currentPlatform);
-    isOnboardingCompleted(currentPlatform);
+    if (res instanceof Error) {
+      triggerAlertWithMessageError(res.message);
+      return;
+    }
+
+    triggerAlertWithMessageSuccess('Registered with success !');
+
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [currentPlatform.name]: res },
+    });
+
+    setFormValues({ email: '', password: '' });
   };
 
   const handlePlatformClick = (key) => {
@@ -102,31 +108,22 @@ const OnBoarding = () => {
   };
 
   const returnFormOrder = () => {
-    if (selectedPlatform.deliveroo && !platformOnboarded.includes('deliveroo')) {
-      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={{ deliveroo: true }} isLoading={isLoading} />;
-    }
+    if (!currentPlatform) return null;
 
-    if (selectedPlatform.talabat && !platformOnboarded.includes('talabat')) {
-      return <OnBoardingForm onSend={handleSubmitLoginInfo} activeForm={{ talabat: true }} isLoading={isLoading} />;
-    }
-  };
-
-  const isOnboardingCompleted = (currentPlatform) => {
-
-    const deliverooOnboarded = !selectedPlatform.deliveroo ? true : currentPlatform.includes('deliveroo');
-    const talabatOnboarded = !selectedPlatform.talabat ? true : currentPlatform.includes('talabat');
-
-    setRegistered(deliverooOnboarded && talabatOnboarded);
-    setIsOnboarded(deliverooOnboarded && talabatOnboarded);
-
-    return (deliverooOnboarded && talabatOnboarded);
+    return (
+      <OnBoardingForm
+        platform={currentPlatform}
+        setFormValue={(v) => setFormValues(v)}
+        formValue={formValues}
+      />
+    );
   };
 
   const renderStepScreens = () => {
     if (step === 0) {
       return (
         <PlatformSelector
-          items={defaultSelections}
+          items={platformList}
           state={selectedPlatform}
           onClickItem={handlePlatformClick}
         />
@@ -137,57 +134,88 @@ const OnBoarding = () => {
       return (
         <>
           <PlatformSelector
-            items={defaultSelections}
+            items={platformList}
             state={selectedPlatform}
             onClickItem={() => null}
-            validated={platformOnboarded}
+            platforms={userPlatformData.platforms}
             noText
           />
           {returnFormOrder()}
         </>
-      )
+      );
     }
 
-    return <Congrats />
+    return <Congrats />;
   };
 
   const isNextDisabled = () => {
-    if (step === 0) {
-      return !selectedPlatform.deliveroo && !selectedPlatform.talabat;
-    }
+    switch (step) {
+      case 0:
+        return Object.values(selectedPlatform).every((v) => !v);
 
-    if (step === 1) {
-      return !registered;
-    }
+      case 1:
+        return !Object.keys(selectedPlatform).reduce((acc, cur) => {
+          if (!selectedPlatform[cur]) return acc;
 
-    return true;
+          return userPlatformData.platforms[cur].registered;
+        }, true);
+
+      default:
+        return true;
+    }
   };
-  
+
+  const renderSendButton = () => {
+    if (step !== 1) return null;
+
+    return (
+      <ButtonLoadingKit
+        variant="contained"
+        onClick={handleSubmitLoginInfo}
+        loading={isLoading}
+        disabled={!isNextDisabled() || !currentPlatform}>
+        Send
+      </ButtonLoadingKit>
+    );
+  };
+
   const isBackDisabled = () => step === 0 || step === 2;
 
   return (
-    <div className='onboarding'>
+    <div className="onboarding">
       <Confetti gravity={0.1} run={step === 2} style={{ zIndex: 1301 }} />
       <RestaurantDropdown names={[]} />
       <Dates />
       <FinanceEmpty />
       <MarketingEmpty />
-      <ModalKit open aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+      <ModalKit open aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <div style={style}>
           <StepperKit activeStep={step} alternativeLabel>
-            {steps.map((step) => (
-              <StepKit key={step}>
-                <StepLabelKit />
+            {steps.map((s) => (
+              <StepKit key={s}>
+                <StepLabelKit>{s}</StepLabelKit>
               </StepKit>
             ))}
           </StepperKit>
           {renderStepScreens()}
           <div className="onboarding-actions">
             <div>
-              <ButtonKit variant="outlined" color="error" disabled={isBackDisabled()} onClick={() => setStep(step - 1)}>Back</ButtonKit>
+              <ButtonKit
+                variant="outlined"
+                color="error"
+                disabled={isBackDisabled()}
+                onClick={() => setStep(step - 1)}>
+                Back
+              </ButtonKit>
             </div>
+            <div>{renderSendButton()}</div>
             <div>
-              <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={() => setStep(step + 1)}>Next</ButtonKit>
+              <ButtonKit
+                variant="outlined"
+                disabled={isNextDisabled()}
+                onClick={() => setStep(step + 1)}>
+                Next
+              </ButtonKit>
             </div>
           </div>
         </div>

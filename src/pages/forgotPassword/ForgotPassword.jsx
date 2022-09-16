@@ -8,9 +8,9 @@ import ForgotPasswordForm from '../../components/forms/forgotPasswordForm/Forgot
 
 import CardKit from '../../kits/card/CardKit';
 
-import useAlert from '../../hooks/useAlert';
+import { useAlert } from '../../hooks/useAlert';
 
-import firebaseCodeError from '../../data/firebaseCodeError';
+import { firebaseCodeError } from '../../data/firebaseCodeError';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -47,15 +47,15 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className='forgot-password'>
-      <div className='forgot-password-cover'>
-        <img src='/images/cover.png' alt='cover' width={300} />
+    <div className="forgot-password">
+      <div className="forgot-password-cover">
+        <img src="/images/cover.png" alt="cover" width={300} />
       </div>
-      <CardKit variant='outlined' className='card-forgot-password'>
+      <CardKit variant="outlined" className="card-forgot-password">
         <h2>Forgot your password ?</h2>
         <p>
-          Please enter the address email associated with your account, and we'll email you a link to
-          reset your password.
+          Please enter the address email associated with your account, and we&apos;ll email you a
+          link to reset your password.
         </p>
         <ForgotPasswordForm
           onChange={handleChange}
@@ -65,7 +65,7 @@ const ForgotPassword = () => {
           error={isError}
         />
         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-          <Link to='/'>Go back</Link>
+          <Link to="/">Go back</Link>
         </div>
       </CardKit>
     </div>

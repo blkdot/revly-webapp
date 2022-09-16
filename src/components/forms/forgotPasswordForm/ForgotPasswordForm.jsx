@@ -10,22 +10,21 @@ const ForgotPasswordForm = (props) => {
   const { onChange, onSubmit, disabled, error, isLoading } = props;
 
   return (
-    <FormcontrolKit className='forgot-password-form' fullWidth>
+    <FormcontrolKit className="forgot-password-form" fullWidth>
       <TextfieldKit
         error={error}
-        label='Email address'
+        label="Email address"
         onChange={(e) => onChange(e.target.value)}
-        className='forgot-password-form__input'
+        className="forgot-password-form__input"
         fullWidth
       />
       <ButtonLoadingKit
-        variant='contained'
+        variant="contained"
         onClick={onSubmit}
-        className='forgot-password-form__input'
+        className="forgot-password-form__input"
         disabled={disabled}
-        size='large'
-        loading={isLoading}
-      >
+        size="large"
+        loading={isLoading}>
         Send Email
       </ButtonLoadingKit>
     </FormcontrolKit>

@@ -6,7 +6,7 @@ import SpinnerKit from '../kits/spinner/SpinnerKit';
 import ContainerKit from '../kits/container/ContainerKit';
 import Navbar from '../components/navbar/Navbar';
 
-export const ProtectedRoutes = () => {
+const ProtectedRoutes = () => {
   const { user } = useUserAuth();
 
   if (typeof user === 'boolean' && user) {
@@ -26,5 +26,7 @@ export const ProtectedRoutes = () => {
     </div>
   );
 
-  return user ? renderLayout() : <Navigate to='/' />;
+  return user ? renderLayout() : <Navigate to="/" />;
 };
+
+export default ProtectedRoutes;

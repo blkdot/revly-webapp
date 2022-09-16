@@ -1,14 +1,14 @@
 import * as React from 'react';
 import StoreIcon from '@mui/icons-material/Store';
 
-import "./RestaurantDropdown.scss"
+import './RestaurantDropdown.scss';
 
 import SelectKit from '../../kits/select/SelectKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit'
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 
 const ITEM_HEIGHT = 48;
@@ -22,23 +22,21 @@ const MenuProps = {
   },
 };
 
-export default function RestaurantDropdown({names}) {
+const RestaurantDropdown = ({ names }) => {
   const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      typeof value === 'string' ? value.split(',') : value,
-    );
+    setPersonName(typeof value === 'string' ? value.split(',') : value);
   };
 
   return (
     <div className="restaurant-dropdown_wrapper">
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
         <InputLabelKit className="restaurant-dropdown-input" id="demo-multiple-checkbox-label">
-          <StoreIcon sx={{ color: "gray" }} />
+          <StoreIcon sx={{ color: 'gray' }} />
           Vendors
         </InputLabelKit>
         <SelectKit
@@ -49,8 +47,7 @@ export default function RestaurantDropdown({names}) {
           onChange={handleChange}
           input={<OutlindeInputKit label="_Vendors" />}
           renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}
-        >
+          MenuProps={MenuProps}>
           {names.map((name) => (
             <MenuItemKit key={name} value={name}>
               <CheckboxKit checked={personName.indexOf(name) > -1} />
@@ -61,4 +58,6 @@ export default function RestaurantDropdown({names}) {
       </FormcontrolKit>
     </div>
   );
-}
+};
+
+export default RestaurantDropdown;

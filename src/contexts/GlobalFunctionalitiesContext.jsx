@@ -1,3 +1,5 @@
+// TODO: fix all linter problem
+/* eslint-disable react/jsx-no-constructed-context-values */
 // This file will handle any global functionnalities related to a context that do not belong to a specific context
 // To prevent creating so many other context
 
@@ -12,8 +14,14 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('error');
 
-  const [leftDate, setLeft] = useState({ startDate: new Date(), endDate: new Date() });
-  const [rightDate, setRight] = useState({ startDate: new Date(), endDate: new Date() });
+  const [leftDate, setLeft] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
+  const [rightDate, setRight] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
   const [titleDate, setTitleDate] = useState('today');
   const [titleRightDate, setTitleRightDate] = useState('today');
 
@@ -37,6 +45,18 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
     setSeverity(t);
   };
 
+  const triggerAlertWithMessageError = (m) => {
+    setMessage(m);
+    setIsShowing(true);
+    setSeverity('error');
+  };
+
+  const triggerAlertWithMessageSuccess = (m) => {
+    setMessage(m);
+    setIsShowing(true);
+    setSeverity('success');
+  };
+
   const renderAlert = () => (
     <Alert severity={severity} visible={isShowing}>
       {message}
@@ -46,17 +66,22 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   return (
     <GlobalFunctionalitiesContext.Provider
       value={{
-        setAlertTheme, setAlertMessage,
-        showAlert, leftDate,
-        rightDate, setLeft,
-        setRight, setTitleDate,
-        titleDate, setTitleRightDate,
-        titleRightDate
-      }}
-    >
+        setAlertTheme,
+        setAlertMessage,
+        showAlert,
+        leftDate,
+        rightDate,
+        setLeft,
+        setRight,
+        setTitleDate,
+        titleDate,
+        setTitleRightDate,
+        titleRightDate,
+        triggerAlertWithMessageError,
+        triggerAlertWithMessageSuccess,
+      }}>
       {renderAlert()}
       {children}
     </GlobalFunctionalitiesContext.Provider>
   );
 };
-
