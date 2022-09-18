@@ -65,23 +65,15 @@ const SignUp = () => {
 
   return (
     <div className="signup">
-      <div className="signup-cover">
-        <h1>Text</h1>
-        <h1>Text</h1>
-        <h1>Text</h1>
-      </div>
       <div className="card-signup">
         <p className="card-signup__signin-text">
-          Already have an account yet ? <Link to="/"> Sign in.</Link>
+          Already have an account yet ? <Link to="/"> Sign in</Link>
         </p>
 
         <div className="card-signup__form">
-          <img
-            className="card-signup__form__logo"
-            src="/images/cover.png"
-            alt="cover"
-            width={300}
-          />
+          <div className="card-signup__form__logo">
+            <img src="/images/cover.png" alt="cover" width="200" />
+          </div>
           <h2>Sign up</h2>
           <SignUpForm
             onChangeEmail={handleChange('email')}
@@ -100,6 +92,11 @@ const SignUp = () => {
             disabled={isDisabled()}
           />
         </div>
+      </div>
+      <div className="signup-cover">
+        <h1>Text</h1>
+        <h1>Text</h1>
+        <h1>Text</h1>
       </div>
     </div>
   );

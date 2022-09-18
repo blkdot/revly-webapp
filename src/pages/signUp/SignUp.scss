@@ -8,7 +8,7 @@
   display:flex;
   align-items: stretch;
   height: 100vh;
-  overflow-y: hidden;
+  overflow: hidden;
 
   .signup-cover {
     width: 45%;
@@ -16,8 +16,6 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    color: wheat;
-    background-color: $color-main;
     h1 {
       margin: 1rem 0;
     }
@@ -27,32 +25,31 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     width: 55%;
-    text-align: left;
     background-color: #ebdbeb;
 
     .card-signup__signin-text {
       position: absolute;
-      right: 1rem;
-      top: 1.5rem;
+      right: 1em;
+      top: 1.5em;
     }
 
     .card-signup__form {
-      padding: 8rem 5rem 5rem 5rem;
+      display: flex;
+      flex-direction: column;
+      padding: 5em 5em 5em 5em;
+      text-align: left;
 
       .card-signup__form__logo {
+        align-self: center;
         position: relative;
-        width: 10rem;
-        height: 5rem;
-        left: 11.5rem;
-        top: 10px;
-        object-fit: contain;
+        bottom: 1em;
       }
     }
   }
 
   @include breakpoint($breakpoint-xs, $breakpoint-lg)  {
+    overflow: auto;
     display: block;
 
     .signup-cover {
@@ -63,7 +60,7 @@
       width: 100%;
       .card-signup__signin-text {
         position: relative;
-        margin: 20px 0;
+        margin: 10px 0;
       }
 
       .card-signup__form {

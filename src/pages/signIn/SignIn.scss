@@ -1,20 +1,72 @@
+@import '../../responsiveness.scss';
+@import '../../library.scss';
+
 .signin {
   text-align: center;
   text-align: -webkit-center;
   text-align: -moz-center;
-  margin: auto;
   display:flex;
-  justify-content:center;
-  flex-direction: column;
+  align-items: stretch;
+  height: 100vh;
+  overflow: hidden;
 
   .signin-cover {
-    margin-top: 10%;
+    width: 45%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    h1 {
+      margin: 1rem 0;
+    }
   }
 
   .card-signin {
-    width: 30rem;
-    text-align: start;
-    padding: 1rem 1rem 1rem;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 55%;
+    background-color: #ebdbeb;
+
+    .card-signin__signin-text {
+      position: absolute;
+      right: 1em;
+      top: 1.5em;
+    }
+
+    .card-signin__form {
+      display: flex;
+      flex-direction: column;
+      padding: 5em 5em 5em 5em;
+      text-align: left;
+
+      .card-signin__form__logo {
+        align-self: center;
+        position: relative;
+        bottom: 3.35em;
+      }
+    }
   }
+
+  @include breakpoint($breakpoint-xs, $breakpoint-lg)  {
+    overflow: auto;
+    display: block;
+
+    .signin-cover {
+      display: none;
+    }
+
+    .card-signin {
+      width: 100%;
+      .card-signin__signin-text {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .card-signin__form {
+        padding: 1rem;
+      }
+    }
+  }
+
 }
