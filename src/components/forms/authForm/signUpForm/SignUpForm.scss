@@ -13,6 +13,9 @@
 
         @include mobileBreakpoint {
             display: block;
+            &.phone {
+                display: flex;
+            }
             .signup-form__flex__input {
                 width: 100%;
             }
@@ -21,26 +24,25 @@
     
     .signup-form__input {
         width: 100%;
-        margin-top: 1rem;
+        margin-top: 1.6rem;
     }
 
     .signup-form__input-phone {
-        margin-top: 1rem;
+        margin-top: 1.6rem;
 
+        width: 40%;
         input {
-            width: 100%;
-            height: 1.4em;
+            width: 85%;
             background-color: transparent;
+            height: 3.8rem;
             &:focus {
                 border: 1.5px solid $color-main;
                 box-shadow: none;
             }
         }
 
-        .special-label {
-            color: $color-gray;
-            font-size: 10px;
-            background-color: #ebdbeb;
+        @include mobileBreakpoint {
+            width: 33%;
         }
     }
 
@@ -53,6 +55,10 @@
         input {
             vertical-align: middle;
             cursor: pointer;
+        }
+
+        a {
+            color: black;
         }
     }
 }

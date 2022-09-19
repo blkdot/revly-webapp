@@ -62,34 +62,21 @@ const SignIn = () => {
 
   return (
     <div className="signin">
-      <div className="card-signin">
-        <p className="card-signin__signin-text">
-          Don&apos;t have an account yet? <Link to="/signup"> Sign up</Link>
-        </p>
-        <div className="card-signin__form">
-          <div className="card-signin__form__logo">
-            <img src="/images/cover.png" alt="cover" width="200" />
-          </div>
-          <h2>Sign in</h2>
-          <AuthForm
-            onChangeEmail={handleChange('email')}
-            onChangePassword={handleChange('password')}
-            errorEmail={errorData.email}
-            errorPassword={errorData.password}
-            onSubmit={handleSubmit}
-            onGoogleSubmit={handleGoogleSubmit}
-            disabled={!value.email || !value.password || processing}
-            isSignin
-          />
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <Link to="/forgot-password">Forgot password ?</Link>
-          </div>
-        </div>
-      </div>
-      <div className="signin-cover">
-        <h1>Text</h1>
-        <h1>Text</h1>
-        <h1>Text</h1>
+      <p className="signin__signup-text">
+        Don&apos;t have an account ? &nbsp; <Link to="/signup">Get Started</Link>
+      </p>
+      <AuthForm
+        onChangeEmail={handleChange('email')}
+        onChangePassword={handleChange('password')}
+        errorEmail={errorData.email}
+        errorPassword={errorData.password}
+        onSubmit={handleSubmit}
+        onGoogleSubmit={handleGoogleSubmit}
+        disabled={!value.email || !value.password || processing}
+        isSignin
+      />
+      <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <Link to="/forgot-password">Forgot password ?</Link>
       </div>
     </div>
   );
