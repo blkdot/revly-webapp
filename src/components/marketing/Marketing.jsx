@@ -29,7 +29,7 @@ function Marketing() {
       <TypographyKit variant={"h5"}><span>{table}</span> of this <span>{
         titleDate === "custom" ? startLocal === endLocal ? startLocal :
           startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
-            format(leftDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
+            format(leftDate.startDate, 'LLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
             startLocal + " - " + endLocal : titleDate
       }</span></TypographyKit>
       {TableMarketingData.map((info) =>

@@ -154,7 +154,7 @@ export default function EnhancedTable({ rows, type }) {
       disablePadding: false,
       label: titleDate === "custom" ? startLocal === endLocal ? startLocal :
         startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
-          format(leftDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
+          format(leftDate.startDate, 'LLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
           startLocal + " - " + endLocal : titleDate,
     },
     {
@@ -163,7 +163,7 @@ export default function EnhancedTable({ rows, type }) {
       disablePadding: false,
       label: titleRightDate === "custom" ? startLocalRight === endLocalRight ? startLocalRight :
         startGetDateRight === 1 && endGetDateRight === endOfMonth(rightDate.startDate, 1).getDate() ?
-          format(rightDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(rightDate.startDate) :
+          format(rightDate.startDate, 'LLL', { locale: enUS }) + " - " + getYear(rightDate.startDate) :
           startLocalRight + " - " + endLocalRight : titleRightDate,
     },
     {

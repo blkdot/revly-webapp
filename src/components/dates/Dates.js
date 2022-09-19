@@ -45,25 +45,10 @@ const Dates = () => {
   const location = useLocation();
 
   const handleClick = () => { // handleClick happens when you click on button "OK" on Left date picker
+
+    // We put in variables for later use
     const startDate = new Date(leftDate[0].startDate);
     const endDate = new Date(leftDate[0].endDate);
-    setOpened(false) // Closing Left date picker
-    if (location.pathname === "/dashboard") {
-      setLeft({ startDate: startDate, endDate: endDate }); // Sending data to context state
-      if (typeDate === "day") {
-        setRight({ startDate: subDays(startDate, 1), endDate: subDays(endDate, 1) });
-      }
-      else if (typeDate === "week") {
-        setRight({ startDate: subWeeks(startDate, 1), endDate: endOfWeek(subWeeks(endDate, 1)) });
-      }
-      else if (typeDate === "month") {
-        setRight({ startDate: subMonths(startDate, 1), endDate: endOfMonth(subMonths(endDate, 1)) });
-      }
-    }
-    else {
-      setLeftDateBtn({ startDate: startDate, endDate: endDate });
-    }
-
     const date = new Date();
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
@@ -75,7 +60,26 @@ const Dates = () => {
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
 
-    if (location.pathname === "/dashboard") {
+    setOpened(false) // Closing Left date picker
+
+    if (location.pathname === "/dashboard") { // its will work on dashboard
+      setLeft({ startDate: startDate, endDate: endDate }); // Sending data to context state
+      if (typeDate === "day") {
+        setRight({ startDate: subDays(startDate, 1), endDate: subDays(endDate, 1) }); // Sending previous day to context state
+      }
+      else if (typeDate === "week") {
+        setRight({ startDate: subWeeks(startDate, 1), endDate: endOfWeek(subWeeks(endDate, 1)) }); // Sending previous week to context state
+      }
+      else if (typeDate === "month") {
+        setRight({ startDate: subMonths(startDate, 1), endDate: endOfMonth(subMonths(endDate, 1)) }); // Sending previous month to context state
+      }
+    }
+    else { // its will work on other pages
+      setLeftDateBtn({ startDate: startDate, endDate: endDate });
+    }
+
+
+    if (location.pathname === "/dashboard") { // its will work on dashboard
       if (startLocal === endLocal) { // It checks that what date is currently selected in Left date picker
         if (startLocal === dateLocal) {
           setTitleDate("today") // Sending data to state which will be needed for the introduction in the left input
@@ -109,12 +113,12 @@ const Dates = () => {
         getMonth(startDate, 1) === getMonth(date, 1)
       ) {
 
-         if (startGetDate === 1 && endGetDate === dateGetDate) {
+        if (startGetDate === 1 && endGetDate === dateGetDate) {
           setTitleDate("current month")
           setTitleRightDate("last month")
         }
         else if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-        setTitleDate("last month")
+          setTitleDate("last month")
           setTitleRightDate("custom")
         }
         else {
@@ -137,7 +141,7 @@ const Dates = () => {
         }
       }
     }
-    else {
+    else { // its will work on other pages
       if (startLocal === endLocal) { // It checks that what date is currently selected in Left date picker
         if (startLocal === dateLocal) {
           setTitle("today") // Sending data to state which will be needed for the introduction in the left input
@@ -187,15 +191,12 @@ const Dates = () => {
         }
       }
     }
-
   };
-  const handleClickRight = () => {// handleClickRight happens when you click on button "OK" on Right date picker
+  const handleClickRight = () => { // handleClickRight happens when you click on button "OK" on Right date picker
+
+    // We put in variables for later use
     const startDate = new Date(rightDate[0].startDate);
     const endDate = new Date(rightDate[0].endDate);
-    setOpenedRight(false) // Closing Right date picker
-    setSelected(false) // Closing Right Select 
-    setRight({ startDate: startDate, endDate: endDate }) // Sending data to context state
-
     const date = new Date()
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
@@ -207,8 +208,14 @@ const Dates = () => {
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
 
+    setOpenedRight(false) // Closing Right date picker
+    setSelected(false) // Closing Right Select 
+    setRight({ startDate: startDate, endDate: endDate }) // Sending data to context state
+
     if (startLocal === endLocal) { // It checks that what date is currently selected in Right date picker
-      if (startLocal === dateLocal) { // Sending data to state which will be needed for the introduction in the right input
+
+      // Sending data to state which will be needed for the introduction in the right input
+      if (startLocal === dateLocal) {
         setTitleRightDate("today")
       }
       else if (startLocal === (subDays(date, 1).toLocaleDateString())) {
@@ -258,41 +265,18 @@ const Dates = () => {
 
   }
 
-  const handleOnChangeRight = ranges => { // handleOnChagneRight happens when you click on some day on Right date picker
-    const { selection } = ranges;
-    if (getMonth(selection.startDate) === getMonth(new Date())) { // This will check if today's month is equal to the month of the clicked day
-      if (typeDate === "day") { // These checks the typeDate
-        setRightDate([selection]);
-      }
-      else if (typeDate === "week") {
-        setRightDate([{
-          startDate: startOfWeek(selection.startDate), // here we send start of week
-          endDate: getWeek(new Date()) === getWeek(selection.startDate) ? new Date() : endOfWeek(selection.startDate), // here we compare if the week of today is equal to the week of the clicked day
-          key: "selection"
-        }])
-      }
-    }
-    else {
-      if (typeDate === "day") {
-        setRightDate([selection]);
-      }
-      else if (typeDate === "week") {
-        setRightDate([{
-          startDate: startOfWeek(selection.startDate), // here we send start of week
-          endDate: endOfWeek(selection.startDate), // here we send end of week
-          key: "selection"
-        }])
-      }
-    }
-  }
 
   const handleOnChange = ranges => { // handleOnChagne happens when you click on some day on Left date picker
     const { selection } = ranges;
+    const rdrDays = document.querySelectorAll(".rdrDay"); // here we took all span
+    rdrDays.forEach((el) => el.addEventListener(("dblclick"), () =>
+      handleClick() // When you double click this function will work
+    ))
     if (getMonth(selection.startDate) === getMonth(new Date())) { // This will check if today's month is equal to the month of the clicked day
       if (typeDate === "day") { // These checks the typeDate
-        setLeftDate([selection]);
+        setLeftDate([selection]); // here we send day
       }
-      else if (typeDate === "week") {
+      else if (typeDate === "week") { // These checks the typeDate
         setLeftDate([{
           startDate: startOfWeek(selection.startDate), // here we send start of week
           endDate: getWeek(new Date()) === getWeek(selection.startDate) ? new Date() : endOfWeek(selection.startDate), // here we compare if the week of today is equal to the week of the clicked day
@@ -301,10 +285,10 @@ const Dates = () => {
       }
     }
     else {
-      if (typeDate === "day") {
-        setLeftDate([selection]);
+      if (typeDate === "day") { // These checks the typeDate
+        setLeftDate([selection]); // here we send day
       }
-      else if (typeDate === "week") {
+      else if (typeDate === "week") { // These checks the typeDate
         setLeftDate([{
           startDate: startOfWeek(selection.startDate), // here we send start of week
           endDate: endOfWeek(selection.startDate), // here we send end of week
@@ -315,6 +299,8 @@ const Dates = () => {
   }
 
   const getRightDate = () => {// This function should check if the date of the left date is the same as the date of the right date
+
+    // We put in variables for later use
     const date = new Date()
     const startDate = new Date(left.startDate);
     const endDate = new Date(left.endDate);
@@ -335,7 +321,8 @@ const Dates = () => {
     const dateGetDay = date.getDay();
     const dateGetDate = date.getDate();
 
-    if (getMonth(startDateRight) === getMonth(date)) {
+    // This comparison needed for right date picker button, check if left date picker not more then chosed date and have the same type
+    if (getMonth(startDateRight) === getMonth(date)) { // check if month of clicked date equal with today`s month
       if (startLocal === endLocal) {
         if (startLocalRight === endLocalRight && startLocal > startLocalRight) return true
         return false
@@ -399,8 +386,51 @@ const Dates = () => {
     }
   }
 
+  const handleOnChangeRight = ranges => { // handleOnChagneRight happens when you click on some day on Right date picker
+    const { selection } = ranges;
+    const rdrDays = document.querySelectorAll(".rdrDay"); // here we took all span
+    if (getRightDate()) {
+      rdrDays.forEach((day) => day.addEventListener(("dblclick"), () =>
+        handleClickRight() // When you double click this function will work
+      ))
+    }
+    if (getMonth(selection.startDate) === getMonth(new Date())) { // This will check if today's month is equal to the month of the clicked day
+      if (typeDate === "day") { // These checks the typeDate
+        setRightDate([selection]); // here we send day
+      }
+      else if (typeDate === "week") { // These checks the typeDate
+        setRightDate([{
+          startDate: startOfWeek(selection.startDate), // here we send start of week
+          endDate: getWeek(new Date()) === getWeek(selection.startDate) ? new Date() : endOfWeek(selection.startDate), // here we compare if the week of today is equal to the week of the clicked day
+          key: "selection"
+        }])
+      }
+    }
+    else {
+      if (typeDate === "day") { // These checks the typeDate
+        setRightDate([selection]); // here we send day
+      }
+      else if (typeDate === "week") { // These checks the typeDate
+        setRightDate([{
+          startDate: startOfWeek(selection.startDate), // here we send start of week
+          endDate: endOfWeek(selection.startDate), // here we send end of week
+          key: "selection"
+        }])
+      }
+    }
+  }
+
+  const handleClickMonth = (e, type) => {
+    e.target.addEventListener(("dblclick"), () =>
+      type === "left" ? handleClick() : handleClickRight()
+    )
+  }
+
+
   const minDate = dayjs('2021-01-01T00:00:00.000');
   const maxDate = new Date()
+
+  // left date picker variables
   const leftStart = new Date(left.startDate)
   const leftEnd = new Date(left.endDate)
   const leftStartBtn = new Date(leftDateBtn.startDate)
@@ -412,6 +442,7 @@ const Dates = () => {
   const leftStartGetDate = new Date(left.startDate).getDate()
   const leftEndGetDate = new Date(left.endDate).getDate()
 
+  // right date picker variables
   const rightStart = new Date(right.startDate)
   const rightEnd = new Date(right.endDate)
   const rightStartLocal = new Date(right.startDate).toLocaleDateString();
@@ -428,12 +459,12 @@ const Dates = () => {
             <span>{
               location.pathname === "/dashboard" ? titleDate === "custom" ? // if titleDate === "custom"  i return the date
                 leftStartLocal === leftEndLocal ? leftStartLocal :
-                  leftStartGetDate === 1 && leftEndGetDate === endOfMonth(leftEnd, 1).getDate() ? format(leftStart, 'LLLL', { locale: enUS }) + " - " + getYear(leftStart) :
+                  leftStartGetDate === 1 && leftEndGetDate === endOfMonth(leftEnd, 1).getDate() ? format(leftStart, 'LLL', { locale: enUS }) + " - " + getYear(leftStart) :
                     leftStartLocal + " - " + leftEndLocal : titleDate // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc) 
                 : title === "custom" ? // if title === "custom"  i return the date
                   leftBtnStartLocal === leftBtnEndLocal ? leftBtnStartLocal :
                     leftStartBtn.getDate() === 1 && leftEndBtn.getDate() === endOfMonth(leftEndBtn, 1).getDate() ?
-                      format(leftStartBtn, 'LLLL', { locale: enUS }) + " - " + getYear(leftStartBtn) :
+                      format(leftStartBtn, 'LLL', { locale: enUS }) + " - " + getYear(leftStartBtn) :
                       leftStartBtn.toLocaleDateString() + " - " + leftEndBtn.toLocaleDateString() : title  // if title !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
             }</span>
           </TypographyKit>
@@ -497,6 +528,7 @@ const Dates = () => {
                   endDate: endOfMonth(new Date(newDateMonth)),
                   key: "selection"
                 }])}
+                onClick={(e) => handleClickMonth(e, "left")}
               />
             </LocalizationProviderKit>
             :
@@ -527,7 +559,7 @@ const Dates = () => {
                       {
                         titleRightDate === "custom" ? // if titleRightDate === "custom"  i return the date
                           rightStartLocal === rightEndLocal ? rightStartLocal :
-                            rightStartGetDate === 1 && rightEndGetDate === endOfMonth(rightEnd, 1).getDate() ? format(rightStart, 'LLLL', { locale: enUS }) + " - " + getYear(rightStart) :
+                            rightStartGetDate === 1 && rightEndGetDate === endOfMonth(rightEnd, 1).getDate() ? format(rightStart, 'LLL', { locale: enUS }) + " - " + getYear(rightStart) :
                               rightStartLocal + " - " + rightEndLocal : titleRightDate // if titleRightDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
                       }
                     </span>
@@ -602,6 +634,7 @@ const Dates = () => {
                         endDate: getMonth(new Date()) === getMonth(new Date(newDateMonth)) ? new Date() : endOfMonth(new Date(newDateMonth)),
                         key: "selection"
                       }])}
+                      onClick={(e) => handleClickMonth(e, "right")}
                     />
                   </LocalizationProviderKit>
                   :

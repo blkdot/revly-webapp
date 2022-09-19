@@ -58,7 +58,7 @@ const Widget = ({ procent, title, setTable, table, coin }) => {
           <TypographyKit className='card-week' variant='body3'>
             than {" "} {titleRightDate === "custom" ? startLocal === endLocal ? startLocal :
               startGetDate === 1 && endGetDate === endOfMonth(rightDate.startDate, 1).getDate() ?
-                format(rightDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(rightDate.startDate) :
+                format(rightDate.startDate, 'LLL', { locale: enUS }) + " - " + getYear(rightDate.startDate) :
                 startLocal + " - " + endLocal : titleRightDate}
           </TypographyKit>
         </div>

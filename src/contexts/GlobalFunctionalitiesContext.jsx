@@ -18,6 +18,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [titleDate, setTitleDate] = useState('today');
   const [titleRightDate, setTitleRightDate] = useState('yesterday');
 
+  const [restaurants, setRestaurants] = useState([]);
+
   useEffect(() => {
     if (isShowing) {
       setTimeout(() => {
@@ -52,7 +54,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         rightDate, setLeft,
         setRight, setTitleDate,
         titleDate, setTitleRightDate,
-        titleRightDate
+        titleRightDate, restaurants,
+        setRestaurants
       }}
     >
       {renderAlert()}

@@ -3,14 +3,14 @@ import "./Finance.scss";
 import Widget from '../widget/Widget';
 import Table from '../table/Table';
 import TypographyKit from '../../kits/typography/TypographyKit';
-import { FinanceData, TableFinanceData } from "../../data/fakeDataDashboard";
+import { FinanceData, restaurantNames, TableFinanceData } from "../../data/fakeDataDashboard";
 import useDate from '../../hooks/useDate';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 
 const Finance = () => {
   const [table, setTable] = useState("Revenue");
-  const { titleDate, leftDate } = useDate();
+  const { titleDate, leftDate, restaurants } = useDate();
   const startLocal = leftDate.startDate.toLocaleDateString();
   const endLocal = leftDate.endDate.toLocaleDateString();
   const startGetDate = leftDate.startDate.getDate();
@@ -24,12 +24,14 @@ const Finance = () => {
           {
             titleDate === "custom" ? startLocal === endLocal ? startLocal :
               startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
-                format(leftDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
+                format(leftDate.startDate, 'LLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
                 startLocal + " - " + endLocal : titleDate
           }
           {" "}
         </span>
-        for all <span>points of sales</span></TypographyKit>
+        for {restaurants.length === restaurantNames.length || restaurants.length === 0 ?
+          <span> all points of sales</span> : <span>{restaurants.join(", ")}</span>}
+      </TypographyKit>
       <TypographyKit variant="h4">Finance</TypographyKit>
       <div className="cardsWrapper finance-wrapper">
         {
@@ -42,7 +44,7 @@ const Finance = () => {
         <span>
           {titleDate === "custom" ? startLocal === endLocal ? startLocal :
             startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
-              format(leftDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
+              format(leftDate.startDate, 'LLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
               startLocal + " - " + endLocal : titleDate}
         </span>
       </TypographyKit>

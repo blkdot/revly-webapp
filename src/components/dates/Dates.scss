@@ -292,12 +292,12 @@
     }
 
     &.date-disabled-btn {
-      background: grey;
+      background: $color-light-grey;
       pointer-events: all;
       cursor: not-allowed;
 
       &:hover {
-        background: grey;
+        background: $color-light-grey;
       }
     }
 
