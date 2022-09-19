@@ -24,9 +24,11 @@
     background: $color-third;
     transition: 0.3s;
     color: #4d2681;
-    svg{
+
+    svg {
       filter: none;
     }
+
     img {
       filter: invert(13%) sepia(33%) saturate(5910%) hue-rotate(257deg) brightness(96%) contrast(91%);
     }
@@ -40,9 +42,10 @@
     background: $color-third;
     color: #4d2681;
 
-    svg{
+    svg {
       filter: none;
     }
+
     img {
       filter: invert(13%) sepia(53%) saturate(3527%) hue-rotate(255deg) brightness(101%) contrast(92%);
     }
@@ -97,6 +100,11 @@
   .card-week {
     font-size: 14px;
     color: $color-arrow;
+    text-transform: lowercase;
+  }
+
+  .card_bottom {
+    flex-wrap: wrap;
   }
 }
 

@@ -2,13 +2,15 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import "./Dates.scss"
 import React from "react";
-import { endOfMonth, getWeek, subDays, subMonths, subWeeks, getMonth } from "date-fns";
+import { endOfMonth, getWeek, subDays, subMonths, subWeeks, getMonth, endOfWeek } from "date-fns";
 import PaperKit from "../../kits/paper/PaperKit";
 import ButtonKit from "../../kits/button/ButtonKit";
 
-const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight, setRightDateBtn,setTitleRight }) => {
-  const startDate = new Date(leftDate.startDate);
-  const endDate = new Date(leftDate.endDate);
+const RightDateSelect = ({ setRightDate, rightDate, selected, setOpenedRight, setRightDateBtn, setTitleRight, leftDate }) => {
+  const startDate = new Date(rightDate.startDate);
+  const endDate = new Date(rightDate.endDate);
+  const startDateLeft = new Date(leftDate.startDate);
+  const endDateLeft = new Date(leftDate.endDate);
   const date = new Date();
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
@@ -31,20 +33,22 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight, set
       <div>
         <ButtonKit
           className="navbar-button-kit"
-          onClick={() => {setRightDateBtn(
-            {
-              startDate: subDays(startDate, 1),
-              endDate: subDays(endDate, 1),
-            })
+          onClick={() => {
+            setRightDateBtn(
+              {
+                startDate: subDays(startDateLeft, 1),
+                endDate: subDays(endDateLeft, 1),
+              })
             setTitleRight("day - 1")
-            }}>Day - 1</ButtonKit>
+          }}>Day - 1</ButtonKit>
         <ButtonKit
           className="navbar-button-kit"
-          onClick={() => {setRightDateBtn(
-            {
-              startDate: subWeeks(startDate, 1),
-              endDate: subWeeks(endDate, 1),
-            })
+          onClick={() => {
+            setRightDateBtn(
+              {
+                startDate: subWeeks(startDateLeft, 1),
+                endDate: subWeeks(endDateLeft, 1),
+              })
             setTitleRight("Same day last week")
           }}
         >Same day last week</ButtonKit>
@@ -57,13 +61,14 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight, set
       <div>
         <ButtonKit
           className="navbar-button-kit"
-          onClick={() => {setRightDateBtn(
-            {
-              startDate: subWeeks(startDate, 1),
-              endDate: subWeeks(endDate, 1),
-            })
+          onClick={() => {
+            setRightDateBtn(
+              {
+                startDate: subWeeks(startDateLeft, 1),
+                endDate: endOfWeek(subWeeks(endDateLeft, 1)),
+              })
             setTitleRight("Week - 1")
-            }}>Week - 1</ButtonKit>
+          }}>Week - 1</ButtonKit>
         <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Week</ButtonKit>
       </div >
     )
@@ -73,13 +78,14 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight, set
       <div>
         <ButtonKit
           className="navbar-button-kit"
-          onClick={() => {setRightDateBtn  (
-            {
-              startDate: subMonths(startDate, 1),
-              endDate: subMonths(endDate, 1),
-            })
+          onClick={() => {
+            setRightDateBtn(
+              {
+                startDate: subMonths(startDateLeft, 1),
+                endDate: endOfMonth(subMonths(endDateLeft, 1)),
+              })
             setTitleRight("Month - 1")
-            }}>Month - 1</ButtonKit>
+          }}>Month - 1</ButtonKit>
 
         <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Month</ButtonKit>
       </div>
@@ -117,4 +123,4 @@ const RightDateSelect = ({ setRightDate, leftDate, selected, setOpenedRight, set
   )
 }
 
-export default React.memo(RightDateSelect)
+export default React.memo(RightDateSelect);

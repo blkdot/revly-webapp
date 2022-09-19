@@ -13,6 +13,9 @@ import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
 import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
 import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
+import { endOfMonth, format, getYear } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+import useDate from '../../hooks/useDate';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -127,6 +130,17 @@ export default function EnhancedTable({ rows, type }) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
+  const { titleRightDate, rightDate, titleDate, leftDate } = useDate();
+
+  const startLocal = leftDate.startDate.toLocaleDateString();
+  const endLocal = leftDate.endDate.toLocaleDateString();
+  const startGetDate = leftDate.startDate.getDate();
+  const endGetDate = leftDate.endDate.getDate();
+
+  const startLocalRight = rightDate.startDate.toLocaleDateString();
+  const endLocalRight = rightDate.endDate.toLocaleDateString();
+  const startGetDateRight = rightDate.startDate.getDate();
+  const endGetDateRight = rightDate.endDate.getDate();
   const headCells = [
     {
       id: 'name',
@@ -138,13 +152,19 @@ export default function EnhancedTable({ rows, type }) {
       id: 'week',
       numeric: true,
       disablePadding: false,
-      label: 'W',
+      label: titleDate === "custom" ? startLocal === endLocal ? startLocal :
+        startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
+          format(leftDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(leftDate.startDate) :
+          startLocal + " - " + endLocal : titleDate,
     },
     {
       id: 'week1',
       numeric: true,
       disablePadding: false,
-      label: 'W - 1',
+      label: titleRightDate === "custom" ? startLocalRight === endLocalRight ? startLocalRight :
+        startGetDateRight === 1 && endGetDateRight === endOfMonth(rightDate.startDate, 1).getDate() ?
+          format(rightDate.startDate, 'LLLL', { locale: enUS }) + " - " + getYear(rightDate.startDate) :
+          startLocalRight + " - " + endLocalRight : titleRightDate,
     },
     {
       id: 'evolution',

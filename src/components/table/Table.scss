@@ -52,6 +52,9 @@
 
 .table-head {
   background: rgb(244, 246, 248);
+  th{
+    text-transform: capitalize;
+  }
 }
 
 .enchanced-table-cell.enchanced-table-cell {

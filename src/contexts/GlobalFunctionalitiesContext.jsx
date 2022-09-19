@@ -1,6 +1,7 @@
 // This file will handle any global functionnalities related to a context that do not belong to a specific context
 // To prevent creating so many other context
 
+import { subDays } from 'date-fns';
 import React, { createContext, useEffect, useState } from 'react';
 
 import Alert from '../components/alert/Alert';
@@ -13,9 +14,9 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [severity, setSeverity] = useState('error');
 
   const [leftDate, setLeft] = useState({ startDate: new Date(), endDate: new Date() });
-  const [rightDate, setRight] = useState({ startDate: new Date(), endDate: new Date() });
+  const [rightDate, setRight] = useState({ startDate: subDays(new Date(), 1), endDate: subDays(new Date(), 1) });
   const [titleDate, setTitleDate] = useState('today');
-  const [titleRightDate, setTitleRightDate] = useState('today');
+  const [titleRightDate, setTitleRightDate] = useState('yesterday');
 
   useEffect(() => {
     if (isShowing) {

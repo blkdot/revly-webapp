@@ -5,7 +5,8 @@
   justify-content: flex-end;
   grid-gap: 20px;
   align-items: center;
-  >span{
+
+  >span {
     width: 80px;
   }
 }
@@ -46,9 +47,11 @@
   &:hover {
     background-color: #F0ECF4;
     color: #823aa8;
-    span{
+
+    span {
       color: #823aa8;
     }
+
     svg {
       fill: #823aa8;
     }
@@ -60,6 +63,7 @@
 }
 
 .date-range.date-range {
+  left: 0;
   opacity: 0;
   visibility: hidden;
   z-index: 800;
@@ -154,7 +158,8 @@
   .rdrDefinedRangesWrapper {
     display: none;
   }
-  .rdrDay.rdrDay{
+
+  .rdrDay.rdrDay {
     height: 49.7px;
   }
 }
@@ -282,14 +287,20 @@
     background: #704cfc;
     font-size: 12px;
 
-    &.date-disabled-btn {
-      cursor: not-allowed;
-      background: grey;
-    }
-
     &:hover {
       background: #704cfc;
     }
+
+    &.date-disabled-btn {
+      background: grey;
+      pointer-events: all;
+      cursor: not-allowed;
+
+      &:hover {
+        background: grey;
+      }
+    }
+
   }
 }
 
