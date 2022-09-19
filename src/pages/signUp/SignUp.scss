@@ -53,14 +53,16 @@
     display: block;
 
     .signup-cover {
-      width: 100%;
+      display: none;
     }
 
     .card-signup {
       width: 100%;
       .card-signup__signin-text {
         position: relative;
-        margin: 10px 0;
+        top: 0;
+        margin-top: 10px;
+        right: 0;
       }
 
       .card-signup__form {
