@@ -23,11 +23,12 @@ import Check from './pages/check/Check';
 import Planning from './pages/planning/Planning';
 import MarketingAds from './pages/marketing/MarketingAds';
 import MarketingOffer from './pages/marketing/MarketingOffer';
+import Dev from './pages/dev/Dev';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4d2681',
+      main: '#826AF9',
     },
   },
 });
@@ -41,6 +42,7 @@ const App = () => (
             <AuthContextProvider>
               <Routes>
                 <Route path="/" element={<SignIn />} />
+                <Route path="/dev" element={<Dev />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route element={<ProtectedRoutes />}>

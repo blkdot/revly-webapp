@@ -15,6 +15,9 @@ import {
   sendEmailVerification,
   reauthenticateWithPopup,
   updatePhoneNumber,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import config from '../setup/config';
@@ -41,7 +44,10 @@ export const AuthContextProvider = ({ children }) => {
 
   const signUp = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 
-  const signIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const signIn = async (email, password, remember = false) => {
+    await setPersistence(auth, remember ? browserSessionPersistence : browserLocalPersistence);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
   const logOut = () => {
     cleanPlatformData();

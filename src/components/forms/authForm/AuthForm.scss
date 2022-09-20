@@ -1,12 +1,80 @@
+@import '../../../library.scss';
+
 .auth-form {
-  margin-top: 1rem;
+  position: relative;
+  height: 90vh;
+  display: flex;
 
-  .auth-form__input {
-    margin-top: 1rem;
+  .auth-form__get-started {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    font-weight: bold;
 
-    &.__google {
-      width: 100% !important;
+    .__get-started__link {
+      color: $color-green-second;
+      text-decoration: none;
+    }
+  }
+
+  .auth-form__block {
+    margin: auto;
+    min-width: 340px;
+    max-width: 520px;
+
+    .__block-head {
+      margin-bottom: 1.6rem;
+
+      .__block-head__title {
+        text-align: start;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+
+      .__block-head__sub {
+        text-align: start;
+        color: $color-table-th;
+      }
+    }
+
+    .__block-google {
+      margin-bottom: 0.8rem;
+      width: 100%;
+
+      .__block-google__button {
+        width: 100%;
+      }
+
+      .__block-google__icon {
+        font-size: 24px;
+      }
+    }
+
+    .__block-divider {
       text-align: center;
+      margin-bottom: 0.8rem;
+
+      .__block-divider__text {
+        color: $color-table-th;
+      }
+    }
+
+    .__block-field {
+      margin-bottom: 0.8rem;
+    }
+
+    .__block-field-check {
+      margin-bottom: 0.8rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .__block-field-check__link {
+        color: $color-main;
+        text-decoration: none;
+        font-size: 12.25px;
+        align-self: center;
+      }
     }
   }
 }
