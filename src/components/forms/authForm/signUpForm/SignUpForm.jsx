@@ -85,9 +85,15 @@ const SignUpForm = (props) => {
         fullWidth
         InputProps={{
           endAdornment: showPassword ? (
-            <VisibilityOff onClick={() => setShowPassword(false)} style={{ cursor: 'pointer' }} />
+            <VisibilityOff
+              onClick={() => setShowPassword(false)}
+              style={{ cursor: 'pointer', color: '#919eab' }}
+            />
           ) : (
-            <Visibility onClick={() => setShowPassword(true)} style={{ cursor: 'pointer' }} />
+            <Visibility
+              onClick={() => setShowPassword(true)}
+              style={{ cursor: 'pointer', color: '#919eab' }}
+            />
           ),
         }}
       />

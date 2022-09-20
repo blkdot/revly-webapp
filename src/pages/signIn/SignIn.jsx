@@ -63,7 +63,7 @@ const SignIn = () => {
   return (
     <div className="signin">
       <p className="signin__signup-text">
-        Don&apos;t have an account ? &nbsp; <Link to="/signup">Get Started</Link>
+        Don&apos;t have an account? &nbsp; <Link to="/signup">Get Started</Link>
       </p>
       <AuthForm
         onChangeEmail={handleChange('email')}

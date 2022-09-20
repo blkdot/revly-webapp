@@ -32,17 +32,49 @@
 
         width: 40%;
         input {
-            width: 85%;
+            width: 88%;
             background-color: transparent;
             height: 3.8rem;
+            padding: 19px 14px 18.5px 3vw;
+            color: $color-input-border;
+            border-color: #919eab65;
+            border-radius: 8px;
             &:focus {
                 border: 1.5px solid $color-main;
                 box-shadow: none;
             }
+
+            @include breakpoint($breakpoint-xs, $breakpoint-md) {
+                width: 73%;
+                padding: 19px 14px 18.5px 59px;
+            }
         }
 
-        @include mobileBreakpoint {
-            width: 33%;
+        & .selected-flag {
+            width: 110px;
+
+            &:focus .arrow, .arrow {
+                left: 5.8vw;
+                top: 10%;
+                border: solid $color-second-third;
+                border-width: 0 2px 2px 0;
+                display: inline-block;
+                padding: 4px;
+                transform: rotate(45deg);
+                -webkit-transform: rotate(45deg);
+                transition: transform .2s;
+
+                &.up {
+                    transform: rotate(225deg);
+                    -webkit-transform: rotate(225deg);
+                    border-width: 0 2px 2px 0;
+                    top: 35%
+                }
+
+                @include breakpoint($breakpoint-xs, $breakpoint-md) {
+                    left: 13vw;
+                }
+            }
         }
     }
 

@@ -74,7 +74,7 @@ const SignUp = () => {
   return (
     <div className="signup">
       <p className="signup__signin-text">
-        Already have an account ? &nbsp; <Link to="/">Sign In</Link>
+        Already have an account? &nbsp; <Link to="/">Sign In</Link>
       </p>
       <SignUpForm
         onChangeEmail={handleChange('email')}
