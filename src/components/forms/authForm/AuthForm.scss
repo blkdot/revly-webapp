@@ -6,7 +6,52 @@
 
     &.__google {
       width: 100% !important;
-      text-align: center;
+      background-color: white !important;
+      box-shadow: none !important;
+      border: 2px solid rgba(225, 218, 218, 0.665) !important;
+      border-radius: 8px !important;
+      & span {
+        display: none;
+      }
+
+      & div {
+        height: 40px !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        margin-top: 3px !important;
+      }
+    }
+  }
+
+  .auth-form__text {
+    display: flex;
+    justify-content: space-between;
+    margin: 2em 0 1em 0;
+
+    div {
+      font-size: 14px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .auth-form__or {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.9em 0 0.7em 0;
+
+    p, hr {
+      color: #637381;
+    }
+
+    hr {
+      width: 46%;
+      height: 0;
     }
   }
 }

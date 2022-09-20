@@ -109,7 +109,7 @@ const SignUpForm = (props) => {
         className="signup-form__input"
         disabled={disabled}
         size="large">
-        Sign Up
+        Register
       </ButtonKit>
     </div>
   );

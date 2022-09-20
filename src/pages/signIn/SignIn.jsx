@@ -9,7 +9,7 @@ import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 
 const SignIn = () => {
-  const [value, setValue] = useState({ email: '', password: '' });
+  const [value, setValue] = useState({ email: '', password: '', remember: false });
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { showAlert, setAlertMessage } = useAlert();
   const [errorData, setErrorData] = useState({ email: false, password: false });
@@ -68,6 +68,7 @@ const SignIn = () => {
       <AuthForm
         onChangeEmail={handleChange('email')}
         onChangePassword={handleChange('password')}
+        onRemember={handleChange('remember')}
         errorEmail={errorData.email}
         errorPassword={errorData.password}
         onSubmit={handleSubmit}
@@ -75,9 +76,6 @@ const SignIn = () => {
         disabled={!value.email || !value.password || processing}
         isSignin
       />
-      <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-        <Link to="/forgot-password">Forgot password ?</Link>
-      </div>
     </div>
   );
 };

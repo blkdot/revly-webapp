@@ -16,19 +16,17 @@
     border-radius: 5px;
     border-top-left-radius: 0;
     box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
-    padding: 40px 40px 0 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 3.5em 0 0 3em;
     .auth-layout__cover__logo {
         position: absolute;
         top: 1em;
-        left: 1.8em;
+        left: 2em;
     }
 
     .auth-layout__cover__center {
-      text-align: left;
-      margin-top: 5vh;
       .auth-layout__cover__center__text {
         position: relative;
         left: 10px;
@@ -60,7 +58,7 @@
       .auth-layout__cover__center {
         margin: 0;
         position: relative;
-        bottom: 0.8em;
+        bottom: 1.2em;
 
         .auth-layout__cover__center-flex {
           margin-top: 4.8em;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import './AuthForm.scss';
 
@@ -17,6 +18,7 @@ const AuthForm = (props) => {
     errorEmail,
     errorPassword,
     isSignin,
+    onRemember,
   } = props;
 
   const renderGoogleButton = () => {
@@ -43,6 +45,13 @@ const AuthForm = (props) => {
           className="auth-form__input"
           fullWidth
         />
+        <div className="auth-form__text">
+          <div>
+            <input type="checkbox" onChange={(e) => onRemember(e.target.checked)} />
+            &nbsp; &nbsp; Remember me
+          </div>
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
         <ButtonKit
           variant="contained"
           onClick={onSubmit}
@@ -51,6 +60,11 @@ const AuthForm = (props) => {
           size="large">
           {isSignin ? 'Sign In' : 'Sign Up'}
         </ButtonKit>
+        <div className="auth-form__or">
+          <hr />
+          <p>OR</p>
+          <hr />
+        </div>
         {renderGoogleButton()}
       </FormcontrolKit>
     </div>
