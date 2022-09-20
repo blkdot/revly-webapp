@@ -1,15 +1,12 @@
 @import '../../../library.scss';
 
 .signin-form {
-  position: relative;
-  height: 90vh;
-  display: flex;
-
   .signin-form__get-started {
     position: absolute;
-    top: 40px;
-    right: 40px;
-    font-weight: bold;
+    top: 1em;
+    right: 1em;
+    font-size: 14px;
+    font-weight: 600;
 
     .__get-started__link {
       color: $color-green-second;
@@ -19,8 +16,7 @@
 
   .signin-form__block {
     margin: auto;
-    min-width: 340px;
-    max-width: 520px;
+    width: 60%;
 
     .__block-head {
       margin-bottom: 1.6rem;

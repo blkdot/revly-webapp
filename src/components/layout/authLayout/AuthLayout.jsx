@@ -30,15 +30,6 @@ const AuthLayout = () => (
       </div>
     </div>
     <div className="auth-layout__form-block">
-      {/* <div className="auth-layout__form-block__form">
-        <p className="auth-layout__form-block__form__text">Enroll in our Beta.</p>
-        <p className="auth-layout__form-block__form__subtext">
-          Let&apos;s increase those sales together!
-        </p>
-        <div className="auth-layout__form-block__form__block">
-          <Outlet />
-        </div>
-      </div> */}
       <Outlet />
     </div>
   </div>
