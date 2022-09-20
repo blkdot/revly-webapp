@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import './SigninForm.scss';
 
@@ -24,6 +25,8 @@ const SigninForm = (props) => {
     onChangeRemebered,
   } = props;
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="signin-form">
       <TypographyKit className="signin-form__get-started">
@@ -37,14 +40,14 @@ const SigninForm = (props) => {
           <TypographyKit variant="h5" className="__block-head__title">
             Sign in to Revly
           </TypographyKit>
-          <TypographyKit variant="body2" className="__block-head__sub">
+          <TypographyKit variant="body1" className="__block-head__sub">
             Enter your details below
           </TypographyKit>
         </div>
         <div className="__block-google">
           <ButtonKit
             variant="outlined"
-            size="medium"
+            size="large"
             className="__block-google__button"
             onClick={onGoogleSubmit}>
             <FcGoogle className="__block-google__icon" />
@@ -65,11 +68,24 @@ const SigninForm = (props) => {
         </div>
         <div className="__block-field">
           <TextfieldKit
-            type="password"
             label="Password"
+            type={showPassword ? 'text' : 'password'}
             fullWidth
             onChange={({ target }) => onChangePassword(target.value)}
             error={errorPassword}
+            InputProps={{
+              endAdornment: showPassword ? (
+                <VisibilityOff
+                  onClick={() => setShowPassword(false)}
+                  style={{ cursor: 'pointer', color: '#919eab' }}
+                />
+              ) : (
+                <Visibility
+                  onClick={() => setShowPassword(true)}
+                  style={{ cursor: 'pointer', color: '#919eab' }}
+                />
+              ),
+            }}
           />
         </div>
         <div className="__block-field-check">
@@ -81,7 +97,11 @@ const SigninForm = (props) => {
                   defaultChecked
                 />
               }
-              label={<TypographyKit variant="body2">Remember me</TypographyKit>}
+              label={
+                <TypographyKit variant="body2" className="__block-field-check__text">
+                  Remember me
+                </TypographyKit>
+              }
             />
           </FormGroupKit>
           <Link className="__block-field-check__link" to="/forgot-password">
@@ -89,7 +109,12 @@ const SigninForm = (props) => {
           </Link>
         </div>
         <div>
-          <ButtonKit fullWidth variant="contained" onClick={onSubmit} disabled={disabled}>
+          <ButtonKit
+            fullWidth
+            size="large"
+            variant="contained"
+            onClick={onSubmit}
+            disabled={disabled}>
             Login
           </ButtonKit>
         </div>

@@ -8,6 +8,10 @@ import './SignUpForm.scss';
 import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 import ButtonKit from '../../../../kits/button/ButtonKit';
 import PhoneInputKit from '../../../../kits/phoneInput/PhoneInputKit';
+import TypographyKit from '../../../../kits/typography/TypographyKit';
+import FormGroupKit from '../../../../kits/formGroup/FormGroupKit';
+import FormControlLabelKit from '../../../../kits/formControlLabel/FormControlLabel';
+import CheckboxKit from '../../../../kits/checkbox/CheckboxKit';
 
 const SignUpForm = (props) => {
   const {
@@ -32,8 +36,10 @@ const SignUpForm = (props) => {
 
   return (
     <div className="signup-form">
-      <p className="signup-form__text">Enroll in our Beta.</p>
-      <p className="signup-form__subtext">Let&apos;s increase those sales together!</p>
+      <TypographyKit className="signup-form__text">Enroll in our Beta.</TypographyKit>
+      <TypographyKit className="signup-form__subtext">
+        Let&apos;s increase those sales together!
+      </TypographyKit>
       <div className="signup-form__form">
         <div className="signup-form__flex">
           <TextfieldKit
@@ -109,13 +115,17 @@ const SignUpForm = (props) => {
             ),
           }}
         />
-        <div className="signup-form__check">
-          <input type="checkbox" onChange={(e) => onChangeAgree(e.target.checked)} />
-          &nbsp; &nbsp; By signing up, I agree to Revly <Link to="/term-of-use">
-            Term of Use
-          </Link>{' '}
-          and <Link to="/privacy-policy">Privacy Policy</Link>.
-        </div>
+        <FormGroupKit className="signup-form__check">
+          <FormControlLabelKit
+            control={<CheckboxKit onChange={({ target }) => onChangeAgree(target.checked)} />}
+            label={
+              <TypographyKit variant="body2" className="signup-form__check__text">
+                By signing up, I agree to Revly <Link to="/term-of-use">Term of Use</Link> and{' '}
+                <Link to="/privacy-policy">Privacy Policy</Link>.
+              </TypographyKit>
+            }
+          />
+        </FormGroupKit>
         <ButtonKit
           variant="contained"
           onClick={onSubmit}

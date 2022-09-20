@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 
 import SpinnerKit from '../kits/spinner/SpinnerKit';
 
@@ -16,14 +16,15 @@ const ProtectedOnboardRoutes = () => {
   const { settingsLogin } = useApi();
   const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
   const { timeRefreshToken } = config;
+  const location = useLocation();
 
   useEffect(() => {
     if (!userPlatformData.onboarded) {
-      setAllowed(new Error(''));
+      reccurentLogin();
     }
 
     setAllowed(true);
-  }, []);
+  }, [location]);
 
   const reccurentLogin = async () => {
     const res = await settingsLogin({
@@ -37,7 +38,10 @@ const ProtectedOnboardRoutes = () => {
       return;
     }
 
-    setUserPlatformData(res);
+    setUserPlatformData({
+      onboarded: true,
+      platforms: { ...userPlatformData.platforms, ...res.platforms },
+    });
     setAllowed(true);
   };
 
@@ -58,7 +62,7 @@ const ProtectedOnboardRoutes = () => {
     );
   }
 
-  return allowed instanceof Error ? <Navigate to="/onboarding" /> : <Outlet />;
+  return allowed instanceof Error ? <Navigate to="/check" /> : <Outlet />;
 };
 
 export default ProtectedOnboardRoutes;

@@ -5,6 +5,7 @@
     width: 60%;
     margin: auto;
     text-align: left;
+    max-width: 480px;
 
         
     .signup-form__text {
@@ -103,6 +104,10 @@
         margin-bottom: 1rem;
         margin-top: 1.5rem;
         text-align: left;
+        
+        .signup-form__check__text {
+            font-size: 14px;
+        }
 
         input {
             vertical-align: middle;

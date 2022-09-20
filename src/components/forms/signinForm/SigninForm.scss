@@ -17,19 +17,22 @@
   .signin-form__block {
     margin: auto;
     width: 60%;
+    max-width: 480px;
 
     .__block-head {
-      margin-bottom: 1.6rem;
+      margin-bottom: calc(30px + 1rem);
 
       .__block-head__title {
         text-align: start;
-        margin-bottom: 0.5rem;
+        margin-bottom: 20px;
         font-weight: bold;
+        font-size: 24px;
       }
 
       .__block-head__sub {
         text-align: start;
         color: $color-table-th;
+        font-size: 16px;
       }
     }
 
@@ -65,10 +68,14 @@
       flex-direction: row;
       justify-content: space-between;
 
+      .__block-field-check__text {
+        font-size: 14px;
+      }
+
       .__block-field-check__link {
         color: $color-main;
         text-decoration: none;
-        font-size: 12.25px;
+        font-size: 14px;
         align-self: center;
       }
     }
