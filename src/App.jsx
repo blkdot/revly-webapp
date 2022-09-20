@@ -28,7 +28,7 @@ import AuthLayout from './components/layout/authLayout/AuthLayout';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#826AF9',
+      main: '#4D2681',
     },
   },
 });
