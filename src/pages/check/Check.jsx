@@ -11,7 +11,7 @@ import SpinnerKit from '../../kits/spinner/SpinnerKit';
 const Check = () => {
   const { settingsOnboarded } = useApi();
   const navigate = useNavigate();
-  const { setUserPlatformData } = usePlatform();
+  const { setUserPlatformData, userPlatformData } = usePlatform();
   const { user } = useUserAuth();
 
   const getPlatformData = async () => {
@@ -22,9 +22,12 @@ const Check = () => {
       access_token: user.accessToken,
     });
 
-    if (res instanceof Error || !res.onboarded || !res) return navigate('/onboarding');
+    if (res instanceof Error || !res.onboarded) return navigate('/onboarding');
 
-    setUserPlatformData(res);
+    setUserPlatformData({
+      onboarded: true,
+      platforms: { ...userPlatformData.platforms, ...res.platforms },
+    });
 
     return navigate('/dashboard');
   };
