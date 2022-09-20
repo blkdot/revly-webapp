@@ -70,45 +70,24 @@
   .auth-layout__form-block {
     display: flex;
     flex-direction: column;
-    // justify-content: center;
+    justify-content: center;
     width: 55%;
-
-    // .auth-layout__form-block__form {
-    //   text-align: left;
-    //   width: 60%;
-    //   margin: auto;
-    //   .auth-layout__form-block__form__text {
-    //     color: $color-second-third;
-    //     font-weight: 700;
-    //     font-size: 24px;
-    //   }
-
-    //   .auth-layout__form-block__form__subtext {
-    //     color: $color-arrow;
-    //     font-size: 16px;
-    //     margin-top: 20px;
-    //   }
-
-    //   .auth-layout__form-block__form__block {
-    //     margin-top: 30px;
-    //   }
-
-    // }
   }
 
-  @include breakpoint($breakpoint-xs, $breakpoint-md) {
+  @include breakpoint($breakpoint-xs, 1115px) {
     display: block;
 
     .auth-layout__cover {
         width: 100%;
 
         .auth-layout__cover__center {
+          margin-top: 2em;
             .auth-layout__cover__center__text {
                 font-size: 20px;
-                top: 1em;
             }
 
             .auth-layout__cover__center-flex {
+                margin-top: 1em;
                 .center-flex__text {
                     font-size: 18px;
                 }

@@ -58,7 +58,6 @@ const SigninForm = (props) => {
         <div className="__block-field">
           <TextfieldKit
             label="Email address"
-            size="small"
             fullWidth
             onChange={({ target }) => onChangeEmail(target.value)}
             error={errorEmail}
@@ -68,7 +67,6 @@ const SigninForm = (props) => {
           <TextfieldKit
             type="password"
             label="Password"
-            size="small"
             fullWidth
             onChange={({ target }) => onChangePassword(target.value)}
             error={errorPassword}
