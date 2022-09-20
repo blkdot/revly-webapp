@@ -5,16 +5,19 @@ import Finance from "../../components/finance/Finance";
 import Marketing from "../../components/marketing/Marketing";
 import RestaurantDropdown from "../../components/restaurantDropdown/RestaurantDropdown";
 import { restaurantNames } from "../../data/fakeDataDashboard";
+import useMetrics from "../../hooks/useMetrics";
 
 const Dashboard = () => {
+  const { metricsLeft, metricsRight } = useMetrics();
+
   return (
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown names={restaurantNames} />
         <Dates />
       </div>
-      <Finance />
-      <Marketing />
+      <Finance metricsLeft={metricsLeft} metricsRight={metricsRight}/>
+      <Marketing metricsLeft={metricsLeft} metricsRight={metricsRight} />
     </div>
   );
 };

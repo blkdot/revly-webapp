@@ -2,7 +2,7 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import "./Dates.scss"
 import React from "react";
-import { endOfMonth, getWeek, subDays, subMonths, subWeeks, getMonth, endOfWeek } from "date-fns";
+import { endOfMonth, getWeek, subDays, subMonths, subWeeks, getMonth, endOfWeek, startOfWeek, startOfMonth } from "date-fns";
 import PaperKit from "../../kits/paper/PaperKit";
 import ButtonKit from "../../kits/button/ButtonKit";
 
@@ -21,7 +21,6 @@ const RightDateSelect = ({ setRightDate, rightDate, selected, setOpenedRight, se
   const dateGetDay = date.getDay();
   const dateGetDate = date.getDate();
 
-
   const openRight = () => {
     setRightDate([{ startDate: startDate, endDate: endDate, key: "selection" }])
     setRightDateBtn({ startDate: startDate, endDate: endDate })
@@ -36,11 +35,21 @@ const RightDateSelect = ({ setRightDate, rightDate, selected, setOpenedRight, se
           onClick={() => {
             setRightDateBtn(
               {
-                startDate: subDays(startDateLeft, 1),
-                endDate: subDays(endDateLeft, 1),
+                startDate: subDays(date, 1),
+                endDate: subDays(date, 1),
               })
-            setTitleRight("day - 1")
-          }}>Day - 1</ButtonKit>
+            setTitleRight("yesterday")
+          }}>Yesterday</ButtonKit>
+        <ButtonKit
+          className="navbar-button-kit"
+          onClick={() => {
+            setRightDateBtn(
+              {
+                startDate: subDays(date, 1),
+                endDate: subDays(date, 1),
+              })
+            setTitleRight("the day before")
+          }}>Day before</ButtonKit>
         <ButtonKit
           className="navbar-button-kit"
           onClick={() => {
@@ -49,7 +58,7 @@ const RightDateSelect = ({ setRightDate, rightDate, selected, setOpenedRight, se
                 startDate: subWeeks(startDateLeft, 1),
                 endDate: subWeeks(endDateLeft, 1),
               })
-            setTitleRight("Same day last week")
+            setTitleRight("the same day last week")
           }}
         >Same day last week</ButtonKit>
         <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Day</ButtonKit>
@@ -64,11 +73,21 @@ const RightDateSelect = ({ setRightDate, rightDate, selected, setOpenedRight, se
           onClick={() => {
             setRightDateBtn(
               {
+                startDate: startOfWeek(subWeeks(date, 1)),
+                endDate: endOfWeek(subWeeks(date, 1)),
+              })
+            setTitleRight("last week")
+          }}>Last week</ButtonKit>
+        <ButtonKit
+          className="navbar-button-kit"
+          onClick={() => {
+            setRightDateBtn(
+              {
                 startDate: subWeeks(startDateLeft, 1),
                 endDate: endOfWeek(subWeeks(endDateLeft, 1)),
               })
-            setTitleRight("Week - 1")
-          }}>Week - 1</ButtonKit>
+            setTitleRight("week before")
+          }}>Week before</ButtonKit>
         <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Week</ButtonKit>
       </div >
     )
@@ -81,11 +100,11 @@ const RightDateSelect = ({ setRightDate, rightDate, selected, setOpenedRight, se
           onClick={() => {
             setRightDateBtn(
               {
-                startDate: subMonths(startDateLeft, 1),
-                endDate: endOfMonth(subMonths(endDateLeft, 1)),
+                startDate: startOfMonth(subMonths(date, 1)),
+                endDate: endOfMonth(subMonths(date, 1)),
               })
-            setTitleRight("Month - 1")
-          }}>Month - 1</ButtonKit>
+            setTitleRight("last month")
+          }}>Last month</ButtonKit>
 
         <ButtonKit className="navbar-button-kit" onClick={openRight}>Custom Month</ButtonKit>
       </div>

@@ -16,13 +16,15 @@ import RoiIcon from "../../assets/images/roi.png"
 import useDate from '../../hooks/useDate';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
-const Widget = ({ procent, title, setTable, table, coin }) => {
+const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
   const { titleRightDate, rightDate } = useDate();
   const startLocal = rightDate.startDate.toLocaleDateString();
   const endLocal = rightDate.endDate.toLocaleDateString();
   const startGetDate = rightDate.startDate.getDate();
   const endGetDate = rightDate.endDate.getDate();
+  const procent =  0
   return (
     <CardKit
       className={'card_wrapper ' + (table === title ? 'active' : '')}
@@ -31,35 +33,36 @@ const Widget = ({ procent, title, setTable, table, coin }) => {
       <CardContentKit>
         <TypographyKit component="div" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <TypographyKit variant='subtitle2' className='card-typography' component='div'>
-              {title}
+            <TypographyKit style={{ textTransform: "capitalize" }} variant='subtitle2' className='card-typography' component='div'>
+              {title === "n_orders" ? "orders" : title === "average_basket" ? "Avg.basket" : title}
             </TypographyKit>
             <TypographyKit variant='h3' className='card-typography'>
-              {coin}
+              {metricsLeft[2] ? metricsLeft[2][1][title] ? metricsLeft[2][1][title] : "-" : ""}
             </TypographyKit>
           </div>
           <TypographyKit className='card-typography card-icon'>
             {
-              title === "Revenue" ? <PaymentsOutlinedIcon /> : title === "Orders" ?
-                <ShoppingBasketOutlinedIcon /> : title === "Profit" ? <AccountBalanceWalletOutlinedIcon /> :
-                  title === "Avg.Basket" ? <ShoppingBagOutlinedIcon /> :
+              title === "revenue" ? <PaymentsOutlinedIcon /> : title === "n_orders" ?
+                <ShoppingBasketOutlinedIcon /> : title === "profit" ? <AccountBalanceWalletOutlinedIcon /> :
+                  title === "average_basket" ? <ShoppingBagOutlinedIcon /> :
                     title === "Marketing Express" ? <RedeemOutlinedIcon /> :
                       <img src={RoiIcon} alt={title} />
             }
           </TypographyKit>
         </TypographyKit>
         <div className='card_bottom'>
-          <PaperKit className={'icon-paper ' + (procent >= 0 ? 'active-bg' : '')}>
-            <MovingIcon className={procent >= 0 ? 'increased' : 'decreased'} />
+          <PaperKit className={'icon-paper ' + (procent > 0 ? 'increased' : procent < 0 ? 'decreased' : '')}>
+            {procent > 0 ? <MovingIcon className='increased' /> : procent < 0 ? <MovingIcon className='decreased' /> : <ArrowRightAltIcon/>}
+            
           </PaperKit>
-          <TypographyKit className={'card-procent ' + (procent >= 0 ? 'active' : '')} variant='body2'>
+          <TypographyKit className={'card-procent ' + (procent > 0 ? 'increased' : procent < 0 ? 'decreased' : "")} variant='body2'>
             {procent > 0 ? '+' + procent : procent}%
           </TypographyKit>
           <TypographyKit className='card-week' variant='body3'>
             than {" "} {titleRightDate === "custom" ? startLocal === endLocal ? startLocal :
               startGetDate === 1 && endGetDate === endOfMonth(rightDate.startDate, 1).getDate() ?
                 format(rightDate.startDate, 'LLL', { locale: enUS }) + " - " + getYear(rightDate.startDate) :
-                startLocal + " - " + endLocal : titleRightDate}
+                "custom week" : titleRightDate}
           </TypographyKit>
         </div>
       </CardContentKit>

@@ -65,11 +65,15 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: $color-icon;
     overflow: hidden;
+    background-color: $color-light-grey;
 
-    &.active-bg {
+    &.increased {
       background-color: $color-icon-active;
+    }
+
+    &.decreased {
+      background-color: $color-icon;
     }
 
     >svg {
@@ -90,10 +94,14 @@
 
   .card-procent {
     font-weight: 600;
-    color: #ff4642;
+    color: gray;
 
-    &.active {
+    &.increased {
       color: $color-green;
+    }
+
+    &.decreased {
+      color: #ff4642;
     }
   }
 

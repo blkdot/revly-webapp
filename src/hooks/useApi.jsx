@@ -16,7 +16,6 @@ const useApi = () => {
 
     return res;
   };
-  
   const handleError = (err, alert = true) => {
     const message = new Error(err.response.data.detail || err.message);
 
@@ -40,11 +39,11 @@ const useApi = () => {
       .then((res) => handleResponse(res))
       .catch((err) => handleError(err));
 
-  const loginExist = async (body) =>
-    axios
-      .post(`${apiUrl}/login/exist`, body)
-      .then((res) => handleResponse(res, false))
-      .catch((err) => handleError(err, false));
+  const loginExist = async (body) => "false"
+    // axios
+    //   .post(`${apiUrl}/login/exist`, body)
+    //   .then((res) => handleResponse(res, false))
+    //   .catch((err) => handleError(err, false));
 
   const loginPlatform = async (platform, body) =>
     axios
@@ -52,11 +51,18 @@ const useApi = () => {
       .then((res) => handleResponse(res))
       .catch((err) => handleError(err));
 
+  const getMetrics = async (body) =>
+    axios
+      .post(`${apiUrl}/user/metrics`, body)
+      .then((res) => handleResponse(res,false))
+      .catch((err) => handleError(err,false));
+
   return {
     initLogin,
     loginAll,
     loginPlatform,
     loginExist,
+    getMetrics
   };
 };
 

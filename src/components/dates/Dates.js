@@ -43,7 +43,6 @@ const Dates = () => {
   }]);
 
   const location = useLocation();
-
   const handleClick = () => { // handleClick happens when you click on button "OK" on Left date picker
 
     // We put in variables for later use
@@ -422,7 +421,7 @@ const Dates = () => {
 
   const handleClickMonth = (e, type) => {
     e.target.addEventListener(("dblclick"), () =>
-      type === "left" ? handleClick() : handleClickRight()
+      type === "left" ? handleClick() : getRightDate() ? handleClickRight() : ""
     )
   }
 

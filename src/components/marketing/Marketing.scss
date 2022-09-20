@@ -7,6 +7,10 @@
 
 .block {
   margin: 50px 0;
+  >h4:nth-of-type(1) {
+    font-weight: 600;
+
+  }
 }
 
 @media(max-width: 1260px) {
