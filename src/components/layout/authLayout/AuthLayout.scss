@@ -19,7 +19,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     .auth-layout__cover__logo {
       position: absolute;
       top: 1em;
@@ -27,7 +26,9 @@
     }
 
     .auth-layout__cover__center {
-      max-width: 480px;
+      width: 85%;
+      margin: 0 auto 0 auto;
+      margin-top: 6em;
       .auth-layout__cover__center__text {
         position: relative;
         left: 10px;
@@ -40,7 +41,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 4vh;
+        margin-top: 5vh;
         .center-flex__icon {
           width: 50px;
           height: 100px;
@@ -54,18 +55,6 @@
         }
       }
     }
-
-    @media only screen and (min-height: 768px) and (max-height: $breakpoint-infinite) {
-      .auth-layout__cover__center {
-        margin: 0;
-        position: relative;
-        bottom: 1.2em;
-
-        .auth-layout__cover__center-flex {
-          margin-top: 4.8em;
-        }
-      }
-    }
   }
 
   .auth-layout__form-block {
@@ -75,24 +64,29 @@
     width: 55%;
   }
 
-  @include breakpoint($breakpoint-xs, 1115px) {
+  @include tabletBreakpoint {
     display: block;
 
     .auth-layout__cover {
       width: 100%;
 
+      .auth-layout__cover__logo {
+        left: 3em;
+        top: 0;
+      }
+
       .auth-layout__cover__center {
-        margin-top: 2em;
+        margin-top: 6em;
         .auth-layout__cover__center__text {
-          font-size: 20px;
-          text-align: justify;
+          font-size: 28px;
         }
 
         .auth-layout__cover__center-flex {
-          margin-top: 1em;
+          margin-top: 1vh;
           .center-flex__text {
-            font-size: 18px;
+            font-size: 24px;
           }
+        
         }
       }
     }
@@ -101,10 +95,40 @@
       margin-top: 2em;
       padding-bottom: 1em;
       width: 100%;
+    }
+  }
 
-      .auth-layout__form-block__form {
-        width: 90%;
+  @include mobileBreakpoint {
+    display: block;
+
+    .auth-layout__cover {
+      width: 100%;
+
+      .auth-layout__cover__logo {
+        top: 1.8em;
+        left: 0.7em;
       }
+
+      .auth-layout__cover__center {
+        margin-top: 7em;
+        .auth-layout__cover__center__text {
+          font-size: 20px;
+        }
+
+        .auth-layout__cover__center-flex {
+          margin-top: 1vh;
+          .center-flex__text {
+            font-size: 18px;
+          }
+        
+        }
+      }
+    }
+
+    .auth-layout__form-block {
+      margin-top: 2em;
+      padding-bottom: 1em;
+      width: 100%;
     }
   }
 }
