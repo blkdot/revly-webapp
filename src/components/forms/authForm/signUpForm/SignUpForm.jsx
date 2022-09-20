@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import { Link } from 'react-router-dom';
 
@@ -24,41 +25,51 @@ const SignUpForm = (props) => {
     errorEmail,
     errorPassword,
     onChangePhone,
+    onDialChange,
   } = props;
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="signup-form" fullWidth>
       <div className="signup-form__flex">
         <TextfieldKit
-          size="small"
           error={errorFName}
           label="First Name"
           onChange={(e) => onChangeFName(e.target.value)}
           className="signup-form__flex__input"
         />
         <TextfieldKit
-          size="small"
           error={errorLName}
           label="Last Name"
           onChange={(e) => onChangeLName(e.target.value)}
           className="signup-form__flex__input"
         />
       </div>
-      <PhoneInputKit
-        country="ae"
-        onChange={(v) => onChangePhone(`+${v}`)}
-        containerClass="signup-form__input-phone"
-      />
       <TextfieldKit
-        size="small"
         error={errorRestoName}
         label="Restaurant name"
         onChange={(e) => onChangeRestoName(e.target.value)}
         className="signup-form__input"
         fullWidth
       />
+      <div className="signup-form__flex phone">
+        <PhoneInputKit
+          inputProps={{ readOnly: true }}
+          country="ae"
+          onChange={(v, c) => onDialChange(c.dialCode)}
+          specialLabel=""
+          containerClass="signup-form__input-phone"
+        />
+        <TextfieldKit
+          label="Phone number"
+          onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
+          onChange={(e) => onChangePhone(e.target.value)}
+          className="signup-form__input"
+          fullWidth
+        />
+      </div>
       <TextfieldKit
-        size="small"
         error={errorEmail}
         label="Email address"
         onChange={(e) => onChangeEmail(e.target.value)}
@@ -66,18 +77,31 @@ const SignUpForm = (props) => {
         fullWidth
       />
       <TextfieldKit
-        size="small"
         error={errorPassword}
         label="Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         onChange={(e) => onChangePassword(e.target.value)}
         className="signup-form__input"
         fullWidth
+        InputProps={{
+          endAdornment: showPassword ? (
+            <VisibilityOff
+              onClick={() => setShowPassword(false)}
+              style={{ cursor: 'pointer', color: '#919eab' }}
+            />
+          ) : (
+            <Visibility
+              onClick={() => setShowPassword(true)}
+              style={{ cursor: 'pointer', color: '#919eab' }}
+            />
+          ),
+        }}
       />
       <div className="signup-form__check">
         <input type="checkbox" onChange={(e) => onChangeAgree(e.target.checked)} />
-        &nbsp; &nbsp; I agree to the <Link to="/term-of-use">Term of Use</Link> and{' '}
-        <Link to="/privacy-policy">Privacy Policy</Link>
+        &nbsp; &nbsp; By signing up, I agree to Revly <Link to="/term-of-use">
+          Term of Use
+        </Link> and <Link to="/privacy-policy">Privacy Policy</Link>.
       </div>
       <ButtonKit
         variant="contained"
@@ -85,7 +109,7 @@ const SignUpForm = (props) => {
         className="signup-form__input"
         disabled={disabled}
         size="large">
-        Sign Up
+        Register
       </ButtonKit>
     </div>
   );

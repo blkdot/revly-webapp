@@ -13,6 +13,9 @@
 
         @include mobileBreakpoint {
             display: block;
+            &.phone {
+                display: flex;
+            }
             .signup-form__flex__input {
                 width: 100%;
             }
@@ -21,26 +24,57 @@
     
     .signup-form__input {
         width: 100%;
-        margin-top: 1rem;
+        margin-top: 1.6rem;
     }
 
     .signup-form__input-phone {
-        margin-top: 1rem;
+        margin-top: 1.6rem;
 
+        width: 40%;
         input {
-            width: 100%;
-            height: 1.4em;
+            width: 88%;
             background-color: transparent;
+            height: 3.8rem;
+            padding: 19px 14px 18.5px 3vw;
+            color: $color-input-border;
+            border-color: #919eab65;
+            border-radius: 8px;
             &:focus {
                 border: 1.5px solid $color-main;
                 box-shadow: none;
             }
+
+            @include breakpoint($breakpoint-xs, $breakpoint-md) {
+                width: 73%;
+                padding: 19px 14px 18.5px 59px;
+            }
         }
 
-        .special-label {
-            color: $color-gray;
-            font-size: 10px;
-            background-color: #ebdbeb;
+        & .selected-flag {
+            width: 110px;
+
+            &:focus .arrow, .arrow {
+                left: 5.8vw;
+                top: 10%;
+                border: solid $color-second-third;
+                border-width: 0 2px 2px 0;
+                display: inline-block;
+                padding: 4px;
+                transform: rotate(45deg);
+                -webkit-transform: rotate(45deg);
+                transition: transform .2s;
+
+                &.up {
+                    transform: rotate(225deg);
+                    -webkit-transform: rotate(225deg);
+                    border-width: 0 2px 2px 0;
+                    top: 35%
+                }
+
+                @include breakpoint($breakpoint-xs, $breakpoint-md) {
+                    left: 13vw;
+                }
+            }
         }
     }
 
@@ -48,10 +82,15 @@
     .signup-form__check {
         margin-bottom: 1rem;
         margin-top: 1.5rem;
+        text-align: left;
 
         input {
             vertical-align: middle;
             cursor: pointer;
+        }
+
+        a {
+            color: black;
         }
     }
 }

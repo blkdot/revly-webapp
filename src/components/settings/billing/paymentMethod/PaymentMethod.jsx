@@ -5,12 +5,12 @@ import { MoreVert } from '@mui/icons-material';
 import './PaymentMethod.scss';
 
 const PaymentMethod = (props) => {
-  const { type, cvv } = props;
+  const { cvv, type } = props;
 
   return (
     <div className="payment-method">
       <div className="payment-method__text">
-        <p className="payment-method__text__type">{type}</p>
+        <img src={type} className="payment-method__text__type" alt="card" />
         <p className="payment-method__text__cvv">**** **** **** {cvv}</p>
       </div>
       <button type="button" className="payment-method__btn">

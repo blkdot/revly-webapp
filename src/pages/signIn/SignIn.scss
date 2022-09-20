@@ -1,20 +1,16 @@
+@import '../../library.scss';
+
 .signin {
-  text-align: center;
-  text-align: -webkit-center;
-  text-align: -moz-center;
-  margin: auto;
-  display:flex;
-  justify-content:center;
-  flex-direction: column;
+    .signin__signup-text {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        font-size: 14px;
+        font-weight: 600;
 
-  .signin-cover {
-    margin-top: 10%;
-  }
-
-  .card-signin {
-    width: 30rem;
-    text-align: start;
-    padding: 1rem 1rem 1rem;
-    margin: auto;
-  }
+        a {
+            text-decoration: none;
+            color: $color-main;
+        }
+    }
 }

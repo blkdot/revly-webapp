@@ -1,80 +1,59 @@
 @import '../../../library.scss';
 
 .auth-form {
-  position: relative;
-  height: 90vh;
-  display: flex;
+  margin-top: 1rem;
 
-  .auth-form__get-started {
-    position: absolute;
-    top: 40px;
-    right: 40px;
-    font-weight: bold;
+  .auth-form__input {
+    margin-top: 1rem;
 
-    .__get-started__link {
-      color: $color-green-second;
+    &.__google {
+      width: 100% !important;
+      background-color: white !important;
+      box-shadow: none !important;
+      border: 2px solid rgba(225, 218, 218, 0.665) !important;
+      border-radius: 8px !important;
+      & span {
+        display: none;
+      }
+
+      & div {
+        height: 40px !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        margin-top: 3px !important;
+      }
+    }
+  }
+
+  .auth-form__text {
+    display: flex;
+    justify-content: space-between;
+    margin: 2em 0 1em 0;
+
+    div {
+      font-size: 14px;
+    }
+
+    a {
       text-decoration: none;
     }
   }
 
-  .auth-form__block {
-    margin: auto;
-    min-width: 340px;
-    max-width: 520px;
+  .auth-form__or {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.9em 0 0.7em 0;
 
-    .__block-head {
-      margin-bottom: 1.6rem;
-
-      .__block-head__title {
-        text-align: start;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-      }
-
-      .__block-head__sub {
-        text-align: start;
-        color: $color-table-th;
-      }
+    p, hr {
+      color: #637381;
     }
 
-    .__block-google {
-      margin-bottom: 0.8rem;
-      width: 100%;
-
-      .__block-google__button {
-        width: 100%;
-      }
-
-      .__block-google__icon {
-        font-size: 24px;
-      }
-    }
-
-    .__block-divider {
-      text-align: center;
-      margin-bottom: 0.8rem;
-
-      .__block-divider__text {
-        color: $color-table-th;
-      }
-    }
-
-    .__block-field {
-      margin-bottom: 0.8rem;
-    }
-
-    .__block-field-check {
-      margin-bottom: 0.8rem;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-
-      .__block-field-check__link {
-        color: $color-main;
-        text-decoration: none;
-        font-size: 12.25px;
-        align-self: center;
-      }
+    hr {
+      width: 46%;
+      height: 0;
     }
   }
 }
