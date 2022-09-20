@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './SignIn.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
-import AuthForm from '../../components/forms/authForm/AuthForm';
+import SigninForm from '../../components/forms/signinForm/SigninForm';
 import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 
@@ -71,7 +71,7 @@ const SignIn = () => {
   };
 
   return (
-    <AuthForm
+    <SigninForm
       onChangeEmail={handleChange('email')}
       onChangePassword={handleChange('password')}
       onChangeRemebered={handleChangeRemembered}
@@ -80,7 +80,6 @@ const SignIn = () => {
       onSubmit={handleSubmit}
       onGoogleSubmit={handleGoogleSubmit}
       disabled={!value.email || !value.password || processing}
-      isSignin
     />
   );
 };
