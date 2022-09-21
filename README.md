@@ -2,15 +2,15 @@
 
 ## Start the project
 
-We are currently using **yarn**
+We are currently using **npm**
 
-### To run the project with the API in localhost `yarn start`
+### To run the project with the API in localhost `npm run start`
 
-### To run the project with the simulation of our API in localhost `yarn dev`
+### To run the project with the simulation of our API in localhost `npm run dev`
 
-### To run the linter and check every error inside the code `yarn lint`
+### To run the linter and check every error inside the code `npm run lint`
 
-### To run the linter, check and fix every error inside the code `yarn lint:fix`
+### To run the linter, check and fix every error inside the code `npm run lint:fix`
 
 ## Code style
 
