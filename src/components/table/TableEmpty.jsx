@@ -27,13 +27,13 @@ const headCells = [
     id: 'week',
     numeric: true,
     disablePadding: false,
-    label: 'W',
+    label: '',
   },
   {
     id: 'week1',
     numeric: true,
     disablePadding: false,
-    label: 'W - 1',
+    label: '',
   },
   {
     id: 'evolution',
@@ -48,7 +48,9 @@ const EnhancedTableHead = () => (
     <TableRowKit>
       {headCells.map((headCell) => (
         <TableCellKit className="enchanced-table-cell" key={headCell.id}>
-          <TableSortLabelKit direction="asc">{headCell.label}</TableSortLabelKit>
+          <TableSortLabelKit direction="asc">
+            <SkeletonKit variant="rectangular" width={100} />
+          </TableSortLabelKit>
         </TableCellKit>
       ))}
     </TableRowKit>
@@ -65,14 +67,16 @@ const renderRow = () =>
           alt={row.name}
         />
       </TableCellKit>
-      <TableCellKit>{row.week}</TableCellKit>
-      <TableCellKit>{row.week1}</TableCellKit>
       <TableCellKit>
-        <div className="table_evolution">
-          <span>
-            <SkeletonKit variant="rectangular" width={100} />
-          </span>
-        </div>
+        <SkeletonKit variant="rectangular" width={100} />
+      </TableCellKit>
+      <TableCellKit>
+        <SkeletonKit variant="rectangular" width={100} />
+      </TableCellKit>
+      <TableCellKit>
+        <span>
+          <SkeletonKit variant="rectangular" width={100} />
+        </span>
       </TableCellKit>
     </TableRowKit>
   ));
@@ -96,11 +100,9 @@ const Table = () => (
                 <SkeletonKit variant="rectangular" width={100} />
               </TableCellKit>
               <TableCellKit>
-                <div className="table_evolution">
-                  <span>
-                    <SkeletonKit variant="rectangular" width={100} />
-                  </span>
-                </div>
+                <span>
+                  <SkeletonKit variant="rectangular" width={100} />
+                </span>
               </TableCellKit>
             </TableRowKit>
           </TableHeadKit>

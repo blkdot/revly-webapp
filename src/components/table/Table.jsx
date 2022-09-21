@@ -3,150 +3,117 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
-import PropTypes from 'prop-types';
-import { visuallyHidden } from '@mui/utils';
-
 import './Table.scss';
 
+import { endOfMonth, format, getYear } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
 import BoxKit from '../../kits/box/BoxKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
-import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
 import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
 import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
+import useDate from '../../hooks/useDate';
+import talabat from '../../assets/images/talabat.png';
+import deliveroo from '../../assets/images/deliveroo.png';
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+const EnhancedTableHead = ({ headCells }) => (
+  <TableHeadKit className="table-head">
+    <TableRowKit>
+      {headCells.map((headCell) => (
+        <TableCellKit className="enchanced-table-cell" key={headCell.id}>
+          {headCell.label}
+        </TableCellKit>
+      ))}
+    </TableRowKit>
+  </TableHeadKit>
+);
 
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
+  const { titleRightDate, rightDate, titleDate, leftDate } = useDate();
 
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
+  const startLocal = leftDate.startDate.toLocaleDateString();
+  const endLocal = leftDate.endDate.toLocaleDateString();
+  const startGetDate = leftDate.startDate.getDate();
+  const endGetDate = leftDate.endDate.getDate();
+
+  const getTitle = () => {
+    if (title === 'n_orders') {
+      return 'orders';
     }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort, headCells } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHeadKit className="table-head">
-      <TableRowKit>
-        {headCells.map((headCell) => (
-          <TableCellKit
-            className="enchanced-table-cell"
-            key={headCell.id}
-            sortDirection={orderBy === headCell.id ? order : false}>
-            <TableSortLabelKit
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}>
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <BoxKit component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </BoxKit>
-              ) : null}
-            </TableSortLabelKit>
-          </TableCellKit>
-        ))}
-      </TableRowKit>
-    </TableHeadKit>
-  );
-};
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const EnhancedTable = ({ rows, type }) => {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
-      setSelected(newSelected);
-      return;
+    if (title === 'average_basket') {
+      return 'Avg.basket';
     }
-    setSelected([]);
+    if (title === 'accrued_discounts') {
+      return 'marketing express';
+    }
+    return title;
   };
+  const getRightDate = () => {
+    if (titleRightDate === 'custom') {
+      if (startLocalRight === endLocalRight) {
+        return `${dayjs(rightDate.startDate).format('DD/MM')}'s`;
+      }
+      if (
+        startGetDateRight === 1 &&
+        endGetDateRight === endOfMonth(rightDate.startDate, 1).getDate()
+      ) {
+        return `${format(rightDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
+          rightDate.startDate,
+        )}`;
+      }
 
-  const handleClick = (name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+      return `${dayjs(rightDate.startDate).format('DD/MM')} - ${dayjs(rightDate.endDate).format(
+        'DD/MM',
+      )}'s`;
     }
 
-    setSelected(newSelected);
+    return `${titleRightDate}'s`;
+  };
+  const getLeftDate = () => {
+    if (titleDate === 'custom') {
+      if (startLocal === endLocal) {
+        return `${dayjs(leftDate.startDate).format('DD/MM')}'s`;
+      }
+      if (startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate()) {
+        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
+          leftDate.startDate,
+        )}`;
+      }
+
+      return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
+        'DD/MM',
+      )}'s`;
+    }
+
+    return `${titleDate}'s`;
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
+  const startLocalRight = rightDate.startDate.toLocaleDateString();
+  const endLocalRight = rightDate.endDate.toLocaleDateString();
+  const startGetDateRight = rightDate.startDate.getDate();
+  const endGetDateRight = rightDate.endDate.getDate();
   const headCells = [
     {
-      id: 'name',
+      id: 'type',
       numeric: false,
       disablePadding: false,
-      label: type,
+      label: getTitle(),
     },
     {
-      id: 'week',
+      id: 'date',
       numeric: true,
       disablePadding: false,
-      label: 'W',
+      label: getLeftDate(),
     },
     {
-      id: 'week1',
+      id: 'date1',
       numeric: true,
       disablePadding: false,
-      label: 'W - 1',
+      label: getRightDate(),
     },
     {
       id: 'evolution',
@@ -156,77 +123,91 @@ const EnhancedTable = ({ rows, type }) => {
     },
   ];
 
-  const getTotal = (key) => Math.ceil(rows.reduce((a, b) => a + (b[key] || 0), 0));
+  const procentTalabat =
+    metricsLeft[0] && metricsRight[0]
+      ? Number(
+          (
+            (metricsLeft[0][1][title] - metricsRight[0][1][title]) /
+            metricsLeft[0][1][title]
+          ).toFixed(2),
+        )
+      : 0;
+
+  const procentDeliveroo =
+    metricsLeft[0] && metricsRight[0]
+      ? Number(
+          (
+            (metricsLeft[0][1][title] - metricsRight[0][1][title]) /
+            metricsLeft[0][1][title]
+          ).toFixed(2),
+        )
+      : 0;
 
   return (
     <BoxKit sx={{ width: '100%' }}>
       <PaperKit className="table-paper-wrapper">
         <TableContainerKit>
           <TableKit className="table" aria-labelledby="tableTitle" size="medium">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              headCells={headCells}
-            />
+            <EnhancedTableHead headCells={headCells} />
             <TableBodyKit className="table-body">
-              {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-                const isItemSelected = isSelected(row.name);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRowKit
-                    onClick={() => handleClick(row.name)}
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.name}
-                    className="table-row">
-                    <TableCellKit component="th" id={labelId} scope="row">
-                      <img
-                        className={`table-img ${row.name === 'deliveroo' ? 'img-del' : ''}`}
-                        src={row.img}
-                        alt={row.name}
-                      />
-                    </TableCellKit>
-                    <TableCellKit>{row.week}</TableCellKit>
-                    <TableCellKit>{row.week1}</TableCellKit>
-                    <TableCellKit>
-                      <div
-                        className={`table_evolution ${
-                          row.evolution >= 0 ? 'table_increased' : 'table_decreased'
-                        }`}>
-                        <span>
-                          {row.evolution > 0
-                            ? `+${Math.ceil(row.evolution)}`
-                            : Math.ceil(row.evolution)}{' '}
-                          %
-                        </span>
-                      </div>
-                    </TableCellKit>
-                  </TableRowKit>
-                );
-              })}
+              <TableRowKit tabIndex={-1} className="table-row">
+                <TableCellKit component="th" id={0} scope="row">
+                  <img
+                    className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
+                    src={deliveroo}
+                    alt={title}
+                  />
+                </TableCellKit>
+                <TableCellKit>{metricsLeft[0] ? metricsLeft[0][1][title] : '-'}</TableCellKit>
+                <TableCellKit>{metricsRight[0] ? metricsRight[0][1][title] : '-'}</TableCellKit>
+                <TableCellKit>
+                  <div
+                    className={`table_evolution ${procentDeliveroo > 0 ? 'table_increased' : ''} ${
+                      procentDeliveroo < 0 ? 'table_decreased' : ''
+                    }`}>
+                    <span>{Number.isNaN(procentDeliveroo) ? '-' : procentDeliveroo} %</span>
+                  </div>
+                </TableCellKit>
+              </TableRowKit>
+              <TableRowKit tabIndex={-1} key={title} className="table-row">
+                <TableCellKit component="th" id={0} scope="row">
+                  <img
+                    className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
+                    src={talabat}
+                    alt={title}
+                  />
+                </TableCellKit>
+                <TableCellKit>{metricsLeft[1] ? metricsLeft[1][1][title] : '-'}</TableCellKit>
+                <TableCellKit>{metricsRight[1] ? metricsRight[1][1][title] : '-'}</TableCellKit>
+                <TableCellKit>
+                  <div
+                    className={`table_evolution ${procentTalabat > 0 ? 'table_increased' : ''} ${
+                      procentTalabat < 0 ? 'table_decreased' : ''
+                    }`}>
+                    <span>{Number.isNaN(procentTalabat) ? '-' : procentTalabat} %</span>
+                  </div>
+                </TableCellKit>
+              </TableRowKit>
             </TableBodyKit>
             <TableHeadKit>
               <TableRowKit className="table-row table-total">
                 <TableCellKit component="th" scope="row">
                   Total
                 </TableCellKit>
-                <TableCellKit>{getTotal('week')}</TableCellKit>
-                <TableCellKit>{getTotal('week1')}</TableCellKit>
+                <TableCellKit>{metricsLeft[2] ? metricsLeft[2][1][title] : '-'}</TableCellKit>
+                <TableCellKit>{metricsRight[2] ? metricsRight[2][1][title] : '-'}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={`table_evolution ${
-                      getTotal('evolution') >= 0 ? 'table_increased' : 'table_decreased'
-                    }`}>
+                      procentDeliveroo + procentTalabat > 0 ? 'table_increased' : ''
+                    } ${procentDeliveroo + procentTalabat < 0 ? 'table_decreased' : ''}`}>
                     <span>
-                      {getTotal('evolution') > 0
-                        ? `+${getTotal('evolution')}`
-                        : getTotal('evolution')}{' '}
-                      %
+                      <span>
+                        {Number.isNaN(procentDeliveroo + procentTalabat)
+                          ? '-'
+                          : procentDeliveroo + procentTalabat}{' '}
+                        %
+                      </span>
                     </span>
                   </div>
                 </TableCellKit>

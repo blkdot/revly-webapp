@@ -69,6 +69,7 @@
 }
 
 .date-range.date-range {
+  left: 0;
   opacity: 0;
   visibility: hidden;
   z-index: 800;
@@ -292,15 +293,27 @@
     background: #704cfc;
     font-size: 12px;
 
-    &.date-disabled-btn {
-      cursor: not-allowed;
-      background: grey;
-    }
-
     &:hover {
       background: #704cfc;
     }
+
+    &.date-disabled-btn {
+      background: $color-light-grey;
+      pointer-events: all;
+      cursor: not-allowed;
+
+      &:hover {
+        background: $color-light-grey;
+      }
+    }
+
   }
+}
+
+.dashboard-date {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
 }
 
 @media(max-width: 1260px) {
