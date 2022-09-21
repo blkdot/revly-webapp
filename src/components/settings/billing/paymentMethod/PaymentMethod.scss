@@ -2,7 +2,7 @@
 @import '../../../../responsiveness.scss';
 
 .payment-method {
-    border: 1px solid $color-border;
+    border: 1px solid $color-light;
     padding: 10px 13px 10px 13px;
     border-radius: 6px;
     margin: 13px 0;
@@ -20,9 +20,9 @@
         height: 30px;
         transition: .3s;
         color: $color-gray;
+        cursor: pointer;
         &:hover {
-            background-color: $color-second;
-            cursor: pointer;
+            background-color: $color-light;
         }
     }
 
@@ -31,14 +31,14 @@
     }
 
     .payment-method__text {
-        margin-top: -6px;
         .payment-method__text__type {
-            font-size: 20px;
+            width: 40px;
+            height: 30px;
         }
 
         .payment-method__text__cvv {
-            font-weight: bolder;
-            font-size: 16px;
+            font-weight: 600;
+            font-size: 14px;
         }
     }
 }

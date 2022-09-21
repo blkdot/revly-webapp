@@ -42,10 +42,7 @@ const NewSettingsOnboarding = () => {
 
   useEffect(() => {
     platformList.forEach(({ name }) => {
-      if (
-        userPlatformData.platforms[name].active_status &&
-        !userPlatformData.platforms[name].registered
-      ) {
+      if (userPlatformData.platforms[name].active && !userPlatformData.platforms[name].registered) {
         SetPlatformActiveModal(name);
         setIsOpenModal(true);
       }
@@ -148,7 +145,7 @@ const NewSettingsOnboarding = () => {
         src={p.src}
         type={p.name}
         onChangeSwitch={handleSwitchChange(p.name)}
-        active={userPlatformData.platforms[p.name].active_status}
+        active={userPlatformData.platforms[p.name].active}
         registered={userPlatformData.platforms[p.name].registered}
         onClick={handleClick(p.name)}
       />

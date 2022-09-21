@@ -7,6 +7,7 @@ import './SignUp.scss';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
+import useApi from '../../hooks/useApi';
 
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 
@@ -18,19 +19,23 @@ const SignUp = () => {
     fname: '',
     lname: '',
     restoName: '',
+    dial: '+971',
     isAgree: false,
+    pointOfSale: '',
   });
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
-  const { showAlert, setAlertMessage } = useAlert();
+  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
   const [errorData, setErrorData] = useState({
     email: false,
     password: false,
     fname: false,
     lname: false,
     restoName: false,
+    pointOfSale: false,
   });
+  const { settingsSave } = useApi();
 
-  const { signUp } = useUserAuth();
+  const { signUp, verifyEmail, logOut } = useUserAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -41,16 +46,27 @@ const SignUp = () => {
       await updateProfile(credential.user, {
         displayName: `${value.fname} ${value.lname}`,
       });
-      navigate('/check');
+      await settingsSave({
+        master_email: credential.user.email,
+        data: {
+          property1: value.restoName.trim(),
+          property2: value.pointOfSale.trim(),
+        },
+      });
+      await verifyEmail(credential.user);
+      await logOut();
+      navigate('/');
+      triggerAlertWithMessageSuccess(
+        'We sent an email verification to your email, please check it (include spam) before signin',
+      );
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
-      if (message && firebaseCodeError[e.code].field) {
+      if (firebaseCodeError[e.code] && firebaseCodeError[e.code].field) {
         setErrorData({ [firebaseCodeError[e.code].field]: true });
       }
 
-      setAlertMessage(message);
-      showAlert();
+      triggerAlertWithMessageError(message);
       setProcessing(false);
     }
   };
@@ -60,47 +76,47 @@ const SignUp = () => {
     setValue({ ...value, [k]: v });
   };
 
+  const onInputBlur = (e) => {
+    if (!value[e]) {
+      setErrorData({ ...errorData, [e]: true });
+    }
+  };
+
   const isDisabled = () =>
-    !value.email || !value.password || processing || !value.fname || !value.lname || !value.isAgree;
+    !value.email ||
+    !value.password ||
+    processing ||
+    !value.fname ||
+    !value.lname ||
+    !value.isAgree ||
+    !value.restoName ||
+    !value.pointOfSale;
 
   return (
     <div className="signup">
-      <div className="signup-cover">
-        <h1>Text</h1>
-        <h1>Text</h1>
-        <h1>Text</h1>
-      </div>
-      <div className="card-signup">
-        <p className="card-signup__signin-text">
-          Already have an account yet ? <Link to="/"> Sign in.</Link>
-        </p>
-
-        <div className="card-signup__form">
-          <img
-            className="card-signup__form__logo"
-            src="/images/cover.png"
-            alt="cover"
-            width={300}
-          />
-          <h2>Sign up</h2>
-          <SignUpForm
-            onChangeEmail={handleChange('email')}
-            onChangeFName={handleChange('fname')}
-            onChangeLName={handleChange('lname')}
-            onChangeRestoName={handleChange('restoName')}
-            onChangePassword={handleChange('password')}
-            onChangePhone={handleChange('phone')}
-            onChangeAgree={handleChange('isAgree')}
-            errorFName={errorData.fname}
-            errorLName={errorData.lname}
-            errorRestoName={errorData.restoName}
-            errorEmail={errorData.email}
-            errorPassword={errorData.password}
-            onSubmit={handleSubmit}
-            disabled={isDisabled()}
-          />
-        </div>
-      </div>
+      <p className="signup__signin-text">
+        Already have an account? &nbsp; <Link to="/">Sign In</Link>
+      </p>
+      <SignUpForm
+        onChangeEmail={handleChange('email')}
+        onChangeFName={handleChange('fname')}
+        onChangePointOfSales={handleChange('pointOfSale')}
+        onChangeLName={handleChange('lname')}
+        onChangeRestoName={handleChange('restoName')}
+        onChangePassword={handleChange('password')}
+        onChangePhone={handleChange('phone')}
+        onDialChange={handleChange('dial')}
+        onChangeAgree={handleChange('isAgree')}
+        onBlur={onInputBlur}
+        errorFName={errorData.fname}
+        errorLName={errorData.lname}
+        errorRestoName={errorData.restoName}
+        errorEmail={errorData.email}
+        errorPassword={errorData.password}
+        errorPointOfSale={errorData.pointOfSale}
+        onSubmit={handleSubmit}
+        disabled={isDisabled()}
+      />
     </div>
   );
 };

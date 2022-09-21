@@ -1,7 +1,8 @@
 [
     {
       "name": "Jordan",
-      "code": "JO"
+      "code": "JO",
+      "dial": "+962"
     },
     {
       "name": "Kuwait",
@@ -30,5 +31,13 @@
     {
       "name": "Madagascar",
       "code": "MG"
+    },
+    {
+      "name": "Maroc",
+      "code": "MA"
+    },
+    {
+      "name": "France",
+      "code": "FR"
     }
 ]

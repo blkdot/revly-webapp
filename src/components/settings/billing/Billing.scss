@@ -4,6 +4,10 @@
 .billing {
     display: flex;
     justify-content: space-between;
+    .billing__card-title {
+        color: rgb(99, 115, 129);
+        font-weight: 700;
+    }
     .billing__block-1 {
         width: 58%;
 
@@ -20,8 +24,7 @@
             }
 
             .billing__plan__flex__text {
-                text-transform: capitalize;
-                font-weight: bolder;
+                font-weight: 700;
                 font-size: 25px;
                 margin-top: 20px;
             }

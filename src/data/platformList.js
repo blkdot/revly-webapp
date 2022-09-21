@@ -13,7 +13,7 @@ export const platformContexDefaultFormat = {
       ...acc,
       [name]: {
         registered: false,
-        active_status: false,
+        active: false,
         access_token: null,
         access_token_bis: null,
       },
