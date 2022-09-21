@@ -6,8 +6,14 @@
   grid-gap: 20px;
   align-items: center;
 
-  >span {
-    width: 80px;
+  .dashboard-date {
+    display: flex;
+    align-items: center;
+    grid-gap: 20px;
+
+    >span {
+      width: 80px;
+    }
   }
 }
 
@@ -303,11 +309,13 @@
 
   }
 }
-.dashboard-date{
+
+.dashboard-date {
   display: flex;
   align-items: center;
   grid-gap: 20px;
 }
+
 @media(max-width: 1260px) {
   .date-range.date-range {
     top: 120px;

@@ -1,0 +1,55 @@
+@import '../../library.scss';
+
+.image-upload-container {
+    border-radius: 50%;
+    border: 0.3px dashed $color-border;
+    padding: 6px;
+    height: 124px;
+    width: 124px;
+
+    .image-upload {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            cursor: pointer;
+            & .image-upload__placeholder  {
+                &.__withfile {
+                    cursor: pointer;
+                    opacity: .6;
+                    background-color: $color-wrapper;
+                }
+            }
+        }
+
+        .image-upload__avatar {
+            height: 110px;
+            width: 110px;
+        }
+
+
+        .image-upload__placeholder {
+            position: absolute;
+            height: 110px;
+            width: 110px;
+            border-radius: 50%;
+            display: flex;
+            transition: .3s;
+            align-items: center;
+            color: $color-third;
+            flex-direction: column;
+            justify-content: center;
+            background-color: $color-arrow;
+            &.__withfile {
+                opacity: 0;
+            }
+
+            .image-upload__placeholder__text {
+                font-weight: bold;
+                font-size: 12px;
+            }
+        }
+    }
+}

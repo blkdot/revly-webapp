@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import './responsiveness.scss';
+
 $base-font: 'Public Sans', sans-serif;
 
 $color-main: #4d2681;
@@ -20,6 +22,7 @@ $color-gray: #908c8c;
 
 $color-wrapper: #212b36;
 
+$color-table-th: #637381;
 $color-evolution-green: #54d62626;
 $color-evolution-red: #ff48424d;
 

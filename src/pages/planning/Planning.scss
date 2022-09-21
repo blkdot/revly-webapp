@@ -1,0 +1,62 @@
+@import "../../library.scss";
+
+.planning_top-nav {
+  position: relative;
+  display: flex;
+  grid-gap: 35px;
+  margin-top: 50px;
+  margin-bottom: 40px;
+
+  > h4 {
+    
+    cursor: pointer;
+    text-decoration: none;
+    color: $color-gray;
+    font-size: 2.125rem;
+    transition: .4s;
+
+    &.active {
+      color: $color-main;
+    }
+
+    &:hover {
+      color: $color-main;
+    }
+  }
+  &::before{
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 2px;
+    background: $color-main;
+    bottom: -5px;
+    left: -5px;
+    transition: .4s;
+  }
+  &.active{
+    &::before{
+      left: 100px;
+    }
+  }
+}
+
+.planning_offers-table-container.planning_offers-table-container {
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
+    0 2px 4px -1px rgb(145 158 171 / 24%);
+  border-radius: 8px;
+
+  th,
+  tr,
+  td {
+    border-bottom: none !important;
+    font-size: 15px;
+  }
+
+  .planning_table-head {
+    background-color: rgb(244, 246, 248);
+
+    th {
+      color: $color-table-th;
+    }
+  }
+}

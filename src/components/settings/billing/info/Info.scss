@@ -1,0 +1,24 @@
+@import '../../../../library.scss';
+
+.info {
+    background-color: $color-main-light;
+    padding: 23px;
+    border-radius: 10px;
+    margin: 13px 0;
+
+    .info__name {
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    p {
+        margin-bottom: 13px;
+        span {
+            color: $color-gray;
+        }
+    }
+
+    .info__btn-flex {
+        margin-top: 13px;
+    }
+}

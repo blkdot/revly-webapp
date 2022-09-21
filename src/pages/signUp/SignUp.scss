@@ -1,20 +1,75 @@
+@import '../../responsiveness.scss';
+@import '../../library.scss';
+
 .signup {
   text-align: center;
   text-align: -webkit-center;
   text-align: -moz-center;
-  margin: auto;
   display:flex;
-  justify-content:center;
-  flex-direction: column;
+  align-items: stretch;
+  height: 100vh;
+  overflow-y: hidden;
 
   .signup-cover {
-    margin-top: 10%;
+    width: 45%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    color: wheat;
+    background-color: $color-main;
+    h1 {
+      margin: 1rem 0;
+    }
   }
 
   .card-signup {
-    width: 30rem;
-    text-align: start;
-    padding: 1rem 1rem 1rem;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 55%;
+    text-align: left;
+    background-color: #ebdbeb;
+
+    .card-signup__signin-text {
+      position: absolute;
+      right: 1rem;
+      top: 1.5rem;
+    }
+
+    .card-signup__form {
+      padding: 8rem 5rem 5rem 5rem;
+
+      .card-signup__form__logo {
+        position: relative;
+        width: 10rem;
+        height: 5rem;
+        left: 11.5rem;
+        top: 10px;
+        object-fit: contain;
+      }
+    }
   }
+
+  @include breakpoint($breakpoint-xs, $breakpoint-lg)  {
+    display: block;
+
+    .signup-cover {
+      width: 100%;
+    }
+
+    .card-signup {
+      width: 100%;
+      .card-signup__signin-text {
+        position: relative;
+        margin: 20px 0;
+      }
+
+      .card-signup__form {
+        padding: 1rem;
+      }
+    }
+  }
+
 }

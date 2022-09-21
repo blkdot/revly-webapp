@@ -1,14 +1,14 @@
 import * as React from 'react';
 import StoreIcon from '@mui/icons-material/Store';
 
-import "./RestaurantDropdown.scss"
+import './RestaurantDropdown.scss';
 
 import SelectKit from '../../kits/select/SelectKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit'
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import useDate from '../../hooks/useDate';
 
@@ -23,7 +23,7 @@ const MenuProps = {
   },
 };
 
-export default function RestaurantDropdown({ names }) {
+const RestaurantDropdown = ({ names }) => {
   const { setRestaurants, restaurants } = useDate();
 
   const handleChange = (event) => {
@@ -31,9 +31,7 @@ export default function RestaurantDropdown({ names }) {
       target: { value },
     } = event;
     if (value.length > 0) {
-      setRestaurants(
-        typeof value === 'string' ? value.split(',') : value,
-      );
+      setRestaurants(typeof value === 'string' ? value.split(',') : value);
     }
   };
 
@@ -41,7 +39,7 @@ export default function RestaurantDropdown({ names }) {
     <div className="restaurant-dropdown_wrapper">
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
         <InputLabelKit className="restaurant-dropdown-input" id="demo-multiple-checkbox-label">
-          <StoreIcon sx={{ color: "gray" }} />
+          <StoreIcon sx={{ color: 'gray' }} />
           Vendors
         </InputLabelKit>
         <SelectKit
@@ -52,8 +50,7 @@ export default function RestaurantDropdown({ names }) {
           onChange={handleChange}
           input={<OutlindeInputKit label="_Vendors" />}
           renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}
-        >
+          MenuProps={MenuProps}>
           {names.map((name) => (
             <MenuItemKit key={name} value={name}>
               <CheckboxKit checked={restaurants.indexOf(name) > -1} />
@@ -64,4 +61,6 @@ export default function RestaurantDropdown({ names }) {
       </FormcontrolKit>
     </div>
   );
-}
+};
+
+export default RestaurantDropdown;

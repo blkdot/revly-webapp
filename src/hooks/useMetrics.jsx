@@ -9,35 +9,32 @@ function useMetrics() {
   const [metricsLeft, setMetricsLeft] = useState([]);
   const [metricsRight, setMetricsRight] = useState([]);
 
- 
-  const handleRequest = (date,setMetrics) => {
-    let isCancelled = false
+  const handleRequest = (date, setMetrics) => {
+    let isCancelled = false;
     getMetrics({
-      master_email: "chiekh.alloul@gmail.com",
-      access_token: "",
+      master_email: 'chiekh.alloul@gmail.com',
+      access_token: '',
       vendors: restaurants,
       start_date: dayjs(date.startDate).format('YYYY/MM/DD'),
-      end_date: dayjs(date.endDate).format('YYYY/MM/DD')
-    })
-      .then((data) => {
-        if (!isCancelled) {
-          setMetrics(Object.entries(data.data.metrics))
-        }
-      })
+      end_date: dayjs(date.endDate).format('YYYY/MM/DD'),
+    }).then((data) => {
+      if (!isCancelled) {
+        setMetrics(Object.entries(data.data.metrics));
+      }
+    });
     return () => {
-      isCancelled = true
-    }
-  }
+      isCancelled = true;
+    };
+  };
   useMemo(() => {
-    handleRequest(rightDate,setMetricsRight)
+    handleRequest(rightDate, setMetricsRight);
   }, [rightDate, restaurants]);
 
-
   useMemo(() => {
-    handleRequest(leftDate,setMetricsLeft)
-  }, [leftDate, restaurants])
+    handleRequest(leftDate, setMetricsLeft);
+  }, [leftDate, restaurants]);
 
-  return { metricsLeft, metricsRight }
+  return { metricsLeft, metricsRight };
 }
 
 export default useMetrics;

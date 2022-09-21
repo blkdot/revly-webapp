@@ -1,0 +1,24 @@
+@import '../../../../library.scss';
+
+.invoice {
+    display: flex;
+    justify-content: space-between;
+    margin: 14px 0;
+
+    .invoice__date {
+        width: 65%;
+    }
+
+    .invoice__link {
+        color: $color-border;
+        text-align: right;
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    p {
+        width: 20%;
+    }
+}

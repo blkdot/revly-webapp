@@ -2,31 +2,38 @@ import React from 'react';
 
 import './PlatformSelector.scss';
 
-const PlatformSelector = (props) => {
-  const { items, onClickItem, state } = props;
+import PlatformBoxSelector from '../platformBoxSelector/PlatformBoxSelector';
 
-  const getState = (n) => (state[n] === true ? '__active' : '');
+const PlatformSelector = (props) => {
+  const { items, onClickItem, state, platforms, noText } = props;
+
+  const getState = (n) => state[n] === true;
 
   const renderItems = () =>
     items.map((item) => (
-      <div
+      <PlatformBoxSelector
         key={item.name}
-        className={`onboarding-platform__selector-item ${getState(item.name)}`}
-        onClick={() => onClickItem(item.name)}
-        onKeyDown={() => onClickItem(item.name)}
-        role="button"
-        tabIndex="0"
-      >
-        <img src={item.src} alt={item.name} width='100' />
-      </div>
+        item={item}
+        onClickItem={onClickItem}
+        classActive={getState(item.name)}
+        platforms={platforms}
+      />
     ));
 
-  return (
-    <div className='onboarding-platform'>
+  const renderText = () => {
+    if (noText) return null;
+
+    return (
       <p>
         Select the delivery platforms that you are using so that we can show you the power of Revly
       </p>
-      <div className='onboarding-platform__selector'>{renderItems()}</div>
+    );
+  };
+
+  return (
+    <div className="onboarding-platform">
+      {renderText()}
+      <div className="onboarding-platform__selector">{renderItems()}</div>
     </div>
   );
 };

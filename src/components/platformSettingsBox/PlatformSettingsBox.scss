@@ -1,0 +1,43 @@
+@import '../../library.scss';
+
+.platform-settings-box {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.4rem;
+  background-color: $color-third;
+  margin: 0.5rem auto;
+  box-shadow: 0 0 1px 0 #919eab7a, 0 2px 4px -1px #919eab3d;
+
+  .platform-settings-box__content {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+
+    .__content__image {
+      img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+      }
+      width: 100px;
+    }
+
+    .__content__label {
+      align-self: center;
+      width: 100%;
+      margin-left: 0.5rem;
+      color: $color-arrow;
+    }
+
+    .__content__switch {
+      width: 100px;
+      align-self: center;
+    }
+  }
+
+  .__footer-action {
+    position: absolute;
+    bottom: 2px;
+    left: 47%;
+  }
+}

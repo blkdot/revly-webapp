@@ -1,5 +1,5 @@
 import React from 'react';
-import MuiAccordion from "@mui/material/Accordion";
+import MuiAccordion from '@mui/material/Accordion';
 
 const AccordionKit = (props) => <MuiAccordion {...props} />;
 

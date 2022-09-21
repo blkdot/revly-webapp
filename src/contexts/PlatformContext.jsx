@@ -1,21 +1,46 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useMemo, useEffect } from 'react';
+
+import { platformContexDefaultFormat } from '../data/platformList';
+
+import config from '../setup/config';
 
 export const PlatformContext = createContext();
 
-export const PlatformProvider = ({ children }) => {
-  const [platformToken, setPlatformToken] = useState([]);
-  const [isOnboarded, setIsOnboarded] = useState(false);
+const { environment } = config;
 
-  return (
-    <PlatformContext.Provider
-      value={{
-        platformToken,
-        setPlatformToken,
-        isOnboarded,
-        setIsOnboarded
-      }}
-    >
-      {children}
-    </PlatformContext.Provider>
+const defaultState = () => {
+  if (environment !== 'dev') return platformContexDefaultFormat;
+
+  const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
+
+  if (!stringFakeOnboarding) return platformContexDefaultFormat;
+
+  return JSON.parse(stringFakeOnboarding);
+};
+
+export const PlatformProvider = ({ children }) => {
+  const [userPlatformData, setUserPlatformData] = useState(defaultState());
+
+  useEffect(() => {
+    if (environment !== 'dev') return;
+
+    localStorage.setItem('fakeOnboarding', JSON.stringify(userPlatformData));
+  }, [userPlatformData]);
+
+  const cleanPlatformData = () => {
+    if (JSON.stringify(userPlatformData) === JSON.stringify(platformContexDefaultFormat)) return;
+
+    setUserPlatformData(platformContexDefaultFormat);
+  };
+
+  const PlatformWrapper = useMemo(
+    () => ({
+      userPlatformData,
+      setUserPlatformData,
+      cleanPlatformData,
+    }),
+    [userPlatformData],
   );
+
+  return <PlatformContext.Provider value={PlatformWrapper}>{children}</PlatformContext.Provider>;
 };

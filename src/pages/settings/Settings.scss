@@ -1,0 +1,32 @@
+@import '../../library.scss';
+
+.setting-account {
+  margin-top: 7.5rem;
+  
+  @include tabletBreakpoint {
+    margin-top: 11.5rem;
+  }
+
+  @include mobileBreakpoint {
+    margin-top: 18rem;
+  }
+
+  .setting-account__tabs {
+    
+    .setting-account__tabs-tab {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      color: $color-gray;
+      font-size: 14px;
+  
+      &.__active {
+        color: $color-main;
+      }
+  
+      &:hover {
+        color: $color-main;
+      }
+    }
+  }
+}

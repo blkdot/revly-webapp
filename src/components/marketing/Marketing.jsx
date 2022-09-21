@@ -1,50 +1,75 @@
 import React, { useState } from 'react';
-import "./Marketing.scss";
+import './Marketing.scss';
+import { endOfMonth, format, getYear } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
 import Widget from '../widget/Widget';
 import Table from '../table/Table';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
-import { endOfMonth, format, getYear } from 'date-fns';
-import { enUS } from 'date-fns/locale';
-import dayjs from 'dayjs';
 
-const Marketing = ({metricsLeft,metricsRight}) => {
-  const [table, setTable] = useState("accrued_discounts");
+const Marketing = ({ metricsLeft, metricsRight }) => {
+  const [table, setTable] = useState('accrued_discounts');
   const { titleDate, leftDate } = useDate();
   const startLocal = leftDate.startDate.toLocaleDateString();
   const endLocal = leftDate.endDate.toLocaleDateString();
   const startGetDate = leftDate.startDate.getDate();
   const endGetDate = leftDate.endDate.getDate();
+  const getLeftDate = () => {
+    if (titleDate === 'custom') {
+      if (startLocal === endLocal) {
+        return `${dayjs(leftDate.startDate).format('DD/MM')}'s`;
+      }
+      if (startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate()) {
+        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
+          leftDate.startDate,
+        )}`;
+      }
 
+      return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
+        'DD/MM',
+      )}'s`;
+    }
+
+    return `${titleDate}'s`;
+  };
+  const getTable = () => {
+    if (table === 'n_orders') {
+      return 'orders';
+    }
+    if (table === 'average_basket') {
+      return 'Avg.basket';
+    }
+    if (table === 'accrued_discounts') {
+      return 'marketing express';
+    }
+    return table;
+  };
   return (
     <div className="block">
       <TypographyKit variant="h4">Marketing</TypographyKit>
       <div className="cardsWrapper">
-        {
-          ["accrued_discounts", "roi"].map((e) => <Widget table={table} setTable={setTable} key={e} title={e} metricsLeft={metricsLeft} metricsRight={metricsRight} />)
-        }
+        {['accrued_discounts', 'roi'].map((info) => (
+          <Widget
+            table={table}
+            setTable={setTable}
+            key={info}
+            title={info}
+            metricsLeft={metricsLeft}
+            metricsRight={metricsRight}
+          />
+        ))}
       </div>
-      <TypographyKit style={{textTransform: "capitalize"}} variant={"h5"}>
-        <span>
-          {
-            titleDate === "custom" ? startLocal === endLocal ? dayjs(leftDate.startDate).format("DD/MM") + "'s" :
-              startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
-                `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
-                `${dayjs(leftDate.startDate).format("DD/MM")} - ${dayjs(leftDate.endDate).format("DD/MM")}'s` : titleDate + "'s"
-          }
-        </span>
-        {" "}
-        <span>
-          {
-            table === "accrued_discounts" ?
-              "Marketing express" : table === "n_orders" ?
-                "orders" : table === "average_basket" ? "avg.basket" : table
-          }
-        </span>
+      <TypographyKit style={{ textTransform: 'capitalize' }} variant="h5">
+        <span>{getLeftDate()}</span> <span>{getTable()}</span>
       </TypographyKit>
-      {
-        ["accrued_discounts", "roi"].map((info, index) => info === table ? <Table key={index} title={info} metricsLeft={metricsLeft} metricsRight={metricsRight} /> : "")
-      }
+      {['accrued_discounts', 'roi'].map((info) =>
+        info === table ? (
+          <Table key={info} title={info} metricsLeft={metricsLeft} metricsRight={metricsRight} />
+        ) : (
+          ''
+        ),
+      )}
     </div>
   );
 };

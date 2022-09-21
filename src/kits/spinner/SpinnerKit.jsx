@@ -1,6 +1,6 @@
 import React from 'react';
-import { CircularProgress  } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 
-const SpinnerKit = (props) => <CircularProgress  {...props} />
+const SpinnerKit = (props) => <CircularProgress {...props} />;
 
 export default SpinnerKit;
