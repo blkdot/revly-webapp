@@ -32,10 +32,12 @@
             &.phone {
                 .signup-form__input-phone {
                     margin-top: 1.6rem;
+                    display: flex;
+                    justify-content: space-between;
             
-                    width: 20%;
+                    width: 7.5em;
                     input {
-                        max-width: 8em;
+                        width: 100%;
                         background-color: transparent;
                         height: 3.8rem;
                         padding: 19px 14px 18.5px 39px;
