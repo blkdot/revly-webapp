@@ -39,11 +39,11 @@ const useApi = () => {
       .then((res) => handleResponse(res))
       .catch((err) => handleError(err));
 
-  const loginExist = async (body) => "false"
-    // axios
-    //   .post(`${apiUrl}/login/exist`, body)
-    //   .then((res) => handleResponse(res, false))
-    //   .catch((err) => handleError(err, false));
+  const loginExist = async (body) =>
+    axios
+      .post(`${apiUrl}/login/exist`, body)
+      .then((res) => handleResponse(res, false))
+      .catch((err) => handleError(err, false));
 
   const loginPlatform = async (platform, body) =>
     axios
