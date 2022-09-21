@@ -83,3 +83,6 @@ export const getMetrics = (body) =>
     .post(`${apiUrl}/user/metrics`, body)
     .then((res) => res)
     .catch(handleResponse);
+
+export const settingsSave = (body) =>
+  axios.post(`${apiUrl}/settings/save`, body).then(handleResponse).catch(handleResponse);

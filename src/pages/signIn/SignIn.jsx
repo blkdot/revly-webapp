@@ -1,39 +1,52 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import './SignIn.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
-import AuthForm from '../../components/forms/authForm/AuthForm';
+import SigninForm from '../../components/forms/signinForm/SigninForm';
 import { useAlert } from '../../hooks/useAlert';
-import CardKit from '../../kits/card/CardKit';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 
 const SignIn = () => {
-  const [value, setValue] = useState({ email: '', password: '' });
+  const [value, setValue] = useState({ email: '', password: '', remembered: true });
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
-  const { showAlert, setAlertMessage } = useAlert();
+  const { triggerAlertWithMessageError } = useAlert('error');
   const [errorData, setErrorData] = useState({ email: false, password: false });
 
   const navigate = useNavigate();
 
-  const { signIn, googleSignIn } = useUserAuth();
+  const { signIn, googleSignIn, user, logOut } = useUserAuth();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/check');
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setProcessing(true);
     try {
-      await signIn(value.email, value.password);
+      const res = await signIn(value.email, value.password, value.remembered);
+
+      if (!res.user.emailVerified) {
+        await logOut();
+        setProcessing(false);
+        throw new Error(
+          'Email not verified, please check your email (include spam) for verification',
+        );
+      }
+
       navigate('/check');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
-      if (firebaseCodeError[e.code].field) {
+      if (firebaseCodeError[e.code] && firebaseCodeError[e.code].field) {
         setErrorData({ [firebaseCodeError[e.code].field]: true });
       }
 
-      setAlertMessage(message);
-      showAlert();
+      triggerAlertWithMessageError(message);
       setProcessing(false);
     }
   };
@@ -51,8 +64,7 @@ const SignIn = () => {
         setErrorData({ [firebaseCodeError[e.code].field]: true });
       }
 
-      setAlertMessage(message);
-      showAlert();
+      triggerAlertWithMessageError(message);
       setProcessing(false);
     }
   };
@@ -61,31 +73,21 @@ const SignIn = () => {
     setValue({ ...value, [k]: v });
   };
 
+  const handleChangeRemembered = (v) => {
+    setValue({ ...value, remembered: v });
+  };
+
   return (
-    <div className="signin">
-      <div className="signin-cover">
-        <img src="/images/cover.png" alt="cover" width={300} />
-      </div>
-      <CardKit variant="outlined" className="card-signin">
-        <h2>Sign in to your account</h2>
-        <p>
-          Don&apos;t have an account yet? <Link to="/signup"> Sign up.</Link>
-        </p>
-        <AuthForm
-          onChangeEmail={handleChange('email')}
-          onChangePassword={handleChange('password')}
-          errorEmail={errorData.email}
-          errorPassword={errorData.password}
-          onSubmit={handleSubmit}
-          onGoogleSubmit={handleGoogleSubmit}
-          disabled={!value.email || !value.password || processing}
-          isSignin
-        />
-        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-          <Link to="/forgot-password">Forgot password ?</Link>
-        </div>
-      </CardKit>
-    </div>
+    <SigninForm
+      onChangeEmail={handleChange('email')}
+      onChangePassword={handleChange('password')}
+      onChangeRemebered={handleChangeRemembered}
+      errorEmail={errorData.email}
+      errorPassword={errorData.password}
+      onSubmit={handleSubmit}
+      onGoogleSubmit={handleGoogleSubmit}
+      disabled={!value.email || !value.password || processing}
+    />
   );
 };
 

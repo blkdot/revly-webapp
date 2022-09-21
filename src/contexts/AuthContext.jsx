@@ -12,9 +12,12 @@ import {
   EmailAuthProvider,
   RecaptchaVerifier,
   PhoneAuthProvider,
-  sendEmailVerification,
   reauthenticateWithPopup,
   updatePhoneNumber,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  sendEmailVerification,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import config from '../setup/config';
@@ -41,20 +44,23 @@ export const AuthContextProvider = ({ children }) => {
 
   const signUp = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 
-  const signIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const signIn = async (email, password, remember = false) => {
+    await setPersistence(auth, remember ? browserSessionPersistence : browserLocalPersistence);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
   const logOut = () => {
     cleanPlatformData();
     return signOut(auth);
   };
 
-  const emailVerify = () => {
+  const verifyEmail = (users) => {
     const actionCodeSettings = {
       url: `${config.frontUrl}`,
       handleCodeInApp: true,
     };
 
-    return sendEmailVerification(user, actionCodeSettings);
+    return sendEmailVerification(users, actionCodeSettings);
   };
 
   const createRecaptcha = () => {
@@ -115,7 +121,7 @@ export const AuthContextProvider = ({ children }) => {
         googleSignIn,
         reAuth,
         updatePhone,
-        emailVerify,
+        verifyEmail,
         reAuthGoogle,
       }}>
       {children}

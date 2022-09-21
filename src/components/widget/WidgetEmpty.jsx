@@ -45,10 +45,10 @@ const Widget = () => (
           <ArrowRightAltIcon />
         </PaperKit>
         <TypographyKit className="card-procent" variant="body2">
-          <SkeletonKit variant="rectangular" width={100} />
+          <SkeletonKit variant="rectangular" width={60} />
         </TypographyKit>
         <TypographyKit className="card-week" variant="body3">
-          <SkeletonKit variant="rectangular" width={100} />
+          <SkeletonKit variant="rectangular" width={60} />
         </TypographyKit>
       </div>
     </CardContentKit>

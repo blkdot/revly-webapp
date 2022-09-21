@@ -23,11 +23,12 @@ import Check from './pages/check/Check';
 import Planning from './pages/planning/Planning';
 import MarketingAds from './pages/marketing/MarketingAds';
 import MarketingOffer from './pages/marketing/MarketingOffer';
+import AuthLayout from './components/layout/authLayout/AuthLayout';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4d2681',
+      main: '#4D2681',
     },
   },
 });
@@ -40,8 +41,10 @@ const App = () => (
           <PlatformProvider>
             <AuthContextProvider>
               <Routes>
-                <Route path="/" element={<SignIn />} />
-                <Route path="/signup" element={<SignUp />} />
+                <Route element={<AuthLayout />}>
+                  <Route path="/" element={<SignIn />} />
+                  <Route path="/signup" element={<SignUp />} />
+                </Route>
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route element={<ProtectedRoutes />}>
                   <Route element={<ProtectedOnboardRoutes />}>

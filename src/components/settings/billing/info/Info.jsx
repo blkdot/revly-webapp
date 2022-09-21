@@ -22,14 +22,14 @@ const Info = (props) => {
       </p>
       <div className="info__btn-flex">
         <ButtonKit
-          sx={{ color: 'red' }}
+          sx={{ color: 'red', textTransform: 'none', fontWeight: '700' }}
           size="small"
           onClick={onDelete}
           startIcon={<DeleteOutlined />}>
           Delete
         </ButtonKit>
         <ButtonKit
-          sx={{ marginLeft: 2 }}
+          sx={{ marginLeft: 2, textTransform: 'none', fontWeight: '700' }}
           size="small"
           onClick={onEdit}
           startIcon={<EditOutlined />}>
