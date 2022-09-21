@@ -7,13 +7,11 @@ import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
 import PaperKit from '../../kits/paper/PaperKit';
-import talabat from '../../assets/images/talabat.png';
-import deliveroo from '../../assets/images/deliveroo.png';
 import './PlanningOffersTable.scss';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 import BoxKit from '../../kits/box/BoxKit';
 
-const PlanningOffersTable = ({ rows }) => (
+const PlanningOffersTableEmpty = () => (
   <BoxKit sx={{ width: '100%' }}>
     <TableContainerKit className="planning_offers-table-container" component={PaperKit}>
       <TableKit aria-label="simple table">
@@ -31,27 +29,35 @@ const PlanningOffersTable = ({ rows }) => (
           </TableRowKit>
         </TableHeadKit>
         <TableBodyKit>
-          {rows.map((row) => (
-            <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          {[0, 1, 2, 3].map((row) => (
+            <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCellKit>
-                {row.vendor_name === null ? <SkeletonKit width={80} /> : row.vendor_name}
+                <SkeletonKit width={80} />
               </TableCellKit>
               <TableCellKit>
-                <img
-                  className="planning-platform"
-                  src={row.platform === 'deliveroo' ? deliveroo : talabat}
-                  alt={row.platform}
-                />
+                <SkeletonKit width={30} />
               </TableCellKit>
-              <TableCellKit>{row.discount_type}</TableCellKit>
-              <TableCellKit>{row.discount_rate}</TableCellKit>
-              <TableCellKit>{row.minimum_order_value}</TableCellKit>
-              <TableCellKit>{row.start_date}</TableCellKit>
-              <TableCellKit>{row.end_date}</TableCellKit>
               <TableCellKit>
-                {row.target === null ? <SkeletonKit width={80} /> : row.target}
+                <SkeletonKit width={80} />
               </TableCellKit>
-              <TableCellKit>{row.status}</TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
             </TableRow>
           ))}
         </TableBodyKit>
@@ -60,4 +66,4 @@ const PlanningOffersTable = ({ rows }) => (
   </BoxKit>
 );
 
-export default PlanningOffersTable;
+export default PlanningOffersTableEmpty;

@@ -28,6 +28,11 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
 
   const [restaurants, setRestaurants] = useState(['1 Restaurant']);
 
+  const [leftDateOffers, setLeftDateOffers] = useState({
+    startDate: leftDate.startDate,
+    endDate: leftDate.endDate,
+  });
+
   useEffect(() => {
     if (isShowing) {
       setTimeout(() => {
@@ -84,6 +89,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         triggerAlertWithMessageSuccess,
         restaurants,
         setRestaurants,
+        leftDateOffers,
+        setLeftDateOffers,
       }}>
       {renderAlert()}
       {children}

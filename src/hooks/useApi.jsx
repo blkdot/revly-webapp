@@ -8,6 +8,8 @@ import {
 
 import { getMetrics } from '../api/userApi';
 
+import { getOffers } from '../api/marketingApi';
+
 const useApi = () => ({
   settingsOnboardPlatform,
   settingsOnboarded,
@@ -15,6 +17,7 @@ const useApi = () => ({
   settingsOnboardPlatformStatus,
   getMetrics,
   settingsSave,
+  getOffers,
 });
 
 export default useApi;
