@@ -14,6 +14,7 @@ import { enUS } from 'date-fns/locale';
 import useDate from '../../hooks/useDate';
 import talabat from '../../assets/images/talabat.png';
 import deliveroo from '../../assets/images/deliveroo.png';
+import dayjs from 'dayjs';
 
 function EnhancedTableHead({ headCells }) {
 
@@ -57,19 +58,21 @@ export default function EnhancedTable({ title, metricsLeft, metricsRight }) {
       id: 'date',
       numeric: true,
       disablePadding: false,
-      label: titleDate === "custom" ? startLocal === endLocal ? startLocal + "'s" :
+      label: 
+        titleDate === "custom" ? startLocal === endLocal ? dayjs(leftDate.startDate).format("DD/MM") + "'s" :
         startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
           `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
-          "custom week's" : titleDate + "'s",
+          `${dayjs(leftDate.startDate).format("DD/MM")} - ${dayjs(leftDate.endDate).format("DD/MM")}'s` : titleDate + "'s",
     },
     {
       id: 'date1',
       numeric: true,
       disablePadding: false,
-      label: titleRightDate === "custom" ? startLocalRight === endLocalRight ? startLocalRight + "'s" :
+      label: 
+        titleRightDate === "custom" ? startLocalRight === endLocalRight ? dayjs(rightDate.startDate).format("DD/MM") + "'s" :
         startGetDateRight === 1 && endGetDateRight === endOfMonth(rightDate.startDate, 1).getDate() ?
-          `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
-          "custom week's" : titleRightDate + "'s",
+          `${format(rightDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(rightDate.startDate)}` :
+          `${dayjs(rightDate.startDate).format("DD/MM")} - ${dayjs(rightDate.endDate).format("DD/MM")}'s` : titleRightDate + "'s",
     },
     {
       id: 'evolution',
@@ -102,8 +105,8 @@ export default function EnhancedTable({ title, metricsLeft, metricsRight }) {
                 <TableCellKit component='th' id={0} scope='row'>
                   <img className={'table-img ' + (title === 'deliveroo' ? 'img-del' : '')} src={deliveroo} alt={title} />
                 </TableCellKit>
-                <TableCellKit>{metricsLeft[0] ? metricsLeft[0][1][title] ? metricsLeft[0][1][title] : "-" : ""}</TableCellKit>
-                <TableCellKit>{metricsRight[0] ? metricsRight[0][1][title] ? metricsRight[0][1][title] : "-" : ""}</TableCellKit>
+                <TableCellKit>{metricsLeft[0] ? metricsLeft[0][1][title] ? metricsLeft[0][1][title] : "-" : 0}</TableCellKit>
+                <TableCellKit>{metricsRight[0] ? metricsRight[0][1][title] ? metricsRight[0][1][title] : "-" : 0}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={
@@ -123,8 +126,8 @@ export default function EnhancedTable({ title, metricsLeft, metricsRight }) {
                 <TableCellKit component='th' id={0} scope='row'>
                   <img className={'table-img ' + (title === 'deliveroo' ? 'img-del' : '')} src={talabat} alt={title} />
                 </TableCellKit>
-                <TableCellKit>{metricsLeft[1] ? metricsLeft[1][1][title] ? metricsLeft[1][1][title] : "-" : ""}</TableCellKit>
-                <TableCellKit>{metricsRight[1] ? metricsRight[1][1][title] ? metricsRight[1][1][title] : "-" : ""}</TableCellKit>
+                <TableCellKit>{metricsLeft[1] ? metricsLeft[1][1][title] ? metricsLeft[1][1][title] : "-" : 0}</TableCellKit>
+                <TableCellKit>{metricsRight[1] ? metricsRight[1][1][title] ? metricsRight[1][1][title] : "-" : 0}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={
@@ -147,8 +150,8 @@ export default function EnhancedTable({ title, metricsLeft, metricsRight }) {
                 <TableCellKit component='th' scope='row'>
                   Total
                 </TableCellKit>
-                <TableCellKit>{metricsLeft[2] ? metricsLeft[2][1][title] ? metricsLeft[2][1][title] : "-" : ""}</TableCellKit>
-                <TableCellKit>{metricsRight[2] ? metricsRight[2][1][title] ? metricsRight[2][1][title] : "-" : ""}</TableCellKit>
+                <TableCellKit>{metricsLeft[2] ? metricsLeft[2][1][title] ? metricsLeft[2][1][title] : "-" : 0}</TableCellKit>
+                <TableCellKit>{metricsRight[2] ? metricsRight[2][1][title] ? metricsRight[2][1][title] : "-" : 0}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={

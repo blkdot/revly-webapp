@@ -23,16 +23,18 @@ const MenuProps = {
   },
 };
 
-export default function RestaurantDropdown({names}) {
+export default function RestaurantDropdown({ names }) {
   const { setRestaurants, restaurants } = useDate();
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setRestaurants(
-      typeof value === 'string' ? value.split(',') : value,
-    );
+    if (value.length > 0) {
+      setRestaurants(
+        typeof value === 'string' ? value.split(',') : value,
+      );
+    }
   };
 
   return (

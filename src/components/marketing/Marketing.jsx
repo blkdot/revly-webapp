@@ -6,6 +6,7 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
 
 const Marketing = ({metricsLeft,metricsRight}) => {
   const [table, setTable] = useState("accrued_discounts");
@@ -24,17 +25,21 @@ const Marketing = ({metricsLeft,metricsRight}) => {
         }
       </div>
       <TypographyKit style={{textTransform: "capitalize"}} variant={"h5"}>
-        <span>{
-          table === "accrued_discounts" ?
-            "marketing express" : table === "n_orders" ?
-              "orders" : table === "average_basket" ? "avg.basket" : table
-          }</span> of this
+        <span>
+          {
+            titleDate === "custom" ? startLocal === endLocal ? dayjs(leftDate.startDate).format("DD/MM") + "'s" :
+              startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
+                `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
+                `${dayjs(leftDate.startDate).format("DD/MM")} - ${dayjs(leftDate.endDate).format("DD/MM")}'s` : titleDate + "'s"
+          }
+        </span>
         {" "}
         <span>
-          {titleDate === "custom" ? startLocal === endLocal ? startLocal + '`s' :
-            startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
-              `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
-              "custom week`s" : titleDate + '`s'}
+          {
+            table === "accrued_discounts" ?
+              "Marketing express" : table === "n_orders" ?
+                "orders" : table === "average_basket" ? "avg.basket" : table
+          }
         </span>
       </TypographyKit>
       {

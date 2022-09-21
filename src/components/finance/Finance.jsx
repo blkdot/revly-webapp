@@ -7,8 +7,9 @@ import { restaurantNames } from "../../data/fakeDataDashboard";
 import useDate from '../../hooks/useDate';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
 
-const Finance = ({metricsLeft,metricsRight}) => {
+const Finance = ({ metricsLeft, metricsRight }) => {
   const [table, setTable] = useState("revenue");
   const { titleDate, leftDate, restaurants } = useDate();
   const startLocal = leftDate.startDate.toLocaleDateString();
@@ -19,19 +20,18 @@ const Finance = ({metricsLeft,metricsRight}) => {
   return (
     <div className="block">
       <TypographyKit variant="h4">
-        Results of this
         <span>
           {" "}
           {
-            titleDate === "custom" ? startLocal === endLocal ? startLocal + '`s' :
+            titleDate === "custom" ? startLocal === endLocal ? dayjs(leftDate.startDate).format("DD/MM") + "'s" :
               startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
                 `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
-                "custom week`s" : titleDate + '`s'
+                `${dayjs(leftDate.startDate).format("DD/MM")} - ${dayjs(leftDate.endDate).format("DD/MM")}'s` : titleDate + "'s"
           }
           {" "}
         </span>
-        for all {restaurants.length === restaurantNames.length || restaurants.length === 0 ?
-          <span> points of sales</span> : <span>{restaurants.join(", ")}</span>}
+        results for  {restaurants.length === restaurantNames.length || restaurants.length === 0 ?
+          <p>all <span> points of sales</span></p> : <span>{restaurants.join(", ")}</span>}
       </TypographyKit>
       <TypographyKit variant="h4">Finance</TypographyKit>
       <div className="cardsWrapper finance-wrapper">
@@ -39,20 +39,23 @@ const Finance = ({metricsLeft,metricsRight}) => {
           ["revenue", "n_orders", "average_basket", "profit"].map((e) => <Widget table={table} setTable={setTable} key={e} title={e} metricsLeft={metricsLeft} metricsRight={metricsRight} />)
         }
       </div>
-      <TypographyKit style={{ textTransform: "capitalize" }} variant={"h5"}>
+      <TypographyKit  variant={"h5"}>
+       
+        <span>
+          {
+            titleDate === "custom" ? startLocal === endLocal ? dayjs(leftDate.startDate).format("DD/MM") + "'s" :
+              startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
+                `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
+                `${dayjs(leftDate.startDate).format("DD/MM")} - ${dayjs(leftDate.endDate).format("DD/MM")}'s` : titleDate + "'s"
+          }
+        </span>
+        {" "}
         <span>
           {
             table === "accrued_discounts" ?
               "marketing express" : table === "n_orders" ?
                 "orders" : table === "average_basket" ? "avg.basket" : table
           }
-        </span> of this
-        {" "}
-        <span>
-          {titleDate === "custom" ? startLocal === endLocal ? startLocal + '`s' :
-            startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate() ?
-              `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(leftDate.startDate)}` :
-              "custom week`s" : titleDate + '`s'}
         </span>
       </TypographyKit>
       {

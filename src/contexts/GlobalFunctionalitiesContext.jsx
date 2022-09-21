@@ -18,7 +18,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [titleDate, setTitleDate] = useState('today');
   const [titleRightDate, setTitleRightDate] = useState('yesterday');
 
-  const [restaurants, setRestaurants] = useState([]);
+  const [restaurants, setRestaurants] = useState(["1 Restaurant"]);
 
   useEffect(() => {
     if (isShowing) {

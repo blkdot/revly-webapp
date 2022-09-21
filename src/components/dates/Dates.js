@@ -545,10 +545,10 @@ const Dates = () => {
             />
         }
       </div>
-      <span>Compare to</span>
       {
         location.pathname === "/dashboard" ?
           <div className="dashboard-date">
+            <span>Compare to</span>
             <div className="date-picker_wrapper">
               <TypographyKit component="div" className="date-input-wrapper">
                 <PaperKit style={{ background: '#fff' }} onClick={() => setSelected(!selected)} className={"date-input " + (selected ? "selected" : "")}>
