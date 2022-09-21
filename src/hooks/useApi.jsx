@@ -3,9 +3,10 @@ import {
   settingsOnboarded,
   settingsLogin,
   settingsOnboardPlatformStatus,
-  getMetrics,
   settingsSave,
 } from '../api/settingsApi';
+
+import { getMetrics } from '../api/userApi';
 
 const useApi = () => ({
   settingsOnboardPlatform,

@@ -78,11 +78,5 @@ export const settingsLogin = (body) => {
   return JSON.parse(stringFakeOnboarding);
 };
 
-export const getMetrics = (body) =>
-  axios
-    .post(`${apiUrl}/user/metrics`, body)
-    .then((res) => res)
-    .catch(handleResponse);
-
 export const settingsSave = (body) =>
   axios.post(`${apiUrl}/settings/save`, body).then(handleResponse).catch(handleResponse);
