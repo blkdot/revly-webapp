@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Confetti from 'react-confetti';
+import { MdOutlineDangerous } from 'react-icons/md';
 
 import './OnBoarding.scss';
 
@@ -9,7 +9,6 @@ import Dates from '../../components/dates/Dates';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
-import Congrats from '../../components/congrats/Congrats';
 
 import ModalKit from '../../kits/modal/ModalKit';
 import StepperKit from '../../kits/stepper/StepperKit';
@@ -17,6 +16,7 @@ import StepKit from '../../kits/step/StepKit';
 import StepLabelKit from '../../kits/stepLabel/StepLabel';
 import ButtonKit from '../../kits/button/ButtonKit';
 import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
+import SpinnerKit from '../../kits/spinner/SpinnerKit';
 
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
@@ -25,7 +25,7 @@ import { useAlert } from '../../hooks/useAlert';
 
 import { platformList } from '../../data/platformList';
 
-const steps = ['Welcome to Revly', 'Connect to the delivery platforms', 'Congratulation'];
+const steps = ['Welcome to Revly', 'Add your delivery platforms', 'Start using Revly'];
 
 const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: false }), {});
 
@@ -34,7 +34,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: 600,
   backgroundColor: '#ffffff',
   borderRadius: '0.4rem',
   boxShadow: 24,
@@ -47,19 +47,39 @@ const OnBoarding = () => {
   const [formValues, setFormValues] = useState({ email: '', password: '' });
   const [currentPlatform, setCurrentPlatform] = useState(null);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
+  const [errorPlatformConnect, setErrorPlatformConnect] = useState(defaultSelected);
   const [isLoading, setIsLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
+  // const [showSuccess, setShowSuccess] = useState(false);
   const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform } = useApi();
   const { user } = useUserAuth();
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
 
   useEffect(() => {
-    if (step > 0) return;
+    if (step > 0) {
+      setErrorPlatformConnect(defaultSelected);
+      return;
+    }
 
+    setShowError(false);
     cleanPlatformData();
   }, [step]);
 
   useEffect(() => {
+    setShowError(false);
+
+    // TODO: remove error only when the selected platform is unselected
+    if (currentPlatform && selectedPlatform[currentPlatform.name]) {
+      setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: false });
+    }
+
+    if (Object.values(selectedPlatform).every((v) => !v) && step !== 0) {
+      setStep(0);
+      setCurrentPlatform(null);
+      return;
+    }
+
     const currentPlatformInsertion = platformList.filter(
       ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
     );
@@ -75,6 +95,7 @@ const OnBoarding = () => {
   const handleSubmitLoginInfo = async () => {
     if (!currentPlatform) return;
 
+    setShowError(false);
     setIsLoading(true);
 
     const res = await settingsOnboardPlatform(
@@ -89,10 +110,13 @@ const OnBoarding = () => {
     setIsLoading(false);
 
     if (res instanceof Error) {
+      setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: true });
       triggerAlertWithMessageError(res.message);
+      setShowError(true);
       return;
     }
 
+    setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: false });
     triggerAlertWithMessageSuccess('Registered with success !');
 
     setUserPlatformData({
@@ -125,6 +149,7 @@ const OnBoarding = () => {
         <PlatformSelector
           items={platformList}
           state={selectedPlatform}
+          errors={errorPlatformConnect}
           onClickItem={handlePlatformClick}
         />
       );
@@ -136,7 +161,8 @@ const OnBoarding = () => {
           <PlatformSelector
             items={platformList}
             state={selectedPlatform}
-            onClickItem={() => null}
+            errors={errorPlatformConnect}
+            onClickItem={handlePlatformClick}
             platforms={userPlatformData.platforms}
             noText
           />
@@ -145,7 +171,23 @@ const OnBoarding = () => {
       );
     }
 
-    return <Congrats />;
+    return 'New content';
+  };
+
+  const renderErrorNotif = () => {
+    if (!showError && !isLoading) return null;
+
+    return (
+      <div style={{ width: '20rem', display: 'flex' }}>
+        <i>
+          <MdOutlineDangerous style={{ fontSize: '60px', color: 'red' }} />
+        </i>
+        <span style={{ color: 'red' }}>
+          We couldn’t connect to your deliveroo account. Please double check your credentials or
+          contact customer support
+        </span>
+      </div>
+    );
   };
 
   const isNextDisabled = () => {
@@ -173,17 +215,36 @@ const OnBoarding = () => {
         variant="contained"
         onClick={handleSubmitLoginInfo}
         loading={isLoading}
-        disabled={!isNextDisabled() || !currentPlatform}>
-        Send
+        disabled={!isNextDisabled() || !currentPlatform}
+        fullWidth>
+        Link
       </ButtonLoadingKit>
     );
   };
 
   const isBackDisabled = () => step === 0 || step === 2;
 
+  const renderSpinner = () => {
+    if (!isLoading) return null;
+
+    return (
+      <div style={{ display: 'flex' }}>
+        <SpinnerKit />
+        <span
+          style={{
+            alignSelf: 'center',
+            fontSize: '16px',
+            color: '#4D2681',
+            marginLeft: '1rem',
+          }}>
+          Connecting
+        </span>
+      </div>
+    );
+  };
+
   return (
     <div className="onboarding">
-      <Confetti gravity={0.1} run={step === 2} style={{ zIndex: 1301 }} />
       <RestaurantDropdown names={[]} />
       <Dates />
       <FinanceEmpty />
@@ -198,6 +259,7 @@ const OnBoarding = () => {
             ))}
           </StepperKit>
           {renderStepScreens()}
+          <div style={{ width: '100%', padding: '0.5rem 2rem 0rem' }}>{renderSendButton()}</div>
           <div className="onboarding-actions">
             <div>
               <ButtonKit
@@ -208,7 +270,8 @@ const OnBoarding = () => {
                 Back
               </ButtonKit>
             </div>
-            <div>{renderSendButton()}</div>
+            {renderSpinner()}
+            {renderErrorNotif()}
             <div>
               <ButtonKit
                 variant="outlined"
