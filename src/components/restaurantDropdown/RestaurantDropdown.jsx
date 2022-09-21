@@ -10,6 +10,7 @@ import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
+import useDate from '../../hooks/useDate';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -23,13 +24,15 @@ const MenuProps = {
 };
 
 const RestaurantDropdown = ({ names }) => {
-  const [personName, setPersonName] = React.useState([]);
+  const { setRestaurants, restaurants } = useDate();
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(typeof value === 'string' ? value.split(',') : value);
+    if (value.length > 0) {
+      setRestaurants(typeof value === 'string' ? value.split(',') : value);
+    }
   };
 
   return (
@@ -43,14 +46,14 @@ const RestaurantDropdown = ({ names }) => {
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={personName}
+          value={restaurants}
           onChange={handleChange}
           input={<OutlindeInputKit label="_Vendors" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}>
           {names.map((name) => (
             <MenuItemKit key={name} value={name}>
-              <CheckboxKit checked={personName.indexOf(name) > -1} />
+              <CheckboxKit checked={restaurants.indexOf(name) > -1} />
               <ListItemTextKit primary={name} />
             </MenuItemKit>
           ))}

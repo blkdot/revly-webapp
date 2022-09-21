@@ -179,7 +179,7 @@ export const TableMarketingData = [
   },
 ];
 
-export const restaurantNames = ['Revenue', 'Orders', 'Profit'];
+export const restaurantNames = ['1 Restaurant', '2 Restaurant', '3 Restaurant'];
 
 export const PlanningOffersData = [
   {

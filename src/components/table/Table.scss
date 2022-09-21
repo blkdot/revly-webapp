@@ -8,6 +8,8 @@
   grid-gap: 5px;
   padding: 5px 5px;
   border-radius: 12px;
+  color: gray;
+  background: $color-light-grey;
 }
 
 .table_evolution span {
@@ -52,6 +54,9 @@
 
 .table-head {
   background: rgb(244, 246, 248);
+  th{
+    text-transform: capitalize;
+  }
 }
 
 .enchanced-table-cell.enchanced-table-cell {
@@ -63,6 +68,7 @@
   width: 25%;
   font-size: 15px;
   color: $color-arrow;
+  text-transform: capitalize;
 }
 
 .table-total.table-total {

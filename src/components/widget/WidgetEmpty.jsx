@@ -1,6 +1,6 @@
 // TODO: fix all linter problem
 import React from 'react';
-import MovingIcon from '@mui/icons-material/Moving';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
 import './Widget.scss';
 
@@ -21,7 +21,14 @@ const Widget = () => (
           alignItems: 'center',
         }}>
         <div>
-          <TypographyKit variant="subtitle2" className="card-typography" component="div">
+          <TypographyKit
+            sx={{ marginBottom: '15px' }}
+            variant="subtitle2"
+            className="card-typography"
+            component="div">
+            <SkeletonKit variant="rectangular" width={100} />
+          </TypographyKit>
+          <TypographyKit variant="h3" className="card-typography">
             <SkeletonKit variant="rectangular" width={100} />
           </TypographyKit>
           <TypographyKit variant="h3" className="card-typography">
@@ -29,18 +36,19 @@ const Widget = () => (
           </TypographyKit>
         </div>
         <TypographyKit className="card-typography card-icon">
-          <SkeletonKit variant="rectangular" width={100} />
+          <SkeletonKit variant="rectangular" width={50} />
+          <SkeletonKit variant="rectangular" width={50} />
         </TypographyKit>
       </TypographyKit>
       <div className="card_bottom">
         <PaperKit className="icon-paper">
-          <MovingIcon className="increased" />
+          <ArrowRightAltIcon />
         </PaperKit>
         <TypographyKit className="card-procent" variant="body2">
-          <SkeletonKit variant="rectangular" width={100} />
+          <SkeletonKit variant="rectangular" width={60} />
         </TypographyKit>
         <TypographyKit className="card-week" variant="body3">
-          <SkeletonKit variant="rectangular" width={100} />
+          <SkeletonKit variant="rectangular" width={60} />
         </TypographyKit>
       </div>
     </CardContentKit>

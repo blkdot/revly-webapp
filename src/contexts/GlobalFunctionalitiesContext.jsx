@@ -3,6 +3,7 @@
 // This file will handle any global functionnalities related to a context that do not belong to a specific context
 // To prevent creating so many other context
 
+import { subDays } from 'date-fns';
 import React, { createContext, useEffect, useState } from 'react';
 
 import Alert from '../components/alert/Alert';
@@ -19,11 +20,13 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
     endDate: new Date(),
   });
   const [rightDate, setRight] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: subDays(new Date(), 1),
+    endDate: subDays(new Date(), 1),
   });
   const [titleDate, setTitleDate] = useState('today');
-  const [titleRightDate, setTitleRightDate] = useState('today');
+  const [titleRightDate, setTitleRightDate] = useState('yesterday');
+
+  const [restaurants, setRestaurants] = useState(['1 Restaurant']);
 
   useEffect(() => {
     if (isShowing) {
@@ -79,6 +82,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         titleRightDate,
         triggerAlertWithMessageError,
         triggerAlertWithMessageSuccess,
+        restaurants,
+        setRestaurants,
       }}>
       {renderAlert()}
       {children}

@@ -24,9 +24,11 @@
     background: $color-third;
     transition: 0.3s;
     color: #4d2681;
-    svg{
+
+    svg {
       filter: none;
     }
+
     img {
       filter: invert(13%) sepia(33%) saturate(5910%) hue-rotate(257deg) brightness(96%) contrast(91%);
     }
@@ -40,9 +42,10 @@
     background: $color-third;
     color: #4d2681;
 
-    svg{
+    svg {
       filter: none;
     }
+
     img {
       filter: invert(13%) sepia(53%) saturate(3527%) hue-rotate(255deg) brightness(101%) contrast(92%);
     }
@@ -62,11 +65,15 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: $color-icon;
     overflow: hidden;
+    background-color: $color-light-grey;
 
-    &.active-bg {
+    &.increased {
       background-color: $color-icon-active;
+    }
+
+    &.decreased {
+      background-color: $color-icon;
     }
 
     >svg {
@@ -87,16 +94,25 @@
 
   .card-procent {
     font-weight: 600;
-    color: #ff4642;
+    color: gray;
 
-    &.active {
+    &.increased {
       color: $color-green;
+    }
+
+    &.decreased {
+      color: #ff4642;
     }
   }
 
   .card-week {
     font-size: 14px;
     color: $color-arrow;
+    text-transform: lowercase;
+  }
+
+  .card_bottom {
+    flex-wrap: wrap;
   }
 }
 
