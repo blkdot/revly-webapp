@@ -19,7 +19,7 @@ $breakpoint-infinite: 10000px;
 }
 
 @mixin tabletBreakpoint {
-    @include breakpoint($breakpoint-md, $breakpoint-lg) {
+    @include breakpoint($breakpoint-sm, $breakpoint-lg) {
         @content;
     }
 }

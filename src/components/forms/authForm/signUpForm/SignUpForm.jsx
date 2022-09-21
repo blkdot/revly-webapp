@@ -20,6 +20,7 @@ const SignUpForm = (props) => {
     onChangeFName,
     onChangeLName,
     onChangeRestoName,
+    onChangePointOfSales,
     onSubmit,
     disabled,
     errorFName,
@@ -29,10 +30,21 @@ const SignUpForm = (props) => {
     errorEmail,
     errorPassword,
     onChangePhone,
+    errorPointOfSale,
     onDialChange,
+    onBlur,
   } = props;
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const onlyNumber = (event) => {
+    const code = ['Backspace', 'Arrow'];
+
+    const isValid = code.some((v) => event.code.includes(v)) || /^[0-9]*$/.test(event.key);
+    if (!isValid) {
+      event.preventDefault();
+    }
+  };
 
   return (
     <div className="signup-form">
@@ -44,31 +56,41 @@ const SignUpForm = (props) => {
         <div className="signup-form__flex">
           <TextfieldKit
             error={errorFName}
+            required
             label="First Name"
             onChange={(e) => onChangeFName(e.target.value)}
             className="signup-form__flex__input"
+            onBlur={() => onBlur('fname')}
           />
           <TextfieldKit
             error={errorLName}
             label="Last Name"
+            required
             onChange={(e) => onChangeLName(e.target.value)}
             className="signup-form__flex__input"
+            onBlur={() => onBlur('lname')}
           />
         </div>
         <div className="signup-form__flex">
           <TextfieldKit
             error={errorRestoName}
+            required
             label="Restaurant name"
             onChange={(e) => onChangeRestoName(e.target.value)}
             className="signup-form__flex__input"
             fullWidth
+            onBlur={() => onBlur('restoName')}
           />
 
           <TextfieldKit
             label="# of points of sale"
-            onChange={(e) => onChangeRestoName(e.target.value)}
+            required
+            onChange={(e) => onChangePointOfSales(e.target.value)}
             className="signup-form__flex__input"
+            onKeyDown={onlyNumber}
             fullWidth
+            onBlur={() => onBlur('pointOfSale')}
+            error={errorPointOfSale}
           />
         </div>
         <div className="signup-form__flex phone">
@@ -81,22 +103,26 @@ const SignUpForm = (props) => {
           />
           <TextfieldKit
             label="Phone number"
-            onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
             onChange={(e) => onChangePhone(e.target.value)}
             className="signup-form__input"
+            onKeyDown={onlyNumber}
             fullWidth
           />
         </div>
         <TextfieldKit
           error={errorEmail}
           label="Email address"
+          required
           onChange={(e) => onChangeEmail(e.target.value)}
           className="signup-form__input"
           fullWidth
+          onBlur={() => onBlur('email')}
         />
         <TextfieldKit
           error={errorPassword}
           label="Password"
+          onBlur={() => onBlur('password')}
+          required
           type={showPassword ? 'text' : 'password'}
           onChange={(e) => onChangePassword(e.target.value)}
           className="signup-form__input"

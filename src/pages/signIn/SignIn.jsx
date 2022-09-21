@@ -11,12 +11,12 @@ import { firebaseCodeError } from '../../data/firebaseCodeError';
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '', remembered: true });
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
-  const { showAlert, setAlertMessage } = useAlert();
+  const { triggerAlertWithMessageError } = useAlert('error');
   const [errorData, setErrorData] = useState({ email: false, password: false });
 
   const navigate = useNavigate();
 
-  const { signIn, googleSignIn, user } = useUserAuth();
+  const { signIn, googleSignIn, user, logOut } = useUserAuth();
 
   useEffect(() => {
     if (user) {
@@ -28,17 +28,25 @@ const SignIn = () => {
     event.preventDefault();
     setProcessing(true);
     try {
-      await signIn(value.email, value.password, value.remembered);
+      const res = await signIn(value.email, value.password, value.remembered);
+
+      if (!res.user.emailVerified) {
+        await logOut();
+        setProcessing(false);
+        throw new Error(
+          'Email not verified, please check your email (include spam) for verification',
+        );
+      }
+
       navigate('/check');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
-      if (firebaseCodeError[e.code].field) {
+      if (firebaseCodeError[e.code] && firebaseCodeError[e.code].field) {
         setErrorData({ [firebaseCodeError[e.code].field]: true });
       }
 
-      setAlertMessage(message);
-      showAlert();
+      triggerAlertWithMessageError(message);
       setProcessing(false);
     }
   };
@@ -56,8 +64,7 @@ const SignIn = () => {
         setErrorData({ [firebaseCodeError[e.code].field]: true });
       }
 
-      setAlertMessage(message);
-      showAlert();
+      triggerAlertWithMessageError(message);
       setProcessing(false);
     }
   };

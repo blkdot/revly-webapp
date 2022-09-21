@@ -3,6 +3,7 @@ import {
   settingsOnboarded,
   settingsLogin,
   settingsOnboardPlatformStatus,
+  settingsSave,
 } from '../api/settingsApi';
 
 const useApi = () => ({
@@ -10,6 +11,7 @@ const useApi = () => ({
   settingsOnboarded,
   settingsLogin,
   settingsOnboardPlatformStatus,
+  settingsSave,
 });
 
 export default useApi;
