@@ -131,4 +131,8 @@
       width: 100%;
     }
   }
+
+  @media only screen and (max-height: 606px) {
+    height: 630px;
+  }
 }

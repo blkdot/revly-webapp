@@ -77,3 +77,6 @@ export const settingsLogin = (body) => {
 
   return JSON.parse(stringFakeOnboarding);
 };
+
+export const settingsSave = (body) =>
+  axios.post(`${apiUrl}/settings/save`, body).then(handleResponse).catch(handleResponse);

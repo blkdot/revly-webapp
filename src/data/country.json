@@ -6,37 +6,38 @@
     },
     {
       "name": "Kuwait",
-      "code": "KW",
-      "dial": "+965"
+      "code": "KW"
     },
     {
       "name": "Lebanon",
-      "code": "LB",
-      "dial": "+961"
+      "code": "LB"
     },
     {
       "name": "Oman",
-      "code": "OM",
-      "dial": "+968"
+      "code": "OM"
     },
     {
       "name": "Qatar",
-      "code": "QA",
-      "dial": "+974"
+      "code": "QA"
     },
     {
       "name": "Saudi Arabia",
-      "code": "SA",
-      "dial": "+966"
+      "code": "SA"
     },
     {
       "name": "United Arab Emirates",
-      "code": "AE",
-      "dial": "+971"
+      "code": "AE"
     },
     {
       "name": "Madagascar",
-      "code": "MG",
-      "dial": "+261"
+      "code": "MG"
+    },
+    {
+      "name": "Maroc",
+      "code": "MA"
+    },
+    {
+      "name": "France",
+      "code": "FR"
     }
 ]
