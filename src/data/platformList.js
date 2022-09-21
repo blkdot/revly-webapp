@@ -2,8 +2,8 @@ import imageDeliveroo from '../assets/images/deliveroo.png';
 import imageTalabat from '../assets/images/talabat.png';
 
 export const platformList = [
-  { src: imageDeliveroo, name: 'deliveroo' },
-  { src: imageTalabat, name: 'talabat' },
+  { src: imageDeliveroo, name: 'deliveroo', color: '#38BCB4' },
+  { src: imageTalabat, name: 'talabat', color: '#EF6400' },
 ];
 
 export const platformContexDefaultFormat = {

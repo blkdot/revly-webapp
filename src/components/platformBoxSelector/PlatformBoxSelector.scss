@@ -19,6 +19,10 @@
     background-color: $color-third;
   }
 
+  &.__error {
+    background-color: $color-light-pink;
+  }
+
   .onboarding-platform__selector-item__state-icon {
     position: absolute;
     right: -5px;

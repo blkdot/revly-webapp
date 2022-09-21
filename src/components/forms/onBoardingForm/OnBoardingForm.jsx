@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import './OnBoardingForm.scss';
 
@@ -18,6 +19,8 @@ const OnBoardingForm = (props) => {
     valueMail,
     valuePassword,
   } = props;
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const renderButton = () => {
     if (!onSubmit) return null;
@@ -49,13 +52,26 @@ const OnBoardingForm = (props) => {
         />
         <TextfieldKit
           label="Password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           size="small"
           onChange={(e) => onChangePassword(e.target.value)}
           className="onboarding-form__input"
           error={isError}
           value={valuePassword}
           fullWidth
+          InputProps={{
+            endAdornment: showPassword ? (
+              <VisibilityOff
+                onClick={() => setShowPassword(false)}
+                style={{ cursor: 'pointer', color: '#919eab' }}
+              />
+            ) : (
+              <Visibility
+                onClick={() => setShowPassword(true)}
+                style={{ cursor: 'pointer', color: '#919eab' }}
+              />
+            ),
+          }}
         />
         {renderButton()}
       </FormcontrolKit>

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { pascalCase } from 'change-case';
 import OnBoardingForm from '../forms/onBoardingForm/OnBoardingForm';
 
 const OnBoarding = ({ platform, formValue, setFormValue }) => {
@@ -7,21 +7,22 @@ const OnBoarding = ({ platform, formValue, setFormValue }) => {
     setFormValue({ ...formValue, [k]: v });
   };
 
+  const renderTitle = () => (
+    <span className="__form-card__text" style={{ fontSize: '16px' }}>
+      Link your{' '}
+      <span style={{ color: platform.color, fontSize: '16px' }}>{pascalCase(platform.name)}</span>{' '}
+      account to your <span style={{ color: '#4D2681', fontSize: '16px' }}>Revly</span> account.
+    </span>
+  );
+
   const renderForm = () => (
-    <div className="onboarding__form-card">
+    <div>
       <OnBoardingForm
         onChangeEmail={handleChange('email')}
         onChangePassword={handleChange('password')}
         valueMail={formValue.email}
         valuePassword={formValue.password}
-        title={
-          <img
-            src={platform.src}
-            alt={platform.name}
-            width={100}
-            style={{ objectFit: 'contain' }}
-          />
-        }
+        title={renderTitle()}
       />
     </div>
   );

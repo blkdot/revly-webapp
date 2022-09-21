@@ -5,7 +5,7 @@ import { FcCheckmark } from 'react-icons/fc';
 import './PlatformBoxSelector.scss';
 
 const PlatformBoxSelector = (props) => {
-  const { item, onClickItem, classActive, platforms } = props;
+  const { item, onClickItem, classActive, platforms, classError } = props;
   const { name, src } = item;
 
   const renderIcon = () => {
@@ -15,9 +15,17 @@ const PlatformBoxSelector = (props) => {
     return null;
   };
 
+  const getClassState = () => {
+    if (classError) return '__error';
+
+    if (classActive) return '__active';
+
+    return '';
+  };
+
   return (
     <div
-      className={`onboarding-platform__selector-item ${classActive ? '__active' : ''}`}
+      className={`onboarding-platform__selector-item ${getClassState()}`}
       onClick={() => onClickItem(name)}
       onKeyDown={() => onClickItem(name)}
       role="button"
