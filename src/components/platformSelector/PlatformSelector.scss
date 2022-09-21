@@ -5,14 +5,18 @@
   flex-direction: column;
   text-align: center;
   margin: 1rem auto;
+  padding: 0rem 2rem;
 
   p {
     font-weight: 600;
+    font-size: 16px;
+    width: 450px;
+    margin: 1.2rem auto;
   }
 
   .onboarding-platform__selector {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
