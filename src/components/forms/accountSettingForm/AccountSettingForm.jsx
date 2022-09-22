@@ -52,7 +52,6 @@ const AccountSettingForm = (props) => {
           />
           <PhoneInputKit
             value={valuePhone}
-            enableSearch
             country="ae"
             onChange={(v) => handleInputChange({ target: { name: 'phone', value: `+${v}` } })}
             containerClass="account-form__flex__block__input-phone"
