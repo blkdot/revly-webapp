@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MdOutlineDangerous } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import { MdLogout, MdHelpOutline } from 'react-icons/md';
 
 import './OnBoarding.scss';
 
@@ -17,6 +18,7 @@ import StepLabelKit from '../../kits/stepLabel/StepLabel';
 import ButtonKit from '../../kits/button/ButtonKit';
 import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import HighOrderBlock from '../../components/highOrderBlock/HighOrderBlock';
 
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
@@ -48,13 +50,14 @@ const OnBoarding = () => {
   const [currentPlatform, setCurrentPlatform] = useState(null);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
   const [errorPlatformConnect, setErrorPlatformConnect] = useState(defaultSelected);
+  const [successPlatformConnect, setSuccessPlatformConnect] = useState(defaultSelected);
   const [isLoading, setIsLoading] = useState(false);
-  const [showError, setShowError] = useState(false);
-  // const [showSuccess, setShowSuccess] = useState(false);
-  const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
+
+  const { userPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform } = useApi();
-  const { user } = useUserAuth();
+  const { user, logOut } = useUserAuth();
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (step > 0) {
@@ -62,17 +65,11 @@ const OnBoarding = () => {
       return;
     }
 
-    setShowError(false);
-    cleanPlatformData();
+    setErrorPlatformConnect(defaultSelected);
   }, [step]);
 
   useEffect(() => {
-    setShowError(false);
-
-    // TODO: remove error only when the selected platform is unselected
-    if (currentPlatform && selectedPlatform[currentPlatform.name]) {
-      setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: false });
-    }
+    setFormValues({ email: '', password: '' });
 
     if (Object.values(selectedPlatform).every((v) => !v) && step !== 0) {
       setStep(0);
@@ -86,16 +83,21 @@ const OnBoarding = () => {
 
     if (!currentPlatformInsertion[0]) {
       setCurrentPlatform(null);
+
+      if (isAllSelected()) setStep(2);
+
       return;
     }
 
     setCurrentPlatform(currentPlatformInsertion[0]);
+    if (step === 2 && isAllSelected()) setStep(1);
   }, [JSON.stringify(userPlatformData.platforms), JSON.stringify(selectedPlatform)]);
+
+  const isAllSelected = () => Object.values(selectedPlatform).every((v) => v);
 
   const handleSubmitLoginInfo = async () => {
     if (!currentPlatform) return;
 
-    setShowError(false);
     setIsLoading(true);
 
     const res = await settingsOnboardPlatform(
@@ -111,23 +113,29 @@ const OnBoarding = () => {
 
     if (res instanceof Error) {
       setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: true });
-      triggerAlertWithMessageError(res.message);
-      setShowError(true);
+      triggerAlertWithMessageError(
+        `We couldn’t connect to your ${currentPlatform.name} account. Please double check your credentials or contact customer support`,
+      );
       return;
     }
 
     setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: false });
-    triggerAlertWithMessageSuccess('Registered with success !');
+    setSuccessPlatformConnect({ ...successPlatformConnect, [currentPlatform.name]: true });
+    triggerAlertWithMessageSuccess(`You ${currentPlatform.name} account has been
+    linked successfully`);
 
     setUserPlatformData({
       ...userPlatformData,
       platforms: { ...userPlatformData.platforms, [currentPlatform.name]: res },
+      onboarded: true,
     });
 
     setFormValues({ email: '', password: '' });
   };
 
   const handlePlatformClick = (key) => {
+    if (userPlatformData.platforms[key].registered) return;
+
     setSelectedPlatform({ ...selectedPlatform, [key]: !selectedPlatform[key] });
   };
 
@@ -150,6 +158,7 @@ const OnBoarding = () => {
           items={platformList}
           state={selectedPlatform}
           errors={errorPlatformConnect}
+          success={successPlatformConnect}
           onClickItem={handlePlatformClick}
         />
       );
@@ -161,6 +170,7 @@ const OnBoarding = () => {
           <PlatformSelector
             items={platformList}
             state={selectedPlatform}
+            success={successPlatformConnect}
             errors={errorPlatformConnect}
             onClickItem={handlePlatformClick}
             platforms={userPlatformData.platforms}
@@ -171,58 +181,72 @@ const OnBoarding = () => {
       );
     }
 
-    return 'New content';
-  };
-
-  const renderErrorNotif = () => {
-    if (!showError && !isLoading) return null;
-
     return (
-      <div style={{ width: '20rem', display: 'flex' }}>
-        <i>
-          <MdOutlineDangerous style={{ fontSize: '60px', color: 'red' }} />
-        </i>
-        <span style={{ color: 'red' }}>
-          We couldn’t connect to your deliveroo account. Please double check your credentials or
-          contact customer support
-        </span>
-      </div>
+      <>
+        <PlatformSelector
+          items={platformList}
+          state={selectedPlatform}
+          success={successPlatformConnect}
+          errors={errorPlatformConnect}
+          onClickItem={handlePlatformClick}
+          platforms={userPlatformData.platforms}
+          noText
+        />
+        <p style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold' }}>
+          All your accounts have been linked successfully!
+        </p>
+        <div style={{ margin: '1.2rem 2rem 0.6rem' }}>
+          <ButtonKit variant="contained" fullWidth onClick={handleClickStart}>
+            Start using Revly
+          </ButtonKit>
+        </div>
+      </>
     );
   };
 
   const isNextDisabled = () => {
     switch (step) {
       case 0:
-        return Object.values(selectedPlatform).every((v) => !v);
+        return !Object.values(selectedPlatform).some((v) => v);
 
       case 1:
-        return !Object.keys(selectedPlatform).reduce((acc, cur) => {
-          if (!selectedPlatform[cur]) return acc;
-
-          return userPlatformData.platforms[cur].registered;
-        }, true);
+        return !Object.values(successPlatformConnect).some((v) => v);
 
       default:
         return true;
     }
   };
 
+  const renderNext = () => {
+    if (step === steps.length - 1) return null;
+
+    return (
+      <div>
+        <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={() => setStep(step + 1)}>
+          Next
+        </ButtonKit>
+      </div>
+    );
+  };
+
   const renderSendButton = () => {
-    if (step !== 1) return null;
+    if (step !== 1 || !currentPlatform) return null;
 
     return (
       <ButtonLoadingKit
         variant="contained"
         onClick={handleSubmitLoginInfo}
         loading={isLoading}
-        disabled={!isNextDisabled() || !currentPlatform}
+        disabled={!currentPlatform || !formValues.email || !formValues.password}
         fullWidth>
         Link
       </ButtonLoadingKit>
     );
   };
 
-  const isBackDisabled = () => step === 0 || step === 2;
+  const isBackDisabled = () => step === 0;
+
+  const handleClickStart = () => navigate('/dashboard');
 
   const renderSpinner = () => {
     if (!isLoading) return null;
@@ -241,6 +265,25 @@ const OnBoarding = () => {
         </span>
       </div>
     );
+  };
+
+  const backTarget = () => {
+    if (step === 2 && isAllSelected()) {
+      setStep(0);
+      return;
+    }
+
+    setStep(step - 1);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate('/');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e.message);
+    }
   };
 
   return (
@@ -266,23 +309,30 @@ const OnBoarding = () => {
                 variant="outlined"
                 color="error"
                 disabled={isBackDisabled()}
-                onClick={() => setStep(step - 1)}>
+                onClick={backTarget}>
                 Back
               </ButtonKit>
             </div>
             {renderSpinner()}
-            {renderErrorNotif()}
-            <div>
-              <ButtonKit
-                variant="outlined"
-                disabled={isNextDisabled()}
-                onClick={() => setStep(step + 1)}>
-                Next
-              </ButtonKit>
-            </div>
+            {renderNext()}
           </div>
         </div>
       </ModalKit>
+      <div style={{ cursor: 'pointer' }}>
+        <HighOrderBlock color="warning" higher>
+          <MdHelpOutline style={{ fontSize: '30px' }} />
+        </HighOrderBlock>
+      </div>
+      <div
+        style={{ cursor: 'pointer' }}
+        onClick={handleLogout}
+        tabIndex={0}
+        onKeyDown={handleLogout}
+        role="button">
+        <HighOrderBlock style={{ cursor: 'pointer' }}>
+          <MdLogout style={{ fontSize: '30px' }} />
+        </HighOrderBlock>
+      </div>
     </div>
   );
 };

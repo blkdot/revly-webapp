@@ -13,6 +13,8 @@ import FormGroupKit from '../../../../kits/formGroup/FormGroupKit';
 import FormControlLabelKit from '../../../../kits/formControlLabel/FormControlLabel';
 import CheckboxKit from '../../../../kits/checkbox/CheckboxKit';
 
+import onlyNumber from '../../../../utlls/input/onlyNumber';
+
 const SignUpForm = (props) => {
   const {
     onChangeEmail,
@@ -36,15 +38,6 @@ const SignUpForm = (props) => {
   } = props;
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const onlyNumber = (event) => {
-    const code = ['Backspace', 'Arrow'];
-
-    const isValid = code.some((v) => event.code.includes(v)) || /^[0-9]*$/.test(event.key);
-    if (!isValid) {
-      event.preventDefault();
-    }
-  };
 
   return (
     <div className="signup-form">

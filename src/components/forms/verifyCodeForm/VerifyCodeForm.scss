@@ -1,0 +1,40 @@
+@import '../../../library.scss';
+@import '../../../responsiveness.scss';
+
+.verify-code-form {
+    margin: 2em 0;
+    .__input-block {
+        display: flex;
+        justify-content: center;
+
+        .__input {
+            width: 56px;
+            height: 56px;
+            margin-right: 0.7em;
+            padding: 0;
+            
+            input {
+                font-size: 16px;
+                margin-left: 8px;
+            }
+
+            @include mobileBreakpoint {
+                input {
+                    margin-left: 0;
+                }
+
+                width: 40px;
+                margin-right: 0.3em;
+            }
+
+        }
+    }
+
+    .__btn {
+        margin-top: 1.5em;
+        width: 100%;
+        font-weight: bold;
+        font-size: 15px;
+        background-color: $color-second-main;
+    }
+}
