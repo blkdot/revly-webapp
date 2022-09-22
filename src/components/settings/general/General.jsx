@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { updateProfile } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 import './General.scss';
 
@@ -14,7 +15,7 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
 
 const General = () => {
-  const { user, updatePhone, createRecaptcha } = useUserAuth();
+  const { user, setIsUpdatingPhone, verifyPhone } = useUserAuth();
   const [inputValue, setInputValue] = useState({
     name: user.displayName || '',
     phone: user.phoneNumber || '',
@@ -31,6 +32,7 @@ const General = () => {
   });
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const isValid = (field, inequalTo) =>
     inputValue[field]
@@ -52,8 +54,9 @@ const General = () => {
       }
 
       if (isValid('phone', user.phoneNumber)) {
-        createRecaptcha();
-        await updatePhone(inputValue.phone.trim());
+        const vId = await verifyPhone(inputValue.phone);
+        setIsUpdatingPhone(true);
+        navigate(`/verify-code?n=${inputValue.phone}&vId=${vId}`);
       }
 
       setIsLoading(false);

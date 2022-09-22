@@ -13,11 +13,11 @@ import {
   RecaptchaVerifier,
   PhoneAuthProvider,
   reauthenticateWithPopup,
-  updatePhoneNumber,
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
   sendEmailVerification,
+  updatePhoneNumber,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import config from '../setup/config';
@@ -28,6 +28,7 @@ const UserAuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(true);
+  const [isUpdatingPhone, setIsUpdatingPhone] = useState(false);
   const { cleanPlatformData } = usePlatform();
 
   useEffect(() => {
@@ -84,13 +85,14 @@ export const AuthContextProvider = ({ children }) => {
     );
   };
 
-  const updatePhone = async (phone) => {
+  const verifyPhone = async (phone) => {
+    createRecaptcha();
     const provider = new PhoneAuthProvider(auth);
-    const verificationId = await provider.verifyPhoneNumber(phone, window.applicationVerifier);
-    // eslint-disable-next-line no-alert
-    const code = window.prompt('Enter the code we sent to the phone number : ');
-    const phoneCredential = PhoneAuthProvider.credential(verificationId, code);
+    return provider.verifyPhoneNumber(phone, window.applicationVerifier);
+  };
 
+  const updatePhone = (vId, code) => {
+    const phoneCredential = PhoneAuthProvider.credential(vId, code);
     return updatePhoneNumber(user, phoneCredential);
   };
 
@@ -113,14 +115,16 @@ export const AuthContextProvider = ({ children }) => {
   return (
     <UserAuthContext.Provider
       value={{
-        createRecaptcha,
         user,
         signUp,
         signIn,
         logOut,
         googleSignIn,
         reAuth,
+        verifyPhone,
         updatePhone,
+        isUpdatingPhone,
+        setIsUpdatingPhone,
         verifyEmail,
         reAuthGoogle,
       }}>
