@@ -1,0 +1,11 @@
+.high-order-block-component {
+  position: fixed;
+  left: 1%;
+  bottom: 1%;
+  z-index: 1301;
+  box-sizing: border-box;
+
+  &.__push-top {
+    bottom: 10%;
+  }
+}
