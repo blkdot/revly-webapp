@@ -583,7 +583,6 @@ const Dates = () => {
       }
       return titleOffers; // if title!== "custom" i only return title ("today", "yesterday", "current week" and etc)
     }
-
     if (title === 'custom') {
       // if titleDate === "custom"  i return the date
       if (leftBtnStartLocal === leftBtnEndLocal) {

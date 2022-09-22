@@ -10,7 +10,6 @@ import PaperKit from '../../kits/paper/PaperKit';
 import talabat from '../../assets/images/talabat.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import './PlanningOffersTable.scss';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 import BoxKit from '../../kits/box/BoxKit';
 
 const PlanningOffersTable = ({ rows }) => (
@@ -33,9 +32,7 @@ const PlanningOffersTable = ({ rows }) => (
         <TableBodyKit>
           {rows.map((row) => (
             <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCellKit>
-                {row.vendor_name === null ? <SkeletonKit width={80} /> : row.vendor_name}
-              </TableCellKit>
+              <TableCellKit>{row.vendor_name === null ? '-' : row.vendor_name}</TableCellKit>
               <TableCellKit>
                 <img
                   className="planning-platform"
@@ -48,9 +45,7 @@ const PlanningOffersTable = ({ rows }) => (
               <TableCellKit>{row.minimum_order_value}</TableCellKit>
               <TableCellKit>{row.start_date}</TableCellKit>
               <TableCellKit>{row.end_date}</TableCellKit>
-              <TableCellKit>
-                {row.target === null ? <SkeletonKit width={80} /> : row.target}
-              </TableCellKit>
+              <TableCellKit>{row.target === null ? '-' : row.target}</TableCellKit>
               <TableCellKit>{row.status}</TableCellKit>
             </TableRow>
           ))}

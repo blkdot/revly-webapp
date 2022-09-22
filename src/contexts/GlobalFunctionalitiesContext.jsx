@@ -32,6 +32,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
     startDate: leftDate.startDate,
     endDate: leftDate.endDate,
   });
+  const [titleOffers, setTitleOffers] = useState(titleDate);
 
   useEffect(() => {
     if (isShowing) {
@@ -91,6 +92,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         setRestaurants,
         leftDateOffers,
         setLeftDateOffers,
+        titleOffers,
+        setTitleOffers,
       }}>
       {renderAlert()}
       {children}
