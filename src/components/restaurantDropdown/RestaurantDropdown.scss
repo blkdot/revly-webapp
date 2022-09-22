@@ -18,7 +18,8 @@
 
   .Mui-focused.Mui-focused fieldset {
     border: 2px solid $color-border;
-    legend{
+
+    legend {
       background: #fff;
     }
   }
@@ -36,4 +37,11 @@
   &.Mui-focused.Mui-focused svg {
     fill: $color-border
   }
+}
+
+.restaurant-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-right: 10px;
 }

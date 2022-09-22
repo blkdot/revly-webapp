@@ -245,8 +245,10 @@ const OnBoarding = () => {
 
   return (
     <div className="onboarding">
-      <RestaurantDropdown names={[]} />
-      <Dates />
+      <div className="top-inputs">
+        <RestaurantDropdown vendors={[]} />
+        <Dates />
+      </div>
       <FinanceEmpty />
       <MarketingEmpty />
       <ModalKit open aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

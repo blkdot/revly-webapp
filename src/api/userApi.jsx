@@ -12,4 +12,10 @@ export const getMetrics = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const getVendors = (body) =>
+  axios
+    .post(`${apiUrl}/user/vendors`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+
 export const _ = () => null;
