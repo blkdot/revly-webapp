@@ -24,6 +24,7 @@ import Planning from './pages/planning/Planning';
 import MarketingAds from './pages/marketing/MarketingAds';
 import MarketingOffer from './pages/marketing/MarketingOffer';
 import AuthLayout from './components/layout/authLayout/AuthLayout';
+import VerifyCode from './pages/verifyCode/VerifyCode';
 
 const theme = createTheme({
   palette: {
@@ -55,6 +56,7 @@ const App = () => (
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/marketing/offer" element={<MarketingOffer />} />
                     <Route path="/marketing/ads" element={<MarketingAds />} />
+                    <Route path="/verify-code" element={<VerifyCode />} />
                   </Route>
                   <Route path="/onboarding" element={<OnBoarding />} />
                   <Route path="/check" element={<Check />} />
