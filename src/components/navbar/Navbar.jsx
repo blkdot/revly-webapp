@@ -6,13 +6,6 @@
 import React, { useState } from 'react';
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import LogoutIcon from '@mui/icons-material/Logout';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
-import GroupsIcon from '@mui/icons-material/Groups';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import SettingsIcon from '@mui/icons-material/Settings';
 
 import './Navbar.scss';
 
@@ -24,6 +17,15 @@ import AccordionKit from '../../kits/accordion/AccordionKit';
 import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import ButtonKit from '../../kits/button/ButtonKit';
+import arrow from '../../assets/images/navbar-arrow.png';
+import dashboardIcon from '../../assets/images/ic_dashboard.png';
+import planningIcon from '../../assets/images/ic_planning.png';
+import marketingIcon from '../../assets/images/ic_marketing.png';
+import offerIcon from '../../assets/images/ic_offers.png';
+import adsIcon from '../../assets/images/ic_ads.png';
+import competitionIcon from '../../assets/images/ic_competiton.png';
+import logoutIcon from '../../assets/images/ic_logout.png';
+import settingsIcon from '../../assets/images/ic_settings.png';
 
 const Link = ({ path, title, children }) => (
   <NavLink to={path}>
@@ -66,17 +68,19 @@ const Navbar = () => {
             ) : (
               <img className="nav-small-logo" src={smallLogo} alt="Revly" />
             )}
-            <ButtonKit
+            <div
+              role="presentation"
+              tabIndex={-1}
               onClick={() => setOpened(!opened)}
               className={`nav-double-arrow ${opened ? 'active' : ''}`}>
-              <KeyboardDoubleArrowRightIcon />
-            </ButtonKit>
+              <img src={arrow} alt="Arrow" />
+            </div>
           </li>
           <Link title="Dashboard" path="/dashboard">
-            <DashboardIcon />
+            <img className="nav-icon" src={dashboardIcon} alt="Dashboard" />
           </Link>
           <Link title="Planning" path="/planning">
-            <CalendarMonthIcon />
+            <img className="nav-icon" src={planningIcon} alt="Planning" />
           </Link>
           <AccordionKit
             onClick={() => setExpanded(!expanded)}
@@ -90,28 +94,32 @@ const Navbar = () => {
                 className="accordion-sum"
                 expandIcon={opened || open ? <ExpandMoreIcon /> : ''}>
                 <TypographyKit
-                  sx={{ display: 'flex', alignItems: 'center', gridGap: '5px', fontSize: '14px' }}>
-                  <StackedLineChartIcon />
+                  sx={{ display: 'flex', alignItems: 'center', gridGap: '16px', fontSize: '14px' }}>
+                  <img className="nav-icon" src={marketingIcon} alt="Marketing" />
                   <span>Marketing</span>
                 </TypographyKit>
               </AccordionSummaryKit>
             </ButtonKit>
             <AccordionDetailsKit className="navbar-accordion-details">
-              <Link path="/marketing/offer">Offer</Link>
-              <Link path="/marketing/ads">Ads</Link>
+              <Link title="Offer" path="/marketing/offer">
+                <img className="nav-icon" src={offerIcon} alt="Offer" />
+              </Link>
+              <Link title="Advertisments" path="/marketing/ads">
+                <img className="nav-icon" src={adsIcon} alt="Advertisments" />
+              </Link>
             </AccordionDetailsKit>
           </AccordionKit>
           <Link title="Competition" path="/competition">
-            <GroupsIcon />
+            <img className="nav-icon" src={competitionIcon} alt="Competition" />
           </Link>
         </ul>
         <ul className="Navbar-footer">
           <Link title="Settings" path="/settings">
-            <SettingsIcon />
+            <img className="nav-icon" src={settingsIcon} alt="Settings" />
           </Link>
           <li onClick={handleLogout}>
             <ButtonKit className="navbar-button-kit">
-              <LogoutIcon />
+              <img className="nav-icon" src={logoutIcon} alt="Logout" />
               <span>Log Out</span>
             </ButtonKit>
           </li>
