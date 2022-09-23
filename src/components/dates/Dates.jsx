@@ -42,6 +42,10 @@ const Dates = () => {
     titleDate,
     setTitleRightDate,
     titleRightDate,
+    leftDateOffers,
+    setLeftDateOffers,
+    titleOffers,
+    setTitleOffers,
   } = useDate();
   const [opened, setOpened] = useState(false);
   const [openedRight, setOpenedRight] = useState(false);
@@ -101,6 +105,9 @@ const Dates = () => {
           endDate: endOfMonth(subMonths(endDate, 1)),
         }); // Sending previous month to context state
       }
+    }
+    if (location.pathname === '/planning') {
+      setLeftDateOffers({ startDate, endDate });
     } else {
       // its will work on other pages
       setLeftDateBtn({ startDate, endDate });
@@ -160,7 +167,48 @@ const Dates = () => {
         setTitleDate('custom');
         setTitleRightDate('custom');
       }
-    } else if (location.pathname !== '/dashboard') {
+    } else if (location.pathname === '/planning') {
+      if (startLocal === endLocal) {
+        // It checks that what date is currently selected in Left date picker
+        if (startLocal === dateLocal) {
+          setTitleOffers('today'); // Sending data to state which will be needed for the introduction in the left input
+        } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
+          setTitleOffers('yesterday');
+        } else {
+          setTitleOffers('custom');
+        }
+      } else if (getWeek(startDate, 1) === getWeek(endDate, 1)) {
+        if (endGetDay === dateGetDay && startGetDay === 0) {
+          setTitleOffers('current week');
+        } else if (
+          startGetDay === 0 &&
+          endGetDay === 6 &&
+          getWeek(startDate) === getWeek(subWeeks(date, 1))
+        ) {
+          setTitleOffers('last week');
+        } else {
+          setTitleOffers('custom');
+        }
+      } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
+        if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
+          setTitleOffers('current month');
+        } else if (startGetDate === 1 && endGetDate === dateGetDate) {
+          setTitleOffers('last month');
+        } else {
+          setTitleOffers('custom');
+        }
+      } else if (
+        startGetDate === 1 &&
+        endGetDate <= dateGetDate &&
+        endGetDate === endOfMonth(endDate).getDate()
+      ) {
+        setTitleOffers('current month');
+      } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+        setTitleOffers('last month');
+      } else {
+        setTitleOffers('custom');
+      }
+    } else if (location.pathname !== '/planning' && location.pathname !== '/dashboard') {
       // its will work on other pages
       if (startLocal === endLocal) {
         // It checks that what date is currently selected in Left date picker
@@ -495,6 +543,14 @@ const Dates = () => {
   const rightStartGetDate = new Date(right.startDate).getDate();
   const rightEndGetDate = new Date(right.endDate).getDate();
 
+  // planning date picker variables
+  const leftStartOffers = new Date(leftDateOffers.startDate);
+  const leftEndOffers = new Date(leftDateOffers.endDate);
+  const leftStartLocalOffers = new Date(leftStartOffers).toLocaleDateString();
+  const leftEndLocalOffers = new Date(leftEndOffers).toLocaleDateString();
+  const leftStartGetDateOffers = new Date(leftStartOffers).getDate();
+  const leftEndGetDateOffers = new Date(leftEndOffers).getDate();
+
   const getLeftDate = () => {
     if (location.pathname === '/dashboard') {
       if (titleDate === 'custom') {
@@ -509,23 +565,35 @@ const Dates = () => {
       }
       return titleDate; // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
     }
-    if (location.pathname !== '/dashboard') {
-      if (title === 'custom') {
+    if (location.pathname === '/planning') {
+      if (titleOffers === 'custom') {
         // if titleDate === "custom"  i return the date
-        if (leftBtnStartLocal === leftBtnEndLocal) {
-          return leftBtnStartLocal;
+        if (leftStartLocalOffers === leftEndLocalOffers) {
+          return leftStartLocalOffers;
         }
         if (
-          leftBtnStartGetDate === 1 &&
-          leftBtnEndGetDate === endOfMonth(leftEndBtn, 1).getDate()
+          leftStartGetDateOffers === 1 &&
+          leftEndGetDateOffers === endOfMonth(leftStartOffers, 1).getDate()
         ) {
-          return `${format(leftStartBtn, 'LLL', { locale: enUS })} - ${getYear(leftStartBtn)}`;
+          return `${format(leftStartOffers, 'LLL', { locale: enUS })} - ${getYear(
+            leftStartOffers,
+          )}`;
         }
-        return `${leftBtnStartLocal} - ${leftBtnEndLocal}`;
+        return `${leftStartLocalOffers} - ${leftEndLocalOffers}`;
       }
-      return title; // if title!== "custom" i only return title ("today", "yesterday", "current week" and etc)
+      return titleOffers; // if title!== "custom" i only return title ("today", "yesterday", "current week" and etc)
     }
-    return '';
+    if (title === 'custom') {
+      // if titleDate === "custom"  i return the date
+      if (leftBtnStartLocal === leftBtnEndLocal) {
+        return leftBtnStartLocal;
+      }
+      if (leftBtnStartGetDate === 1 && leftBtnEndGetDate === endOfMonth(leftEndBtn, 1).getDate()) {
+        return `${format(leftStartBtn, 'LLL', { locale: enUS })} - ${getYear(leftStartBtn)}`;
+      }
+      return `${leftBtnStartLocal} - ${leftBtnEndLocal}`;
+    }
+    return title; // if title!== "custom" i only return title ("today", "yesterday", "current week" and etc)
   };
   const getDateRight = () => {
     if (titleRightDate === 'custom') {

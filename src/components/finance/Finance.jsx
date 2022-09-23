@@ -6,10 +6,9 @@ import dayjs from 'dayjs';
 import Widget from '../widget/Widget';
 import Table from '../table/Table';
 import TypographyKit from '../../kits/typography/TypographyKit';
-import { restaurantNames } from '../../data/fakeDataDashboard';
 import useDate from '../../hooks/useDate';
 
-const Finance = ({ metricsLeft, metricsRight }) => {
+const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   const [table, setTable] = useState('revenue');
   const { titleDate, leftDate, restaurants } = useDate();
   const startLocal = leftDate.startDate.toLocaleDateString();
@@ -51,7 +50,7 @@ const Finance = ({ metricsLeft, metricsRight }) => {
       <TypographyKit variant="h4">
         <span> {getLeftDate()} </span>
         results for{' '}
-        {restaurants.length === restaurantNames.length || restaurants.length === 0 ? (
+        {restaurants.length === vendors.length || restaurants.length === 0 ? (
           <p>
             all <span> points of sales</span>
           </p>

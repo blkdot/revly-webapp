@@ -6,7 +6,9 @@ import {
   settingsSave,
 } from '../api/settingsApi';
 
-import { getMetrics } from '../api/userApi';
+import { getMetrics, getVendors } from '../api/userApi';
+
+import { getOffers } from '../api/marketingApi';
 
 const useApi = () => ({
   settingsOnboardPlatform,
@@ -15,6 +17,8 @@ const useApi = () => ({
   settingsOnboardPlatformStatus,
   getMetrics,
   settingsSave,
+  getOffers,
+  getVendors,
 });
 
 export default useApi;
