@@ -32,7 +32,9 @@ const PlanningOffersTable = ({ rows }) => (
         <TableBodyKit>
           {rows.map((row) => (
             <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCellKit>{row.vendor_name === null ? '-' : row.vendor_name}</TableCellKit>
+              <TableCellKit align="center">
+                {row.vendor_name === null ? '-' : row.vendor_name}
+              </TableCellKit>
               <TableCellKit>
                 <img
                   className="planning-platform"
@@ -41,12 +43,12 @@ const PlanningOffersTable = ({ rows }) => (
                 />
               </TableCellKit>
               <TableCellKit>{row.discount_type}</TableCellKit>
-              <TableCellKit>{row.discount_rate}</TableCellKit>
-              <TableCellKit>{row.minimum_order_value}</TableCellKit>
-              <TableCellKit>{row.start_date}</TableCellKit>
-              <TableCellKit>{row.end_date}</TableCellKit>
-              <TableCellKit>{row.target === null ? '-' : row.target}</TableCellKit>
-              <TableCellKit>{row.status}</TableCellKit>
+              <TableCellKit align="center">{row.discount_rate}</TableCellKit>
+              <TableCellKit align="center">{row.minimum_order_value}</TableCellKit>
+              <TableCellKit align="center">{row.start_date}</TableCellKit>
+              <TableCellKit align="center">{row.end_date}</TableCellKit>
+              <TableCellKit align="center">{row.target === null ? '-' : row.target}</TableCellKit>
+              <TableCellKit align="center">{row.status}</TableCellKit>
             </TableRow>
           ))}
         </TableBodyKit>
