@@ -26,7 +26,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [titleDate, setTitleDate] = useState('today');
   const [titleRightDate, setTitleRightDate] = useState('yesterday');
 
-  const [restaurants, setRestaurants] = useState(['1 Restaurant']);
+  const [restaurants, setRestaurants] = useState([]);
+  const [vendorsContext, setVendorsContext] = useState({});
 
   useEffect(() => {
     if (isShowing) {
@@ -84,6 +85,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         triggerAlertWithMessageSuccess,
         restaurants,
         setRestaurants,
+        vendorsContext,
+        setVendorsContext,
       }}>
       {renderAlert()}
       {children}
