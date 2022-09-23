@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdLogout, MdHelpOutline } from 'react-icons/md';
+import { pascalCase } from 'change-case';
 
 import './OnBoarding.scss';
 
@@ -12,9 +13,7 @@ import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
 
 import ModalKit from '../../kits/modal/ModalKit';
-import StepperKit from '../../kits/stepper/StepperKit';
-import StepKit from '../../kits/step/StepKit';
-import StepLabelKit from '../../kits/stepLabel/StepLabel';
+import Stepper from '../../components/stepper/Stepper';
 import ButtonKit from '../../kits/button/ButtonKit';
 import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
@@ -27,7 +26,14 @@ import { useAlert } from '../../hooks/useAlert';
 
 import { platformList } from '../../data/platformList';
 
-const steps = ['Welcome to Revly', 'Add your delivery platforms', 'Start using Revly'];
+const START_KEY = 'start';
+const END_KEY = 'last';
+
+const defaultSteps = [
+  { key: START_KEY, label: 'Welcome to Revly', active: true },
+  ...platformList.map((p) => ({ key: p.name, label: pascalCase(p.name), active: false })),
+  { key: END_KEY, label: 'Start using Revly', active: true },
+];
 
 const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: false }), {});
 
@@ -45,12 +51,13 @@ const style = {
 };
 
 const OnBoarding = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(START_KEY);
   const [formValues, setFormValues] = useState({ email: '', password: '' });
   const [currentPlatform, setCurrentPlatform] = useState(null);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
   const [errorPlatformConnect, setErrorPlatformConnect] = useState(defaultSelected);
   const [successPlatformConnect, setSuccessPlatformConnect] = useState(defaultSelected);
+  const [steps, setSteps] = useState(defaultSteps);
   const [isLoading, setIsLoading] = useState(false);
 
   const { userPlatformData, setUserPlatformData } = usePlatform();
@@ -59,41 +66,99 @@ const OnBoarding = () => {
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (step > 0) {
-      setErrorPlatformConnect(defaultSelected);
-      return;
-    }
+  const isAllSelected = () => Object.values(selectedPlatform).every((v) => v);
 
+  const isAllNotSelected = () => Object.values(selectedPlatform).every((v) => !v);
+
+  const getCurrentPlatformInsertion = () =>
+    platformList.filter(
+      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
+    );
+
+  const getActiveSteps = () => steps.filter((f) => f.active);
+
+  const isAllNotSelectedInMiddle = () => isAllNotSelected() && step !== START_KEY;
+
+  const getNextKeySteps = () => {
+    if (step === END_KEY) return null;
+
+    if (!currentPlatform) return [END_KEY];
+
+    const indexSteps = steps.findIndex((s) => s.key === currentPlatform.name);
+
+    if (indexSteps < 0) return [END_KEY];
+
+    const promise = new Promise((res) => {
+      for (let index = indexSteps; index < steps.length; index += 1) {
+        if (steps[index].active && steps[index].key !== currentPlatform.name) {
+          res(steps[index].key);
+          return;
+        }
+      }
+
+      res(END_KEY);
+    });
+
+    return Promise.all([promise]);
+  };
+
+  const getPrevKeySteps = async () => {
+    if (step === START_KEY) return null;
+
+    if (!currentPlatform) return [START_KEY];
+
+    const indexSteps = steps.findIndex((s) => s.key === currentPlatform.name);
+
+    if (indexSteps < 0) return null;
+
+    const promise = new Promise((res) => {
+      for (let index = indexSteps - 1; index > steps.length; index -= 1) {
+        if (steps[index].active && steps[index].key !== currentPlatform.name) {
+          res(steps[index].key);
+          return;
+        }
+      }
+
+      res(START_KEY);
+    });
+
+    return Promise.all([promise]);
+  };
+
+  const resetAll = () => {
+    setStep(START_KEY);
+    setSteps(defaultSteps);
+    setCurrentPlatform(null);
+  };
+
+  useEffect(() => {
     setErrorPlatformConnect(defaultSelected);
   }, [step]);
-
   useEffect(() => {
     setFormValues({ email: '', password: '' });
 
-    if (Object.values(selectedPlatform).every((v) => !v) && step !== 0) {
-      setStep(0);
-      setCurrentPlatform(null);
+    if (isAllNotSelectedInMiddle()) {
+      resetAll();
       return;
     }
 
-    const currentPlatformInsertion = platformList.filter(
-      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
-    );
+    const currentPlatformInsertion = getCurrentPlatformInsertion();
 
     if (!currentPlatformInsertion[0]) {
       setCurrentPlatform(null);
 
-      if (isAllSelected()) setStep(2);
+      if (isAllSelected()) {
+        setStep(END_KEY);
+        return;
+      }
 
       return;
     }
 
     setCurrentPlatform(currentPlatformInsertion[0]);
-    if (step === 2 && isAllSelected()) setStep(1);
-  }, [JSON.stringify(userPlatformData.platforms), JSON.stringify(selectedPlatform)]);
 
-  const isAllSelected = () => Object.values(selectedPlatform).every((v) => v);
+    setStep(currentPlatformInsertion[0].name);
+  }, [JSON.stringify(userPlatformData.platforms), JSON.stringify(selectedPlatform)]);
 
   const handleSubmitLoginInfo = async () => {
     if (!currentPlatform) return;
@@ -136,6 +201,18 @@ const OnBoarding = () => {
   const handlePlatformClick = (key) => {
     if (userPlatformData.platforms[key].registered) return;
 
+    const indexSteps = steps.findIndex((s) => s.key === key);
+
+    if (indexSteps > 0) {
+      const newContent = { ...steps[indexSteps], active: !steps[indexSteps].active };
+
+      const clonedSteps = [...steps];
+
+      clonedSteps.splice(indexSteps, 1, newContent);
+
+      setSteps(clonedSteps);
+    }
+
     setSelectedPlatform({ ...selectedPlatform, [key]: !selectedPlatform[key] });
   };
 
@@ -152,7 +229,7 @@ const OnBoarding = () => {
   };
 
   const renderStepScreens = () => {
-    if (step === 0) {
+    if (step === START_KEY) {
       return (
         <PlatformSelector
           items={platformList}
@@ -164,7 +241,7 @@ const OnBoarding = () => {
       );
     }
 
-    if (step === 1) {
+    if (step !== END_KEY) {
       return (
         <>
           <PlatformSelector
@@ -206,23 +283,23 @@ const OnBoarding = () => {
 
   const isNextDisabled = () => {
     switch (step) {
-      case 0:
+      case START_KEY:
         return !Object.values(selectedPlatform).some((v) => v);
 
-      case 1:
-        return !Object.values(successPlatformConnect).some((v) => v);
+      case END_KEY:
+        return true;
 
       default:
-        return true;
+        return !Object.values(successPlatformConnect).some((v) => v);
     }
   };
 
   const renderNext = () => {
-    if (step === steps.length - 1) return null;
+    if (step === END_KEY) return null;
 
     return (
       <div>
-        <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={() => setStep(step + 1)}>
+        <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={nextTarget}>
           Next
         </ButtonKit>
       </div>
@@ -230,7 +307,7 @@ const OnBoarding = () => {
   };
 
   const renderSendButton = () => {
-    if (step !== 1 || !currentPlatform) return null;
+    if (step === START_KEY || step === END_KEY) return null;
 
     return (
       <ButtonLoadingKit
@@ -244,7 +321,7 @@ const OnBoarding = () => {
     );
   };
 
-  const isBackDisabled = () => step === 0;
+  const isBackDisabled = () => step === START_KEY;
 
   const handleClickStart = () => navigate('/dashboard');
 
@@ -267,13 +344,16 @@ const OnBoarding = () => {
     );
   };
 
-  const backTarget = () => {
-    if (step === 2 && isAllSelected()) {
-      setStep(0);
-      return;
-    }
+  const backTarget = async () => {
+    const prevtarget = await getPrevKeySteps();
 
-    setStep(step - 1);
+    setStep(prevtarget[0]);
+  };
+
+  const nextTarget = async () => {
+    const nexttargetR = await getNextKeySteps();
+    console.log(nexttargetR, step);
+    setStep(nexttargetR[0]);
   };
 
   const handleLogout = async () => {
@@ -296,13 +376,7 @@ const OnBoarding = () => {
       <MarketingEmpty />
       <ModalKit open aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <div style={style}>
-          <StepperKit activeStep={step} alternativeLabel>
-            {steps.map((s) => (
-              <StepKit key={s}>
-                <StepLabelKit>{s}</StepLabelKit>
-              </StepKit>
-            ))}
-          </StepperKit>
+          <Stepper step={step} steps={getActiveSteps()} />
           {renderStepScreens()}
           <div style={{ width: '100%', padding: '0.5rem 2rem 0rem' }}>{renderSendButton()}</div>
           <div className="onboarding-actions">
