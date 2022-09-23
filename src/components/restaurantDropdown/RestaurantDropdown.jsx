@@ -11,8 +11,8 @@ import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import useDate from '../../hooks/useDate';
-import talabat from '../../assets/images/talabat.png';
-import deliveroo from '../../assets/images/deliveroo.png';
+import talabat from '../../assets/images/talabat-favicon.png';
+import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
