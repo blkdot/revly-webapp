@@ -26,6 +26,7 @@ import adsIcon from '../../assets/images/ic_ads.png';
 import competitionIcon from '../../assets/images/ic_competiton.png';
 import logoutIcon from '../../assets/images/ic_logout.png';
 import settingsIcon from '../../assets/images/ic_settings.png';
+import lines from '../../assets/images/lines.png';
 
 const Link = ({ path, title, children }) => (
   <NavLink to={path}>
@@ -113,6 +114,7 @@ const Navbar = () => {
             <img className="nav-icon" src={competitionIcon} alt="Competition" />
           </Link>
         </ul>
+        <img className="nav-lines" src={lines} alt="Gradient lines" />
         <ul className="Navbar-footer">
           <Link title="Settings" path="/settings">
             <img className="nav-icon" src={settingsIcon} alt="Settings" />
