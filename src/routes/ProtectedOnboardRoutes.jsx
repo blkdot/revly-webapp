@@ -62,7 +62,7 @@ const ProtectedOnboardRoutes = () => {
     );
   }
 
-  return allowed instanceof Error ? <Navigate to="/check" /> : <Outlet />;
+  return false ? <Navigate to="/check" /> : <Outlet />;
 };
 
 export default ProtectedOnboardRoutes;
