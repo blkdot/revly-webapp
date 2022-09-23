@@ -26,7 +26,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [titleDate, setTitleDate] = useState('today');
   const [titleRightDate, setTitleRightDate] = useState('yesterday');
 
-  const [restaurants, setRestaurants] = useState(['1 Restaurant']);
+  const [restaurants, setRestaurants] = useState([]);
+  const [vendorsContext, setVendorsContext] = useState({});
 
   const [leftDateOffers, setLeftDateOffers] = useState({
     startDate: leftDate.startDate,
@@ -94,6 +95,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         setLeftDateOffers,
         titleOffers,
         setTitleOffers,
+        vendorsContext,
+        setVendorsContext,
       }}>
       {renderAlert()}
       {children}

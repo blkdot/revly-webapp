@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Confetti from 'react-confetti';
+import { useNavigate } from 'react-router-dom';
+import { MdLogout, MdHelpOutline } from 'react-icons/md';
 
 import './OnBoarding.scss';
 
@@ -9,7 +10,6 @@ import Dates from '../../components/dates/Dates';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
-import Congrats from '../../components/congrats/Congrats';
 
 import ModalKit from '../../kits/modal/ModalKit';
 import StepperKit from '../../kits/stepper/StepperKit';
@@ -17,6 +17,8 @@ import StepKit from '../../kits/step/StepKit';
 import StepLabelKit from '../../kits/stepLabel/StepLabel';
 import ButtonKit from '../../kits/button/ButtonKit';
 import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
+import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import HighOrderBlock from '../../components/highOrderBlock/HighOrderBlock';
 
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
@@ -25,7 +27,7 @@ import { useAlert } from '../../hooks/useAlert';
 
 import { platformList } from '../../data/platformList';
 
-const steps = ['Welcome to Revly', 'Connect to the delivery platforms', 'Congratulation'];
+const steps = ['Welcome to Revly', 'Add your delivery platforms', 'Start using Revly'];
 
 const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: false }), {});
 
@@ -34,7 +36,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: 600,
   backgroundColor: '#ffffff',
   borderRadius: '0.4rem',
   boxShadow: 24,
@@ -47,30 +49,51 @@ const OnBoarding = () => {
   const [formValues, setFormValues] = useState({ email: '', password: '' });
   const [currentPlatform, setCurrentPlatform] = useState(null);
   const [selectedPlatform, setSelectedPlatform] = useState(defaultSelected);
+  const [errorPlatformConnect, setErrorPlatformConnect] = useState(defaultSelected);
+  const [successPlatformConnect, setSuccessPlatformConnect] = useState(defaultSelected);
   const [isLoading, setIsLoading] = useState(false);
-  const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
+
+  const { userPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform } = useApi();
-  const { user } = useUserAuth();
+  const { user, logOut } = useUserAuth();
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (step > 0) return;
+    if (step > 0) {
+      setErrorPlatformConnect(defaultSelected);
+      return;
+    }
 
-    cleanPlatformData();
+    setErrorPlatformConnect(defaultSelected);
   }, [step]);
 
   useEffect(() => {
+    setFormValues({ email: '', password: '' });
+
+    if (Object.values(selectedPlatform).every((v) => !v) && step !== 0) {
+      setStep(0);
+      setCurrentPlatform(null);
+      return;
+    }
+
     const currentPlatformInsertion = platformList.filter(
       ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
     );
 
     if (!currentPlatformInsertion[0]) {
       setCurrentPlatform(null);
+
+      if (isAllSelected()) setStep(2);
+
       return;
     }
 
     setCurrentPlatform(currentPlatformInsertion[0]);
+    if (step === 2 && isAllSelected()) setStep(1);
   }, [JSON.stringify(userPlatformData.platforms), JSON.stringify(selectedPlatform)]);
+
+  const isAllSelected = () => Object.values(selectedPlatform).every((v) => v);
 
   const handleSubmitLoginInfo = async () => {
     if (!currentPlatform) return;
@@ -89,21 +112,30 @@ const OnBoarding = () => {
     setIsLoading(false);
 
     if (res instanceof Error) {
-      triggerAlertWithMessageError(res.message);
+      setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: true });
+      triggerAlertWithMessageError(
+        `We couldn’t connect to your ${currentPlatform.name} account. Please double check your credentials or contact customer support`,
+      );
       return;
     }
 
-    triggerAlertWithMessageSuccess('Registered with success !');
+    setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: false });
+    setSuccessPlatformConnect({ ...successPlatformConnect, [currentPlatform.name]: true });
+    triggerAlertWithMessageSuccess(`You ${currentPlatform.name} account has been
+    linked successfully`);
 
     setUserPlatformData({
       ...userPlatformData,
       platforms: { ...userPlatformData.platforms, [currentPlatform.name]: res },
+      onboarded: true,
     });
 
     setFormValues({ email: '', password: '' });
   };
 
   const handlePlatformClick = (key) => {
+    if (userPlatformData.platforms[key].registered) return;
+
     setSelectedPlatform({ ...selectedPlatform, [key]: !selectedPlatform[key] });
   };
 
@@ -125,6 +157,8 @@ const OnBoarding = () => {
         <PlatformSelector
           items={platformList}
           state={selectedPlatform}
+          errors={errorPlatformConnect}
+          success={successPlatformConnect}
           onClickItem={handlePlatformClick}
         />
       );
@@ -136,7 +170,9 @@ const OnBoarding = () => {
           <PlatformSelector
             items={platformList}
             state={selectedPlatform}
-            onClickItem={() => null}
+            success={successPlatformConnect}
+            errors={errorPlatformConnect}
+            onClickItem={handlePlatformClick}
             platforms={userPlatformData.platforms}
             noText
           />
@@ -145,47 +181,117 @@ const OnBoarding = () => {
       );
     }
 
-    return <Congrats />;
+    return (
+      <>
+        <PlatformSelector
+          items={platformList}
+          state={selectedPlatform}
+          success={successPlatformConnect}
+          errors={errorPlatformConnect}
+          onClickItem={handlePlatformClick}
+          platforms={userPlatformData.platforms}
+          noText
+        />
+        <p style={{ textAlign: 'center', fontSize: '16px', fontWeight: 'bold' }}>
+          All your accounts have been linked successfully!
+        </p>
+        <div style={{ margin: '1.2rem 2rem 0.6rem' }}>
+          <ButtonKit variant="contained" fullWidth onClick={handleClickStart}>
+            Start using Revly
+          </ButtonKit>
+        </div>
+      </>
+    );
   };
 
   const isNextDisabled = () => {
     switch (step) {
       case 0:
-        return Object.values(selectedPlatform).every((v) => !v);
+        return !Object.values(selectedPlatform).some((v) => v);
 
       case 1:
-        return !Object.keys(selectedPlatform).reduce((acc, cur) => {
-          if (!selectedPlatform[cur]) return acc;
-
-          return userPlatformData.platforms[cur].registered;
-        }, true);
+        return !Object.values(successPlatformConnect).some((v) => v);
 
       default:
         return true;
     }
   };
 
+  const renderNext = () => {
+    if (step === steps.length - 1) return null;
+
+    return (
+      <div>
+        <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={() => setStep(step + 1)}>
+          Next
+        </ButtonKit>
+      </div>
+    );
+  };
+
   const renderSendButton = () => {
-    if (step !== 1) return null;
+    if (step !== 1 || !currentPlatform) return null;
 
     return (
       <ButtonLoadingKit
         variant="contained"
         onClick={handleSubmitLoginInfo}
         loading={isLoading}
-        disabled={!isNextDisabled() || !currentPlatform}>
-        Send
+        disabled={!currentPlatform || !formValues.email || !formValues.password}
+        fullWidth>
+        Link
       </ButtonLoadingKit>
     );
   };
 
-  const isBackDisabled = () => step === 0 || step === 2;
+  const isBackDisabled = () => step === 0;
+
+  const handleClickStart = () => navigate('/dashboard');
+
+  const renderSpinner = () => {
+    if (!isLoading) return null;
+
+    return (
+      <div style={{ display: 'flex' }}>
+        <SpinnerKit />
+        <span
+          style={{
+            alignSelf: 'center',
+            fontSize: '16px',
+            color: '#4D2681',
+            marginLeft: '1rem',
+          }}>
+          Connecting
+        </span>
+      </div>
+    );
+  };
+
+  const backTarget = () => {
+    if (step === 2 && isAllSelected()) {
+      setStep(0);
+      return;
+    }
+
+    setStep(step - 1);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate('/');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e.message);
+    }
+  };
 
   return (
     <div className="onboarding">
-      <Confetti gravity={0.1} run={step === 2} style={{ zIndex: 1301 }} />
-      <RestaurantDropdown names={[]} />
-      <Dates />
+      <div className="top-inputs">
+        <RestaurantDropdown vendors={[]} />
+        <Dates />
+      </div>
       <FinanceEmpty />
       <MarketingEmpty />
       <ModalKit open aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -198,28 +304,37 @@ const OnBoarding = () => {
             ))}
           </StepperKit>
           {renderStepScreens()}
+          <div style={{ width: '100%', padding: '0.5rem 2rem 0rem' }}>{renderSendButton()}</div>
           <div className="onboarding-actions">
             <div>
               <ButtonKit
                 variant="outlined"
                 color="error"
                 disabled={isBackDisabled()}
-                onClick={() => setStep(step - 1)}>
+                onClick={backTarget}>
                 Back
               </ButtonKit>
             </div>
-            <div>{renderSendButton()}</div>
-            <div>
-              <ButtonKit
-                variant="outlined"
-                disabled={isNextDisabled()}
-                onClick={() => setStep(step + 1)}>
-                Next
-              </ButtonKit>
-            </div>
+            {renderSpinner()}
+            {renderNext()}
           </div>
         </div>
       </ModalKit>
+      <div style={{ cursor: 'pointer' }}>
+        <HighOrderBlock color="warning" higher>
+          <MdHelpOutline style={{ fontSize: '30px' }} />
+        </HighOrderBlock>
+      </div>
+      <div
+        style={{ cursor: 'pointer' }}
+        onClick={handleLogout}
+        tabIndex={0}
+        onKeyDown={handleLogout}
+        role="button">
+        <HighOrderBlock style={{ cursor: 'pointer' }}>
+          <MdLogout style={{ fontSize: '30px' }} />
+        </HighOrderBlock>
+      </div>
     </div>
   );
 };

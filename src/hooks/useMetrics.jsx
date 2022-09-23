@@ -4,7 +4,7 @@ import useApi from './useApi';
 import useDate from './useDate';
 
 function useMetrics() {
-  const { leftDate, restaurants, rightDate } = useDate();
+  const { leftDate, rightDate, restaurants } = useDate();
   const { getMetrics } = useApi();
   const [metricsLeft, setMetricsLeft] = useState([]);
   const [metricsRight, setMetricsRight] = useState([]);
@@ -34,7 +34,7 @@ function useMetrics() {
     handleRequest(leftDate, setMetricsLeft);
   }, [leftDate, restaurants]);
 
-  return { metricsLeft, metricsRight };
+  return { metricsLeft, metricsRight, restaurants };
 }
 
 export default useMetrics;

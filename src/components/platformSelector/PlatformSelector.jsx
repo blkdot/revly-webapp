@@ -5,9 +5,13 @@ import './PlatformSelector.scss';
 import PlatformBoxSelector from '../platformBoxSelector/PlatformBoxSelector';
 
 const PlatformSelector = (props) => {
-  const { items, onClickItem, state, platforms, noText } = props;
+  const { items, onClickItem, state, platforms, noText, errors, success } = props;
 
   const getState = (n) => state[n] === true;
+
+  const getErrors = (n) => state[n] === true && errors[n] === true && success[n] === false;
+
+  const getSuccess = (n) => state[n] === true && success[n] === true;
 
   const renderItems = () =>
     items.map((item) => (
@@ -16,6 +20,8 @@ const PlatformSelector = (props) => {
         item={item}
         onClickItem={onClickItem}
         classActive={getState(item.name)}
+        classError={getErrors(item.name)}
+        classSuccess={getSuccess(item.name)}
         platforms={platforms}
       />
     ));

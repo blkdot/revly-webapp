@@ -24,6 +24,8 @@ import Planning from './pages/planning/Planning';
 import MarketingAds from './pages/marketing/MarketingAds';
 import MarketingOffer from './pages/marketing/MarketingOffer';
 import AuthLayout from './components/layout/authLayout/AuthLayout';
+import VerifyCode from './pages/verifyCode/VerifyCode';
+import ResetPassword from './pages/resetPassword/ResetPassword';
 
 const theme = createTheme({
   palette: {
@@ -44,6 +46,7 @@ const App = () => (
                 <Route element={<AuthLayout />}>
                   <Route path="/" element={<SignIn />} />
                   <Route path="/signup" element={<SignUp />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                 </Route>
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route element={<ProtectedRoutes />}>
@@ -55,6 +58,7 @@ const App = () => (
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/marketing/offer" element={<MarketingOffer />} />
                     <Route path="/marketing/ads" element={<MarketingAds />} />
+                    <Route path="/verify-code" element={<VerifyCode />} />
                   </Route>
                   <Route path="/onboarding" element={<OnBoarding />} />
                   <Route path="/check" element={<Check />} />
