@@ -18,6 +18,8 @@ import {
   browserSessionPersistence,
   sendEmailVerification,
   updatePhoneNumber,
+  confirmPasswordReset,
+  verifyPasswordResetCode,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import config from '../setup/config';
@@ -85,6 +87,10 @@ export const AuthContextProvider = ({ children }) => {
     );
   };
 
+  const verifyResetCode = (actionCode) => verifyPasswordResetCode(auth, actionCode);
+
+  const resetPassword = async (actionCode, pass) => confirmPasswordReset(auth, actionCode, pass);
+
   const verifyPhone = async (phone) => {
     createRecaptcha();
     const provider = new PhoneAuthProvider(auth);
@@ -122,6 +128,8 @@ export const AuthContextProvider = ({ children }) => {
         googleSignIn,
         reAuth,
         verifyPhone,
+        resetPassword,
+        verifyResetCode,
         updatePhone,
         isUpdatingPhone,
         setIsUpdatingPhone,
