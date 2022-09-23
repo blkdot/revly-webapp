@@ -1,0 +1,124 @@
+@import '../../library.scss';
+
+.competitor-btns-wrapper {
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+
+  svg {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    color: $color-gray;
+    transition: .4s;
+
+    &:hover {
+      color: $color-main;
+    }
+  }
+
+  .competitor-btn {
+    color: $color-gray;
+    border-color: $color-gray;
+
+    &:hover {
+      color: $color-main;
+    }
+  }
+}
+
+.competitor-overlay {
+  opacity: 0;
+  visibility: hidden;
+  z-index: 800;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background: rgba($color: $color-gray, $alpha: 0.4);
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .4s;
+
+  &.active {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  h4 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .competitor-paper.competitor-paper {
+    box-shadow: none;
+    padding: 40px 60px;
+    position: relative;
+    background: #fff !important;
+
+    .competitor-close {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      right: 15px;
+      top: 10px;
+      cursor: pointer;
+    }
+
+    .competition-dropdown.competition-dropdown {
+      width: 350px;
+      margin-bottom: 25px;
+      justify-content: flex-start;
+      color: $color-input-border;
+
+      label {
+        color: $color-input-border;
+
+        &.Mui-focused {
+          color: $color-main;
+        }
+      }
+
+      >div {
+        box-shadow: none;
+        width: 100%;
+
+        fieldset {
+          border: 1px solid #919eab65;
+          border-radius: 8px;
+          transition: .4s;
+        }
+      }
+
+      .Mui-focused.Mui-focused fieldset {
+        border: 2px solid $color-border;
+      }
+    }
+  }
+
+  .competition-textfield {
+    width: 350px;
+    margin-bottom: 25px;
+  }
+}
+
+.competition-two-small {
+  display: flex;
+  justify-content: space-between;
+
+  .competition-dropdown.competition-dropdown {
+    width: 160px !important;
+
+    >div {
+      width: 100%;
+    }
+  }
+}
+
+.competition_btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

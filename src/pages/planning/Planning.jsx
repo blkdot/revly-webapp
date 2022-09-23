@@ -2,14 +2,23 @@ import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import PlanningAdsTable from '../../components/planningAdsTable/PlanningAdsTable';
 import PlanningOffersTable from '../../components/planningOffersTable/PlanningOffersTable';
+import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
-import { PlanningAdsData, PlanningOffersData, restaurantNames } from '../../data/fakeDataDashboard';
+import { PlanningAdsData, restaurantNames } from '../../data/fakeDataDashboard';
+import useMarketingOffers from '../../hooks/useMarketingOffers';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Planning.scss';
 
 const Planning = () => {
   const [active, setActive] = useState(true);
+  const { offers } = useMarketingOffers();
 
+  const getOffersTable = () => {
+    if (offers.length === 0) {
+      return <PlanningOffersTableEmpty />;
+    }
+    return <PlanningOffersTable rows={offers} />;
+  };
   return (
     <div className="wrapper">
       <div className="top-inputs">
@@ -30,11 +39,7 @@ const Planning = () => {
           Ads
         </TypographyKit>
       </div>
-      {active ? (
-        <PlanningOffersTable rows={PlanningOffersData} />
-      ) : (
-        <PlanningAdsTable rows={PlanningAdsData} />
-      )}
+      {active ? getOffersTable() : <PlanningAdsTable rows={PlanningAdsData} />}
     </div>
   );
 };

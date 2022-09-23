@@ -8,9 +8,8 @@ import Widget from '../widget/WidgetEmpty';
 import Table from '../table/TableEmpty';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
-import { restaurantNames } from '../../data/fakeDataDashboard';
 
-const FinanceEmpty = () => {
+const FinanceEmpty = ({ vendors }) => {
   const { titleDate, leftDate, restaurants } = useDate();
   const startLocal = leftDate.startDate.toLocaleDateString();
   const endLocal = leftDate.endDate.toLocaleDateString();
@@ -39,7 +38,7 @@ const FinanceEmpty = () => {
       <TypographyKit variant="h4">
         <span> {getLeftDate()} </span>
         results for
-        {restaurants.length === restaurantNames.length || restaurants.length === 0 ? (
+        {restaurants.length === vendors?.length || restaurants.length === 0 ? (
           <p>
             {' '}
             all <span> points of sales</span>

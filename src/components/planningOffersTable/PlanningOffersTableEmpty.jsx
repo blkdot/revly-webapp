@@ -7,12 +7,11 @@ import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
 import PaperKit from '../../kits/paper/PaperKit';
-import talabat from '../../assets/images/talabat.png';
-import deliveroo from '../../assets/images/deliveroo.png';
 import './PlanningOffersTable.scss';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 import BoxKit from '../../kits/box/BoxKit';
 
-const PlanningOffersTable = ({ rows }) => (
+const PlanningOffersTableEmpty = () => (
   <BoxKit sx={{ width: '100%' }}>
     <TableContainerKit className="planning_offers-table-container" component={PaperKit}>
       <TableKit aria-label="simple table">
@@ -30,25 +29,35 @@ const PlanningOffersTable = ({ rows }) => (
           </TableRowKit>
         </TableHeadKit>
         <TableBodyKit>
-          {rows.map((row) => (
-            <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCellKit align="center">
-                {row.vendor_name === null ? '-' : row.vendor_name}
+          {[0, 1, 2, 3].map((row) => (
+            <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCellKit>
+                <SkeletonKit width={80} />
               </TableCellKit>
               <TableCellKit>
-                <img
-                  className="planning-platform"
-                  src={row.platform === 'deliveroo' ? deliveroo : talabat}
-                  alt={row.platform}
-                />
+                <SkeletonKit width={30} />
               </TableCellKit>
-              <TableCellKit>{row.discount_type}</TableCellKit>
-              <TableCellKit align="center">{row.discount_rate}</TableCellKit>
-              <TableCellKit align="center">{row.minimum_order_value}</TableCellKit>
-              <TableCellKit align="center">{row.start_date}</TableCellKit>
-              <TableCellKit align="center">{row.end_date}</TableCellKit>
-              <TableCellKit align="center">{row.target === null ? '-' : row.target}</TableCellKit>
-              <TableCellKit align="center">{row.status}</TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
+              <TableCellKit>
+                <SkeletonKit width={80} />
+              </TableCellKit>
             </TableRow>
           ))}
         </TableBodyKit>
@@ -57,4 +66,4 @@ const PlanningOffersTable = ({ rows }) => (
   </BoxKit>
 );
 
-export default PlanningOffersTable;
+export default PlanningOffersTableEmpty;
