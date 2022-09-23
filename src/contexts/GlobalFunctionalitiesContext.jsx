@@ -29,6 +29,12 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [vendorsContext, setVendorsContext] = useState({});
 
+  const [leftDateOffers, setLeftDateOffers] = useState({
+    startDate: leftDate.startDate,
+    endDate: leftDate.endDate,
+  });
+  const [titleOffers, setTitleOffers] = useState(titleDate);
+
   useEffect(() => {
     if (isShowing) {
       setTimeout(() => {
@@ -85,6 +91,10 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         triggerAlertWithMessageSuccess,
         restaurants,
         setRestaurants,
+        leftDateOffers,
+        setLeftDateOffers,
+        titleOffers,
+        setTitleOffers,
         vendorsContext,
         setVendorsContext,
       }}>

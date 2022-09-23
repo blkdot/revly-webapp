@@ -92,7 +92,7 @@ const Widget = ({ title, setTable, table, metricsLeft }) => {
               {getTitle()}
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
-              {metricsLeft[2] ? metricsLeft[2][1][title] : '-'}
+              {metricsLeft[2][1][title] !== null ? metricsLeft[2][1][title] : '-'}
             </TypographyKit>
           </div>
           <TypographyKit className="card-typography card-icon">{getIcon()}</TypographyKit>

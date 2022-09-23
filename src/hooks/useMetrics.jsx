@@ -15,8 +15,8 @@ function useMetrics() {
       master_email: 'chiekh.alloul@gmail.com',
       access_token: '',
       vendors: restaurants,
-      start_date: dayjs(date.startDate).format('YYYY/MM/DD'),
-      end_date: dayjs(date.endDate).format('YYYY/MM/DD'),
+      start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
       if (!isCancelled) {
         setMetrics(Object.entries(data.data.metrics));
