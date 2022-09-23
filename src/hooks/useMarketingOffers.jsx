@@ -17,9 +17,11 @@ function useMarketingOffers() {
       start_date: dayjs(subDays(date.startDate, 1)).format('YYYY-MM-DD'),
       end_date: dayjs(subDays(date.endDate, 1)).format('YYYY-MM-DD'),
     }).then((data) => {
+      const offersArr = [];
       if (!isCancelled) {
-        setOffers(data.data.offers);
+        data.data.offers?.forEach((obj) => offersArr.push({ ...obj, id: Math.random() }));
       }
+      setOffers(offersArr);
     });
     return () => {
       isCancelled = true;
