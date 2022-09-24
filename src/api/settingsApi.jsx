@@ -38,7 +38,7 @@ export const settingsOnboardPlatformStatus = (body, platform) => {
       ...fakeOnboarding.platforms,
       [platform]: {
         ...fakeOnboarding.platforms[platform],
-        active_status: body.active_status,
+        active: body.active_status,
       },
     },
   };
@@ -47,7 +47,7 @@ export const settingsOnboardPlatformStatus = (body, platform) => {
 
   return {
     ...fakeOnboarding.platforms[platform],
-    active_status: body.active_status,
+    active: body.active_status,
   };
 };
 

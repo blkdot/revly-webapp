@@ -60,6 +60,7 @@ const OnBoarding = () => {
   const [successPlatformConnect, setSuccessPlatformConnect] = useState(defaultSelected);
   const [steps, setSteps] = useState(defaultSteps);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsredirecting] = useState(false);
 
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform } = useApi();
@@ -267,9 +268,13 @@ const OnBoarding = () => {
           All your accounts have been linked successfully!
         </p>
         <div style={{ margin: '1.2rem 2rem 0.6rem' }}>
-          <ButtonKit variant="contained" fullWidth onClick={handleClickStart}>
+          <ButtonLoadingKit
+            variant="contained"
+            loading={isRedirecting}
+            fullWidth
+            onClick={handleClickStart}>
             Start using Revly
-          </ButtonKit>
+          </ButtonLoadingKit>
         </div>
       </>
     );
@@ -317,10 +322,15 @@ const OnBoarding = () => {
 
   const isBackDisabled = () => step === START_KEY || step === END_KEY;
 
-  const handleClickStart = () => {
+  const handleClickStart = async () => {
     setUserPlatformData({
       ...userPlatformData,
       onboarded: true,
+    });
+
+    setIsredirecting(true);
+    await new Promise((r) => {
+      setTimeout(r, 2000);
     });
 
     navigate('/dashboard');

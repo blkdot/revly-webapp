@@ -20,7 +20,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/check');
+      navigate('/dashboard');
     }
   }, []);
 
@@ -38,7 +38,7 @@ const SignIn = () => {
         );
       }
 
-      navigate('/check');
+      navigate('/dashboard');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
@@ -56,7 +56,7 @@ const SignIn = () => {
     setProcessing(true);
     try {
       await googleSignIn();
-      navigate('/check');
+      navigate('/dashboard');
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 

@@ -50,6 +50,12 @@ const NewSettingsOnboarding = () => {
   }, [JSON.stringify(userPlatformData.platforms)]);
 
   const handleSwitchChange = (k) => async (v) => {
+    if (!userPlatformData.platforms[k].registered && !userPlatformData.platforms[k].active) {
+      SetPlatformActiveModal(k);
+      setIsOpenModal(true);
+      return;
+    }
+
     const res = await settingsOnboardPlatformStatus(
       {
         master_email: user.email,
@@ -68,6 +74,7 @@ const NewSettingsOnboarding = () => {
       ...userPlatformData,
       platforms: { ...userPlatformData.platforms, [k]: res },
     });
+
     triggerAlertWithMessageSuccess(`State changed to ${v ? 'active' : 'inactive'}`);
   };
 
@@ -81,7 +88,11 @@ const NewSettingsOnboarding = () => {
   };
 
   const closeWithoutConnecting = async () => {
-    if (userPlatformData.platforms[platformActiveModal].registered) {
+    if (
+      userPlatformData.platforms[platformActiveModal].registered ||
+      (!userPlatformData.platforms[platformActiveModal].registered &&
+        !userPlatformData.platforms[platformActiveModal].active)
+    ) {
       setIsOpenModal(false);
       return;
     }
@@ -186,6 +197,7 @@ const NewSettingsOnboarding = () => {
                 size="small"
                 onChange={(e) => handleChangeFormData('password', e.target.value)}
                 className="auth-form__input"
+                style={{ margin: '1rem 0.5rem' }}
                 fullWidth
               />
             </FormcontrolKit>
