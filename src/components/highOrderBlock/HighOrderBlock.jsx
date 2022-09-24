@@ -2,16 +2,16 @@ import React from 'react';
 
 import './HighOrderBlock.scss';
 
-import AlertKit from '../../kits/alert/AlertKit';
+import FabKit from '../../kits/fab/FabKit';
 
 const HighOrderBlock = (props) => {
   const { children, color, higher } = props;
 
   return (
     <div className={`high-order-block-component ${higher ? '__push-top' : ''}`}>
-      <AlertKit icon={false} variant="filled" severity={color || 'error'}>
+      <FabKit size="small" color={color || 'error'}>
         {children}
-      </AlertKit>
+      </FabKit>
     </div>
   );
 };

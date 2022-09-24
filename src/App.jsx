@@ -32,6 +32,7 @@ const theme = createTheme({
     primary: {
       main: '#4D2681',
       second: '#906BFF',
+      warning: '#FFC107',
     },
     grey: {
       500: '#919eab3d',

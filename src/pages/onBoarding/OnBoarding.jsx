@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdLogout, MdHelpOutline } from 'react-icons/md';
+import { MdLogout } from 'react-icons/md';
+import { IoMdHelp } from 'react-icons/io';
 import { pascalCase } from 'change-case';
 
 import './OnBoarding.scss';
@@ -66,8 +67,6 @@ const OnBoarding = () => {
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
   const navigate = useNavigate();
 
-  const isAllSelected = () => Object.values(selectedPlatform).every((v) => v);
-
   const isAllNotSelected = () => Object.values(selectedPlatform).every((v) => !v);
 
   const getCurrentPlatformInsertion = () =>
@@ -79,18 +78,16 @@ const OnBoarding = () => {
 
   const isAllNotSelectedInMiddle = () => isAllNotSelected() && step !== START_KEY;
 
-  const getNextKeySteps = () => {
-    if (step === END_KEY) return null;
-
+  const getNextKeySteps = (offset = 0) => {
     if (!currentPlatform) return [END_KEY];
 
     const indexSteps = steps.findIndex((s) => s.key === currentPlatform.name);
 
-    if (indexSteps < 0) return [END_KEY];
+    if (indexSteps < 0) return [steps[indexSteps + 1].key];
 
     const promise = new Promise((res) => {
-      for (let index = indexSteps; index < steps.length; index += 1) {
-        if (steps[index].active && steps[index].key !== currentPlatform.name) {
+      for (let index = indexSteps + offset; index < steps.length; index += 1) {
+        if (steps[index].active && !successPlatformConnect[steps[index].key]) {
           res(steps[index].key);
           return;
         }
@@ -103,17 +100,16 @@ const OnBoarding = () => {
   };
 
   const getPrevKeySteps = async () => {
-    if (step === START_KEY) return null;
+    if (step === END_KEY) return null;
 
     if (!currentPlatform) return [START_KEY];
-
     const indexSteps = steps.findIndex((s) => s.key === currentPlatform.name);
 
-    if (indexSteps < 0) return null;
+    if (indexSteps < 0) return [steps[indexSteps - 1].key];
 
     const promise = new Promise((res) => {
-      for (let index = indexSteps - 1; index > steps.length; index -= 1) {
-        if (steps[index].active && steps[index].key !== currentPlatform.name) {
+      for (let index = indexSteps; index > steps.length; index -= 1) {
+        if (steps[index].active) {
           res(steps[index].key);
           return;
         }
@@ -146,18 +142,10 @@ const OnBoarding = () => {
 
     if (!currentPlatformInsertion[0]) {
       setCurrentPlatform(null);
-
-      if (isAllSelected()) {
-        setStep(END_KEY);
-        return;
-      }
-
       return;
     }
 
     setCurrentPlatform(currentPlatformInsertion[0]);
-
-    setStep(currentPlatformInsertion[0].name);
   }, [JSON.stringify(userPlatformData.platforms), JSON.stringify(selectedPlatform)]);
 
   const handleSubmitLoginInfo = async () => {
@@ -184,18 +172,18 @@ const OnBoarding = () => {
       return;
     }
 
+    setUserPlatformData({
+      ...userPlatformData,
+      platforms: { ...userPlatformData.platforms, [currentPlatform.name]: res },
+    });
+    setFormValues({ email: '', password: '' });
     setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: false });
     setSuccessPlatformConnect({ ...successPlatformConnect, [currentPlatform.name]: true });
     triggerAlertWithMessageSuccess(`You ${currentPlatform.name} account has been
     linked successfully`);
 
-    setUserPlatformData({
-      ...userPlatformData,
-      platforms: { ...userPlatformData.platforms, [currentPlatform.name]: res },
-      onboarded: true,
-    });
-
-    setFormValues({ email: '', password: '' });
+    const nextStep = await getNextKeySteps(1);
+    setStep(nextStep[0]);
   };
 
   const handlePlatformClick = (key) => {
@@ -204,6 +192,8 @@ const OnBoarding = () => {
     const indexSteps = steps.findIndex((s) => s.key === key);
 
     if (indexSteps > 0) {
+      const oldState = steps[indexSteps].active;
+
       const newContent = { ...steps[indexSteps], active: !steps[indexSteps].active };
 
       const clonedSteps = [...steps];
@@ -211,6 +201,10 @@ const OnBoarding = () => {
       clonedSteps.splice(indexSteps, 1, newContent);
 
       setSteps(clonedSteps);
+
+      if (oldState && step === key && currentPlatform && step === currentPlatform.name) {
+        setStep(START_KEY);
+      }
     }
 
     setSelectedPlatform({ ...selectedPlatform, [key]: !selectedPlatform[key] });
@@ -265,7 +259,7 @@ const OnBoarding = () => {
           state={selectedPlatform}
           success={successPlatformConnect}
           errors={errorPlatformConnect}
-          onClickItem={handlePlatformClick}
+          onClickItem={() => null}
           platforms={userPlatformData.platforms}
           noText
         />
@@ -321,9 +315,16 @@ const OnBoarding = () => {
     );
   };
 
-  const isBackDisabled = () => step === START_KEY;
+  const isBackDisabled = () => step === START_KEY || step === END_KEY;
 
-  const handleClickStart = () => navigate('/dashboard');
+  const handleClickStart = () => {
+    setUserPlatformData({
+      ...userPlatformData,
+      onboarded: true,
+    });
+
+    navigate('/dashboard');
+  };
 
   const renderSpinner = () => {
     if (!isLoading) return null;
@@ -351,8 +352,14 @@ const OnBoarding = () => {
   };
 
   const nextTarget = async () => {
-    const nexttargetR = await getNextKeySteps();
-    console.log(nexttargetR, step);
+    let offset = 0;
+
+    if (errorPlatformConnect[currentPlatform.name]) {
+      offset = 1;
+    }
+
+    const nexttargetR = await getNextKeySteps(offset);
+
     setStep(nexttargetR[0]);
   };
 
@@ -396,7 +403,7 @@ const OnBoarding = () => {
       </ModalKit>
       <div style={{ cursor: 'pointer' }}>
         <HighOrderBlock color="warning" higher>
-          <MdHelpOutline style={{ fontSize: '30px' }} />
+          <IoMdHelp style={{ fontSize: '20px' }} />
         </HighOrderBlock>
       </div>
       <div
@@ -406,7 +413,7 @@ const OnBoarding = () => {
         onKeyDown={handleLogout}
         role="button">
         <HighOrderBlock style={{ cursor: 'pointer' }}>
-          <MdLogout style={{ fontSize: '30px' }} />
+          <MdLogout style={{ fontSize: '20px' }} />
         </HighOrderBlock>
       </div>
     </div>
