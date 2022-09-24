@@ -257,15 +257,20 @@
     font-size: 12px;
     width: 100%;
     padding: 5px 10px 5px 10px;
+    border-radius: 8px;
+    color: #636363;
 
     &.active {
       background-color: #ebdbeb;
       color: #704cfc;
+
     }
 
     span {
       width: 100%;
       opacity: 1;
+      display: flex;
+      visibility: visible;
     }
   }
 
