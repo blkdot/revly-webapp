@@ -22,34 +22,76 @@
 
                 .MuiInputBase-input {
                     background-color: white;
+                    border-radius: 8px;
                 }
 
             }
 
             .account-form__flex__block__input-phone {
-                margin: 10px 0;
-                margin-top: 20px;
-                input {
-                    width: 100%;
-                    height: 3.4em;
-                    background-color: transparent;
-                    border-color: #919eab65;
-                    border-radius: 8px;
-
-                    &:focus {
-                        border: 2px solid $color-main;
-                        box-shadow: none;
+                display: flex;
+                justify-content: space-between;
+                .account-form__input-phone {
+                    margin-top: 10px;
+                    display: flex;
+                    justify-content: space-between;
+            
+                    width: 7.5em;
+                    input {
+                        width: 100%;
+                        background-color: white;
+                        height: 3.8rem;
+                        padding: 19px 14px 18.5px 39px;
+                        color: $color-input-border;
+                        border-color: #919eab65;
+                        border-radius: 8px;
+                        &:focus {
+                            border: 1.5px solid $color-main;
+                            box-shadow: none;
+                        }
+                    }
+            
+                    & .selected-flag {
+                        // width: 110px;
+                        height: 4rem;
+            
+                        &:focus .arrow, .arrow {
+                            left: 5.6em;
+                            top: 10%;
+                            border: solid $color-second-third;
+                            border-width: 0 2px 2px 0;
+                            display: inline-block;
+                            padding: 4px;
+                            transform: rotate(45deg);
+                            -webkit-transform: rotate(45deg);
+                            transition: transform .2s;
+            
+                            &.up {
+                                transform: rotate(225deg);
+                                -webkit-transform: rotate(225deg);
+                                border-width: 0 2px 2px 0;
+                                top: 35%
+                            }
+        
+                            @include mobileBreakpoint {
+                                left: 3em;
+                            }
+                        }
                     }
                 }
                 .special-label {
                     color: $color-gray;
                     font-size: 10px;
                 }
+                .account-form__flex__block__input {
+                    width: 70%;
+                }
             }
 
 
             .account-form__flex__block__autocomplete {
                 margin: 10px 0;
+                background-color: white;
+                border-radius: 8px;
                 .MuiAutocomplete-inputRoot {
                     height: 3.7em;
                     display: flex;

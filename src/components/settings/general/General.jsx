@@ -29,15 +29,36 @@ const General = () => {
     return allName.join(' ');
   };
 
+  const getNumber = () => {
+    if (!user.phoneNumber) return '';
+
+    const num = user.phoneNumber.substring(user.phoneNumber.length - 9);
+
+    return num;
+  };
+
+  const getDial = () => {
+    if (!user.phoneNumber) return '';
+
+    const num = getNumber();
+
+    const curDial = user.phoneNumber.replace(num, '');
+
+    return curDial;
+  };
+
+  const [dial, setDial] = useState(getDial());
+
   const [inputValue, setInputValue] = useState({
     firstname: getFirstName() || '',
     lastname: getLastName() || '',
-    phone: user.phoneNumber || '',
+    phone: getNumber() || '',
     country: {},
     email: user.email,
     city: '',
     restoName: '',
   });
+  const [inputCountryValue, setInputCountryValue] = React.useState('');
   const [inputError, setInputError] = useState({
     firstname: false,
     lastname: false,
@@ -70,10 +91,11 @@ const General = () => {
         });
       }
 
-      if (isValid('phone', user.phoneNumber)) {
-        const vId = await verifyPhone(inputValue.phone);
+      const newPhoneNumber = `${dial}${inputValue.phone}`;
+      if (newPhoneNumber.trim() !== user.phoneNumber) {
+        const vId = await verifyPhone(newPhoneNumber);
         setIsUpdatingPhone(true);
-        navigate(`/verify-code?n=${inputValue.phone}&vId=${vId}`);
+        navigate(`/verify-code?n=${newPhoneNumber}&vId=${vId}`);
       }
 
       setIsLoading(false);
@@ -112,21 +134,23 @@ const General = () => {
         valueFirstName={{ value: inputValue.firstname, error: inputError.firstname }}
         valueLastName={{ value: inputValue.lastname, error: inputError.lastname }}
         valuePhone={inputValue.phone}
-        valueCountry={inputValue.country}
+        valueCountry={inputValue.country || null}
         valueCity={{ value: inputValue.city, error: inputError.city }}
         valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
+        valueDial={dial}
+        onDialChange={(v) => setDial(v)}
         handleInputChange={handleInputChange}
         valueEmail={inputValue.email}
-        onSave={handleSave}
-        disableSave={disableSave()}
         handleCountryChange={handleSelectCountry}
+        inputCountryValue={inputCountryValue}
+        onInputCountryChange={(e, v) => setInputCountryValue(v)}
       />
       <div style={{ marginTop: '5rem' }}>
         <h3 style={{ fontSize: '16px' }}>Restaurant information</h3>
         <RestaurantForm />
       </div>
       <div style={{ marginTop: '5rem' }}>
-        <ButtonKit disabled={disableSave} variant="contained" onClick={handleSave}>
+        <ButtonKit disabled={disableSave()} variant="contained" onClick={handleSave}>
           Save changes
         </ButtonKit>
       </div>
