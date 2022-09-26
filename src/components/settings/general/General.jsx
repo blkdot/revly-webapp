@@ -38,6 +38,7 @@ const General = () => {
     city: '',
     restoName: '',
   });
+  const [inputCountryValue, setInputCountryValue] = React.useState('');
   const [inputError, setInputError] = useState({
     firstname: false,
     lastname: false,
@@ -101,6 +102,7 @@ const General = () => {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
   };
 
+  // TODO: autocomplete leaks memory, fix that
   const handleSelectCountry = (e, newValue) => {
     setInputValue({ ...inputValue, country: { name: newValue.name, value: newValue.code } });
   };
@@ -112,21 +114,22 @@ const General = () => {
         valueFirstName={{ value: inputValue.firstname, error: inputError.firstname }}
         valueLastName={{ value: inputValue.lastname, error: inputError.lastname }}
         valuePhone={inputValue.phone}
-        valueCountry={inputValue.country}
+        valueCountry={inputValue.country.name}
         valueCity={{ value: inputValue.city, error: inputError.city }}
         valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
         handleInputChange={handleInputChange}
         valueEmail={inputValue.email}
         onSave={handleSave}
-        disableSave={disableSave()}
         handleCountryChange={handleSelectCountry}
+        inputCountryValue={inputCountryValue}
+        onInputCountryChange={(e, v) => setInputCountryValue(v)}
       />
       <div style={{ marginTop: '5rem' }}>
         <h3 style={{ fontSize: '16px' }}>Restaurant information</h3>
         <RestaurantForm />
       </div>
       <div style={{ marginTop: '5rem' }}>
-        <ButtonKit disabled={disableSave} variant="contained" onClick={handleSave}>
+        <ButtonKit disabled={disableSave()} variant="contained" onClick={handleSave}>
           Save changes
         </ButtonKit>
       </div>

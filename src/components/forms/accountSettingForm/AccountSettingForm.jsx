@@ -18,6 +18,8 @@ const AccountSettingForm = (props) => {
     valueCity,
     handleInputChange,
     handleCountryChange,
+    inputCountryValue,
+    onInputCountryChange,
   } = props;
 
   return (
@@ -78,7 +80,9 @@ const AccountSettingForm = (props) => {
               </li>
             )}
             onChange={handleCountryChange}
-            value={valueCountry.value}
+            value={valueCountry}
+            inputValue={inputCountryValue}
+            onInputChange={onInputCountryChange}
             options={country}
             getOptionLabel={(opt) => opt.name}
             className="account-form__flex__block__autocomplete"
