@@ -31,6 +31,7 @@ import DateSelect from './DateSelect';
 import RightDateSelect from './RightDateSelect';
 import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderkit';
 import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
+import switchIcon from '../../assets/images/Switch.png';
 
 const Dates = () => {
   const {
@@ -699,7 +700,7 @@ const Dates = () => {
       </div>
       {location.pathname === '/dashboard' ? (
         <div className="dashboard-date">
-          <span>Compare to</span>
+          <img src={switchIcon} alt="Compare" />
           <div className="date-picker_wrapper">
             <TypographyKit component="div" className="date-input-wrapper">
               <PaperKit

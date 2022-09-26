@@ -6,18 +6,29 @@
   justify-content: flex-end;
 
   >div {
-    box-shadow: 0 0 0px 0 rgb(145 158 171 / 48%),
-      0 2px 4px -1px rgb(145 158 171 / 24%);
-    border-radius: 4px;
+    box-shadow: none;
+    border-radius: 30px;
     margin: 0;
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    height: 45px;
 
     fieldset {
       border: none;
     }
+
+    >div {
+      padding-left: 40px;
+      height: 45px;
+
+      >div {
+        color: #212B36;
+      }
+    }
   }
 
   .Mui-focused.Mui-focused fieldset {
-    border: 2px solid $color-border;
+    border: none;
+    border-radius: 30px;
 
     legend {
       background: #fff;
@@ -44,4 +55,12 @@
   height: 20px;
   object-fit: contain;
   margin-right: 10px;
+}
+
+.select_icon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 5px;
+  top: 2px;
 }

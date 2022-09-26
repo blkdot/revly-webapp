@@ -28,10 +28,12 @@
   justify-content: space-between;
   align-self: center;
   width: 250px;
-  padding: 16px 10px;
-  box-shadow: 0 0 0px 0 rgb(145 158 171 / 48%),
-    0 2px 4px -1px rgb(145 158 171 / 24%);
+  padding: 10px 10px;
+  box-shadow: none;
   transition: .4s;
+  height: 40px;
+  border-radius: 30px;
+  border: 1px solid rgba(145, 158, 171, 0.32);
 
   .date-typography {
     display: flex;
@@ -40,14 +42,15 @@
 
     span {
       text-transform: capitalize;
-      color: $color-gray;
+      color: #212B36;
       transition: .4s;
     }
 
-    >svg {
-      transition: .4s;
-      fill: grey;
-    }
+  }
+
+  svg {
+    transition: .4s;
+    fill: #212B36;
   }
 
   &:hover {
@@ -319,6 +322,10 @@
   display: flex;
   align-items: center;
   grid-gap: 20px;
+  > img{
+    width: 40px;
+    height: 40px;
+  }
 }
 
 @media(max-width: 1260px) {
