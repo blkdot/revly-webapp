@@ -114,7 +114,7 @@ const General = () => {
         valueFirstName={{ value: inputValue.firstname, error: inputError.firstname }}
         valueLastName={{ value: inputValue.lastname, error: inputError.lastname }}
         valuePhone={inputValue.phone}
-        valueCountry={inputValue.country.name}
+        valueCountry={inputValue.country || null}
         valueCity={{ value: inputValue.city, error: inputError.city }}
         valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
         handleInputChange={handleInputChange}
