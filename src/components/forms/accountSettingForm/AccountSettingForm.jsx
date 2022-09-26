@@ -16,10 +16,12 @@ const AccountSettingForm = (props) => {
     valueCountry,
     valueEmail,
     valueCity,
+    valueDial,
     handleInputChange,
     handleCountryChange,
     inputCountryValue,
     onInputCountryChange,
+    onDialChange,
   } = props;
 
   return (
@@ -98,13 +100,24 @@ const AccountSettingForm = (props) => {
             className="account-form__flex__block__autocomplete"
             renderInput={(params) => <TextfieldKit {...params} label="Country" />}
           />
-          <PhoneInputKit
-            value={valuePhone}
-            country="ae"
-            specialLabel=""
-            onChange={(v) => handleInputChange({ target: { name: 'phone', value: `+${v}` } })}
-            containerClass="account-form__flex__block__input-phone"
-          />
+          <div className="account-form__flex__block__input-phone">
+            <PhoneInputKit
+              value={valueDial}
+              country="ae"
+              specialLabel=""
+              inputProps={{ readOnly: true }}
+              onChange={onDialChange}
+              containerClass="account-form__input-phone"
+            />
+            <TextfieldKit
+              value={valuePhone}
+              name="phone"
+              onChange={(e) => handleInputChange(e, 'length')}
+              className="account-form__flex__block__input"
+              fullWidth
+              label="Phone Number"
+            />
+          </div>
         </div>
       </div>
     </div>
