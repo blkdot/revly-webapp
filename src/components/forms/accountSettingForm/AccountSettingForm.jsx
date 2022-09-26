@@ -3,7 +3,6 @@ import React from 'react';
 import './AccountSettingForm.scss';
 
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-import ButtonKit from '../../../kits/button/ButtonKit';
 import AutoCompleteKit from '../../../kits/autoComplete/AutoCompleteKit';
 import PhoneInputKit from '../../../kits/phoneInput/PhoneInputKit';
 
@@ -11,17 +10,18 @@ import country from '../../../data/country.json';
 
 const AccountSettingForm = (props) => {
   const {
-    valueName,
+    valueFirstName,
+    valueLastName,
     valuePhone,
     valueCountry,
     valueEmail,
     valueCity,
-    valueRestoName,
-    valueRole,
+    valueDial,
     handleInputChange,
-    onSave,
-    disableSave,
     handleCountryChange,
+    inputCountryValue,
+    onInputCountryChange,
+    onDialChange,
   } = props;
 
   return (
@@ -29,18 +29,16 @@ const AccountSettingForm = (props) => {
       <div className="account-form__flex">
         <div className="account-form__flex__block">
           <TextfieldKit
-            size="small"
-            helperText={valueName.error ? '* must be > 2 and only alphabet' : ''}
-            error={valueName.error}
-            value={valueName.value}
-            name="name"
+            helperText={valueFirstName.error ? '* must be > 2 and only alphabet' : ''}
+            error={valueFirstName.error}
+            value={valueFirstName.value}
+            name="firstname"
             onChange={(e) => handleInputChange(e, 'isAlphabet')}
             className="account-form__flex__block__input"
             fullWidth
-            label="Name"
+            label="First Name"
           />
           <TextfieldKit
-            size="small"
             helperText={valueCity.error ? '* must be > 2 and only alphabet' : ''}
             error={valueCity.error}
             value={valueCity.value}
@@ -50,17 +48,10 @@ const AccountSettingForm = (props) => {
             fullWidth
             label="City"
           />
-          <PhoneInputKit
-            value={valuePhone}
-            country="ae"
-            onChange={(v) => handleInputChange({ target: { name: 'phone', value: `+${v}` } })}
-            containerClass="account-form__flex__block__input-phone"
-          />
           <TextfieldKit
             label="E-mail"
             fullWidth
-            className="account-form__flex__block__input"
-            size="small"
+            className="account-form__flex__block__input __not-allowed"
             value={valueEmail}
             inputProps={{ readOnly: true }}
           />
@@ -68,15 +59,14 @@ const AccountSettingForm = (props) => {
 
         <div className="account-form__flex__block">
           <TextfieldKit
-            size="small"
-            helperText={valueRestoName.error ? '* must be > 2' : ''}
-            error={valueRestoName.error}
-            value={valueRestoName.value}
-            name="restoName"
+            helperText={valueLastName.error ? '* must be > 2' : ''}
+            error={valueLastName.error}
+            value={valueLastName.value}
+            name="lastname"
             onChange={(e) => handleInputChange(e, 'length')}
             className="account-form__flex__block__input"
             fullWidth
-            label="Restaurant name"
+            label="Last Name"
           />
           <AutoCompleteKit
             disableClearable
@@ -93,28 +83,42 @@ const AccountSettingForm = (props) => {
             )}
             onChange={handleCountryChange}
             value={valueCountry.value}
+            inputValue={inputCountryValue}
+            onInputChange={onInputCountryChange}
             options={country}
-            getOptionLabel={(opt) => opt.name}
+            getOptionLabel={(opt) => {
+              if (typeof opt === 'string') {
+                const co = country.find((c) => c.name === opt);
+
+                if (!co) return valueCountry.name;
+
+                return co.name;
+              }
+
+              return opt.name;
+            }}
             className="account-form__flex__block__autocomplete"
             renderInput={(params) => <TextfieldKit {...params} label="Country" />}
           />
-          <TextfieldKit
-            size="small"
-            helperText={valueRole.error ? '* must be > 2 and only alphabet' : ''}
-            error={valueRole.error}
-            value={valueRole.value}
-            name="role"
-            onChange={(e) => handleInputChange(e, 'isAlphabet')}
-            className="account-form__flex__block__input"
-            fullWidth
-            label="Role"
-          />
+          <div className="account-form__flex__block__input-phone">
+            <PhoneInputKit
+              value={valueDial}
+              country="ae"
+              specialLabel=""
+              inputProps={{ readOnly: true }}
+              onChange={onDialChange}
+              containerClass="account-form__input-phone"
+            />
+            <TextfieldKit
+              value={valuePhone}
+              name="phone"
+              onChange={(e) => handleInputChange(e, 'length')}
+              className="account-form__flex__block__input"
+              fullWidth
+              label="Phone Number"
+            />
+          </div>
         </div>
-      </div>
-      <div style={{ marginTop: '1.5rem' }}>
-        <ButtonKit disabled={disableSave} variant="contained" onClick={onSave}>
-          Save changes
-        </ButtonKit>
       </div>
     </div>
   );

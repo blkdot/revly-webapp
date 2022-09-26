@@ -1,0 +1,21 @@
+.restaurant-form {
+  display: flex;
+  flex-direction: column;
+
+  .restaurant-form__items {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+
+    .__items-item {
+      margin-top: 20px;
+      width: 48%;
+
+      .MuiTextField-root {
+        width: 100%;
+        background-color: white;
+        border-radius: 8px;
+      }
+    }
+  }
+}

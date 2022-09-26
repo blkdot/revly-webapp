@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 import './General.scss';
 
-import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
+import ButtonKit from '../../../kits/button/ButtonKit';
 
-import PaperKit from '../../../kits/paper/PaperKit';
+import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
+import RestaurantForm from '../../forms/restaurantForm/RestaurantForm';
 
 import { useAlert } from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';
@@ -16,19 +17,52 @@ import { firebaseCodeError } from '../../../data/firebaseCodeError';
 
 const General = () => {
   const { user, setIsUpdatingPhone, verifyPhone } = useUserAuth();
+
+  const getFirstName = () => {
+    const allName = user.displayName.split(' ');
+    return allName[0];
+  };
+
+  const getLastName = () => {
+    const allName = user.displayName.split(' ');
+    allName.splice(0, 1);
+    return allName.join(' ');
+  };
+
+  const getNumber = () => {
+    if (!user.phoneNumber) return '';
+
+    const num = user.phoneNumber.substring(user.phoneNumber.length - 9);
+
+    return num;
+  };
+
+  const getDial = () => {
+    if (!user.phoneNumber) return '';
+
+    const num = getNumber();
+
+    const curDial = user.phoneNumber.replace(num, '');
+
+    return curDial;
+  };
+
+  const [dial, setDial] = useState(getDial());
+
   const [inputValue, setInputValue] = useState({
-    name: user.displayName || '',
-    phone: user.phoneNumber || '',
+    firstname: getFirstName() || '',
+    lastname: getLastName() || '',
+    phone: getNumber() || '',
     country: {},
     email: user.email,
     city: '',
     restoName: '',
-    role: '',
   });
+  const [inputCountryValue, setInputCountryValue] = React.useState('');
   const [inputError, setInputError] = useState({
-    name: false,
+    firstname: false,
+    lastname: false,
     restoName: false,
-    role: false,
   });
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
   const [isLoading, setIsLoading] = useState(false);
@@ -43,20 +77,25 @@ const General = () => {
     Object.keys(inputError)
       .map((v) => inputError[v])
       .includes(true) ||
-    (!isValid('name', user.displayName) && !isValid('phone', user.phoneNumber)) ||
+    (!isValid('name', user.firstname) &&
+      !isValid('name', user.lastname) &&
+      !isValid('phone', user.phoneNumber)) ||
     isLoading;
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      if (isValid('name', user.displayName)) {
-        await updateProfile(user, { displayName: inputValue.name.trim() });
+      if (isValid('name', user.firstname) && isValid('name', user.lastname)) {
+        await updateProfile(user, {
+          displayName: `${inputValue.firstname.trim()} ${inputValue.lastname.trim()}`,
+        });
       }
 
-      if (isValid('phone', user.phoneNumber)) {
-        const vId = await verifyPhone(inputValue.phone);
+      const newPhoneNumber = `${dial}${inputValue.phone}`;
+      if (newPhoneNumber.trim() !== user.phoneNumber) {
+        const vId = await verifyPhone(newPhoneNumber);
         setIsUpdatingPhone(true);
-        navigate(`/verify-code?n=${inputValue.phone}&vId=${vId}`);
+        navigate(`/verify-code?n=${newPhoneNumber}&vId=${vId}`);
       }
 
       setIsLoading(false);
@@ -90,21 +129,31 @@ const General = () => {
 
   return (
     <div className="general">
-      <PaperKit className="general__input-block">
-        <AccountSettingForm
-          valueName={{ value: inputValue.name, error: inputError.name }}
-          valuePhone={inputValue.phone}
-          valueCountry={inputValue.country}
-          valueCity={{ value: inputValue.city, error: inputError.city }}
-          valueRole={{ value: inputValue.role, error: inputError.role }}
-          valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
-          handleInputChange={handleInputChange}
-          valueEmail={inputValue.email}
-          onSave={handleSave}
-          disableSave={disableSave()}
-          handleCountryChange={handleSelectCountry}
-        />
-      </PaperKit>
+      <h3 style={{ fontSize: '16px' }}>General information</h3>
+      <AccountSettingForm
+        valueFirstName={{ value: inputValue.firstname, error: inputError.firstname }}
+        valueLastName={{ value: inputValue.lastname, error: inputError.lastname }}
+        valuePhone={inputValue.phone}
+        valueCountry={inputValue.country || null}
+        valueCity={{ value: inputValue.city, error: inputError.city }}
+        valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
+        valueDial={dial}
+        onDialChange={(v) => setDial(v)}
+        handleInputChange={handleInputChange}
+        valueEmail={inputValue.email}
+        handleCountryChange={handleSelectCountry}
+        inputCountryValue={inputCountryValue}
+        onInputCountryChange={(e, v) => setInputCountryValue(v)}
+      />
+      <div style={{ marginTop: '5rem' }}>
+        <h3 style={{ fontSize: '16px' }}>Restaurant information</h3>
+        <RestaurantForm />
+      </div>
+      <div style={{ marginTop: '5rem' }}>
+        <ButtonKit disabled={disableSave()} variant="contained" onClick={handleSave}>
+          Save changes
+        </ButtonKit>
+      </div>
     </div>
   );
 };

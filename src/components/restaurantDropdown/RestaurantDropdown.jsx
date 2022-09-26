@@ -1,5 +1,4 @@
 import * as React from 'react';
-import StoreIcon from '@mui/icons-material/Store';
 
 import './RestaurantDropdown.scss';
 
@@ -9,10 +8,10 @@ import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import useDate from '../../hooks/useDate';
 import talabat from '../../assets/images/talabat-favicon.png';
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
+import selectIcon from '../../assets/images/ic_select.png';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -50,17 +49,14 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform }) => {
   return (
     <div className="restaurant-dropdown_wrapper">
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
-        <InputLabelKit className="restaurant-dropdown-input" id="demo-multiple-checkbox-label">
-          <StoreIcon sx={{ color: 'gray' }} />
-          Vendors
-        </InputLabelKit>
+        <img className="select_icon" src={selectIcon} alt="Select Icon" />
         <SelectKit
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
           value={restaurants}
           onChange={handleChange}
-          input={<OutlindeInputKit label="_Vendors" />}
+          input={<OutlindeInputKit />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
           sx={{ textTransform: 'capitalize' }}>

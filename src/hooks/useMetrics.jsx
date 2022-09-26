@@ -4,17 +4,23 @@ import useApi from './useApi';
 import useDate from './useDate';
 
 function useMetrics() {
-  const { leftDate, rightDate, restaurants } = useDate();
+  const { leftDate, rightDate, vendorsContext } = useDate();
   const { getMetrics } = useApi();
   const [metricsLeft, setMetricsLeft] = useState([]);
   const [metricsRight, setMetricsRight] = useState([]);
 
   const handleRequest = (date, setMetrics) => {
     let isCancelled = false;
+    const keys = Object.keys(vendorsContext);
+    keys.forEach((name) => {
+      if (vendorsContext[name].length === 0) {
+        delete vendorsContext[name];
+      }
+    });
     getMetrics({
       master_email: 'chiekh.alloul@gmail.com',
       access_token: '',
-      vendors: restaurants,
+      vendors: vendorsContext,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
@@ -28,13 +34,13 @@ function useMetrics() {
   };
   useMemo(() => {
     handleRequest(rightDate, setMetricsRight);
-  }, [rightDate, restaurants]);
+  }, [rightDate, vendorsContext]);
 
   useMemo(() => {
     handleRequest(leftDate, setMetricsLeft);
-  }, [leftDate, restaurants]);
+  }, [leftDate, vendorsContext]);
 
-  return { metricsLeft, metricsRight, restaurants };
+  return { metricsLeft, metricsRight };
 }
 
 export default useMetrics;
