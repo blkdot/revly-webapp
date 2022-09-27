@@ -3,7 +3,7 @@
 // This file will handle any global functionnalities related to a context that do not belong to a specific context
 // To prevent creating so many other context
 
-import { subDays } from 'date-fns';
+import { startOfWeek, endOfWeek, subWeeks } from 'date-fns';
 import React, { createContext, useEffect, useState } from 'react';
 
 import Alert from '../components/alert/Alert';
@@ -15,25 +15,33 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('error');
 
-  const [leftDate, setLeft] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
-  const [rightDate, setRight] = useState({
-    startDate: subDays(new Date(), 1),
-    endDate: subDays(new Date(), 1),
-  });
-  const [titleDate, setTitleDate] = useState('today');
-  const [titleRightDate, setTitleRightDate] = useState('yesterday');
+  const storageDate = JSON.parse(localStorage.getItem('date')) || {};
+  const [leftDate, setLeft] = useState(
+    storageDate.leftDate || {
+      startDate: startOfWeek(new Date()),
+      endDate: new Date(),
+    },
+  );
+  const [rightDate, setRight] = useState(
+    storageDate.rightDate || {
+      startDate: startOfWeek(subWeeks(new Date(), 1)),
+      endDate: endOfWeek(subWeeks(new Date(), 1)),
+    },
+  );
+  const [titleDate, setTitleDate] = useState(storageDate.titleDate || 'current week');
+  const [titleRightDate, setTitleRightDate] = useState(storageDate.titleRightDate || 'last week');
 
   const [restaurants, setRestaurants] = useState([]);
   const [vendorsContext, setVendorsContext] = useState({});
 
-  const [leftDateOffers, setLeftDateOffers] = useState({
-    startDate: leftDate.startDate,
-    endDate: leftDate.endDate,
-  });
+  const [leftDateOffers, setLeftDateOffers] = useState(
+    storageDate.leftDateOffers || {
+      startDate: leftDate.startDate,
+      endDate: leftDate.endDate,
+    },
+  );
   const [titleOffers, setTitleOffers] = useState(titleDate);
+  const [typeDateContext, setTypeDateContext] = useState(storageDate.typeDate);
 
   useEffect(() => {
     if (isShowing) {
@@ -97,6 +105,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         setTitleOffers,
         vendorsContext,
         setVendorsContext,
+        typeDateContext,
+        setTypeDateContext,
       }}>
       {renderAlert()}
       {children}

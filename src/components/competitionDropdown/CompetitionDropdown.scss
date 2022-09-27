@@ -1,0 +1,15 @@
+.competition-dropdown.competition-dropdown {
+  background: #fff;
+  padding: 0 5px;
+
+  &.Mui-focused.Mui-focused {
+    img {
+      filter: invert(43%) sepia(17%) saturate(3109%) hue-rotate(219deg) brightness(109%) contrast(103%);
+    }
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}

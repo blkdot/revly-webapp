@@ -18,7 +18,6 @@ import Settings from './pages/settings/Settings';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import ProtectedOnboardRoutes from './routes/ProtectedOnboardRoutes';
-import Competition from './pages/competition/Competition';
 import Check from './pages/check/Check';
 import Planning from './pages/planning/Planning';
 import MarketingAds from './pages/marketing/MarketingAds';
@@ -26,6 +25,8 @@ import MarketingOffer from './pages/marketing/MarketingOffer';
 import AuthLayout from './components/layout/authLayout/AuthLayout';
 import VerifyCode from './pages/verifyCode/VerifyCode';
 import ResetPassword from './pages/resetPassword/ResetPassword';
+import CompetitionRanking from './pages/competition/CompetitionRanking';
+import CompetitionAlerts from './pages/competition/CompetitionAlerts';
 
 const theme = createTheme({
   palette: {
@@ -59,7 +60,8 @@ const App = () => (
                     {/* <Route path='/account' element={<Account />} /> */}
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/planning" element={<Planning />} />
-                    <Route path="/competition" element={<Competition />} />
+                    <Route path="/competition/ranking" element={<CompetitionRanking />} />
+                    <Route path="/competition/alerts" element={<CompetitionAlerts />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/marketing/offer" element={<MarketingOffer />} />
                     <Route path="/marketing/ads" element={<MarketingAds />} />

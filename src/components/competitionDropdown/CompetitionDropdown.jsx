@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './CompetitionDropdown.scss';
 import SelectKit from '../../kits/select/SelectKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
@@ -11,12 +10,12 @@ import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
-const CompetitionDropdown = ({ className, title, rows, select, selectWidth }) => {
+const CompetitionDropdown = ({ className, title, rows, select, icon, setRow }) => {
   const MenuProps = {
     PaperProps: {
       style: {
         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: selectWidth,
+        width: 250,
       },
     },
   };
@@ -25,29 +24,29 @@ const CompetitionDropdown = ({ className, title, rows, select, selectWidth }) =>
     const {
       target: { value },
     } = event;
-    if (value.length > 0) {
-      // setRestaurants(typeof value === 'string' ? value.split(',') : value);
-    }
+    setRow(value);
   };
 
   return (
     <div className={`restaurant-dropdown_wrapper ${className}`}>
-      <FormcontrolKit sx={{ m: 1, width: 300 }}>
-        <InputLabelKit className="restaurant-dropdown-input" id="demo-multiple-checkbox-label">
+      <FormcontrolKit sx={{ m: 1, width: 250 }}>
+        <InputLabelKit
+          className="restaurant-dropdown-input competition-dropdown"
+          id="demo-multiple-checkbox-label">
+          <img src={icon} alt="Select Icon" />
           {title}
         </InputLabelKit>
         <SelectKit
+          required
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
-          multiple
-          value={select || []}
+          value={select === undefined ? '' : select}
           onChange={handleChange}
           input={<OutlindeInputKit label={title} />}
-          renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected) => selected}
           MenuProps={MenuProps}>
           {rows?.map((name) => (
             <MenuItemKit key={name} value={name}>
-              <CheckboxKit checked={select?.indexOf(name) > -1} />
               <ListItemTextKit primary={name} />
             </MenuItemKit>
           ))}

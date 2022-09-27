@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Finance.scss';
 import dayjs from 'dayjs';
-import { endOfMonth, format, getYear } from 'date-fns';
+import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import Widget from '../widget/WidgetEmpty';
 import Table from '../table/TableEmpty';
@@ -11,10 +11,12 @@ import useDate from '../../hooks/useDate';
 
 const FinanceEmpty = ({ vendors }) => {
   const { titleDate, leftDate, restaurants } = useDate();
-  const startLocal = leftDate.startDate.toLocaleDateString();
-  const endLocal = leftDate.endDate.toLocaleDateString();
-  const startGetDate = leftDate.startDate.getDate();
-  const endGetDate = leftDate.endDate.getDate();
+  const startDate = parseISO(leftDate.startDate);
+  const endDate = parseISO(leftDate.endDate);
+  const startLocal = startDate.toLocaleDateString();
+  const endLocal = endDate.toLocaleDateString();
+  const startGetDate = startDate.getDate();
+  const endGetDate = endDate.getDate();
   const getLeftDate = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {

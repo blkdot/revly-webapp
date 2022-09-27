@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Finance.scss';
-import { endOfMonth, format, getYear } from 'date-fns';
+import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import Widget from '../widget/Widget';
@@ -11,10 +11,12 @@ import useDate from '../../hooks/useDate';
 const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   const [table, setTable] = useState('revenue');
   const { titleDate, leftDate, restaurants } = useDate();
-  const startLocal = leftDate.startDate.toLocaleDateString();
-  const endLocal = leftDate.endDate.toLocaleDateString();
-  const startGetDate = leftDate.startDate.getDate();
-  const endGetDate = leftDate.endDate.getDate();
+  const startDate = parseISO(leftDate.startDate);
+  const endDate = parseISO(leftDate.endDate);
+  const startLocal = startDate.toLocaleDateString();
+  const endLocal = endDate.toLocaleDateString();
+  const startGetDate = startDate.getDate();
+  const endGetDate = endDate.getDate();
   const getLeftDate = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {

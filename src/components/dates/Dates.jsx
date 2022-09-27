@@ -1,7 +1,7 @@
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import './Dates.scss';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   endOfMonth,
   endOfWeek,
@@ -47,12 +47,22 @@ const Dates = () => {
     setLeftDateOffers,
     titleOffers,
     setTitleOffers,
+    typeDateContext,
   } = useDate();
   const [opened, setOpened] = useState(false);
   const [openedRight, setOpenedRight] = useState(false);
   const [selected, setSelected] = useState(false);
-  const [expanded, setExpanded] = useState('panel1');
-  const [typeDate, setTypeDate] = useState('day');
+  const getExpanded = () => {
+    if (typeDateContext === 'day') {
+      return 'panel1';
+    }
+    if (typeDateContext === 'week') {
+      return 'panel2';
+    }
+    return 'panel3';
+  };
+  const [expanded, setExpanded] = useState(getExpanded());
+  const [typeDate, setTypeDate] = useState(typeDateContext);
   const [title, setTitle] = useState(titleDate);
   const [leftDateBtn, setLeftDateBtn] = useState({
     startDate: left.startDate,
@@ -60,19 +70,18 @@ const Dates = () => {
   });
   const [leftDate, setLeftDate] = useState([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: new Date(left.startDate),
+      endDate: new Date(left.endDate),
       key: 'selection',
     },
   ]);
   const [rightDate, setRightDate] = useState([
     {
-      startDate: subDays(new Date(), 1),
-      endDate: subDays(new Date(), 1),
+      startDate: new Date(right.startDate),
+      endDate: new Date(right.endDate),
       key: 'selection',
     },
   ]);
-
   const location = useLocation();
   const handleClick = () => {
     // handleClick happens when you click on button "OK" on Left date picker
@@ -269,7 +278,6 @@ const Dates = () => {
     const dateGetDay = date.getDay();
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
-
     setOpenedRight(false); // Closing Right date picker
     setSelected(false); // Closing Right Select
     setRight({ startDate, endDate }); // Sending data to context state
@@ -317,17 +325,23 @@ const Dates = () => {
       setTitleRightDate('custom');
     }
   };
-
+  useMemo(() => {
+    localStorage.setItem(
+      'date',
+      JSON.stringify({
+        titleOffers,
+        titleDate,
+        titleRightDate,
+        leftDateBtn,
+        leftDate: { startDate: new Date(left.startDate), endDate: new Date(left.endDate) },
+        rightDate: { startDate: new Date(right.startDate), endDate: new Date(right.endDate) },
+        typeDate,
+      }),
+    );
+  }, [titleOffers, titleDate, titleRightDate, leftDateBtn, titleRightDate, left, right]);
   const handleOnChange = (ranges) => {
     // handleOnChagne happens when you click on some day on Left date picker
     const { selection } = ranges;
-    const rdrDays = document.querySelectorAll('.rdrDay'); // here we took all span
-    rdrDays.forEach((el) =>
-      el.addEventListener(
-        'dblclick',
-        () => handleClick(), // When you double click this function will work
-      ),
-    );
     if (getMonth(selection.startDate) === getMonth(new Date())) {
       // This will check if today's month is equal to the month of the clicked day
       if (typeDate === 'day') {
@@ -467,15 +481,6 @@ const Dates = () => {
   const handleOnChangeRight = (ranges) => {
     // handleOnChagneRight happens when you click on some day on Right date picker
     const { selection } = ranges;
-    const rdrDays = document.querySelectorAll('.rdrDay'); // here we took all span
-    if (getRightDate()) {
-      rdrDays.forEach((day) =>
-        day.addEventListener(
-          'dblclick',
-          () => handleClickRight(), // When you double click this function will work
-        ),
-      );
-    }
     if (getMonth(selection.startDate) === getMonth(new Date())) {
       // This will check if today's month is equal to the month of the clicked day
       if (typeDate === 'day') {
@@ -507,16 +512,6 @@ const Dates = () => {
         },
       ]);
     }
-  };
-
-  const handleClickMonth = (e, type) => {
-    e.target.addEventListener('dblclick', () => {
-      if (type === 'left') {
-        handleClick();
-      } else if (getRightDate()) {
-        handleClickRight();
-      }
-    });
   };
 
   const minDate = dayjs('2021-01-01T00:00:00.000');
@@ -612,10 +607,13 @@ const Dates = () => {
   return (
     <div className="dates">
       <div className="date-picker_wrapper">
+        <TypographyKit className="top-text-inputs" variant="subtitle">
+          Show Data from
+        </TypographyKit>
         <PaperKit
+          onClick={() => setOpened(true)}
           style={{ background: '#fff' }}
           component="div"
-          onClick={() => setOpened(true)}
           className="date-input">
           <TypographyKit className="date-typography">
             <CalendarMonthIcon />
@@ -680,7 +678,6 @@ const Dates = () => {
                   },
                 ])
               }
-              onClick={(e) => handleClickMonth(e, 'left')}
             />
           </LocalizationProviderKit>
         ) : (
@@ -702,6 +699,9 @@ const Dates = () => {
         <div className="dashboard-date">
           <img src={switchIcon} alt="Compare" />
           <div className="date-picker_wrapper">
+            <TypographyKit className="top-text-inputs" variant="subtitle">
+              Compare to
+            </TypographyKit>
             <TypographyKit component="div" className="date-input-wrapper">
               <PaperKit
                 style={{ background: '#fff' }}
@@ -787,7 +787,6 @@ const Dates = () => {
                       },
                     ])
                   }
-                  onClick={(e) => handleClickMonth(e, 'right')}
                 />
               </LocalizationProviderKit>
             ) : (
