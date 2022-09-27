@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Marketing.scss';
-import { endOfMonth, format, getYear } from 'date-fns';
+import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import Widget from '../widget/Widget';
@@ -11,8 +11,8 @@ import useDate from '../../hooks/useDate';
 const Marketing = ({ metricsLeft, metricsRight }) => {
   const [table, setTable] = useState('accrued_discounts');
   const { titleDate, leftDate } = useDate();
-  const startDate = new Date(leftDate.startDate);
-  const endDate = new Date(leftDate.endDate);
+  const startDate = parseISO(leftDate.startDate);
+  const endDate = parseISO(leftDate.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();

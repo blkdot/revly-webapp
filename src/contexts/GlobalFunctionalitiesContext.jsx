@@ -41,6 +41,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
     },
   );
   const [titleOffers, setTitleOffers] = useState(titleDate);
+  const [typeDateContext, setTypeDateContext] = useState(storageDate.typeDate);
 
   useEffect(() => {
     if (isShowing) {
@@ -104,6 +105,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         setTitleOffers,
         vendorsContext,
         setVendorsContext,
+        typeDateContext,
+        setTypeDateContext,
       }}>
       {renderAlert()}
       {children}

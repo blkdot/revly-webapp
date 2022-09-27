@@ -8,7 +8,7 @@ import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlin
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import RedeemOutlinedIcon from '@mui/icons-material/RedeemOutlined';
-import { endOfMonth, format, getYear } from 'date-fns';
+import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import dayjs from 'dayjs';
@@ -21,16 +21,24 @@ import PaperKit from '../../kits/paper/PaperKit';
 
 const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
   const { titleRightDate, rightDate } = useDate();
-  const startDate = new Date(rightDate.startDate);
-  const endDate = new Date(rightDate.endDate);
+  const startDate = parseISO(rightDate.startDate);
+  const endDate = parseISO(rightDate.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const procent =
-    metricsLeft[2] && metricsRight[2]
-      ? Number((metricsLeft[2][1][title] / (metricsRight[2][1][title] / 100) - 100).toFixed(2))
-      : 0;
+  const procent = () => {
+    if (metricsLeft[0] && metricsRight[0]) {
+      if (Number(metricsRight[2][1][title]) === 0) {
+        return 0;
+      }
+
+      return Number(
+        (metricsLeft[0][1][title] / (metricsRight[0][1][title] / 100) - 100).toFixed(2),
+      );
+    }
+    return '-';
+  };
   const getTitle = () => {
     if (title === 'n_orders') {
       return 'orders';
@@ -48,9 +56,12 @@ const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
       if (startLocal === endLocal) {
         return `${dayjs(rightDate.startDate).format('DD/MM')}'s`;
       }
-      if (startGetDate === 1 && endGetDate === endOfMonth(rightDate.startDate, 1).getDate()) {
-        return `${format(rightDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
-          rightDate.startDate,
+      if (
+        startGetDate === 1 &&
+        endGetDate === endOfMonth(parseISO(rightDate.startDate), 1).getDate()
+      ) {
+        return `${format(parseISO(rightDate.startDate), 'LLL', { locale: enUS })}'s  -  ${getYear(
+          parseISO(rightDate.startDate),
         )}`;
       }
 
@@ -96,28 +107,28 @@ const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
               {getTitle()}
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
-              {metricsLeft[2][1][title] !== null ? metricsLeft[2][1][title] : '-'}
+              {metricsLeft[0][1][title] !== null ? metricsLeft[0][1][title] : '-'}
             </TypographyKit>
           </div>
           <TypographyKit className="card-typography card-icon">{getIcon()}</TypographyKit>
         </TypographyKit>
         <div className="card_bottom">
           <PaperKit
-            className={`icon-paper ${procent > 0 ? 'increased' : ''} ${
-              procent < 0 ? 'decreased' : ''
+            className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
+              procent() < 0 ? 'decreased' : ''
             }`}>
-            {procent === 0 ? (
+            {procent() === 0 ? (
               <ArrowRightAltIcon />
             ) : (
-              <MovingIcon className={procent > 0 ? 'increased' : 'decreased'} />
+              <MovingIcon className={procent() > 0 ? 'increased' : 'decreased'} />
             )}
           </PaperKit>
           <TypographyKit
-            className={`card-procent ${procent > 0 ? 'increased' : ''} ${
-              procent < 0 ? 'decreased' : ''
+            className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
+              procent() < 0 ? 'decreased' : ''
             }`}
             variant="body2">
-            {procent > 0 ? `+${procent}` : procent}%
+            {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
           </TypographyKit>
           <TypographyKit className="card-week" variant="body3">
             than {getRightDate()}

@@ -5,7 +5,7 @@
 import React from 'react';
 import './Table.scss';
 
-import { endOfMonth, format, getYear } from 'date-fns';
+import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import BoxKit from '../../kits/box/BoxKit';
@@ -35,8 +35,8 @@ const EnhancedTableHead = ({ headCells }) => (
 const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
   const { titleRightDate, rightDate, titleDate, leftDate } = useDate();
 
-  const startDate = new Date(leftDate.startDate);
-  const endDate = new Date(leftDate.endDate);
+  const startDate = parseISO(leftDate.startDate);
+  const endDate = parseISO(leftDate.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
@@ -61,10 +61,10 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
       }
       if (
         startGetDateRight === 1 &&
-        endGetDateRight === endOfMonth(rightDate.startDate, 1).getDate()
+        endGetDateRight === endOfMonth(parseISO(rightDate.startDate), 1).getDate()
       ) {
-        return `${format(rightDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
-          rightDate.startDate,
+        return `${format(parseISO(rightDate.startDate), 'LLL', { locale: enUS })}'s  -  ${getYear(
+          parseISO(rightDate.startDate),
         )}`;
       }
 
@@ -80,9 +80,12 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
       if (startLocal === endLocal) {
         return `${dayjs(leftDate.startDate).format('DD/MM')}'s`;
       }
-      if (startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate()) {
-        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
-          leftDate.startDate,
+      if (
+        startGetDate === 1 &&
+        endGetDate === endOfMonth(parseISO(leftDate.startDate), 1).getDate()
+      ) {
+        return `${format(parseISO(leftDate.startDate), 'LLL', { locale: enUS })}'s  -  ${getYear(
+          parseISO(leftDate.startDate),
         )}`;
       }
 
@@ -94,8 +97,8 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
     return `${titleDate}'s`;
   };
 
-  const startDateRight = new Date(rightDate.startDate);
-  const endDateRight = new Date(rightDate.endDate);
+  const startDateRight = parseISO(rightDate.startDate);
+  const endDateRight = parseISO(rightDate.endDate);
   const startLocalRight = startDateRight.toLocaleDateString();
   const endLocalRight = endDateRight.toLocaleDateString();
   const startGetDateRight = startDateRight.getDate();
@@ -127,19 +130,43 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
     },
   ];
 
-  const procentTalabat =
-    metricsLeft[1] && metricsRight[1]
-      ? Number((metricsLeft[1][1][title] / (metricsRight[1][1][title] / 100) - 100).toFixed(2))
-      : 0;
+  const procentTalabat = () => {
+    if (metricsLeft[2] && metricsRight[2]) {
+      if (Number(metricsRight[2][1][title]) === 0) {
+        return 0;
+      }
 
-  const procentDeliveroo =
-    metricsLeft[0] && metricsRight[0]
-      ? Number((metricsLeft[0][1][title] / (metricsRight[0][1][title] / 100) - 100).toFixed(2))
-      : 0;
-  const procentTotal =
-    metricsLeft[2] && metricsRight[2]
-      ? Number((metricsLeft[2][1][title] / (metricsRight[2][1][title] / 100) - 100).toFixed(2))
-      : 0;
+      return Number(
+        (metricsLeft[2][1][title] / (metricsRight[2][1][title] / 100) - 100).toFixed(2),
+      );
+    }
+    return '-';
+  };
+
+  const procentDeliveroo = () => {
+    if (metricsLeft[1] && metricsRight[1]) {
+      if (Number(metricsRight[1][1][title]) === 0) {
+        return 0;
+      }
+
+      return Number(
+        (metricsLeft[1][1][title] / (metricsRight[1][1][title] / 100) - 100).toFixed(2),
+      );
+    }
+    return '-';
+  };
+  const procentTotal = () => {
+    if (metricsLeft[0] && metricsRight[0]) {
+      if (Number(metricsRight[0][1][title]) === 0) {
+        return 0;
+      }
+
+      return Number(
+        (metricsLeft[0][1][title] / (metricsRight[0][1][title] / 100) - 100).toFixed(2),
+      );
+    }
+    return '-';
+  };
   const evolution = (procent) => {
     if (Number.isNaN(procent)) {
       return '-';
@@ -150,7 +177,7 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
     return `${procent}%`;
   };
   const getNum = (metrics) => {
-    if (Number.isNaN(metrics[(1)[title]]) || metrics[1][title] === null) {
+    if (Number.isNaN(metrics[1][title]) || metrics[1][title] === null) {
       return '-';
     }
 
@@ -171,14 +198,14 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
                     alt={title}
                   />
                 </TableCellKit>
-                <TableCellKit>{getNum(metricsLeft[0])}</TableCellKit>
-                <TableCellKit>{getNum(metricsRight[0])}</TableCellKit>
+                <TableCellKit>{getNum(metricsLeft[1])}</TableCellKit>
+                <TableCellKit>{getNum(metricsRight[1])}</TableCellKit>
                 <TableCellKit>
                   <div
-                    className={`table_evolution ${procentDeliveroo > 0 ? 'table_increased' : ''} ${
-                      procentDeliveroo < 0 ? 'table_decreased' : ''
-                    }`}>
-                    <span>{evolution(procentDeliveroo)}</span>
+                    className={`table_evolution ${
+                      procentDeliveroo() > 0 ? 'table_increased' : ''
+                    } ${procentDeliveroo() < 0 ? 'table_decreased' : ''}`}>
+                    <span>{evolution(procentDeliveroo())}</span>
                   </div>
                 </TableCellKit>
               </TableRowKit>
@@ -190,14 +217,14 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
                     alt={title}
                   />
                 </TableCellKit>
-                <TableCellKit>{getNum(metricsLeft[1])}</TableCellKit>
-                <TableCellKit>{getNum(metricsRight[1])}</TableCellKit>
+                <TableCellKit>{getNum(metricsLeft[2])}</TableCellKit>
+                <TableCellKit>{getNum(metricsRight[2])}</TableCellKit>
                 <TableCellKit>
                   <div
-                    className={`table_evolution ${procentTalabat > 0 ? 'table_increased' : ''} ${
-                      procentTalabat < 0 ? 'table_decreased' : ''
+                    className={`table_evolution ${procentTalabat() > 0 ? 'table_increased' : ''} ${
+                      procentTalabat() < 0 ? 'table_decreased' : ''
                     }`}>
-                    <span>{evolution(procentTalabat)}</span>
+                    <span>{evolution(procentTalabat())}</span>
                   </div>
                 </TableCellKit>
               </TableRowKit>
@@ -207,15 +234,15 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
                 <TableCellKit component="th" scope="row">
                   Total
                 </TableCellKit>
-                <TableCellKit>{getNum(metricsLeft[2])}</TableCellKit>
-                <TableCellKit>{getNum(metricsRight[2])}</TableCellKit>
+                <TableCellKit>{getNum(metricsLeft[0])}</TableCellKit>
+                <TableCellKit>{getNum(metricsRight[0])}</TableCellKit>
                 <TableCellKit>
                   <div
-                    className={`table_evolution ${procentTotal > 0 ? 'table_increased' : ''} ${
-                      procentTotal < 0 ? 'table_decreased' : ''
+                    className={`table_evolution ${procentTotal() > 0 ? 'table_increased' : ''} ${
+                      procentTotal() < 0 ? 'table_decreased' : ''
                     }`}>
                     <span>
-                      <span>{evolution(procentTotal)}</span>
+                      <span>{evolution(procentTotal())}</span>
                     </span>
                   </div>
                 </TableCellKit>
