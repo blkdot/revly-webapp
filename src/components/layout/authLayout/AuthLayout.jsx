@@ -17,15 +17,15 @@ const AuthLayout = () => (
             All in one software to optimize your revenue on online channels
           </p>
           <div className="auth-layout__cover__center-flex">
-            <img src={cardImage} alt="card" />
+            <img loading="lazy" src={cardImage} alt="card" />
             <p className="center-flex__text">Set up a customized marketing strategy</p>
           </div>
           <div className="auth-layout__cover__center-flex">
-            <img src={cardImage} alt="card" />
+            <img loading="lazy" src={cardImage} alt="card" />
             <p className="center-flex__text">Gain valuable insights on your performance</p>
           </div>
           <div className="auth-layout__cover__center-flex">
-            <img src={cardImage} alt="card" />
+            <img loading="lazy" src={cardImage} alt="card" />
             <p className="center-flex__text">Stay on top of the competition</p>
           </div>
         </div>
