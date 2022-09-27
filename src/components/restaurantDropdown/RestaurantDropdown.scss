@@ -1,26 +1,58 @@
 @import '../../library.scss';
 
+.top-text-inputs {
+  position: relative;
+  padding-left: 25px;
+
+  &::before {
+    content: "";
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    background: #906BFF;
+    left: 4.3px;
+    top: 4px;
+    z-index: 10;
+  }
+
+  &::after {
+    content: "";
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    background: #D5C8FA;
+    left: 0;
+    top: 0;
+  }
+}
+
 .restaurant-dropdown_wrapper {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  grid-gap: 5px;
+
+
 
   >div {
     box-shadow: none;
     border-radius: 30px;
     margin: 0;
     border: 1px solid rgba(145, 158, 171, 0.32);
-    height: 45px;
+    height: 40px;
 
     fieldset {
       border: none;
     }
 
     >div {
-      padding-left: 40px;
-      height: 45px;
+      height: 40px;
 
       >div {
+        padding-left: 45px;
         color: #212B36;
       }
     }
@@ -59,8 +91,8 @@
 
 .select_icon {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  left: 5px;
+  width: 35px;
+  height: 35px;
+  left: 4px;
   top: 2px;
 }

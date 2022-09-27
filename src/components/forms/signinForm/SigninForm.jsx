@@ -23,6 +23,7 @@ const SigninForm = (props) => {
     errorEmail,
     errorPassword,
     onChangeRemebered,
+    onBlur,
   } = props;
 
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +31,7 @@ const SigninForm = (props) => {
   return (
     <div className="signin-form">
       <TypographyKit className="signin-form__get-started">
-        Don&apos;t have an account ?{' '}
+        Don&apos;t have an account?{' '}
         <Link className="__get-started__link" to="/signup">
           Get started
         </Link>
@@ -61,6 +62,7 @@ const SigninForm = (props) => {
         <div className="__block-field">
           <TextfieldKit
             label="Email address"
+            onBlur={() => onBlur('email')}
             fullWidth
             onChange={({ target }) => onChangeEmail(target.value)}
             error={errorEmail}
@@ -69,6 +71,7 @@ const SigninForm = (props) => {
         <div className="__block-field">
           <TextfieldKit
             label="Password"
+            onBlur={() => onBlur('password')}
             type={showPassword ? 'text' : 'password'}
             fullWidth
             onChange={({ target }) => onChangePassword(target.value)}

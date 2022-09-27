@@ -65,7 +65,7 @@ const Billing = () => {
               <p className="billing__plan__flex__text">Premium</p>
             </div>
             <div className="billing__plan__flex__btn">
-              <ButtonKit sx={{ marginRight: 2 }} size="small" variant="outlined">
+              <ButtonKit style={{ marginRight: 10 }} size="small" variant="outlined">
                 Cancel Plan
               </ButtonKit>
               <ButtonKit

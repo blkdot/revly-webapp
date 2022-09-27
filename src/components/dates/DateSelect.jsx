@@ -19,10 +19,12 @@ import ButtonKit from '../../kits/button/ButtonKit';
 import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
 import AccordionKit from '../../kits/accordion/AccordionKit';
 import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
+import useDate from '../../hooks/useDate';
 
 const DateSelect = React.memo(
   ({ type, setSelections, setTypeDate, expanded, setExpanded, index, leftDate }) => {
     const [active, setActive] = useState('current');
+    const { setTypeDateContext } = useDate();
 
     useEffect(() => {
       const date = new Date();
@@ -83,42 +85,42 @@ const DateSelect = React.memo(
       getActive();
     }, [leftDate, type]);
 
-    const getDate = () => {
-      const date = new Date();
-      switch (type) {
+    const getDate = (date) => {
+      const today = new Date();
+      switch (date) {
         case 'today':
-          setSelections([{ startDate: date, endDate: date, key: 'selection' }]);
+          setSelections([{ startDate: today, endDate: today, key: 'selection' }]);
           setActive('current');
           break;
         case 'yesterday':
           setSelections([
-            { startDate: subDays(date, 1), endDate: subDays(date, 1), key: 'selection' },
+            { startDate: subDays(today, 1), endDate: subDays(today, 1), key: 'selection' },
           ]);
           setActive('last');
           break;
         case 'week':
-          setSelections([{ startDate: startOfWeek(date), endDate: date, key: 'selection' }]);
+          setSelections([{ startDate: startOfWeek(today), endDate: today, key: 'selection' }]);
           setActive('current');
           break;
         case 'last week':
           setSelections([
             {
-              startDate: startOfWeek(subWeeks(date, 1)),
-              endDate: endOfWeek(subWeeks(date, 1)),
+              startDate: startOfWeek(subWeeks(today, 1)),
+              endDate: endOfWeek(subWeeks(today, 1)),
               key: 'selection',
             },
           ]);
           setActive('last');
           break;
         case 'month':
-          setSelections([{ startDate: startOfMonth(date), endDate: date, key: 'selection' }]);
+          setSelections([{ startDate: startOfMonth(today), endDate: today, key: 'selection' }]);
           setActive('current');
           break;
         case 'last month':
           setSelections([
             {
-              startDate: startOfMonth(subMonths(date, 1)),
-              endDate: endOfMonth(subMonths(date, 1)),
+              startDate: startOfMonth(subMonths(today, 1)),
+              endDate: endOfMonth(subMonths(today, 1)),
               key: 'selection',
             },
           ]);
@@ -133,6 +135,7 @@ const DateSelect = React.memo(
     };
     const changeSelect = () => {
       setTypeDate(type);
+      setTypeDateContext(type);
       if (type === 'day') {
         setSelections([{ startDate: new Date(), endDate: new Date(), key: 'selection' }]);
       } else if (type === 'week') {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import cardImage from '../../../assets/images/illustration_register.svg';
+import logo from '../../../assets/images/logo.png';
 
 import './AuthLayout.scss';
 
@@ -9,7 +10,7 @@ const AuthLayout = () => (
   <div className="auth-layout">
     <div className="auth-layout__cover">
       <div className="auth-layout__cover__logo">
-        <img src="/images/cover.png" alt="cover" width="180" height="70" />
+        <img src={logo} alt="cover" width="160" height="50" />
       </div>
       <div className="auth-layout__cover__center">
         <div>

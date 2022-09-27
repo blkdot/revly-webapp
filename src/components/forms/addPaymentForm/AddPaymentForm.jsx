@@ -53,7 +53,7 @@ const AddPaymentForm = (props) => {
           Cancel
         </ButtonKit>
         <ButtonKit
-          sx={{ marginLeft: 2 }}
+          style={{ marginLeft: 15 }}
           size="small"
           className="add-payment-form__input-flex__input"
           onChange={handleInputChange}

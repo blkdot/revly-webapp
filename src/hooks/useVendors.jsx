@@ -21,13 +21,12 @@ function useVendors() {
         entries.forEach((el) => {
           el[1].forEach((obj) => newVendors.push({ ...obj, platform: el[0] }));
         });
-        entries.reverse().forEach((el) => {
-          el[1].reverse().forEach((obj) => setRestaurants([obj.data.vendor_name]));
-        });
-        const platforms = Object.keys(newData).reduce((a, v) => ({ ...a, [v]: [] }), {});
+        const newRestaurants = [];
         entries.forEach((el) => {
-          el[1].forEach((obj) => setVendorsContext({ ...platforms, [el[0]]: [obj] }));
+          el[1].forEach((obj) => newRestaurants.push(obj.data.vendor_name));
         });
+        setRestaurants(newRestaurants);
+        setVendorsContext(newData);
         setVendorsPlatform(Object.keys(newData));
         setVendors(newVendors);
       }

@@ -25,7 +25,13 @@ function useMetrics() {
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
       if (!isCancelled) {
-        setMetrics(Object.entries(data.data.metrics));
+        const sorted = Object.keys(data.data.metrics)
+          .sort()
+          .reduce((accumulator, key) => {
+            accumulator[key] = data.data.metrics[key];
+            return accumulator;
+          }, {});
+        setMetrics(Object.entries(sorted));
       }
     });
     return () => {
