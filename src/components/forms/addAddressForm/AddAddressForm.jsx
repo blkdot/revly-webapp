@@ -58,7 +58,7 @@ const AddAddressForm = (props) => {
           Cancel
         </ButtonKit>
         <ButtonKit
-          sx={{ marginLeft: 2 }}
+          style={{ marginLeft: 15 }}
           size="small"
           className="add-address-form__input-flex__input"
           onChange={handleInputChange}
