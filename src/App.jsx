@@ -30,8 +30,8 @@ import ResetPassword from './pages/resetPassword/ResetPassword';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4D2681',
-      second: '#906BFF',
+      main: '#906BFF',
+      second: '#3AC3B1 ',
       warning: '#FFC107',
     },
     grey: {

@@ -70,11 +70,18 @@ const SignIn = () => {
   };
 
   const handleChange = (k) => (v) => {
+    setErrorData({ ...errorData, [k]: false });
     setValue({ ...value, [k]: v });
   };
 
   const handleChangeRemembered = (v) => {
     setValue({ ...value, remembered: v });
+  };
+
+  const onInputBlur = (field) => {
+    if (!value[field]) {
+      setErrorData({ ...errorData, [field]: true });
+    }
   };
 
   return (
@@ -83,6 +90,7 @@ const SignIn = () => {
       onChangePassword={handleChange('password')}
       onChangeRemebered={handleChangeRemembered}
       errorEmail={errorData.email}
+      onBlur={onInputBlur}
       errorPassword={errorData.password}
       onSubmit={handleSubmit}
       onGoogleSubmit={handleGoogleSubmit}
