@@ -1,7 +1,7 @@
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import './Dates.scss';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   endOfMonth,
   endOfWeek,
@@ -51,8 +51,8 @@ const Dates = () => {
   const [opened, setOpened] = useState(false);
   const [openedRight, setOpenedRight] = useState(false);
   const [selected, setSelected] = useState(false);
-  const [expanded, setExpanded] = useState('panel1');
-  const [typeDate, setTypeDate] = useState('day');
+  const [expanded, setExpanded] = useState('panel2');
+  const [typeDate, setTypeDate] = useState('week');
   const [title, setTitle] = useState(titleDate);
   const [leftDateBtn, setLeftDateBtn] = useState({
     startDate: left.startDate,
@@ -60,23 +60,21 @@ const Dates = () => {
   });
   const [leftDate, setLeftDate] = useState([
     {
-      startDate: new Date(),
+      startDate: startOfWeek(new Date()),
       endDate: new Date(),
       key: 'selection',
     },
   ]);
   const [rightDate, setRightDate] = useState([
     {
-      startDate: subDays(new Date(), 1),
-      endDate: subDays(new Date(), 1),
+      startDate: startOfWeek(subWeeks(new Date(), 1)),
+      endDate: endOfWeek(subWeeks(new Date(), 1)),
       key: 'selection',
     },
   ]);
-
   const location = useLocation();
   const handleClick = () => {
     // handleClick happens when you click on button "OK" on Left date picker
-
     // We put in variables for later use
     const startDate = new Date(leftDate[0].startDate);
     const endDate = new Date(leftDate[0].endDate);
@@ -269,7 +267,6 @@ const Dates = () => {
     const dateGetDay = date.getDay();
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
-
     setOpenedRight(false); // Closing Right date picker
     setSelected(false); // Closing Right Select
     setRight({ startDate, endDate }); // Sending data to context state
@@ -317,7 +314,19 @@ const Dates = () => {
       setTitleRightDate('custom');
     }
   };
-
+  useMemo(() => {
+    localStorage.setItem(
+      'date',
+      JSON.stringify({
+        titleOffers,
+        titleDate,
+        titleRightDate,
+        leftDateBtn,
+        leftDate: { startDate: new Date(left.startDate), endDate: new Date(left.endDate) },
+        rightDate: { startDate: new Date(right.startDate), endDate: new Date(right.endDate) },
+      }),
+    );
+  }, [titleOffers, titleDate, titleRightDate, leftDateBtn, titleRightDate, left, right]);
   const handleOnChange = (ranges) => {
     // handleOnChagne happens when you click on some day on Left date picker
     const { selection } = ranges;
@@ -612,6 +621,9 @@ const Dates = () => {
   return (
     <div className="dates">
       <div className="date-picker_wrapper">
+        <TypographyKit className="top-text-inputs" variant="subtitle">
+          Show Data from
+        </TypographyKit>
         <PaperKit
           style={{ background: '#fff' }}
           component="div"
@@ -702,6 +714,9 @@ const Dates = () => {
         <div className="dashboard-date">
           <img src={switchIcon} alt="Compare" />
           <div className="date-picker_wrapper">
+            <TypographyKit className="top-text-inputs" variant="subtitle">
+              Compare to
+            </TypographyKit>
             <TypographyKit component="div" className="date-input-wrapper">
               <PaperKit
                 style={{ background: '#fff' }}

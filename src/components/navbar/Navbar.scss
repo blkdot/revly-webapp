@@ -127,15 +127,6 @@
   margin-top: 10px;
 }
 
-.increased {
-  color: $color-green;
-}
-
-.decreased {
-  color: $color-red;
-  transform: scale(1, -1);
-}
-
 .Navbar_logo.Navbar_logo {
   position: relative;
   height: 70px;
@@ -175,7 +166,6 @@
 
   &.Mui-expanded.Mui-expanded {
     min-height: 25px;
-
   }
 }
 
@@ -222,6 +212,11 @@
   background: none;
   border: none;
   box-shadow: none;
+  margin: 0 !important;
+
+  &::before {
+    content: none;
+  }
 }
 
 .navbar-accordion-details.navbar-accordion-details {
@@ -235,10 +230,14 @@
   >a {
     position: relative;
 
+    button {
+      padding-left: 40px;
+    }
+
     &::before {
       content: "";
       position: absolute;
-      left: -15px;
+      left: 15px;
       border-radius: 50%;
       top: 45%;
       width: 5px;
@@ -321,21 +320,24 @@
   }
 }
 
-@media(min-height: 1100px){
-  .nav-lines{
+@media(min-height: 1100px) {
+  .nav-lines {
     top: 35%;
   }
 }
+
 @media(max-height: 900px) {
   .nav-lines {
     top: 50%;
   }
 }
+
 @media(max-height: 800px) {
   .nav-lines {
     top: 55%;
   }
 }
+
 @media(max-height: 700px) {
   .nav-lines {
     top: 60%;

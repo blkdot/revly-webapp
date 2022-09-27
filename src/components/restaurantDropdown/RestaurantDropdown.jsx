@@ -12,6 +12,7 @@ import useDate from '../../hooks/useDate';
 import talabat from '../../assets/images/talabat-favicon.png';
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
+import TypographyKit from '../../kits/typography/TypographyKit';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -48,6 +49,9 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform }) => {
 
   return (
     <div className="restaurant-dropdown_wrapper">
+      <TypographyKit className="top-text-inputs" variant="subtitle">
+        Select a Vendor
+      </TypographyKit>
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
         <img className="select_icon" src={selectIcon} alt="Select Icon" />
         <SelectKit

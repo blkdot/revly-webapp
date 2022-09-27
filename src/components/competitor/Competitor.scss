@@ -1,32 +1,5 @@
 @import '../../library.scss';
 
-.competitor-btns-wrapper {
-  display: flex;
-  align-items: center;
-  grid-gap: 10px;
-
-  svg {
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    color: $color-gray;
-    transition: .4s;
-
-    &:hover {
-      color: $color-main;
-    }
-  }
-
-  .competitor-btn {
-    color: $color-gray;
-    border-color: $color-gray;
-
-    &:hover {
-      color: $color-main;
-    }
-  }
-}
-
 .competitor-overlay {
   opacity: 0;
   visibility: hidden;
@@ -34,7 +7,7 @@
   position: fixed;
   width: 100%;
   height: 100vh;
-  background: rgba($color: $color-gray, $alpha: 0.4);
+  background: rgba($color: #000000, $alpha: 0.8);
   left: 0;
   top: 0;
   display: flex;
@@ -54,32 +27,59 @@
 
   .competitor-paper.competitor-paper {
     box-shadow: none;
-    padding: 40px 60px;
+    padding-top: 20px;
     position: relative;
     background: #fff !important;
+    border-radius: 16px;
+    overflow: hidden;
+    width: 570px;
+
+    .competitor-top-text {
+      padding: 0 25px;
+      color: #212B36;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    .competitor-top-text-span {
+      padding: 0 25px;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 22px;
+      color: #637381;
+      margin-bottom: 35px;
+    }
 
     .competitor-close {
       position: absolute;
-      width: 30px;
-      height: 30px;
+      width: 35px;
+      height: 35px;
       right: 15px;
       top: 10px;
       cursor: pointer;
+      border-radius: 50%;
+      border: 1px solid #EBEFF2;
+      padding: 5px;
     }
 
     .competition-dropdown.competition-dropdown {
-      width: 350px;
       margin-bottom: 25px;
       justify-content: flex-start;
-      color: $color-input-border;
+      color: #000000;
 
-      label {
-        color: $color-input-border;
 
-        &.Mui-focused {
-          color: $color-main;
+
+      &.Mui-focused {
+        color: #823aa8 !important;
+
+        fieldset {
+          img {
+            filter: invert(43%) sepia(17%) saturate(3109%) hue-rotate(219deg) brightness(109%) contrast(103%);
+          }
         }
       }
+
 
       >div {
         box-shadow: none;
@@ -91,16 +91,22 @@
           transition: .4s;
         }
       }
-
-      .Mui-focused.Mui-focused fieldset {
-        border: 2px solid $color-border;
-      }
     }
   }
 
-  .competition-textfield {
-    width: 350px;
+  .competition-textfield.competition-textfield {
+    width: 250px;
     margin-bottom: 25px;
+    height: 60px;
+
+    label {
+      margin-top: 4px;
+    }
+
+    input {
+      padding: 0 15px;
+      height: 60px;
+    }
   }
 }
 
@@ -118,7 +124,68 @@
 }
 
 .competition_btn-wrapper {
+  padding: 15px 25px;
+  border-top: 1px solid rgba(145, 158, 171, 0.24);
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  grid-gap: 10px;
+
+  .competition-add.active {
+    display: none;
+  }
+}
+
+.competitor-dropdown.competitor-dropdown {
+  height: 60px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+
+  >div {
+    border-radius: 8px;
+    height: 60px;
+
+    >div {
+      height: 60px;
+
+      >div {
+        padding-left: 15px;
+      }
+    }
+  }
+}
+
+.competitor-inputs {
+  padding: 0 25px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.progress-bar-text.progress-bar-text {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  color: #242634;
+}
+
+.progress-bar {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.progress-bar-line.progress-bar-line {
+  width: 60%;
+  height: 6px;
+  border-radius: 24px;
+  background-color: #EBEFF2;
+  margin-bottom: 20px;
+
+  >span {
+    background-color: #906BFF;
+  }
 }

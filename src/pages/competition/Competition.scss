@@ -1,12 +1,87 @@
-.competition-top{
+@import '../../library.scss';
+
+.competition-top {
   display: flex;
   justify-content: space-between;
   margin: 45px 0;
 }
-.competition-top-text.competition-top-text{
+
+.competition-top-text.competition-top-text {
   margin-bottom: 20px;
 }
+
 .competition-bottom-text.competition-bottom-text {
   margin: 30px 0 20px 0;
   text-align: right;
+}
+
+.competition-paper.competition-paper {
+  padding: 0 25px;
+  overflow: hidden;
+  margin-top: 25px;
+  box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12);
+  border-radius: 16px;
+  background: #FFFFFF;
+  margin-bottom: 40px;
+  .top-competition {
+    height: 60px;
+    border-radius: 8px;
+
+    >div {
+      height: 60px;
+      border-radius: 8px;
+      padding: 0;
+      >div{
+        height: 60px;
+      }
+    }
+  }
+}
+
+.competition-add.competition-add {
+  display: flex;
+  grid-gap: 15px;
+  height: 45px;
+  border-radius: 40px;
+  background-color: #906BFF;
+  padding: 0 20px;
+  text-transform: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+
+  &:hover {
+    background-color: #906BFF;
+  }
+
+  img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.competition-cancel.competition-cancel {
+  height: 45px;
+  border-radius: 40px;
+  background-color: #FFFFFF;
+  padding: 0 25px;
+  text-transform: inherit;
+  color: #212B36;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+
+  &:hover {
+    background-color: #FFFFFF;
+  }
+
+}
+
+.competition-top-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 0px;
+  border-bottom: 1px solid rgba(145, 158, 171, 0.24);
+  margin-bottom: 25px;
 }

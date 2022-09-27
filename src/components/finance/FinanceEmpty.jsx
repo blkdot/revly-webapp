@@ -11,10 +11,12 @@ import useDate from '../../hooks/useDate';
 
 const FinanceEmpty = ({ vendors }) => {
   const { titleDate, leftDate, restaurants } = useDate();
-  const startLocal = leftDate.startDate.toLocaleDateString();
-  const endLocal = leftDate.endDate.toLocaleDateString();
-  const startGetDate = leftDate.startDate.getDate();
-  const endGetDate = leftDate.endDate.getDate();
+  const startDate = new Date(leftDate.startDate);
+  const endDate = new Date(leftDate.endDate);
+  const startLocal = startDate.toLocaleDateString();
+  const endLocal = endDate.toLocaleDateString();
+  const startGetDate = startDate.getDate();
+  const endGetDate = endDate.getDate();
   const getLeftDate = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {

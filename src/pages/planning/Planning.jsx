@@ -4,15 +4,16 @@ import PlanningAdsTable from '../../components/planningAdsTable/PlanningAdsTable
 import PlanningOffersTable from '../../components/planningOffersTable/PlanningOffersTable';
 import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
-import { PlanningAdsData, restaurantNames } from '../../data/fakeDataDashboard';
+import { PlanningAdsData } from '../../data/fakeDataDashboard';
 import useMarketingOffers from '../../hooks/useMarketingOffers';
+import useVendors from '../../hooks/useVendors';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Planning.scss';
 
 const Planning = () => {
   const [active, setActive] = useState(true);
   const { offers } = useMarketingOffers();
-
+  const { vendors, vendorsPlatform } = useVendors();
   const getOffersTable = () => {
     if (offers.length === 0) {
       return <PlanningOffersTableEmpty />;
@@ -22,7 +23,7 @@ const Planning = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown names={restaurantNames} />
+        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
         <Dates />
       </div>
       <div className={`planning_top-nav ${!active ? 'active' : ''}`}>

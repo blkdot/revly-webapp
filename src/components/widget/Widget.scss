@@ -95,13 +95,17 @@
   .card-procent {
     font-weight: 600;
     color: gray;
+  }
 
-    &.increased {
-      color: $color-green;
-    }
+  .increased {
+    color: $color-green;
+  }
 
-    &.decreased {
-      color: #ff4642;
+  .decreased {
+    color: #ff4642;
+
+    svg {
+      transform: scale(1, -1);
     }
   }
 

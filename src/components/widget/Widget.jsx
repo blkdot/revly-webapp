@@ -19,14 +19,18 @@ import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
 import PaperKit from '../../kits/paper/PaperKit';
 
-const Widget = ({ title, setTable, table, metricsLeft }) => {
+const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
   const { titleRightDate, rightDate } = useDate();
-  const startLocal = rightDate.startDate.toLocaleDateString();
-  const endLocal = rightDate.endDate.toLocaleDateString();
-  const startGetDate = rightDate.startDate.getDate();
-  const endGetDate = rightDate.endDate.getDate();
-  const procent = 0;
-
+  const startDate = new Date(rightDate.startDate);
+  const endDate = new Date(rightDate.endDate);
+  const startLocal = startDate.toLocaleDateString();
+  const endLocal = endDate.toLocaleDateString();
+  const startGetDate = startDate.getDate();
+  const endGetDate = endDate.getDate();
+  const procent =
+    metricsLeft[2] && metricsRight[2]
+      ? Number((metricsLeft[2][1][title] / (metricsRight[2][1][title] / 100) - 100).toFixed(2))
+      : 0;
   const getTitle = () => {
     if (title === 'n_orders') {
       return 'orders';

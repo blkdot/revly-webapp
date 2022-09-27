@@ -10,7 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './Navbar.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/images/Logo.png';
 import smallLogo from '../../assets/images/small-logo.png';
 import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
 import AccordionKit from '../../kits/accordion/AccordionKit';
@@ -27,6 +27,8 @@ import competitionIcon from '../../assets/images/ic_competiton.png';
 import logoutIcon from '../../assets/images/ic_logout.png';
 import settingsIcon from '../../assets/images/ic_settings.png';
 import lines from '../../assets/images/lines.png';
+import alertsIcon from '../../assets/images/ic_alerts.png';
+import rankingIcon from '../../assets/images/ic_ranking.png';
 
 const Link = ({ path, title, children }) => (
   <NavLink to={path}>
@@ -54,6 +56,9 @@ const Navbar = () => {
     } catch (e) {
       console.error(e.message);
     }
+  };
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
   return (
@@ -84,9 +89,9 @@ const Navbar = () => {
             <img className="nav-icon" src={planningIcon} alt="Planning" />
           </Link>
           <AccordionKit
-            onClick={() => setExpanded(!expanded)}
-            className="navbar-accordion"
-            expanded={opened || open ? expanded : false}>
+            expanded={expanded === 'panel1'}
+            onChange={handleChange('panel1')}
+            className="navbar-accordion">
             <ButtonKit
               className={`navbar-button-kit ${
                 pathname === '/marketing/offer' || pathname === '/marketing/ads' ? 'active' : ''
@@ -110,9 +115,35 @@ const Navbar = () => {
               </Link>
             </AccordionDetailsKit>
           </AccordionKit>
-          <Link title="Competition" path="/competition">
-            <img className="nav-icon" src={competitionIcon} alt="Competition" />
-          </Link>
+          <AccordionKit
+            expanded={expanded === 'panel2'}
+            onChange={handleChange('panel2')}
+            className="navbar-accordion">
+            <ButtonKit
+              className={`navbar-button-kit ${
+                pathname === '/competition/ranking' || pathname === '/competition/alerts'
+                  ? 'active'
+                  : ''
+              }`}>
+              <AccordionSummaryKit
+                className="accordion-sum"
+                expandIcon={opened || open ? <ExpandMoreIcon /> : ''}>
+                <TypographyKit
+                  sx={{ display: 'flex', alignItems: 'center', gridGap: '16px', fontSize: '14px' }}>
+                  <img className="nav-icon" src={competitionIcon} alt="Competition" />
+                  <span>Competition</span>
+                </TypographyKit>
+              </AccordionSummaryKit>
+            </ButtonKit>
+            <AccordionDetailsKit className="navbar-accordion-details">
+              <Link title="Ranking" path="/competition/ranking">
+                <img className="nav-icon" src={rankingIcon} alt="Ranking" />
+              </Link>
+              <Link title="Alerts" path="/competition/alerts">
+                <img className="nav-icon" src={alertsIcon} alt="Alerts" />
+              </Link>
+            </AccordionDetailsKit>
+          </AccordionKit>
         </ul>
         <img className="nav-lines" src={lines} alt="Gradient lines" />
         <ul className="Navbar-footer">

@@ -35,10 +35,12 @@ const EnhancedTableHead = ({ headCells }) => (
 const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
   const { titleRightDate, rightDate, titleDate, leftDate } = useDate();
 
-  const startLocal = leftDate.startDate.toLocaleDateString();
-  const endLocal = leftDate.endDate.toLocaleDateString();
-  const startGetDate = leftDate.startDate.getDate();
-  const endGetDate = leftDate.endDate.getDate();
+  const startDate = new Date(leftDate.startDate);
+  const endDate = new Date(leftDate.endDate);
+  const startLocal = startDate.toLocaleDateString();
+  const endLocal = endDate.toLocaleDateString();
+  const startGetDate = startDate.getDate();
+  const endGetDate = endDate.getDate();
 
   const getTitle = () => {
     if (title === 'n_orders') {
@@ -92,10 +94,12 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
     return `${titleDate}'s`;
   };
 
-  const startLocalRight = rightDate.startDate.toLocaleDateString();
-  const endLocalRight = rightDate.endDate.toLocaleDateString();
-  const startGetDateRight = rightDate.startDate.getDate();
-  const endGetDateRight = rightDate.endDate.getDate();
+  const startDateRight = new Date(rightDate.startDate);
+  const endDateRight = new Date(rightDate.endDate);
+  const startLocalRight = startDateRight.toLocaleDateString();
+  const endLocalRight = endDateRight.toLocaleDateString();
+  const startGetDateRight = startDateRight.getDate();
+  const endGetDateRight = endDateRight.getDate();
   const headCells = [
     {
       id: 'type',
@@ -124,25 +128,34 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
   ];
 
   const procentTalabat =
-    metricsLeft[0] && metricsRight[0]
-      ? Number(
-          (
-            (metricsLeft[0][1][title] - metricsRight[0][1][title]) /
-            metricsLeft[0][1][title]
-          ).toFixed(2),
-        )
+    metricsLeft[1] && metricsRight[1]
+      ? Number((metricsLeft[1][1][title] / (metricsRight[1][1][title] / 100) - 100).toFixed(2))
       : 0;
 
   const procentDeliveroo =
     metricsLeft[0] && metricsRight[0]
-      ? Number(
-          (
-            (metricsLeft[0][1][title] - metricsRight[0][1][title]) /
-            metricsLeft[0][1][title]
-          ).toFixed(2),
-        )
+      ? Number((metricsLeft[0][1][title] / (metricsRight[0][1][title] / 100) - 100).toFixed(2))
       : 0;
+  const procentTotal =
+    metricsLeft[2] && metricsRight[2]
+      ? Number((metricsLeft[2][1][title] / (metricsRight[2][1][title] / 100) - 100).toFixed(2))
+      : 0;
+  const evolution = (procent) => {
+    if (Number.isNaN(procent)) {
+      return '-';
+    }
+    if (procent > 0) {
+      return `+ ${procent}%`;
+    }
+    return `${procent}%`;
+  };
+  const getNum = (metrics) => {
+    if (Number.isNaN(metrics[(1)[title]]) || metrics[1][title] === null) {
+      return '-';
+    }
 
+    return metrics[1][title];
+  };
   return (
     <BoxKit sx={{ width: '100%' }}>
       <PaperKit className="table-paper-wrapper">
@@ -158,14 +171,14 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
                     alt={title}
                   />
                 </TableCellKit>
-                <TableCellKit>{metricsLeft[0] ? metricsLeft[0][1][title] : '-'}</TableCellKit>
-                <TableCellKit>{metricsRight[0] ? metricsRight[0][1][title] : '-'}</TableCellKit>
+                <TableCellKit>{getNum(metricsLeft[0])}</TableCellKit>
+                <TableCellKit>{getNum(metricsRight[0])}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={`table_evolution ${procentDeliveroo > 0 ? 'table_increased' : ''} ${
                       procentDeliveroo < 0 ? 'table_decreased' : ''
                     }`}>
-                    <span>{Number.isNaN(procentDeliveroo) ? '-' : procentDeliveroo} %</span>
+                    <span>{evolution(procentDeliveroo)}</span>
                   </div>
                 </TableCellKit>
               </TableRowKit>
@@ -177,14 +190,14 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
                     alt={title}
                   />
                 </TableCellKit>
-                <TableCellKit>{metricsLeft[1] ? metricsLeft[1][1][title] : '-'}</TableCellKit>
-                <TableCellKit>{metricsRight[1] ? metricsRight[1][1][title] : '-'}</TableCellKit>
+                <TableCellKit>{getNum(metricsLeft[1])}</TableCellKit>
+                <TableCellKit>{getNum(metricsRight[1])}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={`table_evolution ${procentTalabat > 0 ? 'table_increased' : ''} ${
                       procentTalabat < 0 ? 'table_decreased' : ''
                     }`}>
-                    <span>{Number.isNaN(procentTalabat) ? '-' : procentTalabat} %</span>
+                    <span>{evolution(procentTalabat)}</span>
                   </div>
                 </TableCellKit>
               </TableRowKit>
@@ -194,20 +207,15 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
                 <TableCellKit component="th" scope="row">
                   Total
                 </TableCellKit>
-                <TableCellKit>{metricsLeft[2] ? metricsLeft[2][1][title] : '-'}</TableCellKit>
-                <TableCellKit>{metricsRight[2] ? metricsRight[2][1][title] : '-'}</TableCellKit>
+                <TableCellKit>{getNum(metricsLeft[2])}</TableCellKit>
+                <TableCellKit>{getNum(metricsRight[2])}</TableCellKit>
                 <TableCellKit>
                   <div
-                    className={`table_evolution ${
-                      procentDeliveroo + procentTalabat > 0 ? 'table_increased' : ''
-                    } ${procentDeliveroo + procentTalabat < 0 ? 'table_decreased' : ''}`}>
+                    className={`table_evolution ${procentTotal > 0 ? 'table_increased' : ''} ${
+                      procentTotal < 0 ? 'table_decreased' : ''
+                    }`}>
                     <span>
-                      <span>
-                        {Number.isNaN(procentDeliveroo + procentTalabat)
-                          ? '-'
-                          : procentDeliveroo + procentTalabat}{' '}
-                        %
-                      </span>
+                      <span>{evolution(procentTotal)}</span>
                     </span>
                   </div>
                 </TableCellKit>
