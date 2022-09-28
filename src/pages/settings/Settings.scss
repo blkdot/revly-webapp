@@ -2,6 +2,14 @@
 
 .setting-account {
   margin-top: 7.5rem;
+
+  .__content {
+    margin-top: 2em;
+    box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12);
+    border-radius: 20px;
+    padding: 40px;
+    background-color: white;
+  }
   
   @include tabletBreakpoint {
     margin-top: 11.5rem;
@@ -12,21 +20,62 @@
   }
 
   .setting-account__tabs {
+
+    .MuiTabs-indicator {
+      display: none;
+    }
     
     .setting-account__tabs-tab {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
-      color: $color-gray;
+      text-transform: capitalize;
+      justify-content: flex-start;
+      border-radius: 8px;
+      color: $color-arrow;
+      align-items: center;
       font-size: 14px;
+      background-color: rgba(145, 158, 171, 0.08);
+      margin-right: 2em;
+      width: 214px;
+      padding: 16px 20px;
+      gap: 16px;
+      font-weight: 600;
+      transition: .2s;
+
+      .icon-block {
+        border-radius: 50%;
+        background-color: $color-table-th;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icon {
+          color: white;
+        }
+      }
+      &:hover {
+        background-color: $color-third;
+      }
   
       &.__active {
-        color: $color-main;
+        color: white;
+        background-color: #1F007B;
+
+        .icon-block {
+          background-color: white;
+
+          .icon {
+            color: black;
+          }
+        }
+
+        &:hover {
+          background-color: #1F007B;
+        }
       }
-  
-      &:hover {
-        color: $color-main;
-      }
+
     }
   }
 }

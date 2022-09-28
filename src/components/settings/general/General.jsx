@@ -7,7 +7,6 @@ import './General.scss';
 import ButtonKit from '../../../kits/button/ButtonKit';
 
 import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
-import RestaurantForm from '../../forms/restaurantForm/RestaurantForm';
 
 import { useAlert } from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';
@@ -54,7 +53,7 @@ const General = () => {
     lastname: getLastName() || '',
     phone: getNumber() || '',
     country: {},
-    email: user.email,
+    role: '',
     city: '',
     restoName: '',
   });
@@ -129,7 +128,9 @@ const General = () => {
 
   return (
     <div className="general">
-      <h3 style={{ fontSize: '16px' }}>General information</h3>
+      <h3 style={{ fontSize: '16px', color: '#212B36', fontWeight: 600, marginBottom: 10 }}>
+        Your personal data
+      </h3>
       <AccountSettingForm
         valueFirstName={{ value: inputValue.firstname, error: inputError.firstname }}
         valueLastName={{ value: inputValue.lastname, error: inputError.lastname }}
@@ -140,16 +141,12 @@ const General = () => {
         valueDial={dial}
         onDialChange={(v) => setDial(v)}
         handleInputChange={handleInputChange}
-        valueEmail={inputValue.email}
+        valueRole={inputValue.role}
         handleCountryChange={handleSelectCountry}
         inputCountryValue={inputCountryValue}
         onInputCountryChange={(e, v) => setInputCountryValue(v)}
       />
-      <div style={{ marginTop: '5rem' }}>
-        <h3 style={{ fontSize: '16px' }}>Restaurant information</h3>
-        <RestaurantForm />
-      </div>
-      <div style={{ marginTop: '5rem' }}>
+      <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
         <ButtonKit disabled={disableSave()} variant="contained" onClick={handleSave}>
           Save changes
         </ButtonKit>
