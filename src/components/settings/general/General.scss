@@ -2,6 +2,9 @@
 
 .general {
     width: 100%;
+    border: 1px solid $color-sett-border;
+    padding: 32px;
+    border-radius: 8px;
 
     .general__input-block {
         margin-bottom: 10px;
