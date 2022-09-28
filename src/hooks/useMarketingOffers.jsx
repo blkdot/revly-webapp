@@ -1,4 +1,3 @@
-import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 import useApi from './useApi';
@@ -8,14 +7,14 @@ function useMarketingOffers() {
   const { leftDateOffers, restaurants } = useDate();
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
-  const handleRequest = (date) => {
+  const handleRequest = () => {
     let isCancelled = false;
     getOffers({
       master_email: 'chiekh.alloul@gmail.com',
       access_token: '',
       vendors: restaurants,
-      start_date: dayjs(subDays(date.startDate, 1)).format('YYYY-MM-DD'),
-      end_date: dayjs(subDays(date.endDate, 1)).format('YYYY-MM-DD'),
+      start_date: dayjs(leftDateOffers.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(leftDateOffers.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
       const offersArr = [];
       if (!isCancelled) {
@@ -29,7 +28,7 @@ function useMarketingOffers() {
   };
 
   useMemo(() => {
-    handleRequest(leftDateOffers);
+    handleRequest();
   }, [leftDateOffers, restaurants]);
 
   return { offers };

@@ -10,7 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './Navbar.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
-import logo from '../../assets/images/Logo.png';
+import logo from '../../assets/images/logo.png';
 import smallLogo from '../../assets/images/small-logo.png';
 import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
 import AccordionKit from '../../kits/accordion/AccordionKit';
@@ -68,12 +68,9 @@ const Navbar = () => {
         onMouseLeave={() => setOpen(false)}
         className={`Navbar ${opened || open ? 'opened' : ''}`}>
         <ul>
-          <li className="Navbar_logo">
-            {opened || open ? (
-              <img className="nav-logo" src={logo} alt="Revly" />
-            ) : (
-              <img className="nav-small-logo" src={smallLogo} alt="Revly" />
-            )}
+          <li className={`Navbar_logo ${opened || open ? 'opened' : ''}`}>
+            <img className="nav-logo" src={logo} alt="Revly" />
+            <img className="nav-small-logo" src={smallLogo} alt="Revly" />
             <div
               role="presentation"
               tabIndex={-1}
@@ -89,7 +86,7 @@ const Navbar = () => {
             <img className="nav-icon" src={planningIcon} alt="Planning" />
           </Link>
           <AccordionKit
-            expanded={expanded === 'panel1'}
+            expanded={!!((expanded === 'panel1' && opened) || (expanded === 'panel1' && open))}
             onChange={handleChange('panel1')}
             className="navbar-accordion">
             <ButtonKit
@@ -116,7 +113,7 @@ const Navbar = () => {
             </AccordionDetailsKit>
           </AccordionKit>
           <AccordionKit
-            expanded={expanded === 'panel2'}
+            expanded={!!((expanded === 'panel2' && opened) || (expanded === 'panel2' && open))}
             onChange={handleChange('panel2')}
             className="navbar-accordion">
             <ButtonKit

@@ -20,20 +20,20 @@ const Marketing = ({ metricsLeft, metricsRight }) => {
   const getLeftDate = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(leftDate.startDate).format('DD/MM')}'s`;
+        return `${dayjs(leftDate.startDate).format('DD/MM')}`;
       }
       if (startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate()) {
-        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
+        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}  -  ${getYear(
           leftDate.startDate,
         )}`;
       }
 
       return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
         'DD/MM',
-      )}'s`;
+      )}`;
     }
 
-    return `${titleDate}'s`;
+    return `${titleDate}`;
   };
   const getTable = () => {
     if (table === 'n_orders') {
@@ -63,7 +63,9 @@ const Marketing = ({ metricsLeft, metricsRight }) => {
         ))}
       </div>
       <TypographyKit style={{ textTransform: 'capitalize' }} variant="h5">
-        <span>{getLeftDate()}</span> <span>{getTable()}</span>
+        <span>{getLeftDate()}</span>
+        <span>&apos;s</span>
+        <span> {getTable()}</span>
       </TypographyKit>
       {['accrued_discounts', 'roi'].map((info) =>
         info === table ? (

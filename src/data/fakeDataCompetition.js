@@ -1,4 +1,4 @@
-const competitionRankingData = [
+export const competitionRankingData = [
   {
     name: 'Big Nouna',
     platform: 'deliveroo',
@@ -10,4 +10,17 @@ const competitionRankingData = [
     id: 0,
   },
 ];
-export default competitionRankingData;
+
+export const competitionAlertsData = [
+  {
+    name: 'Big Nouna',
+    type: 'Discount',
+    alert: -4,
+    start_date: '28/09/22',
+    end_date: '28/09/22',
+    start_hour: '10:00',
+    end_hour: '23:00',
+    status: 'active',
+    id: 0,
+  },
+];
