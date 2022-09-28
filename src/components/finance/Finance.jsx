@@ -20,20 +20,20 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   const getLeftDate = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(leftDate.startDate).format('DD/MM')}'s`;
+        return `${dayjs(leftDate.startDate).format('DD/MM')}`;
       }
       if (startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate()) {
-        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
+        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}  -  ${getYear(
           leftDate.startDate,
         )}`;
       }
 
       return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
         'DD/MM',
-      )}'s`;
+      )}`;
     }
 
-    return `${titleDate}'s`;
+    return `${titleDate}`;
   };
   const getTable = () => {
     if (table === 'n_orders') {
@@ -50,8 +50,8 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   return (
     <div className="block">
       <TypographyKit variant="h4">
-        <span> {getLeftDate()} </span>
-        results for{' '}
+        <span>{getLeftDate()}</span>
+        <span>&apos;s</span> results for{' '}
         {restaurants.length === vendors.length || restaurants.length === 0 ? (
           <p>
             all <span> points of sales</span>
@@ -74,7 +74,9 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
         ))}
       </div>
       <TypographyKit variant="h5">
-        <span>{getLeftDate()}</span> <span>{getTable()}</span>
+        <span>{getLeftDate()}</span>
+        <span>&apos;s</span>
+        <span> {getTable()}</span>
       </TypographyKit>
       {['revenue', 'n_orders', 'average_basket', 'profit'].map((info) =>
         info === table ? (

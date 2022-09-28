@@ -9,11 +9,12 @@ import CompetitionDropdown from '../../components/competitionDropdown/Competitio
 import CompetitionTable from '../../components/competitonTable/CompetitionTable';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
-import competitionRankingData from '../../data/fakeDataCompetition';
+import { competitionRankingData } from '../../data/fakeDataCompetition';
 
 const CompetitionRanking = () => {
   const { vendors, vendorsPlatform } = useVendors();
   const [opened, setOpened] = useState(false);
+  const [platform, setPlatform] = useState('');
   const Open = () => {
     setOpened(!opened);
     const body = document.querySelector('body');
@@ -43,6 +44,8 @@ const CompetitionRanking = () => {
             icon={PlatformIcon}
             title="Select a Platform"
             className="top-competition"
+            setRow={setPlatform}
+            select={platform}
           />
           <Competitor open={Open} opened={opened} />
         </div>
@@ -50,7 +53,7 @@ const CompetitionRanking = () => {
           You can select up to 5 competitors to be monitored per point of sale. Competitors can be
           changed every 3 months
         </TypographyKit>
-        <CompetitionTable open={Open} rows={competitionRankingData} />
+        <CompetitionTable type="ranking" open={Open} rows={competitionRankingData} />
       </PaperKit>
     </div>
   );

@@ -23,6 +23,7 @@
   border-radius: 16px;
   background: #FFFFFF;
   margin-bottom: 40px;
+
   .top-competition {
     height: 60px;
     border-radius: 8px;
@@ -31,8 +32,12 @@
       height: 60px;
       border-radius: 8px;
       padding: 0;
-      >div{
+
+      >div {
         height: 60px;
+        >div{
+          padding-left: 20px;
+        }
       }
     }
   }
@@ -49,9 +54,10 @@
   font-weight: 700;
   font-size: 14px;
   line-height: 24px;
+  box-shadow: 0px 2px 16px rgb(43 0 171 / 24%) !important;
 
   &:hover {
-    background-color: #906BFF;
+    background-color: #906BFF !important;
   }
 
   img {
@@ -84,4 +90,10 @@
   padding: 25px 0px;
   border-bottom: 1px solid rgba(145, 158, 171, 0.24);
   margin-bottom: 25px;
+
+  .competition-dropdowns {
+    display: flex;
+    align-items: center;
+    grid-gap: 20px;
+  }
 }
