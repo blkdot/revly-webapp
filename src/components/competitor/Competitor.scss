@@ -11,8 +11,8 @@
   left: 0;
   top: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-end;
   transition: .4s;
 
   &.active {
@@ -30,12 +30,16 @@
     padding-top: 20px;
     position: relative;
     background: #fff !important;
-    border-radius: 16px;
+    border-radius: 0;
     overflow: hidden;
-    width: 570px;
+    width: 450px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     .competitor-top-text {
-      padding: 0 25px;
+      padding: 0 40px;
       color: #212B36;
       font-weight: 700;
       font-size: 14px;
@@ -43,7 +47,7 @@
     }
 
     .competitor-top-text-span {
-      padding: 0 25px;
+      padding: 0 40px;
       font-weight: 400;
       font-size: 14px;
       line-height: 22px;
@@ -95,8 +99,8 @@
   }
 
   .competition-textfield.competition-textfield {
-    width: 250px;
-    margin-bottom: 25px;
+    width: 280px;
+    margin-bottom: 15px;
     height: 60px;
 
     label {
@@ -110,25 +114,11 @@
   }
 }
 
-.competition-two-small {
-  display: flex;
-  justify-content: space-between;
-
-  .competition-dropdown.competition-dropdown {
-    width: 160px !important;
-
-    >div {
-      width: 100%;
-    }
-  }
-}
-
 .competition_btn-wrapper {
-  padding: 15px 25px;
-  border-top: 1px solid rgba(145, 158, 171, 0.24);
+  padding: 30px 25px;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-end;
+  justify-content: center;
   grid-gap: 10px;
 
   .competition-add.active {
@@ -139,11 +129,13 @@
 .competitor-dropdown.competitor-dropdown {
   height: 60px;
   border-radius: 8px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
+  width: 280px;
 
   >div {
     border-radius: 8px;
     height: 60px;
+    width: 100%;
 
     >div {
       height: 60px;
@@ -156,10 +148,22 @@
 }
 
 .competitor-inputs {
-  padding: 0 25px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  margin-top: 120px;
+  padding: 0 40px;
+
+  >div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 25px;
+  }
+
+  >span {
+    font-size: 16px;
+    color: #212B36;
+    font-weight: 600;
+    line-height: 24px;
+  }
 }
 
 .progress-bar-text.progress-bar-text {
@@ -175,7 +179,21 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  margin-top: 140px;
+  width: 90%;
+
+  h5 {
+    margin-top: 30px;
+  }
+
+  img {
+    width: 320px;
+    margin-left: 60px;
+  }
+
+  .competitor-top-text-span {
+    text-align: center;
+  }
 }
 
 .progress-bar-line.progress-bar-line {
@@ -187,5 +205,23 @@
 
   >span {
     background-color: #906BFF;
+  }
+}
+
+.competitor-lines {
+  position: absolute;
+  right: -30px;
+  top: 100px;
+  width: 200px;
+}
+
+@media(max-height: 800px) {
+  .competitor-dropdown.competitor-dropdown {
+    width: 170px;
+  }
+
+  .competition-textfield.competition-textfield {
+    width: 170px !important;
+    
   }
 }

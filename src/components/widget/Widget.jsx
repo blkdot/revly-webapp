@@ -29,7 +29,7 @@ const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
   const endGetDate = endDate.getDate();
   const procent = () => {
     if (metricsLeft[0] && metricsRight[0]) {
-      if (Number(metricsRight[2][1][title]) === 0) {
+      if (Number(metricsRight[0][1][title]) === 0) {
         return 0;
       }
 

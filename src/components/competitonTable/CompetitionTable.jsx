@@ -90,9 +90,59 @@ const headCells = [
     label: 'Review',
   },
 ];
+const headCellsAlerts = [
+  {
+    id: 'name',
+    numeric: false,
+    disablePadding: true,
+    label: 'Name',
+  },
+  {
+    id: 'type',
+    numeric: true,
+    disablePadding: false,
+    label: 'Type',
+  },
+  {
+    id: 'alert',
+    numeric: true,
+    disablePadding: false,
+    label: 'Alert',
+  },
+  {
+    id: 'start_date',
+    numeric: true,
+    disablePadding: false,
+    label: 'Starting Date',
+  },
+  {
+    id: 'end_date',
+    numeric: true,
+    disablePadding: false,
+    label: 'Ending Date',
+  },
+  {
+    id: 'start_hour',
+    numeric: true,
+    disablePadding: false,
+    label: 'Starting Hour',
+  },
+  {
+    id: 'end_hour',
+    numeric: true,
+    disablePadding: false,
+    label: 'Ending Hour',
+  },
+  {
+    id: 'status',
+    numeric: true,
+    disablePadding: false,
+    label: 'Status',
+  },
+];
 
 const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, type } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -100,7 +150,7 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHeadKit>
       <TableRowKit>
-        {headCells.map((headCell) => (
+        {(type === 'ranking' ? headCells : headCellsAlerts).map((headCell) => (
           <TableCellKit
             key={headCell.id}
             align="left"
@@ -124,7 +174,7 @@ const EnhancedTableHead = (props) => {
   );
 };
 
-const CompetitionTable = ({ rows, open }) => {
+const CompetitionTable = ({ rows, open, type }) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const [selected, setSelected] = React.useState([]);
@@ -197,15 +247,53 @@ const CompetitionTable = ({ rows, open }) => {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              type={type}
             />
             <TableBodyKit>
               {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
                 const isItemSelected = isSelected(row.name);
                 const labelId = `enhanced-table-checkbox-${index}`;
+                if (type === 'ranking') {
+                  return (
+                    <TableRowKit
+                      onClick={(event) => handleClick(event, row.name)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.name}
+                      selected={isItemSelected}>
+                      <TableCellKit component="th" id={labelId} scope="row">
+                        {row.name}
+                      </TableCellKit>
+                      <TableCellKit>
+                        <img
+                          className="competition-table-icon"
+                          src={row.platform === 'deliveroo' ? deliveroo : talabat}
+                          alt={row.platform}
+                        />
+                      </TableCellKit>
+                      <TableCellKit>{row.carrous}</TableCellKit>
+                      <TableCellKit>{ordinalSuffixOf(row.offers)}</TableCellKit>
+                      <TableCellKit>{ordinalSuffixOf(row.cuisine)}</TableCellKit>
+                      <TableCellKit>{ordinalSuffixOf(row.ranking)}</TableCellKit>
+                      <TableCellKit>
+                        <StackKit spacing={1}>
+                          <RatingKit
+                            name="size-large"
+                            value={row.review}
+                            precision={0.1}
+                            size="large"
+                            readOnly
+                          />
+                        </StackKit>
+                        {row.review}
+                      </TableCellKit>
+                    </TableRowKit>
+                  );
+                }
 
                 return (
                   <TableRowKit
-                    hover
                     onClick={(event) => handleClick(event, row.name)}
                     role="checkbox"
                     aria-checked={isItemSelected}
@@ -215,44 +303,34 @@ const CompetitionTable = ({ rows, open }) => {
                     <TableCellKit component="th" id={labelId} scope="row">
                       {row.name}
                     </TableCellKit>
+                    <TableCellKit>{row.type}</TableCellKit>
                     <TableCellKit>
-                      <img
-                        className="competition-table-icon"
-                        src={row.platform === 'deliveroo' ? deliveroo : talabat}
-                        alt={row.platform}
-                      />
+                      <span className="competition-table-alert">{row.alert}%</span>
                     </TableCellKit>
-                    <TableCellKit>{row.carrous}</TableCellKit>
-                    <TableCellKit>{ordinalSuffixOf(row.offers)}</TableCellKit>
-                    <TableCellKit>{ordinalSuffixOf(row.cuisine)}</TableCellKit>
-                    <TableCellKit>{ordinalSuffixOf(row.ranking)}</TableCellKit>
+                    <TableCellKit>{row.start_date}</TableCellKit>
+                    <TableCellKit>{row.end_date}</TableCellKit>
+                    <TableCellKit>{row.start_hour}</TableCellKit>
+                    <TableCellKit>{row.end_hour}</TableCellKit>
                     <TableCellKit>
-                      <StackKit spacing={1}>
-                        <RatingKit
-                          name="size-large"
-                          value={row.review}
-                          precision={0.1}
-                          size="large"
-                          readOnly
-                        />
-                      </StackKit>
-                      {row.review}
+                      <span className={`competition-status ${row.status}`}>{row.status}</span>
                     </TableCellKit>
                   </TableRowKit>
                 );
               })}
             </TableBodyKit>
           </TableKit>
-          {getNumArr().map((num) => (
-            <ButtonKit
-              onClick={() => open()}
-              key={num}
-              variant="contained"
-              className="competition-add competiton-table-btn">
-              <AddIcon />
-              Add a Competitor
-            </ButtonKit>
-          ))}
+          {type === 'ranking'
+            ? getNumArr().map((num) => (
+                <ButtonKit
+                  onClick={() => open()}
+                  key={num}
+                  variant="contained"
+                  className="competition-add competiton-table-btn">
+                  <AddIcon />
+                  Add a Competitor
+                </ButtonKit>
+              ))
+            : ''}
         </TableContainerKit>
       </PaperKit>
     </BoxKit>

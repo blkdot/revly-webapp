@@ -11,17 +11,20 @@
     color: #212B36;
   }
 
+  table {
+    background-color: #fff;
+  }
+
   tbody {
     >tr:nth-of-type(1) {
       background: rgba(144, 107, 255, 0.08);
       padding-right: 5px;
+
       th {
         border-radius: 8px 0 0 8px;
       }
 
-      table {
-        background-color: #fff;
-      }
+
 
       >td:last-of-type {
         border-radius: 0 8px 8px 0;
@@ -51,11 +54,11 @@
   border-radius: 8px;
   background: #F4F6F8;
   color: #637381;
-  box-shadow: none;
+  box-shadow: none !important;
   border: none;
 
   &:hover {
-    background: #F4F6F8;
+    background: #F4F6F8 !important;
   }
 }
 
@@ -64,6 +67,29 @@
 .competition-table-icon {
   width: 45px;
   object-fit: contain;
+}
+
+.competition-table-conatiner.competition-table-conatiner {
+  padding: 0 10px;
+}
+
+.competition-table-alert {
+  padding: 5px 7px;
+  border-radius: 6px;
+  color: #893AED;
+  background: rgba(144, 107, 255, 0.08);
+  ;
+}
+
+.competition-status {
+  padding: 5px 7px;
+  border-radius: 6px;
+
+  &.active {
+    background: rgba(84, 214, 44, 0.16);
+    color: #229A16;
+    text-transform: capitalize;
+  }
 }
 
 @media(max-width: 1400px) {
