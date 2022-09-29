@@ -18,9 +18,10 @@ const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
+    id: 'restaurant_dropdown_menu',
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 500,
+      width: 250,
       left: 0,
     },
   },

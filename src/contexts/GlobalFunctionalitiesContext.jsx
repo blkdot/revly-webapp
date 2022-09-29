@@ -40,8 +40,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
       endDate: leftDate.endDate,
     },
   );
-  const [titleOffers, setTitleOffers] = useState(titleDate);
-  const [typeDateContext, setTypeDateContext] = useState(storageDate.typeDate);
+  const [titleOffers, setTitleOffers] = useState(storageDate.titleOffers || 'current week');
+  const [typeDateContext, setTypeDateContext] = useState(storageDate.typeDate || 'week');
 
   useEffect(() => {
     if (isShowing) {

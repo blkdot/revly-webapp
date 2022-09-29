@@ -20,20 +20,16 @@ const FinanceEmpty = ({ vendors }) => {
   const getLeftDate = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(leftDate.startDate).format('DD/MM')}'s`;
+        return `${dayjs(startDate).format('DD/MM')}`;
       }
-      if (startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate()) {
-        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}'s  -  ${getYear(
-          leftDate.startDate,
-        )}`;
+      if (startGetDate === 1 && endGetDate === endOfMonth(startDate, 1).getDate()) {
+        return `${format(startDate, 'LLL', { locale: enUS })}  -  ${getYear(startDate)}`;
       }
 
-      return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
-        'DD/MM',
-      )}'s`;
+      return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(endDate).format('DD/MM')}`;
     }
 
-    return `${titleDate}'s`;
+    return `${titleDate}`;
   };
   return (
     <div className="block">

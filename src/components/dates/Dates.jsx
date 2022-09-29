@@ -99,9 +99,7 @@ const Dates = () => {
     const dateGetDay = date.getDay();
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
-
     setOpened(false); // Closing Left date picker
-
     if (location.pathname === '/dashboard') {
       // its will work on dashboard
       setLeft({ startDate, endDate }); // Sending data to context state
@@ -129,17 +127,21 @@ const Dates = () => {
         // It checks that what date is currently selected in Left date picker
         if (startLocal === dateLocal) {
           setTitleDate('today'); // Sending data to state which will be needed for the introduction in the left input
+          setTitleOffers('today'); // Sending data to state which will be needed for the introduction in the left input
           setTitleRightDate('yesterday'); // Sending data to state which will be needed for the introduction in the right input
         } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
           setTitleDate('yesterday');
+          setTitleOffers('yesterday');
           setTitleRightDate('custom');
         } else {
           setTitleDate('custom');
+          setTitleOffers('custom');
           setTitleRightDate('custom');
         }
       } else if (getWeek(startDate, 1) === getWeek(endDate, 1)) {
         if (endGetDay === dateGetDay && startGetDay === 0) {
           setTitleDate('current week');
+          setTitleOffers('current week');
           setTitleRightDate('last week');
         } else if (
           startGetDay === 0 &&
@@ -147,20 +149,25 @@ const Dates = () => {
           getWeek(startDate) === getWeek(subWeeks(date, 1))
         ) {
           setTitleDate('last week');
+          setTitleOffers('last week');
           setTitleRightDate('custom');
         } else {
           setTitleDate('custom');
+          setTitleOffers('custom');
           setTitleRightDate('custom');
         }
       } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
         if (startGetDate === 1 && endGetDate === dateGetDate) {
           setTitleDate('current month');
+          setTitleOffers('current month');
           setTitleRightDate('last month');
         } else if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
           setTitleDate('last month');
+          setTitleOffers('last month');
           setTitleRightDate('custom');
         } else {
           setTitleDate('custom');
+          setTitleOffers('custom');
           setTitleRightDate('custom');
         }
       } else if (
@@ -169,12 +176,15 @@ const Dates = () => {
         endGetDate === endOfMonth(endDate).getDate()
       ) {
         setTitleDate('current month');
+        setTitleOffers('current month');
         setTitleRightDate('l month');
       } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
         setTitleDate('last month');
+        setTitleOffers('last month');
         setTitleRightDate('custom');
       } else {
         setTitleDate('custom');
+        setTitleOffers('custom');
         setTitleRightDate('custom');
       }
     } else if (location.pathname === '/planning') {
@@ -374,7 +384,6 @@ const Dates = () => {
       ]);
     }
   };
-
   const getRightDate = () => {
     // This function should check if the date of the left date is the same as the date of the right date
 

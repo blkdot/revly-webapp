@@ -27,7 +27,9 @@ const Day = ({
   titleLeft,
 }) => (
   <div>
-    {titleLeft !== 'yesterday' ? (
+    {titleLeft === 'yesterday' || titleLeft === 'custom' ? (
+      ''
+    ) : (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
@@ -39,8 +41,6 @@ const Day = ({
         }}>
         Yesterday
       </ButtonKit>
-    ) : (
-      ''
     )}
     <ButtonKit
       className="navbar-button-kit"
@@ -78,7 +78,9 @@ const Week = ({
   titleLeft,
 }) => (
   <div>
-    {titleLeft !== 'last week' ? (
+    {titleLeft === 'last week' || titleLeft === 'custom' ? (
+      ''
+    ) : (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
@@ -90,8 +92,6 @@ const Week = ({
         }}>
         Last week
       </ButtonKit>
-    ) : (
-      ''
     )}
     <ButtonKit
       className="navbar-button-kit"
@@ -111,7 +111,9 @@ const Week = ({
 );
 const Month = ({ setTitleRight, setRightDateBtn, openRight, titleLeft }) => (
   <div>
-    {titleLeft !== 'last month' ? (
+    {titleLeft === 'last month' || titleLeft === 'custom' ? (
+      ''
+    ) : (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
@@ -123,8 +125,6 @@ const Month = ({ setTitleRight, setRightDateBtn, openRight, titleLeft }) => (
         }}>
         Last month
       </ButtonKit>
-    ) : (
-      ''
     )}
 
     <ButtonKit className="navbar-button-kit" onClick={openRight}>
