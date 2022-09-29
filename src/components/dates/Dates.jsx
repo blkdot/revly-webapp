@@ -721,6 +721,7 @@ const Dates = () => {
                 rightDate={right}
                 setTitleRight={setTitleRightDate}
                 leftDate={left}
+                titleLeft={titleDate}
               />
             </TypographyKit>
           </div>

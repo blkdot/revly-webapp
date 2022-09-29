@@ -62,9 +62,9 @@ const Marketing = ({ metricsLeft, metricsRight }) => {
           />
         ))}
       </div>
-      <TypographyKit style={{ textTransform: 'capitalize' }} variant="h5">
+      <TypographyKit variant="h5">
         <span>{getLeftDate()}</span>
-        <span>&apos;s</span>
+        &apos;s
         <span> {getTable()}</span>
       </TypographyKit>
       {['accrued_discounts', 'roi'].map((info) =>

@@ -57,20 +57,20 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
   const getRightDate = () => {
     if (titleRightDate === 'custom') {
       if (startLocalRight === endLocalRight) {
-        return `${dayjs(rightDate.startDate).format('DD/MM')}'s`;
+        return `${dayjs(rightDate.startDate).format('DD/MM')}`;
       }
       if (
         startGetDateRight === 1 &&
         endGetDateRight === endOfMonth(parseISO(rightDate.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(rightDate.startDate), 'LLL', { locale: enUS })}'s  -  ${getYear(
+        return `${format(parseISO(rightDate.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
           parseISO(rightDate.startDate),
         )}`;
       }
 
       return `${dayjs(rightDate.startDate).format('DD/MM')} - ${dayjs(rightDate.endDate).format(
         'DD/MM',
-      )}'s`;
+      )}`;
     }
 
     return `${titleRightDate}'s`;
@@ -78,20 +78,20 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
   const getLeftDate = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(leftDate.startDate).format('DD/MM')}'s`;
+        return `${dayjs(leftDate.startDate).format('DD/MM')}`;
       }
       if (
         startGetDate === 1 &&
         endGetDate === endOfMonth(parseISO(leftDate.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(leftDate.startDate), 'LLL', { locale: enUS })}'s  -  ${getYear(
+        return `${format(parseISO(leftDate.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
           parseISO(leftDate.startDate),
         )}`;
       }
 
       return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
         'DD/MM',
-      )}'s`;
+      )}`;
     }
 
     return `${titleDate}'s`;
@@ -177,11 +177,13 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
     return `${procent}%`;
   };
   const getNum = (metrics) => {
-    if (Number.isNaN(metrics[1][title]) || metrics[1][title] === null) {
-      return '-';
+    if (metrics) {
+      if (Number.isNaN(metrics[1][title]) || metrics[1][title] === null) {
+        return '-';
+      }
+      return metrics[1][title];
     }
-
-    return metrics[1][title];
+    return '-';
   };
   return (
     <BoxKit sx={{ width: '100%' }}>
