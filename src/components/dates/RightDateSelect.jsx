@@ -140,13 +140,13 @@ const RightDateSelect = ({
   setOpenedRight,
   setRightDateBtn,
   setTitleRight,
-  leftDate,
+  compareDateValue,
   titleLeft,
 }) => {
   const startDate = new Date(rightDate.startDate);
   const endDate = new Date(rightDate.endDate);
-  const startDateLeft = new Date(leftDate.startDate);
-  const endDateLeft = new Date(leftDate.endDate);
+  const startDateLeft = new Date(compareDateValue.startDate);
+  const endDateLeft = new Date(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();

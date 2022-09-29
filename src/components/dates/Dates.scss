@@ -5,7 +5,7 @@
   justify-content: flex-end;
   grid-gap: 20px;
   align-items: center;
-
+  flex-wrap: wrap;
   .dashboard-date {
     display: flex;
     align-items: center;
@@ -347,7 +347,6 @@
 
 @media(max-width: 960px) {
   .dates {
-    flex-direction: column;
     grid-gap: 10px;
   }
 
@@ -355,6 +354,13 @@
     top: 140px;
     &.range-right {
       top: 220px;
+    }
+  }
+}
+@media(max-width: 898px){
+  .dashboard-date{
+    > img{
+      opacity: 0;
     }
   }
 }

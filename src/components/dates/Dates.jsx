@@ -37,14 +37,14 @@ const Dates = () => {
   const {
     setLeft,
     setRight,
-    leftDate: left,
+    compareDateValue: left,
     rightDate: right,
     setTitleDate,
     titleDate,
     setTitleRightDate,
     titleRightDate,
-    leftDateOffers,
-    setLeftDateOffers,
+    compareDateValueOffers,
+    setcompareDateValueOffers,
     titleOffers,
     setTitleOffers,
     typeDateContext,
@@ -64,11 +64,11 @@ const Dates = () => {
   const [expanded, setExpanded] = useState(getExpanded());
   const [typeDate, setTypeDate] = useState(typeDateContext);
   const [title, setTitle] = useState(titleDate);
-  const [leftDateBtn, setLeftDateBtn] = useState({
+  const [compareDateValueBtn, setcompareDateValueBtn] = useState({
     startDate: left.startDate,
     endDate: left.endDate,
   });
-  const [leftDate, setLeftDate] = useState([
+  const [compareDateValue, setcompareDateValue] = useState([
     {
       startDate: new Date(left.startDate),
       endDate: new Date(left.endDate),
@@ -87,8 +87,8 @@ const Dates = () => {
     // handleClick happens when you click on button "OK" on Left date picker
 
     // We put in variables for later use
-    const startDate = new Date(leftDate[0].startDate);
-    const endDate = new Date(leftDate[0].endDate);
+    const startDate = new Date(compareDateValue[0].startDate);
+    const endDate = new Date(compareDateValue[0].endDate);
     const date = new Date();
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
@@ -117,10 +117,10 @@ const Dates = () => {
       }
     }
     if (location.pathname === '/planning') {
-      setLeftDateOffers({ startDate, endDate });
+      setcompareDateValueOffers({ startDate, endDate });
     } else {
       // its will work on other pages
-      setLeftDateBtn({ startDate, endDate });
+      setcompareDateValueBtn({ startDate, endDate });
     }
 
     if (location.pathname === '/dashboard') {
@@ -332,13 +332,13 @@ const Dates = () => {
         titleOffers,
         titleDate,
         titleRightDate,
-        leftDateBtn,
-        leftDate: { startDate: new Date(left.startDate), endDate: new Date(left.endDate) },
+        compareDateValueBtn,
+        compareDateValue: { startDate: new Date(left.startDate), endDate: new Date(left.endDate) },
         rightDate: { startDate: new Date(right.startDate), endDate: new Date(right.endDate) },
         typeDate,
       }),
     );
-  }, [titleOffers, titleDate, titleRightDate, leftDateBtn, titleRightDate, left, right]);
+  }, [titleOffers, titleDate, titleRightDate, compareDateValueBtn, titleRightDate, left, right]);
   const handleOnChange = (ranges) => {
     // handleOnChagne happens when you click on some day on Left date picker
     const { selection } = ranges;
@@ -346,10 +346,10 @@ const Dates = () => {
       // This will check if today's month is equal to the month of the clicked day
       if (typeDate === 'day') {
         // These checks the typeDate
-        setLeftDate([selection]); // here we send day
+        setcompareDateValue([selection]); // here we send day
       } else if (typeDate === 'week') {
         // These checks the typeDate
-        setLeftDate([
+        setcompareDateValue([
           {
             startDate: startOfWeek(selection.startDate), // here we send start of week
             endDate:
@@ -362,10 +362,10 @@ const Dates = () => {
       }
     } else if (typeDate === 'day') {
       // These checks the typeDate
-      setLeftDate([selection]); // here we send day
+      setcompareDateValue([selection]); // here we send day
     } else if (typeDate === 'week') {
       // These checks the typeDate
-      setLeftDate([
+      setcompareDateValue([
         {
           startDate: startOfWeek(selection.startDate), // here we send start of week
           endDate: endOfWeek(selection.startDate), // here we send end of week
@@ -520,16 +520,16 @@ const Dates = () => {
   // left date picker variables
   const leftStart = new Date(left.startDate);
   const leftEnd = new Date(left.endDate);
-  const leftStartBtn = new Date(leftDateBtn.startDate);
-  const leftEndBtn = new Date(leftDateBtn.endDate);
+  const leftStartBtn = new Date(compareDateValueBtn.startDate);
+  const leftEndBtn = new Date(compareDateValueBtn.endDate);
   const leftStartLocal = new Date(left.startDate).toLocaleDateString();
   const leftEndLocal = new Date(left.endDate).toLocaleDateString();
-  const leftBtnStartLocal = new Date(leftDateBtn.startDate).toLocaleDateString();
-  const leftBtnEndLocal = new Date(leftDateBtn.endDate).toLocaleDateString();
+  const leftBtnStartLocal = new Date(compareDateValueBtn.startDate).toLocaleDateString();
+  const leftBtnEndLocal = new Date(compareDateValueBtn.endDate).toLocaleDateString();
   const leftStartGetDate = new Date(left.startDate).getDate();
   const leftEndGetDate = new Date(left.endDate).getDate();
-  const leftBtnStartGetDate = new Date(leftDateBtn.startDate).getDate();
-  const leftBtnEndGetDate = new Date(leftDateBtn.endDate).getDate();
+  const leftBtnStartGetDate = new Date(compareDateValueBtn.startDate).getDate();
+  const leftBtnEndGetDate = new Date(compareDateValueBtn.endDate).getDate();
 
   // right date picker variables
   const rightStart = new Date(right.startDate);
@@ -540,14 +540,14 @@ const Dates = () => {
   const rightEndGetDate = new Date(right.endDate).getDate();
 
   // planning date picker variables
-  const leftStartOffers = new Date(leftDateOffers.startDate);
-  const leftEndOffers = new Date(leftDateOffers.endDate);
+  const leftStartOffers = new Date(compareDateValueOffers.startDate);
+  const leftEndOffers = new Date(compareDateValueOffers.endDate);
   const leftStartLocalOffers = new Date(leftStartOffers).toLocaleDateString();
   const leftEndLocalOffers = new Date(leftEndOffers).toLocaleDateString();
   const leftStartGetDateOffers = new Date(leftStartOffers).getDate();
   const leftEndGetDateOffers = new Date(leftEndOffers).getDate();
 
-  const getLeftDate = () => {
+  const getcompareDateValue = () => {
     if (location.pathname === '/dashboard') {
       if (titleDate === 'custom') {
         // if titleDate === "custom"  i return the date
@@ -617,7 +617,7 @@ const Dates = () => {
           className="date-input">
           <TypographyKit className="date-typography">
             <CalendarMonthIcon />
-            <span>{getLeftDate()}</span>
+            <span>{getcompareDateValue()}</span>
           </TypographyKit>
           <ExpandMoreIcon />
         </PaperKit>
@@ -634,27 +634,27 @@ const Dates = () => {
             setExpanded={setExpanded}
             index="1"
             type="day"
-            setSelections={setLeftDate}
+            setSelections={setcompareDateValue}
             setTypeDate={setTypeDate}
-            leftDate={leftDate}
+            compareDateValue={compareDateValue}
           />
           <DateSelect
             expanded={expanded}
             setExpanded={setExpanded}
             index="2"
             type="week"
-            setSelections={setLeftDate}
+            setSelections={setcompareDateValue}
             setTypeDate={setTypeDate}
-            leftDate={leftDate}
+            compareDateValue={compareDateValue}
           />
           <DateSelect
             expanded={expanded}
             setExpanded={setExpanded}
             index="3"
             type="month"
-            setSelections={setLeftDate}
+            setSelections={setcompareDateValue}
             setTypeDate={setTypeDate}
-            leftDate={leftDate}
+            compareDateValue={compareDateValue}
           />
           <div className="date-btn-wrapper">
             <ButtonKit onClick={handleClick} className="date-save-btn " variant="contained">
@@ -666,11 +666,11 @@ const Dates = () => {
           <LocalizationProviderKit dateAdapter={AdapterDayjs}>
             <MonthPickerKit
               className="month_picker"
-              date={dayjs(leftDate[0].startDate)}
+              date={dayjs(compareDateValue[0].startDate)}
               minDate={minDate}
               maxDate={maxDate}
               onChange={(newDateMonth) =>
-                setLeftDate([
+                setcompareDateValue([
                   {
                     startDate: startOfMonth(new Date(newDateMonth)),
                     endDate: endOfMonth(new Date(newDateMonth)),
@@ -689,7 +689,7 @@ const Dates = () => {
             showSelectionPreview
             moveRangeOnFirstSelection={false}
             months={2}
-            ranges={leftDate}
+            ranges={compareDateValue}
             direction="horizontal"
             dragSelectionEnabled={false}
           />
@@ -720,7 +720,7 @@ const Dates = () => {
                 selected={selected}
                 rightDate={right}
                 setTitleRight={setTitleRightDate}
-                leftDate={left}
+                compareDateValue={left}
                 titleLeft={titleDate}
               />
             </TypographyKit>
@@ -739,7 +739,7 @@ const Dates = () => {
                 type="day"
                 setSelections={setRightDate}
                 setTypeDate={setTypeDate}
-                leftDate={rightDate}
+                compareDateValue={rightDate}
               />
               <DateSelect
                 expanded={expanded}
@@ -748,7 +748,7 @@ const Dates = () => {
                 type="week"
                 setSelections={setRightDate}
                 setTypeDate={setTypeDate}
-                leftDate={rightDate}
+                compareDateValue={rightDate}
               />
               <DateSelect
                 expanded={expanded}
@@ -757,7 +757,7 @@ const Dates = () => {
                 type="month"
                 setSelections={setRightDate}
                 setTypeDate={setTypeDate}
-                leftDate={rightDate}
+                compareDateValue={rightDate}
               />
               <div className="date-btn-wrapper">
                 <ButtonKit
