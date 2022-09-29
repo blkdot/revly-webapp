@@ -10,14 +10,14 @@ import useDate from '../../hooks/useDate';
 
 const Marketing = ({ metricsLeft, metricsRight }) => {
   const [table, setTable] = useState('accrued_discounts');
-  const { titleDate, leftDate } = useDate();
-  const startDate = new Date(leftDate.startDate);
-  const endDate = new Date(leftDate.endDate);
+  const { titleDate, compareDateValue } = useDate();
+  const startDate = new Date(compareDateValue.startDate);
+  const endDate = new Date(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const getLeftDate = () => {
+  const getcompareDateValue = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
@@ -59,7 +59,7 @@ const Marketing = ({ metricsLeft, metricsRight }) => {
         ))}
       </div>
       <TypographyKit variant="h5">
-        <span>{getLeftDate()}</span>
+        <span>{getcompareDateValue()}</span>
         &apos;s
         <span> {getTable()}</span>
       </TypographyKit>

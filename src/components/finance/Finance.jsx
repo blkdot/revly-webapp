@@ -10,14 +10,14 @@ import useDate from '../../hooks/useDate';
 
 const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   const [table, setTable] = useState('revenue');
-  const { titleDate, leftDate, restaurants } = useDate();
-  const startDate = new Date(leftDate.startDate);
-  const endDate = new Date(leftDate.endDate);
+  const { titleDate, compareDateValue, restaurants } = useDate();
+  const startDate = new Date(compareDateValue.startDate);
+  const endDate = new Date(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const getLeftDate = () => {
+  const getcompareDateValue = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
@@ -46,7 +46,7 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   return (
     <div className="block">
       <TypographyKit variant="h4">
-        <span>{getLeftDate()} </span>
+        <span>{getcompareDateValue()} </span>
         results for{' '}
         {restaurants.length === vendors.length || restaurants.length === 0 ? (
           <p>
@@ -70,7 +70,7 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
         ))}
       </div>
       <TypographyKit variant="h5">
-        <span>{getLeftDate()}</span>
+        <span>{getcompareDateValue()}</span>
         &apos;s
         <span> {getTable()}</span>
       </TypographyKit>

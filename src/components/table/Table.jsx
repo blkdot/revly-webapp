@@ -33,10 +33,10 @@ const EnhancedTableHead = ({ headCells }) => (
 );
 
 const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
-  const { titleRightDate, rightDate, titleDate, leftDate } = useDate();
+  const { titleRightDate, rightDate, titleDate, compareDateValue } = useDate();
 
-  const startDate = parseISO(leftDate.startDate);
-  const endDate = parseISO(leftDate.endDate);
+  const startDate = parseISO(compareDateValue.startDate);
+  const endDate = parseISO(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
@@ -75,23 +75,23 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
 
     return `${titleRightDate}'s`;
   };
-  const getLeftDate = () => {
+  const getcompareDateValue = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(leftDate.startDate).format('DD/MM')}`;
+        return `${dayjs(compareDateValue.startDate).format('DD/MM')}`;
       }
       if (
         startGetDate === 1 &&
-        endGetDate === endOfMonth(parseISO(leftDate.startDate), 1).getDate()
+        endGetDate === endOfMonth(parseISO(compareDateValue.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(leftDate.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
-          parseISO(leftDate.startDate),
-        )}`;
+        return `${format(parseISO(compareDateValue.startDate), 'LLL', {
+          locale: enUS,
+        })}  -  ${getYear(parseISO(compareDateValue.startDate))}`;
       }
 
-      return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
-        'DD/MM',
-      )}`;
+      return `${dayjs(compareDateValue.startDate).format('DD/MM')} - ${dayjs(
+        compareDateValue.endDate,
+      ).format('DD/MM')}`;
     }
 
     return `${titleDate}'s`;
@@ -114,7 +114,7 @@ const EnhancedTable = ({ title, metricsLeft, metricsRight }) => {
       id: 'date',
       numeric: true,
       disablePadding: false,
-      label: getLeftDate(),
+      label: getcompareDateValue(),
     },
     {
       id: 'date1',

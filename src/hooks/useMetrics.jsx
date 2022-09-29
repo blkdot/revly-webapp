@@ -4,7 +4,7 @@ import useApi from './useApi';
 import useDate from './useDate';
 
 function useMetrics() {
-  const { leftDate, rightDate, vendorsContext } = useDate();
+  const { compareDateValue, rightDate, vendorsContext } = useDate();
   const { getMetrics } = useApi();
   const [metricsLeft, setMetricsLeft] = useState([]);
   const [metricsRight, setMetricsRight] = useState([]);
@@ -43,8 +43,8 @@ function useMetrics() {
   }, [rightDate, vendorsContext]);
 
   useMemo(() => {
-    handleRequest(leftDate, setMetricsLeft);
-  }, [leftDate, vendorsContext]);
+    handleRequest(compareDateValue, setMetricsLeft);
+  }, [compareDateValue, vendorsContext]);
 
   return { metricsLeft, metricsRight };
 }

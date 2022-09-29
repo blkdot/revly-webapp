@@ -10,14 +10,14 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
 
 const FinanceEmpty = ({ vendors }) => {
-  const { titleDate, leftDate, restaurants } = useDate();
-  const startDate = parseISO(leftDate.startDate);
-  const endDate = parseISO(leftDate.endDate);
+  const { titleDate, compareDateValue, restaurants } = useDate();
+  const startDate = parseISO(compareDateValue.startDate);
+  const endDate = parseISO(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const getLeftDate = () => {
+  const getcompareDateValue = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
@@ -26,7 +26,7 @@ const FinanceEmpty = ({ vendors }) => {
         return `${format(startDate, 'LLL', { locale: enUS })}  -  ${getYear(startDate)}`;
       }
 
-      return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(endDate).format('DD/MM')}`;
+      return `${dayjs(startDate).format('DD/MM')} - ${dayjs(endDate).format('DD/MM')}`;
     }
 
     return `${titleDate}`;
@@ -34,7 +34,7 @@ const FinanceEmpty = ({ vendors }) => {
   return (
     <div className="block">
       <TypographyKit variant="h4">
-        <span> {getLeftDate()} </span>
+        <span> {getcompareDateValue()} </span>
         results for
         {restaurants.length === vendors?.length || restaurants.length === 0 ? (
           <p>
