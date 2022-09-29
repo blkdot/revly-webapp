@@ -128,9 +128,7 @@ const General = () => {
 
   return (
     <div className="general">
-      <h3 style={{ fontSize: '16px', color: '#212B36', fontWeight: 600, marginBottom: 10 }}>
-        Your personal data
-      </h3>
+      <p className="__title">Your personal data</p>
       <AccountSettingForm
         valueFirstName={{ value: inputValue.firstname, error: inputError.firstname }}
         valueLastName={{ value: inputValue.lastname, error: inputError.lastname }}

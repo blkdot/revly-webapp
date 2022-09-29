@@ -4,22 +4,36 @@
     display: flex;
     justify-content: space-between;
     margin: 14px 0;
-    font-weight: 400;
-
-    .invoice__date {
-        width: 65%;
-    }
-
-    .invoice__link {
-        color: $color-border;
-        text-align: right;
-        &:hover {
-            text-decoration: underline;
-            cursor: pointer;
-        }
-    }
+    align-items: center;
+    padding: 12px 30px;
+    background-color: #F9FAFB;
+    border-radius: 8px;
 
     p {
-        width: 20%;
+        font-weight: 600;
+        font-size: 16px;
+        color: $color-second-third
+    }
+
+    .__flex {
+        display: flex;
+
+        p {
+            margin-left: 0.6em;
+        }
+
+        .__img-block {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(145, 158, 171, 0.24);
+            border-radius: 50%;
+            img {
+                width: 30px;
+                height: 30px;
+            }
+        }
     }
 }

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Zoom } from '@mui/material';
 
-import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
-
 import './Info.scss';
 
 import ButtonKit from '../../../../kits/button/ButtonKit';
@@ -13,28 +11,20 @@ const Info = (props) => {
   return (
     <Zoom in>
       <div className="info">
-        <p className="info__name">{name}</p>
-        <p>
-          {' '}
-          <span>Address:</span> &nbsp; {address}
+        <p className="__text">
+          <span>Name :</span> &nbsp; &nbsp; &nbsp; {name}
         </p>
-        <p>
-          {' '}
-          <span>Phone:</span> &nbsp; {phone}
+        <p className="__text">
+          <span>Address :</span> &nbsp; {address}
         </p>
-        <div className="info__btn-flex">
-          <ButtonKit
-            sx={{ color: 'red', textTransform: 'none', fontWeight: '700' }}
-            size="small"
-            onClick={onDelete}
-            startIcon={<DeleteOutlined />}>
+        <p className="__text">
+          <span>Phone :</span> &nbsp; &nbsp; &nbsp;{phone}
+        </p>
+        <div className="__btn-flex">
+          <ButtonKit variant="outlined" onClick={onDelete}>
             Delete
           </ButtonKit>
-          <ButtonKit
-            sx={{ marginLeft: 2, textTransform: 'none', fontWeight: '700' }}
-            size="small"
-            onClick={onEdit}
-            startIcon={<EditOutlined />}>
+          <ButtonKit variant="contained" onClick={onEdit}>
             Edit
           </ButtonKit>
         </div>
