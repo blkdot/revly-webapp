@@ -14,7 +14,7 @@ const AccountSettingForm = (props) => {
     valueLastName,
     valuePhone,
     valueCountry,
-    valueEmail,
+    valueRole,
     valueCity,
     valueDial,
     handleInputChange,
@@ -48,13 +48,24 @@ const AccountSettingForm = (props) => {
             fullWidth
             label="City"
           />
-          <TextfieldKit
-            label="E-mail"
-            fullWidth
-            className="account-form__flex__block__input __not-allowed"
-            value={valueEmail}
-            inputProps={{ readOnly: true }}
-          />
+          <div className="account-form__flex__block__input-phone">
+            <PhoneInputKit
+              value={valueDial}
+              country="ae"
+              specialLabel=""
+              inputProps={{ readOnly: true }}
+              onChange={onDialChange}
+              containerClass="account-form__input-phone"
+            />
+            <TextfieldKit
+              value={valuePhone}
+              name="phone"
+              onChange={(e) => handleInputChange(e, 'length')}
+              className="account-form__flex__block__input"
+              fullWidth
+              label="Phone Number"
+            />
+          </div>
         </div>
 
         <div className="account-form__flex__block">
@@ -100,24 +111,12 @@ const AccountSettingForm = (props) => {
             className="account-form__flex__block__autocomplete"
             renderInput={(params) => <TextfieldKit {...params} label="Country" />}
           />
-          <div className="account-form__flex__block__input-phone">
-            <PhoneInputKit
-              value={valueDial}
-              country="ae"
-              specialLabel=""
-              inputProps={{ readOnly: true }}
-              onChange={onDialChange}
-              containerClass="account-form__input-phone"
-            />
-            <TextfieldKit
-              value={valuePhone}
-              name="phone"
-              onChange={(e) => handleInputChange(e, 'length')}
-              className="account-form__flex__block__input"
-              fullWidth
-              label="Phone Number"
-            />
-          </div>
+          <TextfieldKit
+            label="Role"
+            fullWidth
+            className="account-form__flex__block__input"
+            value={valueRole}
+          />
         </div>
       </div>
     </div>

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-
-import { FaUserAlt, FaCreditCard, FaTruck } from 'react-icons/fa';
-import { BsKeyFill } from 'react-icons/bs';
+import { Description, Password, Person, Send } from '@mui/icons-material';
 
 import './Settings.scss';
 
@@ -22,22 +20,38 @@ const Settings = () => {
   const ACCOUNT_TABS = [
     {
       value: 'general',
-      icon: <FaUserAlt width={20} height={20} style={{ marginRight: 5 }} />,
+      icon: (
+        <div className="icon-block">
+          <Person className="icon" />
+        </div>
+      ),
       component: <General />,
     },
     {
       value: 'billing',
-      icon: <FaCreditCard width={20} height={20} style={{ marginRight: 5 }} />,
+      icon: (
+        <div className="icon-block">
+          <Description className="icon" />
+        </div>
+      ),
       component: <Billing />,
     },
     {
       value: 'onboarding',
-      icon: <FaTruck width={20} height={20} style={{ marginRight: 5 }} />,
+      icon: (
+        <div className="icon-block">
+          <Send className="icon" />
+        </div>
+      ),
       component: <NewSettingsOnboarding />,
     },
     {
-      value: 'change_password',
-      icon: <BsKeyFill width={20} height={20} style={{ marginRight: 5 }} />,
+      value: 'change password',
+      icon: (
+        <div className="icon-block">
+          <Password className="icon" />
+        </div>
+      ),
       component: <ChangePassword />,
     },
   ];
@@ -48,8 +62,10 @@ const Settings = () => {
 
   return (
     <div className="setting-account">
-      <TypographyKit variant="h4">Settings</TypographyKit>
-      <div>
+      <TypographyKit color="#212B36" fontWeight="700" variant="h4">
+        Settings - {currentTab.charAt(0).toUpperCase() + currentTab.slice(1)}
+      </TypographyKit>
+      <div className="__content">
         <TabsKit
           allowScrollButtonsMobile
           variant="scrollable"

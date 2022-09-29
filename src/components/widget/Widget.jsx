@@ -54,23 +54,23 @@ const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
   const getRightDate = () => {
     if (titleRightDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(rightDate.startDate).format('DD/MM')}'s`;
+        return `${dayjs(rightDate.startDate).format('DD/MM')}`;
       }
       if (
         startGetDate === 1 &&
         endGetDate === endOfMonth(parseISO(rightDate.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(rightDate.startDate), 'LLL', { locale: enUS })}'s  -  ${getYear(
+        return `${format(parseISO(rightDate.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
           parseISO(rightDate.startDate),
         )}`;
       }
 
       return `${dayjs(rightDate.startDate).format('DD/MM')} - ${dayjs(rightDate.endDate).format(
         'DD/MM',
-      )}'s`;
+      )}`;
     }
 
-    return `${titleRightDate}'s`;
+    return `${titleRightDate}`;
   };
   const getIcon = () => {
     if (title === 'reveunue') {
