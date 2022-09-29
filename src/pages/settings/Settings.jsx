@@ -62,8 +62,12 @@ const Settings = () => {
 
   return (
     <div className="setting-account">
-      <TypographyKit color="#212B36" fontWeight="700" variant="h4">
+      <TypographyKit fontSize="32px" color="#212B36" fontWeight="700" variant="h4">
         Settings - {currentTab.charAt(0).toUpperCase() + currentTab.slice(1)}
+      </TypographyKit>
+      <TypographyKit mt={1.3} lineHeight="24px" fontSize="16px" color="#637381" fontWeight="400">
+        Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+        vivamus risus.
       </TypographyKit>
       <div className="__content">
         <TabsKit

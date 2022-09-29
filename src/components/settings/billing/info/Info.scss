@@ -1,26 +1,30 @@
 @import '../../../../library.scss';
 
 .info {
-    background-color: #ebdbeb;
-
-    padding: 23px;
+    background-color: #F9FAFB;
+    padding: 28px 30px;
     border-radius: 10px;
-    margin: 13px 0;
+    margin-bottom: 1em;
 
-    .info__name {
-        font-weight: 600;
-        font-size: 1rem;
-    }
-
-    p {
-        margin-bottom: 13px;
+    .__text {
+        margin-bottom: 1.5em;
         font-weight: 400;
+        font-size: 16px;
+        color: $color-table-th;
         span {
-            color: rgb(99, 115, 129);
+            font-weight: 600;
+            font-size: 14px;
+            color: $color-second-third;
         }
     }
 
-    .info__btn-flex {
-        margin-top: 13px;
+    .__btn-flex {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+
+        button {
+            width: 112px;
+        }
     }
 }
