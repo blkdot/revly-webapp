@@ -50,8 +50,8 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   return (
     <div className="block">
       <TypographyKit variant="h4">
-        <span>{getLeftDate()}</span>
-        <span>&apos;s</span> results for{' '}
+        <span>{getLeftDate()} </span>
+        results for{' '}
         {restaurants.length === vendors.length || restaurants.length === 0 ? (
           <p>
             all <span> points of sales</span>
@@ -75,7 +75,7 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
       </div>
       <TypographyKit variant="h5">
         <span>{getLeftDate()}</span>
-        <span>&apos;s</span>
+        &apos;s
         <span> {getTable()}</span>
       </TypographyKit>
       {['revenue', 'n_orders', 'average_basket', 'profit'].map((info) =>

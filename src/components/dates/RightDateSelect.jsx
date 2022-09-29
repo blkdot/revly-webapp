@@ -18,19 +18,30 @@ import ButtonKit from '../../kits/button/ButtonKit';
 
 const date = new Date();
 
-const Day = ({ setTitleRight, setRightDateBtn, startDateLeft, endDateLeft, openRight }) => (
+const Day = ({
+  setTitleRight,
+  setRightDateBtn,
+  startDateLeft,
+  endDateLeft,
+  openRight,
+  titleLeft,
+}) => (
   <div>
-    <ButtonKit
-      className="navbar-button-kit"
-      onClick={() => {
-        setRightDateBtn({
-          startDate: subDays(date, 1),
-          endDate: subDays(date, 1),
-        });
-        setTitleRight('yesterday');
-      }}>
-      Yesterday
-    </ButtonKit>
+    {titleLeft !== 'yesterday' ? (
+      <ButtonKit
+        className="navbar-button-kit"
+        onClick={() => {
+          setRightDateBtn({
+            startDate: subDays(date, 1),
+            endDate: subDays(date, 1),
+          });
+          setTitleRight('yesterday');
+        }}>
+        Yesterday
+      </ButtonKit>
+    ) : (
+      ''
+    )}
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
@@ -58,19 +69,30 @@ const Day = ({ setTitleRight, setRightDateBtn, startDateLeft, endDateLeft, openR
     </ButtonKit>
   </div>
 );
-const Week = ({ setTitleRight, setRightDateBtn, startDateLeft, endDateLeft, openRight }) => (
+const Week = ({
+  setTitleRight,
+  setRightDateBtn,
+  startDateLeft,
+  endDateLeft,
+  openRight,
+  titleLeft,
+}) => (
   <div>
-    <ButtonKit
-      className="navbar-button-kit"
-      onClick={() => {
-        setRightDateBtn({
-          startDate: startOfWeek(subWeeks(date, 1)),
-          endDate: endOfWeek(subWeeks(date, 1)),
-        });
-        setTitleRight('last week');
-      }}>
-      Last week
-    </ButtonKit>
+    {titleLeft !== 'last week' ? (
+      <ButtonKit
+        className="navbar-button-kit"
+        onClick={() => {
+          setRightDateBtn({
+            startDate: startOfWeek(subWeeks(date, 1)),
+            endDate: endOfWeek(subWeeks(date, 1)),
+          });
+          setTitleRight('last week');
+        }}>
+        Last week
+      </ButtonKit>
+    ) : (
+      ''
+    )}
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
@@ -87,19 +109,23 @@ const Week = ({ setTitleRight, setRightDateBtn, startDateLeft, endDateLeft, open
     </ButtonKit>
   </div>
 );
-const Month = ({ setTitleRight, setRightDateBtn, openRight }) => (
+const Month = ({ setTitleRight, setRightDateBtn, openRight, titleLeft }) => (
   <div>
-    <ButtonKit
-      className="navbar-button-kit"
-      onClick={() => {
-        setRightDateBtn({
-          startDate: startOfMonth(subMonths(date, 1)),
-          endDate: endOfMonth(subMonths(date, 1)),
-        });
-        setTitleRight('last month');
-      }}>
-      Last month
-    </ButtonKit>
+    {titleLeft !== 'last month' ? (
+      <ButtonKit
+        className="navbar-button-kit"
+        onClick={() => {
+          setRightDateBtn({
+            startDate: startOfMonth(subMonths(date, 1)),
+            endDate: endOfMonth(subMonths(date, 1)),
+          });
+          setTitleRight('last month');
+        }}>
+        Last month
+      </ButtonKit>
+    ) : (
+      ''
+    )}
 
     <ButtonKit className="navbar-button-kit" onClick={openRight}>
       Custom Month
@@ -115,6 +141,7 @@ const RightDateSelect = ({
   setRightDateBtn,
   setTitleRight,
   leftDate,
+  titleLeft,
 }) => {
   const startDate = new Date(rightDate.startDate);
   const endDate = new Date(rightDate.endDate);
@@ -140,6 +167,7 @@ const RightDateSelect = ({
       if (startLocal === endLocal)
         return (
           <Day
+            titleLeft={titleLeft}
             openRight={openRight}
             startDateLeft={startDateLeft}
             endDateLeft={endDateLeft}
@@ -155,6 +183,7 @@ const RightDateSelect = ({
       )
         return (
           <Week
+            titleLeft={titleLeft}
             openRight={openRight}
             startDateLeft={startDateLeft}
             endDateLeft={endDateLeft}
@@ -170,6 +199,7 @@ const RightDateSelect = ({
       )
         return (
           <Month
+            titleLeft={titleLeft}
             openRight={openRight}
             setRightDateBtn={setRightDateBtn}
             setTitleRight={setTitleRight}
@@ -178,6 +208,7 @@ const RightDateSelect = ({
     } else if (startLocal === endLocal)
       return (
         <Day
+          titleLeft={titleLeft}
           openRight={openRight}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
@@ -188,6 +219,7 @@ const RightDateSelect = ({
     else if (getWeek(startDate) === getWeek(endDate) && startGetDay === 0 && endGetDay <= 6)
       return (
         <Week
+          titleLeft={titleLeft}
           openRight={openRight}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
@@ -202,6 +234,7 @@ const RightDateSelect = ({
     )
       return (
         <Month
+          titleLeft={titleLeft}
           openRight={openRight}
           setRightDateBtn={setRightDateBtn}
           setTitleRight={setTitleRight}
