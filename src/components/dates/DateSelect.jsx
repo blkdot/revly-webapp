@@ -22,14 +22,14 @@ import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
 import useDate from '../../hooks/useDate';
 
 const DateSelect = React.memo(
-  ({ type, setSelections, setTypeDate, expanded, setExpanded, index, compareDateValue }) => {
+  ({ type, setSelections, setTypeDate, expanded, setExpanded, index, dateFrom }) => {
     const [active, setActive] = useState('current');
     const { setTypeDateContext } = useDate();
 
     useEffect(() => {
       const date = new Date();
-      const startDate = new Date(compareDateValue[0].startDate);
-      const endDate = new Date(compareDateValue[0].endDate);
+      const startDate = new Date(dateFrom[0].startDate);
+      const endDate = new Date(dateFrom[0].endDate);
       const startLocal = startDate.toLocaleDateString();
       const endLocal = endDate.toLocaleDateString();
       const startGetDate = startDate.getDate();
@@ -83,7 +83,7 @@ const DateSelect = React.memo(
         }
       };
       getActive();
-    }, [compareDateValue, type]);
+    }, [dateFrom, type]);
 
     const getDate = (date) => {
       const today = new Date();

@@ -4,28 +4,34 @@ import Dates from '../../components/dates/Dates';
 import Finance from '../../components/finance/Finance';
 import Marketing from '../../components/marketing/Marketing';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
-// import { restaurantNames } from '../../data/fakeDataDashboard';
 import useMetrics from '../../hooks/useMetrics';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import useVendors from '../../hooks/useVendors';
 
 const Dashboard = () => {
-  const { metricsLeft, metricsRight } = useMetrics();
+  const { metricsDateFrom, metricsCompareDateValue } = useMetrics();
   const { vendors, vendorsPlatform } = useVendors();
   return (
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates />
+        <Dates isDashboard />
       </div>
-      {metricsLeft.length !== 0 && metricsRight.length !== 0 ? (
-        <Finance metricsLeft={metricsLeft} metricsRight={metricsRight} vendors={vendors} />
+      {metricsDateFrom.length !== 0 && metricsCompareDateValue.length !== 0 ? (
+        <Finance
+          metricsDateFrom={metricsDateFrom}
+          metricsCompareDateValue={metricsCompareDateValue}
+          vendors={vendors}
+        />
       ) : (
         <FinanceEmpty vendors={vendors} />
       )}
-      {metricsLeft.length !== 0 && metricsRight.length !== 0 ? (
-        <Marketing metricsLeft={metricsLeft} metricsRight={metricsRight} />
+      {metricsDateFrom.length !== 0 && metricsCompareDateValue.length !== 0 ? (
+        <Marketing
+          metricsDateFrom={metricsDateFrom}
+          metricsCompareDateValue={metricsCompareDateValue}
+        />
       ) : (
         <MarketingEmpty />
       )}

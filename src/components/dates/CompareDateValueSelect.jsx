@@ -19,11 +19,11 @@ import ButtonKit from '../../kits/button/ButtonKit';
 const date = new Date();
 
 const Day = ({
-  setTitleRight,
-  setRightDateBtn,
+  setTitleCompareDateValue,
+  setcompareDateValueBtn,
   startDateLeft,
   endDateLeft,
-  openRight,
+  openCompareDateValue,
   titleLeft,
 }) => (
   <div>
@@ -33,11 +33,11 @@ const Day = ({
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
-          setRightDateBtn({
+          setcompareDateValueBtn({
             startDate: subDays(date, 1),
             endDate: subDays(date, 1),
           });
-          setTitleRight('yesterday');
+          setTitleCompareDateValue('yesterday');
         }}>
         Yesterday
       </ButtonKit>
@@ -45,36 +45,36 @@ const Day = ({
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
-        setRightDateBtn({
+        setcompareDateValueBtn({
           startDate: subDays(date, 1),
           endDate: subDays(date, 1),
         });
-        setTitleRight('the day before');
+        setTitleCompareDateValue('the day before');
       }}>
       Day before
     </ButtonKit>
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
-        setRightDateBtn({
+        setcompareDateValueBtn({
           startDate: subWeeks(startDateLeft, 1),
           endDate: subWeeks(endDateLeft, 1),
         });
-        setTitleRight('the same day last week');
+        setTitleCompareDateValue('the same day last week');
       }}>
       Same day last week
     </ButtonKit>
-    <ButtonKit className="navbar-button-kit" onClick={openRight}>
+    <ButtonKit className="navbar-button-kit" onClick={openCompareDateValue}>
       Custom Day
     </ButtonKit>
   </div>
 );
 const Week = ({
-  setTitleRight,
-  setRightDateBtn,
+  setTitleCompareDateValue,
+  setcompareDateValueBtn,
   startDateLeft,
   endDateLeft,
-  openRight,
+  openCompareDateValue,
   titleLeft,
 }) => (
   <div>
@@ -84,11 +84,11 @@ const Week = ({
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
-          setRightDateBtn({
+          setcompareDateValueBtn({
             startDate: startOfWeek(subWeeks(date, 1)),
             endDate: endOfWeek(subWeeks(date, 1)),
           });
-          setTitleRight('last week');
+          setTitleCompareDateValue('last week');
         }}>
         Last week
       </ButtonKit>
@@ -96,20 +96,25 @@ const Week = ({
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
-        setRightDateBtn({
+        setcompareDateValueBtn({
           startDate: subWeeks(startDateLeft, 1),
           endDate: endOfWeek(subWeeks(endDateLeft, 1)),
         });
-        setTitleRight('week before');
+        setTitleCompareDateValue('week before');
       }}>
       Week before
     </ButtonKit>
-    <ButtonKit className="navbar-button-kit" onClick={openRight}>
+    <ButtonKit className="navbar-button-kit" onClick={openCompareDateValue}>
       Custom Week
     </ButtonKit>
   </div>
 );
-const Month = ({ setTitleRight, setRightDateBtn, openRight, titleLeft }) => (
+const Month = ({
+  setTitleCompareDateValue,
+  setcompareDateValueBtn,
+  openCompareDateValue,
+  titleLeft,
+}) => (
   <div>
     {titleLeft === 'last month' || titleLeft === 'custom' ? (
       ''
@@ -117,36 +122,36 @@ const Month = ({ setTitleRight, setRightDateBtn, openRight, titleLeft }) => (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
-          setRightDateBtn({
+          setcompareDateValueBtn({
             startDate: startOfMonth(subMonths(date, 1)),
             endDate: endOfMonth(subMonths(date, 1)),
           });
-          setTitleRight('last month');
+          setTitleCompareDateValue('last month');
         }}>
         Last month
       </ButtonKit>
     )}
 
-    <ButtonKit className="navbar-button-kit" onClick={openRight}>
+    <ButtonKit className="navbar-button-kit" onClick={openCompareDateValue}>
       Custom Month
     </ButtonKit>
   </div>
 );
 
-const RightDateSelect = ({
-  setRightDate,
-  rightDate,
-  selected,
-  setOpenedRight,
-  setRightDateBtn,
-  setTitleRight,
+const CompareDateValueSelect = ({
+  setcompareDateValue,
   compareDateValue,
+  selected,
+  setOpenedCompareDateValue,
+  setcompareDateValueBtn,
+  setTitleCompareDateValue,
+  dateFrom,
   titleLeft,
 }) => {
-  const startDate = new Date(rightDate.startDate);
-  const endDate = new Date(rightDate.endDate);
-  const startDateLeft = new Date(compareDateValue.startDate);
-  const endDateLeft = new Date(compareDateValue.endDate);
+  const startDate = new Date(compareDateValue.startDate);
+  const endDate = new Date(compareDateValue.endDate);
+  const startDateLeft = new Date(dateFrom.startDate);
+  const endDateLeft = new Date(dateFrom.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
@@ -156,10 +161,10 @@ const RightDateSelect = ({
   const dateGetDay = date.getDay();
   const dateGetDate = date.getDate();
 
-  const openRight = () => {
-    setRightDate([{ startDate, endDate, key: 'selection' }]);
-    setRightDateBtn({ startDate, endDate });
-    setOpenedRight(true);
+  const openCompareDateValue = () => {
+    setcompareDateValue([{ startDate, endDate, key: 'selection' }]);
+    setcompareDateValueBtn({ startDate, endDate });
+    setOpenedCompareDateValue(true);
   };
 
   function render() {
@@ -168,11 +173,11 @@ const RightDateSelect = ({
         return (
           <Day
             titleLeft={titleLeft}
-            openRight={openRight}
+            openCompareDateValue={openCompareDateValue}
             startDateLeft={startDateLeft}
             endDateLeft={endDateLeft}
-            setRightDateBtn={setRightDateBtn}
-            setTitleRight={setTitleRight}
+            setcompareDateValueBtn={setcompareDateValueBtn}
+            setTitleCompareDateValue={setTitleCompareDateValue}
           />
         );
       if (
@@ -184,11 +189,11 @@ const RightDateSelect = ({
         return (
           <Week
             titleLeft={titleLeft}
-            openRight={openRight}
+            openCompareDateValue={openCompareDateValue}
             startDateLeft={startDateLeft}
             endDateLeft={endDateLeft}
-            setRightDateBtn={setRightDateBtn}
-            setTitleRight={setTitleRight}
+            setcompareDateValueBtn={setcompareDateValueBtn}
+            setTitleCompareDateValue={setTitleCompareDateValue}
           />
         );
       if (
@@ -200,31 +205,31 @@ const RightDateSelect = ({
         return (
           <Month
             titleLeft={titleLeft}
-            openRight={openRight}
-            setRightDateBtn={setRightDateBtn}
-            setTitleRight={setTitleRight}
+            openCompareDateValue={openCompareDateValue}
+            setcompareDateValueBtn={setcompareDateValueBtn}
+            setTitleCompareDateValue={setTitleCompareDateValue}
           />
         );
     } else if (startLocal === endLocal)
       return (
         <Day
           titleLeft={titleLeft}
-          openRight={openRight}
+          openCompareDateValue={openCompareDateValue}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
-          setRightDateBtn={setRightDateBtn}
-          setTitleRight={setTitleRight}
+          setcompareDateValueBtn={setcompareDateValueBtn}
+          setTitleCompareDateValue={setTitleCompareDateValue}
         />
       );
     else if (getWeek(startDate) === getWeek(endDate) && startGetDay === 0 && endGetDay <= 6)
       return (
         <Week
           titleLeft={titleLeft}
-          openRight={openRight}
+          openCompareDateValue={openCompareDateValue}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
-          setRightDateBtn={setRightDateBtn}
-          setTitleRight={setTitleRight}
+          setcompareDateValueBtn={setcompareDateValueBtn}
+          setTitleCompareDateValue={setTitleCompareDateValue}
         />
       );
     else if (
@@ -235,9 +240,9 @@ const RightDateSelect = ({
       return (
         <Month
           titleLeft={titleLeft}
-          openRight={openRight}
-          setRightDateBtn={setRightDateBtn}
-          setTitleRight={setTitleRight}
+          openCompareDateValue={openCompareDateValue}
+          setcompareDateValueBtn={setcompareDateValueBtn}
+          setTitleCompareDateValue={setTitleCompareDateValue}
         />
       );
     return '';
@@ -251,4 +256,4 @@ const RightDateSelect = ({
   );
 };
 
-export default React.memo(RightDateSelect);
+export default React.memo(CompareDateValueSelect);

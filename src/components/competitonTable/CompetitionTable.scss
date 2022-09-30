@@ -43,7 +43,7 @@
   }
 
   th:nth-of-type(1) {
-    padding-left: 25px;
+    padding-left: 15px;
   }
 }
 
@@ -71,6 +71,7 @@
 
 .competition-table-conatiner.competition-table-conatiner {
   padding: 0 10px;
+  overflow: hidden;
 }
 
 .competition-table-alert {
@@ -99,5 +100,38 @@
 
   .competition-table-conatiner.competition-table-conatiner {
     width: 120%;
+  }
+}
+
+@media(max-width: 1210px) {
+  .competition-table-conatiner.competition-table-conatiner {
+    width: 150%;
+  }
+}
+
+@media(max-width: 1145px) {
+  .competition-table-conatiner.competition-table-conatiner {
+    width: 180%;
+  }
+}
+
+@media(max-width: 1100px) {
+  .competition-table-conatiner.competition-table-conatiner {
+    padding: 0;
+
+    th,
+    tr {
+      border-radius: 0 !important;
+    }
+  }
+}
+@media(max-width: 795px){
+  .competition-table-conatiner.competition-table-conatiner{
+    width: 220%;
+  }
+}
+@media(max-width: 695px) {
+  .competition-table-conatiner.competition-table-conatiner {
+    width: 250%;
   }
 }
