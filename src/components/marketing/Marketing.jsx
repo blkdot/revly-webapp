@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Marketing.scss';
-import { endOfMonth, format, getYear, parseISO } from 'date-fns';
+import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import Widget from '../widget/Widget';
@@ -10,27 +10,23 @@ import useDate from '../../hooks/useDate';
 
 const Marketing = ({ metricsLeft, metricsRight }) => {
   const [table, setTable] = useState('accrued_discounts');
-  const { titleDate, leftDate } = useDate();
-  const startDate = parseISO(leftDate.startDate);
-  const endDate = parseISO(leftDate.endDate);
+  const { titleDate, compareDateValue } = useDate();
+  const startDate = new Date(compareDateValue.startDate);
+  const endDate = new Date(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const getLeftDate = () => {
+  const getcompareDateValue = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(leftDate.startDate).format('DD/MM')}`;
+        return `${dayjs(startDate).format('DD/MM')}`;
       }
-      if (startGetDate === 1 && endGetDate === endOfMonth(leftDate.startDate, 1).getDate()) {
-        return `${format(leftDate.startDate, 'LLL', { locale: enUS })}  -  ${getYear(
-          leftDate.startDate,
-        )}`;
+      if (startGetDate === 1 && endGetDate === endOfMonth(startDate, 1).getDate()) {
+        return `${format(startDate, 'LLL', { locale: enUS })}  -  ${getYear(startDate)}`;
       }
 
-      return `${dayjs(leftDate.startDate).format('DD/MM')} - ${dayjs(leftDate.endDate).format(
-        'DD/MM',
-      )}`;
+      return `${dayjs(startDate).format('DD/MM')} - ${dayjs(endDate).format('DD/MM')}`;
     }
 
     return `${titleDate}`;
@@ -63,7 +59,7 @@ const Marketing = ({ metricsLeft, metricsRight }) => {
         ))}
       </div>
       <TypographyKit variant="h5">
-        <span>{getLeftDate()}</span>
+        <span>{getcompareDateValue()}</span>
         &apos;s
         <span> {getTable()}</span>
       </TypographyKit>

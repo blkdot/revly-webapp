@@ -46,7 +46,6 @@
   box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
     0 2px 4px -1px rgb(145 158 171 / 24%);
   border-radius: 8px;
-  
   th,
   tr,
   td {
@@ -59,6 +58,42 @@
 
     th {
       color: $color-table-th;
+    }
+  }
+}
+
+@media(max-width: 1360px){
+  .planning_offers-table-container.planning_offers-table-container{
+    table{
+      width: 130%;
+    }
+  }
+}
+@media(max-width: 1130px) {
+  .planning_offers-table-container.planning_offers-table-container {
+    table {
+      width: 160%;
+    }
+  }
+}
+@media(max-width: 975px) {
+  .planning_offers-table-container.planning_offers-table-container {
+    table {
+      width: 190%;
+    }
+  }
+}
+@media(max-width: 875px) {
+  .planning_offers-table-container.planning_offers-table-container {
+    table {
+      width: 240%;
+    }
+  }
+}
+@media(max-width: 760px) {
+  .planning_offers-table-container.planning_offers-table-container {
+    table {
+      width: 280%;
     }
   }
 }

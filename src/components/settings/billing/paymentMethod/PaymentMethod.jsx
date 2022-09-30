@@ -1,21 +1,24 @@
 import React from 'react';
 
-import { MoreVert } from '@mui/icons-material';
-
 import './PaymentMethod.scss';
+
+import mastercard from '../../../../assets/images/mastercard.svg';
+import visa from '../../../../assets/images/visa.svg';
 
 const PaymentMethod = (props) => {
   const { cvv, type } = props;
 
   return (
-    <div className="payment-method">
-      <div className="payment-method__text">
-        <img src={type} className="payment-method__text__type" alt="card" />
-        <p className="payment-method__text__cvv">**** **** **** {cvv}</p>
+    <div className={`payment-method __${type}`}>
+      <div className="__text __flex">
+        <img src={type === 'mastercard' ? mastercard : visa} className="__type" alt="card" />
+        <p>{type === 'mastercard' ? 'Mas' : 'Visa'}</p>
       </div>
-      <button type="button" className="payment-method__btn">
-        <MoreVert />
-      </button>
+      <p className="__cvv">{cvv}</p>
+      <div className="__name __flex">
+        <p>NAME</p>
+        <p>MM/YY</p>
+      </div>
     </div>
   );
 };

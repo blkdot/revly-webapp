@@ -16,8 +16,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [severity, setSeverity] = useState('error');
 
   const storageDate = JSON.parse(localStorage.getItem('date')) || {};
-  const [leftDate, setLeft] = useState(
-    storageDate.leftDate || {
+  const [compareDateValue, setLeft] = useState(
+    storageDate.compareDateValue || {
       startDate: startOfWeek(new Date()),
       endDate: new Date(),
     },
@@ -34,14 +34,14 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [vendorsContext, setVendorsContext] = useState({});
 
-  const [leftDateOffers, setLeftDateOffers] = useState(
-    storageDate.leftDateOffers || {
-      startDate: leftDate.startDate,
-      endDate: leftDate.endDate,
+  const [compareDateValueOffers, setcompareDateValueOffers] = useState(
+    storageDate.compareDateValueOffers || {
+      startDate: compareDateValue.startDate,
+      endDate: compareDateValue.endDate,
     },
   );
-  const [titleOffers, setTitleOffers] = useState(titleDate);
-  const [typeDateContext, setTypeDateContext] = useState(storageDate.typeDate);
+  const [titleOffers, setTitleOffers] = useState(storageDate.titleOffers || 'current week');
+  const [typeDateContext, setTypeDateContext] = useState(storageDate.typeDate || 'week');
 
   useEffect(() => {
     if (isShowing) {
@@ -87,7 +87,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         setAlertTheme,
         setAlertMessage,
         showAlert,
-        leftDate,
+        compareDateValue,
         rightDate,
         setLeft,
         setRight,
@@ -99,8 +99,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         triggerAlertWithMessageSuccess,
         restaurants,
         setRestaurants,
-        leftDateOffers,
-        setLeftDateOffers,
+        compareDateValueOffers,
+        setcompareDateValueOffers,
         titleOffers,
         setTitleOffers,
         vendorsContext,

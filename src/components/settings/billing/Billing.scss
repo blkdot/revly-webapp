@@ -3,81 +3,111 @@
 
 .billing {
     display: flex;
-    justify-content: space-between;
-    .billing__card-title {
-        color: rgb(99, 115, 129);
-        font-weight: 700;
-    }
-    .billing__block-1 {
-        width: 65%;
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-start;
+    
+    .__card {
+        border: 1px solid $color-sett-border;
+        padding: 32px;
+        border-radius: 8px;
+        width: 100%;
 
-        .billing__payment, .billing__info {
-            margin: 13px 0;
-            padding: 15px;
+        .billing__card-title {
+            color: $color-second-third;
+            font-weight: 600;
+            text-transform: capitalize;
+            font-size: 16px;
         }
 
+        .billing__card-subtitle {
+            font-size: 16px;
+            font-weight: 400;
+            color: $color-table-th;
+            margin: 1em 0;
+        }
+    }
+
         .billing__plan {
-            padding: 15px;
             .billing__plan__flex {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
+                margin: 2.8em 0 0 0;
+                padding: 12px 30px;
+                background-color: #F9FAFB;
+                border-radius: 8px;
             }
 
-            .billing__plan__flex__text {
-                font-weight: 700;
-                font-size: 25px;
-                margin-top: 20px;
+            .__block {
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                .__img-block {
+                    background-color: rgba(145, 158, 171, 0.24);
+                    border-radius: 50%;
+                    width: 48px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 48px;
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+                .__text {
+                    font-weight: 700;
+                    font-size: 20px;
+                    color: $color-second-third;
+                }
             }
 
             .billing__plan__flex__btn {
-                .billing__plan__flex__btn__upgrade {
-                    border: 1px solid $color-green;
-                    color: $color-green;
-                }
+                display: flex;
+                gap: 16px;
             }
         }
 
         .billing__payment {
             .billing__payment__flex {
                 display: flex;
-                justify-content: space-between;
+                align-items: stretch;
+                gap: 15px;
+                margin-top: 3em;
+
+                .__btn-add {
+                    width: 326px;
+                    background-color: #F4F6F8;
+                    color: $color-input-border;
+                    font-size: 15px;
+                }
             }
         }
-    }
 
     .billing__invoice {
-        width: 30%;
-
-        .billing__invoice__btn-next {
+        .__flex {
             display: flex;
-            justify-content: flex-end;
-            margin: 25px 0;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10.5px;
         }
+         .__btn {
+            height: 50px;
+         }
     }
-}
 
-@include mobileBreakpoint {
-    .billing {
-        display: block;
-        .billing__block-1, .billing__invoice {
+    .billing__info {
+        .__btn-add {
             width: 100%;
+            background-color: #F4F6F8;
+            height: 72px;
+            font-size: 15px;
+            color: $color-table-th;
         }
 
-        .billing__block-1 {
-            .billing__payment {
-                .billing__payment__flex {
-                    display: block;
-                }
-            }
-
-            .billing__plan {
-                .billing__plan__flex {
-                    display: block;
-                    .billing__plan__flex__btn {
-                        margin-top: 15px;
-                    }
-                }
-            }
+        .__info-block {
+            margin-top: 2.8em;
         }
     }
 }

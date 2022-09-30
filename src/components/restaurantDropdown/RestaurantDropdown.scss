@@ -96,3 +96,48 @@
   left: 4px;
   top: 2px;
 }
+
+#restaurant_dropdown_menu {
+  border-radius: 12px;
+  overflow: visible;
+  top: 95px !important;
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
+  border: 1px solid rgba(145, 158, 171, 0.32);
+
+  >ul {
+    border-radius: 12px;
+    background-color: #fff;
+    &::after {
+      border: 1px solid rgba(145, 158, 171, 0.32);
+      top: -7px;
+      background-color: #fff;
+      right: 15px;
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      transform: rotate(45deg);
+      box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
+    }
+
+    &::before {
+      z-index: 1;
+      top: 0px;
+      background-color: #fff;
+      right: 10px;
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 20px;
+    }
+
+    >li {
+      background-color: #fff;
+
+      >div>span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
