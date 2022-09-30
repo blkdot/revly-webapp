@@ -4,7 +4,7 @@ import useApi from './useApi';
 import useDate from './useDate';
 
 function useMarketingOffers() {
-  const { leftDateOffers, restaurants } = useDate();
+  const { compareDateValueOffers, restaurants } = useDate();
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
   const handleRequest = () => {
@@ -13,8 +13,8 @@ function useMarketingOffers() {
       master_email: 'chiekh.alloul@gmail.com',
       access_token: '',
       vendors: restaurants,
-      start_date: dayjs(leftDateOffers.startDate).format('YYYY-MM-DD'),
-      end_date: dayjs(leftDateOffers.endDate).format('YYYY-MM-DD'),
+      start_date: dayjs(compareDateValueOffers.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(compareDateValueOffers.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
       const offersArr = [];
       if (!isCancelled) {
@@ -29,7 +29,7 @@ function useMarketingOffers() {
 
   useMemo(() => {
     handleRequest();
-  }, [leftDateOffers, restaurants]);
+  }, [compareDateValueOffers, restaurants]);
 
   return { offers };
 }
