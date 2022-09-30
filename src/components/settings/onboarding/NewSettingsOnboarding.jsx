@@ -163,7 +163,8 @@ const NewSettingsOnboarding = () => {
     ));
 
   return (
-    <div>
+    <div className="settings-onboarding">
+      <p className="__title">Your Connected Apps</p>
       {renderPlatform()}
       <ModalKit
         open={isOpenModal}
