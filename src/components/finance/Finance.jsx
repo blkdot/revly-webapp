@@ -8,16 +8,16 @@ import Table from '../table/Table';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
 
-const Finance = ({ metricsLeft, metricsRight, vendors }) => {
+const Finance = ({ metricsDateFrom, metricsCompareDateValue, vendors }) => {
   const [table, setTable] = useState('revenue');
-  const { titleDate, compareDateValue, restaurants } = useDate();
-  const startDate = new Date(compareDateValue.startDate);
-  const endDate = new Date(compareDateValue.endDate);
+  const { titleDate, dateFromContext, restaurants } = useDate();
+  const startDate = new Date(dateFromContext.startDate);
+  const endDate = new Date(dateFromContext.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const getcompareDateValue = () => {
+  const getdateFrom = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
@@ -46,7 +46,7 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
   return (
     <div className="block">
       <TypographyKit variant="h4">
-        <span>{getcompareDateValue()} </span>
+        <span>{getdateFrom()} </span>
         results for{' '}
         {restaurants.length === vendors.length || restaurants.length === 0 ? (
           <p>
@@ -64,19 +64,24 @@ const Finance = ({ metricsLeft, metricsRight, vendors }) => {
             setTable={setTable}
             key={info}
             title={info}
-            metricsLeft={metricsLeft}
-            metricsRight={metricsRight}
+            metricsDateFrom={metricsDateFrom}
+            metricsCompareDateValue={metricsCompareDateValue}
           />
         ))}
       </div>
       <TypographyKit variant="h5">
-        <span>{getcompareDateValue()}</span>
+        <span>{getdateFrom()}</span>
         &apos;s
         <span> {getTable()}</span>
       </TypographyKit>
       {['revenue', 'n_orders', 'average_basket', 'profit'].map((info) =>
         info === table ? (
-          <Table key={info} title={info} metricsLeft={metricsLeft} metricsRight={metricsRight} />
+          <Table
+            key={info}
+            title={info}
+            metricsDateFrom={metricsDateFrom}
+            metricsCompareDateValue={metricsCompareDateValue}
+          />
         ) : (
           ''
         ),

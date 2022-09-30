@@ -222,6 +222,95 @@
 
   .competition-textfield.competition-textfield {
     width: 170px !important;
-    
+
   }
+}
+
+@media(max-width: 900px) {
+  .competitor-overlay {
+    .competition-add.competition-add {
+      width: fit-content !important;
+    }
+  }
+}
+
+@media(max-width: 800px) {
+  .competitor-overlay {
+    .competitor-inputs {
+      >span {
+        font-size: 18px;
+      }
+
+      >div {
+        justify-content: flex-start;
+        grid-gap: 15px;
+      }
+    }
+
+    .competitor-paper.competitor-paper {
+      width: 100%;
+
+      .competitor-top-text {
+        font-size: 20px;
+      }
+
+      .competitor-top-text-span {
+        font-size: 16px;
+      }
+    }
+
+    .competition-textfield.competition-textfield {
+      width: 280px !important;
+      margin: 0;
+    }
+
+    .competitor-dropdown.competitor-dropdown {
+      width: 280px;
+      margin: 0;
+
+      >div {
+        width: 280px;
+
+      }
+    }
+  }
+}
+@media(max-width: 660px){
+  .competitor-overlay {
+    .competitor-inputs{
+      margin-top: 60px;
+    }
+        .competition-textfield.competition-textfield {
+        width: 200px !important;
+      }
+  
+      .competitor-dropdown.competitor-dropdown {
+        width: 200px;
+  
+        >div {
+          width: 200px;
+  
+        }
+      }
+    }
+}
+@media(max-width: 495px){
+  .competitor-overlay {
+      .competitor-inputs {
+        margin-top: 60px;
+      }
+  
+      .competition-textfield.competition-textfield {
+        width: 100% !important;
+      }
+  
+      .competitor-dropdown.competitor-dropdown {
+        width: 100%;
+  
+        >div {
+          width: 100%;
+  
+        }
+      }
+    }
 }

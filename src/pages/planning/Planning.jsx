@@ -5,6 +5,7 @@ import PlanningOffersTable from '../../components/planningOffersTable/PlanningOf
 import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import { PlanningAdsData } from '../../data/fakeDataDashboard';
+import useDate from '../../hooks/useDate';
 import useMarketingOffers from '../../hooks/useMarketingOffers';
 import useVendors from '../../hooks/useVendors';
 import TypographyKit from '../../kits/typography/TypographyKit';
@@ -12,7 +13,12 @@ import './Planning.scss';
 
 const Planning = () => {
   const [active, setActive] = useState(true);
-  const { offers } = useMarketingOffers();
+  const { dateFromContext: dateFrom } = useDate();
+  const [dateFromBtn, setDateFromBtn] = useState({
+    startDate: dateFrom.startDate,
+    endDate: dateFrom.endDate,
+  });
+  const { offers } = useMarketingOffers({ dateFromBtn });
   const { vendors, vendorsPlatform } = useVendors();
   const getOffersTable = () => {
     if (offers.length === 0) {
@@ -24,7 +30,7 @@ const Planning = () => {
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates />
+        <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
       </div>
       <div className={`planning_top-nav ${!active ? 'active' : ''}`}>
         <TypographyKit

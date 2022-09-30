@@ -10,11 +10,17 @@ import CompetitionTable from '../../components/competitonTable/CompetitionTable'
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import { competitionRankingData } from '../../data/fakeDataCompetition';
+import useDate from '../../hooks/useDate';
 
 const CompetitionRanking = () => {
   const { vendors, vendorsPlatform } = useVendors();
   const [opened, setOpened] = useState(false);
   const [platform, setPlatform] = useState('');
+  const { dateFromContext: dateFrom } = useDate();
+  const [dateFromBtn, setDateFromBtn] = useState({
+    startDate: dateFrom.startDate,
+    endDate: dateFrom.endDate,
+  });
   const Open = () => {
     setOpened(!opened);
     const body = document.querySelector('body');
@@ -28,7 +34,7 @@ const CompetitionRanking = () => {
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates />
+        <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
         Competition - Ranking

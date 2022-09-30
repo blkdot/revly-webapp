@@ -1,3 +1,41 @@
-.planning-platform{
+.planning-box {
+  padding: 0 15px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 2px rgb(145 158 171 / 20%), 0px 12px 24px -4px rgb(145 158 171 / 12%);
+
+}
+
+.planning-platform {
   width: 50px;
+}
+@media(max-width: 1400px){
+  .planning-table-container.planning-table-container{
+    width: 130% !important;
+  }
+}
+@media(max-width: 1260px) {
+  .planning-table-container.planning-table-container {
+    width: 160% !important;
+  }
+}
+@media(max-width: 1190px) {
+  .planning-table-container.planning-table-container {
+    width: 190% !important;
+  }
+}
+@media(max-width: 975px) {
+  .planning-table-container.planning-table-container {
+    width: 230% !important;
+  }
+}
+@media(max-width: 870px) {
+  .planning-table-container.planning-table-container {
+    width: 275% !important;
+  }
+}
+@media(max-width: 780px) {
+  .planning-table-container.planning-table-container {
+    width: 300% !important;
+  }
 }
