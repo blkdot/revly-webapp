@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Add, NavigateNext } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 
 import './Billing.scss';
 
-import mastercard from '../../../assets/images/mastercard.svg';
-import visa from '../../../assets/images/visa.svg';
+import smallLogo from '../../../assets/images/small-logo.png';
 
-import PaperKit from '../../../kits/paper/PaperKit';
 import ButtonKit from '../../../kits/button/ButtonKit';
 
 import AddPaymentForm from '../../forms/addPaymentForm/AddPaymentForm';
@@ -57,45 +55,73 @@ const Billing = () => {
 
   return (
     <div className="billing">
-      <div className="billing__block-1">
-        <PaperKit className="billing__plan">
-          <div className="billing__plan__flex">
-            <div>
-              <p className="billing__card-title">YOUR PLAN</p>
-              <p className="billing__plan__flex__text">Premium</p>
+      <div className="billing__plan __card">
+        <p className="billing__card-title">Your plan</p>
+        <p className="billing__card-subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.{' '}
+        </p>
+        <div className="billing__plan__flex">
+          <div className="__block">
+            <div className="__img-block">
+              <img src={smallLogo} alt="logo" />
             </div>
-            <div className="billing__plan__flex__btn">
-              <ButtonKit style={{ marginRight: 10 }} size="small" variant="outlined">
-                Cancel Plan
-              </ButtonKit>
-              <ButtonKit
-                className="billing__plan__flex__btn__upgrade"
-                size="small"
-                variant="outlined">
-                Upgrade Plan
-              </ButtonKit>
-            </div>
+            <p className="__text">Premium Plan</p>
           </div>
-        </PaperKit>
-        <PaperKit className="billing__payment">
-          <p className="billing__card-title">PAYMENT METHOD</p>
-          <div className="billing__payment__flex">
-            <PaymentMethod type={mastercard} cvv="1234" />
-            <PaymentMethod type={visa} cvv="1234" />
+          <div className="billing__plan__flex__btn">
+            <ButtonKit variant="outlined">Cancel Plan</ButtonKit>
+            <ButtonKit variant="contained">Upgrade Plan</ButtonKit>
           </div>
-          <ButtonKit onClick={() => addMethod('card')} startIcon={<Add />}>
+        </div>
+      </div>
+      <div className="billing__invoice __card">
+        <div className="__flex">
+          <div>
+            <p className="billing__card-title">Invoice History</p>
+            <p className="billing__card-subtitle">
+              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+              vivamus risus.
+            </p>
+          </div>
+          <div className="__btn">
+            <ButtonKit variant="contained">All invoices</ButtonKit>
+          </div>
+        </div>
+        <Invoice date="8/16/13" amount="28.9 $" />
+        <Invoice date="8/16/13" amount="28.9 $" />
+        <Invoice date="8/16/13" amount="28.9 $" />
+      </div>
+      <div className="billing__payment __card">
+        <p className="billing__card-title"> your payment methods</p>
+        <p className="billing__card-subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.{' '}
+        </p>
+        <div className="billing__payment__flex">
+          <PaymentMethod type="mastercard" cvv="0000 0000 0000 0000" />
+          <PaymentMethod type="visa" cvv="0000 0000 0000 0000" />
+          <ButtonKit
+            className="__btn-add"
+            onClick={() => addMethod('card')}
+            startIcon={<Add fontSize="large" />}>
             Add New Card
           </ButtonKit>
-          <AddPaymentForm
-            visible={showAddForm.card}
-            handleInputChange={handleInputChange}
-            onCancel={() => {
-              setShowAddForm({ ...showAddForm, card: false });
-            }}
-          />
-        </PaperKit>
-        <PaperKit className="billing__info">
-          <p className="billing__card-title">BILLING INFO</p>
+        </div>
+        <AddPaymentForm
+          visible={showAddForm.card}
+          handleInputChange={handleInputChange}
+          onCancel={() => {
+            setShowAddForm({ ...showAddForm, card: false });
+          }}
+        />
+      </div>
+      <div className="billing__info __card">
+        <p className="billing__card-title">Your billing Information</p>
+        <p className="billing__card-subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.{' '}
+        </p>
+        <div className="__info-block">
           {infos.map((v, i) => (
             <Info
               onDelete={() => onAddressDelete(i)}
@@ -105,35 +131,26 @@ const Billing = () => {
               phone={v.phone}
             />
           ))}
-          <ButtonKit
-            style={{ marginTop: 8 }}
-            onClick={() => addMethod('address')}
-            startIcon={<Add />}>
-            Add New Address
-          </ButtonKit>
-          <AddAddressForm
-            nameValue={inputValue.name}
-            phoneValue={inputValue.phone}
-            addressValue={inputValue.address}
-            visible={showAddForm.address}
-            handleInputChange={handleInputChange}
-            onCancel={() => {
-              setShowAddForm({ ...showAddForm, address: false });
-              resetAddress();
-            }}
-            onSaveChange={onSaveAddress}
-          />
-        </PaperKit>
-      </div>
-      <div className="billing__invoice">
-        <p style={{ marginBottom: '2rem', fontWeight: '600' }}>Invoice History</p>
-        <Invoice date="4 September 2022" amount="$28.9" />
-        <Invoice date="4 September 2022" amount="$28.9" />
-        <div className="billing__invoice__btn-next">
-          <ButtonKit size="small" endIcon={<NavigateNext />}>
-            All invoices
-          </ButtonKit>
         </div>
+        <ButtonKit
+          style={{ marginTop: 8 }}
+          className="__btn-add"
+          onClick={() => addMethod('address')}
+          startIcon={<Add />}>
+          Add New Address
+        </ButtonKit>
+        <AddAddressForm
+          nameValue={inputValue.name}
+          phoneValue={inputValue.phone}
+          addressValue={inputValue.address}
+          visible={showAddForm.address}
+          handleInputChange={handleInputChange}
+          onCancel={() => {
+            setShowAddForm({ ...showAddForm, address: false });
+            resetAddress();
+          }}
+          onSaveChange={onSaveAddress}
+        />
       </div>
     </div>
   );

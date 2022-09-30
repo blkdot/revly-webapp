@@ -63,6 +63,7 @@ const SigninForm = (props) => {
           <TextfieldKit
             label="Email address"
             onBlur={() => onBlur('email')}
+            required
             fullWidth
             onChange={({ target }) => onChangeEmail(target.value)}
             error={errorEmail}
@@ -70,6 +71,7 @@ const SigninForm = (props) => {
         </div>
         <div className="__block-field">
           <TextfieldKit
+            required
             label="Password"
             onBlur={() => onBlur('password')}
             type={showPassword ? 'text' : 'password'}

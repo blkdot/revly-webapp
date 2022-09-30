@@ -2,14 +2,23 @@ import React from 'react';
 
 import './Invoice.scss';
 
+import icinvoice from '../../../../assets/images/ic_invoice.png';
+
+import ButtonKit from '../../../../kits/button/ButtonKit';
+
 const Invoice = (props) => {
   const { date, amount } = props;
 
   return (
     <div className="invoice">
-      <p className="invoice__date">{date}</p>
+      <div className="__flex">
+        <div className="__img-block">
+          <img src={icinvoice} alt="invoice" />
+        </div>
+        <p>{date}</p>
+      </div>
       <p>{amount}</p>
-      <p className="invoice__link">PDF</p>
+      <ButtonKit variant="contained">Download</ButtonKit>
     </div>
   );
 };
