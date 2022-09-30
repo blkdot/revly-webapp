@@ -5,7 +5,7 @@
   flex-direction: column;
   border-radius: 0.4rem;
   background-color: $color-third;
-  margin: 0.5rem auto;
+  margin: 1rem auto;
   box-shadow: 0 0 1px 0 #919eab7a, 0 2px 4px -1px #919eab3d;
 
   .platform-settings-box__content {
@@ -26,12 +26,23 @@
       align-self: center;
       width: 100%;
       margin-left: 0.5rem;
-      color: $color-arrow;
+      color: $color-second-third;
+      font-weight: 600;
+      font-size: 14px;
     }
 
     .__content__switch {
       width: 100px;
       align-self: center;
+      display: flex;
+      align-items: center;
+      margin-right: 2em;
+
+      span {
+        font-weight: 400;
+        font-size: 14px;
+        color: $color-second-third
+      }
     }
   }
 

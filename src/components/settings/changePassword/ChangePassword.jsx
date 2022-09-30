@@ -5,7 +5,6 @@ import { updatePassword } from 'firebase/auth';
 import './ChangePassword.scss';
 
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-import PaperKit from '../../../kits/paper/PaperKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 
 import { useAlert } from '../../../hooks/useAlert';
@@ -130,9 +129,10 @@ const ChangePassword = () => {
   );
 
   return (
-    <PaperKit className="change-password" elevation={0}>
+    <div className="change-password">
+      <p className="__title">Type your current password to change it</p>
       {renderForm()}
-    </PaperKit>
+    </div>
   );
 };
 

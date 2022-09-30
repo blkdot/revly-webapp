@@ -34,6 +34,7 @@ const PlatformSettingsBox = (props) => {
           <span>Connect your {pascalCase(type)} account to your Revly account</span>
         </div>
         <div className="__content__switch">
+          <span>{active ? 'Active' : 'Inactive'}</span>
           <SwitchKit checked={active} onChange={({ target }) => onChangeSwitch(target.checked)} />
         </div>
         {renderFooter()}
