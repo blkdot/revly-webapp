@@ -19,22 +19,24 @@ import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
 import PaperKit from '../../kits/paper/PaperKit';
 
-const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
-  const { titleRightDate, rightDate } = useDate();
-  const startDate = parseISO(rightDate.startDate);
-  const endDate = parseISO(rightDate.endDate);
+const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateValue }) => {
+  const { titlecompareDateValue, compareDateValueContext: compareDateValue } = useDate();
+  const startDate = parseISO(compareDateValue.startDate);
+  const endDate = parseISO(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
   const procent = () => {
-    if (metricsLeft[0] && metricsRight[0]) {
-      if (Number(metricsRight[0][1][title]) === 0) {
+    if (metricsDateFrom[0] && metricsCompareDateValue[0]) {
+      if (Number(metricsCompareDateValue[0][1][title]) === 0) {
         return 0;
       }
 
       return Number(
-        (metricsLeft[0][1][title] / (metricsRight[0][1][title] / 100) - 100).toFixed(2),
+        (metricsDateFrom[0][1][title] / (metricsCompareDateValue[0][1][title] / 100) - 100).toFixed(
+          2,
+        ),
       );
     }
     return '-';
@@ -51,26 +53,26 @@ const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
     }
     return title;
   };
-  const getRightDate = () => {
-    if (titleRightDate === 'custom') {
+  const getcompareDateValue = () => {
+    if (titlecompareDateValue === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(rightDate.startDate).format('DD/MM')}`;
+        return `${dayjs(compareDateValue.startDate).format('DD/MM')}`;
       }
       if (
         startGetDate === 1 &&
-        endGetDate === endOfMonth(parseISO(rightDate.startDate), 1).getDate()
+        endGetDate === endOfMonth(parseISO(compareDateValue.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(rightDate.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
-          parseISO(rightDate.startDate),
-        )}`;
+        return `${format(parseISO(compareDateValue.startDate), 'LLL', {
+          locale: enUS,
+        })}  -  ${getYear(parseISO(compareDateValue.startDate))}`;
       }
 
-      return `${dayjs(rightDate.startDate).format('DD/MM')} - ${dayjs(rightDate.endDate).format(
-        'DD/MM',
-      )}`;
+      return `${dayjs(compareDateValue.startDate).format('DD/MM')} - ${dayjs(
+        compareDateValue.endDate,
+      ).format('DD/MM')}`;
     }
 
-    return `${titleRightDate}`;
+    return `${titlecompareDateValue}`;
   };
   const getIcon = () => {
     if (title === 'reveunue') {
@@ -107,7 +109,7 @@ const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
               {getTitle()}
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
-              {metricsLeft[0][1][title] !== null ? metricsLeft[0][1][title] : '-'}
+              {metricsDateFrom[0][1][title] !== null ? metricsDateFrom[0][1][title] : '-'}
             </TypographyKit>
           </div>
           <TypographyKit className="card-typography card-icon">{getIcon()}</TypographyKit>
@@ -131,7 +133,7 @@ const Widget = ({ title, setTable, table, metricsLeft, metricsRight }) => {
             {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
           </TypographyKit>
           <TypographyKit className="card-week" variant="body3">
-            than {getRightDate()}
+            than {getcompareDateValue()}
           </TypographyKit>
         </div>
       </CardContentKit>

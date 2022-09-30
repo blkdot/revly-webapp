@@ -13,6 +13,7 @@ import CuisineIcon from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import lines from '../../assets/images/lines.png';
 import loadingImage from '../../assets/images/loading-image.png';
+import contryData from '../../data/country.json';
 
 const Competitor = ({ open, opened }) => {
   const [restaurant, setRestaurant] = useState('');
@@ -22,6 +23,8 @@ const Competitor = ({ open, opened }) => {
   const [country, setCountry] = useState('');
   const [cuisineFilter, setCuisineFilter] = useState('');
   const [loading, setLoading] = useState(false);
+  const countryArr = [];
+  contryData.forEach((obj) => countryArr.push(obj.name));
   const submit = (e) => {
     e.preventDefault();
     const data = {
@@ -90,7 +93,7 @@ const Competitor = ({ open, opened }) => {
                       setRow={setCountry}
                       title="Country"
                       className="competitor-dropdown"
-                      rows={['USA', 'Kyrgystan']}
+                      rows={countryArr}
                       select={country}
                     />
                     <CompetitionDropdown

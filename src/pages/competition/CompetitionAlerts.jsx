@@ -11,12 +11,18 @@ import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import { competitionAlertsData } from '../../data/fakeDataCompetition';
+import useDate from '../../hooks/useDate';
 
 const CompetitionAlerts = () => {
   const { vendors, vendorsPlatform } = useVendors();
   const [opened, setOpened] = useState(false);
   const [platform, setPlatform] = useState('');
   const [competitor, setCompetitor] = useState('');
+  const { dateFromContext: dateFrom } = useDate();
+  const [dateFromBtn, setDateFromBtn] = useState({
+    startDate: dateFrom.startDate,
+    endDate: dateFrom.endDate,
+  });
   const Open = () => {
     setOpened(!opened);
     const body = document.querySelector('body');
@@ -30,7 +36,7 @@ const CompetitionAlerts = () => {
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates />
+        <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
         Competition - Alerts
@@ -40,7 +46,7 @@ const CompetitionAlerts = () => {
         vivamus risus.
       </TypographyKit>
       <PaperKit className="competition-paper">
-        <div className="competition-top-input">
+        <div className="competition-top-input alerts-top-inputs">
           <div className="competition-dropdowns">
             <CompetitionDropdown
               rows={['talabat', 'deliveroo']}

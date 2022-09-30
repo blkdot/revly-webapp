@@ -4,10 +4,10 @@ import useApi from './useApi';
 import useDate from './useDate';
 
 function useMetrics() {
-  const { compareDateValue, rightDate, vendorsContext } = useDate();
+  const { dateFromContext, compareDateValueContext, vendorsContext } = useDate();
   const { getMetrics } = useApi();
-  const [metricsLeft, setMetricsLeft] = useState([]);
-  const [metricsRight, setMetricsRight] = useState([]);
+  const [metricsDateFrom, setMetricsDateFrom] = useState([]);
+  const [metricsCompareDateValue, setMetricsCompareDateValue] = useState([]);
 
   const handleRequest = (date, setMetrics) => {
     let isCancelled = false;
@@ -39,14 +39,14 @@ function useMetrics() {
     };
   };
   useMemo(() => {
-    handleRequest(rightDate, setMetricsRight);
-  }, [rightDate, vendorsContext]);
+    handleRequest(compareDateValueContext, setMetricsCompareDateValue);
+  }, [compareDateValueContext, vendorsContext]);
 
   useMemo(() => {
-    handleRequest(compareDateValue, setMetricsLeft);
-  }, [compareDateValue, vendorsContext]);
+    handleRequest(dateFromContext, setMetricsDateFrom);
+  }, [dateFromContext, vendorsContext]);
 
-  return { metricsLeft, metricsRight };
+  return { metricsDateFrom, metricsCompareDateValue };
 }
 
 export default useMetrics;

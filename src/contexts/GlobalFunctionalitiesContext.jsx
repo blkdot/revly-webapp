@@ -16,31 +16,25 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [severity, setSeverity] = useState('error');
 
   const storageDate = JSON.parse(localStorage.getItem('date')) || {};
-  const [compareDateValue, setLeft] = useState(
-    storageDate.compareDateValue || {
+  const [dateFromContext, setDateFromContext] = useState(
+    storageDate.dateFrom || {
       startDate: startOfWeek(new Date()),
       endDate: new Date(),
     },
   );
-  const [rightDate, setRight] = useState(
-    storageDate.rightDate || {
+  const [compareDateValueContext, setCompareDateValueContext] = useState(
+    storageDate.compareDateValue || {
       startDate: startOfWeek(subWeeks(new Date(), 1)),
       endDate: endOfWeek(subWeeks(new Date(), 1)),
     },
   );
   const [titleDate, setTitleDate] = useState(storageDate.titleDate || 'current week');
-  const [titleRightDate, setTitleRightDate] = useState(storageDate.titleRightDate || 'last week');
+  const [titlecompareDateValue, setTitlecompareDateValue] = useState(
+    storageDate.titlecompareDateValue || 'last week',
+  );
 
   const [restaurants, setRestaurants] = useState([]);
   const [vendorsContext, setVendorsContext] = useState({});
-
-  const [compareDateValueOffers, setcompareDateValueOffers] = useState(
-    storageDate.compareDateValueOffers || {
-      startDate: compareDateValue.startDate,
-      endDate: compareDateValue.endDate,
-    },
-  );
-  const [titleOffers, setTitleOffers] = useState(storageDate.titleOffers || 'current week');
   const [typeDateContext, setTypeDateContext] = useState(storageDate.typeDate || 'week');
 
   useEffect(() => {
@@ -87,22 +81,18 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         setAlertTheme,
         setAlertMessage,
         showAlert,
-        compareDateValue,
-        rightDate,
-        setLeft,
-        setRight,
+        dateFromContext,
+        compareDateValueContext,
+        setDateFromContext,
+        setCompareDateValueContext,
         setTitleDate,
         titleDate,
-        setTitleRightDate,
-        titleRightDate,
+        setTitlecompareDateValue,
+        titlecompareDateValue,
         triggerAlertWithMessageError,
         triggerAlertWithMessageSuccess,
         restaurants,
         setRestaurants,
-        compareDateValueOffers,
-        setcompareDateValueOffers,
-        titleOffers,
-        setTitleOffers,
         vendorsContext,
         setVendorsContext,
         typeDateContext,
