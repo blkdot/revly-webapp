@@ -8,7 +8,7 @@ import {
 
 import { getMetrics, getVendors } from '../api/userApi';
 
-import { getOffers } from '../api/marketingApi';
+import { getOffers, getAds } from '../api/planningApi';
 
 const useApi = () => ({
   settingsOnboardPlatform,
@@ -19,6 +19,7 @@ const useApi = () => ({
   settingsSave,
   getOffers,
   getVendors,
+  getAds,
 });
 
 export default useApi;

@@ -1,24 +1,28 @@
-import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
+import dayjs from 'dayjs';
 import useApi from './useApi';
 import useDate from './useDate';
+import config from '../setup/config';
+import { useUserAuth } from '../contexts/AuthContext';
 
 function useMetrics() {
   const { dateFromContext, compareDateValueContext, vendorsContext } = useDate();
   const { getMetrics } = useApi();
   const [metricsDateFrom, setMetricsDateFrom] = useState([]);
   const [metricsCompareDateValue, setMetricsCompareDateValue] = useState([]);
+  const { environment } = config;
+  const { user } = useUserAuth();
 
   const handleRequest = (date, setMetrics) => {
     let isCancelled = false;
     const keys = Object.keys(vendorsContext);
     keys.forEach((name) => {
-      if (vendorsContext[name].length === 0) {
+      if (!vendorsContext[name] || vendorsContext[name].length === 0) {
         delete vendorsContext[name];
       }
     });
     getMetrics({
-      master_email: 'chiekh.alloul@gmail.com',
+      master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
       vendors: vendorsContext,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
