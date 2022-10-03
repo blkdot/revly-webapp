@@ -75,7 +75,7 @@ const Billing = () => {
         </div>
       </div>
       <div className="billing__invoice __card">
-        <div className="__flex">
+        <div className="__flex __head">
           <div>
             <p className="billing__card-title">Invoice History</p>
             <p className="billing__card-subtitle">
