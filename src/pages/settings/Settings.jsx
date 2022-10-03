@@ -26,6 +26,12 @@ const Settings = () => {
         </div>
       ),
       component: <General />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
     },
     {
       value: 'billing',
@@ -44,6 +50,12 @@ const Settings = () => {
         </div>
       ),
       component: <NewSettingsOnboarding />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
     },
     {
       value: 'change password',
@@ -53,6 +65,12 @@ const Settings = () => {
         </div>
       ),
       component: <ChangePassword />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
     },
   ];
 
@@ -64,10 +82,6 @@ const Settings = () => {
     <div className="setting-account">
       <TypographyKit fontSize="32px" color="#212B36" fontWeight="700" variant="h4">
         Settings - {currentTab.charAt(0).toUpperCase() + currentTab.slice(1)}
-      </TypographyKit>
-      <TypographyKit mt={1.3} lineHeight="24px" fontSize="16px" color="#637381" fontWeight="400">
-        Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-        vivamus risus.
       </TypographyKit>
       <div className="__content">
         <TabsKit
@@ -91,7 +105,14 @@ const Settings = () => {
         <BoxKit sx={{ mb: 5 }} />
         {ACCOUNT_TABS.map((tab) => {
           const isMatched = tab.value === currentTab;
-          return isMatched && <BoxKit key={tab.value}>{tab.component}</BoxKit>;
+          return (
+            isMatched && (
+              <div key={tab.value}>
+                {tab.subtitle || null}
+                <BoxKit key={tab.value}>{tab.component}</BoxKit>
+              </div>
+            )
+          );
         })}
       </div>
     </div>

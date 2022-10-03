@@ -91,9 +91,14 @@
             align-items: center;
             justify-content: space-between;
             gap: 10.5px;
+
+            &.__head {
+                padding-right: 30px;
+            }
         }
          .__btn {
             height: 50px;
+            position: relative;
          }
     }
 
