@@ -1,35 +1,47 @@
 import { useMemo, useState } from 'react';
 import useApi from './useApi';
 import useDate from './useDate';
+import config from '../setup/config';
+import { useUserAuth } from '../contexts/AuthContext';
+import { platformList } from '../data/platformList';
 
 function useVendors() {
   const { setRestaurants, setVendorsContext } = useDate();
-  const { getVendors } = useApi();
   const [vendors, setVendors] = useState([]);
   const [vendorsPlatform, setVendorsPlatform] = useState([]);
+  const { getVendors } = useApi();
+  const { environment } = config;
+  const { user } = useUserAuth();
+
+  const requestVendorsDefaultParam = {
+    master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+    access_token: user.accessToken,
+  };
+
   const handleRequest = () => {
     let isCancelled = false;
-    getVendors({
-      master_email: 'chiekh.alloul@gmail.com',
-      access_token: '',
-    }).then((data) => {
-      if (!isCancelled) {
-        const newData = data.data;
-        delete newData?.master_email;
-        const entries = Object.entries(newData);
-        const newVendors = [];
-        entries.forEach((el) => {
-          el[1].forEach((obj) => newVendors.push({ ...obj, platform: el[0] }));
-        });
-        const newRestaurants = [];
-        entries.forEach((el) => {
-          el[1].forEach((obj) => newRestaurants.push(obj.data.vendor_name));
-        });
-        setRestaurants(newRestaurants);
-        setVendorsContext(newData);
-        setVendorsPlatform(Object.keys(newData));
-        setVendors(newVendors);
-      }
+    getVendors(requestVendorsDefaultParam).then((data) => {
+      if (isCancelled) return;
+
+      const newData = data.data;
+
+      delete newData?.master_email;
+
+      platformList
+        .filter((p) => {
+          if (!newData[p.name]) delete newData[p.name];
+
+          return newData[p.name];
+        })
+        .flatMap((p) =>
+          newData[p.name].forEach((v) => {
+            setVendors((cur) => [...cur, { ...v, platform: p.name }]);
+            setRestaurants((cur) => [...cur, v.data.vendor_name]);
+          }),
+        );
+
+      setVendorsContext(newData);
+      setVendorsPlatform(Object.keys(newData));
     });
     return () => {
       isCancelled = true;

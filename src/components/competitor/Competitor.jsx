@@ -35,6 +35,8 @@ const Competitor = ({ open, opened }) => {
       country,
       cuisineFilter,
     };
+    // TODO: fix this code
+    // eslint-disable-next-line no-console
     console.log(data);
     setLoading(true);
   };
