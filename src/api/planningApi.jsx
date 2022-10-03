@@ -12,4 +12,10 @@ export const getOffers = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const getAds = (body) =>
+  axios
+    .post(`${apiUrl}/planning/ads`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+
 export const _ = () => null;

@@ -19,6 +19,7 @@ import TableBodyKit from '../../kits/tablebody/TableBodyKit';
 import useDate from '../../hooks/useDate';
 import talabat from '../../assets/images/talabat.png';
 import deliveroo from '../../assets/images/deliveroo.png';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const EnhancedTableHead = ({ headCells }) => (
   <TableHeadKit className="table-head">
@@ -39,6 +40,7 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
     titleDate,
     dateFromContext: dateFrom,
   } = useDate();
+  const { userPlatformData } = usePlatform();
 
   const startDate = parseISO(dateFrom.startDate);
   const endDate = parseISO(dateFrom.endDate);
@@ -203,44 +205,48 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
           <TableKit className="table" aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead headCells={headCells} />
             <TableBodyKit className="table-body">
-              <TableRowKit tabIndex={-1} className="table-row">
-                <TableCellKit component="th" id={0} scope="row">
-                  <img
-                    className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
-                    src={deliveroo}
-                    alt={title}
-                  />
-                </TableCellKit>
-                <TableCellKit>{getNum(metricsDateFrom[1])}</TableCellKit>
-                <TableCellKit>{getNum(metricsCompareDateValue[1])}</TableCellKit>
-                <TableCellKit>
-                  <div
-                    className={`table_evolution ${
-                      procentDeliveroo() > 0 ? 'table_increased' : ''
-                    } ${procentDeliveroo() < 0 ? 'table_decreased' : ''}`}>
-                    <span>{evolution(procentDeliveroo())}</span>
-                  </div>
-                </TableCellKit>
-              </TableRowKit>
-              <TableRowKit tabIndex={-1} key={title} className="table-row">
-                <TableCellKit component="th" id={0} scope="row">
-                  <img
-                    className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
-                    src={talabat}
-                    alt={title}
-                  />
-                </TableCellKit>
-                <TableCellKit>{getNum(metricsDateFrom[2])}</TableCellKit>
-                <TableCellKit>{getNum(metricsCompareDateValue[2])}</TableCellKit>
-                <TableCellKit>
-                  <div
-                    className={`table_evolution ${procentTalabat() > 0 ? 'table_increased' : ''} ${
-                      procentTalabat() < 0 ? 'table_decreased' : ''
-                    }`}>
-                    <span>{evolution(procentTalabat())}</span>
-                  </div>
-                </TableCellKit>
-              </TableRowKit>
+              {!userPlatformData.platforms.deliveroo.active ? null : (
+                <TableRowKit tabIndex={-1} className="table-row">
+                  <TableCellKit component="th" id={0} scope="row">
+                    <img
+                      className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
+                      src={deliveroo}
+                      alt={title}
+                    />
+                  </TableCellKit>
+                  <TableCellKit>{getNum(metricsDateFrom[1])}</TableCellKit>
+                  <TableCellKit>{getNum(metricsCompareDateValue[1])}</TableCellKit>
+                  <TableCellKit>
+                    <div
+                      className={`table_evolution ${
+                        procentDeliveroo() > 0 ? 'table_increased' : ''
+                      } ${procentDeliveroo() < 0 ? 'table_decreased' : ''}`}>
+                      <span>{evolution(procentDeliveroo())}</span>
+                    </div>
+                  </TableCellKit>
+                </TableRowKit>
+              )}
+              {!userPlatformData.platforms.talabat.active ? null : (
+                <TableRowKit tabIndex={-1} key={title} className="table-row">
+                  <TableCellKit component="th" id={0} scope="row">
+                    <img
+                      className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
+                      src={talabat}
+                      alt={title}
+                    />
+                  </TableCellKit>
+                  <TableCellKit>{getNum(metricsDateFrom[2])}</TableCellKit>
+                  <TableCellKit>{getNum(metricsCompareDateValue[2])}</TableCellKit>
+                  <TableCellKit>
+                    <div
+                      className={`table_evolution ${
+                        procentTalabat() > 0 ? 'table_increased' : ''
+                      } ${procentTalabat() < 0 ? 'table_decreased' : ''}`}>
+                      <span>{evolution(procentTalabat())}</span>
+                    </div>
+                  </TableCellKit>
+                </TableRowKit>
+              )}
             </TableBodyKit>
             <TableHeadKit>
               <TableRowKit className="table-row table-total">

@@ -1,4 +1,8 @@
-import * as React from 'react';
+import React from 'react';
+import { noCase, sentenceCase } from 'change-case';
+
+import './PlanningOffersTable.scss';
+
 import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
@@ -8,7 +12,6 @@ import PaperKit from '../../kits/paper/PaperKit';
 import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
 import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-import './PlanningOffersTable.scss';
 import deliveroo from '../../assets/images/deliveroo.png';
 import talabat from '../../assets/images/talabat.png';
 
@@ -100,7 +103,7 @@ const headCells = [
 ];
 
 const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, header } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -108,7 +111,7 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHeadKit>
       <TableRowKit>
-        {headCells.map((headCell) => (
+        {header.map((headCell) => (
           <TableCellKit
             key={headCell.id}
             align="left"
@@ -171,7 +174,36 @@ const PlanningOffersTable = ({ rows }) => {
 
     setSelected(newSelected);
   };
+
+  const getHeadCells = () => {
+    if (!rows[0]) return headCells;
+
+    return Object.keys(rows[0]).map((k) => ({
+      id: k,
+      numeric: Number.isNaN(rows[0][k]),
+      disablePadding: true,
+      label: sentenceCase(noCase(k)),
+    }));
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
+
+  const renderRowsByHeader = (r) =>
+    getHeadCells().map((h) => {
+      if (h.id !== 'platform')
+        return <TableCellKit key={h.id}>{r[h.id] === null ? '-' : r[h.id]}</TableCellKit>;
+
+      return (
+        <TableCellKit key={h.id}>
+          <img
+            className="planning-platform"
+            src={r.platform === 'deliveroo' ? deliveroo : talabat}
+            alt={r.platform}
+          />
+        </TableCellKit>
+      );
+    });
+
   return (
     <BoxKit className="competition-box planning-box" sx={{ width: '100%' }}>
       <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
@@ -184,6 +216,7 @@ const PlanningOffersTable = ({ rows }) => {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              header={getHeadCells()}
             />
             <TableBodyKit>
               {stableSort(rows, getComparator(order, orderBy)).map((row) => {
@@ -196,21 +229,7 @@ const PlanningOffersTable = ({ rows }) => {
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}>
-                    <TableCellKit>{row.vendor_name === null ? '-' : row.vendor_name}</TableCellKit>
-                    <TableCellKit>
-                      <img
-                        className="planning-platform"
-                        src={row.platform === 'deliveroo' ? deliveroo : talabat}
-                        alt={row.platform}
-                      />
-                    </TableCellKit>
-                    <TableCellKit>{row.discount_type}</TableCellKit>
-                    <TableCellKit>{row.discount_rate}</TableCellKit>
-                    <TableCellKit>{row.minimum_order_value}</TableCellKit>
-                    <TableCellKit>{row.start_date}</TableCellKit>
-                    <TableCellKit>{row.end_date}</TableCellKit>
-                    <TableCellKit>{row.target === null ? '-' : row.target}</TableCellKit>
-                    <TableCellKit>{row.status}</TableCellKit>
+                    {renderRowsByHeader(row)}
                   </TableRowKit>
                 );
               })}
