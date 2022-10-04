@@ -1,69 +1,53 @@
 import * as React from 'react';
+
+import '../planningOffersTable/PlanningOffersTable.scss';
+
+import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
+import TableKit from '../../kits/table/TableKit';
 import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
-import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
-import BoxKit from '../../kits/box/BoxKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
-import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-import './PlanningOffersTable.scss';
+import PaperKit from '../../kits/paper/PaperKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
+import BoxKit from '../../kits/box/BoxKit';
+import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
 
 const headCells = [
   {
-    id: 'vendor_name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Vendor Name',
+    id: 'Date',
+    label: 'Date',
+  },
+  {
+    id: 'branche',
+    label: 'branche',
   },
   {
     id: 'platform',
-    numeric: true,
-    disablePadding: false,
-    label: 'Platform',
+    label: 'platform',
   },
   {
-    id: 'discount_type',
-    numeric: true,
-    disablePadding: false,
-    label: 'Discount Type',
+    id: 'Day',
+    label: 'Day',
   },
   {
-    id: 'discount_rate',
-    numeric: true,
-    disablePadding: false,
-    label: 'Discount Rate',
+    id: 'slot',
+    label: 'slot',
   },
   {
-    id: 'minimum_order_value',
-    numeric: true,
-    disablePadding: false,
-    label: 'Min.Order',
+    id: 'Bid',
+    label: 'Bid',
   },
   {
-    id: 'start_date',
-    numeric: true,
-    disablePadding: false,
-    label: 'Start Date',
+    id: 'Budget',
+    label: 'Budget',
   },
   {
-    id: 'end_date',
-    numeric: true,
-    disablePadding: false,
-    label: 'End Date',
-  },
-  {
-    id: 'target',
-    numeric: true,
-    disablePadding: false,
+    id: 'Target',
     label: 'Target',
   },
   {
-    id: 'status',
-    numeric: true,
-    disablePadding: false,
+    id: 'Status',
     label: 'Status',
   },
 ];
@@ -83,7 +67,7 @@ const EnhancedTableHead = () => (
   </TableHeadKit>
 );
 
-const PlanningOffersTableEmpty = () => (
+const PlanningAdsTableEmpty = () => (
   <BoxKit className="competition-box planning-box" sx={{ width: '100%' }}>
     <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
       <TableContainerKit className="planning-table-container competition-table-conatiner">
@@ -128,4 +112,4 @@ const PlanningOffersTableEmpty = () => (
   </BoxKit>
 );
 
-export default PlanningOffersTableEmpty;
+export default PlanningAdsTableEmpty;
