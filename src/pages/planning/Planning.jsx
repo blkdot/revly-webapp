@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
-import PlanningAdsTable from '../../components/planningAdsTable/PlanningAdsTable';
-import PlanningAdsTableEmpty from '../../components/planningAdsTable/PlanningAdsTableEmpty';
 import PlanningOffersTable from '../../components/planningOffersTable/PlanningOffersTable';
 import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
@@ -21,22 +19,23 @@ const Planning = () => {
   });
 
   const { vendors, vendorsPlatform } = useVendors();
-  const { offers } = usePlanningOffers({ dateRange });
-  const { ads } = usePlanningAds({ dateRange });
+  const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
+  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
 
   const getOffersTable = () => {
-    if (offers.length === 0) {
+    if (isLoadingOffers) {
       return <PlanningOffersTableEmpty />;
     }
+
     return <PlanningOffersTable rows={offers} />;
   };
 
   const getAdsTable = () => {
-    if (ads.length === 0) {
-      return <PlanningAdsTableEmpty />;
+    if (isLoadingAds) {
+      return <PlanningOffersTableEmpty />;
     }
 
-    return <PlanningAdsTable rows={ads} />;
+    return <PlanningOffersTable rows={ads} />;
   };
 
   const renderTable = () => {
