@@ -179,6 +179,7 @@ const PlanningOffersTable = ({ rows }) => {
     if (!rows[0]) return headCells;
 
     return Object.keys(rows[0]).map((k) => ({
+      key: k,
       id: k,
       numeric: Number.isNaN(rows[0][k]),
       disablePadding: true,
@@ -208,7 +209,7 @@ const PlanningOffersTable = ({ rows }) => {
     <BoxKit className="competition-box planning-box" sx={{ width: '100%' }}>
       <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
         <TableContainerKit className="planning-table-container competition-table-conatiner">
-          <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
+          <TableKit aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -219,20 +220,17 @@ const PlanningOffersTable = ({ rows }) => {
               header={getHeadCells()}
             />
             <TableBodyKit>
-              {stableSort(rows, getComparator(order, orderBy)).map((row) => {
-                const isItemSelected = isSelected(row.vendor_name);
-                return (
-                  <TableRowKit
-                    onClick={(event) => handleClick(event, row.name)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}>
-                    {renderRowsByHeader(row)}
-                  </TableRowKit>
-                );
-              })}
+              {stableSort(rows, getComparator(order, orderBy)).map((row) => (
+                <TableRowKit
+                  onClick={(event) => handleClick(event, row.name)}
+                  role="checkbox"
+                  aria-checked={isSelected(row.vendor_name)}
+                  tabIndex={-1}
+                  key={row.id}
+                  selected={isSelected(row.vendor_name)}>
+                  {renderRowsByHeader(row)}
+                </TableRowKit>
+              ))}
             </TableBodyKit>
           </TableKit>
         </TableContainerKit>

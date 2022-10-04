@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import PlanningAdsTable from '../../components/planningAdsTable/PlanningAdsTable';
+import PlanningAdsTableEmpty from '../../components/planningAdsTable/PlanningAdsTableEmpty';
 import PlanningOffersTable from '../../components/planningOffersTable/PlanningOffersTable';
 import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
@@ -15,8 +16,8 @@ const Planning = () => {
   const [active, setActive] = useState(1);
   const { dateFromContext: dateFrom } = useDate();
   const [dateRange, setDateRange] = useState({
-    start: dateFrom.startDate,
-    end: dateFrom.endDate,
+    startDate: dateFrom.startDate,
+    endDate: dateFrom.endDate,
   });
 
   const { vendors, vendorsPlatform } = useVendors();
@@ -28,6 +29,20 @@ const Planning = () => {
       return <PlanningOffersTableEmpty />;
     }
     return <PlanningOffersTable rows={offers} />;
+  };
+
+  const getAdsTable = () => {
+    if (ads.length === 0) {
+      return <PlanningAdsTableEmpty />;
+    }
+
+    return <PlanningAdsTable rows={ads} />;
+  };
+
+  const renderTable = () => {
+    if (active) return getOffersTable();
+
+    return getAdsTable();
   };
 
   return (
@@ -47,7 +62,7 @@ const Planning = () => {
           Ads
         </TypographyKit>
       </div>
-      {active ? getOffersTable() : <PlanningAdsTable rows={ads} />}
+      {renderTable()}
     </div>
   );
 };
