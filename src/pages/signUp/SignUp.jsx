@@ -49,8 +49,8 @@ const SignUp = () => {
       await settingsSave({
         master_email: credential.user.email,
         data: {
-          property1: value.restoName.trim(),
-          property2: value.pointOfSale.trim(),
+          restoname: value.restoName.trim(),
+          pointOfSale: value.pointOfSale,
         },
       });
       await verifyEmail(credential.user);
