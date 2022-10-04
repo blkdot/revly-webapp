@@ -22,6 +22,8 @@ function useVendors() {
     let isCancelled = false;
     getVendors(requestVendorsDefaultParam).then((data) => {
       if (isCancelled) return;
+      setRestaurants([]);
+      setVendors([]);
 
       const newData = data.data;
 

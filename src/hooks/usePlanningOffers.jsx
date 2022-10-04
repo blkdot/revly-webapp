@@ -20,8 +20,8 @@ function usePlanningOffers({ dateRange }) {
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
       vendors: vendorsContext,
-      start_date: dayjs(dateRange.start).format('YYYY-MM-DD'),
-      end_date: dayjs(dateRange.end).format('YYYY-MM-DD'),
+      start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
       if (isCancelled) return;
 

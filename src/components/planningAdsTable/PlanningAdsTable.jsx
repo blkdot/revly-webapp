@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TableRow from '@mui/material/TableRow';
+
 import { noCase, sentenceCase } from 'change-case';
 
 import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
@@ -9,6 +9,8 @@ import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
 import PaperKit from '../../kits/paper/PaperKit';
+import BoxKit from '../../kits/box/BoxKit';
+import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
 
 const headCells = [
   {
@@ -49,6 +51,18 @@ const headCells = [
   },
 ];
 
+const EnhancedTableHead = ({ header }) => (
+  <TableHeadKit>
+    <TableRowKit>
+      {header.map((headCell) => (
+        <TableCellKit key={headCell.id} align="left" padding="normal">
+          <TableSortLabelKit>{headCell.label}</TableSortLabelKit>
+        </TableCellKit>
+      ))}
+    </TableRowKit>
+  </TableHeadKit>
+);
+
 const PlanningAdsTable = ({ rows }) => {
   const getHeadCells = () => {
     if (!rows[0]) return headCells;
@@ -60,26 +74,24 @@ const PlanningAdsTable = ({ rows }) => {
   };
 
   return (
-    <TableContainerKit className="planning_offers-table-container" component={PaperKit}>
-      <TableKit sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHeadKit className="planning_table-head">
-          <TableRowKit>
-            {getHeadCells().map((h) => (
-              <TableCellKit key={h.id}>{h.label}</TableCellKit>
-            ))}
-          </TableRowKit>
-        </TableHeadKit>
-        <TableBodyKit>
-          {rows.map((row) => (
-            <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              {getHeadCells().map((h) => (
-                <TableCellKit>{row[h.id]}</TableCellKit>
+    <BoxKit className="planning-box" sx={{ width: '100%' }}>
+      <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
+        <TableContainerKit className="planning-table-container">
+          <TableKit aria-labelledby="tableTitle" size="medium">
+            <EnhancedTableHead header={getHeadCells()} />
+            <TableBodyKit>
+              {rows.map((row) => (
+                <TableRowKit key={row.id}>
+                  {getHeadCells().map((h) => (
+                    <TableCellKit key={h.id}>{row[h.id]}</TableCellKit>
+                  ))}
+                </TableRowKit>
               ))}
-            </TableRow>
-          ))}
-        </TableBodyKit>
-      </TableKit>
-    </TableContainerKit>
+            </TableBodyKit>
+          </TableKit>
+        </TableContainerKit>
+      </PaperKit>
+    </BoxKit>
   );
 };
 
