@@ -18,14 +18,14 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const storageDate = JSON.parse(localStorage.getItem('date')) || {};
   const [dateFromContext, setDateFromContext] = useState(
     storageDate.dateFrom || {
-      startDate: startOfWeek(new Date()),
+      startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
       endDate: new Date(),
     },
   );
   const [compareDateValueContext, setCompareDateValueContext] = useState(
     storageDate.compareDateValue || {
-      startDate: startOfWeek(subWeeks(new Date(), 1)),
-      endDate: endOfWeek(subWeeks(new Date(), 1)),
+      startDate: startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
+      endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
     },
   );
   const [titleDate, setTitleDate] = useState(storageDate.titleDate || 'current week');
