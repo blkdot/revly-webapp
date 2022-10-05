@@ -26,24 +26,6 @@ export const headCells = [
     label: 'Discount Rate',
   },
   {
-    id: 'minimum_order_value',
-    numeric: true,
-    disablePadding: false,
-    label: 'Min.Order',
-  },
-  {
-    id: 'start_date',
-    numeric: true,
-    disablePadding: false,
-    label: 'Start Date',
-  },
-  {
-    id: 'end_date',
-    numeric: true,
-    disablePadding: false,
-    label: 'End Date',
-  },
-  {
     id: 'target',
     numeric: true,
     disablePadding: false,

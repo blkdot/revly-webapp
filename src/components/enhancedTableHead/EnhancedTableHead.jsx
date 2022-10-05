@@ -18,12 +18,14 @@ const EnhancedTableHead = (props) => {
         {header.map((headCell) => (
           <TableCellKit
             key={headCell.id}
-            align="left"
+            align="center"
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+            style={{ height: '4rem' }}>
             <TableSortLabelKit
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
+              style={{ whiteSpace: 'nowrap' }}
               onClick={createSortHandler(headCell.id)}>
               {headCell.label}
               {orderBy === headCell.id ? (

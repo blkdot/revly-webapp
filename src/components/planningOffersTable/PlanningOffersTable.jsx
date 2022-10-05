@@ -41,7 +41,9 @@ const PlanningOffersTable = ({ rows }) => {
   };
 
   const renderSimpleRow = (r, h) => (
-    <TableCellKit key={h.id}>{r[h.id] === null ? '-' : r[h.id]}</TableCellKit>
+    <span style={{ whiteSpace: 'nowrap' }} key={h.id}>
+      {r[h.id] === null ? '-' : r[h.id]}
+    </span>
   );
 
   const renderPlatform = (r) => (
@@ -52,11 +54,25 @@ const PlanningOffersTable = ({ rows }) => {
     />
   );
 
-  const renderPercent = (r, h) => <span className="competition-table-alert">{r[h.id]}%</span>;
+  const renderPercent = (r, h) => (
+    <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+      {r[h.id]}%
+    </span>
+  );
 
-  const renderCurrency = (r, h) => <span>{r[h.id]}&nbsp;AED</span>;
+  const renderCurrency = (r, h) => <span style={{ whiteSpace: 'nowrap' }}>{r[h.id]}&nbsp;AED</span>;
 
-  const renderStatus = (r, h) => <span className={`competition-status ${r[h.id]}`}>{r[h.id]}</span>;
+  const renderCalculatedPercent = (r, h) => (
+    <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+      {r[h.id] * 10}%
+    </span>
+  );
+
+  const renderStatus = (r, h) => (
+    <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
+      {r[h.id]}
+    </span>
+  );
 
   const cellTemplatesObject = {
     platform: renderPlatform,
@@ -66,8 +82,10 @@ const PlanningOffersTable = ({ rows }) => {
     cost_per_click: renderCurrency,
     remaining_budget: renderCurrency,
     return_on_ad_spent: renderCurrency,
+    spend: renderCurrency,
     status: renderStatus,
     ad_status: renderStatus,
+    conversion_rate: renderCalculatedPercent,
   };
 
   const renderRowsByHeader = (r) =>
@@ -79,17 +97,24 @@ const PlanningOffersTable = ({ rows }) => {
 
   const renderTableBody = () => {
     // TODO: show message : no offers retrieved
-    if (!rows) return null;
+    if (!rows || rows.length < 1)
+      return (
+        <TableCellKit colSpan={getHeadCells().length} style={{ textAlign: 'center' }}>
+          <span>No data retrieved</span>
+        </TableCellKit>
+      );
 
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
-      <TableRowKit key={row.id}>{renderRowsByHeader(row)}</TableRowKit>
+      <TableRowKit key={row.id} selected={false} style={{ marginTop: '0.5rem' }}>
+        {renderRowsByHeader(row)}
+      </TableRowKit>
     ));
   };
 
   return (
-    <BoxKit className="competition-box planning-box" sx={{ width: '100%' }}>
-      <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
-        <TableContainerKit className="planning-table-container competition-table-conatiner">
+    <BoxKit className="planning-box" sx={{ width: '100%' }}>
+      <PaperKit className="planning-box__paper" sx={{ width: '100%', mb: 2 }}>
+        <TableContainerKit className="planning-table-container">
           <TableKit aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
               order={order}
