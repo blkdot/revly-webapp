@@ -1,41 +1,93 @@
 .planning-box {
-  padding: 0 15px;
-  margin-bottom: 30px;
+  // box-sizing: border-box;
+  padding: 15px;
+  // margin-bottom: 30px;
+  background-color: #fff;
   border-radius: 12px;
   box-shadow: 0px 0px 2px rgb(145 158 171 / 20%), 0px 12px 24px -4px rgb(145 158 171 / 12%);
-
+  border: none;
 }
 
 .planning-platform {
   width: 50px;
 }
-@media(max-width: 1400px){
-  .planning-table-container.planning-table-container{
-    width: 130% !important;
+
+.planning-box__paper {
+  box-shadow: none !important;
+  border: none !important;
+
+  th,
+  td {
+    border-bottom: none;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: #212B36;
+  }
+
+  table {
+    background-color: #fff;
+  }
+
+  tbody {
+    >tr:nth-of-type(1) {
+      background: rgba(144, 107, 255, 0.08);
+      padding-right: 5px;
+
+      th {
+        border-radius: 8px 0 0 8px;
+      }
+
+
+
+      >td:last-of-type {
+        border-radius: 0 8px 8px 0;
+        display: flex;
+        align-items: center;
+        padding: 20px 15px;
+        grid-gap: 8px;
+
+        >div {
+          width: 100px;
+          padding-left: 14px;
+          transform: scale(1.5);
+        }
+      }
+    }
+  }
+
+  th:nth-of-type(1) {
+    padding-left: 15px;
   }
 }
-@media(max-width: 1260px) {
-  .planning-table-container.planning-table-container {
-    width: 160% !important;
-  }
-}
-@media(max-width: 1190px) {
-  .planning-table-container.planning-table-container {
-    width: 190% !important;
-  }
-}
-@media(max-width: 975px) {
-  .planning-table-container.planning-table-container {
-    width: 230% !important;
-  }
-}
-@media(max-width: 870px) {
-  .planning-table-container.planning-table-container {
-    width: 275% !important;
-  }
-}
-@media(max-width: 780px) {
-  .planning-table-container.planning-table-container {
-    width: 300% !important;
-  }
-}
+
+// @media(max-width: 1400px){
+//   .planning-table-container.planning-table-container{
+//     width: 130% !important;
+//   }
+// }
+// @media(max-width: 1260px) {
+//   .planning-table-container.planning-table-container {
+//     width: 160% !important;
+//   }
+// }
+// @media(max-width: 1190px) {
+//   .planning-table-container.planning-table-container {
+//     width: 190% !important;
+//   }
+// }
+// @media(max-width: 975px) {
+//   .planning-table-container.planning-table-container {
+//     width: 230% !important;
+//   }
+// }
+// @media(max-width: 870px) {
+//   .planning-table-container.planning-table-container {
+//     width: 275% !important;
+//   }
+// }
+// @media(max-width: 780px) {
+//   .planning-table-container.planning-table-container {
+//     width: 300% !important;
+//   }
+// }
