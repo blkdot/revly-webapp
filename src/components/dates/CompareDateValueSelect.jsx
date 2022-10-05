@@ -24,10 +24,10 @@ const Day = ({
   startDateLeft,
   endDateLeft,
   openCompareDateValue,
-  titleLeft,
+  titledateFromContext,
 }) => (
   <div>
-    {titleLeft === 'yesterday' || titleLeft === 'custom' ? (
+    {titledateFromContext === 'yesterday' || titledateFromContext === 'custom' ? (
       ''
     ) : (
       <ButtonKit
@@ -75,18 +75,18 @@ const Week = ({
   startDateLeft,
   endDateLeft,
   openCompareDateValue,
-  titleLeft,
+  titledateFromContext,
 }) => (
   <div>
-    {titleLeft === 'last week' || titleLeft === 'custom' ? (
+    {titledateFromContext === 'last week' || titledateFromContext === 'custom' ? (
       ''
     ) : (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
           setcompareDateValueBtn({
-            startDate: startOfWeek(subWeeks(date, 1)),
-            endDate: endOfWeek(subWeeks(date, 1)),
+            startDate: startOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
+            endDate: endOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
           });
           setTitleCompareDateValue('last week');
         }}>
@@ -97,8 +97,8 @@ const Week = ({
       className="navbar-button-kit"
       onClick={() => {
         setcompareDateValueBtn({
-          startDate: subWeeks(startDateLeft, 1),
-          endDate: endOfWeek(subWeeks(endDateLeft, 1)),
+          startDate: startOfWeek(subWeeks(startDateLeft, 1), { weekStartsOn: 1 }),
+          endDate: endOfWeek(subWeeks(endDateLeft, 1), { weekStartsOn: 1 }),
         });
         setTitleCompareDateValue('week before');
       }}>
@@ -113,10 +113,10 @@ const Month = ({
   setTitleCompareDateValue,
   setcompareDateValueBtn,
   openCompareDateValue,
-  titleLeft,
+  titledateFromContext,
 }) => (
   <div>
-    {titleLeft === 'last month' || titleLeft === 'custom' ? (
+    {titledateFromContext === 'last month' || titledateFromContext === 'custom' ? (
       ''
     ) : (
       <ButtonKit
@@ -146,7 +146,7 @@ const CompareDateValueSelect = ({
   setcompareDateValueBtn,
   setTitleCompareDateValue,
   dateFrom,
-  titleLeft,
+  titledateFromContext,
 }) => {
   const startDate = new Date(compareDateValue.startDate);
   const endDate = new Date(compareDateValue.endDate);
@@ -172,7 +172,7 @@ const CompareDateValueSelect = ({
       if (startLocal === endLocal)
         return (
           <Day
-            titleLeft={titleLeft}
+            titledateFromContext={titledateFromContext}
             openCompareDateValue={openCompareDateValue}
             startDateLeft={startDateLeft}
             endDateLeft={endDateLeft}
@@ -181,14 +181,14 @@ const CompareDateValueSelect = ({
           />
         );
       if (
-        getWeek(startDate) === getWeek(endDate) &&
-        startGetDay === 0 &&
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
+        startGetDay === 1 &&
         endGetDay >= dateGetDay &&
-        endGetDay <= 6
+        endGetDay === 0
       )
         return (
           <Week
-            titleLeft={titleLeft}
+            titledateFromContext={titledateFromContext}
             openCompareDateValue={openCompareDateValue}
             startDateLeft={startDateLeft}
             endDateLeft={endDateLeft}
@@ -204,7 +204,7 @@ const CompareDateValueSelect = ({
       )
         return (
           <Month
-            titleLeft={titleLeft}
+            titledateFromContext={titledateFromContext}
             openCompareDateValue={openCompareDateValue}
             setcompareDateValueBtn={setcompareDateValueBtn}
             setTitleCompareDateValue={setTitleCompareDateValue}
@@ -213,7 +213,7 @@ const CompareDateValueSelect = ({
     } else if (startLocal === endLocal)
       return (
         <Day
-          titleLeft={titleLeft}
+          titledateFromContext={titledateFromContext}
           openCompareDateValue={openCompareDateValue}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
@@ -221,10 +221,14 @@ const CompareDateValueSelect = ({
           setTitleCompareDateValue={setTitleCompareDateValue}
         />
       );
-    else if (getWeek(startDate) === getWeek(endDate) && startGetDay === 0 && endGetDay <= 6)
+    else if (
+      getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
+      startGetDay === 1 &&
+      endGetDay === 0
+    )
       return (
         <Week
-          titleLeft={titleLeft}
+          titledateFromContext={titledateFromContext}
           openCompareDateValue={openCompareDateValue}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
@@ -239,7 +243,7 @@ const CompareDateValueSelect = ({
     )
       return (
         <Month
-          titleLeft={titleLeft}
+          titledateFromContext={titledateFromContext}
           openCompareDateValue={openCompareDateValue}
           setcompareDateValueBtn={setcompareDateValueBtn}
           setTitleCompareDateValue={setTitleCompareDateValue}

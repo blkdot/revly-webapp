@@ -6,6 +6,7 @@
   grid-gap: 20px;
   align-items: center;
   flex-wrap: wrap;
+
   .dashboard-date {
     display: flex;
     align-items: center;
@@ -72,6 +73,32 @@
   display: flex;
   flex-direction: column;
   grid-gap: 5px;
+
+  &.disabled {
+    .date-input {
+      cursor: not-allowed;
+
+      svg {
+        fill: #919EAB;
+      }
+
+      span {
+        color: #919EAB;
+      }
+    }
+
+    .top-text-inputs {
+      color: #919EAB;
+
+      &::after {
+        content: none;
+      }
+
+      &::before {
+        background-color: #DFE3E8;
+      }
+    }
+  }
 }
 
 .date-range.date-range {
@@ -195,7 +222,8 @@
 }
 
 .date-select.date-select {
-  background: #fff;
+  background: #fff !important;
+  z-index: 100;
   position: absolute;
   top: 55px;
   left: 0;
@@ -210,7 +238,7 @@
   &::after {
     box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
     border: 1px solid rgba(145, 158, 171, 0.32);
-    
+
     top: -7px;
     background-color: #fff;
     right: 15px;
@@ -383,9 +411,10 @@
     }
   }
 }
-@media(max-width: 898px){
-  .dashboard-date{
-    > img{
+
+@media(max-width: 898px) {
+  .dashboard-date {
+    >img {
       opacity: 0;
     }
   }

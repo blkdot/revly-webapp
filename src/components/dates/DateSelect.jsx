@@ -51,19 +51,17 @@ const DateSelect = React.memo(
             }
           }
         } else if (type === 'week') {
-          if (
-            getWeek(startDate, 1) === getWeek(endDate, 1) &&
-            startGetDay === 0 &&
-            endGetDay >= dateGetDay &&
-            startGetDay <= 6
+          if (endGetDay === dateGetDay && startGetDay === 1) {
+            setActive('current');
+          } else if (
+            startGetDay === 1 &&
+            endGetDay === 0 &&
+            getWeek(startDate, { weekStartsOn: 1 }) ===
+              getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
           ) {
-            if (endGetDay === dateGetDay && startGetDay === 0) {
-              setActive('current');
-            } else if (getWeek(startDate, 1) === getWeek(subWeeks(date, 1))) {
-              setActive('last');
-            } else {
-              setActive('custom');
-            }
+            setActive('last');
+          } else {
+            setActive('custom');
           }
         } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
           if (startGetDate === 1 && endGetDate >= dateGetDate) {
@@ -99,14 +97,20 @@ const DateSelect = React.memo(
           setActive('last');
           break;
         case 'week':
-          setSelections([{ startDate: startOfWeek(today), endDate: today, key: 'selection' }]);
+          setSelections([
+            {
+              startDate: startOfWeek(today, { weekStartsOn: 1 }),
+              endDate: today,
+              key: 'selection',
+            },
+          ]);
           setActive('current');
           break;
         case 'last week':
           setSelections([
             {
-              startDate: startOfWeek(subWeeks(today, 1)),
-              endDate: endOfWeek(subWeeks(today, 1)),
+              startDate: startOfWeek(subWeeks(today, 1), { weekStartsOn: 1 }),
+              endDate: endOfWeek(subWeeks(today, 1), { weekStartsOn: 1 }),
               key: 'selection',
             },
           ]);
@@ -140,7 +144,11 @@ const DateSelect = React.memo(
         setSelections([{ startDate: new Date(), endDate: new Date(), key: 'selection' }]);
       } else if (type === 'week') {
         setSelections([
-          { startDate: startOfWeek(new Date()), endDate: new Date(), key: 'selection' },
+          {
+            startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
+            endDate: new Date(),
+            key: 'selection',
+          },
         ]);
       } else {
         setSelections([
