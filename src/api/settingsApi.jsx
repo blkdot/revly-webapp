@@ -80,3 +80,6 @@ export const settingsLogin = (body) => {
 
 export const settingsSave = (body) =>
   axios.post(`${apiUrl}/settings/save`, body).then(handleResponse).catch(handleResponse);
+
+export const settingsLoad = (body) =>
+  axios.post(`${apiUrl}/settings/load`, body).then(handleResponse).catch(handleResponse);

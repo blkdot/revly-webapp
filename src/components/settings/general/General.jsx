@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { updateProfile } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 
 import './General.scss';
+
+import country from '../../../data/country.json';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
 
@@ -13,20 +16,11 @@ import validator from '../../../utlls/input/validator';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
+import useApi from '../../../hooks/useApi';
 
 const General = () => {
   const { user, setIsUpdatingPhone, verifyPhone } = useUserAuth();
-
-  const getFirstName = () => {
-    const allName = user.displayName.split(' ');
-    return allName[0];
-  };
-
-  const getLastName = () => {
-    const allName = user.displayName.split(' ');
-    allName.splice(0, 1);
-    return allName.join(' ');
-  };
+  const { settingsSave, settingsLoad } = useApi();
 
   const getNumber = () => {
     if (!user.phoneNumber) return '';
@@ -49,52 +43,96 @@ const General = () => {
   const [dial, setDial] = useState(getDial());
 
   const [inputValue, setInputValue] = useState({
-    firstname: getFirstName() || '',
-    lastname: getLastName() || '',
+    name: user.displayName,
     phone: getNumber() || '',
-    country: {},
+    country: { name: '', code: '' },
     role: '',
     city: '',
     restoName: '',
   });
+  const [oldValue, setOldValue] = useState({});
   const [inputCountryValue, setInputCountryValue] = React.useState('');
   const [inputError, setInputError] = useState({
-    firstname: false,
-    lastname: false,
+    name: false,
     restoName: false,
+    role: false,
   });
   const { showAlert, setAlertMessage, setAlertTheme } = useAlert();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const isValid = (field, inequalTo) =>
-    inputValue[field]
+  const isValid = (field, inequalTo) => {
+    if (field === 'phone') {
+      return inputValue.phone
+        ? `${dial}${inputValue.phone}` !== inequalTo
+        : !!inputValue.phone !== !!inequalTo;
+    }
+
+    if (field === 'country') {
+      return inputValue.country.name !== inequalTo;
+    }
+
+    return inputValue[field]
       ? inputValue[field].trim() !== inequalTo
       : !!inputValue[field] !== !!inequalTo;
+  };
 
   const disableSave = () =>
     Object.keys(inputError)
       .map((v) => inputError[v])
       .includes(true) ||
-    (!isValid('name', user.firstname) &&
-      !isValid('name', user.lastname) &&
-      !isValid('phone', user.phoneNumber)) ||
+    (!isValid('name', user.displayName) &&
+      !isValid('restoName', oldValue.restoName) &&
+      !isValid('city', oldValue.city) &&
+      !isValid('role', oldValue.role) &&
+      !isValid('phone', user.phoneNumber) &&
+      !isValid('country', oldValue.country)) ||
     isLoading;
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      if (isValid('name', user.firstname) && isValid('name', user.lastname)) {
+      if (isValid('name', user.displayName)) {
         await updateProfile(user, {
-          displayName: `${inputValue.firstname.trim()} ${inputValue.lastname.trim()}`,
+          displayName: `${inputValue.name.trim()}`,
         });
       }
 
       const newPhoneNumber = `${dial}${inputValue.phone}`;
-      if (newPhoneNumber.trim() !== user.phoneNumber) {
+      if (
+        inputValue.phone
+          ? newPhoneNumber.trim() !== user.phoneNumber
+          : isValid('phone', user.phoneNumber)
+      ) {
         const vId = await verifyPhone(newPhoneNumber);
         setIsUpdatingPhone(true);
         navigate(`/verify-code?n=${newPhoneNumber}&vId=${vId}`);
+      }
+
+      if (
+        isValid('restoName', oldValue.restoName) ||
+        isValid('city', oldValue.city) ||
+        isValid('role', oldValue.role) ||
+        isValid('country', oldValue.country)
+      ) {
+        const data = {
+          ...(isValid('city', oldValue.city) && { city: inputValue.city }),
+          ...(isValid('restoName', oldValue.restoName) && { restoName: inputValue.restoName }),
+          ...(isValid('country', oldValue.country) && {
+            country: inputValue.country.name,
+          }),
+          ...(isValid('role', oldValue.role) && { role: inputValue.role }),
+        };
+        const save = await settingsSave({
+          master_email: user.email,
+          data,
+        });
+
+        if (save instanceof AxiosError) {
+          throw new Error('Update failed');
+        }
+
+        setOldValue({ ...oldValue, ...data });
       }
 
       setIsLoading(false);
@@ -115,6 +153,34 @@ const General = () => {
     }
   };
 
+  const getUserData = async () => {
+    try {
+      const data = await settingsLoad({
+        master_email: user.email,
+        access_token: user.accessToken,
+      });
+      const obj = {
+        restoName: data.restoname || '',
+        city: data.city || '',
+        role: data.role || '',
+        country: country.find((v) => v.name === data.country) || { name: '', code: '' },
+      };
+
+      setInputValue({
+        ...inputValue,
+        ...obj,
+      });
+      setOldValue({ ...obj, country: data.country || '' });
+    } catch (err) {
+      setAlertMessage(err.code);
+      showAlert();
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
   const handleInputChange = (e, is) => {
     if (validator[is]) {
       setInputError({ ...inputError, [e.target.name]: !validator[is](e.target.value) });
@@ -130,8 +196,7 @@ const General = () => {
     <div className="general">
       <p className="__title">Your personal data</p>
       <AccountSettingForm
-        valueFirstName={{ value: inputValue.firstname, error: inputError.firstname }}
-        valueLastName={{ value: inputValue.lastname, error: inputError.lastname }}
+        valueName={{ value: inputValue.name, error: inputError.name }}
         valuePhone={inputValue.phone}
         valueCountry={inputValue.country || null}
         valueCity={{ value: inputValue.city, error: inputError.city }}
@@ -139,7 +204,7 @@ const General = () => {
         valueDial={dial}
         onDialChange={(v) => setDial(v)}
         handleInputChange={handleInputChange}
-        valueRole={inputValue.role}
+        valueRole={{ value: inputValue.role, error: inputError.role }}
         handleCountryChange={handleSelectCountry}
         inputCountryValue={inputCountryValue}
         onInputCountryChange={(e, v) => setInputCountryValue(v)}
