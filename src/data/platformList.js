@@ -6,6 +6,8 @@ export const platformList = [
   { src: imageTalabat, name: 'talabat', color: '#EF6400' },
 ];
 
+export const platformObject = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
+
 export const platformContexDefaultFormat = {
   onboarded: false,
   platforms: platformList.reduce(

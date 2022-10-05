@@ -32,7 +32,7 @@ import LocalizationProviderKit from '../../kits/localizationProvider/Localizatio
 import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
 import switchIcon from '../../assets/images/Switch.png';
 
-const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
+const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap }) => {
   const {
     setDateFromContext,
     setCompareDateValueContext,
@@ -100,8 +100,8 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
         }); // Sending previous day to context state
       } else if (typeDate === 'week') {
         setCompareDateValueContext({
-          startDate: subWeeks(startDate, 1),
-          endDate: endOfWeek(subWeeks(endDate, 1)),
+          startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+          endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
         }); // Sending previous week to context state
       } else if (typeDate === 'month') {
         setCompareDateValueContext({
@@ -128,14 +128,17 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
           setTitleDate('custom');
           setTitlecompareDateValue('custom');
         }
-      } else if (getWeek(startDate, 1) === getWeek(endDate, 1)) {
-        if (endGetDay === dateGetDay && startGetDay === 0) {
+      } else if (
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })
+      ) {
+        if (endGetDay === dateGetDay && startGetDay === 1) {
           setTitleDate('current week');
           setTitlecompareDateValue('last week');
         } else if (
-          startGetDay === 0 &&
-          endGetDay === 6 &&
-          getWeek(startDate) === getWeek(subWeeks(date, 1))
+          startGetDay === 1 &&
+          endGetDay === 0 &&
+          getWeek(startDate, { weekStartsOn: 1 }) ===
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
         ) {
           setTitleDate('last week');
           setTitlecompareDateValue('custom');
@@ -179,13 +182,16 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
         } else {
           setTitle('custom');
         }
-      } else if (getWeek(startDate, 1) === getWeek(endDate, 1)) {
-        if (endGetDay === dateGetDay && startGetDay === 0) {
+      } else if (
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })
+      ) {
+        if (endGetDay === dateGetDay && startGetDay === 1) {
           setTitle('current week');
         } else if (
-          startGetDay === 0 &&
-          endGetDay === 6 &&
-          getWeek(startDate) === getWeek(subWeeks(date, 1))
+          startGetDay === 1 &&
+          endGetDay === 0 &&
+          getWeek(startDate, { weekStartsOn: 1 }) ===
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
         ) {
           setTitle('last week');
         } else {
@@ -247,9 +253,10 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
       if (endGetDay === dateGetDay && startGetDay === 0) {
         setTitlecompareDateValue('current week');
       } else if (
-        startGetDay === 0 &&
-        endGetDay === 6 &&
-        getWeek(startDate) === getWeek(subWeeks(date, 1))
+        startGetDay === 1 &&
+        endGetDay === 0 &&
+        getWeek(startDate, { weekStartsOn: 1 }) ===
+          getWeek(subWeeks(subWeeks(date, 1), { weekStartsOn: 1 }))
       ) {
         setTitlecompareDateValue('last week');
       } else {
@@ -308,11 +315,12 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
         // These checks the typeDate
         setdateFrom([
           {
-            startDate: startOfWeek(selection.startDate), // here we send start of week
+            startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
             endDate:
-              getWeek(new Date()) === getWeek(selection.startDate)
+              getWeek(new Date(), { weekStartsOn: 1 }) ===
+              getWeek(selection.startDate, { weekStartsOn: 1 })
                 ? new Date()
-                : endOfWeek(selection.startDate), // here we compare if the week of today is equal to the week of the clicked day
+                : endOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we compare if the week of today is equal to the week of the clicked day
             key: 'selection',
           },
         ]);
@@ -324,8 +332,8 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
       // These checks the typeDate
       setdateFrom([
         {
-          startDate: startOfWeek(selection.startDate), // here we send start of week
-          endDate: endOfWeek(selection.startDate), // here we send end of week
+          startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }),
+          endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }),
           key: 'selection',
         },
       ]);
@@ -367,16 +375,17 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
         return false;
       }
       if (
-        getWeek(startDate, 1) === getWeek(endDate, 1) &&
-        startGetDay === 0 &&
-        endGetDay >= dateGetDay &&
-        startGetDay <= 6
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
+        startGetDay === 1 &&
+        endGetDay === dateGetDay
       ) {
         if (
-          startGetDayCompareDateValue === 0 &&
-          endGetDayCompareDateValue >= dateGetDay &&
-          startGetDayCompareDateValue <= endOfWeek(startDateCompareDateValue) &&
-          getWeek(startDate, 1) > getWeek(startDateCompareDateValue, 1)
+          startGetDayCompareDateValue === 1 &&
+          endGetDayCompareDateValue === 0 &&
+          getWeek(date, { weekStartsOn: 1 }) !==
+            getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) &&
+          getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) ===
+            getWeek(endDateCompareDateValue, { weekStartsOn: 1 })
         )
           return true;
         return false;
@@ -402,16 +411,12 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
       return false;
     }
 
-    if (
-      getWeek(startDate, 1) === getWeek(endDate, 1) &&
-      startGetDay === 0 &&
-      endGetDay >= dateGetDay &&
-      startGetDay <= 6
-    ) {
+    if (typeDate === 'week') {
       if (
-        startGetDayCompareDateValue === 0 &&
-        endGetDayCompareDateValue === endOfWeek(endDateCompareDateValue).getDay() &&
-        getWeek(startDate, 1) > getWeek(startDateCompareDateValue, 1)
+        startGetDayCompareDateValue === 1 &&
+        endGetDayCompareDateValue === 0 &&
+        getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) <
+          getWeek(startDate, { weekStartsOn: 1 })
       )
         return true;
       return false;
@@ -451,11 +456,12 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
         // These checks the typeDate
         setcompareDateValue([
           {
-            startDate: startOfWeek(selection.startDate), // here we send start of week
+            startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
             endDate:
-              getWeek(new Date()) === getWeek(selection.startDate)
+              getWeek(new Date(), { weekStartsOn: 1 }) ===
+              getWeek(selection.startDate, { weekStartsOn: 1 })
                 ? new Date()
-                : endOfWeek(selection.startDate), // here we compare if the week of today is equal to the week of the clicked day
+                : endOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we compare if the week of today is equal to the week of the clicked day
             key: 'selection',
           },
         ]);
@@ -467,8 +473,8 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
       // These checks the typeDate
       setcompareDateValue([
         {
-          startDate: startOfWeek(selection.startDate), // here we send start of week
-          endDate: endOfWeek(selection.startDate), // here we send end of week
+          startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
+          endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send end of week
           key: 'selection',
         },
       ]);
@@ -583,15 +589,19 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}>
         <PaperKit style={{ background: '#fff' }} className="date-picker">
-          <DateSelect
-            expanded={expanded}
-            setExpanded={setExpanded}
-            index="1"
-            type="day"
-            setSelections={setdateFrom}
-            setTypeDate={setTypeDate}
-            dateFrom={dateFrom}
-          />
+          {!isMarketingHeatMap ? (
+            <DateSelect
+              expanded={expanded}
+              setExpanded={setExpanded}
+              index="1"
+              type="day"
+              setSelections={setdateFrom}
+              setTypeDate={setTypeDate}
+              dateFrom={dateFrom}
+            />
+          ) : (
+            ''
+          )}
           <DateSelect
             expanded={expanded}
             setExpanded={setExpanded}
@@ -601,15 +611,19 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
             setTypeDate={setTypeDate}
             dateFrom={dateFrom}
           />
-          <DateSelect
-            expanded={expanded}
-            setExpanded={setExpanded}
-            index="3"
-            type="month"
-            setSelections={setdateFrom}
-            setTypeDate={setTypeDate}
-            dateFrom={dateFrom}
-          />
+          {!isMarketingHeatMap ? (
+            <DateSelect
+              expanded={expanded}
+              setExpanded={setExpanded}
+              index="3"
+              type="month"
+              setSelections={setdateFrom}
+              setTypeDate={setTypeDate}
+              dateFrom={dateFrom}
+            />
+          ) : (
+            ''
+          )}
           <div className="date-btn-wrapper">
             <ButtonKit onClick={handleClick} className="date-save-btn " variant="contained">
               Ok
@@ -627,7 +641,10 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
                 setdateFrom([
                   {
                     startDate: startOfMonth(new Date(newDateMonth)),
-                    endDate: endOfMonth(new Date(newDateMonth)),
+                    endDate:
+                      getMonth(new Date(newDateMonth)) === getMonth(new Date())
+                        ? new Date()
+                        : endOfMonth(new Date(newDateMonth)),
                     key: 'selection',
                   },
                 ])
@@ -646,20 +663,21 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
             ranges={dateFrom}
             direction="horizontal"
             dragSelectionEnabled={false}
+            weekStartsOn={1}
           />
         )}
       </div>
-      {isDashboard ? (
-        <div className="dashboard-date">
+      {!isMarketingHeatMap ? (
+        <div className="dashboard-date ">
           <img src={switchIcon} alt="Compare" />
-          <div className="date-picker_wrapper">
+          <div className={`date-picker_wrapper ${!isDashboard ? 'disabled' : ''}`}>
             <TypographyKit className="top-text-inputs" variant="subtitle">
               Compare to
             </TypographyKit>
             <TypographyKit component="div" className="date-input-wrapper">
               <PaperKit
                 style={{ background: '#fff' }}
-                onClick={() => setSelected(!selected)}
+                onClick={() => setSelected(isDashboard ? !selected : false)}
                 className={`date-input ${selected ? 'selected' : ''}`}>
                 <TypographyKit component="div" className="date-typography">
                   <CalendarMonthIcon />
@@ -758,6 +776,7 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn }) => {
                 ranges={compareDateValue}
                 direction="horizontal"
                 dragSelectionEnabled={false}
+                weekStartsOn={1}
               />
             )}
           </div>

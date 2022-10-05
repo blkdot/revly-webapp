@@ -9,6 +9,7 @@ function usePlanningOffers({ dateRange }) {
   const { vendorsContext } = useDate();
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { environment } = config;
   const { user } = useUserAuth();
 
@@ -16,6 +17,7 @@ function usePlanningOffers({ dateRange }) {
 
   const handleRequest = () => {
     let isCancelled = false;
+    setIsLoading(true);
     getOffers({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
@@ -23,6 +25,7 @@ function usePlanningOffers({ dateRange }) {
       start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
+      setIsLoading(false);
       if (isCancelled) return;
 
       setOffers(data.data.offers);
@@ -36,7 +39,7 @@ function usePlanningOffers({ dateRange }) {
     handleRequest();
   }, [dateRange, vendorsContext]);
 
-  return { offers, dateRange, reloadRequest };
+  return { offers, dateRange, reloadRequest, isLoading };
 }
 
 export default usePlanningOffers;
