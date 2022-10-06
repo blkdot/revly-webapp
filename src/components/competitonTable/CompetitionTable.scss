@@ -2,6 +2,21 @@
   box-shadow: none;
   border: none;
 
+  >div {
+    scroll-behavior: smooth;
+    &::-webkit-scrollbar{
+      height: 6px;
+    }
+    &::-webkit-scrollbar-track{
+      background-color: #F3F3F3;
+      border-radius: 31px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #637381;
+      border-radius: 31px;
+    }
+  }
+
   th,
   td {
     border-bottom: none;
@@ -13,6 +28,7 @@
 
   table {
     background-color: #fff;
+    margin-bottom: 40px;
   }
 
   tbody {
@@ -125,11 +141,13 @@
     }
   }
 }
-@media(max-width: 795px){
-  .competition-table-conatiner.competition-table-conatiner{
+
+@media(max-width: 795px) {
+  .competition-table-conatiner.competition-table-conatiner {
     width: 220%;
   }
 }
+
 @media(max-width: 695px) {
   .competition-table-conatiner.competition-table-conatiner {
     width: 250%;
