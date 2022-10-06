@@ -41,37 +41,62 @@ const PlanningOffersTable = ({ rows }) => {
   };
 
   const renderSimpleRow = (r, h) => (
-    <span style={{ whiteSpace: 'nowrap' }} key={h.id}>
-      {r[h.id] === null ? '-' : r[h.id]}
-    </span>
+    <TableCellKit
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}>
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r[h.id] === null ? '-' : r[h.id]}
+      </span>
+    </TableCellKit>
   );
 
-  const renderPlatform = (r) => (
-    <img
-      className="planning-platform"
-      src={platformObject[r.platform].src}
-      alt={platformObject[r.platform].name}
-    />
+  const renderSimpleRowNotCentered = (r, h) => (
+    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', minWidth: '14rem' }}>
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r[h.id] === null ? '-' : r[h.id]}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderPlatform = (r, h) => (
+    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', minWidth: '8rem' }}>
+      <img
+        className="planning-platform"
+        style={{ marginRight: '1.5rem' }}
+        src={platformObject[r.platform].src}
+        alt={platformObject[r.platform].name}
+      />
+    </TableCellKit>
   );
 
   const renderPercent = (r, h) => (
-    <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
-      {r[h.id]}%
-    </span>
+    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+        {r[h.id]}%
+      </span>
+    </TableCellKit>
   );
 
-  const renderCurrency = (r, h) => <span style={{ whiteSpace: 'nowrap' }}>{r[h.id]}&nbsp;AED</span>;
+  const renderCurrency = (r, h) => (
+    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+      <span style={{ whiteSpace: 'nowrap' }}>{r[h.id]}&nbsp;AED</span>
+    </TableCellKit>
+  );
 
   const renderCalculatedPercent = (r, h) => (
-    <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
-      {r[h.id] * 10}%
-    </span>
+    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+        {r[h.id] * 10}%
+      </span>
+    </TableCellKit>
   );
 
   const renderStatus = (r, h) => (
-    <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
-      {r[h.id]}
-    </span>
+    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem' }}>
+      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
+        {r[h.id]}
+      </span>
+    </TableCellKit>
   );
 
   const cellTemplatesObject = {
@@ -86,17 +111,16 @@ const PlanningOffersTable = ({ rows }) => {
     status: renderStatus,
     ad_status: renderStatus,
     conversion_rate: renderCalculatedPercent,
+    vendor_name: renderSimpleRowNotCentered,
+    target: renderSimpleRowNotCentered,
   };
 
   const renderRowsByHeader = (r) =>
-    getHeadCells().map((h) => (
-      <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem' }}>
-        {cellTemplatesObject[h.id] ? cellTemplatesObject[h.id](r, h) : renderSimpleRow(r, h)}
-      </TableCellKit>
-    ));
+    getHeadCells().map((h) =>
+      cellTemplatesObject[h.id] ? cellTemplatesObject[h.id](r, h) : renderSimpleRow(r, h),
+    );
 
   const renderTableBody = () => {
-    // TODO: show message : no offers retrieved
     if (!rows || rows.length < 1)
       return (
         <TableCellKit colSpan={getHeadCells().length} style={{ textAlign: 'center' }}>
