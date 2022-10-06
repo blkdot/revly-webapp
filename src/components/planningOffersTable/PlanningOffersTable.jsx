@@ -40,11 +40,7 @@ const PlanningOffersTable = ({ rows }) => {
       .filter((el) => !ignoredFields.includes(el.id));
   };
 
-  const renderSimpleRow = (r, h) => (
-    <span style={{ whiteSpace: 'nowrap' }} key={h.id}>
-      {r[h.id] === null ? '-' : r[h.id]}
-    </span>
-  );
+  const renderSimpleRow = (r, h) => <span key={h.id}>{r[h.id] === null ? '-' : r[h.id]}</span>;
 
   const renderPlatform = (r) => (
     <img
@@ -90,7 +86,7 @@ const PlanningOffersTable = ({ rows }) => {
 
   const renderRowsByHeader = (r) =>
     getHeadCells().map((h) => (
-      <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem' }}>
+      <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', minWidth: '10rem' }}>
         {cellTemplatesObject[h.id] ? cellTemplatesObject[h.id](r, h) : renderSimpleRow(r, h)}
       </TableCellKit>
     ));
