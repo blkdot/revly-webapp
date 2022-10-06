@@ -25,7 +25,7 @@ const EnhancedTableHead = (props) => {
             <TableSortLabelKit
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              style={{ whiteSpace: 'nowrap' }}
+              style={{ whiteSpace: 'nowrap', marginLeft: '1rem' }}
               onClick={createSortHandler(headCell.id)}>
               {headCell.label}
               {orderBy === headCell.id ? (
