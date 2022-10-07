@@ -27,3 +27,90 @@
   justify-content: space-between;
 }
 
+.marketing-links.marketing-links {
+  width: 100% !important;
+
+  >span {
+    &::before {
+      width: 180px !important;
+    }
+
+    &.active {
+      &::before {
+        left: 180px !important;
+        width: 205px !important;
+      }
+    }
+  }
+}
+
+.marketing-paper.marketing-paper {
+  margin-top: 20px;
+  background: #fff !important;
+  box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12);
+  border-radius: 16px;
+  padding: 20px 30px;
+
+  >div {
+    width: 100%;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+}
+
+.marketing-filters {
+  display: flex;
+  align-items: center;
+
+  >div {
+    display: flex;
+    grid-gap: 10px;
+    border-right: 1px solid #919EABCC;
+    padding-right: 10px;
+    margin-right: 10px;
+  }
+
+  button {
+    border-radius: 30px;
+    padding: 10px 15px;
+    color: #919EABCC;
+    transition: .4s;
+    text-transform: capitalize;
+    border-color: #919EABCC;
+    border-width: 2px;
+    font-size: 13px;
+
+    &:hover {
+      color: #906BFF;
+      border-color: #906BFF;
+      border-width: 2px;
+
+      img {
+        filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%) contrast(102%);
+      }
+    }
+
+    img {
+      margin-right: 10px;
+    }
+  }
+}
+
+.marketing-delete.marketing-delete {
+  font-size: 13px;
+  border-radius: 30px;
+  padding: 10px 15px;
+  color: #637381;
+  transition: .4s;
+  text-transform: capitalize;
+  border-color: #637381;
+  font-weight: 700;
+  &:hover {
+    border-color: #637381;
+    cursor: not-allowed;
+  }
+
+  img {
+    margin-right: 10px;
+  }
+}
