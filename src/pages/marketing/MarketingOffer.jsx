@@ -19,6 +19,7 @@ import TrashIcon from '../../assets/images/ic_trash.png';
 import plus from '../../assets/images/plus.png';
 import MarketingTable from '../../components/marketingTable/MarketingTable';
 import { OffersTableData } from '../../data/fakeDataMarketing';
+import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
@@ -87,6 +88,12 @@ const MarketingOffer = () => {
                   {name}
                 </ButtonKit>
               ))}
+              <FilterDropdown
+                items={[{ value: 1, text: 'test' }]}
+                values={[]}
+                handleChange={() => null}
+                label="test2"
+              />
             </div>
             <ButtonKit variant="outlined">
               <img src={plus} alt="Filter Icon" />

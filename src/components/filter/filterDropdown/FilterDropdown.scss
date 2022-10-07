@@ -1,0 +1,104 @@
+.comp-dropdown {
+  // border-bottom: 1px solid $color-primary;
+  display: flex;
+  position: relative;
+
+  button {
+    border-radius: 30px;
+    padding: 10px 15px;
+    color: #919eabcc;
+    transition: 0.4s;
+    text-transform: capitalize;
+    border-color: #919eabcc;
+    border-width: 2px;
+    font-size: 13px;
+
+    &:hover {
+      color: #906bff;
+      border-color: #906bff;
+      border-width: 2px;
+
+      img {
+        filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
+          contrast(102%);
+      }
+    }
+
+    img {
+      margin-right: 10px;
+    }
+  }
+
+  span {
+    font-weight: bold;
+    align-self: center;
+  }
+
+  .comp-dropdown__content {
+    position: absolute;
+    border-radius: 12px;
+    overflow: visible;
+    background: white;
+    box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    width: 100%;
+    max-width: 2rem;
+    margin-top: 4.2rem;
+    box-sizing: border-box;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+
+    > div {
+      scroll-behavior: smooth;
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: #f3f3f3;
+        border-radius: 31px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #637381;
+        border-radius: 31px;
+      }
+    }
+
+    .comp-dropdown__item {
+      margin: 0.2rem 0;
+
+      &::after {
+        border: 1px solid rgba(145, 158, 171, 0.32);
+        z-index: 998;
+        top: -7px;
+        background-color: #fff;
+        left: 15px;
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        transform: rotate(45deg);
+        box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
+      }
+
+      span {
+        padding: 0.6rem 0.5rem;
+        white-space: nowrap;
+        z-index: 1334;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &.__active {
+        // background-color: $color-secondary-darker;
+
+        span {
+          // color: $color-light;
+        }
+      }
+    }
+  }
+}
