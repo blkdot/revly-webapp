@@ -191,11 +191,9 @@ const EnhancedTableHead = (props) => {
   );
 };
 
-const MarketingTable = ({ rows }) => {
+const MarketingTable = ({ rows, selected, setSelected }) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
-  const [selected, setSelected] = React.useState([]);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -235,7 +233,7 @@ const MarketingTable = ({ rows }) => {
   return (
     <BoxKit className="competition-box" sx={{ width: '100%' }}>
       <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
-        <TableContainerKit>
+        <TableContainerKit id="markeitngContainer">
           <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
               numSelected={selected.length}
@@ -246,16 +244,16 @@ const MarketingTable = ({ rows }) => {
               rowCount={rows.length}
             />
             <TableBodyKit>
-              {stableSort(rows, getComparator(order, orderBy)).map((row) => {
-                const isItemSelected = isSelected(row.date);
+              {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                const isItemSelected = isSelected(index);
                 return (
                   <TableRowKit
-                    className="marketing-table-top"
-                    onClick={(event) => handleClick(event, row.name)}
+                    className={`marketing-table-top ${isItemSelected ? 'selected' : ''}`}
+                    onClick={(event) => handleClick(event, index)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.date}
+                    key={row.id}
                     selected={isItemSelected}>
                     <TableCellKit component="th" id="dateMn" scope="row">
                       {row.date}

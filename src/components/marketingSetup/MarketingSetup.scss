@@ -223,9 +223,6 @@
   }
 
   .right-part-main-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin-bottom: 30px;
 
     >h5 {
@@ -371,4 +368,75 @@
       text-align: center;
     }
   }
+}
+
+.color-btns {
+  display: flex;
+  justify-content: space-between;
+
+  >p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24.6%;
+    height: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  >p:nth-of-type(1) {
+    background-color: #F6F3FF;
+  }
+
+  >p:nth-of-type(2) {
+    background-color: #EDE7FF;
+  }
+
+  >p:nth-of-type(3) {
+    background-color: #CAB8FF;
+  }
+
+  >p:nth-of-type(4) {
+    background-color: #906BFF;
+  }
+}
+
+.setup-container {
+  overflow: visible !important;
+}
+
+.heatmap-btn {
+  position: relative;
+  overflow: hidden;
+  transition: .4s;
+
+  >span {
+    position: absolute;
+    left: -36px;
+    opacity: 0;
+    visibility: hidden;
+    transition: .4s;
+
+    >span {
+      top: 10px;
+      height: 1px;
+      width: 60px;
+      position: absolute;
+      transform: rotate(-107deg);
+      z-index: 10;
+      background-color: #2D99FF;
+      left: calc(5.5px * var(--i));
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #83CFFF;
+    >span{
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
 }

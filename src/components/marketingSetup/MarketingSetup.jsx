@@ -196,7 +196,7 @@ const MarketingSetup = ({ active, setActive }) => {
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
-        <ContainerKit>
+        <ContainerKit className="setup-container">
           <div className="left-part">
             <div className="left-part-top">
               <div>
@@ -261,16 +261,20 @@ const MarketingSetup = ({ active, setActive }) => {
             </div>
             <TypographyKit variant="div" className="right-part-main">
               <TypographyKit className="right-part-main-title" variant="div">
-                <TypographyKit variant="h5">
-                  Max Revenue this week
-                  <TypographyKit variant="span">${OrderHeatMap.max_value}</TypographyKit>
+                <TypographyKit
+                  variant="div"
+                  sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <TypographyKit variant="h6">Min Revenue this week</TypographyKit>
+                  <TypographyKit variant="h6">Max Revenue this week</TypographyKit>
                 </TypographyKit>
-                <TypographyKit variant="h5">
-                  Min Revenue this week
-                  <TypographyKit variant="span">${OrderHeatMap.min_value}</TypographyKit>
+                <TypographyKit variant="div" className="color-btns">
+                  <TypographyKit>&lt;1</TypographyKit>
+                  <TypographyKit>&lt;30</TypographyKit>
+                  <TypographyKit>&lt;50</TypographyKit>
+                  <TypographyKit>&lt;$5,213.98</TypographyKit>
                 </TypographyKit>
               </TypographyKit>
-              <TypographyKit variant="div" sx={{ display: 'flex' }}>
+              <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>
                 <TypographyKit variant="div" className="right-part-main-hour">
                   <TypographyKit>
                     <img src={OpacityLogo} alt="Logo" />
@@ -294,13 +298,19 @@ const MarketingSetup = ({ active, setActive }) => {
                       <TypographyKit key={Object.keys(obj)[index]} variant="div">
                         {Object.keys(obj).map((num, indexObj) => (
                           <TypographyKit
+                            className="heatmap-btn"
                             sx={{
                               background: `${
                                 obj[indexObj + 5].color ? obj[indexObj + 5].color : '#919EAB1F'
                               }`,
                             }}
-                            key={num}
-                          />
+                            key={num}>
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((n) => (
+                              <span>
+                                <span style={{ '--i': n }} key={n} />
+                              </span>
+                            ))}
+                          </TypographyKit>
                         ))}
                       </TypographyKit>
                     ))}

@@ -52,6 +52,28 @@ export const OrderHeatMap = {
 
 export const OffersTableData = [
   {
+    date: '10/6/15',
+    branche: 'Kathryn Murphy',
+    platform: 'deliveroo',
+    day: 'Friday',
+    slot: 'Slot',
+    discountType: 'Discount type',
+    procent: -4,
+    minOrder: 3,
+    target: 'Target',
+    status: 'active',
+    discountTypePr: 'ID',
+    targetPr: 'active',
+    statusPr: 12,
+    caroussel: 12,
+    rank: 12,
+    orders: 6,
+    avgBasket: '120 Mad',
+    roi: 24,
+    revenue: '600 Mad',
+    id: 1,
+  },
+  {
     date: '10/6/13',
     branche: 'Kathryn Murphy',
     platform: 'deliveroo',
@@ -71,5 +93,6 @@ export const OffersTableData = [
     avgBasket: '120 Mad',
     roi: 24,
     revenue: '600 Mad',
+    id: 2,
   },
 ];

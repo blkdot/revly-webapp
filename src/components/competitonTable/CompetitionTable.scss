@@ -100,12 +100,15 @@
 
 .competition-status {
   padding: 5px 7px;
-  border-radius: 6px;
-
+    text-transform: capitalize;
+      border-radius: 6px;
+  &.canceled{
+    background: #FFF7CD;
+    color: #B78103;
+  }
   &.active {
     background: rgba(84, 214, 44, 0.16);
     color: #229A16;
-    text-transform: capitalize;
   }
 }
 

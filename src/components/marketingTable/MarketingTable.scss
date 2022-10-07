@@ -1,6 +1,14 @@
 .marketing-table-top {
-  background-color: #fff !important;
+  background: #fff !important;
   border-bottom: 1px solid #919EAB3D;
+  &.selected {
+
+    th,
+    td {
+      background: #FF484214 !important;
+    }
+  }
+
   th,
   td {
     white-space: nowrap;
@@ -9,13 +17,15 @@
       text-align: center;
     }
   }
-  td{
+
+  td {
     padding-right: 40px;
     text-align: center;
   }
 }
-.marketing-thead{
-  >tr{
+
+.marketing-thead {
+  >tr {
     border-bottom: none !important;
   }
 }
