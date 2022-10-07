@@ -13,7 +13,7 @@ import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import BranchIcon from '../../assets/images/ic_branch.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import OrderHeatMap from '../../data/fakeDataMarketing';
+import { OrderHeatMap } from '../../data/fakeDataMarketing';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import TypeDiscountIcon from '../../assets/images/ic_type-dis.png';
 import InputKit from '../../kits/input/InputKit';
