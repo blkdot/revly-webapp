@@ -1,5 +1,6 @@
-import { startOfWeek } from 'date-fns';
+import { format, startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
+import MarketingRadio from './MarketingRadio';
 import CloseIcon from '../../assets/images/ic_close.png';
 import Dates from '../dates/Dates';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -8,33 +9,41 @@ import './MarketingSetup.scss';
 import PaperKit from '../../kits/paper/PaperKit';
 import ContainerKit from '../../kits/container/ContainerKit';
 import BoxKit from '../../kits/box/BoxKit';
-import LinearProgressKit from '../../kits/linearProgress/LinearProgressKit';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
-import BranchIcon from '../../assets/images/ic_branch.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import { OrderHeatMap } from '../../data/fakeDataMarketing';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TypeDiscountIcon from '../../assets/images/ic_type-dis.png';
 import InputKit from '../../kits/input/InputKit';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
+import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
+import talabat from '../../assets/images/talabat.png';
+import deliveroo from '../../assets/images/deliveroo.png';
+import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
+import BranchesIcon from '../../assets/images/ic_branch.png';
+import menuIcon from '../../assets/images/ic_menu.png';
+import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
+import BreakIcon from '../../assets/images/ic_break.png';
+import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
+import RadioKit from '../../kits/radio/RadioKit';
+import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
+import CalendarEventIcon from '../../assets/images/ic_calendar-event.png';
 
 const MarketingSetup = ({ active, setActive }) => {
-  const [progress, setProgress] = useState(33.33);
-  const [platform, setPlatform] = useState('');
   const [branch, setBranch] = useState('');
-  const [typeDiscount, setTypeDiscount] = useState('');
+  const [platform, setPlatform] = useState('talabat');
+  const [selected, setSelected] = useState(1);
+  const [discount, setDiscount] = useState('Percentage Discount');
+  const [percentage, setPercentage] = useState(0);
   const [links, setLinks] = useState(false);
-  const [menu, setMenu] = useState('');
-  const [item, setItem] = useState('');
+  const [menu, setMenu] = useState('Offer on the whole Menu');
   const [minOrder, setMinOrder] = useState(0);
-  const [maxOrder, setMaxOrder] = useState(0);
+  const [duration, setDuration] = useState('Starting Now');
   const [disabled, setDisabled] = useState(false);
   const [beforePeriodBtn, setBeforePeriodBtn] = useState({
     startDate: startOfWeek(new Date()),
     endDate: new Date(),
   });
-
+  const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const heatMap = () => {
     const data = OrderHeatMap.values;
@@ -59,180 +68,200 @@ const MarketingSetup = ({ active, setActive }) => {
     });
     return Object.values(heatMapObj);
   };
+  const getPlatform = (e) => {
+    const { value } = e.target;
+    setPlatform(value);
+    if (value === 'talabat') {
+      setSteps([0, 1, 2, 3]);
+    } else {
+      setSteps([0, 1, 2, 3, 4]);
+    }
+  };
   const getProgress = () => {
-    if (progress === 33.33) {
+    if (selected === 1) {
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h4">1.Select platform and branches</TypographyKit>
-          <TypographyKit sx={{ fontSize: '18px' }} color="#637381" variant="subtitle">
+          <TypographyKit variant="h6">1.Select platform and branches</TypographyKit>
+          <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
             Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
           </TypographyKit>
+          <div className="left-part-radio-wrapper">
+            <RadioGroupKit
+              aria-labelledby="demo-radio-buttons-group-label"
+              value={platform}
+              onChange={(e) => getPlatform(e)}
+              name="radio-buttons-group">
+              <MarketingRadio className="talabat" icon={talabat} title="talabat" />
+              <MarketingRadio className="deliveroo" icon={deliveroo} title="deliveroo" />
+            </RadioGroupKit>
+          </div>
           <CompetitionDropdown
-            rows={['talabat', 'deliveroo']}
-            icon={PlatformIcon}
-            title="Select a Platform"
-            className="top-competition"
-            setRow={setPlatform}
-            select={platform}
-          />
-          <CompetitionDropdown
-            rows={['1 Branch', '2 Branch']}
-            icon={BranchIcon}
+            rows={['1 branch', '2 branch']}
+            icon={BranchesIcon}
             title="Select Branches"
-            className="top-competition"
+            className="top-competition marketing-dropdown"
             setRow={setBranch}
             select={branch}
           />
         </div>
       );
     }
-    if (progress === 66.66) {
+    if (platform === 'deliveroo') {
+      if (selected === 2) {
+        return (
+          <div className="left-part-middle">
+            <TypographyKit variant="h6">2.Select the Type of the offer</TypographyKit>
+            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            </TypographyKit>
+            <RadioGroupKit
+              aria-labelledby="demo-radio-buttons-group-label"
+              value={menu}
+              onChange={(e) => setMenu(e.target.value)}
+              name="radio-buttons-group-menu">
+              <MarketingRadio
+                icon={menuIcon}
+                title="Offer on the whole Menu"
+                subtitle="Ex : Lorme Ipsum 24%"
+              />
+              <MarketingRadio
+                disabled
+                icon={ItemMenuIcon}
+                title="Offer on An Item from the Menu"
+                subtitle="Ex : Lorme Ipsum 24%"
+              />
+            </RadioGroupKit>
+            <RadioGroupKit
+              aria-labelledby="demo-radio-buttons-group-label"
+              value={discount}
+              onChange={(e) => setDiscount(e.target.value)}
+              name="radio-buttons-group-discount">
+              <BoxKit className="left-part-radio under-textfields">
+                <div className="radio">
+                  <div>
+                    <span>
+                      <img src={BreakIcon} alt="Box Icon" />
+                    </span>
+                    <div>Percentage Discount</div>
+                  </div>
+                  <FormControlLabelKit value="Percentage Discount" control={<RadioKit />} />
+                </div>
+                <TypographyKit className="min-max-textfields" variant="div">
+                  <TypographyKit variant="div">
+                    <InputKit
+                      onChange={(e) => setPercentage(e.target.value)}
+                      type="number"
+                      placeholder="Percentage Value %"
+                      className="min-max-textfield"
+                    />
+                  </TypographyKit>
+                </TypographyKit>
+                <TypographyKit className="min-max-textfields" variant="div">
+                  <TypographyKit variant="div">
+                    <TypographyKit>Min Order</TypographyKit>
+                    <InputKit
+                      onChange={(e) => setMinOrder(e.target.value)}
+                      type="number"
+                      placeholder="$0.00"
+                      className="min-max-textfield"
+                    />
+                  </TypographyKit>
+                </TypographyKit>
+              </BoxKit>
+            </RadioGroupKit>
+          </div>
+        );
+      }
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h4">2.Select the Type of the offer</TypographyKit>
-          <TypographyKit sx={{ fontSize: '18px' }} color="#637381" variant="subtitle">
+          <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
+          <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
             Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
           </TypographyKit>
-          <TextfieldKit
-            onChange={(e) => setMenu(e.target.value)}
-            className="marketing-textfield"
-            label="Menu"
-            variant="outlined"
-          />
-          <TextfieldKit
-            onChange={(e) => setItem(e.target.value)}
-            className="marketing-textfield"
-            label="Item"
-            variant="outlined"
-          />
-          <CompetitionDropdown
-            rows={['1 type', '2 type']}
-            icon={TypeDiscountIcon}
-            title="Type of discount"
-            className="top-competition type-dis"
-            setRow={setTypeDiscount}
-            select={typeDiscount}
-          />
-          <TypographyKit className="min-max-textfields" variant="div">
-            <TypographyKit variant="div">
-              <TypographyKit>Min Order</TypographyKit>
-              <InputKit
-                onChange={(e) => setMinOrder(e.target.value)}
-                type="number"
-                placeholder="$0.00"
-                className="min-max-textfield"
-              />
-            </TypographyKit>
-            <TypographyKit variant="div">
-              <TypographyKit>Max Order</TypographyKit>
-              <InputKit
-                onChange={(e) => setMaxOrder(e.target.value)}
-                type="number"
-                placeholder="$0.00"
-                className="min-max-textfield"
-              />
-            </TypographyKit>
-          </TypographyKit>
+          <RadioGroupKit
+            className="duration-wrapper"
+            aria-labelledby="demo-radio-buttons-group-label"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+            name="radio-buttons-group-discount">
+            <BoxKit className="left-part-radio">
+              <div>
+                <span>
+                  <img src={CalendarCheckedIcon} alt="Calendar checked Icon" />
+                </span>
+                <div>
+                  <div>Starting Now</div>
+                  <p>{format(new Date(), 'dd MMM yyyy HH:mm')}</p>
+                </div>
+              </div>
+              <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
+            </BoxKit>
+            <BoxKit className="left-part-radio">
+              <div>
+                <span>
+                  <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                </span>
+                <div>
+                  <div>Program the offer duration</div>
+                  <p>Recurrence customized</p>
+                </div>
+              </div>
+              <FormControlLabelKit value="Program the offer duration" control={<RadioKit />} />
+            </BoxKit>
+          </RadioGroupKit>
         </div>
       );
     }
-    return (
-      <div className="left-part-middle">
-        <TypographyKit variant="h4">3.Select the Duration</TypographyKit>
-        <TypographyKit sx={{ fontSize: '18px' }} color="#637381" variant="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-        </TypographyKit>
-        <TextfieldKit
-          onChange={(e) => setMenu(e.target.value)}
-          className="marketing-textfield"
-          label="Menu"
-          variant="outlined"
-        />
-        <TextfieldKit
-          onChange={(e) => setItem(e.target.value)}
-          className="marketing-textfield"
-          label="Item"
-          variant="outlined"
-        />
-        <CompetitionDropdown
-          rows={['1 type', '2 type']}
-          icon={TypeDiscountIcon}
-          title="Type of discount"
-          className="top-competition type-dis"
-          setRow={setTypeDiscount}
-          select={typeDiscount}
-        />
-        <TypographyKit className="min-max-textfields" variant="div">
-          <TypographyKit variant="div">
-            <TypographyKit>Min Order</TypographyKit>
-            <InputKit
-              onChange={(e) => setMinOrder(e.target.value)}
-              type="number"
-              placeholder="$0.00"
-              className="min-max-textfield"
-            />
-          </TypographyKit>
-          <TypographyKit variant="div">
-            <TypographyKit>Max Order</TypographyKit>
-            <InputKit
-              onChange={(e) => setMaxOrder(e.target.value)}
-              type="number"
-              placeholder="$0.00"
-              className="min-max-textfield"
-            />
-          </TypographyKit>
-        </TypographyKit>
-      </div>
-    );
+    return '';
   };
   useEffect(() => {
-    if (progress === 33.33) {
-      setDisabled(!(platform && branch));
+    if (platform === 'deliveroo') {
+      if (selected === 1) {
+        setDisabled(!branch);
+      }
+      if (selected === 2) {
+        setDisabled(!(menu && percentage > 0 && minOrder > 0));
+      }
+    } else if (platform === 'talabat') {
+      if (selected === 1) {
+        setDisabled(!branch);
+      }
+      if (selected === 2) {
+        setDisabled(!(menu && percentage > 0 && minOrder > 0));
+      }
     }
-    if (progress === 66.66) {
-      setDisabled(!(menu && item && typeDiscount && minOrder && maxOrder));
-    }
-  }, [progress, platform, branch, menu, item, typeDiscount, minOrder, maxOrder]);
+  }, [menu, minOrder, branch, platform, percentage]);
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
         <ContainerKit className="setup-container">
           <div className="left-part">
-            <div className="left-part-top">
-              <div>
-                <TypographyKit onClick={() => setProgress(66.66)} variant="h4">
-                  Set up an offer
-                </TypographyKit>
+            <div>
+              <div className="left-part-top">
+                <div>
+                  <TypographyKit variant="h4">Set up an offer</TypographyKit>
 
-                <img
-                  tabIndex={-1}
-                  role="presentation"
-                  onClick={() => setActive(false)}
-                  src={CloseIcon}
-                  alt="close icon"
-                />
+                  <img
+                    tabIndex={-1}
+                    role="presentation"
+                    onClick={() => setActive(false)}
+                    src={CloseIcon}
+                    alt="close icon"
+                  />
+                </div>
+                <MarketingSetupStepper selected={selected} steps={steps} />
               </div>
-              <BoxKit className="progress-bar" sx={{ display: 'flex', alignItems: 'center' }}>
-                <BoxKit sx={{ width: '100%', mr: 1 }}>
-                  <LinearProgressKit variant="determinate" value={progress} />
-                </BoxKit>
-                <BoxKit sx={{ minWidth: 35 }}>
-                  <TypographyKit variant="body2" color="text.secondary">{`${Math.round(
-                    progress / 33,
-                  )} / 3`}</TypographyKit>
-                </BoxKit>
-              </BoxKit>
+              {getProgress()}
             </div>
-            {getProgress()}
             <div className="left-part-bottom">
               <ButtonKit
-                onClick={() => setProgress(progress - 33.33)}
+                onClick={() => setSelected(selected - 1)}
                 variant="outlined"
-                disabled={!!(progress < 66.66)}>
+                disabled={!(selected >= 2)}>
                 Previous Step
               </ButtonKit>
               <ButtonKit
-                onClick={() => setProgress(progress + 33.33)}
+                onClick={() => setSelected(selected + 1)}
                 disabled={disabled}
                 variant="contained">
                 Next Step
