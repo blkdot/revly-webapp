@@ -1,17 +1,33 @@
 import React from 'react';
-import { Dialog } from '@mui/material';
 
 import './FilterMore.scss';
 
 import filterOffersData from '../../../data/filterOffersData';
 import FilterDropdown from '../filterDropdown/FilterDropdown';
-import RangeSelector from '../../rangeSelector/RangeSelector';
+import ButtonKit from '../../../kits/button/ButtonKit';
+import TypographyKit from '../../../kits/typography/TypographyKit';
+import PaperKit from '../../../kits/paper/PaperKit';
+import CloseIcon from '../../../assets/images/ic_close.png';
 
 const FilterMore = (props) => {
-  const { open, onClose, onChangeMultipleSelect, filters, onChangeProcent } = props;
+  const { onClose, onChangeMultipleSelect, filters } = props;
 
   return (
-    <Dialog onClose={onClose} open={open}>
+    <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper filter-paper">
+      <div>
+        <TypographyKit>More Filters</TypographyKit>
+        <img
+          role="presentation"
+          tabIndex={-1}
+          onClick={() => onClose()}
+          src={CloseIcon}
+          alt="close icon"
+        />
+      </div>
+      <TypographyKit variant="subtitle">
+        Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+        vivamus risus.
+      </TypographyKit>
       <div className="filter-more">
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ marginTop: '0.5rem', width: '100%' }}>
@@ -31,20 +47,15 @@ const FilterMore = (props) => {
               label="Days"
             />
           </div>
-          <div style={{ marginTop: '1.5rem' }}>
-            <RangeSelector
-              min={-200}
-              max={200}
-              step={2}
-              values={filters.procent}
-              onChange={onChangeProcent}
-              valueLabelDisplay="auto"
-              label="test"
-            />
-          </div>
         </div>
       </div>
-    </Dialog>
+      <div>
+        <ButtonKit variant="contained">Confirme and Filter</ButtonKit>
+        <ButtonKit variant="outlined" onClick={() => onClose()}>
+          Cancel
+        </ButtonKit>
+      </div>
+    </PaperKit>
   );
 };
 

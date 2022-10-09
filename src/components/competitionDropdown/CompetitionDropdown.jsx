@@ -33,7 +33,7 @@ const CompetitionDropdown = ({ className, title, rows, select, icon, setRow }) =
         <InputLabelKit
           className="restaurant-dropdown-input competition-dropdown"
           id="demo-multiple-checkbox-label">
-          <img src={icon} alt="Select Icon" />
+          {icon ? <img src={icon} alt="Select Icon" /> : ''}
           {title}
         </InputLabelKit>
         <SelectKit

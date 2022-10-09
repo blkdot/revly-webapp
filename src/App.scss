@@ -27,10 +27,18 @@ body {
 
   >div:nth-of-type(1)~div {
     width: calc(100% - 70px);
+    .delete-overlay{
+      width: calc(100% - 70px);
+      left: 70px;
+    }
   }
 
   >.opened.opened~div {
     width: calc(100% - 280px);
+    .delete-overlay{
+      width: calc(100% - 280px);
+      left: 280px;
+    }
   }
 
   >div:nth-of-type(2) {
@@ -63,6 +71,10 @@ h2 {
 
     >.opened.opened~div {
       width: calc(100% - 200px);
+      .delete-overlay {
+          width: calc(100% - 200px);
+          left: 200px;
+        }
     }
 
   }
