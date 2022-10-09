@@ -468,8 +468,32 @@
   overflow: hidden;
 
   &.under-textfields {
+    align-items: flex-start;
     flex-direction: column;
-
+    .picker-duration{
+      margin-top: 20px;
+    }
+    >div:nth-of-type(2){
+      opacity: 0;
+      visibility: hidden;
+      height: 0;
+      margin: 0;
+      transition: .4s;
+    }
+    &.active{
+      >div:nth-of-type(2){
+        opacity: 1;
+        visibility: visible;
+        margin-top: 20px;
+        height: 100%;
+      }
+      p{
+        img{
+          transition: .4s;
+          transform: rotate(90deg);
+        }
+      }
+    }
     .MuiOutlinedInput-root {
       width: 100%;
     }
@@ -479,7 +503,6 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      margin-bottom: 20px;
 
       >div {
         width: 100%;
@@ -589,6 +612,9 @@
         font-weight: 400;
         font-size: 12px;
         line-height: 18px;
+        img{
+          margin-left: 15px;
+        }
       }
     }
 
@@ -614,8 +640,45 @@
     border-radius: 8px !important;
   }
 }
-.duration-wrapper{
+
+.duration-wrapper {
   display: flex;
   flex-direction: column;
   grid-gap: 20px;
+}
+
+.radio-dates {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .picker-duration {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    >div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      grid-gap: 5px;
+      >div{
+        >div {
+          height: 50px;
+          display: flex;
+          flex-direction: row-reverse;
+        }
+        fieldset{
+          border-radius: 30px;
+        }
+    }}
+
+
+    .hour-picker {
+      width: 40%;
+    }
+  }
+}
+.radio-group-day{
+  padding-left: 10px;
 }

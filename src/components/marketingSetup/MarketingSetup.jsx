@@ -13,7 +13,6 @@ import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import { OrderHeatMap } from '../../data/fakeDataMarketing';
-import InputKit from '../../kits/input/InputKit';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
 import talabat from '../../assets/images/talabat.png';
@@ -27,22 +26,35 @@ import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
 import RadioKit from '../../kits/radio/RadioKit';
 import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
 import CalendarEventIcon from '../../assets/images/ic_calendar-event.png';
+import BasicTimePicker from '../timePicker/TimePicker';
+import TextfieldKit from '../../kits/textfield/TextfieldKit';
+import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
+import ArrowIcon from '../../assets/images/arrow.png';
+import TimerIcon from '../../assets/images/ic_timer.png';
 
 const MarketingSetup = ({ active, setActive }) => {
   const [branch, setBranch] = useState('');
   const [platform, setPlatform] = useState('talabat');
   const [selected, setSelected] = useState(1);
   const [discount, setDiscount] = useState('Percentage Discount');
-  const [percentage, setPercentage] = useState(0);
   const [links, setLinks] = useState(false);
   const [menu, setMenu] = useState('Offer on the whole Menu');
-  const [minOrder, setMinOrder] = useState(0);
+  const [discountPercentage, setDiscountPercentage] = useState('');
+  const [minOrder, setMinOrder] = useState('');
   const [duration, setDuration] = useState('Starting Now');
   const [disabled, setDisabled] = useState(false);
   const [beforePeriodBtn, setBeforePeriodBtn] = useState({
     startDate: startOfWeek(new Date()),
     endDate: new Date(),
   });
+  const [startingDate, setStartingDate] = useState();
+  const [startingHour, setStartingHour] = useState();
+  const [endingDate, setEndingDate] = useState(new Date());
+  const [endingHour, setEndingHour] = useState(
+    new Date(null, null, null, format(new Date(), 'HH'), 0),
+  );
+  const [customDay, setCustomDay] = useState('');
+
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const heatMap = () => {
@@ -148,22 +160,23 @@ const MarketingSetup = ({ active, setActive }) => {
                 </div>
                 <TypographyKit className="min-max-textfields" variant="div">
                   <TypographyKit variant="div">
-                    <InputKit
-                      onChange={(e) => setPercentage(e.target.value)}
-                      type="number"
-                      placeholder="Percentage Value %"
-                      className="min-max-textfield"
+                    <CompetitionDropdown
+                      rows={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                      title="Percentage Value %"
+                      className="top-competition marketing-dropdown"
+                      setRow={setDiscountPercentage}
+                      select={discountPercentage}
                     />
                   </TypographyKit>
                 </TypographyKit>
                 <TypographyKit className="min-max-textfields" variant="div">
                   <TypographyKit variant="div">
-                    <TypographyKit>Min Order</TypographyKit>
-                    <InputKit
-                      onChange={(e) => setMinOrder(e.target.value)}
-                      type="number"
-                      placeholder="$0.00"
-                      className="min-max-textfield"
+                    <CompetitionDropdown
+                      rows={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
+                      title="Min Order"
+                      className="top-competition marketing-dropdown"
+                      setRow={setMinOrder}
+                      select={minOrder}
                     />
                   </TypographyKit>
                 </TypographyKit>
@@ -172,65 +185,280 @@ const MarketingSetup = ({ active, setActive }) => {
           </div>
         );
       }
-      return (
-        <div className="left-part-middle">
-          <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
-          <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-          </TypographyKit>
-          <RadioGroupKit
-            className="duration-wrapper"
-            aria-labelledby="demo-radio-buttons-group-label"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            name="radio-buttons-group-discount">
-            <BoxKit className="left-part-radio">
-              <div>
-                <span>
-                  <img src={CalendarCheckedIcon} alt="Calendar checked Icon" />
-                </span>
-                <div>
-                  <div>Starting Now</div>
-                  <p>{format(new Date(), 'dd MMM yyyy HH:mm')}</p>
+      if (selected === 3) {
+        return (
+          <div className="left-part-middle">
+            <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
+            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            </TypographyKit>
+            <RadioGroupKit
+              className="duration-wrapper"
+              aria-labelledby="demo-radio-buttons-group-label"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              name="radio-buttons-group-duration">
+              <BoxKit
+                className={`left-part-radio under-textfields radio-dates ${
+                  duration === 'Starting Now' ? 'active' : ''
+                }`}>
+                <div className="radio">
+                  <div>
+                    <span>
+                      <img src={CalendarCheckedIcon} alt="Calendar checked Icon" />
+                    </span>
+                    <div>
+                      <div>Starting Now</div>
+                      <p>{format(new Date(), 'dd MMM yyyy HH:00')}</p>
+                    </div>
+                  </div>
+                  <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
                 </div>
-              </div>
-              <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
-            </BoxKit>
-            <BoxKit className="left-part-radio">
-              <div>
-                <span>
-                  <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                </span>
-                <div>
-                  <div>Program the offer duration</div>
-                  <p>Recurrence customized</p>
+                <div className="picker-duration">
+                  <div>
+                    Ending Date
+                    <DatePickerDayKit
+                      minDate={new Date()}
+                      value={endingDate}
+                      onChange={(newValue) => {
+                        setEndingDate(newValue);
+                      }}
+                      renderInput={(params) => <TextfieldKit {...params} />}
+                    />
+                  </div>
+                  <div className="hour-picker">
+                    Ending Hour
+                    <BasicTimePicker
+                      minTime={new Date(null, null, null, format(new Date(), 'HH'), 0)}
+                      value={endingHour}
+                      setValue={setEndingHour}
+                    />
+                  </div>
                 </div>
+              </BoxKit>
+              <BoxKit
+                className={`left-part-radio under-textfields ${
+                  duration === 'Program the offer duration' ? 'active' : ''
+                }`}>
+                <div className="radio">
+                  <div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Program the offer duration</div>
+                      <p>
+                        {customDay || 'Recurrence customized'}
+                        <img src={ArrowIcon} alt="arrow" />
+                      </p>
+                    </div>
+                  </div>
+                  <FormControlLabelKit value="Program the offer duration" control={<RadioKit />} />
+                </div>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={customDay}
+                    onChange={(e) => setCustomDay(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {[
+                      'Continues Offer',
+                      'Every Day',
+                      'Work Week',
+                      'Same day every week',
+                      'Customised Days',
+                    ].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            </RadioGroupKit>
+          </div>
+        );
+      }
+      if (duration === 'Program the offer duration') {
+        if (selected === 4) {
+          if (customDay === 'Continues Offer') {
+            return (
+              <div className="left-part-middle">
+                <TypographyKit variant="h6">4.Select the Recurrence detail</TypographyKit>
+                <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+                  Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+                </TypographyKit>
+                <BoxKit className="left-part-radio under-textfields radio-dates active">
+                  <div className="radio">
+                    <div>
+                      <span>
+                        <img src={TimerIcon} alt="Timer Icon" />
+                      </span>
+                      <div>
+                        <div>Recurrence Details</div>
+                        <p>{customDay}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="picker-duration">
+                    <div>
+                      Starting Date
+                      <DatePickerDayKit
+                        value={startingDate}
+                        onChange={(newValue) => {
+                          setStartingDate(newValue);
+                        }}
+                        renderInput={(params) => <TextfieldKit {...params} />}
+                      />
+                    </div>
+                    <div>
+                      Ending Date
+                      <DatePickerDayKit
+                        minDate={startingDate}
+                        value={endingDate}
+                        onChange={(newValue) => {
+                          setEndingDate(newValue);
+                        }}
+                        renderInput={(params) => <TextfieldKit {...params} />}
+                      />
+                    </div>
+                  </div>
+                  <div className="picker-duration">
+                    <div>
+                      Start Time
+                      <BasicTimePicker value={startingHour} setValue={setStartingHour} />
+                    </div>
+                    <div>
+                      End Time
+                      <BasicTimePicker
+                        minTime={
+                          new Date(
+                            null,
+                            null,
+                            null,
+                            format(
+                              startingHour !== null &&
+                                !Number.isNaN(new Date(startingHour).getTime()) &&
+                                isValidDate(startingHour)
+                                ? new Date()
+                                : startingHour,
+                              'HH',
+                            ),
+                            0,
+                          )
+                        }
+                        value={endingHour}
+                        setValue={setEndingHour}
+                      />
+                    </div>
+                  </div>
+                </BoxKit>
               </div>
-              <FormControlLabelKit value="Program the offer duration" control={<RadioKit />} />
-            </BoxKit>
-          </RadioGroupKit>
-        </div>
-      );
+            );
+          }
+        }
+        return '';
+      }
+      return '';
     }
     return '';
   };
+  function isValidDate(d) {
+    return d instanceof Date && !Number.isNaN(d);
+  }
   useEffect(() => {
     if (platform === 'deliveroo') {
       if (selected === 1) {
         setDisabled(!branch);
       }
       if (selected === 2) {
-        setDisabled(!(menu && percentage > 0 && minOrder > 0));
+        setDisabled(!(menu && discountPercentage && minOrder));
+      }
+      if (selected === 3) {
+        const data = {
+          startDate: startingDate,
+          startHour: startingHour,
+        };
+        console.log(data);
+        if (duration === 'Program the offer duration') {
+          setSteps([0, 1, 2, 3, 4, 5]);
+          setDisabled(!customDay);
+        } else {
+          setSteps([0, 1, 2, 3, 4]);
+          setDisabled(
+            !(
+              endingDate !== null &&
+              !Number.isNaN(new Date(endingDate).getTime()) &&
+              isValidDate(endingDate) &&
+              new Date(endingDate).toISOString() >= new Date().toISOString().slice(0, 10) &&
+              endingHour !== null &&
+              !Number.isNaN(new Date(endingHour).getTime()) &&
+              isValidDate(endingHour) &&
+              new Date(null, null, null, format(endingHour, 'HH'), 0).toISOString() >=
+                new Date(null, null, null, format(new Date(), 'HH'), 0).toISOString()
+            ),
+          );
+        }
+      }
+      if (duration === 'Program the offer duration') {
+        if (selected === 4) {
+          if (customDay === 'Continues Offer') {
+            setDisabled(
+              !(
+                endingDate !== null &&
+                !Number.isNaN(new Date(endingDate).getTime()) &&
+                isValidDate(endingDate) &&
+                new Date(endingDate).toISOString() >= new Date().toISOString().slice(0, 10) &&
+                endingHour !== null &&
+                !Number.isNaN(new Date(endingHour).getTime()) &&
+                isValidDate(endingHour) &&
+                new Date(null, null, null, format(endingHour, 'HH'), 0).toISOString() >=
+                  new Date(null, null, null, format(startingHour, 'HH'), 0).toISOString() &&
+                startingDate !== null &&
+                !Number.isNaN(new Date(startingDate).getTime()) &&
+                isValidDate(startingDate) &&
+                startingHour !== null &&
+                !Number.isNaN(new Date(startingHour).getTime()) &&
+                isValidDate(startingHour)
+              ),
+            );
+          }
+        }
       }
     } else if (platform === 'talabat') {
       if (selected === 1) {
         setDisabled(!branch);
       }
       if (selected === 2) {
-        setDisabled(!(menu && percentage > 0 && minOrder > 0));
+        setDisabled(!(menu && discountPercentage && minOrder));
       }
     }
-  }, [menu, minOrder, branch, platform, percentage]);
+  }, [
+    menu,
+    minOrder,
+    branch,
+    platform,
+    discountPercentage,
+    selected,
+    duration,
+    endingDate,
+    endingHour,
+    customDay,
+  ]);
+  useEffect(() => {
+    if (selected === 3) {
+      setStartingDate(new Date());
+      setStartingHour(new Date(null, null, null, format(new Date(), 'HH'), 0));
+    }
+    if (selected === 4) {
+      setStartingDate(new Date());
+      setStartingHour(new Date(null, null, null, format(new Date(), 'HH'), 0));
+      setEndingDate(new Date());
+      setEndingHour(new Date(null, null, null, format(new Date(), 'HH'), 0));
+    }
+  }, [selected]);
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
