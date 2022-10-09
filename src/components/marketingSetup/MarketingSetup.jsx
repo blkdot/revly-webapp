@@ -284,6 +284,18 @@ const MarketingSetup = ({ active, setActive }) => {
       if (duration === 'Program the offer duration') {
         if (selected === 4) {
           if (customDay === 'Continues Offer') {
+            const getEndValue = () => {
+              if (new Date(endingDate).toDateString() === new Date(startingDate).toDateString()) {
+                if (
+                  new Date(null, null, null, format(endingHour, 'HH'), 0).toISOString() >=
+                  new Date(null, null, null, format(startingHour, 'HH'), 0).toISOString()
+                ) {
+                  return startingHour;
+                }
+                return endingHour;
+              }
+              return endingHour;
+            };
             return (
               <div className="left-part-middle">
                 <TypographyKit variant="h6">4.Select the Recurrence detail</TypographyKit>
@@ -334,22 +346,27 @@ const MarketingSetup = ({ active, setActive }) => {
                       End Time
                       <BasicTimePicker
                         minTime={
-                          new Date(
-                            null,
-                            null,
-                            null,
-                            format(
-                              startingHour !== null &&
-                                !Number.isNaN(new Date(startingHour).getTime()) &&
-                                isValidDate(startingHour)
-                                ? new Date()
-                                : startingHour,
-                              'HH',
-                            ),
-                            0,
-                          )
+                          new Date(endingDate).toDateString() ===
+                          new Date(startingDate).toDateString()
+                            ? new Date(
+                                null,
+                                null,
+                                null,
+                                format(
+                                  !(
+                                    startingHour !== null &&
+                                    !Number.isNaN(new Date(startingHour).getTime()) &&
+                                    isValidDate(startingHour)
+                                  )
+                                    ? new Date()
+                                    : startingHour,
+                                  'HH',
+                                ),
+                                0,
+                              )
+                            : null
                         }
-                        value={endingHour}
+                        value={getEndValue()}
                         setValue={setEndingHour}
                       />
                     </div>
