@@ -1,5 +1,6 @@
-import { startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
+import { startOfWeek } from 'date-fns';
+import dayjs from 'dayjs';
 import CloseIcon from '../../assets/images/ic_close.png';
 import Dates from '../dates/Dates';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -13,18 +14,30 @@ import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import BranchIcon from '../../assets/images/ic_branch.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import { OrderHeatMap } from '../../data/fakeDataMarketing';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import TypeDiscountIcon from '../../assets/images/ic_type-dis.png';
 import InputKit from '../../kits/input/InputKit';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
+import useApi from '../../hooks/useApi';
+import { useUserAuth } from '../../contexts/AuthContext';
+import { useGlobal } from '../../hooks/useGlobal';
+
+const defaultHeatmapState = {
+  Monday: {},
+  Tuesday: {},
+  Wednesday: {},
+  Thursday: {},
+  Friday: {},
+  Saturday: {},
+  Sunday: {},
+};
 
 const MarketingSetup = ({ active, setActive }) => {
   const [progress, setProgress] = useState(33.33);
   const [platform, setPlatform] = useState('');
   const [branch, setBranch] = useState('');
   const [typeDiscount, setTypeDiscount] = useState('');
-  const [links, setLinks] = useState(false);
+  const [links, setLinks] = useState('revenue');
   const [menu, setMenu] = useState('');
   const [item, setItem] = useState('');
   const [minOrder, setMinOrder] = useState(0);
@@ -34,31 +47,64 @@ const MarketingSetup = ({ active, setActive }) => {
     startDate: startOfWeek(new Date()),
     endDate: new Date(),
   });
+  const [heatmapData, setHeatmapData] = useState({
+    revenue: defaultHeatmapState,
+    orders: defaultHeatmapState,
+  });
+  const { getHeatmap } = useApi();
+  const { user } = useUserAuth();
+  const { vendorsContext, titleDate } = useGlobal();
 
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const heatMap = () => {
-    const data = OrderHeatMap.values;
-    const heatMapObj = {
-      Monday: {},
-      Tuesday: {},
-      Wednesday: {},
-      Thusday: {},
-      Friday: {},
-      Saturday: {},
-      Sunday: {},
-    };
-    Object.keys(heatMapObj).forEach((day) => {
+  const heatMapFormatter = (type) => {
+    const tmpData = defaultHeatmapState;
+
+    Object.keys(defaultHeatmapState).forEach((day) => {
       for (let i = 5; i < 25; i++) {
-        heatMapObj[day] = { ...heatMapObj[day], [i]: {} };
+        tmpData[day][i] = heatmapData[type][day] ? heatmapData[type][day][i] || {} : {};
       }
     });
-    Object.keys(data).forEach((day) => {
-      Object.keys(heatMapObj[day]).forEach((num) => {
-        heatMapObj[day][num] = data[day][num] || {};
-      });
-    });
-    return Object.values(heatMapObj);
+
+    return Object.values(tmpData);
   };
+
+  const getHeatmapData = () => {
+    const body = {
+      master_email: user.email,
+      access_token: user.accessToken,
+      start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+      colors: ['#906BFF47', '#906BFF80', '#7952EEA6', '#7E5BE5'],
+      vendors: vendorsContext,
+    };
+
+    Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
+      ([resRevenue, resOrders]) => {
+        const initialisationStateRevenue = resRevenue.heatmap
+          ? resRevenue.heatmap.all
+          : defaultHeatmapState;
+        const initialisationStateOrders = resOrders.heatmap
+          ? resOrders.heatmap.all
+          : defaultHeatmapState;
+
+        setHeatmapData({ revenue: initialisationStateRevenue, orders: initialisationStateOrders });
+      },
+    );
+  };
+
+  useEffect(() => {
+    getHeatmapData();
+  }, [JSON.stringify(beforePeriodBtn)]);
+
+  useEffect(() => {
+    if (progress === 33.33) {
+      setDisabled(!(platform && branch));
+    }
+    if (progress === 66.66) {
+      setDisabled(!(menu && item && typeDiscount && minOrder && maxOrder));
+    }
+  }, [progress, platform, branch, menu, item, typeDiscount, minOrder, maxOrder]);
+
   const getProgress = () => {
     if (progress === 33.33) {
       return (
@@ -185,14 +231,7 @@ const MarketingSetup = ({ active, setActive }) => {
       </div>
     );
   };
-  useEffect(() => {
-    if (progress === 33.33) {
-      setDisabled(!(platform && branch));
-    }
-    if (progress === 66.66) {
-      setDisabled(!(menu && item && typeDiscount && minOrder && maxOrder));
-    }
-  }, [progress, platform, branch, menu, item, typeDiscount, minOrder, maxOrder]);
+
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
@@ -242,13 +281,17 @@ const MarketingSetup = ({ active, setActive }) => {
           <div className="right-part">
             <div className="right-part-header">
               <TypographyKit
-                className={`right-part-header_link ${links ? 'active' : ''}`}
+                className={`right-part-header_link ${links === 'orders' ? 'active' : ''}`}
                 variant="div">
-                <BoxKit className={!links ? 'active' : ''} onClick={() => setLinks(false)}>
+                <BoxKit
+                  className={links === 'revenue' ? 'active' : ''}
+                  onClick={() => setLinks('revenue')}>
                   <img src={RevenueHeatMapIcon} alt="Revenue Heat Map Icon" />
                   Revenue Heat Map
                 </BoxKit>
-                <BoxKit className={links ? 'active' : ''} onClick={() => setLinks(true)}>
+                <BoxKit
+                  className={links === 'orders' ? 'active' : ''}
+                  onClick={() => setLinks('orders')}>
                   <img src={PlatformIcon} alt="Order Heat Map Icon" />
                   Orders Heat Map
                 </BoxKit>
@@ -260,16 +303,30 @@ const MarketingSetup = ({ active, setActive }) => {
               />
             </div>
             <TypographyKit variant="div" className="right-part-main">
-              <TypographyKit className="right-part-main-title" variant="div">
-                <TypographyKit variant="h5">
-                  Max Revenue this week
-                  <TypographyKit variant="span">${OrderHeatMap.max_value}</TypographyKit>
+              <div>
+                <TypographyKit className="right-part-main-title" variant="div">
+                  <TypographyKit variant="span" style={{ fontWeight: 'bold' }}>
+                    Min Revenue this {titleDate}
+                  </TypographyKit>
+                  <TypographyKit variant="span" style={{ fontWeight: 'bold' }}>
+                    Max Revenue this {titleDate}
+                  </TypographyKit>
                 </TypographyKit>
-                <TypographyKit variant="h5">
-                  Min Revenue this week
-                  <TypographyKit variant="span">${OrderHeatMap.min_value}</TypographyKit>
-                </TypographyKit>
-              </TypographyKit>
+                <div className="marketing-case">
+                  <div
+                    className="marketing-case__item"
+                    style={{ background: '#F6F3FF', marginRight: '0.5rem' }}>{`<1`}</div>
+                  <div
+                    className="marketing-case__item"
+                    style={{ background: '#EDE7FF', marginRight: '0.5rem' }}>{`<30`}</div>
+                  <div
+                    className="marketing-case__item"
+                    style={{ background: '#CAB8FF', marginRight: '0.5rem' }}>{`<50`}</div>
+                  <div className="marketing-case__item" style={{ background: '#906BFF' }}>
+                    $5,213,98
+                  </div>
+                </div>
+              </div>
               <TypographyKit variant="div" sx={{ display: 'flex' }}>
                 <TypographyKit variant="div" className="right-part-main-hour">
                   <TypographyKit>
@@ -290,7 +347,7 @@ const MarketingSetup = ({ active, setActive }) => {
                     ))}
                   </TypographyKit>
                   <TypographyKit className="right-part-main-heatmap" variant="div">
-                    {heatMap().map((obj, index) => (
+                    {heatMapFormatter(links).map((obj, index) => (
                       <TypographyKit key={Object.keys(obj)[index]} variant="div">
                         {Object.keys(obj).map((num, indexObj) => (
                           <TypographyKit

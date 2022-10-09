@@ -18,4 +18,7 @@ export const getVendors = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const getHeatmap = (type, body) =>
+  axios.post(`${apiUrl}/user/heatmap/${type}`, body).then(handleResponse).catch(handleResponse);
+
 export const _ = () => null;
