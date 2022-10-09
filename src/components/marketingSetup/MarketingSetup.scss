@@ -1,17 +1,14 @@
 .marketing-setup-offer {
   position: fixed;
-  left: 0;
+  right: -100vw;
   top: 0;
   width: 100vw;
   height: 100vh;
-  opacity: 0;
-  visibility: hidden;
   transition: .4s;
   z-index: 1000;
 
   &.active {
-    opacity: 1;
-    visibility: visible;
+    right: 0;
   }
 
   .marketing-paper {
@@ -33,6 +30,7 @@
     }
 
     .left-part {
+      grid-gap: 30px;
       height: 100%;
       width: 35%;
       display: flex;
@@ -82,6 +80,14 @@
       }
 
       .left-part-middle {
+        margin-top: 60px;
+
+        >h6 {
+          font-weight: 700;
+          font-size: 18px;
+          line-height: 28px;
+        }
+
         >span {
           margin-top: 10px;
           margin-bottom: 20px;
@@ -223,9 +229,6 @@
   }
 
   .right-part-main-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin-bottom: 30px;
 
     >h5 {
@@ -333,7 +336,7 @@
   }
 
   input {
-    padding-left: 15px;
+    padding-left: 55px;
   }
 
   fieldset {
@@ -346,6 +349,11 @@
   display: flex !important;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+
+  >span {
+    width: 100%;
+  }
 
   p {
     font-size: 12px;
@@ -355,6 +363,9 @@
   }
 
   .min-max-textfield {
+    width: 100%;
+    margin-bottom: 20px;
+
     &::before {
       content: none;
     }
@@ -364,11 +375,310 @@
     }
 
     border: 1px solid #919eab65;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 30px;
+  }
+}
 
-    input {
-      text-align: center;
+.color-btns {
+  display: flex;
+  justify-content: space-between;
+
+  >p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24.6%;
+    height: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  >p:nth-of-type(1) {
+    background-color: #F6F3FF;
+  }
+
+  >p:nth-of-type(2) {
+    background-color: #EDE7FF;
+  }
+
+  >p:nth-of-type(3) {
+    background-color: #CAB8FF;
+  }
+
+  >p:nth-of-type(4) {
+    background-color: #906BFF;
+  }
+}
+
+.setup-container {
+  overflow: visible !important;
+}
+
+.heatmap-btn {
+  position: relative;
+  overflow: hidden;
+  transition: .4s;
+
+  >span {
+    position: absolute;
+    left: -36px;
+    opacity: 0;
+    visibility: hidden;
+    transition: .4s;
+
+    >span {
+      top: 10px;
+      height: 1px;
+      width: 60px;
+      position: absolute;
+      transform: rotate(-107deg);
+      z-index: 10;
+      background-color: #2D99FF;
+      left: calc(5.5px * var(--i));
     }
   }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #83CFFF;
+
+    >span {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+}
+
+.left-part-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.left-part-radio {
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 8px 16px rgba(145, 158, 171, 0.16);
+  border-radius: 8px;
+  padding: 15px 20px;
+  justify-content: space-between;
+  overflow: hidden;
+
+  &.under-textfields {
+    align-items: flex-start;
+    flex-direction: column;
+    .picker-duration{
+      margin-top: 20px;
+    }
+    >div:nth-of-type(2){
+      opacity: 0;
+      visibility: hidden;
+      height: 0;
+      margin: 0;
+      transition: .4s;
+    }
+    &.active{
+      >div:nth-of-type(2){
+        opacity: 1;
+        visibility: visible;
+        margin-top: 20px;
+        height: 100%;
+      }
+      p{
+        img{
+          transition: .4s;
+          transform: rotate(90deg);
+        }
+      }
+    }
+    .MuiOutlinedInput-root {
+      width: 100%;
+    }
+
+    .radio {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      >div {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        grid-gap: 15px;
+        flex-direction: row;
+
+        >span {
+          display: inline-block;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #906BFF14;
+
+          img {
+            width: 23px;
+            height: 23px;
+            object-fit: contain;
+          }
+        }
+      }
+    }
+  }
+
+  &.disabled {
+    >div {
+      color: #919EAB !important;
+
+      >span {
+        background: none;
+      }
+
+      p {
+        color: #919EAB !important;
+      }
+    }
+
+
+
+  }
+
+  label {
+    margin-right: 0 !important;
+  }
+
+  >div {
+    display: flex;
+    align-items: center;
+    grid-gap: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+
+    >span {
+      display: inline-block;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #906BFF14;
+
+      &.talabat {
+        background-color: #FFC10714;
+
+        ~div {
+          text-transform: capitalize;
+        }
+
+        img {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      &.deliveroo {
+        background-color: #54D62C14;
+
+        ~div {
+          text-transform: capitalize;
+        }
+
+        img {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      img {
+        width: 23px;
+        height: 23px;
+        object-fit: contain;
+      }
+    }
+
+    >div {
+      display: flex;
+      flex-direction: column;
+
+      p {
+        color: #637381;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 18px;
+        img{
+          margin-left: 15px;
+        }
+      }
+    }
+
+
+  }
+}
+
+.left-part-radio-wrapper {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 20px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #919EAB3D;
+}
+
+.marketing-dropdown {
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0px 8px 16px rgba(145, 158, 171, 0.16);
+
+  >div {
+    border: none !important;
+    border-radius: 8px !important;
+  }
+}
+
+.duration-wrapper {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 20px;
+}
+
+.radio-dates {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .picker-duration {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    >div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      grid-gap: 5px;
+      >div{
+        >div {
+          height: 50px;
+          display: flex;
+          flex-direction: row-reverse;
+        }
+        fieldset{
+          border-radius: 30px;
+        }
+    }}
+
+
+    .hour-picker {
+      width: 40%;
+    }
+  }
+}
+.radio-group-day{
+  padding-left: 10px;
 }

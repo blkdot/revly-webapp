@@ -35,7 +35,9 @@
   height: 40px;
   border-radius: 30px;
   border: 1px solid rgba(145, 158, 171, 0.32);
-
+  &.ending-date{
+    width: 200px;
+  }
   .date-typography {
     display: flex;
     align-items: center;
