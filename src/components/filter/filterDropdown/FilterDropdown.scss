@@ -41,9 +41,8 @@
     background: white;
     box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
     border: 1px solid rgba(145, 158, 171, 0.32);
-    width: 100%;
-    max-width: 2rem;
-    margin-top: 4.2rem;
+    min-width: 100%;
+    margin-top: 4.5rem;
     box-sizing: border-box;
     padding: 15px 20px;
     display: flex;
@@ -65,22 +64,26 @@
       }
     }
 
+    &::before {
+      border: 1px solid rgba(145, 158, 171, 0.32);
+      top: -11px;
+      background-color: #fff;
+      left: 15px;
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      transform: rotate(45deg);
+      box-shadow: inset 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
+      border-bottom: none;
+      border-right: none;
+    }
+
     .comp-dropdown__item {
       margin: 0.2rem 0;
-
-      &::after {
-        border: 1px solid rgba(145, 158, 171, 0.32);
-        z-index: 998;
-        top: -7px;
-        background-color: #fff;
-        left: 15px;
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        transform: rotate(45deg);
-        box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
-      }
+      z-index: 1335;
+      width: 100%;
+      display: flex;
 
       span {
         padding: 0.6rem 0.5rem;
@@ -91,14 +94,15 @@
       &:hover {
         cursor: pointer;
       }
+    }
+  }
 
-      &.__active {
-        // background-color: $color-secondary-darker;
+  .MuiChip-root  {
+    cursor: pointer;
 
-        span {
-          // color: $color-light;
-        }
-      }
+    .MuiChip-labelSmall {
+      font-weight: lighter;
+      color: #906bff;
     }
   }
 }

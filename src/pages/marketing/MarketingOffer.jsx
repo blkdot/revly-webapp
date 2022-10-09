@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
@@ -14,12 +14,13 @@ import useDate from '../../hooks/useDate';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
-import FilterIcon from '../../assets/images/ic_filter.png';
 import TrashIcon from '../../assets/images/ic_trash.png';
 import plus from '../../assets/images/plus.png';
 import MarketingTable from '../../components/marketingTable/MarketingTable';
 import { OffersTableData } from '../../data/fakeDataMarketing';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
+import FilterMore from '../../components/filter/filterMore/FilterMore';
+import filterOffersData from '../../data/filterOffersData';
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
@@ -30,8 +31,62 @@ const MarketingOffer = () => {
     startDate: dateFrom.startDate,
     endDate: dateFrom.endDate,
   });
+  const [offersData] = useState(OffersTableData);
+  const [offersDataFiltered, setOffersDataFiltered] = useState([]);
+  const [showAllFilter, setShowAllFilter] = useState(false);
+
+  const [filters, setFilters] = useState({
+    status: [],
+    days: [],
+    procent: [0, 100],
+  });
+
+  useEffect(() => {
+    let filteredData = offersData.filter(
+      (f) => f.procent >= filters.procent[0] && f.procent <= filters.procent[1],
+    );
+
+    if (filters.status.length > 0) {
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+    }
+
+    if (filters.days.length > 0) {
+      filteredData = filteredData.filter((f) => filters.days.includes(f.day.toLowerCase()));
+    }
+
+    setOffersDataFiltered(filteredData);
+  }, [JSON.stringify(filters)]);
+
+  const handleChangeMultipleFilter = (k) => (v) => {
+    const propertyFilter = filters[k];
+
+    const index = propertyFilter.findIndex((p) => p === v);
+
+    if (index < 0) {
+      setFilters({ ...filters, [k]: [...propertyFilter, v] });
+      return;
+    }
+
+    const mutablePropertyFilter = [...propertyFilter];
+
+    mutablePropertyFilter.splice(index, 1);
+
+    setFilters({ ...filters, [k]: mutablePropertyFilter });
+  };
+
+  const handleProcentChange = (v) => {
+    setFilters({ ...filters, procent: v });
+  };
+
   return (
     <div className="wrapper">
+      <FilterMore
+        open={showAllFilter}
+        onClose={() => setShowAllFilter(false)}
+        onChangeMultipleSelect={handleChangeMultipleFilter}
+        onChangeProcent={handleProcentChange}
+        filters={filters}
+      />
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
         <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
@@ -82,20 +137,20 @@ const MarketingOffer = () => {
         <TypographyKit variant="div" sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className="marketing-filters">
             <div>
-              {['Filter One', 'Filter Two', 'Filter Three'].map((name) => (
-                <ButtonKit key={name} variant="outlined">
-                  <img src={FilterIcon} alt="Filter Icon" />
-                  {name}
-                </ButtonKit>
-              ))}
               <FilterDropdown
-                items={[{ value: 1, text: 'test' }]}
-                values={[]}
-                handleChange={() => null}
-                label="test2"
+                items={filterOffersData.status}
+                values={filters.status}
+                onChange={handleChangeMultipleFilter('status')}
+                label="Status"
+              />
+              <FilterDropdown
+                items={filterOffersData.days}
+                values={filters.days}
+                onChange={handleChangeMultipleFilter('days')}
+                label="Days"
               />
             </div>
-            <ButtonKit variant="outlined">
+            <ButtonKit variant="outlined" onClick={() => setShowAllFilter(true)}>
               <img src={plus} alt="Filter Icon" />
               More Filter
             </ButtonKit>
@@ -105,7 +160,7 @@ const MarketingOffer = () => {
             Delete Offer
           </ButtonKit>
         </TypographyKit>
-        <MarketingTable type={links} rows={OffersTableData} />
+        <MarketingTable type={links} rows={offersDataFiltered} />
       </PaperKit>
       <MarketingSetup active={active} setActive={setActive} />
     </div>

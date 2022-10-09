@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
+import { Chip } from '@mui/material';
 
 import './FilterDropdown.scss';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
+import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 
 import FilterIcon from '../../../assets/images/ic_filter.png';
 import useClickAwayListner from '../../../hooks/useClickAwayListner';
@@ -20,13 +22,29 @@ const FilterDropdown = (props) => {
   };
 
   const getCurrentValue = () => {
-    const current = items.find((i) => i.value === values[0]);
+    const lengthValues = values.length;
 
-    if (!current) {
+    if (lengthValues < 1) {
       return label;
     }
 
-    return current.text;
+    if (lengthValues === items.length)
+      return <Chip size="small" style={{ margin: '0 2px' }} label={`All ${label} selected`} />;
+
+    if (lengthValues > 2)
+      return (
+        <Chip
+          size="small"
+          style={{ margin: '0 2px' }}
+          label={`${lengthValues} ${label} selected`}
+        />
+      );
+
+    return values.map((v) => {
+      const item = items.find((i) => v === i.value);
+
+      return <Chip key={item.value} size="small" style={{ margin: '0 2px' }} label={item.text} />;
+    });
   };
 
   useClickAwayListner(refDropdown, () => setIsOpen(false));
@@ -40,6 +58,10 @@ const FilterDropdown = (props) => {
         onKeyDown={() => selectItem(item.value)}
         role="button"
         tabIndex={0}>
+        <CheckboxKit
+          checked={values.includes(item.value)}
+          onChange={() => selectItem(item.value)}
+        />
         <span>{item.text}</span>
       </div>
     ));
