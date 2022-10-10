@@ -29,21 +29,22 @@ function useVendors() {
 
       delete newData?.master_email;
 
-      platformList
-        .filter((p) => {
-          if (!newData[p.name]) delete newData[p.name];
+      if (newData) {
+        platformList
+          .filter((p) => {
+            if (!newData[p.name]) delete newData[p.name];
 
-          return newData[p.name];
-        })
-        .flatMap((p) =>
-          newData[p.name].forEach((v) => {
-            setVendors((cur) => [...cur, { ...v, platform: p.name }]);
-            setRestaurants((cur) => [...cur, v.data.vendor_name]);
-          }),
-        );
-
-      setVendorsContext(newData);
-      setVendorsPlatform(Object.keys(newData));
+            return newData[p.name];
+          })
+          .flatMap((p) =>
+            newData[p.name].forEach((v) => {
+              setVendors((cur) => [...cur, { ...v, platform: p.name }]);
+              setRestaurants((cur) => [...cur, v.data.vendor_name]);
+            }),
+          );
+        setVendorsContext(newData);
+        setVendorsPlatform(Object.keys(newData));
+      }
     });
     return () => {
       isCancelled = true;

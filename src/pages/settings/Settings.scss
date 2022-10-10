@@ -56,10 +56,16 @@
         position: relative;
         top: 2px;
 
-        .icon {
+        .__icon {
           color: $color-table-th;
           width: 25px;
           height: 25px;
+
+          &.__menu {
+            path {
+              fill: $color-table-th
+            }
+          }
         }
       }
   
@@ -68,8 +74,14 @@
 
         .icon-block {
 
-          .icon {
+          .__icon {
             color: $color-main;
+
+            &.__menu {
+              path {
+                fill: $color-main
+              }
+            }
           }
         }
       }
