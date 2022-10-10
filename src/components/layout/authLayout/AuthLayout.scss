@@ -32,7 +32,7 @@
       .auth-layout__cover__center__text {
         position: relative;
         left: 10px;
-        color: $color-main;
+        color: #12004f;
         font-size: 28px;
         font-weight: 700;
       }
@@ -134,5 +134,16 @@
 
   @media only screen and (max-height: 606px) {
     height: 630px;
+  }
+
+  @media only screen and (min-height: 910px) {
+    .auth-layout__cover {
+      .auth-layout__cover__center {
+        margin-top: -4em;
+        .auth-layout__cover__center-flex {
+          margin-top: 9vh;
+        }
+      }
+    }
   }
 }
