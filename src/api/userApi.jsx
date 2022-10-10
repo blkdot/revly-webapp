@@ -18,4 +18,10 @@ export const getVendors = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const getMenu = (body, platform) =>
+  axios
+    .post(`${apiUrl}/user/menu/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+
 export const _ = () => null;
