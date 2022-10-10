@@ -8,11 +8,14 @@ import NewSettingsOnboarding from '../../components/settings/onboarding/NewSetti
 import General from '../../components/settings/general/General';
 import Billing from '../../components/settings/billing/Billing';
 import ChangePassword from '../../components/settings/changePassword/ChangePassword';
+import Menu from '../../components/settings/menu/Menu';
 
 import TypographyKit from '../../kits/typography/TypographyKit';
 import TabKit from '../../kits/tab/TabKit';
 import TabsKit from '../../kits/tabs/TabsKit';
 import BoxKit from '../../kits/box/BoxKit';
+
+import MenuIcon from '../../assets/icons/MenuIcon';
 
 const Settings = () => {
   const [currentTab, setCurrentTab] = useState('general');
@@ -22,7 +25,7 @@ const Settings = () => {
       value: 'general',
       icon: (
         <div className="icon-block">
-          <Person className="icon" />
+          <Person className="__icon" />
         </div>
       ),
       component: <General />,
@@ -37,7 +40,7 @@ const Settings = () => {
       value: 'billing',
       icon: (
         <div className="icon-block">
-          <Description className="icon" />
+          <Description className="__icon" />
         </div>
       ),
       component: <Billing />,
@@ -46,7 +49,7 @@ const Settings = () => {
       value: 'onboarding',
       icon: (
         <div className="icon-block">
-          <Send className="icon" />
+          <Send className="__icon" />
         </div>
       ),
       component: <NewSettingsOnboarding />,
@@ -61,10 +64,25 @@ const Settings = () => {
       value: 'change password',
       icon: (
         <div className="icon-block">
-          <Password className="icon" />
+          <Password className="__icon" />
         </div>
       ),
       component: <ChangePassword />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
+    },
+    {
+      value: 'menu',
+      icon: (
+        <div className="icon-block">
+          <MenuIcon className="__icon __menu" />
+        </div>
+      ),
+      component: <Menu />,
       subtitle: (
         <p className="subtitle">
           Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
