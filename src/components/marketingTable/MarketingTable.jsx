@@ -236,7 +236,7 @@ const MarketingTable = ({ rows, selected, setSelected }) => {
         <TableContainerKit id="markeitngContainer">
           <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
-              numSelected={selected.length}
+              numSelected={!selected ? 0 : selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}

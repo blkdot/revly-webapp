@@ -1,5 +1,7 @@
 import { format, startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import { Tooltip } from '@mui/material';
 import MarketingRadio from './MarketingRadio';
 import CloseIcon from '../../assets/images/ic_close.png';
 import Dates from '../dates/Dates';
@@ -12,11 +14,16 @@ import BoxKit from '../../kits/box/BoxKit';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import { OrderHeatMap } from '../../data/fakeDataMarketing';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
+import useApi from '../../hooks/useApi';
+import { useUserAuth } from '../../contexts/AuthContext';
+import { useGlobal } from '../../hooks/useGlobal';
+import { usePlatform } from '../../hooks/usePlatform';
+import TextfieldKit from '../../kits/textfield/TextfieldKit';
+
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
-import talabat from '../../assets/images/talabat.png';
-import deliveroo from '../../assets/images/deliveroo.png';
+// import talabat from '../../assets/images/talabat.png';
+// import deliveroo from '../../assets/images/deliveroo.png';
 import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import menuIcon from '../../assets/images/ic_menu.png';
@@ -27,17 +34,32 @@ import RadioKit from '../../kits/radio/RadioKit';
 import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
 import CalendarEventIcon from '../../assets/images/ic_calendar-event.png';
 import BasicTimePicker from '../timePicker/TimePicker';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
 import ArrowIcon from '../../assets/images/arrow.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
+import { platformList } from '../../data/platformList';
+
+const defaultHeatmapState = {
+  Monday: {},
+  Tuesday: {},
+  Wednesday: {},
+  Thursday: {},
+  Friday: {},
+  Saturday: {},
+  Sunday: {},
+};
+
+const defaultRangeColorIndices = [0, 0, 0, 0];
 
 const MarketingSetup = ({ active, setActive }) => {
   const [branch, setBranch] = useState('');
-  const [platform, setPlatform] = useState('talabat');
+  const { userPlatformData } = usePlatform();
+  const [platform, setPlatform] = useState(
+    userPlatformData.platforms.talabat.active ? 'talabat' : 'deliveroo',
+  );
   const [selected, setSelected] = useState(1);
   const [discount, setDiscount] = useState('Percentage Discount');
-  const [links, setLinks] = useState(false);
+  const [links, setLinks] = useState('revenue');
   const [menu, setMenu] = useState('Offer on the whole Menu');
   const [discountPercentage, setDiscountPercentage] = useState('');
   const [minOrder, setMinOrder] = useState('');
@@ -47,6 +69,17 @@ const MarketingSetup = ({ active, setActive }) => {
     startDate: startOfWeek(new Date()),
     endDate: new Date(),
   });
+  const [heatmapData, setHeatmapData] = useState({
+    revenue: defaultHeatmapState,
+    orders: defaultHeatmapState,
+  });
+  const [rangeColorIndices, setRangeColorIndices] = useState({
+    revenue: defaultRangeColorIndices,
+    orders: defaultRangeColorIndices,
+  });
+  const { getHeatmap } = useApi();
+  const { user } = useUserAuth();
+  const { vendorsContext } = useGlobal();
   const [startingDate, setStartingDate] = useState();
   const [startingHour, setStartingHour] = useState();
   const [endingDate, setEndingDate] = useState(new Date());
@@ -57,29 +90,56 @@ const MarketingSetup = ({ active, setActive }) => {
 
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const heatMap = () => {
-    const data = OrderHeatMap.values;
-    const heatMapObj = {
-      Monday: {},
-      Tuesday: {},
-      Wednesday: {},
-      Thusday: {},
-      Friday: {},
-      Saturday: {},
-      Sunday: {},
-    };
-    Object.keys(heatMapObj).forEach((day) => {
+  const heatMapFormatter = (type) => {
+    const tmpData = defaultHeatmapState;
+
+    Object.keys(defaultHeatmapState).forEach((day) => {
       for (let i = 5; i < 25; i++) {
-        heatMapObj[day] = { ...heatMapObj[day], [i]: {} };
+        tmpData[day][i] = heatmapData[type][day] ? heatmapData[type][day][i] || {} : {};
       }
     });
-    Object.keys(data).forEach((day) => {
-      Object.keys(heatMapObj[day]).forEach((num) => {
-        heatMapObj[day][num] = data[day][num] || {};
-      });
-    });
-    return Object.values(heatMapObj);
+    return Object.values(tmpData);
   };
+
+  const getHeatmapData = () => {
+    const body = {
+      master_email: user.email,
+      access_token: user.accessToken,
+      start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+      colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
+      vendors: vendorsContext,
+    };
+
+    Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
+      ([resRevenue, resOrders]) => {
+        const initialisationStateRevenue = resRevenue.data.all
+          ? resRevenue.data.all.heatmap
+          : defaultHeatmapState;
+        const initialisationStateOrders = resOrders.data.all
+          ? resOrders.data.all.heatmap
+          : defaultHeatmapState;
+
+        const initialisationRangeColorIndicesRevenue = resRevenue.data.all
+          ? resRevenue.data.all.ranges
+          : defaultRangeColorIndices;
+        const initialisationRangeColorIndicesOrders = resOrders.data.all
+          ? resOrders.data.all.ranges
+          : defaultRangeColorIndices;
+
+        setHeatmapData({ revenue: initialisationStateRevenue, orders: initialisationStateOrders });
+        setRangeColorIndices({
+          revenue: initialisationRangeColorIndicesRevenue,
+          orders: initialisationRangeColorIndicesOrders,
+        });
+      },
+    );
+  };
+
+  useEffect(() => {
+    getHeatmapData();
+  }, [JSON.stringify(beforePeriodBtn)]);
+
   const getPlatform = (e) => {
     const { value } = e.target;
     setPlatform(value);
@@ -103,8 +163,13 @@ const MarketingSetup = ({ active, setActive }) => {
               value={platform}
               onChange={(e) => getPlatform(e)}
               name="radio-buttons-group">
-              <MarketingRadio className="talabat" icon={talabat} title="talabat" />
-              <MarketingRadio className="deliveroo" icon={deliveroo} title="deliveroo" />
+              {platformList
+                .filter((pf) => userPlatformData.platforms[pf.name].active)
+                .map((p) => (
+                  <MarketingRadio key={p.name} className={p.name} icon={p.src} title={p.name} />
+                ))}
+              {/* <MarketingRadio className="talabat" icon={talabat} title="talabat" />
+              <MarketingRadio className="deliveroo" icon={deliveroo} title="deliveroo" /> */}
             </RadioGroupKit>
           </div>
           <CompetitionDropdown
@@ -385,6 +450,14 @@ const MarketingSetup = ({ active, setActive }) => {
   function isValidDate(d) {
     return d instanceof Date && !Number.isNaN(d);
   }
+
+  const renderHeatmapBox = () =>
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((n) => (
+      <span key={n}>
+        <span style={{ '--i': n }} key={n} />
+      </span>
+    ));
+
   useEffect(() => {
     if (platform === 'deliveroo') {
       if (selected === 1) {
@@ -394,11 +467,6 @@ const MarketingSetup = ({ active, setActive }) => {
         setDisabled(!(menu && discountPercentage && minOrder));
       }
       if (selected === 3) {
-        const data = {
-          startDate: startingDate,
-          startHour: startingHour,
-        };
-        console.log(data);
         if (duration === 'Program the offer duration') {
           setSteps([0, 1, 2, 3, 4, 5]);
           setDisabled(!customDay);
@@ -476,6 +544,24 @@ const MarketingSetup = ({ active, setActive }) => {
       setEndingHour(new Date(null, null, null, format(new Date(), 'HH'), 0));
     }
   }, [selected]);
+
+  const renderTooltipContent = (data) => (
+    <div className="heatmap-tooltip">
+      <div className="heatmap-tooltip__item">
+        <span className="__item-text">total daily revenue till slot</span>
+        <span className="__item-value">{data.x_accrued_intra_day}&nbsp;AED</span>
+      </div>
+      <div className="heatmap-tooltip__item">
+        <span className="__item-text">Weekly total revenue of slot</span>
+        <span className="__item-value">{data.x_slot_across_week}&nbsp;AED</span>
+      </div>
+      <div className="heatmap-tooltip__item">
+        <span className="__item-text">% of daily revenue </span>
+        <span className="__item-value">{data.x_percentage_intra_day * 100}&nbsp;%</span>
+      </div>
+    </div>
+  );
+
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
@@ -516,13 +602,17 @@ const MarketingSetup = ({ active, setActive }) => {
           <div className="right-part">
             <div className="right-part-header">
               <TypographyKit
-                className={`right-part-header_link ${links ? 'active' : ''}`}
+                className={`right-part-header_link ${links === 'orders' ? 'active' : ''}`}
                 variant="div">
-                <BoxKit className={!links ? 'active' : ''} onClick={() => setLinks(false)}>
+                <BoxKit
+                  className={links === 'revenue' ? 'active' : ''}
+                  onClick={() => setLinks('revenue')}>
                   <img src={RevenueHeatMapIcon} alt="Revenue Heat Map Icon" />
                   Revenue Heat Map
                 </BoxKit>
-                <BoxKit className={links ? 'active' : ''} onClick={() => setLinks(true)}>
+                <BoxKit
+                  className={links === 'orders' ? 'active' : ''}
+                  onClick={() => setLinks('orders')}>
                   <img src={PlatformIcon} alt="Order Heat Map Icon" />
                   Orders Heat Map
                 </BoxKit>
@@ -542,10 +632,9 @@ const MarketingSetup = ({ active, setActive }) => {
                   <TypographyKit variant="h6">Max Revenue this week</TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant="div" className="color-btns">
-                  <TypographyKit>&lt;1</TypographyKit>
-                  <TypographyKit>&lt;30</TypographyKit>
-                  <TypographyKit>&lt;50</TypographyKit>
-                  <TypographyKit>&lt;$5,213.98</TypographyKit>
+                  {rangeColorIndices[links].map((r) => (
+                    <TypographyKit>&lt;{r}</TypographyKit>
+                  ))}
                 </TypographyKit>
               </TypographyKit>
               <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>
@@ -568,24 +657,34 @@ const MarketingSetup = ({ active, setActive }) => {
                     ))}
                   </TypographyKit>
                   <TypographyKit className="right-part-main-heatmap" variant="div">
-                    {heatMap().map((obj, index) => (
+                    {heatMapFormatter(links).map((obj, index) => (
                       <TypographyKit key={Object.keys(obj)[index]} variant="div">
-                        {Object.keys(obj).map((num, indexObj) => (
-                          <TypographyKit
-                            className="heatmap-btn"
-                            sx={{
-                              background: `${
-                                obj[indexObj + 5].color ? obj[indexObj + 5].color : '#919EAB1F'
-                              }`,
-                            }}
-                            key={num}>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((n) => (
-                              <span>
-                                <span style={{ '--i': n }} key={n} />
-                              </span>
-                            ))}
-                          </TypographyKit>
-                        ))}
+                        {Object.keys(obj).map((num, indexObj) => {
+                          if (!obj[indexObj + 5].color)
+                            return (
+                              <TypographyKit
+                                className="heatmap-btn"
+                                key={num}
+                                sx={{ background: '#919EAB1F' }}>
+                                {renderHeatmapBox()}
+                              </TypographyKit>
+                            );
+
+                          return (
+                            <Tooltip
+                              title={renderTooltipContent(obj[indexObj + 5].data)}
+                              key={num}
+                              arrow>
+                              <ItemHeatmap>
+                                <TypographyKit
+                                  className="heatmap-btn"
+                                  sx={{ background: obj[indexObj + 5].color }}>
+                                  {renderHeatmapBox()}
+                                </TypographyKit>
+                              </ItemHeatmap>
+                            </Tooltip>
+                          );
+                        })}
                       </TypographyKit>
                     ))}
                   </TypographyKit>
@@ -598,5 +697,7 @@ const MarketingSetup = ({ active, setActive }) => {
     </div>
   );
 };
+
+const ItemHeatmap = React.forwardRef((props, ref) => <div {...props} ref={ref} />);
 
 export default MarketingSetup;

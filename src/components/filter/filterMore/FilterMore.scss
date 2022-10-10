@@ -1,0 +1,11 @@
+.filter-more {
+  padding: 15px 20px;
+  min-width: 25rem;
+  min-height: 40rem;
+
+  .MuiButtonBase-root {
+    &.MuiButton-outlined {
+      width: 100%;
+    }
+  }
+}
