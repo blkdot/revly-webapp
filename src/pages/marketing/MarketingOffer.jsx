@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
+
 import CloseIcon from '../../assets/images/ic_close.png';
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
@@ -21,6 +22,11 @@ import plus from '../../assets/images/plus.png';
 import MarketingTable from '../../components/marketingTable/MarketingTable';
 import { OffersTableData } from '../../data/fakeDataMarketing';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
+import Layers from '../../assets/icons/Layers';
+import Tag from '../../assets/icons/Tag';
+import { platformObject } from '../../data/platformList';
+import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import TextfieldKit from '../../kits/textfield/TextfieldKit';
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
@@ -42,14 +48,17 @@ const MarketingOffer = () => {
   };
   const [offersData] = useState(OffersTableData);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
+  const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
 
   const [filters, setFilters] = useState({
-    status: [],
-    day: [],
+    platform: [],
+    discountType: [],
+    procent: [],
   });
   const [filtersHead, setFiltersHead] = useState({
-    status: [],
-    day: [],
+    platform: [],
+    discountType: [],
+    procent: [],
   });
   useEffect(() => {
     const cont = document.querySelector('#markeitngContainer');
@@ -62,22 +71,39 @@ const MarketingOffer = () => {
   useEffect(() => {
     const preHead = offersData.reduce(
       (acc, cur) => {
-        const { status } = acc;
-        const { day } = acc;
-        if (!status.includes(cur.status)) status.push(cur.status);
+        const { platform, discountType, procent } = acc;
 
-        if (!day.includes(cur.day)) day.push(cur.day);
+        if (!platform.includes(cur.platform)) platform.push(cur.platform);
 
-        return { ...acc, status, day };
+        if (!discountType.includes(cur.discountType)) discountType.push(cur.discountType);
+
+        if (!procent.includes(cur.procent)) procent.push(cur.procent);
+
+        return { ...acc, platform, discountType, procent };
       },
-      { status: [], day: [] },
+      { discountType: [], platform: [], procent: [] },
     );
 
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: s }));
-    const preHeadDay = preHead.day.map((s) => ({ value: s, text: s }));
+    const preHeadPlatform = preHead.platform.map((s) => ({
+      value: s,
+      text: renderPlatformInsideFilter(s),
+    }));
+    const preHeadDiscountType = preHead.discountType.map((s) => ({ value: s, text: s }));
+    const preHeadProcent = preHead.procent.map((s) => ({ value: s, text: `${s} %` }));
 
-    setFiltersHead({ status: preHeadStatus, day: preHeadDay });
+    setFiltersHead({
+      platform: preHeadPlatform,
+      discountType: preHeadDiscountType,
+      procent: preHeadProcent,
+    });
   }, [JSON.stringify(offersData)]);
+
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{s}</span>
+    </div>
+  );
   const CancelOffer = () => {
     row.forEach((obj, index) => {
       selected.forEach((n) => {
@@ -91,7 +117,16 @@ const MarketingOffer = () => {
     setOpened(false);
   };
 
-  const CloseFilterPopup = () => {
+  const CloseFilterPopup = (cancel = false) => {
+    if (cancel) {
+      setFilters({
+        platform: [],
+        discountType: [],
+        procent: [],
+      });
+
+      setAvgBasketRange({ min: '', max: '' });
+    }
     const body = document.querySelector('body');
     body.style.overflow = 'visible';
     setOpenedFilter(false);
@@ -100,16 +135,26 @@ const MarketingOffer = () => {
   useEffect(() => {
     let filteredData = offersData;
 
-    if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+    if (avgBasketRange.min && avgBasketRange.max && avgBasketRange.max > avgBasketRange.min) {
+      filteredData = filteredData.filter(
+        (f) => f.avgBasket >= avgBasketRange.min && f.avgBasket <= avgBasketRange.max,
+      );
     }
 
-    if (filters.day.length > 0) {
-      filteredData = filteredData.filter((f) => filters.day.includes(f.day));
+    if (filters.platform.length > 0) {
+      filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
+    }
+
+    if (filters.discountType.length > 0) {
+      filteredData = filteredData.filter((f) => filters.discountType.includes(f.discountType));
+    }
+
+    if (filters.procent.length > 0) {
+      filteredData = filteredData.filter((f) => filters.procent.includes(f.procent));
     }
 
     setOffersDataFiltered(filteredData);
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(filters), JSON.stringify(avgBasketRange)]);
 
   const handleChangeMultipleFilter = (k) => (v) => {
     const propertyFilter = filters[k];
@@ -177,19 +222,36 @@ const MarketingOffer = () => {
           <div className="marketing-filters">
             <div>
               <FilterDropdown
-                items={filtersHead.status}
-                values={filters.status}
-                onChange={handleChangeMultipleFilter('status')}
-                label="Status"
+                items={filtersHead.platform}
+                values={filters.platform}
+                onChange={handleChangeMultipleFilter('platform')}
+                label="Platform"
+                icon={<Layers />}
+                internalIconOnActive={platformObject}
+                maxShowned={1}
               />
               <FilterDropdown
-                items={filtersHead.day}
-                values={filters.day}
-                onChange={handleChangeMultipleFilter('day')}
-                label="Day"
+                items={filtersHead.discountType}
+                values={filters.discountType}
+                onChange={handleChangeMultipleFilter('discountType')}
+                label="Discount Type"
+                icon={<Tag />}
+                maxShowned={1}
+              />
+              <FilterDropdown
+                items={filtersHead.procent}
+                values={filters.procent}
+                onChange={handleChangeMultipleFilter('procent')}
+                label="Discount Amount"
+                icon={<Tag />}
+                customTag="%"
+                maxShowned={5}
               />
             </div>
-            <ButtonKit variant="outlined" onClick={() => setOpenedFilter(true)}>
+            <ButtonKit
+              className="more-filter"
+              variant="outlined"
+              onClick={() => setOpenedFilter(true)}>
               <img src={plus} alt="Filter Icon" />
               More Filter
             </ButtonKit>
@@ -229,7 +291,7 @@ const MarketingOffer = () => {
       <div
         role="presentation"
         tabIndex={-1}
-        onClick={() => CloseFilterPopup()}
+        onClick={() => CloseFilterPopup(true)}
         className={`filter-overlay${openedFilter ? ' active' : ''}`}>
         <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper filter-paper">
           <div>
@@ -237,7 +299,7 @@ const MarketingOffer = () => {
             <img
               role="presentation"
               tabIndex={-1}
-              onClick={() => CloseFilterPopup()}
+              onClick={() => CloseFilterPopup(true)}
               src={CloseIcon}
               alt="close icon"
             />
@@ -246,9 +308,150 @@ const MarketingOffer = () => {
             Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
             vivamus risus.
           </TypographyKit>
-          <div>
-            <ButtonKit variant="contained">Confirme and Filter</ButtonKit>
-            <ButtonKit variant="outlined" onClick={() => CloseFilterPopup()}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              marginTop: '2rem',
+              flexDirection: 'column',
+            }}>
+            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
+              <Layers /> Platform
+            </span>
+            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+              {filtersHead.platform.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    display: 'flex',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                    width: '42%',
+                  }}>
+                  <CheckboxKit
+                    checked={filters.platform.includes(item.value)}
+                    onChange={() => handleChangeMultipleFilter('platform')(item.value)}
+                  />
+                  <span style={{ alignSelf: 'center' }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <hr />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              marginTop: '2rem',
+              flexDirection: 'column',
+            }}>
+            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
+              <Tag /> Discount Type
+            </span>
+            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+              {filtersHead.discountType.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    display: 'flex',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                    marginRight: '1rem',
+                    marginTop: '1rem',
+                    width: '42%',
+                  }}>
+                  <CheckboxKit
+                    checked={filters.discountType.includes(item.value)}
+                    onChange={() => handleChangeMultipleFilter('discountType')(item.value)}
+                  />
+                  <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <hr />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              marginTop: '2rem',
+              flexDirection: 'column',
+            }}>
+            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
+              <Tag /> Discount Amount
+            </span>
+            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+              {filtersHead.procent.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    display: 'flex',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                    marginRight: '1rem',
+                    marginTop: '1rem',
+                    width: '42%',
+                  }}>
+                  <CheckboxKit
+                    checked={filters.procent.includes(item.value)}
+                    onChange={() => handleChangeMultipleFilter('procent')(item.value)}
+                  />
+                  <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <hr />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              marginTop: '2rem',
+              flexDirection: 'column',
+            }}>
+            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
+              <Tag /> Avg Basket
+            </span>
+            <div style={{ display: 'flex', width: '100%' }}>
+              <div
+                style={{
+                  marginRight: '0.5rem',
+                  marginTop: '1rem',
+                }}>
+                <span style={{ fontSize: '12px' }}>Min</span>
+                <TextfieldKit
+                  placeholder="$ 0"
+                  type="number"
+                  value={avgBasketRange.min}
+                  onChange={(e) => setAvgBasketRange({ ...avgBasketRange, min: e.target.value })}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: '1rem',
+                }}>
+                <span style={{ fontSize: '12px' }}>Max</span>
+                <TextfieldKit
+                  placeholder="-"
+                  type="number"
+                  value={avgBasketRange.max}
+                  onChange={(e) => setAvgBasketRange({ ...avgBasketRange, max: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ButtonKit
+              variant="contained"
+              style={{ marginRight: '1rem' }}
+              onClick={() => CloseFilterPopup(false)}>
+              Confirme and Filter
+            </ButtonKit>
+            <ButtonKit variant="outlined" onClick={() => CloseFilterPopup(true)}>
               Cancel
             </ButtonKit>
           </div>

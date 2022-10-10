@@ -1,27 +1,43 @@
 .comp-dropdown {
-  // border-bottom: 1px solid $color-primary;
   display: flex;
   position: relative;
 
   button {
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 30px;
-    padding: 10px 15px;
-    color: #919eabcc;
-    transition: 0.4s;
-    text-transform: capitalize;
-    border-color: #919eabcc;
-    border-width: 2px;
-    font-size: 13px;
+    background: #ffffff;
+    padding: 11px 18px;
+    color: black;
+    font-weight: bold;
+    width: 100%;
+    min-width: 14rem;
+
+    &.__active {
+      background: rgba(144, 107, 255, 0.08);
+      /* 09 Transparent/08 Black/08% */
+
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #906bff;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    i {
+      &.__active {
+        * {
+          filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
+            contrast(102%);
+        }
+      }
+    }
 
     &:hover {
-      color: #906bff;
-      border-color: #906bff;
-      border-width: 2px;
-
-      img {
-        filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
-          contrast(102%);
-      }
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 30px;
+      background: #ffffff;
+      padding: 11px 18px;
+      color: black;
+      font-weight: bold;
     }
 
     img {
@@ -97,7 +113,7 @@
     }
   }
 
-  .MuiChip-root  {
+  .MuiChip-root {
     cursor: pointer;
 
     .MuiChip-labelSmall {

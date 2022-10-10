@@ -1,16 +1,17 @@
 import React, { useState, useRef } from 'react';
-import { Chip } from '@mui/material';
+
+import { GoChevronDown, GoChevronRight } from 'react-icons/go';
 
 import './FilterDropdown.scss';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
 import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 
-import FilterIcon from '../../../assets/images/ic_filter.png';
 import useClickAwayListner from '../../../hooks/useClickAwayListner';
 
 const FilterDropdown = (props) => {
-  const { items, values, onChange, label } = props;
+  const { items, values, onChange, label, icon, customTag, maxShowned, internalIconOnActive } =
+    props;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,28 +24,21 @@ const FilterDropdown = (props) => {
 
   const getCurrentValue = () => {
     const lengthValues = values.length;
+    const max = maxShowned ?? 2;
 
     if (lengthValues < 1) {
       return label;
     }
 
-    if (lengthValues === items.length)
-      return <Chip size="small" style={{ margin: '0 2px' }} label={`All ${label} selected`} />;
+    if (lengthValues === items.length) {
+      if (items.length === 1) return `${values[0]}${customTag ?? ''}`;
 
-    if (lengthValues > 2)
-      return (
-        <Chip
-          size="small"
-          style={{ margin: '0 2px' }}
-          label={`${lengthValues} ${label} selected`}
-        />
-      );
+      return `All ${label} selected`;
+    }
 
-    return values.map((v) => {
-      const item = items.find((i) => v === i.value);
+    if (lengthValues > max) return `${lengthValues} ${label} selected`;
 
-      return <Chip key={item.value} size="small" style={{ margin: '0 2px' }} label={item.text} />;
-    });
+    return `${values.join(`${customTag ?? ''}, `)}${customTag ?? ''}`;
   };
 
   useClickAwayListner(refDropdown, () => setIsOpen(false));
@@ -78,6 +72,26 @@ const FilterDropdown = (props) => {
     );
   };
 
+  const renderIcon = () => {
+    if (internalIconOnActive && values.length > 0)
+      return (
+        <img
+          src={internalIconOnActive[values[0]].src}
+          alt={values[0]}
+          width={30}
+          style={{ verticalAlign: 'middle' }}
+        />
+      );
+
+    return (
+      <i
+        style={{ marginRight: '0.5rem', alignItems: 'center' }}
+        className={`${values.length > 0 ? '__active' : ''}`}>
+        {icon}
+      </i>
+    );
+  };
+
   return (
     <div className="comp-dropdown">
       <ButtonKit
@@ -85,9 +99,14 @@ const FilterDropdown = (props) => {
         onClick={() => setIsOpen(!isOpen)}
         onKeyPress={() => setIsOpen(!isOpen)}
         role="button"
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+        className={`${values.length > 0 ? '__active' : ''}`}
         tabIndex={0}>
-        <img src={FilterIcon} alt="Filter Icon" />
-        {getCurrentValue()}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {renderIcon()}
+          {getCurrentValue()}
+        </div>
+        {isOpen ? <GoChevronDown /> : <GoChevronRight />}
       </ButtonKit>
       {renderItems()}
     </div>
