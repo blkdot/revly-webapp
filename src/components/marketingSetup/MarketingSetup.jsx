@@ -1,6 +1,7 @@
-import { format, startOfWeek } from 'date-fns';
+import { addDays, format, startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import MarketingRadio from './MarketingRadio';
+import plus from '../../assets/images/plus.png';
 import CloseIcon from '../../assets/images/ic_close.png';
 import Dates from '../dates/Dates';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -31,6 +32,8 @@ import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
 import ArrowIcon from '../../assets/images/arrow.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
+import trash from '../../assets/images/ic_trash.png';
+import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
 
 const MarketingSetup = ({ active, setActive }) => {
   const [branch, setBranch] = useState('');
@@ -47,16 +50,28 @@ const MarketingSetup = ({ active, setActive }) => {
     startDate: startOfWeek(new Date()),
     endDate: new Date(),
   });
-  const [startingDate, setStartingDate] = useState();
-  const [startingHour, setStartingHour] = useState();
-  const [endingDate, setEndingDate] = useState(new Date());
-  const [endingHour, setEndingHour] = useState(
-    new Date(null, null, null, format(new Date(), 'HH'), 0),
-  );
+  const [startingDate, setStartingDate] = useState(new Date());
+  const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
   const [customDay, setCustomDay] = useState('');
+  const [disabledDate, setDisabledDate] = useState(true);
+  const [customisedDay, setCustomisedDay] = useState([]);
+  const [times, setTimes] = useState([
+    {
+      startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+      endTime: new Date(
+        null,
+        null,
+        null,
+        format(new Date(addDays(new Date(startingDate), 1)), 'HH'),
+        0,
+      ),
+      pos: 1,
+    },
+  ]);
+  const [everyWeek, setEveryWeek] = useState('');
 
   const [steps, setSteps] = useState([0, 1, 2, 3]);
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const heatMap = () => {
     const data = OrderHeatMap.values;
     const heatMapObj = {
@@ -78,7 +93,7 @@ const MarketingSetup = ({ active, setActive }) => {
         heatMapObj[day][num] = data[day][num] || {};
       });
     });
-    return Object.values(heatMapObj);
+    return heatMapObj;
   };
   const getPlatform = (e) => {
     const { value } = e.target;
@@ -88,6 +103,14 @@ const MarketingSetup = ({ active, setActive }) => {
     } else {
       setSteps([0, 1, 2, 3, 4]);
     }
+  };
+  const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
+  const onChange = async (newValue, setDate) => {
+    setDate(newValue);
+    const date = await document.querySelectorAll('.date-error');
+    const arr = [];
+    date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
+    setDisabledDate(arr.every((bool) => bool === false));
   };
   const getProgress = () => {
     if (selected === 1) {
@@ -218,22 +241,29 @@ const MarketingSetup = ({ active, setActive }) => {
                   <div>
                     Ending Date
                     <DatePickerDayKit
-                      minDate={new Date()}
+                      className="date-error"
+                      minDate={new Date(addDays(new Date(), 1))}
                       value={endingDate}
                       onChange={(newValue) => {
-                        setEndingDate(newValue);
+                        onChange(newValue, setEndingDate);
                       }}
                       renderInput={(params) => <TextfieldKit {...params} />}
                     />
                   </div>
-                  <div className="hour-picker">
-                    Ending Hour
-                    <BasicTimePicker
-                      minTime={new Date(null, null, null, format(new Date(), 'HH'), 0)}
-                      value={endingHour}
-                      setValue={setEndingHour}
-                    />
-                  </div>
+                  {times.map((obj, index) => (
+                    <div key={obj.pos} className="picker-duration">
+                      <div>
+                        End Time
+                        <BasicTimePicker
+                          value={obj.endTime}
+                          setValue={setTimes}
+                          times={times}
+                          index={index}
+                          type="endTime"
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </BoxKit>
               <BoxKit
@@ -283,19 +313,7 @@ const MarketingSetup = ({ active, setActive }) => {
       }
       if (duration === 'Program the offer duration') {
         if (selected === 4) {
-          if (customDay === 'Continues Offer') {
-            const getEndValue = () => {
-              if (new Date(endingDate).toDateString() === new Date(startingDate).toDateString()) {
-                if (
-                  new Date(null, null, null, format(endingHour, 'HH'), 0).toISOString() >=
-                  new Date(null, null, null, format(startingHour, 'HH'), 0).toISOString()
-                ) {
-                  return startingHour;
-                }
-                return endingHour;
-              }
-              return endingHour;
-            };
+          if (customDay) {
             return (
               <div className="left-part-middle">
                 <TypographyKit variant="h6">4.Select the Recurrence detail</TypographyKit>
@@ -314,13 +332,43 @@ const MarketingSetup = ({ active, setActive }) => {
                       </div>
                     </div>
                   </div>
+                  {customDay === 'Same day every week' ? (
+                    <CompetitionDropdown
+                      rows={[
+                        'Every Monday',
+                        'Every Tuesday',
+                        'Every Wendensday',
+                        'Every Thursday',
+                        'Every Friday',
+                        'Every Saturday',
+                        'Every Sunday',
+                      ]}
+                      title={customDay}
+                      className="top-competition marketing-setup-dropdown"
+                      setRow={setEveryWeek}
+                      select={everyWeek}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  {customDay === 'Customised Days' ? (
+                    <MarketingCheckmarksDropdown
+                      names={days}
+                      setName={setCustomisedDay}
+                      personName={customisedDay}
+                    />
+                  ) : (
+                    ''
+                  )}
                   <div className="picker-duration">
                     <div>
                       Starting Date
                       <DatePickerDayKit
+                        className="date-error"
+                        shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
                         value={startingDate}
                         onChange={(newValue) => {
-                          setStartingDate(newValue);
+                          onChange(newValue, setStartingDate);
                         }}
                         renderInput={(params) => <TextfieldKit {...params} />}
                       />
@@ -328,49 +376,98 @@ const MarketingSetup = ({ active, setActive }) => {
                     <div>
                       Ending Date
                       <DatePickerDayKit
-                        minDate={startingDate}
+                        className="date-error"
+                        shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
+                        minDate={new Date(addDays(startingDate, 1))}
                         value={endingDate}
                         onChange={(newValue) => {
-                          setEndingDate(newValue);
+                          onChange(newValue, setEndingDate);
                         }}
                         renderInput={(params) => <TextfieldKit {...params} />}
                       />
                     </div>
                   </div>
-                  <div className="picker-duration">
-                    <div>
-                      Start Time
-                      <BasicTimePicker value={startingHour} setValue={setStartingHour} />
-                    </div>
-                    <div>
-                      End Time
-                      <BasicTimePicker
-                        minTime={
-                          new Date(endingDate).toDateString() ===
-                          new Date(startingDate).toDateString()
-                            ? new Date(
-                                null,
-                                null,
-                                null,
-                                format(
-                                  !(
-                                    startingHour !== null &&
-                                    !Number.isNaN(new Date(startingHour).getTime()) &&
-                                    isValidDate(startingHour)
-                                  )
-                                    ? new Date()
-                                    : startingHour,
-                                  'HH',
-                                ),
-                                0,
-                              )
-                            : null
-                        }
-                        value={getEndValue()}
-                        setValue={setEndingHour}
-                      />
-                    </div>
-                  </div>
+                  {times.map((obj, index) =>
+                    times.length > 1 ? (
+                      <div key={obj.pos} className="picker-duration">
+                        <div>
+                          Start Time {obj.pos}
+                          <BasicTimePicker
+                            value={obj.startTime}
+                            setValue={setTimes}
+                            times={times}
+                            index={index}
+                            type="startTime"
+                          />
+                        </div>
+                        <div>
+                          End Time {obj.pos}
+                          <BasicTimePicker
+                            value={obj.endTime}
+                            setValue={setTimes}
+                            times={times}
+                            index={index}
+                            type="endTime"
+                          />
+                        </div>
+                        <div className="trash-wrapper">
+                          <img
+                            role="presentation"
+                            tabIndex={-1}
+                            onClick={() => {
+                              times.splice(index, 1);
+                              setTimes([...times]);
+                            }}
+                            src={trash}
+                            alt="trash"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div key={obj.pos} className="picker-duration">
+                        <div>
+                          Start Time
+                          <BasicTimePicker
+                            value={obj.startTime}
+                            setValue={setTimes}
+                            times={times}
+                            index={index}
+                            type="startTime"
+                          />
+                        </div>
+                        <div>
+                          End Time
+                          <BasicTimePicker
+                            value={obj.endTime}
+                            setValue={setTimes}
+                            times={times}
+                            index={index}
+                            type="endTime"
+                          />
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  {customDay === 'Continues Offer' || times.length === 3 ? (
+                    ''
+                  ) : (
+                    <ButtonKit
+                      onClick={() =>
+                        setTimes([
+                          ...times,
+                          {
+                            startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+                            endTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+                            pos: times.length + 1,
+                          },
+                        ])
+                      }
+                      className="another-slot"
+                      variant="contained">
+                      <img src={plus} alt="plus" />
+                      Add Another Slot
+                    </ButtonKit>
+                  )}
                 </BoxKit>
               </div>
             );
@@ -394,11 +491,6 @@ const MarketingSetup = ({ active, setActive }) => {
         setDisabled(!(menu && discountPercentage && minOrder));
       }
       if (selected === 3) {
-        const data = {
-          startDate: startingDate,
-          startHour: startingHour,
-        };
-        console.log(data);
         if (duration === 'Program the offer duration') {
           setSteps([0, 1, 2, 3, 4, 5]);
           setDisabled(!customDay);
@@ -407,38 +499,71 @@ const MarketingSetup = ({ active, setActive }) => {
           setDisabled(
             !(
               endingDate !== null &&
-              !Number.isNaN(new Date(endingDate).getTime()) &&
-              isValidDate(endingDate) &&
-              new Date(endingDate).toISOString() >= new Date().toISOString().slice(0, 10) &&
-              endingHour !== null &&
-              !Number.isNaN(new Date(endingHour).getTime()) &&
-              isValidDate(endingHour) &&
-              new Date(null, null, null, format(endingHour, 'HH'), 0).toISOString() >=
-                new Date(null, null, null, format(new Date(), 'HH'), 0).toISOString()
+              disabledDate &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()),
+              )
             ),
           );
         }
       }
       if (duration === 'Program the offer duration') {
         if (selected === 4) {
-          if (customDay === 'Continues Offer') {
+          if (customDay === 'Same day every week') {
             setDisabled(
               !(
-                endingDate !== null &&
-                !Number.isNaN(new Date(endingDate).getTime()) &&
-                isValidDate(endingDate) &&
-                new Date(endingDate).toISOString() >= new Date().toISOString().slice(0, 10) &&
-                endingHour !== null &&
-                !Number.isNaN(new Date(endingHour).getTime()) &&
-                isValidDate(endingHour) &&
-                new Date(null, null, null, format(endingHour, 'HH'), 0).toISOString() >=
-                  new Date(null, null, null, format(startingHour, 'HH'), 0).toISOString() &&
                 startingDate !== null &&
-                !Number.isNaN(new Date(startingDate).getTime()) &&
-                isValidDate(startingDate) &&
-                startingHour !== null &&
-                !Number.isNaN(new Date(startingHour).getTime()) &&
-                isValidDate(startingHour)
+                endingDate !== null &&
+                disabledDate &&
+                everyWeek &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
+              ),
+            );
+          }
+          if (customDay === 'Customised Days') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                customisedDay.length > 0 &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
+              ),
+            );
+          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
               ),
             );
           }
@@ -461,21 +586,27 @@ const MarketingSetup = ({ active, setActive }) => {
     selected,
     duration,
     endingDate,
-    endingHour,
     customDay,
+    disabledDate,
+    times,
+    everyWeek,
+    customisedDay,
   ]);
   useEffect(() => {
-    if (selected === 3) {
-      setStartingDate(new Date());
-      setStartingHour(new Date(null, null, null, format(new Date(), 'HH'), 0));
-    }
-    if (selected === 4) {
-      setStartingDate(new Date());
-      setStartingHour(new Date(null, null, null, format(new Date(), 'HH'), 0));
-      setEndingDate(new Date());
-      setEndingHour(new Date(null, null, null, format(new Date(), 'HH'), 0));
-    }
-  }, [selected]);
+    setTimes([
+      {
+        startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+        endTime: new Date(
+          null,
+          null,
+          null,
+          format(new Date(addDays(new Date(startingDate), 1)), 'HH'),
+          0,
+        ),
+        pos: 1,
+      },
+    ]);
+  }, [customDay]);
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
@@ -564,15 +695,15 @@ const MarketingSetup = ({ active, setActive }) => {
                 <TypographyKit sx={{ width: '100%' }} variant="div">
                   <TypographyKit variant="div" className="right-part-main-day">
                     {days.map((day) => (
-                      <TypographyKit key={day}>{day}</TypographyKit>
+                      <TypographyKit key={day}>{day.slice(0, 3)}</TypographyKit>
                     ))}
                   </TypographyKit>
                   <TypographyKit className="right-part-main-heatmap" variant="div">
-                    {heatMap().map((obj, index) => (
+                    {Object.values(heatMap()).map((obj, index) => (
                       <TypographyKit key={Object.keys(obj)[index]} variant="div">
                         {Object.keys(obj).map((num, indexObj) => (
                           <TypographyKit
-                            className="heatmap-btn"
+                            className={"heatmap-btn "}
                             sx={{
                               background: `${
                                 obj[indexObj + 5].color ? obj[indexObj + 5].color : '#919EAB1F'
