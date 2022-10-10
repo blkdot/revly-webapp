@@ -49,6 +49,8 @@ const defaultHeatmapState = {
   Sunday: {},
 };
 
+const defaultRangeColorIndices = [0, 0, 0, 0];
+
 const MarketingSetup = ({ active, setActive }) => {
   const [branch, setBranch] = useState('');
   const { userPlatformData } = usePlatform();
@@ -71,6 +73,10 @@ const MarketingSetup = ({ active, setActive }) => {
     revenue: defaultHeatmapState,
     orders: defaultHeatmapState,
   });
+  const [rangeColorIndices, setRangeColorIndices] = useState({
+    revenue: defaultRangeColorIndices,
+    orders: defaultRangeColorIndices,
+  });
   const { getHeatmap } = useApi();
   const { user } = useUserAuth();
   const { vendorsContext } = useGlobal();
@@ -92,7 +98,6 @@ const MarketingSetup = ({ active, setActive }) => {
         tmpData[day][i] = heatmapData[type][day] ? heatmapData[type][day][i] || {} : {};
       }
     });
-
     return Object.values(tmpData);
   };
 
@@ -102,20 +107,31 @@ const MarketingSetup = ({ active, setActive }) => {
       access_token: user.accessToken,
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
-      colors: ['#906BFF47', '#906BFF80', '#7952EEA6', '#7E5BE5'],
+      colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
       vendors: vendorsContext,
     };
 
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
       ([resRevenue, resOrders]) => {
-        const initialisationStateRevenue = resRevenue.heatmap
-          ? resRevenue.heatmap.all
+        const initialisationStateRevenue = resRevenue.data.all
+          ? resRevenue.data.all.heatmap
           : defaultHeatmapState;
-        const initialisationStateOrders = resOrders.heatmap
-          ? resOrders.heatmap.all
+        const initialisationStateOrders = resOrders.data.all
+          ? resOrders.data.all.heatmap
           : defaultHeatmapState;
 
+        const initialisationRangeColorIndicesRevenue = resRevenue.data.all
+          ? resRevenue.data.all.ranges
+          : defaultRangeColorIndices;
+        const initialisationRangeColorIndicesOrders = resOrders.data.all
+          ? resOrders.data.all.ranges
+          : defaultRangeColorIndices;
+
         setHeatmapData({ revenue: initialisationStateRevenue, orders: initialisationStateOrders });
+        setRangeColorIndices({
+          revenue: initialisationRangeColorIndicesRevenue,
+          orders: initialisationRangeColorIndicesOrders,
+        });
       },
     );
   };
@@ -529,23 +545,19 @@ const MarketingSetup = ({ active, setActive }) => {
     }
   }, [selected]);
 
-  const renderTooltipContent = () => (
+  const renderTooltipContent = (data) => (
     <div className="heatmap-tooltip">
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">Revenue</span>
-        <span className="__item-value">$26,213,89</span>
+        <span className="__item-text">total daily revenue till slot</span>
+        <span className="__item-value">{data.x_accrued_intra_day}&nbsp;AED</span>
       </div>
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">Revenue / Slot this week</span>
-        <span className="__item-value">$26,213,89</span>
+        <span className="__item-text">Weekly total revenue of slot</span>
+        <span className="__item-value">{data.x_slot_across_week}&nbsp;AED</span>
       </div>
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">Total Revenue Today till Slot this week</span>
-        <span className="__item-value">$26,213,89</span>
-      </div>
-      <div className="heatmap-tooltip__item">
-        <span className="__item-text">% Revenue Today till Slot this week</span>
-        <span className="__item-value">80 %</span>
+        <span className="__item-text">% of daily revenue </span>
+        <span className="__item-value">{data.x_percentage_intra_day * 100}&nbsp;%</span>
       </div>
     </div>
   );
@@ -620,10 +632,9 @@ const MarketingSetup = ({ active, setActive }) => {
                   <TypographyKit variant="h6">Max Revenue this week</TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant="div" className="color-btns">
-                  <TypographyKit>&lt;1</TypographyKit>
-                  <TypographyKit>&lt;30</TypographyKit>
-                  <TypographyKit>&lt;50</TypographyKit>
-                  <TypographyKit>&lt;$5,213.98</TypographyKit>
+                  {rangeColorIndices[links].map((r) => (
+                    <TypographyKit>&lt;{r}</TypographyKit>
+                  ))}
                 </TypographyKit>
               </TypographyKit>
               <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>
@@ -660,7 +671,10 @@ const MarketingSetup = ({ active, setActive }) => {
                             );
 
                           return (
-                            <Tooltip title={renderTooltipContent()} key={num} arrow>
+                            <Tooltip
+                              title={renderTooltipContent(obj[indexObj + 5].data)}
+                              key={num}
+                              arrow>
                               <ItemHeatmap>
                                 <TypographyKit
                                   className="heatmap-btn"
