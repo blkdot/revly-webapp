@@ -29,11 +29,11 @@ const AuthLayout = () => (
               <p className="center-flex__text">Set up a customized marketing strategy</p>
             </div>
             <div className="auth-layout__cover__center-flex">
-              <img loading="lazy" src={iccompetitionwhite} alt="card" />
+              <img loading="lazy" src={icperf} alt="card" />
               <p className="center-flex__text">Gain valuable insights on your performance</p>
             </div>
             <div className="auth-layout__cover__center-flex">
-              <img loading="lazy" src={icperf} alt="card" />
+              <img loading="lazy" src={iccompetitionwhite} alt="card" />
               <p className="center-flex__text">Stay on top of the competition</p>
             </div>
           </div>
