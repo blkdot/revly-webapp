@@ -115,6 +115,7 @@ export const OffersTableData = [
     avgBasket: 20,
     roi: 24,
     revenue: '600 Mad',
+    id: 3,
   },
   {
     date: '07/09/22',
@@ -136,6 +137,7 @@ export const OffersTableData = [
     avgBasket: 32,
     roi: 24,
     revenue: '600 Mad',
+    id: 4,
   },
   {
     date: '08/09/22',
@@ -157,6 +159,7 @@ export const OffersTableData = [
     avgBasket: 34,
     roi: 24,
     revenue: '600 Mad',
+    id: 5,
   },
   {
     date: '10/09/22',
@@ -178,5 +181,6 @@ export const OffersTableData = [
     avgBasket: 76,
     roi: 24,
     revenue: '600 Mad',
+    id: 6,
   },
 ];
