@@ -115,6 +115,7 @@ const SigninForm = (props) => {
         </div>
         <div>
           <ButtonKit
+            style={{ borderRadius: 30 }}
             fullWidth
             size="large"
             variant="contained"
