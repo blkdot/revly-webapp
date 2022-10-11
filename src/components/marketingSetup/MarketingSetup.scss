@@ -424,7 +424,7 @@
 
   >span {
     position: absolute;
-    left: -36px;
+    left: -160px;
     opacity: 0;
     visibility: hidden;
     transition: .4s;
@@ -467,6 +467,11 @@
   justify-content: space-between;
   overflow: hidden;
 
+  &.reversed {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
   &.under-textfields {
     align-items: flex-start;
     flex-direction: column;
@@ -489,6 +494,14 @@
         visibility: visible;
         margin-top: 20px;
         height: 100%;
+      }
+
+      .radio {
+        span {
+          img {
+            filter: invert(38%) sepia(95%) saturate(820%) hue-rotate(224deg) brightness(103%) contrast(101%);
+          }
+        }
       }
 
       p {
@@ -747,5 +760,29 @@
       border-color: #906BFF !important;
       border-width: 2px !important;
     }
+  }
+}
+.marketing-placeholder-dropdown{
+  fieldset{
+    border-radius: 30px;
+  }
+  >div{
+    width: 100%;
+    margin: 0;
+    margin-top: 3px;
+    >div>div{
+      padding-left: 20px;
+    }
+  }
+}
+.dropdown-wrapper{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 10px;
+  margin-top: 15px;
+  >span{
+    width: 46% !important;
   }
 }

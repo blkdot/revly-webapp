@@ -1,11 +1,11 @@
 import * as React from 'react';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import ListItemText from '@mui/material/ListItemText';
-import Select from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
+import SelectKit from '../../kits/select/SelectKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -31,25 +31,27 @@ const MarketingCheckmarksDropdown = ({ personName, setName, names }) => {
 
   return (
     <div style={{ width: '100%' }}>
-      <FormControl className="top-competition marketing-setup-dropdown" sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Customised Days</InputLabel>
-        <Select
+      <FormcontrolKit
+        className="top-competition marketing-setup-dropdown"
+        sx={{ m: 1, width: 300 }}>
+        <InputLabelKit id="demo-multiple-checkbox-label">Customised Days</InputLabelKit>
+        <SelectKit
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
           value={personName}
           onChange={handleChange}
-          input={<OutlinedInput label="Customised Days" />}
+          input={<OutlindeInputKit uncontrolled label="Customised Days" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}>
           {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
+            <MenuItemKit key={name} value={name}>
+              <CheckboxKit checked={personName.indexOf(name) > -1} />
+              <ListItemTextKit primary={name} />
+            </MenuItemKit>
           ))}
-        </Select>
-      </FormControl>
+        </SelectKit>
+      </FormcontrolKit>
     </div>
   );
 };

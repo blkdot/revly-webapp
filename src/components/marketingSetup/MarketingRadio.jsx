@@ -4,11 +4,15 @@ import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
 import RadioKit from '../../kits/radio/RadioKit';
 
 const MarketingRadio = ({ title, subtitle, icon, className, disabled }) => (
-  <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''}`}>
+  <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''} ${!icon ? 'reversed' : ''}`}>
     <div>
-      <span className={className}>
-        <img src={icon} alt="Box Icon" />
-      </span>
+      {icon ? (
+        <span className={className}>
+          <img src={icon} alt="Box Icon" />
+        </span>
+      ) : (
+        ''
+      )}
       <div>
         {title}
         {subtitle ? <p>{subtitle}</p> : ''}

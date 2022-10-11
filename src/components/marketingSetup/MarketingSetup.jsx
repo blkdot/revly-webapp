@@ -1,4 +1,4 @@
-import { addDays, format, startOfWeek } from 'date-fns';
+import { addDays, addHours, format, startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import MarketingRadio from './MarketingRadio';
 import plus from '../../assets/images/plus.png';
@@ -22,7 +22,6 @@ import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import menuIcon from '../../assets/images/ic_menu.png';
 import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
-import BreakIcon from '../../assets/images/ic_break.png';
 import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
 import RadioKit from '../../kits/radio/RadioKit';
 import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
@@ -34,12 +33,12 @@ import ArrowIcon from '../../assets/images/arrow.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
 import trash from '../../assets/images/ic_trash.png';
 import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
+import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 
 const MarketingSetup = ({ active, setActive }) => {
   const [branch, setBranch] = useState('');
   const [platform, setPlatform] = useState('talabat');
   const [selected, setSelected] = useState(1);
-  const [discount, setDiscount] = useState('Percentage Discount');
   const [links, setLinks] = useState(false);
   const [menu, setMenu] = useState('Offer on the whole Menu');
   const [discountPercentage, setDiscountPercentage] = useState('');
@@ -58,22 +57,40 @@ const MarketingSetup = ({ active, setActive }) => {
   const [times, setTimes] = useState([
     {
       startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-      endTime: new Date(
-        null,
-        null,
-        null,
-        format(new Date(addDays(new Date(startingDate), 1)), 'HH'),
-        0,
-      ),
+      endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
       pos: 1,
     },
   ]);
   const [everyWeek, setEveryWeek] = useState('');
+  const [itemMenu, setItemMenu] = useState('');
 
+  const getHourArr = (hour) => {
+    const arr = [];
+    times.forEach((obj) =>
+      Object.keys(obj).forEach((keys) => {
+        if (keys === hour) {
+          arr.push(format(obj[keys], 'HH:00'));
+        }
+      }),
+    );
+    return arr;
+  };
+
+  const data = {
+    start_date: format(startingDate, 'dd/MM/yyyy'),
+    start_hour: getHourArr('startTime'),
+    end_date: format(endingDate, 'dd/MM/yyyy'),
+    end_hour: getHourArr('endTime'),
+    discount: Number(discountPercentage.replace('%', '')),
+    mov: Number(minOrder.replace('%', '')),
+  };
+  useEffect(() => {
+    console.log(data);
+  }, []);
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const heatMap = () => {
-    const data = OrderHeatMap.values;
+    const heatMapValues = OrderHeatMap.values;
     const heatMapObj = {
       Monday: {},
       Tuesday: {},
@@ -88,9 +105,9 @@ const MarketingSetup = ({ active, setActive }) => {
         heatMapObj[day] = { ...heatMapObj[day], [i]: {} };
       }
     });
-    Object.keys(data).forEach((day) => {
+    Object.keys(heatMapValues).forEach((day) => {
       Object.keys(heatMapObj[day]).forEach((num) => {
-        heatMapObj[day][num] = data[day][num] || {};
+        heatMapObj[day][num] = heatMapValues[day][num] || {};
       });
     });
     return heatMapObj;
@@ -154,55 +171,118 @@ const MarketingSetup = ({ active, setActive }) => {
               value={menu}
               onChange={(e) => setMenu(e.target.value)}
               name="radio-buttons-group-menu">
-              <MarketingRadio
-                icon={menuIcon}
-                title="Offer on the whole Menu"
-                subtitle="Ex : Lorme Ipsum 24%"
-              />
-              <MarketingRadio
-                disabled
-                icon={ItemMenuIcon}
-                title="Offer on An Item from the Menu"
-                subtitle="Ex : Lorme Ipsum 24%"
-              />
-            </RadioGroupKit>
-            <RadioGroupKit
-              aria-labelledby="demo-radio-buttons-group-label"
-              value={discount}
-              onChange={(e) => setDiscount(e.target.value)}
-              name="radio-buttons-group-discount">
-              <BoxKit className="left-part-radio under-textfields">
+              <BoxKit
+                className={`left-part-radio under-textfields radio-dates ${
+                  menu === 'Offer on the whole Menu' ? 'active' : ''
+                }
+                  `}>
                 <div className="radio">
                   <div>
                     <span>
-                      <img src={BreakIcon} alt="Box Icon" />
+                      <img src={menuIcon} alt="Menu Icon" />
                     </span>
-                    <div>Percentage Discount</div>
+                    <div>
+                      <div>Offer on the whole Menu</div>
+                      <p>Ex : Lorme Ipsum 24%</p>
+                    </div>
                   </div>
-                  <FormControlLabelKit value="Percentage Discount" control={<RadioKit />} />
+                  <FormControlLabelKit value="Offer on the whole Menu" control={<RadioKit />} />
                 </div>
-                <TypographyKit className="min-max-textfields" variant="div">
-                  <TypographyKit variant="div">
-                    <CompetitionDropdown
-                      rows={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
-                      title="Percentage Value %"
-                      className="top-competition marketing-dropdown"
-                      setRow={setDiscountPercentage}
-                      select={discountPercentage}
-                    />
-                  </TypographyKit>
-                </TypographyKit>
-                <TypographyKit className="min-max-textfields" variant="div">
-                  <TypographyKit variant="div">
-                    <CompetitionDropdown
-                      rows={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
-                      title="Min Order"
-                      className="top-competition marketing-dropdown"
-                      setRow={setMinOrder}
-                      select={minOrder}
-                    />
-                  </TypographyKit>
-                </TypographyKit>
+                <div style={{ width: '100%', marginTop: '0px' }}>
+                  <div style={{ width: '100%' }}>
+                    <div className="dropdown-wrapper">
+                      <TypographyKit className="min-max-textfields" variant="div">
+                        <TypographyKit variant="div">
+                          Procentage Discount
+                          <MarketingPlaceholderDropdown
+                            names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                            title="%"
+                            setPersonName={setDiscountPercentage}
+                            personName={discountPercentage}
+                          />
+                        </TypographyKit>
+                      </TypographyKit>
+                      <TypographyKit className="min-max-textfields" variant="div">
+                        <TypographyKit variant="div">
+                          Min Order Value
+                          <MarketingPlaceholderDropdown
+                            names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
+                            title="$0.00"
+                            setPersonName={setMinOrder}
+                            personName={minOrder}
+                          />
+                        </TypographyKit>
+                      </TypographyKit>
+                    </div>
+                  </div>
+                </div>
+              </BoxKit>
+              <BoxKit
+                className={`left-part-radio under-textfields radio-dates ${
+                  menu === 'Offer on An Item from the Menu' ? 'active' : ''
+                }
+                  `}>
+                <div className="radio">
+                  <div>
+                    <span>
+                      <img src={ItemMenuIcon} alt="Item Menu Icon" />
+                    </span>
+                    <div>
+                      <div>Offer on An Item from the Menu</div>
+                      <p>Ex : Lorme Ipsum 24%</p>
+                    </div>
+                  </div>
+                  <FormControlLabelKit
+                    value="Offer on An Item from the Menu"
+                    control={<RadioKit />}
+                  />
+                </div>
+                <div>
+                  <RadioGroupKit
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={itemMenu}
+                    onChange={(e) => setItemMenu(e.target.value)}
+                    name="radio-buttons-group-menu">
+                    {[
+                      {
+                        title: 'Flash Deal',
+                        subtitle: 'Sell Off extra stock when you’re about to close',
+                      },
+                      {
+                        title: 'Order more , save more',
+                        subtitle: 'Attract larger orders from groupes and famillies',
+                      },
+                      { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
+                      { title: 'Free item', subtitle: 'Allow customers ro choose a free item' },
+                    ].map((obj) => (
+                      <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
+                    ))}
+                    <div className="dropdown-wrapper">
+                      <TypographyKit className="min-max-textfields" variant="div">
+                        <TypographyKit variant="div">
+                          Procentage Discount
+                          <MarketingPlaceholderDropdown
+                            names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                            title="%"
+                            setPersonName={setDiscountPercentage}
+                            personName={discountPercentage}
+                          />
+                        </TypographyKit>
+                      </TypographyKit>
+                      <TypographyKit className="min-max-textfields" variant="div">
+                        <TypographyKit variant="div">
+                          Min Order Value
+                          <MarketingPlaceholderDropdown
+                            names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
+                            title="$0.00"
+                            setPersonName={setMinOrder}
+                            personName={minOrder}
+                          />
+                        </TypographyKit>
+                      </TypographyKit>
+                    </div>
+                  </RadioGroupKit>
+                </div>
               </BoxKit>
             </RadioGroupKit>
           </div>
@@ -255,6 +335,14 @@ const MarketingSetup = ({ active, setActive }) => {
                       <div>
                         End Time
                         <BasicTimePicker
+                          minTime={
+                            new Date(
+                              null,
+                              null,
+                              null,
+                              format(addHours(new Date(obj.startTime), 1), 'HH', 0),
+                            )
+                          }
                           value={obj.endTime}
                           setValue={setTimes}
                           times={times}
@@ -324,7 +412,7 @@ const MarketingSetup = ({ active, setActive }) => {
                   <div className="radio">
                     <div>
                       <span>
-                        <img src={TimerIcon} alt="Timer Icon" />
+                        <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
                       </span>
                       <div>
                         <div>Recurrence Details</div>
@@ -394,6 +482,17 @@ const MarketingSetup = ({ active, setActive }) => {
                           Start Time {obj.pos}
                           <BasicTimePicker
                             value={obj.startTime}
+                            minTime={
+                              obj.pos === 1
+                                ? ''
+                                : new Date(
+                                    null,
+                                    null,
+                                    null,
+                                    format(addHours(times[index - 1].endTime, 1), 'HH'),
+                                    0,
+                                  )
+                            }
                             setValue={setTimes}
                             times={times}
                             index={index}
@@ -404,6 +503,15 @@ const MarketingSetup = ({ active, setActive }) => {
                           End Time {obj.pos}
                           <BasicTimePicker
                             value={obj.endTime}
+                            minTime={
+                              new Date(
+                                null,
+                                null,
+                                null,
+                                format(addHours(obj.startTime, 1), 'HH'),
+                                0,
+                              )
+                            }
                             setValue={setTimes}
                             times={times}
                             index={index}
@@ -438,6 +546,7 @@ const MarketingSetup = ({ active, setActive }) => {
                         <div>
                           End Time
                           <BasicTimePicker
+                            minTime={new Date(addHours(new Date(obj.startTime), 1))}
                             value={obj.endTime}
                             setValue={setTimes}
                             times={times}
@@ -457,7 +566,21 @@ const MarketingSetup = ({ active, setActive }) => {
                           ...times,
                           {
                             startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-                            endTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+                            endTime: new Date(
+                              null,
+                              null,
+                              null,
+                              format(
+                                addDays(
+                                  times.length === 1
+                                    ? times[0].startTime
+                                    : times[times.length - 2].endTime,
+                                  1,
+                                ),
+                                'HH',
+                              ),
+                              0,
+                            ),
                             pos: times.length + 1,
                           },
                         ])
@@ -488,7 +611,13 @@ const MarketingSetup = ({ active, setActive }) => {
         setDisabled(!branch);
       }
       if (selected === 2) {
-        setDisabled(!(menu && discountPercentage && minOrder));
+        if (menu === 'Offer on An Item from the Menu') {
+          setSteps([0, 1, 2, 3, 4, 5]);
+          setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
+        } else {
+          setSteps([0, 1, 2, 3, 4]);
+          setDisabled(!(menu && discountPercentage && minOrder));
+        }
       }
       if (selected === 3) {
         if (duration === 'Program the offer duration') {
@@ -591,18 +720,13 @@ const MarketingSetup = ({ active, setActive }) => {
     times,
     everyWeek,
     customisedDay,
+    itemMenu,
   ]);
   useEffect(() => {
     setTimes([
       {
         startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-        endTime: new Date(
-          null,
-          null,
-          null,
-          format(new Date(addDays(new Date(startingDate), 1)), 'HH'),
-          0,
-        ),
+        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
         pos: 1,
       },
     ]);
@@ -703,18 +827,20 @@ const MarketingSetup = ({ active, setActive }) => {
                       <TypographyKit key={Object.keys(obj)[index]} variant="div">
                         {Object.keys(obj).map((num, indexObj) => (
                           <TypographyKit
-                            className={"heatmap-btn "}
+                            className="heatmap-btn"
                             sx={{
                               background: `${
                                 obj[indexObj + 5].color ? obj[indexObj + 5].color : '#919EAB1F'
                               }`,
                             }}
                             key={num}>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((n) => (
-                              <span>
-                                <span style={{ '--i': n }} key={n} />
-                              </span>
-                            ))}
+                            {[24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39].map(
+                              (n) => (
+                                <span>
+                                  <span style={{ '--i': n }} key={n} />
+                                </span>
+                              ),
+                            )}
                           </TypographyKit>
                         ))}
                       </TypographyKit>
