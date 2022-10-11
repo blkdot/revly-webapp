@@ -421,6 +421,9 @@ const MarketingOffer = () => {
                 style={{
                   marginRight: '0.5rem',
                   marginTop: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
                 }}>
                 <span style={{ fontSize: '12px' }}>Min</span>
                 <TextfieldKit
@@ -433,6 +436,9 @@ const MarketingOffer = () => {
               <div
                 style={{
                   marginTop: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
                 }}>
                 <span style={{ fontSize: '12px' }}>Max</span>
                 <TextfieldKit
