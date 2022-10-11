@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
+import { pascalCase } from 'change-case';
 
 import CloseIcon from '../../assets/images/ic_close.png';
 import logo from '../../assets/images/small-logo.png';
@@ -101,7 +102,7 @@ const MarketingOffer = () => {
   const renderPlatformInsideFilter = (s) => (
     <div key={s}>
       <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
-      <span style={{ verticalAlign: 'middle' }}>{s}</span>
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
     </div>
   );
   const CancelOffer = () => {

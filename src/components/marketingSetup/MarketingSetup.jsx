@@ -22,8 +22,6 @@ import { usePlatform } from '../../hooks/usePlatform';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
-// import talabat from '../../assets/images/talabat.png';
-// import deliveroo from '../../assets/images/deliveroo.png';
 import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import menuIcon from '../../assets/images/ic_menu.png';
@@ -37,7 +35,8 @@ import BasicTimePicker from '../timePicker/TimePicker';
 import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
 import ArrowIcon from '../../assets/images/arrow.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
-import { platformList } from '../../data/platformList';
+import { platformList, platformObject } from '../../data/platformList';
+import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -90,6 +89,7 @@ const MarketingSetup = ({ active, setActive }) => {
 
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
   const heatMapFormatter = (type) => {
     const tmpData = defaultHeatmapState;
 
@@ -149,6 +149,7 @@ const MarketingSetup = ({ active, setActive }) => {
       setSteps([0, 1, 2, 3, 4]);
     }
   };
+
   const getProgress = () => {
     if (selected === 1) {
       return (
@@ -168,17 +169,16 @@ const MarketingSetup = ({ active, setActive }) => {
                 .map((p) => (
                   <MarketingRadio key={p.name} className={p.name} icon={p.src} title={p.name} />
                 ))}
-              {/* <MarketingRadio className="talabat" icon={talabat} title="talabat" />
-              <MarketingRadio className="deliveroo" icon={deliveroo} title="deliveroo" /> */}
             </RadioGroupKit>
           </div>
-          <CompetitionDropdown
-            rows={['1 branch', '2 branch']}
+          <BranchMarketingDropdown
+            rows={vendorsContext[platform]}
             icon={BranchesIcon}
             title="Select Branches"
             className="top-competition marketing-dropdown"
             setRow={setBranch}
             select={branch}
+            platformData={platformObject[platform]}
           />
         </div>
       );
@@ -628,8 +628,16 @@ const MarketingSetup = ({ active, setActive }) => {
                 <TypographyKit
                   variant="div"
                   sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                  <TypographyKit variant="h6">Min Revenue this week</TypographyKit>
-                  <TypographyKit variant="h6">Max Revenue this week</TypographyKit>
+                  <TypographyKit variant="h6">
+                    Min {links === 'revenue' ? 'revenue' : 'number of orders'} from{' '}
+                    {dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD')} to{' '}
+                    {dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD')}
+                  </TypographyKit>
+                  <TypographyKit variant="h6">
+                    Max {links === 'revenue' ? 'revenue' : 'number of orders'} from{' '}
+                    {dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD')} to{' '}
+                    {dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD')}
+                  </TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant="div" className="color-btns">
                   {rangeColorIndices[links].map((r) => (
