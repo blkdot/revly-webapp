@@ -733,7 +733,24 @@
   }
 }
 
+.search-filter{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-direction: row !important;
+  width: 100%;
+  >div:nth-of-type(1)>div{
+    height: 52px;
+    >div{
+    height: 50px !important;
+  }
+}
+}
 .marketing-setup-dropdown {
+  &.w60.w60{
+    width: 100% !important;
+    margin: 0 !important;
+  }
   >div {
     height: 53px !important;
     border: none !important;

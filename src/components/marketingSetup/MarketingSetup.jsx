@@ -1,5 +1,6 @@
 import { addDays, addHours, format, startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
+import InputAdornment from '@mui/material/InputAdornment';
 import MarketingRadio from './MarketingRadio';
 import plus from '../../assets/images/plus.png';
 import CloseIcon from '../../assets/images/ic_close.png';
@@ -34,6 +35,7 @@ import TimerIcon from '../../assets/images/ic_timer.png';
 import trash from '../../assets/images/ic_trash.png';
 import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
+import searchIcon from '../../assets/images/ic_search.png';
 
 const MarketingSetup = ({ active, setActive }) => {
   const [branch, setBranch] = useState('');
@@ -63,6 +65,7 @@ const MarketingSetup = ({ active, setActive }) => {
   ]);
   const [everyWeek, setEveryWeek] = useState('');
   const [itemMenu, setItemMenu] = useState('');
+  const [category, setCategory] = useState('');
 
   const getHourArr = (hour) => {
     const arr = [];
@@ -75,14 +78,35 @@ const MarketingSetup = ({ active, setActive }) => {
     );
     return arr;
   };
+  const getTypeOffer = () => {
+    if (customDay === 'Continues Offer') {
+      return 'once';
+    }
+    if (customDay === 'Every Day') {
+      return 'everyday';
+    }
+    if (customDay === 'Work Week') {
+      return 'workweek';
+    }
+    if (customDay === 'Same day every week') {
+      return everyWeek.toLowerCase().replace('every', '');
+    }
+    if (customDay === 'Customised Days') {
+      return customisedDay.toString().toLowerCase().replace(/,/g, '.');
+    }
+    return '';
+  };
 
+  // Here is data which need to request
   const data = {
     start_date: format(startingDate, 'dd/MM/yyyy'),
     start_hour: getHourArr('startTime'),
     end_date: format(endingDate, 'dd/MM/yyyy'),
     end_hour: getHourArr('endTime'),
-    discount: Number(discountPercentage.replace('%', '')),
-    mov: Number(minOrder.replace('%', '')),
+    type_offer: getTypeOffer(),
+    goal: 'orders',
+    discount: Number(discountPercentage.replace('%', '')) || '',
+    mov: Number(minOrder.replace('%', '')) || '',
   };
   useEffect(() => {
     console.log(data);
@@ -288,185 +312,93 @@ const MarketingSetup = ({ active, setActive }) => {
           </div>
         );
       }
-      if (selected === 3) {
-        return (
-          <div className="left-part-middle">
-            <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
-            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-            </TypographyKit>
-            <RadioGroupKit
-              className="duration-wrapper"
-              aria-labelledby="demo-radio-buttons-group-label"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              name="radio-buttons-group-duration">
+      if (menu === 'Offer on An Item from the Menu') {
+        if (selected === 3) {
+          return (
+            <div className="left-part-middle">
+              <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
+              <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              </TypographyKit>
               <BoxKit
                 className={`left-part-radio under-textfields radio-dates ${
-                  duration === 'Starting Now' ? 'active' : ''
-                }`}>
+                  menu === 'Offer on An Item from the Menu' ? 'active' : ''
+                }
+                  `}>
                 <div className="radio">
                   <div>
                     <span>
-                      <img src={CalendarCheckedIcon} alt="Calendar checked Icon" />
+                      <img src={ItemMenuIcon} alt="Item Menu Icon" />
                     </span>
                     <div>
-                      <div>Starting Now</div>
-                      <p>{format(new Date(), 'dd MMM yyyy HH:00')}</p>
+                      <div>Offer on An Item from the Menu</div>
+                      <p>{itemMenu}</p>
                     </div>
                   </div>
-                  <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
                 </div>
-                <div className="picker-duration">
-                  <div>
-                    Ending Date
-                    <DatePickerDayKit
-                      className="date-error"
-                      minDate={new Date(addDays(new Date(), 1))}
-                      value={endingDate}
-                      onChange={(newValue) => {
-                        onChange(newValue, setEndingDate);
-                      }}
-                      renderInput={(params) => <TextfieldKit {...params} />}
-                    />
-                  </div>
-                  {times.map((obj, index) => (
-                    <div key={obj.pos} className="picker-duration">
-                      <div>
-                        End Time
-                        <BasicTimePicker
-                          minTime={
-                            new Date(
-                              null,
-                              null,
-                              null,
-                              format(addHours(new Date(obj.startTime), 1), 'HH', 0),
-                            )
-                          }
-                          value={obj.endTime}
-                          setValue={setTimes}
-                          times={times}
-                          index={index}
-                          type="endTime"
-                        />
-                      </div>
-                    </div>
-                  ))}
+                <div className="picker-duration search-filter">
+                  <TextfieldKit
+                    style={{ width: '100%' }}
+                    id="input-with-icon-textfield"
+                    placeholder="Search"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <img src={searchIcon} alt="Searh Icon" />
+                        </InputAdornment>
+                      ),
+                    }}
+                    variant="outlined"
+                  />
+                  <CompetitionDropdown
+                    rows={['category 1', 'category 2']}
+                    title="All Categories"
+                    className="top-competition marketing-setup-dropdown w60"
+                    setRow={setCategory}
+                    select={category}
+                  />
                 </div>
               </BoxKit>
-              <BoxKit
-                className={`left-part-radio under-textfields ${
-                  duration === 'Program the offer duration' ? 'active' : ''
-                }`}>
-                <div className="radio">
-                  <div>
-                    <span>
-                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                    </span>
-                    <div>
-                      <div>Program the offer duration</div>
-                      <p>
-                        {customDay || 'Recurrence customized'}
-                        <img src={ArrowIcon} alt="arrow" />
-                      </p>
-                    </div>
-                  </div>
-                  <FormControlLabelKit value="Program the offer duration" control={<RadioKit />} />
-                </div>
-                <div>
-                  <RadioGroupKit
-                    className="radio-group-day"
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    value={customDay}
-                    onChange={(e) => setCustomDay(e.target.value)}
-                    name="radio-buttons-group-days">
-                    {[
-                      'Continues Offer',
-                      'Every Day',
-                      'Work Week',
-                      'Same day every week',
-                      'Customised Days',
-                    ].map((day) => (
-                      <div key={day}>
-                        <FormControlLabelKit value={day} control={<RadioKit />} />
-                        <span>{day}</span>
-                      </div>
-                    ))}
-                  </RadioGroupKit>
-                </div>
-              </BoxKit>
-            </RadioGroupKit>
-          </div>
-        );
+            </div>
+          );
+        }
       }
-      if (duration === 'Program the offer duration') {
-        if (selected === 4) {
-          if (customDay) {
-            return (
-              <div className="left-part-middle">
-                <TypographyKit variant="h6">4.Select the Recurrence detail</TypographyKit>
-                <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                  Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-                </TypographyKit>
-                <BoxKit className="left-part-radio under-textfields radio-dates active">
+      if (menu === 'Offer on the whole Menu') {
+        if (selected === 3) {
+          return (
+            <div className="left-part-middle">
+              <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
+              <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              </TypographyKit>
+              <RadioGroupKit
+                className="duration-wrapper"
+                aria-labelledby="demo-radio-buttons-group-label"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                name="radio-buttons-group-duration">
+                <BoxKit
+                  className={`left-part-radio under-textfields radio-dates ${
+                    duration === 'Starting Now' ? 'active' : ''
+                  }`}>
                   <div className="radio">
                     <div>
                       <span>
-                        <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
+                        <img src={CalendarCheckedIcon} alt="Calendar checked Icon" />
                       </span>
                       <div>
-                        <div>Recurrence Details</div>
-                        <p>{customDay}</p>
+                        <div>Starting Now</div>
+                        <p>{format(new Date(), 'dd MMM yyyy HH:00')}</p>
                       </div>
                     </div>
+                    <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
                   </div>
-                  {customDay === 'Same day every week' ? (
-                    <CompetitionDropdown
-                      rows={[
-                        'Every Monday',
-                        'Every Tuesday',
-                        'Every Wendensday',
-                        'Every Thursday',
-                        'Every Friday',
-                        'Every Saturday',
-                        'Every Sunday',
-                      ]}
-                      title={customDay}
-                      className="top-competition marketing-setup-dropdown"
-                      setRow={setEveryWeek}
-                      select={everyWeek}
-                    />
-                  ) : (
-                    ''
-                  )}
-                  {customDay === 'Customised Days' ? (
-                    <MarketingCheckmarksDropdown
-                      names={days}
-                      setName={setCustomisedDay}
-                      personName={customisedDay}
-                    />
-                  ) : (
-                    ''
-                  )}
                   <div className="picker-duration">
-                    <div>
-                      Starting Date
-                      <DatePickerDayKit
-                        className="date-error"
-                        shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
-                        value={startingDate}
-                        onChange={(newValue) => {
-                          onChange(newValue, setStartingDate);
-                        }}
-                        renderInput={(params) => <TextfieldKit {...params} />}
-                      />
-                    </div>
                     <div>
                       Ending Date
                       <DatePickerDayKit
                         className="date-error"
-                        shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
-                        minDate={new Date(addDays(startingDate, 1))}
+                        minDate={new Date(addDays(new Date(), 1))}
                         value={endingDate}
                         onChange={(newValue) => {
                           onChange(newValue, setEndingDate);
@@ -474,79 +406,19 @@ const MarketingSetup = ({ active, setActive }) => {
                         renderInput={(params) => <TextfieldKit {...params} />}
                       />
                     </div>
-                  </div>
-                  {times.map((obj, index) =>
-                    times.length > 1 ? (
+                    {times.map((obj, index) => (
                       <div key={obj.pos} className="picker-duration">
                         <div>
-                          Start Time {obj.pos}
+                          End Time
                           <BasicTimePicker
-                            value={obj.startTime}
-                            minTime={
-                              obj.pos === 1
-                                ? ''
-                                : new Date(
-                                    null,
-                                    null,
-                                    null,
-                                    format(addHours(times[index - 1].endTime, 1), 'HH'),
-                                    0,
-                                  )
-                            }
-                            setValue={setTimes}
-                            times={times}
-                            index={index}
-                            type="startTime"
-                          />
-                        </div>
-                        <div>
-                          End Time {obj.pos}
-                          <BasicTimePicker
-                            value={obj.endTime}
                             minTime={
                               new Date(
                                 null,
                                 null,
                                 null,
-                                format(addHours(obj.startTime, 1), 'HH'),
-                                0,
+                                format(addHours(new Date(obj.startTime), 1), 'HH', 0),
                               )
                             }
-                            setValue={setTimes}
-                            times={times}
-                            index={index}
-                            type="endTime"
-                          />
-                        </div>
-                        <div className="trash-wrapper">
-                          <img
-                            role="presentation"
-                            tabIndex={-1}
-                            onClick={() => {
-                              times.splice(index, 1);
-                              setTimes([...times]);
-                            }}
-                            src={trash}
-                            alt="trash"
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <div key={obj.pos} className="picker-duration">
-                        <div>
-                          Start Time
-                          <BasicTimePicker
-                            value={obj.startTime}
-                            setValue={setTimes}
-                            times={times}
-                            index={index}
-                            type="startTime"
-                          />
-                        </div>
-                        <div>
-                          End Time
-                          <BasicTimePicker
-                            minTime={new Date(addHours(new Date(obj.startTime), 1))}
                             value={obj.endTime}
                             setValue={setTimes}
                             times={times}
@@ -555,49 +427,258 @@ const MarketingSetup = ({ active, setActive }) => {
                           />
                         </div>
                       </div>
-                    ),
-                  )}
-                  {customDay === 'Continues Offer' || times.length === 3 ? (
-                    ''
-                  ) : (
-                    <ButtonKit
-                      onClick={() =>
-                        setTimes([
-                          ...times,
-                          {
-                            startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-                            endTime: new Date(
-                              null,
-                              null,
-                              null,
-                              format(
-                                addDays(
-                                  times.length === 1
-                                    ? times[0].startTime
-                                    : times[times.length - 2].endTime,
-                                  1,
-                                ),
-                                'HH',
-                              ),
-                              0,
-                            ),
-                            pos: times.length + 1,
-                          },
-                        ])
-                      }
-                      className="another-slot"
-                      variant="contained">
-                      <img src={plus} alt="plus" />
-                      Add Another Slot
-                    </ButtonKit>
-                  )}
+                    ))}
+                  </div>
                 </BoxKit>
-              </div>
-            );
-          }
+                <BoxKit
+                  className={`left-part-radio under-textfields ${
+                    duration === 'Program the offer duration' ? 'active' : ''
+                  }`}>
+                  <div className="radio">
+                    <div>
+                      <span>
+                        <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                      </span>
+                      <div>
+                        <div>Program the offer duration</div>
+                        <p>
+                          {customDay || 'Recurrence customized'}
+                          <img src={ArrowIcon} alt="arrow" />
+                        </p>
+                      </div>
+                    </div>
+                    <FormControlLabelKit
+                      value="Program the offer duration"
+                      control={<RadioKit />}
+                    />
+                  </div>
+                  <div>
+                    <RadioGroupKit
+                      className="radio-group-day"
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      value={customDay}
+                      onChange={(e) => setCustomDay(e.target.value)}
+                      name="radio-buttons-group-days">
+                      {[
+                        'Continues Offer',
+                        'Every Day',
+                        'Work Week',
+                        'Same day every week',
+                        'Customised Days',
+                      ].map((day) => (
+                        <div key={day}>
+                          <FormControlLabelKit value={day} control={<RadioKit />} />
+                          <span>{day}</span>
+                        </div>
+                      ))}
+                    </RadioGroupKit>
+                  </div>
+                </BoxKit>
+              </RadioGroupKit>
+            </div>
+          );
         }
-        return '';
+        if (duration === 'Program the offer duration') {
+          if (selected === 4) {
+            if (customDay) {
+              return (
+                <div className="left-part-middle">
+                  <TypographyKit variant="h6">4.Select the Recurrence detail</TypographyKit>
+                  <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+                    Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+                  </TypographyKit>
+                  <BoxKit className="left-part-radio under-textfields radio-dates active">
+                    <div className="radio">
+                      <div>
+                        <span>
+                          <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
+                        </span>
+                        <div>
+                          <div>Recurrence Details</div>
+                          <p>{customDay}</p>
+                        </div>
+                      </div>
+                    </div>
+                    {customDay === 'Same day every week' ? (
+                      <CompetitionDropdown
+                        rows={[
+                          'Every Monday',
+                          'Every Tuesday',
+                          'Every Wendensday',
+                          'Every Thursday',
+                          'Every Friday',
+                          'Every Saturday',
+                          'Every Sunday',
+                        ]}
+                        title={customDay}
+                        className="top-competition marketing-setup-dropdown"
+                        setRow={setEveryWeek}
+                        select={everyWeek}
+                      />
+                    ) : (
+                      ''
+                    )}
+                    {customDay === 'Customised Days' ? (
+                      <MarketingCheckmarksDropdown
+                        names={days}
+                        setName={setCustomisedDay}
+                        personName={customisedDay}
+                      />
+                    ) : (
+                      ''
+                    )}
+                    <div className="picker-duration">
+                      <div>
+                        Starting Date
+                        <DatePickerDayKit
+                          className="date-error"
+                          shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
+                          value={startingDate}
+                          onChange={(newValue) => {
+                            onChange(newValue, setStartingDate);
+                          }}
+                          renderInput={(params) => <TextfieldKit {...params} />}
+                        />
+                      </div>
+                      <div>
+                        Ending Date
+                        <DatePickerDayKit
+                          className="date-error"
+                          shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
+                          minDate={new Date(addDays(startingDate, 1))}
+                          value={endingDate}
+                          onChange={(newValue) => {
+                            onChange(newValue, setEndingDate);
+                          }}
+                          renderInput={(params) => <TextfieldKit {...params} />}
+                        />
+                      </div>
+                    </div>
+                    {times.map((obj, index) =>
+                      times.length > 1 ? (
+                        <div key={obj.pos} className="picker-duration">
+                          <div>
+                            Start Time {obj.pos}
+                            <BasicTimePicker
+                              value={obj.startTime}
+                              minTime={
+                                obj.pos === 1
+                                  ? ''
+                                  : new Date(
+                                      null,
+                                      null,
+                                      null,
+                                      format(addHours(times[index - 1].endTime, 1), 'HH'),
+                                      0,
+                                    )
+                              }
+                              setValue={setTimes}
+                              times={times}
+                              index={index}
+                              type="startTime"
+                            />
+                          </div>
+                          <div>
+                            End Time {obj.pos}
+                            <BasicTimePicker
+                              value={obj.endTime}
+                              minTime={
+                                new Date(
+                                  null,
+                                  null,
+                                  null,
+                                  format(addHours(obj.startTime, 1), 'HH'),
+                                  0,
+                                )
+                              }
+                              setValue={setTimes}
+                              times={times}
+                              index={index}
+                              type="endTime"
+                            />
+                          </div>
+                          <div className="trash-wrapper">
+                            <img
+                              role="presentation"
+                              tabIndex={-1}
+                              onClick={() => {
+                                times.splice(index, 1);
+                                setTimes([...times]);
+                              }}
+                              src={trash}
+                              alt="trash"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div key={obj.pos} className="picker-duration">
+                          <div>
+                            Start Time
+                            <BasicTimePicker
+                              value={obj.startTime}
+                              setValue={setTimes}
+                              times={times}
+                              index={index}
+                              type="startTime"
+                            />
+                          </div>
+                          <div>
+                            End Time
+                            <BasicTimePicker
+                              minTime={new Date(addHours(new Date(obj.startTime), 1))}
+                              value={obj.endTime}
+                              setValue={setTimes}
+                              times={times}
+                              index={index}
+                              type="endTime"
+                            />
+                          </div>
+                        </div>
+                      ),
+                    )}
+                    {customDay === 'Continues Offer' || times.length === 3 ? (
+                      ''
+                    ) : (
+                      <ButtonKit
+                        onClick={() =>
+                          setTimes([
+                            ...times,
+                            {
+                              startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+                              endTime: new Date(
+                                null,
+                                null,
+                                null,
+                                format(
+                                  addHours(
+                                    times.length === 1
+                                      ? times[0].startTime
+                                      : times[times.length - 2].endTime,
+                                    1,
+                                  ),
+                                  'HH',
+                                ),
+                                0,
+                              ),
+                              pos: times.length + 1,
+                            },
+                          ])
+                        }
+                        className="another-slot"
+                        variant="contained">
+                        <img src={plus} alt="plus" />
+                        Add Another Slot
+                      </ButtonKit>
+                    )}
+                  </BoxKit>
+                </div>
+              );
+            }
+          }
+          return '';
+        }
       }
+
       return '';
     }
     return '';
@@ -836,8 +917,8 @@ const MarketingSetup = ({ active, setActive }) => {
                             key={num}>
                             {[24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39].map(
                               (n) => (
-                                <span>
-                                  <span style={{ '--i': n }} key={n} />
+                                <span key={n}>
+                                  <span style={{ '--i': n }} />
                                 </span>
                               ),
                             )}

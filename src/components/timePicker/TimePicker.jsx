@@ -17,7 +17,7 @@ const BasicTimePicker = ({ value, setValue, minTime, type, times, index }) => {
       value={value}
       minTime={minTime}
       onChange={(newValue) => setTimes(newValue)}
-      renderInput={(params) => <TextfieldKit defaultValue={new Date()} {...params} />}
+      renderInput={(params) => <TextfieldKit {...params} />}
     />
   );
 };

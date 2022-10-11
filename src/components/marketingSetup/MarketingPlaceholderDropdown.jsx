@@ -32,10 +32,7 @@ const MarketingPlaceholderDropdown = ({ setPersonName, personName, title, names 
     const {
       target: { value },
     } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
+    setPersonName(value);
   };
 
   return (
@@ -46,13 +43,7 @@ const MarketingPlaceholderDropdown = ({ setPersonName, personName, title, names 
           value={personName}
           onChange={handleChange}
           input={<OutlindeInputKit />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>{title}</em>;
-            }
-
-            return selected.join(', ');
-          }}
+          renderValue={(selected) => <em>{selected || title}</em>}
           MenuProps={MenuProps}
           inputProps={{ 'aria-label': 'Without label' }}>
           {names.map((name) => (
