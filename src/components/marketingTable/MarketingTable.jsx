@@ -202,7 +202,7 @@ const MarketingTable = ({ rows, selected, setSelected }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => <React.Fragment key={n.name}>{n.name}</React.Fragment>);
       setSelected(newSelected);
       return;
     }
@@ -246,14 +246,15 @@ const MarketingTable = ({ rows, selected, setSelected }) => {
             <TableBodyKit>
               {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
                 const isItemSelected = isSelected(index);
+
                 return (
                   <TableRowKit
+                    key={row.id}
                     className={`marketing-table-top ${isItemSelected ? 'selected' : ''}`}
                     onClick={(event) => handleClick(event, index)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
                     selected={isItemSelected}>
                     <TableCellKit component="th" id="dateMn" scope="row">
                       {row.date}
