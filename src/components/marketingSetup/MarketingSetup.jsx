@@ -1,6 +1,7 @@
 import { format, startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
 import MarketingRadio from './MarketingRadio';
 import CloseIcon from '../../assets/images/ic_close.png';
@@ -89,7 +90,6 @@ const MarketingSetup = ({ active, setActive }) => {
 
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
   const heatMapFormatter = (type) => {
     const tmpData = defaultHeatmapState;
 
@@ -137,8 +137,10 @@ const MarketingSetup = ({ active, setActive }) => {
   };
 
   useEffect(() => {
+    if (!vendorsContext) return;
+
     getHeatmapData();
-  }, [JSON.stringify(beforePeriodBtn)]);
+  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsContext)]);
 
   const getPlatform = (e) => {
     const { value } = e.target;
@@ -557,7 +559,9 @@ const MarketingSetup = ({ active, setActive }) => {
       </div>
       <div className="heatmap-tooltip__item">
         <span className="__item-text">% of daily revenue </span>
-        <span className="__item-value">{data.x_percentage_intra_day * 100}&nbsp;%</span>
+        <span className="__item-value">
+          {(data.x_percentage_intra_day * 100).toFixed(2)}&nbsp;%
+        </span>
       </div>
     </div>
   );
@@ -628,20 +632,20 @@ const MarketingSetup = ({ active, setActive }) => {
                 <TypographyKit
                   variant="div"
                   sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                  <TypographyKit variant="h6">
+                  <TypographyKit variant="h6" style={{ fontSize: '15px' }}>
                     Min {links === 'revenue' ? 'revenue' : 'number of orders'} from{' '}
-                    {dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD')} to{' '}
-                    {dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD')}
+                    {dayjs(beforePeriodBtn.startDate).format('MM-DD')} to{' '}
+                    {dayjs(beforePeriodBtn.endDate).format('MM-DD')}
                   </TypographyKit>
-                  <TypographyKit variant="h6">
+                  <TypographyKit variant="h6" style={{ fontSize: '15px' }}>
                     Max {links === 'revenue' ? 'revenue' : 'number of orders'} from{' '}
-                    {dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD')} to{' '}
-                    {dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD')}
+                    {dayjs(beforePeriodBtn.startDate).format('MM-DD')} to{' '}
+                    {dayjs(beforePeriodBtn.endDate).format('MM-DD')}
                   </TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant="div" className="color-btns">
                   {rangeColorIndices[links].map((r) => (
-                    <TypographyKit>&lt;{r}</TypographyKit>
+                    <TypographyKit key={nanoid()}>&lt;{r}</TypographyKit>
                   ))}
                 </TypographyKit>
               </TypographyKit>
