@@ -4,110 +4,87 @@ import './Menu.scss';
 
 import iccategory from '../../../assets/images/ic_menu-category.png';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
-import icitem from '../../../assets/images/ic_menu-item.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
+import icdeliveroo from '../../../assets/images/deliveroo.png';
+import ictalabat from '../../../assets/images/talabat.png';
 
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';
 
-// import useApi from '../../../hooks/useApi';
+import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
+
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useVendors from '../../../hooks/useVendors';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
-
-const platformList = [
-  { name: 'deliveroo', label: 'Deliveroo' },
-  { name: 'talabat', label: 'Talabat' },
-];
+import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
+import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
+import { platformList } from '../../../data/platformList';
 
 const Menu = () => {
-  const [category] = useState([]);
-  const [branch] = useState([]);
-  const [platform, setPlatform] = useState({ name: 'deliveroo', label: 'Deliveroo' });
+  const [categoryList, setCategoryList] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [platform, setPlatform] = useState(platformList[0].name);
+  const [filteredCategoryData, setFilteredCategoryData] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { triggerAlertWithMessageError } = useAlert('error');
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: 'Name',
-      price: '20.15',
-      category: 'Category',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-    },
-    {
-      id: 2,
-      name: 'Pame',
-      price: '21.15',
-      category: 'Category',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-    },
-    {
-      id: 3,
-      name: 'Pame',
-      price: '21.15',
-      category: 'Category',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-      image: icitem,
-    },
-    {
-      id: 4,
-      name: 'Pame',
-      price: '21.15',
-      category: 'Category',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-      image: icitem,
-    },
-    {
-      id: 5,
-      name: 'Pame',
-      price: '21.15',
-      category: 'Category',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-      image: icitem,
-    },
-    {
-      id: 6,
-      name: 'Pame',
-      price: '21.15',
-      category: 'Category',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-      image: icitem,
-    },
-    {
-      id: 7,
-      name: 'Pame',
-      price: '21.15',
-      category: 'Category',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-      image: icitem,
-    },
-  ]);
   const { getMenu } = useApi();
-  const { vendors } = useVendors();
+  const { vendors: vendorsList } = useVendors();
+  const [branch, setBranch] = useState('');
   const { user } = useUserAuth();
 
-  const getMenuData = async () => {
+  const getMenuData = async (vendor, platforms) => {
+    setLoading(true);
     try {
-      const res = getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor: vendors },
-        platform.name,
+      const res = await getMenu(
+        { master_email: user.email, access_token: user.accessToken, vendor },
+        platforms,
       );
 
-      if (!res.menu_items) {
+      if (!res.data) {
         throw new Error('');
       }
-      setData(res.menu_items);
+
+      const resp = Object.keys(res.data.menu_items)
+        .map((v) => res.data.menu_items[v])
+        .map((k) => Object.keys(k).map((el) => k[el]))
+        .flat();
+
+      setCategoryList(res.data.categories);
+      setData(resp);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
+      setData([]);
       triggerAlertWithMessageError('Error while retrieving data');
     }
   };
 
   useEffect(() => {
-    getMenuData();
-  }, []);
+    if (!branch && vendorsList.length) {
+      setBranch(vendorsList[0]);
+    }
 
-  const handleSelectChange = (e) => {
-    setPlatform(e.target.value);
+    if (branch) {
+      getMenuData(branch, platform);
+    }
+  }, [vendorsList, branch, platform]);
+
+  const handleSelectChange = (e, set) => {
+    set(e.target.value);
+  };
+
+  const handleCategoryChange = (e) => {
+    const { value } = e.target;
+    if (value.length > 0) {
+      const arr = value.map((v) => data.filter((k) => k.category === v)).flat();
+      setFilteredCategoryData(arr);
+    } else {
+      setFilteredCategoryData([]);
+    }
+    setCategory(value);
   };
 
   return (
@@ -115,7 +92,7 @@ const Menu = () => {
       <div className="__select-block">
         <div className="__select">
           <MenuDropdown
-            onChange={handleSelectChange}
+            onChange={handleCategoryChange}
             startIcon={
               <img
                 src={iccategory}
@@ -123,31 +100,66 @@ const Menu = () => {
                 style={{ position: 'relative', bottom: '5px' }}
               />
             }
-            items={category}
+            value={category}
+            multiple
+            renderValue={(selected) => selected.join(', ')}
+            items={categoryList}
             label="All Categories"
+            renderOption={(v) => (
+              <MenuItemKit key={v} value={v}>
+                <CheckboxKit checked={category.indexOf(v) > -1} />
+                <ListItemTextKit primary={v} />
+              </MenuItemKit>
+            )}
           />
         </div>
         <div className="__select">
           <MenuDropdown
-            onChange={handleSelectChange}
+            onChange={(e) => handleSelectChange(e, setBranch)}
             startIcon={
               <img src={icbranch} alt="category" style={{ position: 'relative', bottom: '2px' }} />
             }
-            items={branch}
+            items={vendorsList}
             label="Select a branch"
+            value={branch}
+            renderOption={(v) => (
+              <MenuItemKit key={v.vendor_id} value={v}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <img
+                    src={v.platform === 'deliveroo' ? icdeliveroo : ictalabat}
+                    width={50}
+                    height={30}
+                    alt="icon"
+                  />
+                  <ListItemTextKit primary={v.data.vendor_name} />
+                </div>
+              </MenuItemKit>
+            )}
           />
         </div>
         <div className="__select">
           <MenuDropdown
-            onChange={handleSelectChange}
+            onChange={(e) => handleSelectChange(e, setPlatform)}
             startIcon={<img width={25} height={25} src={icplatform} alt="category" />}
             items={platformList}
             label="Select a Platform"
+            value={platform}
+            renderOption={(v) => (
+              <MenuItemKit key={v.name} value={v.name}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <img src={v.src} width={50} height={30} alt="icon" />
+                  <ListItemTextKit primary={v.name} />
+                </div>
+              </MenuItemKit>
+            )}
           />
         </div>
       </div>
       <div className="__table-block">
-        <MenuTable data={data} />
+        <MenuTable
+          data={filteredCategoryData.length > 0 ? filteredCategoryData : data}
+          loading={loading}
+        />
       </div>
     </div>
   );
