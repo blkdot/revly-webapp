@@ -9,6 +9,13 @@
     border-radius: 20px;
     padding: 40px;
     background-color: white;
+
+    .subtitle {
+      font-weight: 400;
+      font-size: 16px;
+      color: $color-table-th;
+      margin-bottom: 2em;
+    }
   }
   
   @include tabletBreakpoint {
@@ -21,58 +28,61 @@
 
   .setting-account__tabs {
 
-    .MuiTabs-indicator {
-      display: none;
-    }
+    // .MuiTabs-indicator {
+    //   display: none;
+    // }
+    height: 56px;
+    gap: 20px;
+    display: flex;
     
     .setting-account__tabs-tab {
       display: flex;
-      flex-direction: row;
       text-transform: capitalize;
-      justify-content: flex-start;
+      flex-direction: row;
       border-radius: 8px;
-      color: $color-arrow;
+      color: $color-table-th;
       align-items: center;
+      margin-right: 2.5em;
       font-size: 14px;
-      background-color: rgba(145, 158, 171, 0.08);
-      margin-right: 2em;
-      width: 214px;
-      padding: 16px 20px;
-      gap: 16px;
+      padding: 0px 15px 0px 0px;
+      gap: 10px;
       font-weight: 600;
       transition: .2s;
 
       .icon-block {
-        border-radius: 50%;
-        background-color: $color-table-th;
-        width: 40px;
-        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+        top: 2px;
 
-        .icon {
-          color: white;
+        .__icon {
+          color: $color-table-th;
+          width: 25px;
+          height: 25px;
+
+          &.__menu {
+            path {
+              fill: $color-table-th
+            }
+          }
         }
-      }
-      &:hover {
-        background-color: $color-third;
       }
   
       &.__active {
-        color: white;
-        background-color: #1F007B;
+        color: #906BFF;
 
         .icon-block {
-          background-color: white;
 
-          .icon {
-            color: black;
+          .__icon {
+            color: $color-main;
+
+            &.__menu {
+              path {
+                fill: $color-main
+              }
+            }
           }
-        }
-
-        &:hover {
-          background-color: #1F007B;
         }
       }
 

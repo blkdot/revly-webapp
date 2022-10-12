@@ -8,11 +8,14 @@ import NewSettingsOnboarding from '../../components/settings/onboarding/NewSetti
 import General from '../../components/settings/general/General';
 import Billing from '../../components/settings/billing/Billing';
 import ChangePassword from '../../components/settings/changePassword/ChangePassword';
+import Menu from '../../components/settings/menu/Menu';
 
 import TypographyKit from '../../kits/typography/TypographyKit';
 import TabKit from '../../kits/tab/TabKit';
 import TabsKit from '../../kits/tabs/TabsKit';
 import BoxKit from '../../kits/box/BoxKit';
+
+import MenuIcon from '../../assets/icons/MenuIcon';
 
 const Settings = () => {
   const [currentTab, setCurrentTab] = useState('general');
@@ -22,16 +25,22 @@ const Settings = () => {
       value: 'general',
       icon: (
         <div className="icon-block">
-          <Person className="icon" />
+          <Person className="__icon" />
         </div>
       ),
       component: <General />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
     },
     {
       value: 'billing',
       icon: (
         <div className="icon-block">
-          <Description className="icon" />
+          <Description className="__icon" />
         </div>
       ),
       component: <Billing />,
@@ -40,19 +49,46 @@ const Settings = () => {
       value: 'onboarding',
       icon: (
         <div className="icon-block">
-          <Send className="icon" />
+          <Send className="__icon" />
         </div>
       ),
       component: <NewSettingsOnboarding />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
     },
     {
       value: 'change password',
       icon: (
         <div className="icon-block">
-          <Password className="icon" />
+          <Password className="__icon" />
         </div>
       ),
       component: <ChangePassword />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
+    },
+    {
+      value: 'menu',
+      icon: (
+        <div className="icon-block">
+          <MenuIcon className="__icon __menu" />
+        </div>
+      ),
+      component: <Menu />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
     },
   ];
 
@@ -64,10 +100,6 @@ const Settings = () => {
     <div className="setting-account">
       <TypographyKit fontSize="32px" color="#212B36" fontWeight="700" variant="h4">
         Settings - {currentTab.charAt(0).toUpperCase() + currentTab.slice(1)}
-      </TypographyKit>
-      <TypographyKit mt={1.3} lineHeight="24px" fontSize="16px" color="#637381" fontWeight="400">
-        Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-        vivamus risus.
       </TypographyKit>
       <div className="__content">
         <TabsKit
@@ -91,7 +123,14 @@ const Settings = () => {
         <BoxKit sx={{ mb: 5 }} />
         {ACCOUNT_TABS.map((tab) => {
           const isMatched = tab.value === currentTab;
-          return isMatched && <BoxKit key={tab.value}>{tab.component}</BoxKit>;
+          return (
+            isMatched && (
+              <div key={tab.value}>
+                {tab.subtitle || null}
+                <BoxKit key={tab.value}>{tab.component}</BoxKit>
+              </div>
+            )
+          );
         })}
       </div>
     </div>

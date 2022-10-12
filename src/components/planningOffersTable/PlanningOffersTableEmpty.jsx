@@ -88,7 +88,7 @@ const PlanningOffersTableEmpty = () => (
     <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
       <TableContainerKit className="planning-table-container competition-table-conatiner">
         <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
-          <EnhancedTableHead rowCount={5} />
+          <EnhancedTableHead />
           <TableBodyKit>
             {[1, 2, 3, 4, 5].map((n) => (
               <TableRowKit key={n}>

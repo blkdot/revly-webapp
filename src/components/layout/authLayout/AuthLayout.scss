@@ -9,49 +9,92 @@
   align-items: stretch;
   height: 100vh;
 
-  .auth-layout__cover {
+.auth-layout__cover {
     width: 45%;
-    background-color: rgba(144, 107, 255, 0.08);
+    background-color: $color-main;
     text-align: left;
     border-radius: 5px;
     border-top-left-radius: 0;
     box-shadow: 0 4px 4px 0px rgb(0 0 0 / 25%);
     display: flex;
     flex-direction: column;
+    padding: 3em;
     justify-content: center;
-    .auth-layout__cover__logo {
-      position: absolute;
-      top: 2em;
-      left: 4em;
-    }
+    .__container {
+      background: rgba(183, 233, 246, 0.25);
+      backdrop-filter: blur(5.495px);
+      border-radius: 6px;
+      height: 100%;
+      position: relative;
+      .auth-layout__cover__logo {
+        position: absolute;
+        top: 2em;
+        left: 3em;
 
-    .auth-layout__cover__center {
-      width: 85%;
-      margin: 0 auto 0 auto;
-      margin-top: 6em;
-      .auth-layout__cover__center__text {
-        position: relative;
-        left: 10px;
-        color: $color-main;
-        font-size: 28px;
-        font-weight: 700;
-      }
-
-      .auth-layout__cover__center-flex {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 5vh;
-        .center-flex__icon {
-          width: 50px;
-          height: 100px;
+        @media only screen and (min-width: 1460px) {
+          left: 2.8vw;
         }
-        .center-flex__text {
-          font-size: 24px;
-          font-weight: 600;
-          color: $color-second-third;
-          width: 70%;
-          text-align: left;
+      }
+  
+      .auth-layout__cover__center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        margin: 6em auto;
+        justify-content: space-between;
+        height: 78%;
+
+        .__img-frame {
+          img {
+            width: 491.94px;
+            height: 300.52px;
+          }
+
+          position: absolute;
+          top: 23vh;
+          left: -3em;
+
+          @media only screen and (max-height: 656px) {
+            top: 9.5em;
+          }
+        }
+
+        .auth-layout__cover__center__text {
+          position: relative;
+          left: 10px;
+          color: white;
+          font-size: 32px;
+          font-weight: 700;
+        }
+  
+        .__block {
+          .auth-layout__cover__center-flex {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 2em;
+            img {
+              width: 30px;
+              height: 30px;
+            }
+            .center-flex__text {
+              font-size: 16px;
+              font-weight: 600;
+              color: white;
+            }
+
+            @media only screen and (min-width: 1480px) {
+              img {
+                width: 50px;
+                height: 50px;
+              }
+
+              .center-flex__text {
+                font-size: 20px;
+              }
+            }
+          }
         }
       }
     }
@@ -70,23 +113,23 @@
     .auth-layout__cover {
       width: 100%;
 
-      .auth-layout__cover__logo {
-        left: 4.5em;
-        top: 1em;
-      }
-
-      .auth-layout__cover__center {
-        margin-top: 6em;
-        .auth-layout__cover__center__text {
-          font-size: 28px;
+      .__container {
+        .auth-layout__cover__logo {
+          left: 4.5em;
+          top: 1em;
         }
-
-        .auth-layout__cover__center-flex {
-          margin-top: 1vh;
-          .center-flex__text {
-            font-size: 24px;
+  
+        .auth-layout__cover__center {
+          .__img-frame {
+            top: 27em;
           }
-        
+          .auth-layout__cover__center__text {
+            font-size: 28px;
+          }
+          
+          .__block {
+            margin-top: 3em;
+          }
         }
       }
     }
@@ -104,23 +147,23 @@
     .auth-layout__cover {
       width: 100%;
 
-      .auth-layout__cover__logo {
-        top: 1.8em;
-        left: 3.4em;
-      }
-
-      .auth-layout__cover__center {
-        margin-top: 7em;
-        .auth-layout__cover__center__text {
-          font-size: 20px;
+      .__container {
+        .auth-layout__cover__logo {
+          top: 1.8em;
+          left: 2em;
         }
-
-        .auth-layout__cover__center-flex {
-          margin-top: 1vh;
-          .center-flex__text {
-            font-size: 18px;
+  
+        .auth-layout__cover__center {
+          .__img-frame {
+            top: 27em;
           }
-        
+          .auth-layout__cover__center__text {
+            font-size: 20px;
+          }
+          
+          .__block {
+            margin-top: 2em;
+          }
         }
       }
     }

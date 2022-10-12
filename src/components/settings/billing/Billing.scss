@@ -91,10 +91,15 @@
             align-items: center;
             justify-content: space-between;
             gap: 10.5px;
+
+            .__head {
+                width: 80%;
+            }
+            .__btn {
+               height: 50px;
+               margin-right: 2.2em;
+            }
         }
-         .__btn {
-            height: 50px;
-         }
     }
 
     .billing__info {

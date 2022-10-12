@@ -147,6 +147,7 @@ const SignUpForm = (props) => {
         </FormGroupKit>
         <ButtonKit
           variant="contained"
+          style={{ borderRadius: 30 }}
           onClick={onSubmit}
           className="signup-form__input"
           disabled={disabled}

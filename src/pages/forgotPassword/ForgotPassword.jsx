@@ -4,6 +4,8 @@ import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 import './ForgotPassword.scss';
 
+import logo from '../../assets/images/logo.png';
+
 import ForgotPasswordForm from '../../components/forms/forgotPasswordForm/ForgotPasswordForm';
 
 import CardKit from '../../kits/card/CardKit';
@@ -49,7 +51,7 @@ const ForgotPassword = () => {
   return (
     <div className="forgot-password">
       <div className="forgot-password-cover">
-        <img src="/images/cover.png" alt="cover" width={300} />
+        <img src={logo} alt="cover" />
       </div>
       <CardKit variant="outlined" className="card-forgot-password">
         <h2>Forgot your password ?</h2>

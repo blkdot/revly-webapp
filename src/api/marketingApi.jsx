@@ -8,7 +8,7 @@ const { apiUrl } = config;
 
 export const getOffers = (body) =>
   axios
-    .post(`${apiUrl}/marketing/offers`, body)
+    .post(`${apiUrl}/planning/offers`, body)
     .then((res) => res)
     .catch(handleResponse);
 

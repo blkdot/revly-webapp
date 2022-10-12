@@ -2,9 +2,9 @@ import { AxiosError } from 'axios';
 
 export const handleResponse = (res) => {
   if (res.status > 399 || res instanceof Error || res instanceof AxiosError) {
-    if (!res.response.data.detail) return res;
+    if (!res.response.data?.detail) return res;
 
-    if (typeof res.response.data.detail === 'string') {
+    if (typeof res.response.data?.detail === 'string') {
       return new Error(res.response.data.detail);
     }
 

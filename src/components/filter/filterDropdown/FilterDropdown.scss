@@ -1,0 +1,124 @@
+.comp-dropdown {
+  display: flex;
+  position: relative;
+
+  button {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 30px;
+    background: #ffffff;
+    padding: 11px 18px;
+    color: black;
+    font-weight: bold;
+    width: 100%;
+    min-width: 14rem;
+
+    &.__active {
+      background: rgba(144, 107, 255, 0.08);
+      /* 09 Transparent/08 Black/08% */
+
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #906bff;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    i {
+      &.__active {
+        * {
+          filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
+            contrast(102%);
+        }
+      }
+    }
+
+    &:hover {
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 30px;
+      background: #ffffff;
+      padding: 11px 18px;
+      color: black;
+      font-weight: bold;
+    }
+
+    img {
+      margin-right: 10px;
+    }
+  }
+
+  span {
+    font-weight: bold;
+    align-self: center;
+  }
+
+  .comp-dropdown__content {
+    position: absolute;
+    border-radius: 12px;
+    overflow: visible;
+    background: white;
+    box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    min-width: 100%;
+    margin-top: 4.5rem;
+    box-sizing: border-box;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+
+    > div {
+      scroll-behavior: smooth;
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: #f3f3f3;
+        border-radius: 31px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #637381;
+        border-radius: 31px;
+      }
+    }
+
+    &::before {
+      border: 1px solid rgba(145, 158, 171, 0.32);
+      top: -11px;
+      background-color: #fff;
+      left: 15px;
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      transform: rotate(45deg);
+      box-shadow: inset 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
+      border-bottom: none;
+      border-right: none;
+    }
+
+    .comp-dropdown__item {
+      margin: 0.2rem 0;
+      z-index: 1335;
+      width: 100%;
+      display: flex;
+
+      span {
+        padding: 0.6rem 0.5rem;
+        white-space: nowrap;
+        z-index: 1334;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .MuiChip-root {
+    cursor: pointer;
+
+    .MuiChip-labelSmall {
+      font-weight: lighter;
+      color: #906bff;
+    }
+  }
+}
