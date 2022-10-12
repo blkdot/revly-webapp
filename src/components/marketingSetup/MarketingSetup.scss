@@ -420,10 +420,11 @@
   position: relative;
   overflow: hidden;
   transition: .4s;
+  cursor: pointer;
 
   >span {
     position: absolute;
-    left: -36px;
+    left: -160px;
     opacity: 0;
     visibility: hidden;
     transition: .4s;
@@ -440,8 +441,7 @@
     }
   }
 
-  &:hover {
-    cursor: pointer;
+  &.active {
     background-color: #83CFFF;
 
     >span {
@@ -467,33 +467,51 @@
   justify-content: space-between;
   overflow: hidden;
 
+  &.reversed {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
   &.under-textfields {
     align-items: flex-start;
     flex-direction: column;
-    .picker-duration{
+
+    .picker-duration {
       margin-top: 20px;
     }
-    >div:nth-of-type(2){
+
+    >div:nth-of-type(2) {
       opacity: 0;
       visibility: hidden;
       height: 0;
       margin: 0;
       transition: .4s;
     }
-    &.active{
-      >div:nth-of-type(2){
+
+    &.active {
+      >div:nth-of-type(2) {
         opacity: 1;
         visibility: visible;
         margin-top: 20px;
         height: 100%;
       }
-      p{
-        img{
+
+      .radio {
+        span {
+          img {
+            filter: invert(38%) sepia(95%) saturate(820%) hue-rotate(224deg) brightness(103%) contrast(101%);
+          }
+        }
+      }
+
+      p {
+        img {
           transition: .4s;
           transform: rotate(90deg);
         }
       }
     }
+
     .MuiOutlinedInput-root {
       width: 100%;
     }
@@ -612,7 +630,8 @@
         font-weight: 400;
         font-size: 12px;
         line-height: 18px;
-        img{
+
+        img {
           margin-left: 15px;
         }
       }
@@ -654,24 +673,28 @@
 
   .picker-duration {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
 
     >div {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      justify-content: flex-end;
       grid-gap: 5px;
-      >div{
+
+      >div {
         >div {
           height: 50px;
           display: flex;
           flex-direction: row-reverse;
         }
-        fieldset{
+
+        fieldset {
           border-radius: 30px;
         }
-    }}
+      }
+    }
 
 
     .hour-picker {
@@ -679,8 +702,106 @@
     }
   }
 }
-.radio-group-day{
+
+.radio-group-day {
   padding-left: 10px;
+}
+
+.another-slot {
+  width: 100%;
+  background-color: #906BFF14 !important;
+  height: 60px;
+  color: #906BFF !important;
+  border-radius: 30px !important;
+  margin-top: 20px !important;
+  box-shadow: none !important;
+}
+
+.trash-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 15px;
+
+  img {
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid #EBEFF2;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+  }
+}
+
+.search-filter{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-direction: row !important;
+  width: 100%;
+  >div:nth-of-type(1)>div{
+    height: 52px;
+    >div{
+    height: 50px !important;
+  }
+}
+}
+.marketing-setup-dropdown {
+  &.w60.w60{
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  >div {
+    height: 53px !important;
+    border: none !important;
+
+    >div {
+      border-radius: 30px;
+    }
+
+    fieldset {
+      padding-left: 23px;
+      border: 1px solid #919EAB52 !important;
+
+      span {
+        padding: 0 !important;
+        font-size: 11.5px;
+      }
+    }
+
+
+  }
+
+  .Mui-focused.Mui-focused {
+    fieldset {
+      border-color: #906BFF !important;
+      border-width: 2px !important;
+    }
+  }
+}
+.marketing-placeholder-dropdown{
+  fieldset{
+    border-radius: 30px;
+  }
+  >div{
+    width: 100%;
+    margin: 0;
+    margin-top: 3px;
+    >div>div{
+      padding-left: 20px;
+    }
+  }
+}
+.dropdown-wrapper{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 10px;
+  margin-top: 15px;
+  >span{
+    width: 46% !important;
+  }
 }
 
 .MuiTooltip-popper {
