@@ -6,7 +6,7 @@ import StepperKit from '../../kits/stepper/StepperKit';
 import StepKit from '../../kits/step/StepKit';
 import StepLabelKit from '../../kits/stepLabel/StepLabel';
 
-import RevlyIcon from '../../assets/icons/RevlyIcon';
+import icrevly from '../../assets/images/small-logo-white.png';
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -54,7 +54,7 @@ const ColorlibStepIcon = (props) => {
 
   return (
     <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
-      <RevlyIcon />
+      <img width={16} height={20} src={icrevly} alt="revly" />
     </ColorlibStepIconRoot>
   );
 };
