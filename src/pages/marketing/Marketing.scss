@@ -108,13 +108,16 @@
 
     &.more-filter {
       width: 14rem;
+      align-self: end;
+      font-size: 14px;
     }
 
     &:hover {
       color: #906BFF;
       border-color: #906BFF;
+      background: rgba(144, 107, 255, 0.08);
 
-      img {
+      svg {
         filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%) contrast(102%);
       }
     }
