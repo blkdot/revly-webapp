@@ -6,19 +6,20 @@ import iccategory from '../../../assets/images/ic_menu-category.png';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
 import icdeliveroo from '../../../assets/images/deliveroo.png';
-import ictalabat from '../../../assets/images/talabat.png';
+import ictalabat from '../../../assets/images/talabat-favicon.png';
 
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';
 
 import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
+import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
+import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useVendors from '../../../hooks/useVendors';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
-import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
-import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
+
 import { platformList } from '../../../data/platformList';
 
 const Menu = () => {
@@ -147,7 +148,12 @@ const Menu = () => {
             renderOption={(v) => (
               <MenuItemKit key={v.name} value={v.name}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <img src={v.src} width={50} height={30} alt="icon" />
+                  <img
+                    src={v.name === 'deliveroo' ? v.src : ictalabat}
+                    width={40}
+                    height={30}
+                    alt="icon"
+                  />
                   <ListItemTextKit primary={v.name} />
                 </div>
               </MenuItemKit>
