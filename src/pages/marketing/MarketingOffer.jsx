@@ -19,12 +19,14 @@ import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
 import TrashIcon from '../../assets/images/ic_trash.png';
-import plus from '../../assets/images/plus.png';
 import MarketingTable from '../../components/marketingTable/MarketingTable';
 import { OffersTableData } from '../../data/fakeDataMarketing';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
+import Vector from '../../assets/icons/Vector';
+import Switch from '../../assets/icons/Switch';
+import Basket from '../../assets/icons/Basket';
 import { platformObject } from '../../data/platformList';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
@@ -55,12 +57,24 @@ const MarketingOffer = () => {
     platform: [],
     discountType: [],
     procent: [],
+    status: [],
   });
   const [filtersHead, setFiltersHead] = useState({
     platform: [],
     discountType: [],
     procent: [],
+    status: [],
   });
+
+  const renderStatus = (s) => {
+    if (!s) return null;
+
+    return (
+      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${s}`}>
+        {s}
+      </span>
+    );
+  };
   useEffect(() => {
     const cont = document.querySelector('#markeitngContainer');
     cont.addEventListener('scroll', handleScroll);
@@ -72,7 +86,7 @@ const MarketingOffer = () => {
   useEffect(() => {
     const preHead = offersData.reduce(
       (acc, cur) => {
-        const { platform, discountType, procent } = acc;
+        const { platform, discountType, procent, status } = acc;
 
         if (!platform.includes(cur.platform)) platform.push(cur.platform);
 
@@ -80,9 +94,11 @@ const MarketingOffer = () => {
 
         if (!procent.includes(cur.procent)) procent.push(cur.procent);
 
-        return { ...acc, platform, discountType, procent };
+        if (!status.includes(cur.status)) status.push(cur.status);
+
+        return { ...acc, platform, discountType, procent, status };
       },
-      { discountType: [], platform: [], procent: [] },
+      { discountType: [], platform: [], procent: [], status: [] },
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
@@ -91,11 +107,13 @@ const MarketingOffer = () => {
     }));
     const preHeadDiscountType = preHead.discountType.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.procent.map((s) => ({ value: s, text: `${s} %` }));
+    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatus(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
       discountType: preHeadDiscountType,
       procent: preHeadProcent,
+      status: preHeadStatus,
     });
   }, [JSON.stringify(offersData)]);
 
@@ -152,6 +170,10 @@ const MarketingOffer = () => {
 
     if (filters.procent.length > 0) {
       filteredData = filteredData.filter((f) => filters.procent.includes(f.procent));
+    }
+
+    if (filters.status.length > 0) {
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
     }
 
     setOffersDataFiltered(filteredData);
@@ -259,7 +281,7 @@ const MarketingOffer = () => {
               className="more-filter"
               variant="outlined"
               onClick={() => setOpenedFilter(true)}>
-              <img src={plus} alt="Filter Icon" />
+              <Vector />
               More Filter
             </ButtonKit>
           </div>
@@ -367,7 +389,7 @@ const MarketingOffer = () => {
                     fontWeight: 'bold',
                     marginRight: '1rem',
                     marginTop: '1rem',
-                    width: '42%',
+                    width: '80%',
                   }}>
                   <CheckboxKit
                     checked={filters.discountType.includes(item.value)}
@@ -388,7 +410,7 @@ const MarketingOffer = () => {
               flexDirection: 'column',
             }}>
             <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
-              <Tag /> Discount Amount
+              <Tag /> Discount Amount %
             </span>
             <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
               {filtersHead.procent.map((item) => (
@@ -400,11 +422,51 @@ const MarketingOffer = () => {
                     fontWeight: 'bold',
                     marginRight: '1rem',
                     marginTop: '1rem',
-                    width: '42%',
+                    width: '18%',
                   }}>
                   <CheckboxKit
                     checked={filters.procent.includes(item.value)}
                     onChange={() => handleChangeMultipleFilter('procent')(item.value)}
+                  />
+                  <span style={{ display: 'flex', alignItems: 'center' }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <hr />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              marginTop: '2rem',
+              flexDirection: 'column',
+            }}>
+            <span
+              style={{
+                fontSize: '13px',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+              <Switch />
+              &nbsp; Status
+            </span>
+            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+              {filtersHead.status.map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    display: 'flex',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                    marginRight: '1rem',
+                    marginTop: '1rem',
+                    width: '42%',
+                  }}>
+                  <CheckboxKit
+                    checked={filters.status.includes(item.value) || false}
+                    onChange={() => handleChangeMultipleFilter('status')(item.value)}
                   />
                   <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
                 </div>
@@ -420,8 +482,15 @@ const MarketingOffer = () => {
               marginTop: '2rem',
               flexDirection: 'column',
             }}>
-            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
-              <Tag /> Avg Basket
+            <span
+              style={{
+                fontSize: '13px',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+              <Basket />
+              &nbsp; Avg Basket
             </span>
             <div style={{ display: 'flex', width: '100%' }}>
               <div

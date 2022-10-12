@@ -8,7 +8,9 @@ const OnBoarding = ({ platform, formValue, setFormValue }) => {
   };
 
   const renderTitle = () => (
-    <span className="__form-card__text" style={{ fontSize: '16px' }}>
+    <span
+      className="__form-card__text"
+      style={{ fontSize: '16px', fontWeight: 600, color: '#212B36' }}>
       Link your{' '}
       <span style={{ color: platform.color, fontSize: '16px' }}>{pascalCase(platform.name)}</span>{' '}
       account to your <span style={{ color: '#4D2681', fontSize: '16px' }}>Revly</span> account.
