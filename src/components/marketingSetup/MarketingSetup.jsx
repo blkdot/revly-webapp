@@ -130,7 +130,8 @@ const MarketingSetup = ({ active, setActive }) => {
     return '';
   };
 
-  // Here is data which need to request
+  // TODO: Here is data which need to request
+  // eslint-disable-next-line no-unused-vars
   const dataReq = {
     start_date: format(startingDate, 'dd/MM/yyyy'),
     start_hour: getHourArr('startTime'),
@@ -141,9 +142,7 @@ const MarketingSetup = ({ active, setActive }) => {
     discount: Number(discountPercentage.replace('%', '')) || '',
     mov: Number(minOrder.replace('%', '')) || '',
   };
-  useEffect(() => {
-    console.log(dataReq);
-  }, []);
+
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const heatMapFormatter = (type) => {
@@ -169,6 +168,8 @@ const MarketingSetup = ({ active, setActive }) => {
 
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
       ([resRevenue, resOrders]) => {
+        if (resRevenue instanceof Error || resOrders instanceof Error) return;
+
         const initialisationStateRevenue = resRevenue.data.all
           ? resRevenue.data.all.heatmap
           : defaultHeatmapState;
@@ -887,18 +888,38 @@ const MarketingSetup = ({ active, setActive }) => {
     ]);
   }, [customDay]);
 
+  const renderGradientValue = (v, i) => {
+    if (i === 0) {
+      return (
+        <>
+          AED&nbsp;{rangeColorIndices[links][i]} - AED&nbsp;{v}
+        </>
+      );
+    }
+
+    return (
+      <>
+        AED&nbsp;{rangeColorIndices[links][i - 1]} - AED&nbsp;{v}
+      </>
+    );
+  };
+
   const renderTooltipContent = (data) => (
     <div className="heatmap-tooltip">
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">total daily revenue till slot</span>
-        <span className="__item-value">{data.x_accrued_intra_day}&nbsp;AED</span>
+        <span className="__item-text">total daily {links} till slot</span>
+        <span className="__item-value">
+          {data.x_accrued_intra_day}&nbsp;{links === 'revenue' ? 'AED' : ''}
+        </span>
       </div>
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">Weekly total revenue of slot</span>
-        <span className="__item-value">{data.x_slot_across_week}&nbsp;AED</span>
+        <span className="__item-text">Weekly total {links} of slot</span>
+        <span className="__item-value">
+          {data.x_slot_across_week}&nbsp;{links === 'revenue' ? 'AED' : ''}
+        </span>
       </div>
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">% of daily revenue </span>
+        <span className="__item-text">% of daily {links} </span>
         <span className="__item-value">
           {(data.x_percentage_intra_day * 100).toFixed(2)}&nbsp;%
         </span>
@@ -984,8 +1005,8 @@ const MarketingSetup = ({ active, setActive }) => {
                   </TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant="div" className="color-btns">
-                  {rangeColorIndices[links]?.map((r) => (
-                    <TypographyKit key={nanoid()}>&lt;{r}</TypographyKit>
+                  {rangeColorIndices[links]?.map((r, i) => (
+                    <TypographyKit key={nanoid()}>{renderGradientValue(r, i)}</TypographyKit>
                   ))}
                 </TypographyKit>
               </TypographyKit>

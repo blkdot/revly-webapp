@@ -298,7 +298,7 @@ const OnBoarding = () => {
 
     return (
       <div>
-        <ButtonKit variant="outlined" disabled={isNextDisabled()} onClick={nextTarget}>
+        <ButtonKit variant="contained" disabled={isNextDisabled()} onClick={nextTarget}>
           Next
         </ButtonKit>
       </div>
@@ -315,7 +315,7 @@ const OnBoarding = () => {
         loading={isLoading}
         disabled={!currentPlatform || !formValues.email || !formValues.password}
         fullWidth>
-        Link
+        Connect
       </ButtonLoadingKit>
     );
   };
@@ -398,11 +398,7 @@ const OnBoarding = () => {
           <div style={{ width: '100%', padding: '0.5rem 2rem 0rem' }}>{renderSendButton()}</div>
           <div className="onboarding-actions">
             <div>
-              <ButtonKit
-                variant="outlined"
-                color="error"
-                disabled={isBackDisabled()}
-                onClick={backTarget}>
+              <ButtonKit variant="contained" disabled={isBackDisabled()} onClick={backTarget}>
                 Back
               </ButtonKit>
             </div>

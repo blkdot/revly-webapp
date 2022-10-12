@@ -43,7 +43,6 @@ const OnBoardingForm = (props) => {
       <FormcontrolKit className="onboarding-form" fullWidth>
         <TextfieldKit
           label="Email address"
-          size="small"
           onChange={(e) => onChangeEmail(e.target.value)}
           className="onboarding-form__input"
           fullWidth
@@ -53,7 +52,6 @@ const OnBoardingForm = (props) => {
         <TextfieldKit
           label="Password"
           type={showPassword ? 'text' : 'password'}
-          size="small"
           onChange={(e) => onChangePassword(e.target.value)}
           className="onboarding-form__input"
           error={isError}

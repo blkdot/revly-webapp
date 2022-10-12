@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-import { GoChevronDown, GoChevronRight } from 'react-icons/go';
+import { FaChevronRight, FaChevronDown } from 'react-icons/fa';
 
 import './FilterDropdown.scss';
 
@@ -99,14 +99,16 @@ const FilterDropdown = (props) => {
         onClick={() => setIsOpen(!isOpen)}
         onKeyPress={() => setIsOpen(!isOpen)}
         role="button"
-        style={{ display: 'flex', justifyContent: 'space-between' }}
+        style={{ display: 'flex', justifyContent: 'flex-start' }}
         className={`${values.length > 0 ? '__active' : ''}`}
         tabIndex={0}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {renderIcon()}
           {getCurrentValue()}
         </div>
-        {isOpen ? <GoChevronDown /> : <GoChevronRight />}
+        <div style={{ display: 'flex', marginLeft: '1rem', alignItems: 'center' }}>
+          {isOpen ? <FaChevronDown /> : <FaChevronRight />}
+        </div>
       </ButtonKit>
       {renderItems()}
     </div>
