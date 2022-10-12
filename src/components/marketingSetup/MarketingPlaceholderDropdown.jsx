@@ -36,7 +36,7 @@ const MarketingPlaceholderDropdown = ({ setPersonName, personName, title, names 
   };
 
   return (
-    <div className="marketing-placeholder-dropdown">
+    <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''}`}>
       <FormcontrolKit sx={{ m: 1, width: 300, mt: 3 }}>
         <SelectKit
           displayEmpty

@@ -196,6 +196,12 @@ const MarketingOffer = () => {
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
 
+  const OpenSetup = () => {
+    const body = document.querySelector('body');
+    setActive(true);
+    body.style.overflowY = 'hidden';
+  };
+
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
@@ -214,7 +220,7 @@ const MarketingOffer = () => {
             <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
             Create a smart rule
           </ButtonKit>
-          <ButtonKit onClick={() => setActive(true)} variant="contained">
+          <ButtonKit onClick={() => OpenSetup()} variant="contained">
             <img src={SettingFuture} alt="Setting future icon" />
             Set up an offer
           </ButtonKit>

@@ -3,9 +3,6 @@ import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
-import InputAdornment from '@mui/material/InputAdornment';
-import MarketingRadio from './MarketingRadio';
-import plus from '../../assets/images/plus.png';
 import CloseIcon from '../../assets/images/ic_close.png';
 import Dates from '../dates/Dates';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -14,35 +11,17 @@ import './MarketingSetup.scss';
 import PaperKit from '../../kits/paper/PaperKit';
 import ContainerKit from '../../kits/container/ContainerKit';
 import BoxKit from '../../kits/box/BoxKit';
-import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
-import useApi from '../../hooks/useApi';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-
+import { useUserAuth } from '../../contexts/AuthContext';
+import useVendors from '../../hooks/useVendors';
+import useApi from '../../hooks/useApi';
+import { useAlert } from '../../hooks/useAlert';
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
-import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
-import BranchesIcon from '../../assets/images/ic_branch.png';
-import menuIcon from '../../assets/images/ic_menu.png';
-import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
-import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
-import RadioKit from '../../kits/radio/RadioKit';
-import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
-import CalendarEventIcon from '../../assets/images/ic_calendar-event.png';
-import BasicTimePicker from '../timePicker/TimePicker';
-import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
-import ArrowIcon from '../../assets/images/arrow.png';
-import TimerIcon from '../../assets/images/ic_timer.png';
-import { platformList, platformObject } from '../../data/platformList';
-import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
-import trash from '../../assets/images/ic_trash.png';
-import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
-import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
-import searchIcon from '../../assets/images/ic_search.png';
+import GetProgress from './MarketingGetProgress';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -70,7 +49,7 @@ const MarketingSetup = ({ active, setActive }) => {
   const [duration, setDuration] = useState('Starting Now');
   const [disabled, setDisabled] = useState(false);
   const [beforePeriodBtn, setBeforePeriodBtn] = useState({
-    startDate: startOfWeek(new Date()),
+    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
     endDate: new Date(),
   });
   const [heatmapData, setHeatmapData] = useState({
@@ -91,21 +70,64 @@ const MarketingSetup = ({ active, setActive }) => {
   const [customisedDay, setCustomisedDay] = useState([]);
   const [times, setTimes] = useState([
     {
-      startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-      endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+      startTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+      endTime: new Date(null, null, null, format(addHours(new Date(), 2), 'HH'), 0),
       pos: 1,
     },
   ]);
   const [everyWeek, setEveryWeek] = useState('');
-  const [itemMenu, setItemMenu] = useState('');
-  const [category, setCategory] = useState('');
+  const [itemMenu, setItemMenu] = useState('Flash Deal');
+  const [category, setCategory] = useState([]);
+  const [filteredCategoryData, setFilteredCategoryData] = useState([]);
+  const [targetAudience, setTargetAudience] = useState('All customers');
+
+  const [checked, setChecked] = useState([]);
+  const getDiscountOrMov = (type) => {
+    if (type === 'discount') {
+      if (itemMenu === 'Flash Deal') {
+        return ['50%'];
+      }
+      if (itemMenu === 'Order more , save more') {
+        return ['30%', '50%'];
+      }
+      if (itemMenu === 'Restaurent Pick') {
+        return ['20%', '25%', '30%', '35%', '40%', '45%', '50%'];
+      }
+      return ['100%'];
+    }
+    if (type === 'mov') {
+      if (itemMenu === 'Flash Deal') {
+        return ['0 AED', '10 AED'];
+      }
+      if (itemMenu === 'Order more , save more') {
+        return ['60 AED'];
+      }
+      if (itemMenu === 'Restaurent Pick') {
+        return ['0 AED', '15 AED', '30 AED'];
+      }
+      return ['15 AED', '30 AED', '60 AED'];
+    }
+    return [];
+  };
+  const [categoryDataList, setCategoryDataList] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const { triggerAlertWithMessageError } = useAlert('error');
+  const { getMenu } = useApi();
+  const { vendors: vendorsList } = useVendors();
+  const [branchData, setBranchData] = useState('');
 
   const getHourArr = (hour) => {
     const arr = [];
     times.forEach((obj) =>
       Object.keys(obj).forEach((keys) => {
         if (keys === hour) {
-          arr.push(format(obj[keys], 'HH:00'));
+          if (
+            isValidDate(obj[hour]) &&
+            obj[hour] !== null &&
+            !Number.isNaN(new Date(obj[hour]).getTime())
+          ) {
+            arr.push(format(obj[keys], 'HH:00'));
+          }
         }
       }),
     );
@@ -129,7 +151,38 @@ const MarketingSetup = ({ active, setActive }) => {
     }
     return '';
   };
-
+  const getTargetAudience = () => {
+    if (targetAudience === 'New customer') {
+      return 'new_customers';
+    }
+    if (targetAudience === 'Deliveroo plus') {
+      return 'subscribers';
+    }
+    return 'orders';
+  };
+  const getMenuItem = () => {
+    const arr = [];
+    category.forEach((obj) => {
+      checked.forEach((c) => {
+        if (obj.name === c) {
+          arr.push({ id: obj.id, drn_id: obj.id });
+        }
+      });
+    });
+    return arr;
+  };
+  const getTypeItemMenu = () => {
+    if (itemMenu === 'Flash Deal') {
+      return 'flash-deals';
+    }
+    if (itemMenu === 'Order more , save more') {
+      return 'groups';
+    }
+    if (itemMenu === 'Restaurent Pick') {
+      return 'restaurant-picks';
+    }
+    return 'free-items';
+  };
   // TODO: Here is data which need to request
   // eslint-disable-next-line no-unused-vars
   const dataReq = {
@@ -138,9 +191,10 @@ const MarketingSetup = ({ active, setActive }) => {
     end_date: format(endingDate, 'dd/MM/yyyy'),
     end_hour: getHourArr('endTime'),
     type_offer: getTypeOffer(),
-    goal: 'orders',
-    discount: Number(discountPercentage.replace('%', '')) || '',
-    mov: Number(minOrder.replace('%', '')) || '',
+    menu_type: { menu_items: getMenuItem(), theme: getTypeItemMenu() },
+    goal: getTargetAudience(),
+    discount: Number(discountPercentage.replace('%', '')),
+    mov: Number(minOrder.toLowerCase().replace('aed', '')),
   };
 
   const [steps, setSteps] = useState([0, 1, 2, 3]);
@@ -216,539 +270,54 @@ const MarketingSetup = ({ active, setActive }) => {
     date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
     setDisabledDate(arr.every((bool) => bool === false));
   };
-  const getProgress = () => {
-    if (selected === 1) {
-      return (
-        <div className="left-part-middle">
-          <TypographyKit variant="h6">1.Select platform and branches</TypographyKit>
-          <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-          </TypographyKit>
-          <div className="left-part-radio-wrapper">
-            <RadioGroupKit
-              aria-labelledby="demo-radio-buttons-group-label"
-              value={platform}
-              onChange={(e) => getPlatform(e)}
-              name="radio-buttons-group">
-              {platformList
-                .filter((pf) => userPlatformData.platforms[pf.name].active)
-                .map((p) => (
-                  <MarketingRadio key={p.name} className={p.name} icon={p.src} title={p.name} />
-                ))}
-            </RadioGroupKit>
-          </div>
-          <BranchMarketingDropdown
-            rows={vendorsContext[platform]}
-            icon={BranchesIcon}
-            title="Select Branches"
-            className="top-competition marketing-dropdown"
-            setRow={setBranch}
-            select={branch}
-            platformData={platformObject[platform]}
-          />
-        </div>
+  useEffect(() => {
+    setDiscountPercentage('');
+    setMinOrder('');
+  }, [itemMenu, menu]);
+
+  const getMenuData = async (vendor, platforms) => {
+    try {
+      const res = await getMenu(
+        { master_email: user.email, access_token: user.accessToken, vendor },
+        platforms,
       );
-    }
-    if (platform === 'deliveroo') {
-      if (selected === 2) {
-        return (
-          <div className="left-part-middle">
-            <TypographyKit variant="h6">2.Select the Type of the offer</TypographyKit>
-            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-            </TypographyKit>
-            <RadioGroupKit
-              aria-labelledby="demo-radio-buttons-group-label"
-              value={menu}
-              onChange={(e) => setMenu(e.target.value)}
-              name="radio-buttons-group-menu">
-              <BoxKit
-                className={`left-part-radio under-textfields radio-dates ${
-                  menu === 'Offer on the whole Menu' ? 'active' : ''
-                }
-                  `}>
-                <div className="radio">
-                  <div>
-                    <span>
-                      <img src={menuIcon} alt="Menu Icon" />
-                    </span>
-                    <div>
-                      <div>Offer on the whole Menu</div>
-                      <p>Ex : Lorme Ipsum 24%</p>
-                    </div>
-                  </div>
-                  <FormControlLabelKit value="Offer on the whole Menu" control={<RadioKit />} />
-                </div>
-                <div style={{ width: '100%', marginTop: '0px' }}>
-                  <div style={{ width: '100%' }}>
-                    <div className="dropdown-wrapper">
-                      <TypographyKit className="min-max-textfields" variant="div">
-                        <TypographyKit variant="div">
-                          Procentage Discount
-                          <MarketingPlaceholderDropdown
-                            names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
-                            title="%"
-                            setPersonName={setDiscountPercentage}
-                            personName={discountPercentage}
-                          />
-                        </TypographyKit>
-                      </TypographyKit>
-                      <TypographyKit className="min-max-textfields" variant="div">
-                        <TypographyKit variant="div">
-                          Min Order Value
-                          <MarketingPlaceholderDropdown
-                            names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
-                            title="$0.00"
-                            setPersonName={setMinOrder}
-                            personName={minOrder}
-                          />
-                        </TypographyKit>
-                      </TypographyKit>
-                    </div>
-                  </div>
-                </div>
-              </BoxKit>
-              <BoxKit
-                className={`left-part-radio under-textfields radio-dates ${
-                  menu === 'Offer on An Item from the Menu' ? 'active' : ''
-                }
-                  `}>
-                <div className="radio">
-                  <div>
-                    <span>
-                      <img src={ItemMenuIcon} alt="Item Menu Icon" />
-                    </span>
-                    <div>
-                      <div>Offer on An Item from the Menu</div>
-                      <p>Ex : Lorme Ipsum 24%</p>
-                    </div>
-                  </div>
-                  <FormControlLabelKit
-                    value="Offer on An Item from the Menu"
-                    control={<RadioKit />}
-                  />
-                </div>
-                <div>
-                  <RadioGroupKit
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    value={itemMenu}
-                    onChange={(e) => setItemMenu(e.target.value)}
-                    name="radio-buttons-group-menu">
-                    {[
-                      {
-                        title: 'Flash Deal',
-                        subtitle: 'Sell Off extra stock when you’re about to close',
-                      },
-                      {
-                        title: 'Order more , save more',
-                        subtitle: 'Attract larger orders from groupes and famillies',
-                      },
-                      { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
-                      { title: 'Free item', subtitle: 'Allow customers ro choose a free item' },
-                    ].map((obj) => (
-                      <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
-                    ))}
-                    <div className="dropdown-wrapper">
-                      <TypographyKit className="min-max-textfields" variant="div">
-                        <TypographyKit variant="div">
-                          Procentage Discount
-                          <MarketingPlaceholderDropdown
-                            names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
-                            title="%"
-                            setPersonName={setDiscountPercentage}
-                            personName={discountPercentage}
-                          />
-                        </TypographyKit>
-                      </TypographyKit>
-                      <TypographyKit className="min-max-textfields" variant="div">
-                        <TypographyKit variant="div">
-                          Min Order Value
-                          <MarketingPlaceholderDropdown
-                            names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
-                            title="$0.00"
-                            setPersonName={setMinOrder}
-                            personName={minOrder}
-                          />
-                        </TypographyKit>
-                      </TypographyKit>
-                    </div>
-                  </RadioGroupKit>
-                </div>
-              </BoxKit>
-            </RadioGroupKit>
-          </div>
-        );
-      }
-      if (menu === 'Offer on An Item from the Menu') {
-        if (selected === 3) {
-          return (
-            <div className="left-part-middle">
-              <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
-              <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-              </TypographyKit>
-              <BoxKit
-                className={`left-part-radio under-textfields radio-dates ${
-                  menu === 'Offer on An Item from the Menu' ? 'active' : ''
-                }
-                  `}>
-                <div className="radio">
-                  <div>
-                    <span>
-                      <img src={ItemMenuIcon} alt="Item Menu Icon" />
-                    </span>
-                    <div>
-                      <div>Offer on An Item from the Menu</div>
-                      <p>{itemMenu}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="picker-duration search-filter">
-                  <TextfieldKit
-                    style={{ width: '100%' }}
-                    id="input-with-icon-textfield"
-                    placeholder="Search"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img src={searchIcon} alt="Searh Icon" />
-                        </InputAdornment>
-                      ),
-                    }}
-                    variant="outlined"
-                  />
-                  <CompetitionDropdown
-                    rows={['category 1', 'category 2']}
-                    title="All Categories"
-                    className="top-competition marketing-setup-dropdown w60"
-                    setRow={setCategory}
-                    select={category}
-                  />
-                </div>
-              </BoxKit>
-            </div>
-          );
-        }
-      }
-      if (menu === 'Offer on the whole Menu') {
-        if (selected === 3) {
-          return (
-            <div className="left-part-middle">
-              <TypographyKit variant="h6">3.Select the Duration</TypographyKit>
-              <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-              </TypographyKit>
-              <RadioGroupKit
-                className="duration-wrapper"
-                aria-labelledby="demo-radio-buttons-group-label"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                name="radio-buttons-group-duration">
-                <BoxKit
-                  className={`left-part-radio under-textfields radio-dates ${
-                    duration === 'Starting Now' ? 'active' : ''
-                  }`}>
-                  <div className="radio">
-                    <div>
-                      <span>
-                        <img src={CalendarCheckedIcon} alt="Calendar checked Icon" />
-                      </span>
-                      <div>
-                        <div>Starting Now</div>
-                        <p>{format(new Date(), 'dd MMM yyyy HH:00')}</p>
-                      </div>
-                    </div>
-                    <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
-                  </div>
-                  <div className="picker-duration">
-                    <div>
-                      Ending Date
-                      <DatePickerDayKit
-                        className="date-error"
-                        minDate={new Date(addDays(new Date(), 1))}
-                        value={endingDate}
-                        onChange={(newValue) => {
-                          onChange(newValue, setEndingDate);
-                        }}
-                        renderInput={(params) => <TextfieldKit {...params} />}
-                      />
-                    </div>
-                    {times.map((obj, index) => (
-                      <div key={obj.pos} className="picker-duration">
-                        <div>
-                          End Time
-                          <BasicTimePicker
-                            minTime={
-                              new Date(
-                                null,
-                                null,
-                                null,
-                                format(addHours(new Date(obj.startTime), 1), 'HH', 0),
-                              )
-                            }
-                            value={obj.endTime}
-                            setValue={setTimes}
-                            times={times}
-                            index={index}
-                            type="endTime"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </BoxKit>
-                <BoxKit
-                  className={`left-part-radio under-textfields ${
-                    duration === 'Program the offer duration' ? 'active' : ''
-                  }`}>
-                  <div className="radio">
-                    <div>
-                      <span>
-                        <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                      </span>
-                      <div>
-                        <div>Program the offer duration</div>
-                        <p>
-                          {customDay || 'Recurrence customized'}
-                          <img src={ArrowIcon} alt="arrow" />
-                        </p>
-                      </div>
-                    </div>
-                    <FormControlLabelKit
-                      value="Program the offer duration"
-                      control={<RadioKit />}
-                    />
-                  </div>
-                  <div>
-                    <RadioGroupKit
-                      className="radio-group-day"
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      value={customDay}
-                      onChange={(e) => setCustomDay(e.target.value)}
-                      name="radio-buttons-group-days">
-                      {[
-                        'Continues Offer',
-                        'Every Day',
-                        'Work Week',
-                        'Same day every week',
-                        'Customised Days',
-                      ].map((day) => (
-                        <div key={day}>
-                          <FormControlLabelKit value={day} control={<RadioKit />} />
-                          <span>{day}</span>
-                        </div>
-                      ))}
-                    </RadioGroupKit>
-                  </div>
-                </BoxKit>
-              </RadioGroupKit>
-            </div>
-          );
-        }
-        if (duration === 'Program the offer duration') {
-          if (selected === 4) {
-            if (customDay) {
-              return (
-                <div className="left-part-middle">
-                  <TypographyKit variant="h6">4.Select the Recurrence detail</TypographyKit>
-                  <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                    Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
-                  </TypographyKit>
-                  <BoxKit className="left-part-radio under-textfields radio-dates active">
-                    <div className="radio">
-                      <div>
-                        <span>
-                          <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
-                        </span>
-                        <div>
-                          <div>Recurrence Details</div>
-                          <p>{customDay}</p>
-                        </div>
-                      </div>
-                    </div>
-                    {customDay === 'Same day every week' ? (
-                      <CompetitionDropdown
-                        rows={[
-                          'Every Monday',
-                          'Every Tuesday',
-                          'Every Wendensday',
-                          'Every Thursday',
-                          'Every Friday',
-                          'Every Saturday',
-                          'Every Sunday',
-                        ]}
-                        title={customDay}
-                        className="top-competition marketing-setup-dropdown"
-                        setRow={setEveryWeek}
-                        select={everyWeek}
-                      />
-                    ) : (
-                      ''
-                    )}
-                    {customDay === 'Customised Days' ? (
-                      <MarketingCheckmarksDropdown
-                        names={days}
-                        setName={setCustomisedDay}
-                        personName={customisedDay}
-                      />
-                    ) : (
-                      ''
-                    )}
-                    <div className="picker-duration">
-                      <div>
-                        Starting Date
-                        <DatePickerDayKit
-                          className="date-error"
-                          shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
-                          value={startingDate}
-                          onChange={(newValue) => {
-                            onChange(newValue, setStartingDate);
-                          }}
-                          renderInput={(params) => <TextfieldKit {...params} />}
-                        />
-                      </div>
-                      <div>
-                        Ending Date
-                        <DatePickerDayKit
-                          className="date-error"
-                          shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
-                          minDate={new Date(addDays(startingDate, 1))}
-                          value={endingDate}
-                          onChange={(newValue) => {
-                            onChange(newValue, setEndingDate);
-                          }}
-                          renderInput={(params) => <TextfieldKit {...params} />}
-                        />
-                      </div>
-                    </div>
-                    {times.map((obj, index) =>
-                      times.length > 1 ? (
-                        <div key={obj.pos} className="picker-duration">
-                          <div>
-                            Start Time {obj.pos}
-                            <BasicTimePicker
-                              value={obj.startTime}
-                              minTime={
-                                obj.pos === 1
-                                  ? ''
-                                  : new Date(
-                                      null,
-                                      null,
-                                      null,
-                                      format(addHours(times[index - 1].endTime, 1), 'HH'),
-                                      0,
-                                    )
-                              }
-                              setValue={setTimes}
-                              times={times}
-                              index={index}
-                              type="startTime"
-                            />
-                          </div>
-                          <div>
-                            End Time {obj.pos}
-                            <BasicTimePicker
-                              value={obj.endTime}
-                              minTime={
-                                new Date(
-                                  null,
-                                  null,
-                                  null,
-                                  format(addHours(obj.startTime, 1), 'HH'),
-                                  0,
-                                )
-                              }
-                              setValue={setTimes}
-                              times={times}
-                              index={index}
-                              type="endTime"
-                            />
-                          </div>
-                          <div className="trash-wrapper">
-                            <img
-                              role="presentation"
-                              tabIndex={-1}
-                              onClick={() => {
-                                times.splice(index, 1);
-                                setTimes([...times]);
-                              }}
-                              src={trash}
-                              alt="trash"
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div key={obj.pos} className="picker-duration">
-                          <div>
-                            Start Time
-                            <BasicTimePicker
-                              value={obj.startTime}
-                              setValue={setTimes}
-                              times={times}
-                              index={index}
-                              type="startTime"
-                            />
-                          </div>
-                          <div>
-                            End Time
-                            <BasicTimePicker
-                              minTime={new Date(addHours(new Date(obj.startTime), 1))}
-                              value={obj.endTime}
-                              setValue={setTimes}
-                              times={times}
-                              index={index}
-                              type="endTime"
-                            />
-                          </div>
-                        </div>
-                      ),
-                    )}
-                    {customDay === 'Continues Offer' || times.length === 3 ? (
-                      ''
-                    ) : (
-                      <ButtonKit
-                        onClick={() =>
-                          setTimes([
-                            ...times,
-                            {
-                              startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-                              endTime: new Date(
-                                null,
-                                null,
-                                null,
-                                format(
-                                  addHours(
-                                    times.length === 1
-                                      ? times[0].startTime
-                                      : times[times.length - 2].endTime,
-                                    1,
-                                  ),
-                                  'HH',
-                                ),
-                                0,
-                              ),
-                              pos: times.length + 1,
-                            },
-                          ])
-                        }
-                        className="another-slot"
-                        variant="contained">
-                        <img src={plus} alt="plus" />
-                        Add Another Slot
-                      </ButtonKit>
-                    )}
-                  </BoxKit>
-                </div>
-              );
-            }
-          }
-          return '';
-        }
+
+      if (!res.data) {
+        throw new Error('');
       }
 
-      return '';
+      const resp = Object.keys(res.data.menu_items)
+        .map((v) => res.data.menu_items[v])
+        .map((k) => Object.keys(k).map((el) => k[el]))
+        .flat();
+
+      setCategoryDataList(res.data.categories);
+      setCategory(resp);
+    } catch (err) {
+      setCategory([]);
+      triggerAlertWithMessageError('Error while retrieving data');
     }
-    return '';
+  };
+
+  useEffect(() => {
+    if (!branchData && vendorsList.length) {
+      setBranchData(vendorsList[0]);
+    }
+
+    if (branchData) {
+      getMenuData(branchData, platform);
+    }
+  }, [vendorsList, branchData, platform]);
+
+  const handleCategoryDataChange = (e) => {
+    const { value } = e.target;
+    if (value.length > 0) {
+      const arr = value.map((v) => category.filter((k) => k.categoryData === v)).flat();
+      setFilteredCategoryData(arr);
+    } else {
+      setFilteredCategoryData([]);
+    }
+    setCategoryData(value);
   };
   function isValidDate(d) {
     return d instanceof Date && !Number.isNaN(d);
@@ -775,82 +344,168 @@ const MarketingSetup = ({ active, setActive }) => {
           setDisabled(!(menu && discountPercentage && minOrder));
         }
       }
-      if (selected === 3) {
-        if (duration === 'Program the offer duration') {
-          setSteps([0, 1, 2, 3, 4, 5]);
-          setDisabled(!customDay);
-        } else {
-          setSteps([0, 1, 2, 3, 4]);
-          setDisabled(
-            !(
-              endingDate !== null &&
-              disabledDate &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()),
-              )
-            ),
-          );
+      if (menu === 'Offer on An Item from the Menu') {
+        if (selected === 3) {
+          setDisabled(checked.length === 0);
         }
-      }
-      if (duration === 'Program the offer duration') {
         if (selected === 4) {
-          if (customDay === 'Same day every week') {
+          if (duration === 'Program the offer duration') {
+            setSteps([0, 1, 2, 3, 4, 5, 6]);
+            setDisabled(!customDay);
+          } else {
+            setSteps([0, 1, 2, 3, 4, 5]);
             setDisabled(
               !(
-                startingDate !== null &&
                 endingDate !== null &&
                 disabledDate &&
-                everyWeek &&
                 times.every(
                   (obj) =>
                     isValidDate(obj.endTime) &&
                     obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                    !Number.isNaN(new Date(obj.endTime).getTime()),
                 )
               ),
             );
           }
-          if (customDay === 'Customised Days') {
+        }
+        if (duration === 'Program the offer duration') {
+          if (selected === 5) {
+            if (customDay === 'Same day every week') {
+              setDisabled(
+                !(
+                  startingDate !== null &&
+                  endingDate !== null &&
+                  disabledDate &&
+                  everyWeek &&
+                  times.every(
+                    (obj) =>
+                      isValidDate(obj.endTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                      isValidDate(obj.startTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.startTime).getTime()),
+                  )
+                ),
+              );
+            }
+            if (customDay === 'Customised Days') {
+              setDisabled(
+                !(
+                  startingDate !== null &&
+                  endingDate !== null &&
+                  disabledDate &&
+                  customisedDay.length > 0 &&
+                  times.every(
+                    (obj) =>
+                      isValidDate(obj.endTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                      isValidDate(obj.startTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.startTime).getTime()),
+                  )
+                ),
+              );
+            } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
+              setDisabled(
+                !(
+                  startingDate !== null &&
+                  endingDate !== null &&
+                  disabledDate &&
+                  times.every(
+                    (obj) =>
+                      isValidDate(obj.endTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                      isValidDate(obj.startTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.startTime).getTime()),
+                  )
+                ),
+              );
+            }
+          }
+        }
+      }
+      if (menu === 'Offer on the whole Menu') {
+        if (selected === 3) {
+          if (duration === 'Program the offer duration') {
+            setSteps([0, 1, 2, 3, 4, 5]);
+            setDisabled(!customDay);
+          } else {
+            setSteps([0, 1, 2, 3, 4]);
             setDisabled(
               !(
-                startingDate !== null &&
                 endingDate !== null &&
                 disabledDate &&
-                customisedDay.length > 0 &&
                 times.every(
                   (obj) =>
                     isValidDate(obj.endTime) &&
                     obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                    !Number.isNaN(new Date(obj.endTime).getTime()),
                 )
               ),
             );
-          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
+          }
+        }
+        if (duration === 'Program the offer duration') {
+          if (selected === 4) {
+            if (customDay === 'Same day every week') {
+              setDisabled(
+                !(
+                  startingDate !== null &&
+                  endingDate !== null &&
+                  disabledDate &&
+                  everyWeek &&
+                  times.every(
+                    (obj) =>
+                      isValidDate(obj.endTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                      isValidDate(obj.startTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.startTime).getTime()),
+                  )
+                ),
+              );
+            }
+            if (customDay === 'Customised Days') {
+              setDisabled(
+                !(
+                  startingDate !== null &&
+                  endingDate !== null &&
+                  disabledDate &&
+                  customisedDay.length > 0 &&
+                  times.every(
+                    (obj) =>
+                      isValidDate(obj.endTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                      isValidDate(obj.startTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.startTime).getTime()),
+                  )
+                ),
+              );
+            } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
+              setDisabled(
+                !(
+                  startingDate !== null &&
+                  endingDate !== null &&
+                  disabledDate &&
+                  times.every(
+                    (obj) =>
+                      isValidDate(obj.endTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                      isValidDate(obj.startTime) &&
+                      obj.startTime !== null &&
+                      !Number.isNaN(new Date(obj.startTime).getTime()),
+                  )
+                ),
+              );
+            }
           }
         }
       }
@@ -877,12 +532,13 @@ const MarketingSetup = ({ active, setActive }) => {
     everyWeek,
     customisedDay,
     itemMenu,
+    checked,
   ]);
   useEffect(() => {
     setTimes([
       {
-        startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+        startTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 2)), 'HH'), 0),
         pos: 1,
       },
     ]);
@@ -926,7 +582,11 @@ const MarketingSetup = ({ active, setActive }) => {
       </div>
     </div>
   );
-
+  const closeSetup = () => {
+    const body = document.querySelector('body');
+    setActive(false);
+    body.style.overflowY = 'visible';
+  };
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
@@ -940,14 +600,59 @@ const MarketingSetup = ({ active, setActive }) => {
                   <img
                     tabIndex={-1}
                     role="presentation"
-                    onClick={() => setActive(false)}
+                    onClick={() => closeSetup()}
                     src={CloseIcon}
                     alt="close icon"
                   />
                 </div>
                 <MarketingSetupStepper selected={selected} steps={steps} />
               </div>
-              {getProgress()}
+              <GetProgress
+                selected={selected}
+                getPlatform={getPlatform}
+                platform={platform}
+                handleCategoryDataChange={handleCategoryDataChange}
+                userPlatformData={userPlatformData}
+                vendorsContext={vendorsContext}
+                setBranch={setBranch}
+                branch={branch}
+                menu={menu}
+                setMenu={setMenu}
+                setDiscountPercentage={setDiscountPercentage}
+                discountPercentage={discountPercentage}
+                setMinOrder={setMinOrder}
+                minOrder={minOrder}
+                itemMenu={itemMenu}
+                setItemMenu={setItemMenu}
+                getDiscountOrMov={getDiscountOrMov}
+                categoryData={categoryData}
+                categoryDataList={categoryDataList}
+                filteredCategoryData={filteredCategoryData}
+                category={category}
+                setChecked={setChecked}
+                checked={checked}
+                duration={duration}
+                setDuration={setDuration}
+                endingDate={endingDate}
+                onChange={onChange}
+                setEndingDate={setEndingDate}
+                times={times}
+                setTimes={setTimes}
+                customDay={customDay}
+                setCustomDay={setCustomDay}
+                targetAudience={targetAudience}
+                setTargetAudience={setTargetAudience}
+                setSteps={setSteps}
+                setSelected={setSelected}
+                setEveryWeek={setEveryWeek}
+                everyWeek={everyWeek}
+                days={days}
+                setCustomisedDay={setCustomisedDay}
+                customisedDay={customisedDay}
+                disableWeekends={disableWeekends}
+                startingDate={startingDate}
+                setStartingDate={setStartingDate}
+              />
             </div>
             <div className="left-part-bottom">
               <ButtonKit
