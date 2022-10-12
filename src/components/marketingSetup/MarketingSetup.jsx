@@ -43,6 +43,8 @@ import trash from '../../assets/images/ic_trash.png';
 import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 import searchIcon from '../../assets/images/ic_search.png';
+import SmRuleIcon from '../../assets/images/ic_sm-rule.png';
+import SpeakerIcon from '../../assets/images/ic_speaker.png';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -97,8 +99,9 @@ const MarketingSetup = ({ active, setActive }) => {
     },
   ]);
   const [everyWeek, setEveryWeek] = useState('');
-  const [itemMenu, setItemMenu] = useState('');
+  const [itemMenu, setItemMenu] = useState('Flash Deal');
   const [category, setCategory] = useState('');
+  const [targetAudience, setTargetAudience] = useState('All customers');
 
   const getHourArr = (hour) => {
     const arr = [];
@@ -214,6 +217,37 @@ const MarketingSetup = ({ active, setActive }) => {
     const arr = [];
     date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
     setDisabledDate(arr.every((bool) => bool === false));
+  };
+  useEffect(() => {
+    setDiscountPercentage('');
+    setMinOrder('');
+  }, [itemMenu, menu]);
+  const getDiscountOrMov = (type) => {
+    if (type === 'discount') {
+      if (itemMenu === 'Flash Deal') {
+        return ['50%'];
+      }
+      if (itemMenu === 'Order more , save more') {
+        return ['30%', '50%'];
+      }
+      if (itemMenu === 'Restaurent Pick') {
+        return ['20%', '25%', '30%', '35%', '40%', '45%', '50%'];
+      }
+      return ['100%'];
+    }
+    if (type === 'mov') {
+      if (itemMenu === 'Flash Deal') {
+        return ['0 AED', '10 AED'];
+      }
+      if (itemMenu === 'Order more , save more') {
+        return ['60 AED'];
+      }
+      if (itemMenu === 'Restaurent Pick') {
+        return ['0 AED', '15 AED', '30 AED'];
+      }
+      return ['15 AED', '30 AED', '60 AED'];
+    }
+    return [];
   };
   const getProgress = () => {
     if (selected === 1) {
@@ -352,7 +386,7 @@ const MarketingSetup = ({ active, setActive }) => {
                         <TypographyKit variant="div">
                           Procentage Discount
                           <MarketingPlaceholderDropdown
-                            names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                            names={getDiscountOrMov('discount')}
                             title="%"
                             setPersonName={setDiscountPercentage}
                             personName={discountPercentage}
@@ -363,7 +397,7 @@ const MarketingSetup = ({ active, setActive }) => {
                         <TypographyKit variant="div">
                           Min Order Value
                           <MarketingPlaceholderDropdown
-                            names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
+                            names={getDiscountOrMov('mov')}
                             title="$0.00"
                             setPersonName={setMinOrder}
                             personName={minOrder}
@@ -741,7 +775,57 @@ const MarketingSetup = ({ active, setActive }) => {
               );
             }
           }
-          return '';
+          if (selected === 5) {
+            return (
+              <div className="left-part-middle">
+                <TypographyKit variant="h6">4.Select your target audience</TypographyKit>
+                <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+                  Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+                </TypographyKit>
+                <BoxKit className="left-part-radio under-textfields active">
+                  <div className="radio">
+                    <div>
+                      <span>
+                        <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                      </span>
+                      <div>
+                        <div>Target Audience</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <RadioGroupKit
+                      className="radio-group-day"
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      value={targetAudience}
+                      onChange={(e) => setTargetAudience(e.target.value)}
+                      name="radio-buttons-group-days">
+                      {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                        <div key={day}>
+                          <FormControlLabelKit value={day} control={<RadioKit />} />
+                          <span>{day}</span>
+                        </div>
+                      ))}
+                    </RadioGroupKit>
+                  </div>
+                </BoxKit>
+                <ButtonKit
+                  onClick={() => {
+                    setSteps([0, 1, 2, 3, 4, 5, 6]);
+                    setSelected(6);
+                  }}
+                  className="another-slot"
+                  variant="contained">
+                  <img src={SmRuleIcon} alt="Sm Rule" />
+                  Combine with a smart rule
+                </ButtonKit>
+                <ButtonKit className="another-slot remove" variant="contained">
+                  <img src={SpeakerIcon} alt="Speaker" />
+                  Combine with an Ads
+                </ButtonKit>
+              </div>
+            );
+          }
         }
       }
 
