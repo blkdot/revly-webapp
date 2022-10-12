@@ -5,18 +5,21 @@ import './MenuDropdown.scss';
 import FormcontrolKit from '../../../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../../../kits/inputlabel/InputLabelKit';
 import SelectKit from '../../../../kits/select/SelectKit';
-import MenuItemKit from '../../../../kits/menuItem/MenuItemKit';
-import ListItemTextKit from '../../../../kits/listItemtext/ListItemTextKit';
 
 const MenuDropdown = (props) => {
-  const { label, items, startIcon, onChange } = props;
+  const {
+    label,
+    items,
+    startIcon,
+    onChange,
+    renderOption,
+    renderValue,
+    multiple,
+    value,
+    defaultValue,
+  } = props;
 
-  const renderSelectItem = (arr) =>
-    arr.map((v) => (
-      <MenuItemKit key={v.name} value={v.name}>
-        <ListItemTextKit primary={v.label} />
-      </MenuItemKit>
-    ));
+  const renderSelectItem = (arr) => arr.map((v) => renderOption(v));
 
   return (
     <FormcontrolKit fullWidth>
@@ -26,7 +29,14 @@ const MenuDropdown = (props) => {
           {label}
         </div>
       </InputLabelKit>
-      <SelectKit sx={{ height: '55px' }} onChange={onChange} label={label}>
+      <SelectKit
+        renderValue={renderValue}
+        multiple={multiple}
+        value={value}
+        defaultValue={defaultValue}
+        sx={{ height: '55px' }}
+        onChange={onChange}
+        label={label}>
         {renderSelectItem(items)}
       </SelectKit>
     </FormcontrolKit>
