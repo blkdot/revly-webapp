@@ -231,9 +231,7 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
     const endGetDate = endDate.getDate();
     const startGetDay = startDate.getDay();
     const endGetDay = endDate.getDay();
-    const dateGetDay = date.getDay();
     const dateGetDate = date.getDate();
-    const dateLocal = date.toLocaleDateString();
     setOpenedCompareDateValue(false); // Closing CompareDateValue date picker
     setSelected(false); // Closing CompareDateValue Select
     setCompareDateValueContext({ startDate, endDate }); // Sending data to context state
@@ -242,40 +240,27 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
       // It checks that what date is currently selected in CompareDateValue date picker
 
       // Sending data to state which will be needed for the introduction in the compareDateValueContext input
-      if (startLocal === dateLocal) {
-        setTitlecompareDateValue('today');
-      } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
+      if (startLocal === subDays(date, 1).toLocaleDateString()) {
         setTitlecompareDateValue('yesterday');
       } else {
         setTitlecompareDateValue('custom');
       }
-    } else if (getWeek(startDate, 1) === getWeek(endDate, 1)) {
-      if (endGetDay === dateGetDay && startGetDay === 0) {
-        setTitlecompareDateValue('current week');
-      } else if (
+    } else if (getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })) {
+      if (
         startGetDay === 1 &&
         endGetDay === 0 &&
-        getWeek(startDate, { weekStartsOn: 1 }) ===
-          getWeek(subWeeks(subWeeks(date, 1), { weekStartsOn: 1 }))
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
       ) {
         setTitlecompareDateValue('last week');
       } else {
         setTitlecompareDateValue('custom');
       }
     } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
-      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-        setTitlecompareDateValue('current month');
-      } else if (startGetDate === 1 && endGetDate === dateGetDate) {
+      if (startGetDate === 1 && endGetDate === dateGetDate) {
         setTitlecompareDateValue('last month');
       } else {
         setTitlecompareDateValue('custom');
       }
-    } else if (
-      startGetDate === 1 &&
-      endGetDate <= dateGetDate &&
-      endGetDate === endOfMonth(endDate).getDate()
-    ) {
-      setTitlecompareDateValue('current month');
     } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
       setTitlecompareDateValue('last month');
     } else {
@@ -579,7 +564,7 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
             <CalendarMonthIcon />
             <span>{getdateFrom()}</span>
           </TypographyKit>
-          <ExpandMoreIcon />
+          <ExpandMoreIcon className={`expand-img ${opened ? 'active' : ''}`} />
         </PaperKit>
       </div>
       <div
@@ -683,7 +668,7 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
                   <CalendarMonthIcon />
                   <span>{getDateCompareDateValue()}</span>
                 </TypographyKit>
-                <ExpandMoreIcon />
+                <ExpandMoreIcon className={`expand-img ${selected ? 'active' : ''}`} />
               </PaperKit>
               <CompareDateValueSelect
                 setcompareDateValueBtn={setCompareDateValueContext}
@@ -694,6 +679,8 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
                 setTitleCompareDateValue={setTitlecompareDateValue}
                 dateFrom={dateFromContext}
                 titledateFromContext={titleDate}
+                typeDate={typeDate}
+                setSelected={setSelected}
               />
             </TypographyKit>
           </div>
@@ -797,6 +784,13 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
         className={`date-range-overlay ${openedCompareDateValue ? 'opened' : ''}`}
         onClick={() => setOpenedCompareDateValue(false)}
         onKeyDown={() => setOpenedCompareDateValue(false)}
+      />
+      <div
+        role="presentation"
+        tabIndex={-1}
+        className={`date-range-overlay ${selected ? 'opened' : ''}`}
+        onClick={() => setSelected(false)}
+        onKeyDown={() => setSelected(false)}
       />
     </div>
   );

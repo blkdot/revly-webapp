@@ -225,7 +225,7 @@
 
 .date-select.date-select {
   background: #fff !important;
-  z-index: 100;
+  z-index: 800;
   position: absolute;
   top: 55px;
   left: 0;
@@ -387,7 +387,12 @@
     height: 40px;
   }
 }
-
+.expand-img{
+  transition: .4s;
+  &.active{
+    transform: scale(1,-1);
+  }
+}
 @media(max-width: 1260px) {
   .date-range.date-range {
     top: 130px;
