@@ -11,6 +11,8 @@ import { getMetrics, getVendors, getHeatmap, getMenu } from '../api/userApi';
 
 import { getOffers, getAds } from '../api/planningApi';
 
+import { triggerOffers } from '../api/marketingApi';
+
 const useApi = () => ({
   settingsOnboardPlatform,
   settingsOnboarded,
@@ -24,6 +26,7 @@ const useApi = () => ({
   getVendors,
   getAds,
   getHeatmap,
+  triggerOffers,
 });
 
 export default useApi;

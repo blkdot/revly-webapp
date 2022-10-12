@@ -60,7 +60,7 @@ const MarketingSetup = ({ active, setActive }) => {
     revenue: defaultRangeColorIndices,
     orders: defaultRangeColorIndices,
   });
-  const { getHeatmap } = useApi();
+  const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
   const { vendorsContext } = useGlobal();
   const [startingDate, setStartingDate] = useState(new Date());
@@ -183,22 +183,39 @@ const MarketingSetup = ({ active, setActive }) => {
     }
     return 'free-items';
   };
-  // TODO: Here is data which need to request
-  // eslint-disable-next-line no-unused-vars
-  const dataReq = {
-    start_date: format(startingDate, 'dd/MM/yyyy'),
-    start_hour: getHourArr('startTime'),
-    end_date: format(endingDate, 'dd/MM/yyyy'),
-    end_hour: getHourArr('endTime'),
-    type_offer: getTypeOffer(),
-    menu_type: { menu_items: getMenuItem(), theme: getTypeItemMenu() },
-    goal: getTargetAudience(),
-    discount: Number(discountPercentage.replace('%', '')),
-    mov: Number(minOrder.toLowerCase().replace('aed', '')),
-  };
 
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  // TODO: Send request
+  const handleSchedule = async () => {
+    const clonedVendor = { ...branchData };
+    delete clonedVendor.platform;
+
+    const dataReq = {
+      start_date: format(startingDate, 'dd/MM/yyyy'),
+      start_hour: getHourArr('startTime'),
+      end_date: format(endingDate, 'dd/MM/yyyy'),
+      end_hour: getHourArr('endTime'),
+      type_offer: getTypeOffer(),
+      menu_type: { menu_items: getMenuItem(), theme: getTypeItemMenu() },
+      goal: getTargetAudience(),
+      discount: Number(discountPercentage.replace('%', '')),
+      mov: Number(minOrder.toLowerCase().replace('aed', '')),
+      master_email: user.email,
+      access_token: user.accessToken,
+      platform_token:
+        userPlatformData.platforms[platform].access_token ??
+        userPlatformData.platforms[platform].access_token_bis,
+      vendors: [clonedVendor],
+      chain_id: clonedVendor.chain_id,
+    };
+
+    const res = await triggerOffers(platform, dataReq);
+
+    console.log(res);
+  };
+
   const heatMapFormatter = (type) => {
     const tmpData = defaultHeatmapState;
 
@@ -661,12 +678,19 @@ const MarketingSetup = ({ active, setActive }) => {
                 disabled={!(selected >= 2)}>
                 Previous Step
               </ButtonKit>
-              <ButtonKit
-                onClick={() => setSelected(selected + 1)}
-                disabled={disabled}
-                variant="contained">
-                Next Step
-              </ButtonKit>
+              {/* TODO: create Schedule Offer Button here on last step for each platform */}
+              {selected === steps.length - 1 ? (
+                <ButtonKit onClick={handleSchedule} disabled={disabled} variant="contained">
+                  Next Step
+                </ButtonKit>
+              ) : (
+                <ButtonKit
+                  onClick={() => setSelected(selected + 1)}
+                  disabled={disabled}
+                  variant="contained">
+                  Next Step
+                </ButtonKit>
+              )}
             </div>
           </div>
           <div className="right-part">
