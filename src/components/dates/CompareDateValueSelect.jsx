@@ -4,11 +4,9 @@ import './Dates.scss';
 import React from 'react';
 import {
   endOfMonth,
-  getWeek,
   subDays,
   subMonths,
   subWeeks,
-  getMonth,
   endOfWeek,
   startOfWeek,
   startOfMonth,
@@ -147,70 +145,23 @@ const CompareDateValueSelect = ({
   setTitleCompareDateValue,
   dateFrom,
   titledateFromContext,
+  typeDate,
+  setSelected,
 }) => {
   const startDate = new Date(compareDateValue.startDate);
   const endDate = new Date(compareDateValue.endDate);
   const startDateLeft = new Date(dateFrom.startDate);
   const endDateLeft = new Date(dateFrom.endDate);
-  const startLocal = startDate.toLocaleDateString();
-  const endLocal = endDate.toLocaleDateString();
-  const startGetDate = startDate.getDate();
-  const endGetDate = endDate.getDate();
-  const startGetDay = startDate.getDay();
-  const endGetDay = endDate.getDay();
-  const dateGetDay = date.getDay();
-  const dateGetDate = date.getDate();
 
   const openCompareDateValue = () => {
     setcompareDateValue([{ startDate, endDate, key: 'selection' }]);
     setcompareDateValueBtn({ startDate, endDate });
     setOpenedCompareDateValue(true);
+    setSelected(false);
   };
 
   function render() {
-    if (getMonth(startDate) === getMonth(date)) {
-      if (startLocal === endLocal)
-        return (
-          <Day
-            titledateFromContext={titledateFromContext}
-            openCompareDateValue={openCompareDateValue}
-            startDateLeft={startDateLeft}
-            endDateLeft={endDateLeft}
-            setcompareDateValueBtn={setcompareDateValueBtn}
-            setTitleCompareDateValue={setTitleCompareDateValue}
-          />
-        );
-      if (
-        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
-        startGetDay === 1 &&
-        endGetDay >= dateGetDay &&
-        endGetDay === 0
-      )
-        return (
-          <Week
-            titledateFromContext={titledateFromContext}
-            openCompareDateValue={openCompareDateValue}
-            startDateLeft={startDateLeft}
-            endDateLeft={endDateLeft}
-            setcompareDateValueBtn={setcompareDateValueBtn}
-            setTitleCompareDateValue={setTitleCompareDateValue}
-          />
-        );
-      if (
-        getMonth(startDate) === getMonth(endDate) &&
-        startGetDate === 1 &&
-        endGetDate >= dateGetDate &&
-        endGetDate <= endOfMonth(endDate).getDate()
-      )
-        return (
-          <Month
-            titledateFromContext={titledateFromContext}
-            openCompareDateValue={openCompareDateValue}
-            setcompareDateValueBtn={setcompareDateValueBtn}
-            setTitleCompareDateValue={setTitleCompareDateValue}
-          />
-        );
-    } else if (startLocal === endLocal)
+    if (typeDate === 'day') {
       return (
         <Day
           titledateFromContext={titledateFromContext}
@@ -221,11 +172,8 @@ const CompareDateValueSelect = ({
           setTitleCompareDateValue={setTitleCompareDateValue}
         />
       );
-    else if (
-      getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
-      startGetDay === 1 &&
-      endGetDay === 0
-    )
+    }
+    if (typeDate === 'week') {
       return (
         <Week
           titledateFromContext={titledateFromContext}
@@ -236,11 +184,8 @@ const CompareDateValueSelect = ({
           setTitleCompareDateValue={setTitleCompareDateValue}
         />
       );
-    else if (
-      getMonth(startDate) === getMonth(endDate) &&
-      startGetDate === 1 &&
-      endGetDate === endOfMonth(endDate, 1).getDate()
-    )
+    }
+    if (typeDate === 'month') {
       return (
         <Month
           titledateFromContext={titledateFromContext}
@@ -249,10 +194,12 @@ const CompareDateValueSelect = ({
           setTitleCompareDateValue={setTitleCompareDateValue}
         />
       );
+    }
     return '';
   }
   return (
     <PaperKit
+      onClick={(e) => e.preventDefault()}
       style={{ background: '#fff' }}
       className={`date-select ${selected ? 'selected' : ''}`}>
       {render()}

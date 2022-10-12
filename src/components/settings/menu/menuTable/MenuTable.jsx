@@ -9,27 +9,20 @@ import TableSortLabelKit from '../../../../kits/tablesortlabel/TableSortLableKit
 import TableContainerKit from '../../../../kits/tablecontainer/TableContainerKit';
 import TableKit from '../../../../kits/table/TableKit';
 import TableBodyKit from '../../../../kits/tablebody/TableBodyKit';
+import SpinnerKit from '../../../../kits/spinner/SpinnerKit';
 
 const headRows = [
   {
-    id: 'image',
-    label: 'Image',
-  },
-  {
     id: 'name',
     label: 'Name',
+    width: 380,
   },
   {
     id: 'category',
     label: 'Category',
   },
   {
-    id: 'description',
-    label: 'Description',
-  },
-  {
     id: 'price',
-    disablePadding: true,
     label: 'Price',
   },
 ];
@@ -45,8 +38,8 @@ const TableHead = ({ order, orderBy, onRequestSort }) => {
         {headRows.map((headCell) => (
           <TableCellKit
             key={headCell.id}
+            width={headCell.width}
             align="left"
-            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabelKit
               active={orderBy === headCell.id}
@@ -78,7 +71,7 @@ function getComparator(order, orderBy) {
 }
 
 const MenuTable = (props) => {
-  const { data } = props;
+  const { data, loading } = props;
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('image');
@@ -102,21 +95,39 @@ const MenuTable = (props) => {
   }
 
   const renderData = () =>
-    stableSort(data, getComparator(order, orderBy)).map((row) => (
-      <TableRowKit key={row.id} tabIndex={-1}>
-        <TableCellKit>{row.image && <img alt="icon" src={row.image} />}</TableCellKit>
-        <TableCellKit>{row.name}</TableCellKit>
-        <TableCellKit>{row.category}</TableCellKit>
-        <TableCellKit>{row.description}</TableCellKit>
-        <TableCellKit>${row.price}</TableCellKit>
-      </TableRowKit>
-    ));
+    data.length > 0 ? (
+      stableSort(data, getComparator(order, orderBy)).map((row) => (
+        <TableRowKit key={row.id} tabIndex={-1}>
+          <TableCellKit>{row.name}</TableCellKit>
+          <TableCellKit>{row.category}</TableCellKit>
+          <TableCellKit>${row.price}</TableCellKit>
+        </TableRowKit>
+      ))
+    ) : (
+      <tr>
+        <td />
+        <td>Empty !</td>
+        <td />
+      </tr>
+    );
 
   return (
     <TableContainerKit className="menu-table">
       <TableKit size="medium">
         <TableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
-        <TableBodyKit>{renderData()}</TableBodyKit>
+        <TableBodyKit>
+          {loading ? (
+            <tr>
+              <td />
+              <td>
+                <SpinnerKit />
+              </td>
+              <td />
+            </tr>
+          ) : (
+            renderData()
+          )}
+        </TableBodyKit>
       </TableKit>
     </TableContainerKit>
   );
