@@ -6,6 +6,9 @@ import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
+import UAE from '../../assets/images/UAE.png';
+import Kuwait from '../../assets/images/Kuwait.png';
+import Qatar from '../../assets/images/Qatar.png';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -27,6 +30,16 @@ const CompetitionDropdown = ({ className, title, rows, select, icon, setRow }) =
     setRow(value);
   };
 
+  const getFlag = (name) => {
+    if (name === 'UAE') {
+      return UAE;
+    }
+    if (name === 'Kuwait') {
+      return Kuwait;
+    }
+    return Qatar;
+  };
+
   return (
     <div className={`restaurant-dropdown_wrapper ${className}`}>
       <FormcontrolKit sx={{ m: 1, width: 250 }}>
@@ -43,10 +56,24 @@ const CompetitionDropdown = ({ className, title, rows, select, icon, setRow }) =
           value={select === undefined ? '' : select}
           onChange={handleChange}
           input={<OutlindeInputKit label={title} />}
-          renderValue={(selected) => selected}
+          renderValue={(selected) => (
+            <div className="country-wrapper">
+              {title === 'Country' ? (
+                <img className="flag-img" src={getFlag(selected)} alt={selected} />
+              ) : (
+                ''
+              )}
+              {selected}
+            </div>
+          )}
           MenuProps={MenuProps}>
           {rows?.map((name) => (
             <MenuItemKit key={name} value={name}>
+              {title === 'Country' ? (
+                <img className="flag-img" src={getFlag(name)} alt={name} />
+              ) : (
+                ''
+              )}
               <ListItemTextKit primary={name} />
             </MenuItemKit>
           ))}
