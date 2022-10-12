@@ -7,7 +7,7 @@
         thead {
             background-color: #F9FAFB;
             tr th {
-                padding: 1.5em 3em;
+                padding: 1.5em 0 1.5em 4em;
                 border: none;
                 span {
                     font-weight: 600;
@@ -25,7 +25,7 @@
                     font-size: 14px;
                     padding-top: 2em;
                     height: 90px;
-                    padding-left: 2.6em;
+                    padding-left: 3.5em;
                     &:nth-child(5) {
                         padding-left: 2.5em;
                     }
