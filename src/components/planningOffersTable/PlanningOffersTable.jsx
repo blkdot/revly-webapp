@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { noCase, sentenceCase } from 'change-case';
+import { useNavigate } from 'react-router-dom';
 
 import './PlanningOffersTable.scss';
 
@@ -18,6 +19,7 @@ import { platformObject } from '../../data/platformList';
 const PlanningOffersTable = ({ rows }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
+  const navigate = useNavigate();
   // const [selected, setSelected] = useState([]);
 
   const handleRequestSort = (event, property) => {
@@ -40,10 +42,14 @@ const PlanningOffersTable = ({ rows }) => {
       .filter((el) => !ignoredFields.includes(el.id));
   };
 
+  const navigateToOfferDetails = (offer) =>
+    navigate(`/offer/detail/${offer.offer_id}`, { state: { offerDetail: offer } });
+
   const renderSimpleRow = (r, h) => (
     <TableCellKit
+      onClick={() => navigateToOfferDetails(r)}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}>
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}>
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
       </span>

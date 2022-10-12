@@ -1,4 +1,4 @@
-export const ignoredFields = ['vendor_id', 'ad_id'];
+export const ignoredFields = ['vendor_id', 'ad_id', 'data'];
 
 export const headCells = [
   {
