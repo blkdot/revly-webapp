@@ -14,12 +14,12 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundColor: theme.palette.primary.second,
+      backgroundColor: theme.palette.primary.main,
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundColor: theme.palette.primary.second,
+      backgroundColor: theme.palette.primary.main,
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
@@ -42,10 +42,10 @@ const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   ...(ownerState.active && {
-    backgroundColor: theme.palette.primary.second,
+    backgroundColor: theme.palette.primary.main,
   }),
   ...(ownerState.completed && {
-    backgroundColor: theme.palette.primary.second,
+    backgroundColor: theme.palette.primary.main,
   }),
 }));
 
@@ -69,7 +69,9 @@ const Stepper = (props) => {
       connector={<ColorlibConnector />}>
       {steps.map((s) => (
         <StepKit key={s.key}>
-          <StepLabelKit StepIconComponent={ColorlibStepIcon}>{s.label}</StepLabelKit>
+          <StepLabelKit StepIconComponent={ColorlibStepIcon}>
+            <span style={{ color: '#212B36', fontSize: '12px', fontWeight: 400 }}>{s.label}</span>
+          </StepLabelKit>
         </StepKit>
       ))}
     </StepperKit>
