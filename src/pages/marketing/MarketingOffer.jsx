@@ -441,7 +441,7 @@ const MarketingOffer = () => {
                 fontSize: '13px',
                 fontWeight: 'bold',
                 display: 'flex',
-                alignSelf: 'center',
+                alignItems: 'center',
               }}>
               <Switch />
               &nbsp; Status
@@ -459,7 +459,7 @@ const MarketingOffer = () => {
                     width: '42%',
                   }}>
                   <CheckboxKit
-                    checked={filters.status.includes(item.value)}
+                    checked={filters.status.includes(item.value) || false}
                     onChange={() => handleChangeMultipleFilter('status')(item.value)}
                   />
                   <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
