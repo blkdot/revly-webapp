@@ -13,18 +13,19 @@ import CuisineIcon from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import lines from '../../assets/images/lines.png';
 import loadingImage from '../../assets/images/loading-image.png';
-import contryData from '../../data/country.json';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const Competitor = ({ open, opened }) => {
   const [restaurant, setRestaurant] = useState('');
-  const [platform, setPlatform] = useState('');
+  const { userPlatformData } = usePlatform();
+  const [platform, setPlatform] = useState(
+    userPlatformData.platforms.talabat.active ? 'talabat' : 'deliveroo',
+  );
   const [area, setArea] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [cuisineFilter, setCuisineFilter] = useState('');
   const [loading, setLoading] = useState(false);
-  const countryArr = [];
-  contryData.forEach((obj) => countryArr.push(obj.name));
   const submit = (e) => {
     e.preventDefault();
     const data = {
@@ -85,7 +86,7 @@ const Competitor = ({ open, opened }) => {
                     <CompetitionDropdown
                       icon={PlatformIcon}
                       select={platform}
-                      rows={['talabat', 'deliveroo']}
+                      rows={[platform]}
                       title="Select a Platform"
                       className="competitor-dropdown"
                       setRow={setPlatform}
@@ -95,7 +96,7 @@ const Competitor = ({ open, opened }) => {
                       setRow={setCountry}
                       title="Country"
                       className="competitor-dropdown"
-                      rows={countryArr}
+                      rows={['UAE', 'Kuwait', 'Qatar']}
                       select={country}
                     />
                     <CompetitionDropdown
@@ -103,7 +104,7 @@ const Competitor = ({ open, opened }) => {
                       setRow={setCity}
                       title="City"
                       className="competitor-dropdown"
-                      rows={['Bishkek', 'New York']}
+                      rows={['Dubai', 'Sharjah', 'Abu Dhabi', 'Kuwait City', 'Doha']}
                       select={city}
                     />
                     <TextfieldKit
@@ -118,7 +119,7 @@ const Competitor = ({ open, opened }) => {
                       title="Cuisine filter"
                       className="competitor-dropdown"
                       setRow={setCuisineFilter}
-                      rows={['Sushi', 'Curry']}
+                      rows={['Italian', 'Burgers', 'Pizza', 'Sushi', 'Indian']}
                       select={cuisineFilter}
                     />
                   </div>
