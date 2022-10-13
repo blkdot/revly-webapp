@@ -85,9 +85,10 @@ const GetProgress = (props) => {
   if (selected === 1) {
     return (
       <div className="left-part-middle">
-        <TypographyKit variant="h6">{selected}.Select platform and branches</TypographyKit>
+        <TypographyKit variant="h6">{selected}. Select platform and branches</TypographyKit>
         <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+          Create and manage all your offers. Set personalised rules to automatically trigger your
+          offers.
         </TypographyKit>
         <div className="left-part-radio-wrapper">
           <RadioGroupKit
@@ -117,9 +118,10 @@ const GetProgress = (props) => {
   if (selected === 2) {
     return (
       <div className="left-part-middle">
-        <TypographyKit variant="h6">{selected}.Select the Type of the offer</TypographyKit>
+        <TypographyKit variant="h6">{selected}. Select the Type of the offer</TypographyKit>
         <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+          Create and manage all your offers. Set personalised rules to automatically trigger your
+          offers.
         </TypographyKit>
         <RadioGroupKit
           aria-labelledby="demo-radio-buttons-group-label"
@@ -137,8 +139,8 @@ const GetProgress = (props) => {
                   <img src={menuIcon} alt="Menu Icon" />
                 </span>
                 <div>
-                  <div>Offer on the whole Menu</div>
-                  <p>Ex : Lorme Ipsum 24%</p>
+                  <div>Discount on the whole Menu</div>
+                  <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
               <FormControlLabelKit value="Offer on the whole Menu" control={<RadioKit />} />
@@ -148,7 +150,7 @@ const GetProgress = (props) => {
                 <div className="dropdown-wrapper">
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Procentage Discount
+                      Percentage Discount
                       <MarketingPlaceholderDropdown
                         names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
                         title="%"
@@ -159,7 +161,7 @@ const GetProgress = (props) => {
                   </TypographyKit>
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Min Order Value
+                      Min. Order Value
                       <MarketingPlaceholderDropdown
                         names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
                         title="0.0 AED"
@@ -184,10 +186,17 @@ const GetProgress = (props) => {
                 </span>
                 <div>
                   <div>Offer on An Item from the Menu</div>
-                  <p>Ex : Lorme Ipsum 24%</p>
+                  <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
-              <FormControlLabelKit value="Offer on An Item from the Menu" control={<RadioKit />} />
+              {platform === 'deliveroo' ? (
+                <FormControlLabelKit
+                  value="Offer on An Item from the Menu"
+                  control={<RadioKit />}
+                />
+              ) : (
+                ''
+              )}
             </div>
             <div>
               <RadioGroupKit
@@ -205,14 +214,14 @@ const GetProgress = (props) => {
                     subtitle: 'Attract larger orders from groupes and famillies',
                   },
                   { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
-                  { title: 'Free item', subtitle: 'Allow customers ro choose a free item' },
+                  { title: 'Free item', subtitle: 'Allow customers to choose a free item' },
                 ].map((obj) => (
                   <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
                 ))}
                 <div className="dropdown-wrapper">
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Procentage Discount
+                      Percentage Discount
                       <MarketingPlaceholderDropdown
                         names={getDiscountOrMov('discount')}
                         title="%"
@@ -223,7 +232,7 @@ const GetProgress = (props) => {
                   </TypographyKit>
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Min Order Value
+                      Min. Order Value
                       <MarketingPlaceholderDropdown
                         names={getDiscountOrMov('mov')}
                         title="0.0 AED"
@@ -244,9 +253,10 @@ const GetProgress = (props) => {
     if (selected === 3) {
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h6">{selected}.Select the discounted items</TypographyKit>
+          <TypographyKit variant="h6">{selected}. Select the discounted items</TypographyKit>
           <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
           </TypographyKit>
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
@@ -325,9 +335,10 @@ const GetProgress = (props) => {
     if (selected === 4) {
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h6">{selected}.Select the Duration</TypographyKit>
+          <TypographyKit variant="h6">{selected}. Select the Duration</TypographyKit>
           <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
           </TypographyKit>
           <RadioGroupKit
             className="duration-wrapper"
@@ -415,7 +426,7 @@ const GetProgress = (props) => {
                   onChange={(e) => setCustomDay(e.target.value)}
                   name="radio-buttons-group-days">
                   {[
-                    'Continues Offer',
+                    'Continuous Offer',
                     'Every Day',
                     'Work Week',
                     'Same day every week',
@@ -437,44 +448,52 @@ const GetProgress = (props) => {
       if (selected === 5) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
-            <BoxKit className="left-part-radio under-textfields active">
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
-                setSteps([0, 1, 2, 3, 4, 5, 6]);
-                setSelected(6);
+                setSteps([0, 1, 2, 3, 4, 5]);
+                setSelected(5);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
@@ -492,9 +511,10 @@ const GetProgress = (props) => {
         if (customDay) {
           return (
             <div className="left-part-middle">
-              <TypographyKit variant="h6">{selected}.Select the Recurrence detail</TypographyKit>
+              <TypographyKit variant="h6">{selected}. Select the Recurrence detail</TypographyKit>
               <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+                Create and manage all your offers. Set personalised rules to automatically trigger
+                your offers.
               </TypographyKit>
               <BoxKit className="left-part-radio under-textfields radio-dates active">
                 <div className="radio">
@@ -513,7 +533,7 @@ const GetProgress = (props) => {
                     rows={[
                       'Every Monday',
                       'Every Tuesday',
-                      'Every Wendensday',
+                      'Every Wendnesday',
                       'Every Thursday',
                       'Every Friday',
                       'Every Saturday',
@@ -570,17 +590,6 @@ const GetProgress = (props) => {
                         Start Time {obj.pos}
                         <BasicTimePicker
                           value={obj.startTime}
-                          minTime={
-                            obj.pos === 1
-                              ? ''
-                              : new Date(
-                                  null,
-                                  null,
-                                  null,
-                                  format(addHours(times[index - 1].endTime, 1), 'HH'),
-                                  0,
-                                )
-                          }
                           setValue={setTimes}
                           times={times}
                           index={index}
@@ -591,9 +600,6 @@ const GetProgress = (props) => {
                         End Time {obj.pos}
                         <BasicTimePicker
                           value={obj.endTime}
-                          minTime={
-                            new Date(null, null, null, format(addHours(obj.startTime, 1), 'HH'), 0)
-                          }
                           setValue={setTimes}
                           times={times}
                           index={index}
@@ -639,7 +645,7 @@ const GetProgress = (props) => {
                     </div>
                   ),
                 )}
-                {customDay === 'Continues Offer' || times.length === 3 ? (
+                {customDay === 'Continuous Offer' || times.length === 3 ? (
                   ''
                 ) : (
                   <ButtonKit
@@ -647,23 +653,21 @@ const GetProgress = (props) => {
                       setTimes([
                         ...times,
                         {
-                          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+                          startTime: new Date(
+                            null,
+                            null,
+                            null,
+                            format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                            0,
+                          ),
                           endTime: new Date(
                             null,
                             null,
                             null,
-                            format(
-                              addHours(
-                                times.length === 1
-                                  ? times[0].startTime
-                                  : times[times.length - 2].endTime,
-                                1,
-                              ),
-                              'HH',
-                            ),
+                            format(addHours(times[times.length - 1].endTime, 2), 'HH'),
                             0,
                           ),
-                          pos: times.length + 1,
+                          pos: times[times.length - 1].pos + 1,
                         },
                       ])
                     }
@@ -681,44 +685,52 @@ const GetProgress = (props) => {
       if (selected === 6) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
-            <BoxKit className="left-part-radio under-textfields active">
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5, 6]);
                 setSelected(6);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
@@ -736,9 +748,10 @@ const GetProgress = (props) => {
     if (selected === 3) {
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h6">{selected}.Select the Duration</TypographyKit>
+          <TypographyKit variant="h6">{selected}. Select the Duration</TypographyKit>
           <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
           </TypographyKit>
           <RadioGroupKit
             className="duration-wrapper"
@@ -826,7 +839,7 @@ const GetProgress = (props) => {
                   onChange={(e) => setCustomDay(e.target.value)}
                   name="radio-buttons-group-days">
                   {[
-                    'Continues Offer',
+                    'Continuous Offer',
                     'Every Day',
                     'Work Week',
                     'Same day every week',
@@ -848,47 +861,52 @@ const GetProgress = (props) => {
       if (selected === 4) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
-            <BoxKit
-              className={`left-part-radio under-textfields ${
-                platform === 'talabat' ? 'disabled' : 'active'
-              }`}>
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5]);
                 setSelected(5);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
@@ -906,9 +924,10 @@ const GetProgress = (props) => {
         if (customDay) {
           return (
             <div className="left-part-middle">
-              <TypographyKit variant="h6">{selected}.Select the Recurrence detail</TypographyKit>
+              <TypographyKit variant="h6">{selected}. Select the Recurrence detail</TypographyKit>
               <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+                Create and manage all your offers. Set personalised rules to automatically trigger
+                your offers.
               </TypographyKit>
               <BoxKit className="left-part-radio under-textfields radio-dates active">
                 <div className="radio">
@@ -927,7 +946,7 @@ const GetProgress = (props) => {
                     rows={[
                       'Every Monday',
                       'Every Tuesday',
-                      'Every Wendensday',
+                      'Every Wendnesday',
                       'Every Thursday',
                       'Every Friday',
                       'Every Saturday',
@@ -1028,7 +1047,6 @@ const GetProgress = (props) => {
                       <div>
                         End Time
                         <BasicTimePicker
-                          minTime={new Date(addHours(new Date(obj.startTime), 1))}
                           value={obj.endTime}
                           setValue={setTimes}
                           times={times}
@@ -1039,7 +1057,7 @@ const GetProgress = (props) => {
                     </div>
                   ),
                 )}
-                {customDay === 'Continues Offer' || times.length === 3 ? (
+                {customDay === 'Continuous Offer' || times.length === 3 ? (
                   ''
                 ) : (
                   <ButtonKit
@@ -1079,44 +1097,52 @@ const GetProgress = (props) => {
       if (selected === 5) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
-            <BoxKit className="left-part-radio under-textfields active">
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5, 6]);
                 setSelected(6);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule

@@ -12,6 +12,11 @@ export const getOffers = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const cancelOffer = (body, platform) =>
+  axios
+    .post(`${apiUrl}/marketing/cancel/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);
 export const triggerOffers = (platform, body) =>
   axios
     .post(`${apiUrl}/marketing/offer/${platform}`, {
