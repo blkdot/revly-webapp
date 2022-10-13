@@ -118,8 +118,8 @@ const OfferDetailComponent = () => {
         chain_id,
       },
       platform,
-    ).then((res) => {
-      setOfferDetail({ ...offerDetail, status: res.data.status });
+    ).then(() => {
+      setOfferDetail({ ...offerDetail, status: 'Cancelled' });
       setIsOpen(false);
     });
   };
