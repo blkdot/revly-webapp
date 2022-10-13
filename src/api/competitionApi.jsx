@@ -8,18 +8,12 @@ const { apiUrl } = config;
 
 export const getAlerts = (body, platform) =>
   axios
-    .post(`${apiUrl}/competition/alert/${platform}`, {
-      ...body,
-      master_email: 'chiekh.alloul@gmail.com',
-    })
+    .post(`${apiUrl}/competition/alert/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 
 export const getCompetitors = (body, platform) =>
   axios
-    .post(`${apiUrl}/competition/competitors/${platform}`, {
-      ...body,
-      master_email: 'chiekh.alloul@gmail.com',
-    })
+    .post(`${apiUrl}/competition/competitors/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);

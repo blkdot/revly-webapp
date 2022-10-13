@@ -138,44 +138,44 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
   ];
 
   const procentTalabat = () => {
-    if (metricsDateFrom[2] && metricsCompareDateValue[2]) {
-      if (Number(metricsCompareDateValue[2][1][title]) === 0) {
+    if (metricsDateFrom.talabat && metricsCompareDateValue.talabat) {
+      if (Number(metricsCompareDateValue.talabat[title]) === 0) {
         return 0;
       }
 
       return Number(
-        (metricsDateFrom[2][1][title] / (metricsCompareDateValue[2][1][title] / 100) - 100).toFixed(
-          2,
-        ),
+        (
+          metricsDateFrom.talabat[title] / (metricsCompareDateValue.talabat[title] / 100) -
+          100
+        ).toFixed(2),
       );
     }
     return '-';
   };
 
   const procentDeliveroo = () => {
-    if (metricsDateFrom[1] && metricsCompareDateValue[1]) {
-      if (Number(metricsCompareDateValue[1][1][title]) === 0) {
+    if (metricsDateFrom.deliveroo && metricsCompareDateValue.deliveroo) {
+      if (Number(metricsCompareDateValue.deliveroo[title]) === 0) {
         return 0;
       }
 
       return Number(
-        (metricsDateFrom[1][1][title] / (metricsCompareDateValue[1][1][title] / 100) - 100).toFixed(
-          2,
-        ),
+        (
+          metricsDateFrom.deliveroo[title] / (metricsCompareDateValue.deliveroo[title] / 100) -
+          100
+        ).toFixed(2),
       );
     }
     return '-';
   };
   const procentTotal = () => {
-    if (metricsDateFrom[0] && metricsCompareDateValue[0]) {
-      if (Number(metricsCompareDateValue[0][1][title]) === 0) {
+    if (metricsDateFrom.all && metricsCompareDateValue.all) {
+      if (Number(metricsCompareDateValue.all[title]) === 0) {
         return 0;
       }
 
       return Number(
-        (metricsDateFrom[0][1][title] / (metricsCompareDateValue[0][1][title] / 100) - 100).toFixed(
-          2,
-        ),
+        (metricsDateFrom.all[title] / (metricsCompareDateValue.all[title] / 100) - 100).toFixed(2),
       );
     }
     return '-';
@@ -191,10 +191,10 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
   };
   const getNum = (metrics) => {
     if (metrics) {
-      if (Number.isNaN(metrics[1][title]) || metrics[1][title] === null) {
+      if (Number.isNaN(metrics[title]) || metrics[title] === null) {
         return '-';
       }
-      return metrics[1][title];
+      return metrics[title];
     }
     return '-';
   };
@@ -214,8 +214,8 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
                       alt={title}
                     />
                   </TableCellKit>
-                  <TableCellKit>{getNum(metricsDateFrom[1])}</TableCellKit>
-                  <TableCellKit>{getNum(metricsCompareDateValue[1])}</TableCellKit>
+                  <TableCellKit>{getNum(metricsDateFrom.deliveroo)}</TableCellKit>
+                  <TableCellKit>{getNum(metricsCompareDateValue.deliveroo)}</TableCellKit>
                   <TableCellKit>
                     <div
                       className={`table_evolution ${
@@ -235,8 +235,8 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
                       alt={title}
                     />
                   </TableCellKit>
-                  <TableCellKit>{getNum(metricsDateFrom[2])}</TableCellKit>
-                  <TableCellKit>{getNum(metricsCompareDateValue[2])}</TableCellKit>
+                  <TableCellKit>{getNum(metricsDateFrom.talabat)}</TableCellKit>
+                  <TableCellKit>{getNum(metricsCompareDateValue.talabat)}</TableCellKit>
                   <TableCellKit>
                     <div
                       className={`table_evolution ${
@@ -253,8 +253,8 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
                 <TableCellKit component="th" scope="row">
                   Total
                 </TableCellKit>
-                <TableCellKit>{getNum(metricsDateFrom[0])}</TableCellKit>
-                <TableCellKit>{getNum(metricsCompareDateValue[0])}</TableCellKit>
+                <TableCellKit>{getNum(metricsDateFrom.all)}</TableCellKit>
+                <TableCellKit>{getNum(metricsCompareDateValue.all)}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={`table_evolution ${procentTotal() > 0 ? 'table_increased' : ''} ${

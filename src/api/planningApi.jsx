@@ -8,19 +8,13 @@ const { apiUrl } = config;
 
 export const getOffers = (body) =>
   axios
-    .post(`${apiUrl}/planning/offers`, {
-      ...body,
-      master_email: 'chiekh.alloul@gmail.com',
-    })
+    .post(`${apiUrl}/planning/offers`, body)
     .then((res) => res)
     .catch(handleResponse);
 
 export const getAds = (body) =>
   axios
-    .post(`${apiUrl}/planning/ads`, {
-      ...body,
-      master_email: 'chiekh.alloul@gmail.com',
-    })
+    .post(`${apiUrl}/planning/ads`, body)
     .then((res) => res)
     .catch(handleResponse);
 

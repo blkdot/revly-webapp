@@ -334,6 +334,12 @@ const MarketingSetup = ({ active, setActive }) => {
   };
 
   useEffect(() => {
+    const newBranchData = vendorsList.find((v) => v.data.vendor_name === branch);
+
+    setBranchData(newBranchData);
+  }, [branch]);
+
+  useEffect(() => {
     if (!branchData && vendorsList.length) {
       setBranchData(vendorsList[0]);
     }
@@ -610,8 +616,14 @@ const MarketingSetup = ({ active, setActive }) => {
   const closeSetup = () => {
     const body = document.querySelector('body');
     setActive(false);
+    setSelected(1);
     body.style.overflowY = 'visible';
   };
+
+  useEffect(() => {
+    setSelected(1);
+    setRecap(false);
+  }, [active]);
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
     const arr = [];

@@ -19,10 +19,7 @@ export const cancelOffer = (body, platform) =>
     .catch(handleResponse);
 export const triggerOffers = (platform, body) =>
   axios
-    .post(`${apiUrl}/marketing/offer/${platform}`, {
-      ...body,
-      master_email: 'chiekh.alloul@gmail.com',
-    })
+    .post(`${apiUrl}/marketing/offer/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 

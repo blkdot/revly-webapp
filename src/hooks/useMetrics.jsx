@@ -28,15 +28,9 @@ function useMetrics() {
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
-      if (!isCancelled) {
-        const sorted = Object.keys(data.data.metrics)
-          .sort()
-          .reduce((accumulator, key) => {
-            accumulator[key] = data.data.metrics[key];
-            return accumulator;
-          }, {});
-        setMetrics(Object.entries(sorted));
-      }
+      if (isCancelled) return;
+
+      setMetrics(data.data.metrics);
     });
     return () => {
       isCancelled = true;
