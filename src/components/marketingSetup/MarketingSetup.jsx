@@ -60,7 +60,7 @@ const MarketingSetup = ({ active, setActive }) => {
     revenue: defaultRangeColorIndices,
     orders: defaultRangeColorIndices,
   });
-  const { getHeatmap } = useApi();
+  const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
   const { vendorsContext } = useGlobal();
   const [startingDate, setStartingDate] = useState(new Date());
@@ -133,7 +133,7 @@ const MarketingSetup = ({ active, setActive }) => {
     );
     return arr;
   };
-  const getTypeOffer = () => {
+  const getTypeSchedule = () => {
     if (customDay === 'Continues Offer') {
       return 'once';
     }
@@ -149,7 +149,8 @@ const MarketingSetup = ({ active, setActive }) => {
     if (customDay === 'Customised Days') {
       return customisedDay.toString().toLowerCase().replace(/,/g, '.');
     }
-    return '';
+
+    return 'now';
   };
   const getTargetAudience = () => {
     if (targetAudience === 'New customer') {
@@ -165,7 +166,7 @@ const MarketingSetup = ({ active, setActive }) => {
     category.forEach((obj) => {
       checked.forEach((c) => {
         if (obj.name === c) {
-          arr.push({ id: obj.id, drn_id: obj.id });
+          arr.push({ id: obj.id, drn_id: obj.drn_id });
         }
       });
     });
@@ -183,22 +184,50 @@ const MarketingSetup = ({ active, setActive }) => {
     }
     return 'free-items';
   };
-  // TODO: Here is data which need to request
-  // eslint-disable-next-line no-unused-vars
-  const dataReq = {
-    start_date: format(startingDate, 'dd/MM/yyyy'),
-    start_hour: getHourArr('startTime'),
-    end_date: format(endingDate, 'dd/MM/yyyy'),
-    end_hour: getHourArr('endTime'),
-    type_offer: getTypeOffer(),
-    menu_type: { menu_items: getMenuItem(), theme: getTypeItemMenu() },
-    goal: getTargetAudience(),
-    discount: Number(discountPercentage.replace('%', '')),
-    mov: Number(minOrder.toLowerCase().replace('aed', '')),
-  };
 
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  // TODO: Send request
+  const handleSchedule = async () => {
+    const clonedVendor = { ...branchData };
+    delete clonedVendor.platform;
+
+    const menuType =
+      menu === 'Offer on the whole Menu'
+        ? null
+        : { menu_items: getMenuItem(), theme: getTypeItemMenu() };
+
+    const dataReq = {
+      start_date: format(startingDate, 'yyyy-MM-dd'),
+      start_hour: getHourArr('startTime'),
+      end_date: format(endingDate, 'yyyy-MM-dd'),
+      end_hour: getHourArr('endTime'),
+      type_schedule: getTypeSchedule(),
+      menu_type: menuType,
+      goal: getTargetAudience(),
+      discount: Number(discountPercentage.replace('%', '')),
+      mov: Number(minOrder.toLowerCase().replace('aed', '')),
+      master_email: user.email,
+      access_token: user.accessToken,
+      platform_token:
+        userPlatformData.platforms[platform].access_token ??
+        userPlatformData.platforms[platform].access_token_bis,
+      vendors: [clonedVendor],
+      chain_id: clonedVendor.chain_id,
+    };
+
+    const res = await triggerOffers(platform, dataReq);
+
+    if (res instanceof Error) {
+      triggerAlertWithMessageError(res.message);
+      return;
+    }
+
+    // TODO: get new offers list in the table on close here
+    closeSetup();
+  };
+
   const heatMapFormatter = (type) => {
     const tmpData = defaultHeatmapState;
 
@@ -223,6 +252,8 @@ const MarketingSetup = ({ active, setActive }) => {
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
       ([resRevenue, resOrders]) => {
         if (resRevenue instanceof Error || resOrders instanceof Error) return;
+
+        if (!resRevenue.data || !resOrders.data) return;
 
         const initialisationStateRevenue = resRevenue.data.all
           ? resRevenue.data.all.heatmap
@@ -548,7 +579,7 @@ const MarketingSetup = ({ active, setActive }) => {
     if (i === 0) {
       return (
         <>
-          AED&nbsp;{rangeColorIndices[links][i]} - AED&nbsp;{v}
+          AED&nbsp;{0} - AED&nbsp;{v}
         </>
       );
     }
@@ -661,12 +692,19 @@ const MarketingSetup = ({ active, setActive }) => {
                 disabled={!(selected >= 2)}>
                 Previous Step
               </ButtonKit>
-              <ButtonKit
-                onClick={() => setSelected(selected + 1)}
-                disabled={disabled}
-                variant="contained">
-                Next Step
-              </ButtonKit>
+              {/* TODO: create Schedule Offer Button here on last step for each platform */}
+              {selected === steps.length - 1 ? (
+                <ButtonKit onClick={handleSchedule} disabled={disabled} variant="contained">
+                  Next Step
+                </ButtonKit>
+              ) : (
+                <ButtonKit
+                  onClick={() => setSelected(selected + 1)}
+                  disabled={disabled}
+                  variant="contained">
+                  Next Step
+                </ButtonKit>
+              )}
             </div>
           </div>
           <div className="right-part">
@@ -678,13 +716,13 @@ const MarketingSetup = ({ active, setActive }) => {
                   className={links === 'revenue' ? 'active' : ''}
                   onClick={() => setLinks('revenue')}>
                   <img src={RevenueHeatMapIcon} alt="Revenue Heat Map Icon" />
-                  Revenue Heat Map
+                  Revenue
                 </BoxKit>
                 <BoxKit
                   className={links === 'orders' ? 'active' : ''}
                   onClick={() => setLinks('orders')}>
                   <img src={PlatformIcon} alt="Order Heat Map Icon" />
-                  Orders Heat Map
+                  Orders
                 </BoxKit>
               </TypographyKit>
               <Dates

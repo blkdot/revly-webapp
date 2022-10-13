@@ -82,6 +82,7 @@ const OfferDetailComponent = () => {
     start_date,
     status,
     vendor_name,
+    vendor_id,
   } = offerDetail;
 
   const menu_items = [
@@ -327,11 +328,13 @@ const OfferDetailComponent = () => {
                   <FastFood />
                 </div>
                 <span className="offer-duration width-left-icon width-right-icon">
-                  {menu_items ? 'Offer on an item from the Menu' : 'Offer on the whole Menu'}
+                  {discount_type !== 'Menu discount'
+                    ? 'Offer on an item from the Menu'
+                    : 'Offer on the whole Menu'}
                 </span>
                 <ExpandIcon />
               </div>
-              {menu_items && (
+              {discount_type !== 'Menu discount' && (
                 <div
                   style={{
                     display: 'flex',
@@ -414,13 +417,14 @@ const OfferDetailComponent = () => {
               </div>
             </div>
           </div>
-          {menu_items &&
+          {discount_type !== 'Menu discount' &&
             menu_items.map((menuItem) => (
               <MenuItem
                 key={menuItem.drn_id}
                 offerId={offerDetail.offer_id}
                 discountRate={discount_rate}
                 platform={platform}
+                vendorId={vendor_id}
               />
             ))}
         </div>

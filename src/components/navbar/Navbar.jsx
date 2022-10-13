@@ -104,10 +104,10 @@ const Navbar = () => {
               </AccordionSummaryKit>
             </ButtonKit>
             <AccordionDetailsKit className="navbar-accordion-details">
-              <Link title="Offer" path="/marketing/offer">
+              <Link title="Offers" path="/marketing/offer">
                 <img className="nav-icon" src={offerIcon} alt="Offer" />
               </Link>
-              <Link title="Advertisments" path="/marketing/ads">
+              <Link title="Ads" path="/marketing/ads">
                 <img className="nav-icon" src={adsIcon} alt="Advertisments" />
               </Link>
             </AccordionDetailsKit>
