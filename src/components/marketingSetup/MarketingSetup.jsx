@@ -195,6 +195,10 @@ const MarketingSetup = ({ active, setActive }) => {
   const [steps, setSteps] = useState([0, 1, 2, 3]);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+  useEffect(() => {
+    setBranch('');
+  }, [platform]);
+
   // TODO: Send request
   const handleSchedule = async () => {
     const clonedVendor = { ...branchData };

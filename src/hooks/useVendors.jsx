@@ -29,6 +29,8 @@ function useVendors() {
 
       delete newData?.master_email;
 
+      const restaurantTemp = [];
+
       if (newData) {
         platformList
           .filter((p) => {
@@ -39,9 +41,10 @@ function useVendors() {
           .flatMap((p) =>
             newData[p.name].forEach((v) => {
               setVendors((cur) => [...cur, { ...v, platform: p.name }]);
-              setRestaurants((cur) => [...cur, v.data.vendor_name]);
+              restaurantTemp.push(v.data.vendor_name);
             }),
           );
+        setRestaurants([restaurantTemp[0]]);
         setVendorsContext(newData);
         setVendorsPlatform(Object.keys(newData));
       }
