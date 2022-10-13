@@ -27,4 +27,10 @@ export const getMenu = (body, platform) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const getOfferDetails = (body, platform) =>
+  axios
+    .post(`${apiUrl}/user/item/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+
 export const _ = () => null;

@@ -6,13 +6,27 @@ import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import UAE from '../../assets/images/UAE.png';
+import Kuwait from '../../assets/images/Kuwait.png';
+import Qatar from '../../assets/images/Qatar.png';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
 const CompetitionDropdown = (props) => {
-  const { className, title, rows, renderOptions, select, icon, setRow, multiple, onChange, id } =
-    props;
+  const {
+    className,
+    title,
+    rows,
+    renderOptions,
+    select,
+    icon,
+    setRow,
+    multiple,
+    onChange,
+    id,
+    renderValue,
+  } = props;
 
   const MenuProps = {
     PaperProps: {
@@ -33,12 +47,23 @@ const CompetitionDropdown = (props) => {
     }
   };
 
+  const getFlag = (name) => {
+    if (name === 'UAE') {
+      return UAE;
+    }
+    if (name === 'Kuwait') {
+      return Kuwait;
+    }
+    return Qatar;
+  };
+
   const renderSelectOption = (arr) =>
     arr?.map((name) =>
       renderOptions ? (
         renderOptions(name)
       ) : (
         <MenuItemKit key={name} value={name}>
+          {title === 'Country' ? <img className="flag-img" src={getFlag(name)} alt={name} /> : ''}
           <ListItemTextKit primary={name} />
         </MenuItemKit>
       ),
@@ -62,7 +87,16 @@ const CompetitionDropdown = (props) => {
           onChange={onChange || handleChange}
           input={<OutlindeInputKit label={title} />}
           renderValue={(selected) =>
-            Array.isArray(selected) ? selected.map((v) => v.vendor_name).join(',') : selected
+            renderValue ? (
+              renderValue(selected)
+            ) : (
+              <div className="country-wrapper">
+                {title === 'Country' && (
+                  <img className="flag-img" src={getFlag(selected)} alt={selected} />
+                )}
+                {selected}
+              </div>
+            )
           }
           MenuProps={MenuProps}>
           {renderSelectOption(rows)}

@@ -1,5 +1,7 @@
-.competition-dropdown.competition-dropdown {
-  background: transparent;
+.competition-dropdown {
+  &[data-shrink=true] {
+    background: rgb(252, 252, 252);
+  }
 
   &.Mui-focused.Mui-focused {
     img {
@@ -57,4 +59,15 @@
       }
     }
   }
+}
+.flag-img{
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  margin-right: 5px;
+}
+.country-wrapper{
+  display: flex;
+  align-items: center;
+  text-transform: capitalize;
 }

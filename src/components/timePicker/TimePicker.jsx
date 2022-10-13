@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import TimePickerKit from '../../kits/timePickerKit/TimePickerKit';
 
-const BasicTimePicker = ({ value, setValue, minTime, type, times, index }) => {
+const BasicTimePicker = ({ value, setValue, minTime, type, times, index, defaultValue }) => {
   const setTimes = (newValue) => {
     if (type) {
       times.splice(index, 1, { ...times[index], [type]: newValue });
@@ -14,6 +14,7 @@ const BasicTimePicker = ({ value, setValue, minTime, type, times, index }) => {
   return (
     <TimePickerKit
       views={['hours']}
+      defaultValue={defaultValue}
       value={value}
       minTime={minTime}
       onChange={(newValue) => setTimes(newValue)}

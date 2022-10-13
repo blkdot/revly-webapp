@@ -159,6 +159,7 @@ const CompetitionAlerts = () => {
               multiple
               icon={competitorIcon}
               onChange={handleCompetitorChange}
+              renderValue={(v) => v.map((k) => k.vendor_name).join(',')}
               renderOptions={(v) => (
                 <MenuItemKit key={v.vendor_name} value={v}>
                   <CheckboxKit checked={competitor.indexOf(v) > -1} />

@@ -5,7 +5,7 @@ import './Menu.scss';
 import iccategory from '../../../assets/images/ic_menu-category.png';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
-import icdeliveroo from '../../../assets/images/deliveroo.png';
+import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import ictalabat from '../../../assets/images/talabat-favicon.png';
 
 import MenuDropdown from './menuDropdown/MenuDropdown';
@@ -125,11 +125,12 @@ const Menu = () => {
             value={branch}
             renderOption={(v) => (
               <MenuItemKit key={v.vendor_id} value={v}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <img
                     src={v.platform === 'deliveroo' ? icdeliveroo : ictalabat}
-                    width={50}
-                    height={30}
+                    width={24}
+                    height={24}
+                    style={{ objectFit: 'contain' }}
                     alt="icon"
                   />
                   <ListItemTextKit primary={v.data.vendor_name} />
@@ -147,11 +148,18 @@ const Menu = () => {
             value={platform}
             renderOption={(v) => (
               <MenuItemKit key={v.name} value={v.name}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    textTransform: 'capitalize',
+                  }}>
                   <img
-                    src={v.name === 'deliveroo' ? v.src : ictalabat}
-                    width={40}
-                    height={30}
+                    src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                    width={24}
+                    height={24}
+                    style={{ objectFit: 'contain' }}
                     alt="icon"
                   />
                   <ListItemTextKit primary={v.name} />
