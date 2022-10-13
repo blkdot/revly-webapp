@@ -192,7 +192,7 @@ const MarketingSetup = ({ active, setActive }) => {
     return 'free-items';
   };
 
-  const [steps, setSteps] = useState([0, 1, 2, 3]);
+  const [steps, setSteps] = useState([0, 1, 2, 3, 4]);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   useEffect(() => {
@@ -739,7 +739,7 @@ const MarketingSetup = ({ active, setActive }) => {
             </div>
             <div
               className={`radio recap-box-wrapper between under ${
-                menu === 'Offer on An Item from the Menu' ? 'border-none' : ''
+                menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
               }`}>
               {menu === 'Offer on An Item from the Menu' ? (
                 <div className="item-menu-recap">
