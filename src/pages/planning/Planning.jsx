@@ -27,7 +27,7 @@ const Planning = () => {
       return <PlanningOffersTableEmpty />;
     }
 
-    return <PlanningOffersTable rows={offers} />;
+    return <PlanningOffersTable type="offer" rows={offers} />;
   };
 
   const getAdsTable = () => {
@@ -35,7 +35,7 @@ const Planning = () => {
       return <PlanningOffersTableEmpty />;
     }
 
-    return <PlanningOffersTable rows={ads} />;
+    return <PlanningOffersTable type="ad" rows={ads} />;
   };
 
   const renderTable = () => {

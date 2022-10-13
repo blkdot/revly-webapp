@@ -1,18 +1,22 @@
-.marketing-table-top {
-  background: #fff !important;
-  border-bottom: 1px solid #919EAB3D;
-  &.selected {
+.marketing-table-top:hover {
+  background: rgba(144, 107, 255, 0.08) !important;
+}
 
+.marketing-table-top {
+  cursor: pointer;
+  background: #fff !important;
+  border-bottom: 1px solid #919eab3d;
+  &.selected {
     th,
     td {
-      background: #FF484214 !important;
+      background: #ff484214 !important;
     }
   }
 
   th,
   td {
     white-space: nowrap;
-    >span {
+    > span {
       white-space: nowrap;
       text-align: center;
     }
@@ -25,7 +29,7 @@
 }
 
 .marketing-thead {
-  >tr {
+  > tr {
     border-bottom: none !important;
   }
 }
