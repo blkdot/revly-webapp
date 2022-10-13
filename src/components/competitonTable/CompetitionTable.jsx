@@ -13,8 +13,6 @@ import './CompetitionTable.scss';
 import ButtonKit from '../../kits/button/ButtonKit';
 import deliveroo from '../../assets/images/deliveroo.png';
 import talabat from '../../assets/images/talabat.png';
-import RatingKit from '../../kits/rating/RatingKit';
-import StackKit from '../../kits/stack/StackKit';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
 
 function descendingComparator(a, b, orderBy) {
@@ -61,34 +59,27 @@ const headCells = [
     label: 'Platform',
   },
   {
-    id: 'carrous',
-    numeric: true,
-    disablePadding: false,
-    label: 'Carrous',
-  },
-  {
     id: 'offers',
-    numeric: true,
     disablePadding: false,
-    label: 'Ranking in Offers',
+    label: 'Ranking in offers',
   },
   {
     id: 'cuisine',
     numeric: true,
     disablePadding: false,
-    label: 'Ranking Cuisine',
+    label: 'Ranking in cuisine',
   },
   {
     id: 'ranking',
     numeric: true,
     disablePadding: false,
-    label: 'Total Ranking',
+    label: 'Ranking in offers and cuisine',
   },
   {
     id: 'review',
     numeric: true,
     disablePadding: false,
-    label: 'Review',
+    label: 'Overall ranking',
   },
 ];
 const headCellsAlerts = [
@@ -168,11 +159,6 @@ const EnhancedTableHead = (props) => {
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}>
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <BoxKit component="span" sx={{ display: 'none' }}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </BoxKit>
-              ) : null}
             </TableSortLabelKit>
           </TableCellKit>
         ))}
@@ -228,18 +214,8 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
     return numArr;
   };
   const ordinalSuffixOf = (i) => {
-    const j = i % 10;
-    const k = i % 100;
-    if (j === 1 && k !== 11) {
-      return `${i}st`;
-    }
-    if (j === 2 && k !== 12) {
-      return `${i}nd`;
-    }
-    if (j === 3 && k !== 13) {
-      return `${i}rd`;
-    }
-    return `${i}th`;
+    const r = Math.round(i);
+    return r >= 100 ? '100' : `${r}`;
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;
   return (
@@ -262,9 +238,9 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                   <td />
                   <td />
                   <td />
-                  <td />
+                  {type !== 'ranking' && <td />}
                   <td>
-                    <SpinnerKit />
+                    <SpinnerKit sx={{ margin: '1em 0' }} />
                   </td>
                   <td />
                   <td />
@@ -273,16 +249,17 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                 </tr>
               ) : (
                 stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   if (type === 'ranking') {
                     return (
                       <TableRowKit
-                        onClick={(event) => handleClick(event, row.name)}
+                        onClick={(event) => handleClick(event, row.id)}
                         role="checkbox"
+                        sx={{ height: '72px' }}
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={row.id}
                         selected={isItemSelected}>
                         <TableCellKit component="th" id={labelId} scope="row">
                           {row.name}
@@ -294,21 +271,21 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                             alt={row.platform}
                           />
                         </TableCellKit>
-                        <TableCellKit>{row.carrous}</TableCellKit>
-                        <TableCellKit>{ordinalSuffixOf(row.offers)}</TableCellKit>
-                        <TableCellKit>{ordinalSuffixOf(row.cuisine)}</TableCellKit>
-                        <TableCellKit>{ordinalSuffixOf(row.ranking)}</TableCellKit>
                         <TableCellKit>
-                          <StackKit spacing={1}>
-                            <RatingKit
-                              name="size-large"
-                              value={row.review}
-                              precision={0.1}
-                              size="large"
-                              readOnly
-                            />
-                          </StackKit>
-                          {row.review}
+                          {ordinalSuffixOf(row.r_offers) >= 100 && '> '}
+                          {ordinalSuffixOf(row.r_offers)}
+                        </TableCellKit>
+                        <TableCellKit>
+                          {ordinalSuffixOf(row.r_cuis) >= 100 && '> '}
+                          {ordinalSuffixOf(row.r_cuis)}
+                        </TableCellKit>
+                        <TableCellKit>
+                          {ordinalSuffixOf(row.r_all) >= 100 && '> '}
+                          {ordinalSuffixOf(row.r_all)}
+                        </TableCellKit>
+                        <TableCellKit>
+                          {ordinalSuffixOf(row.ov) >= 100 && '> '}
+                          {ordinalSuffixOf(row.ov)}
                         </TableCellKit>
                       </TableRowKit>
                     );

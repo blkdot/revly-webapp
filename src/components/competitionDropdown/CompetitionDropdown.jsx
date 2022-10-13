@@ -9,6 +9,8 @@ import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import UAE from '../../assets/images/UAE.png';
 import Kuwait from '../../assets/images/Kuwait.png';
 import Qatar from '../../assets/images/Qatar.png';
+import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
+import ictalabat from '../../assets/images/talabat-favicon.png';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,6 +28,7 @@ const CompetitionDropdown = (props) => {
     onChange,
     id,
     renderValue,
+    type,
   } = props;
 
   const MenuProps = {
@@ -93,6 +96,15 @@ const CompetitionDropdown = (props) => {
               <div className="country-wrapper">
                 {title === 'Country' && (
                   <img className="flag-img" src={getFlag(selected)} alt={selected} />
+                )}
+                {type === 'platform' && (
+                  <img
+                    src={selected === 'deliveroo' ? icdeliveroo : ictalabat}
+                    width={24}
+                    height={24}
+                    style={{ objectFit: 'contain' }}
+                    alt="icon"
+                  />
                 )}
                 {selected}
               </div>

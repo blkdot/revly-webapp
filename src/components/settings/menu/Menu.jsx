@@ -19,17 +19,18 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import useVendors from '../../../hooks/useVendors';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
-
-import { platformList } from '../../../data/platformList';
+import { usePlatform } from '../../../hooks/usePlatform';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [category, setCategory] = useState([]);
-  const [platform, setPlatform] = useState(platformList[0].name);
+  const [platformList, setPlatformList] = useState([]);
+  const [platform, setPlatform] = useState('');
   const [filteredCategoryData, setFilteredCategoryData] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
   const { vendors: vendorsList } = useVendors();
@@ -64,14 +65,32 @@ const Menu = () => {
   };
 
   useEffect(() => {
-    if (!branch && vendorsList.length) {
-      setBranch(vendorsList[0]);
-    }
+    if (userPlatformData) {
+      const pl = userPlatformData.platforms;
+      const list = Object.keys(pl)
+        .map((v) => ({
+          name: v,
+          registered: pl[v].active,
+        }))
+        .filter((k) => k.registered === true);
 
+      setPlatform(list[0].name);
+      setPlatformList(list);
+    }
+  }, [userPlatformData]);
+
+  useEffect(() => {
+    if (vendorsList.length) {
+      const ve = vendorsList.filter((v) => v.platform === platform);
+      setBranch(ve[0] || '');
+    }
+  }, [vendorsList, platform]);
+
+  useEffect(() => {
     if (branch) {
       getMenuData(branch, platform);
     }
-  }, [vendorsList, branch, platform]);
+  }, [branch, platform]);
 
   const handleSelectChange = (e, set) => {
     set(e.target.value);
@@ -120,7 +139,7 @@ const Menu = () => {
             startIcon={
               <img src={icbranch} alt="category" style={{ position: 'relative', bottom: '2px' }} />
             }
-            items={vendorsList}
+            items={vendorsList.filter((v) => v.platform === platform)}
             label="Select a branch"
             value={branch}
             renderOption={(v) => (

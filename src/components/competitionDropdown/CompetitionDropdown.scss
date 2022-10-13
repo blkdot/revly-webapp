@@ -19,9 +19,9 @@
 #platform_dropdown_menu {
   border-radius: 12px;
   overflow: visible;
-  top: 300px !important;
   box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
   border: 1px solid rgba(145, 158, 171, 0.32);
+  margin-top: 20px;
 
   >ul {
     border-radius: 12px;
@@ -70,4 +70,5 @@
   display: flex;
   align-items: center;
   text-transform: capitalize;
+  gap: 10px
 }
