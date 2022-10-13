@@ -160,7 +160,7 @@
         position: absolute;
         bottom: -5px;
         left: 0;
-        width: 170px;
+        width: 110px;
         height: 2px;
         background-color: #906BFF;
         transition: .4s;
@@ -168,8 +168,8 @@
 
       &.active {
         &::before {
-          left: 170px;
-          width: 190px;
+          left: 120px;
+          width: 110px;
         }
       }
 

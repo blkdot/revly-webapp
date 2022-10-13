@@ -39,7 +39,7 @@ const Marketing = ({ metricsDateFrom, metricsCompareDateValue }) => {
       return 'Avg.basket';
     }
     if (table === 'accrued_discounts') {
-      return 'marketing express';
+      return 'discount offered';
     }
     return table;
   };

@@ -678,13 +678,13 @@ const MarketingSetup = ({ active, setActive }) => {
                   className={links === 'revenue' ? 'active' : ''}
                   onClick={() => setLinks('revenue')}>
                   <img src={RevenueHeatMapIcon} alt="Revenue Heat Map Icon" />
-                  Revenue Heat Map
+                  Revenue
                 </BoxKit>
                 <BoxKit
                   className={links === 'orders' ? 'active' : ''}
                   onClick={() => setLinks('orders')}>
                   <img src={PlatformIcon} alt="Order Heat Map Icon" />
-                  Orders Heat Map
+                  Orders
                 </BoxKit>
               </TypographyKit>
               <Dates
