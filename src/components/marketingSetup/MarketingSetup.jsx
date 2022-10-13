@@ -149,7 +149,7 @@ const MarketingSetup = ({ active, setActive }) => {
     if (customDay === 'Customised Days') {
       return customisedDay.toString().toLowerCase().replace(/,/g, '.');
     }
-    return '';
+    return 'once';
   };
   const getTargetAudience = () => {
     if (targetAudience === 'New customer') {
@@ -165,7 +165,7 @@ const MarketingSetup = ({ active, setActive }) => {
     category.forEach((obj) => {
       checked.forEach((c) => {
         if (obj.name === c) {
-          arr.push({ id: obj.id, drn_id: obj.id });
+          arr.push({ id: obj.id, drn_id: obj.drn_id });
         }
       });
     });
@@ -193,9 +193,9 @@ const MarketingSetup = ({ active, setActive }) => {
     delete clonedVendor.platform;
 
     const dataReq = {
-      start_date: format(startingDate, 'dd/MM/yyyy'),
+      start_date: format(startingDate, 'yyyy-MM-dd'),
       start_hour: getHourArr('startTime'),
-      end_date: format(endingDate, 'dd/MM/yyyy'),
+      end_date: format(endingDate, 'yyyy-MM-dd'),
       end_hour: getHourArr('endTime'),
       type_offer: getTypeOffer(),
       menu_type: { menu_items: getMenuItem(), theme: getTypeItemMenu() },

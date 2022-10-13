@@ -7,9 +7,11 @@ import {
   settingsLoad,
 } from '../api/settingsApi';
 
-import { getMetrics, getVendors, getHeatmap, getMenu } from '../api/userApi';
+import { getMetrics, getVendors, getHeatmap, getMenu, getOfferDetails } from '../api/userApi';
 
 import { getOffers, getAds } from '../api/planningApi';
+
+import { getCompetitors, getAlerts } from '../api/competitionApi';
 
 import { triggerOffers } from '../api/marketingApi';
 
@@ -23,9 +25,12 @@ const useApi = () => ({
   settingsSave,
   getMenu,
   getOffers,
+  getCompetitors,
+  getAlerts,
   getVendors,
   getAds,
   getHeatmap,
+  getOfferDetails,
   triggerOffers,
 });
 
