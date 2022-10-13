@@ -119,8 +119,7 @@ const CompetitionAlerts = () => {
         Competition - Alerts
       </TypographyKit>
       <TypographyKit variant="subtitle">
-        Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-        vivamus risus.
+        Keep an eye on your competitors marketing campaigns
       </TypographyKit>
       <PaperKit className="competition-paper">
         <div className="competition-top-input alerts-top-inputs">
@@ -174,8 +173,8 @@ const CompetitionAlerts = () => {
           <Competitor open={Open} opened={opened} />
         </div>
         <TypographyKit variant="subtitle">
-          You can select up to 5 competitors to be monitored per point of sale. Competitors can be
-          changed every 3 months
+          You can select up to 5 competitors to be monitored. Competitors can be changed every 3
+          months.
         </TypographyKit>
         <CompetitionTable
           loading={loading}
