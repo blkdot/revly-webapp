@@ -162,7 +162,7 @@ const OfferDetailComponent = () => {
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
               <div>
-                {!['Active', 'Scheduled'].includes(status) && (
+                {['Active', 'Scheduled'].includes(status) && (
                   <button onClick={openCancelModal} className="cancel-btn" type="button">
                     <Warning />
                     <span style={{ color: '#FF4842' }}>Cancel Offer</span>
