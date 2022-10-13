@@ -48,7 +48,7 @@ const Planning = () => {
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates dateFromBtn={dateRange} setdateFromBtn={setDateRange} />
+        <Dates offer dateFromBtn={dateRange} setdateFromBtn={setDateRange} />
       </div>
       <div className={`planning_top-nav ${!active ? 'active' : ''}`}>
         <TypographyKit className={active ? 'active' : ''} onClick={() => setActive(1)} variant="h4">
