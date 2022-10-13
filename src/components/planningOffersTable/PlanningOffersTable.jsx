@@ -30,14 +30,13 @@ const PlanningOffersTable = ({ rows }) => {
 
   const getHeadCells = () => {
     if (!rows[0]) return headCells;
-
     return Object.keys(rows[0])
       .map((k) => ({
         key: k,
         id: k,
         numeric: Number.isNaN(rows[0][k]),
         disablePadding: true,
-        label: sentenceCase(noCase(k)),
+        label: k === 'type_schedule' ? 'Schedule type' : sentenceCase(noCase(k)),
       }))
       .filter((el) => !ignoredFields.includes(el.id));
   };

@@ -462,6 +462,9 @@
 .back-icon {
   display: flex;
   align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 .cancel-btn {
   box-sizing: border-box;

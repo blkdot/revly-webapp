@@ -2,26 +2,43 @@ import React, { useEffect, useState } from 'react';
 import { Checkbox } from '@mui/material';
 import useApi from '../../../hooks/useApi';
 import burger from '../../../assets/images/burger.png';
-import config from '../../../setup/config';
-import { useUserAuth } from '../../../contexts/AuthContext';
-import useDate from '../../../hooks/useDate';
+// import config from '../../../setup/config';
+// import { useUserAuth } from '../../../contexts/AuthContext';
+// import useDate from '../../../hooks/useDate';
 
-const MenuItem = ({ offerId, discountRate, platform }) => {
+const MenuItem = ({ offerId, discountRate /* , platform */ }) => {
   const [data, setData] = useState(null);
   const { getOfferDetails } = useApi();
-  const { environment } = config;
-  const { user } = useUserAuth();
-  const { vendorsContext } = useDate();
+  // const { environment } = config;
+  // const { user } = useUserAuth();
+  // const { vendorsContext } = useDate();
 
   const getOfferDetailData = () => {
     getOfferDetails(
       {
+        master_email: 'chiekh.alloul@gmail.com',
+        access_token: '',
+        vendor: {
+          vendor_id: '126601',
+          chain_id: '82369',
+          data: {
+            chain_name: "Fawzi Alghammary DMCC (Adam's Kitchen)",
+            vendor_name: "Adam's Kitchen",
+          },
+          meta: {
+            prefix_vendor_id: '',
+          },
+        },
+        id: 391328231,
+      },
+      'deliveroo',
+      /* {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
         access_token: '',
         vendors: vendorsContext,
         id: offerId,
       },
-      platform,
+      platform, */
     )
       .then((res) => setData(res.data))
       .catch((err) => console.log({ err }));
