@@ -46,10 +46,10 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
       return 'orders';
     }
     if (title === 'average_basket') {
-      return 'Avg.basket';
+      return 'Avg.  basket';
     }
     if (title === 'accrued_discounts') {
-      return 'marketing express';
+      return 'discount offered';
     }
     return title;
   };

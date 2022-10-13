@@ -142,6 +142,7 @@ const MarketingOffer = () => {
         platform: [],
         discountType: [],
         procent: [],
+        status: [],
       });
 
       setAvgBasketRange({ min: '', max: '' });
@@ -212,7 +213,8 @@ const MarketingOffer = () => {
         <div className="marketing-top-text">
           <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
           <TypographyKit color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
           </TypographyKit>
         </div>
         <div className="markting-top-btns">
@@ -235,13 +237,13 @@ const MarketingOffer = () => {
               <HashLink to="#dateMn">
                 <BoxKit className={scrollPosition < 578 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
-                  Offers Managment
+                  Offers Management
                 </BoxKit>
               </HashLink>
               <HashLink to="#revenuePr">
                 <BoxKit className={scrollPosition > 578 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
-                  Offers Performence
+                  Offers Performance
                 </BoxKit>
               </HashLink>
             </TypographyKit>
@@ -282,7 +284,7 @@ const MarketingOffer = () => {
               variant="outlined"
               onClick={() => setOpenedFilter(true)}>
               <Vector />
-              More Filter
+              More Filters
             </ButtonKit>
           </div>
           <ButtonKit className="marketing-delete" variant="outlined">
@@ -333,10 +335,6 @@ const MarketingOffer = () => {
               alt="close icon"
             />
           </div>
-          <TypographyKit variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-            vivamus risus.
-          </TypographyKit>
           <div
             style={{
               display: 'flex',
@@ -531,7 +529,7 @@ const MarketingOffer = () => {
               variant="contained"
               style={{ marginRight: '1rem' }}
               onClick={() => CloseFilterPopup(false)}>
-              Confirme and Filter
+              Confirm and Filter
             </ButtonKit>
             <ButtonKit variant="outlined" onClick={() => CloseFilterPopup(true)}>
               Cancel
