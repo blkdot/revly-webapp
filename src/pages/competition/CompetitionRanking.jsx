@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import PaperKit from '../../kits/paper/PaperKit';
@@ -9,18 +9,35 @@ import CompetitionDropdown from '../../components/competitionDropdown/Competitio
 import CompetitionTable from '../../components/competitonTable/CompetitionTable';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
-import { competitionRankingData } from '../../data/fakeDataCompetition';
 import useDate from '../../hooks/useDate';
+import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import ictalabat from '../../assets/images/talabat-favicon.png';
+import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
+import useApi from '../../hooks/useApi';
+import { useUserAuth } from '../../contexts/AuthContext';
+import { useAlert } from '../../hooks/useAlert';
+import { useGlobal } from '../../hooks/useGlobal';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const CompetitionRanking = () => {
   const { vendors, vendorsPlatform } = useVendors();
+  const { vendorsContext, setRestaurants } = useGlobal();
   const [opened, setOpened] = useState(false);
-  const [platform, setPlatform] = useState('');
+  const [platformList, setPlatformList] = useState([]);
+  const [platform, setPlatform] = useState('deliveroo');
+  const [loading, setLoading] = useState(true);
+  const [competitionRankingData, setCompetitionRankingData] = useState([]);
+  const { triggerAlertWithMessageError } = useAlert();
   const { dateFromContext: dateFrom } = useDate();
   const [dateFromBtn, setDateFromBtn] = useState({
     startDate: dateFrom.startDate,
     endDate: dateFrom.endDate,
   });
+  const { getRanking } = useApi();
+  const { user } = useUserAuth();
+  const { userPlatformData } = usePlatform();
+
   const Open = () => {
     setOpened(!opened);
     const body = document.querySelector('body');
@@ -30,10 +47,74 @@ const CompetitionRanking = () => {
       body.style.overflowY = 'hidden';
     }
   };
+
+  useEffect(() => {
+    if (userPlatformData) {
+      const pl = userPlatformData.platforms;
+      const list = Object.keys(pl)
+        .map((v) => ({
+          name: v,
+          registered: pl[v].active,
+        }))
+        .filter((k) => k.registered === true);
+
+      setPlatform(list[0].name);
+      setPlatformList(list);
+    }
+  }, [userPlatformData]);
+
+  const getData = async (plat, vend) => {
+    setLoading(true);
+    try {
+      const body = {
+        master_email: user.email,
+        access_token: user.accessToken,
+        vendors: vend,
+      };
+
+      const ranking = await getRanking(body, plat);
+
+      if (!ranking) {
+        throw new Error('');
+      }
+
+      const filt = ranking.data.data.map((v) => ({
+        name: v.name,
+        r_offers: v.basket_discount_only,
+        r_cuis: v.italian_only,
+        r_all: v.italian_basket_discount,
+        ov: v.no_filter,
+        platform,
+        id: v.id,
+      }));
+
+      setCompetitionRankingData(filt);
+      setLoading(false);
+    } catch (err) {
+      setCompetitionRankingData([]);
+      setLoading(false);
+      triggerAlertWithMessageError('Error while retrieving data');
+    }
+  };
+
+  useEffect(() => {
+    if (vendors.length) {
+      getData(platform, vendorsContext[platform]);
+    }
+  }, [platform, vendorsContext]);
+
+  useEffect(() => {
+    const arr = vendors.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
+    setRestaurants(arr);
+  }, [platform]);
+
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+        <RestaurantDropdown
+          vendors={vendors.filter((v) => v.platform === platform)}
+          vendorsPlatform={vendorsPlatform}
+        />
         <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
@@ -45,9 +126,31 @@ const CompetitionRanking = () => {
       <PaperKit className="competition-paper">
         <div className="competition-top-input">
           <CompetitionDropdown
-            rows={['talabat', 'deliveroo']}
+            rows={platformList}
+            renderOptions={(v) => (
+              <MenuItemKit key={v.name} value={v.name}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    textTransform: 'capitalize',
+                  }}>
+                  <img
+                    src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                    width={24}
+                    height={24}
+                    style={{ objectFit: 'contain' }}
+                    alt="icon"
+                  />
+                  <ListItemTextKit primary={v.name} />
+                </div>
+              </MenuItemKit>
+            )}
             icon={PlatformIcon}
             title="Select a Platform"
+            id="platform_dropdown_menu"
+            type="platform"
             className="top-competition"
             setRow={setPlatform}
             select={platform}
@@ -58,7 +161,12 @@ const CompetitionRanking = () => {
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
-        <CompetitionTable type="ranking" open={Open} rows={competitionRankingData} />
+        <CompetitionTable
+          loading={loading}
+          type="ranking"
+          open={Open}
+          rows={competitionRankingData}
+        />
       </PaperKit>
     </div>
   );

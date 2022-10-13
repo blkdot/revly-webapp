@@ -29,14 +29,12 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
   const endGetDate = endDate.getDate();
   const procent = () => {
     if (metricsDateFrom[0] && metricsCompareDateValue[0]) {
-      if (Number(metricsCompareDateValue[0][1][title]) === 0) {
+      if (Number(metricsCompareDateValue.all[title]) === 0) {
         return 0;
       }
 
       return Number(
-        (metricsDateFrom[0][1][title] / (metricsCompareDateValue[0][1][title] / 100) - 100).toFixed(
-          2,
-        ),
+        (metricsDateFrom.all[title] / (metricsCompareDateValue.all[title] / 100) - 100).toFixed(2),
       );
     }
     return '-';
@@ -109,7 +107,7 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
               {getTitle()}
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
-              {metricsDateFrom[0][1][title] !== null ? metricsDateFrom[0][1][title] : '-'}
+              {metricsDateFrom.all[title] !== null ? metricsDateFrom.all[title] : '-'}
             </TypographyKit>
           </div>
           <TypographyKit className="card-typography card-icon">{getIcon()}</TypographyKit>

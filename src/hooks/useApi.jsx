@@ -11,7 +11,7 @@ import { getMetrics, getVendors, getHeatmap, getMenu, getOfferDetails } from '..
 
 import { getOffers, getAds } from '../api/planningApi';
 
-import { getCompetitors, getAlerts } from '../api/competitionApi';
+import { getCompetitors, getAlerts, getRanking } from '../api/competitionApi';
 
 import { triggerOffers, cancelOffer } from '../api/marketingApi';
 
@@ -22,6 +22,7 @@ const useApi = () => ({
   settingsOnboardPlatformStatus,
   settingsLoad,
   getMetrics,
+  getRanking,
   settingsSave,
   getMenu,
   getOffers,

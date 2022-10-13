@@ -17,3 +17,9 @@ export const getCompetitors = (body, platform) =>
     .post(`${apiUrl}/competition/competitors/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
+
+export const getRanking = (body, platform) =>
+  axios
+    .post(`${apiUrl}/competition/ranking/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);

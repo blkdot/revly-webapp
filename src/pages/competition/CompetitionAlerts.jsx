@@ -15,14 +15,17 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
-import { platformList } from '../../data/platformList';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import { useGlobal } from '../../hooks/useGlobal';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const CompetitionAlerts = () => {
   const { vendors, vendorsPlatform } = useVendors();
+  const { vendorsContext, setRestaurants } = useGlobal();
+  const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
   const [platform, setPlatform] = useState('deliveroo');
@@ -38,6 +41,7 @@ const CompetitionAlerts = () => {
     startDate: dateFrom.startDate,
     endDate: dateFrom.endDate,
   });
+  const { userPlatformData } = usePlatform();
 
   const Open = () => {
     setOpened(!opened);
@@ -48,6 +52,21 @@ const CompetitionAlerts = () => {
       body.style.overflowY = 'hidden';
     }
   };
+
+  useEffect(() => {
+    if (userPlatformData) {
+      const pl = userPlatformData.platforms;
+      const list = Object.keys(pl)
+        .map((v) => ({
+          name: v,
+          registered: pl[v].active,
+        }))
+        .filter((k) => k.registered === true);
+
+      setPlatform(list[0].name);
+      setPlatformList(list);
+    }
+  }, [userPlatformData]);
 
   const getData = async (plat, vend) => {
     setLoading(true);
@@ -88,13 +107,18 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     if (vendors.length) {
-      const red = vendors.reduce(
-        (a, b) => ({ ...a, [b.platform]: vendors.filter((v) => v.platform === b.platform) }),
-        {},
-      );
+      const arr = Object.keys(vendorsContext).filter((v) => v === platform);
+
+      const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsContext[arr] }), {});
+
       getData(platform, red);
     }
-  }, [platform, vendors]);
+  }, [platform, vendorsContext]);
+
+  useEffect(() => {
+    const arr = vendors.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
+    setRestaurants(arr);
+  }, [platform]);
 
   const handleCompetitorChange = (e) => {
     const { value } = e.target;
@@ -112,7 +136,10 @@ const CompetitionAlerts = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+        <RestaurantDropdown
+          vendors={vendors.filter((v) => v.platform === platform)}
+          vendorsPlatform={vendorsPlatform}
+        />
         <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
@@ -149,6 +176,7 @@ const CompetitionAlerts = () => {
               icon={PlatformIcon}
               title="Select a Platform"
               id="platform_dropdown_menu"
+              type="platform"
               className="top-competition"
               setRow={setPlatform}
               select={platform}
