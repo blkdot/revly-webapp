@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import MenuItem from './MenuItem';
 import Dates from '../../../components/dates/Dates';
@@ -28,6 +28,7 @@ const OfferDetailComponent = () => {
   const {
     state: { offerDetail },
   } = useLocation();
+  const navigate = useNavigate();
   // const { user } = useUserAuth();
   const { vendors, vendorsPlatform } = useVendors();
   const { dateFromContext: dateFrom } = useDate();
@@ -125,10 +126,10 @@ const OfferDetailComponent = () => {
       <PaperKit className="marketing-paper offer-paper">
         <div>
           <div className="offer-details-actions">
-            <div className="back-icon">
+            <button onClick={() => navigate('/planning')} type="button" className="back-icon">
               <Arrow />
               <span style={{ paddingLeft: '5px' }}>Back</span>
-            </div>
+            </button>
             <div>
               {['Active', 'Scheduled'].includes(status) && (
                 <button className="cancel-btn" type="button">
