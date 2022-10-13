@@ -14,7 +14,10 @@ export const getOffers = (body) =>
 
 export const triggerOffers = (platform, body) =>
   axios
-    .post(`${apiUrl}/marketing/offer/${platform}`, body)
+    .post(`${apiUrl}/marketing/offer/${platform}`, {
+      ...body,
+      master_email: 'chiekh.alloul@gmail.com',
+    })
     .then((res) => res)
     .catch(handleResponse);
 
