@@ -86,7 +86,9 @@ const EnhancedTableHead = () => (
 const PlanningOffersTableEmpty = () => (
   <BoxKit className="competition-box planning-box" sx={{ width: '100%' }}>
     <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
-      <TableContainerKit className="planning-table-container competition-table-conatiner">
+      <TableContainerKit
+        id="adsContainer"
+        className="planning-table-container competition-table-conatiner">
         <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
           <EnhancedTableHead />
           <TableBodyKit>
