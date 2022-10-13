@@ -142,6 +142,7 @@ const MarketingOffer = () => {
         platform: [],
         discountType: [],
         procent: [],
+        status: [],
       });
 
       setAvgBasketRange({ min: '', max: '' });
