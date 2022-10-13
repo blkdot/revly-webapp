@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import { pascalCase } from 'change-case';
 
+import { startOfWeek } from 'date-fns';
 import CloseIcon from '../../assets/images/ic_close.png';
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
@@ -14,11 +15,9 @@ import SettingFuture from '../../assets/images/ic_setting-future.png';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import BoxKit from '../../kits/box/BoxKit';
 import useVendors from '../../hooks/useVendors';
-import useDate from '../../hooks/useDate';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
-import TrashIcon from '../../assets/images/ic_trash.png';
 import MarketingTable from '../../components/marketingTable/MarketingTable';
 import { OffersTableData } from '../../data/fakeDataMarketing';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
@@ -34,10 +33,9 @@ import TextfieldKit from '../../kits/textfield/TextfieldKit';
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { vendors, vendorsPlatform } = useVendors();
-  const { dateFromContext: dateFrom } = useDate();
   const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
+    endDate: new Date(),
   });
   const [scrollPosition, setScrollPosition] = useState(0);
   const [selected, setSelected] = useState([]);
@@ -206,7 +204,7 @@ const MarketingOffer = () => {
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
+        <Dates offer dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
       </div>
       <div className="marketing-top">
         <div className="marketing-top-text">
@@ -285,10 +283,6 @@ const MarketingOffer = () => {
               More Filter
             </ButtonKit>
           </div>
-          <ButtonKit className="marketing-delete" variant="outlined">
-            <img src={TrashIcon} alt="Trash Icon" />
-            Delete Offer
-          </ButtonKit>
         </TypographyKit>
         <MarketingTable selected={selected} rows={offersDataFiltered} />
       </PaperKit>

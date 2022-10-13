@@ -15,6 +15,7 @@ import {
   subMonths,
   format,
   getYear,
+  addMonths,
 } from 'date-fns';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -32,7 +33,8 @@ import LocalizationProviderKit from '../../kits/localizationProvider/Localizatio
 import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
 import switchIcon from '../../assets/images/Switch.png';
 
-const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap }) => {
+const Dates = (props) => {
+  const { isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap, offer } = props;
   const {
     setDateFromContext,
     setCompareDateValueContext,
@@ -47,18 +49,22 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
   const [opened, setOpened] = useState(false);
   const [openedCompareDateValue, setOpenedCompareDateValue] = useState(false);
   const [selected, setSelected] = useState(false);
+  const [typeDate, setTypeDate] = useState(typeDateContext);
+  const [type, setType] = useState('');
   const getExpanded = () => {
-    if (typeDateContext === 'day') {
-      return 'panel1';
+    if (!isMarketingHeatMap) {
+      if (typeDate === 'day') {
+        return 'panel1';
+      }
+      if (typeDate === 'week') {
+        return 'panel2';
+      }
+      return 'panel3';
     }
-    if (typeDateContext === 'week') {
-      return 'panel2';
-    }
-    return 'panel3';
+    return 'panel2';
   };
   const [expanded, setExpanded] = useState(getExpanded());
-  const [typeDate, setTypeDate] = useState(typeDateContext);
-  const [title, setTitle] = useState(titleDate);
+  const [title, setTitle] = useState(isMarketingHeatMap ? 'current week' : titleDate);
   const [dateFrom, setdateFrom] = useState([
     {
       startDate: new Date(dateFromContext.startDate),
@@ -91,6 +97,7 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
     const dateLocal = date.toLocaleDateString();
     setOpened(false); // Closing dateFromContext date picker
     if (isDashboard) {
+      setType(typeDate);
       // its will work on dashboard
       setDateFromContext({ startDate, endDate }); // Sending data to context state
       if (typeDate === 'day') {
@@ -163,7 +170,7 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
         endGetDate === endOfMonth(endDate).getDate()
       ) {
         setTitleDate('current month');
-        setTitlecompareDateValue('l month');
+        setTitlecompareDateValue('last month');
       } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
         setTitleDate('last month');
         setTitlecompareDateValue('custom');
@@ -185,7 +192,23 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
       } else if (
         getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })
       ) {
-        if (endGetDay === dateGetDay && startGetDay === 1) {
+        if (offer) {
+          if (
+            getWeek(startDate, { weekStartsOn: 1 }) === getWeek(date, { weekStartsOn: 1 }) &&
+            startGetDay === 1
+          ) {
+            setTitle('current week');
+          } else if (
+            startGetDay === 1 &&
+            endGetDay === 0 &&
+            getWeek(startDate, { weekStartsOn: 1 }) ===
+              getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+          ) {
+            setTitle('last week');
+          } else {
+            setTitle('custom');
+          }
+        } else if (endGetDay === dateGetDay && startGetDay === 1) {
           setTitle('current week');
         } else if (
           startGetDay === 1 &&
@@ -267,7 +290,6 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
       setTitlecompareDateValue('custom');
     }
   };
-
   useMemo(() => {
     localStorage.setItem(
       'date',
@@ -283,11 +305,18 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
           startDate: new Date(compareDateValueContext.startDate),
           endDate: new Date(compareDateValueContext.endDate),
         },
-        typeDate,
+        typeDate: type,
       }),
     );
-  }, [titleDate, titlecompareDateValue, dateFromBtn, dateFromContext, compareDateValueContext]);
-
+  }, [
+    titleDate,
+    titlecompareDateValue,
+    dateFromBtn,
+    dateFromContext,
+    compareDateValueContext,
+    type,
+    typeDateContext,
+  ]);
   const handleOnChange = (ranges) => {
     // handleOnChagne happens when you click on some day on dateFromContext date picker
     const { selection } = ranges;
@@ -297,15 +326,24 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
         // These checks the typeDate
         setdateFrom([selection]); // here we send day
       } else if (typeDate === 'week') {
+        const getOfferWeek = () => {
+          if (offer) {
+            return endOfWeek(selection.startDate, { weekStartsOn: 1 });
+          }
+
+          if (
+            getWeek(new Date(), { weekStartsOn: 1 }) ===
+            getWeek(selection.startDate, { weekStartsOn: 1 })
+          ) {
+            return new Date();
+          }
+          return endOfWeek(selection.startDate, { weekStartsOn: 1 });
+        };
         // These checks the typeDate
         setdateFrom([
           {
             startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
-            endDate:
-              getWeek(new Date(), { weekStartsOn: 1 }) ===
-              getWeek(selection.startDate, { weekStartsOn: 1 })
-                ? new Date()
-                : endOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we compare if the week of today is equal to the week of the clicked day
+            endDate: getOfferWeek(),
             key: 'selection',
           },
         ]);
@@ -549,6 +587,61 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
     }
     return titlecompareDateValue; // if titlecompareDateValue !== "custom" i only return titlecompareDateValue ("today", "yesterday", "current week" and etc)
   };
+  const getMarketingHeatMap = () => {
+    if (isMarketingHeatMap) {
+      return (
+        <DatePickerKit
+          onRangeFocusChange={(e) => e}
+          minDate={new Date(minDate)}
+          maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
+          onChange={handleOnChange}
+          showSelectionPreview
+          moveRangeOnFirstSelection={false}
+          months={2}
+          ranges={dateFrom}
+          direction="horizontal"
+          dragSelectionEnabled={false}
+          weekStartsOn={1}
+        />
+      );
+    }
+    return typeDate === 'month' ? (
+      <LocalizationProviderKit dateAdapter={AdapterDayjs}>
+        <MonthPickerKit
+          className="month_picker"
+          date={dayjs(dateFrom[0].startDate)}
+          minDate={minDate}
+          maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
+          onChange={(newDateMonth) =>
+            setdateFrom([
+              {
+                startDate: startOfMonth(new Date(newDateMonth)),
+                endDate:
+                  getMonth(new Date(newDateMonth)) === getMonth(new Date())
+                    ? new Date()
+                    : endOfMonth(new Date(newDateMonth)),
+                key: 'selection',
+              },
+            ])
+          }
+        />
+      </LocalizationProviderKit>
+    ) : (
+      <DatePickerKit
+        onRangeFocusChange={(e) => e}
+        minDate={new Date(minDate)}
+        maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
+        onChange={handleOnChange}
+        showSelectionPreview
+        moveRangeOnFirstSelection={false}
+        months={2}
+        ranges={dateFrom}
+        direction="horizontal"
+        dragSelectionEnabled={false}
+        weekStartsOn={1}
+      />
+    );
+  };
   return (
     <div className="dates">
       <div className="date-picker_wrapper">
@@ -615,42 +708,7 @@ const Dates = ({ isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap })
             </ButtonKit>
           </div>
         </PaperKit>
-        {typeDate === 'month' ? (
-          <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-            <MonthPickerKit
-              className="month_picker"
-              date={dayjs(dateFrom[0].startDate)}
-              minDate={minDate}
-              maxDate={maxDate}
-              onChange={(newDateMonth) =>
-                setdateFrom([
-                  {
-                    startDate: startOfMonth(new Date(newDateMonth)),
-                    endDate:
-                      getMonth(new Date(newDateMonth)) === getMonth(new Date())
-                        ? new Date()
-                        : endOfMonth(new Date(newDateMonth)),
-                    key: 'selection',
-                  },
-                ])
-              }
-            />
-          </LocalizationProviderKit>
-        ) : (
-          <DatePickerKit
-            onRangeFocusChange={(e) => e}
-            minDate={new Date(minDate)}
-            maxDate={new Date()}
-            onChange={handleOnChange}
-            showSelectionPreview
-            moveRangeOnFirstSelection={false}
-            months={2}
-            ranges={dateFrom}
-            direction="horizontal"
-            dragSelectionEnabled={false}
-            weekStartsOn={1}
-          />
-        )}
+        {getMarketingHeatMap()}
       </div>
       {!isMarketingHeatMap ? (
         <div className="dashboard-date ">

@@ -187,7 +187,14 @@ const GetProgress = (props) => {
                   <p>Ex : Lorme Ipsum 24%</p>
                 </div>
               </div>
-              <FormControlLabelKit value="Offer on An Item from the Menu" control={<RadioKit />} />
+              {platform === 'deliveroo' ? (
+                <FormControlLabelKit
+                  value="Offer on An Item from the Menu"
+                  control={<RadioKit />}
+                />
+              ) : (
+                ''
+              )}
             </div>
             <div>
               <RadioGroupKit
@@ -437,44 +444,51 @@ const GetProgress = (props) => {
       if (selected === 5) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
               Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
             </TypographyKit>
-            <BoxKit className="left-part-radio under-textfields active">
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
-                setSteps([0, 1, 2, 3, 4, 5, 6]);
-                setSelected(6);
+                setSteps([0, 1, 2, 3, 4, 5]);
+                setSelected(5);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
@@ -570,17 +584,6 @@ const GetProgress = (props) => {
                         Start Time {obj.pos}
                         <BasicTimePicker
                           value={obj.startTime}
-                          minTime={
-                            obj.pos === 1
-                              ? ''
-                              : new Date(
-                                  null,
-                                  null,
-                                  null,
-                                  format(addHours(times[index - 1].endTime, 1), 'HH'),
-                                  0,
-                                )
-                          }
                           setValue={setTimes}
                           times={times}
                           index={index}
@@ -591,9 +594,6 @@ const GetProgress = (props) => {
                         End Time {obj.pos}
                         <BasicTimePicker
                           value={obj.endTime}
-                          minTime={
-                            new Date(null, null, null, format(addHours(obj.startTime, 1), 'HH'), 0)
-                          }
                           setValue={setTimes}
                           times={times}
                           index={index}
@@ -647,23 +647,21 @@ const GetProgress = (props) => {
                       setTimes([
                         ...times,
                         {
-                          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+                          startTime: new Date(
+                            null,
+                            null,
+                            null,
+                            format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                            0,
+                          ),
                           endTime: new Date(
                             null,
                             null,
                             null,
-                            format(
-                              addHours(
-                                times.length === 1
-                                  ? times[0].startTime
-                                  : times[times.length - 2].endTime,
-                                1,
-                              ),
-                              'HH',
-                            ),
+                            format(addHours(times[times.length - 1].endTime, 2), 'HH'),
                             0,
                           ),
-                          pos: times.length + 1,
+                          pos: times[times.length - 1].pos + 1,
                         },
                       ])
                     }
@@ -681,44 +679,51 @@ const GetProgress = (props) => {
       if (selected === 6) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
               Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
             </TypographyKit>
-            <BoxKit className="left-part-radio under-textfields active">
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5, 6]);
                 setSelected(6);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
@@ -848,47 +853,51 @@ const GetProgress = (props) => {
       if (selected === 4) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
               Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
             </TypographyKit>
-            <BoxKit
-              className={`left-part-radio under-textfields ${
-                platform === 'talabat' ? 'disabled' : 'active'
-              }`}>
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5]);
                 setSelected(5);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
@@ -1079,44 +1088,51 @@ const GetProgress = (props) => {
       if (selected === 5) {
         return (
           <div className="left-part-middle">
-            <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            {platform === 'deliveroo' ? (
+              <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+            ) : (
+              ''
+            )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
               Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
             </TypographyKit>
-            <BoxKit className="left-part-radio under-textfields active">
-              <div className="radio">
-                <div>
-                  <span>
-                    <img src={CalendarEventIcon} alt="Calendar Event Icon" />
-                  </span>
+            {platform !== 'talabat' ? (
+              <BoxKit className="left-part-radio under-textfields active">
+                <div className="radio">
                   <div>
-                    <div>Target Audience</div>
+                    <span>
+                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <RadioGroupKit
-                  className="radio-group-day"
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  name="radio-buttons-group-days">
-                  {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
-                    <div key={day}>
-                      <FormControlLabelKit value={day} control={<RadioKit />} />
-                      <span>{day}</span>
-                    </div>
-                  ))}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
+                <div>
+                  <RadioGroupKit
+                    className="radio-group-day"
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={targetAudience}
+                    onChange={(e) => setTargetAudience(e.target.value)}
+                    name="radio-buttons-group-days">
+                    {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
+                      <div key={day}>
+                        <FormControlLabelKit value={day} control={<RadioKit />} />
+                        <span>{day}</span>
+                      </div>
+                    ))}
+                  </RadioGroupKit>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
             <ButtonKit
-              disabled
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5, 6]);
                 setSelected(6);
               }}
-              className="another-slot remove"
+              className="another-slot remove grey"
               variant="contained">
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule

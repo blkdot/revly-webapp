@@ -127,6 +127,7 @@ const Menu = () => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <img
                     src={v.platform === 'deliveroo' ? icdeliveroo : ictalabat}
+                    style={{ objectFit: 'contain' }}
                     width={50}
                     height={30}
                     alt="icon"
@@ -147,7 +148,13 @@ const Menu = () => {
             renderOption={(v) => (
               <MenuItemKit key={v.name} value={v.name}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <img src={v.src} width={50} height={30} alt="icon" />
+                  <img
+                    src={v.src}
+                    style={{ objectFit: 'contain' }}
+                    width={50}
+                    height={30}
+                    alt="icon"
+                  />
                   <ListItemTextKit primary={v.name} />
                 </div>
               </MenuItemKit>
