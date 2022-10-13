@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Checkbox } from '@mui/material';
 import useApi from '../../../hooks/useApi';
-import burger from '../../../assets/images/burger.png';
+import defaultImage from '../../../assets/images/default.png';
 import config from '../../../setup/config';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useDate from '../../../hooks/useDate';
@@ -32,7 +32,7 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
 
   if (!data || !data.item) return null;
   const {
-    item: { category, name, price },
+    item: { category, name, price, url },
   } = data;
 
   return (
@@ -47,7 +47,13 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
       }}>
       <div style={{ display: 'flex' }}>
         <Checkbox classes={{ colorSecondary: '#906BFF' }} checked />
-        <img style={{ borderRadius: '10px' }} width={40} hieght={40} src={burger} alt="item" />
+        <img
+          style={{ borderRadius: '10px' }}
+          width={40}
+          hieght={40}
+          src={url || defaultImage}
+          alt="item"
+        />
         <div
           style={{
             marginLeft: '23px',

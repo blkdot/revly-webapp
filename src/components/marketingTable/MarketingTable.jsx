@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
@@ -11,6 +12,12 @@ import TableBodyKit from '../../kits/tablebody/TableBodyKit';
 import deliveroo from '../../assets/images/deliveroo.png';
 import talabat from '../../assets/images/talabat.png';
 import './MarketingTable.scss';
+
+const targetMapping = {
+  orders: 'Everyone',
+  new_customers: 'New customers only',
+  subscribers: 'Deliveroo Plus',
+};
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,7 +68,7 @@ const headCells = [
     disablePadding: false,
     label: 'Platfrom',
   },
-  {
+  /*   {
     id: 'day',
     numeric: true,
     disablePadding: false,
@@ -72,7 +79,7 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'Slot',
-  },
+  }, */
   {
     id: 'discountType',
     numeric: true,
@@ -103,19 +110,19 @@ const headCells = [
     disablePadding: false,
     label: 'Status',
   },
-  {
+  /*   {
     id: 'discountTypePr',
     numeric: true,
     disablePadding: false,
     label: 'Discount Type',
-  },
-  {
+  }, */
+  /* {
     id: 'targetPr',
     numeric: true,
     disablePadding: false,
     label: 'Target',
   },
-  {
+     {
     id: 'statusPr',
     numeric: true,
     disablePadding: false,
@@ -132,7 +139,7 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'Visibility Rank',
-  },
+  }, */
   {
     id: 'orders',
     numeric: true,
@@ -191,7 +198,8 @@ const EnhancedTableHead = (props) => {
   );
 };
 
-const MarketingTable = ({ rows, selected, setSelected }) => {
+const MarketingTable = ({ rows, selected, setSelected, offers }) => {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const handleRequestSort = (event, property) => {
@@ -209,8 +217,8 @@ const MarketingTable = ({ rows, selected, setSelected }) => {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, name, offerId) => {
+    /*     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
     if (selectedIndex === -1) {
@@ -226,7 +234,10 @@ const MarketingTable = ({ rows, selected, setSelected }) => {
       );
     }
 
-    setSelected(newSelected);
+    setSelected(newSelected); */
+    navigate(`/offer/detail/${offerId}`, {
+      state: { offerDetail: offers.find((o) => o.offer_id === offerId) },
+    });
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -251,7 +262,7 @@ const MarketingTable = ({ rows, selected, setSelected }) => {
                   <TableRowKit
                     key={row.id}
                     className={`marketing-table-top ${isItemSelected ? 'selected' : ''}`}
-                    onClick={(event) => handleClick(event, index)}
+                    onClick={(event) => handleClick(event, index, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -267,24 +278,24 @@ const MarketingTable = ({ rows, selected, setSelected }) => {
                         alt={row.platform}
                       />
                     </TableCellKit>
-                    <TableCellKit>{row.day}</TableCellKit>
-                    <TableCellKit>{row.slot}</TableCellKit>
+                    {/*  <TableCellKit>{row.day}</TableCellKit>
+                    <TableCellKit>{row.slot}</TableCellKit> */}
                     <TableCellKit>{row.discountType}</TableCellKit>
                     <TableCellKit>
                       <span className="competition-table-alert">{row.procent}%</span>
                     </TableCellKit>
                     <TableCellKit>{row.minOrder}</TableCellKit>
-                    <TableCellKit>{row.target}</TableCellKit>
+                    <TableCellKit>{targetMapping[row.target] || row.target}</TableCellKit>
                     <TableCellKit>
                       <span className={`competition-status ${row.status}`}>{row.status}</span>
                     </TableCellKit>
-                    <TableCellKit>{row.discountTypePr}</TableCellKit>
+                    {/*        <TableCellKit>{row.discountTypePr}</TableCellKit>
                     <TableCellKit>
                       <span className={`competition-status ${row.targetPr}`}>{row.targetPr}</span>
                     </TableCellKit>
-                    <TableCellKit>{row.statusPr}</TableCellKit>
-                    <TableCellKit>{row.caroussel}</TableCellKit>
-                    <TableCellKit>{row.rank}</TableCellKit>
+                    <TableCellKit>{row.statusPr}</TableCellKit> */}
+                    {/* <TableCellKit>{row.caroussel}</TableCellKit>
+                    <TableCellKit>{row.rank}</TableCellKit> */}
                     <TableCellKit>{row.orders}</TableCellKit>
                     <TableCellKit>{row.avgBasket}</TableCellKit>
                     <TableCellKit>{row.roi}</TableCellKit>
