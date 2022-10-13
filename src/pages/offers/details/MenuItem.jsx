@@ -6,7 +6,7 @@ import config from '../../../setup/config';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useDate from '../../../hooks/useDate';
 
-const MenuItem = ({ offerId, discountRate, platform, vendorId }) => {
+const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
   const [data, setData] = useState(null);
   const { getOfferDetails } = useApi();
   const { environment } = config;
@@ -20,7 +20,7 @@ const MenuItem = ({ offerId, discountRate, platform, vendorId }) => {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
         access_token: '',
         vendor,
-        id: offerId,
+        id: itemId,
       },
       platform,
     )
@@ -28,7 +28,7 @@ const MenuItem = ({ offerId, discountRate, platform, vendorId }) => {
       .catch((err) => console.log({ err }));
   };
   // triggerAlertWithMessageError('Error while retrieving data'+ )
-  useEffect(() => getOfferDetailData(), [offerId]);
+  useEffect(() => getOfferDetailData(), [itemId]);
 
   if (!data || !data.item) return null;
   const {
@@ -80,8 +80,8 @@ const MenuItem = ({ offerId, discountRate, platform, vendorId }) => {
         </div>
       </div>
       <div className="price">
-        <span>{`$${price}`}</span>
-        <span>{`    $${price * (discountRate / 100)}`}</span>
+        <span style={{ marginRight: '12px' }}>{`$${price}`}</span>
+        <span>{`$${price * (discountRate / 100)}`}</span>
       </div>
     </div>
   );

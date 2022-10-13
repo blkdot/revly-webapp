@@ -11,6 +11,8 @@ import { getMetrics, getVendors, getHeatmap, getMenu, getOfferDetails } from '..
 
 import { getOffers, getAds } from '../api/planningApi';
 
+import { cancelOffer } from '../api/marketingApi';
+
 import { getCompetitors, getAlerts } from '../api/competitionApi';
 
 const useApi = () => ({
@@ -29,6 +31,7 @@ const useApi = () => ({
   getAds,
   getHeatmap,
   getOfferDetails,
+  cancelOffer,
 });
 
 export default useApi;
