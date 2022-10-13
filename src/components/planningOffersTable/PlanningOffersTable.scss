@@ -22,15 +22,18 @@
     font-weight: 600;
     font-size: 14px;
     line-height: 22px;
-    color: #212B36;
+    color: #212b36;
   }
 
   table {
     background-color: #fff;
   }
+  .offer-row:hover {
+    background-color: rgba(144, 107, 255, 0.08);;
+  }
 
   tbody {
-    >tr:nth-of-type(1) {
+    > tr:nth-of-type(1) {
       background: rgba(144, 107, 255, 0.08);
       padding-right: 5px;
 
@@ -38,16 +41,14 @@
         border-radius: 8px 0 0 8px;
       }
 
-
-
-      >td:last-of-type {
+      > td:last-of-type {
         border-radius: 0 8px 8px 0;
         display: flex;
         align-items: center;
         padding: 20px 15px;
         grid-gap: 8px;
 
-        >div {
+        > div {
           width: 100px;
           padding-left: 14px;
           transform: scale(1.5);
