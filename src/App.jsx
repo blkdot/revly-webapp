@@ -27,6 +27,7 @@ import VerifyCode from './pages/verifyCode/VerifyCode';
 import ResetPassword from './pages/resetPassword/ResetPassword';
 import CompetitionRanking from './pages/competition/CompetitionRanking';
 import CompetitionAlerts from './pages/competition/CompetitionAlerts';
+import OfferDetails from './pages/offers/details';
 
 const theme = createTheme({
   palette: {
@@ -66,6 +67,7 @@ const App = () => (
                     <Route path="/marketing/offer" element={<MarketingOffer />} />
                     <Route path="/marketing/ads" element={<MarketingAds />} />
                     <Route path="/verify-code" element={<VerifyCode />} />
+                    <Route path="/offer/detail/:offerId" element={<OfferDetails />} />
                   </Route>
                   <Route path="/onboarding" element={<OnBoarding />} />
                   <Route path="/check" element={<Check />} />
