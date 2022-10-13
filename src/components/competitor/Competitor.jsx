@@ -59,17 +59,13 @@ const Competitor = ({ open, opened }) => {
               <CloseIcon onClick={() => open()} className="competitor-close" />
               <img className="competitor-lines" src={lines} alt="Lines" />
               <TypographyKit className="competitor-top-text">Add a competitor</TypographyKit>
-              <TypographyKit className="competitor-top-text-span">
-                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna
-                massa vivamus risus.{' '}
-              </TypographyKit>
               {loading ? (
                 <div className="progress-bar">
                   <img src={loadingImage} alt="Procces" />
                   <TypographyKit variant="h5">Competitor on process</TypographyKit>
                   <TypographyKit className="competitor-top-text-span">
-                    Eu neque tempus cursus sit lectus eget consequat donec odio. Nunc sit et
-                    suspendisse dolor ac in in sed.
+                    We are processing your competitor data. You can check your competitor ranking
+                    after 24 hours.
                   </TypographyKit>
                 </div>
               ) : (

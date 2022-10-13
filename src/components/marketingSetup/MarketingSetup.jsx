@@ -22,6 +22,13 @@ import useApi from '../../hooks/useApi';
 import { useAlert } from '../../hooks/useAlert';
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
 import GetProgress from './MarketingGetProgress';
+import talabat from '../../assets/images/talabat.png';
+import deliveroo from '../../assets/images/deliveroo.png';
+import ArrowIcon from '../../assets/images/arrow.png';
+import TimerIcon from '../../assets/images/ic_timer.png';
+import menuIcon from '../../assets/images/ic_menu.png';
+import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
+import selectIcon from '../../assets/images/ic_select.png';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -144,7 +151,7 @@ const MarketingSetup = ({ active, setActive }) => {
       return 'workweek';
     }
     if (customDay === 'Same day every week') {
-      return everyWeek.toLowerCase().replace('every', '');
+      return everyWeek.toLowerCase().replace('every', '').split(' ').join('');
     }
     if (customDay === 'Customised Days') {
       return customisedDay.toString().toLowerCase().replace(/,/g, '.');
@@ -287,11 +294,7 @@ const MarketingSetup = ({ active, setActive }) => {
   const getPlatform = (e) => {
     const { value } = e.target;
     setPlatform(value);
-    if (value === 'talabat') {
-      setSteps([0, 1, 2, 3]);
-    } else {
-      setSteps([0, 1, 2, 3, 4]);
-    }
+    setSteps([0, 1, 2, 3, 4]);
   };
   const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
   const onChange = async (newValue, setDate) => {
@@ -343,7 +346,7 @@ const MarketingSetup = ({ active, setActive }) => {
   const handleCategoryDataChange = (e) => {
     const { value } = e.target;
     if (value.length > 0) {
-      const arr = value.map((v) => category.filter((k) => k.categoryData === v)).flat();
+      const arr = value.map((v) => category.filter((k) => k.category === v)).flat();
       setFilteredCategoryData(arr);
     } else {
       setFilteredCategoryData([]);
@@ -362,190 +365,181 @@ const MarketingSetup = ({ active, setActive }) => {
     ));
 
   useEffect(() => {
-    if (platform === 'deliveroo') {
-      if (selected === 1) {
-        setDisabled(!branch);
+    if (selected === 1) {
+      setDisabled(!branch);
+    }
+    if (selected === 2) {
+      if (menu === 'Offer on An Item from the Menu') {
+        setSteps([0, 1, 2, 3, 4, 5]);
+        setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
+      } else {
+        setSteps([0, 1, 2, 3, 4]);
+        setDisabled(!(menu && discountPercentage && minOrder));
       }
-      if (selected === 2) {
-        if (menu === 'Offer on An Item from the Menu') {
+    }
+    if (menu === 'Offer on An Item from the Menu') {
+      if (selected === 3) {
+        setDisabled(checked.length === 0);
+      }
+      if (selected === 4) {
+        if (duration === 'Program the offer duration') {
+          setSteps([0, 1, 2, 3, 4, 5, 6]);
+          setDisabled(!customDay);
+        } else {
           setSteps([0, 1, 2, 3, 4, 5]);
-          setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
+          setDisabled(
+            !(
+              endingDate !== null &&
+              disabledDate &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()),
+              )
+            ),
+          );
+        }
+      }
+      if (duration === 'Program the offer duration') {
+        if (selected === 5) {
+          if (customDay === 'Same day every week') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                everyWeek &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
+              ),
+            );
+          }
+          if (customDay === 'Customised Days') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                customisedDay.length > 0 &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
+              ),
+            );
+          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
+              ),
+            );
+          }
+        }
+      }
+    }
+    if (menu === 'Offer on the whole Menu') {
+      if (selected === 3) {
+        if (duration === 'Program the offer duration') {
+          setSteps([0, 1, 2, 3, 4, 5]);
+          setDisabled(!customDay);
         } else {
           setSteps([0, 1, 2, 3, 4]);
-          setDisabled(!(menu && discountPercentage && minOrder));
+          setDisabled(
+            !(
+              endingDate !== null &&
+              disabledDate &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()),
+              )
+            ),
+          );
         }
       }
-      if (menu === 'Offer on An Item from the Menu') {
-        if (selected === 3) {
-          setDisabled(checked.length === 0);
-        }
+      if (duration === 'Program the offer duration') {
         if (selected === 4) {
-          if (duration === 'Program the offer duration') {
-            setSteps([0, 1, 2, 3, 4, 5, 6]);
-            setDisabled(!customDay);
-          } else {
-            setSteps([0, 1, 2, 3, 4, 5]);
+          if (customDay === 'Same day every week') {
             setDisabled(
               !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                everyWeek &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
+              ),
+            );
+          }
+          if (customDay === 'Customised Days') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                customisedDay.length > 0 &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
+                )
+              ),
+            );
+          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
+            setDisabled(
+              !(
+                startingDate !== null &&
                 endingDate !== null &&
                 disabledDate &&
                 times.every(
                   (obj) =>
                     isValidDate(obj.endTime) &&
                     obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()),
-                )
-              ),
-            );
-          }
-        }
-        if (duration === 'Program the offer duration') {
-          if (selected === 5) {
-            if (customDay === 'Same day every week') {
-              setDisabled(
-                !(
-                  startingDate !== null &&
-                  endingDate !== null &&
-                  disabledDate &&
-                  everyWeek &&
-                  times.every(
-                    (obj) =>
-                      isValidDate(obj.endTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                      isValidDate(obj.startTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.startTime).getTime()),
-                  )
-                ),
-              );
-            }
-            if (customDay === 'Customised Days') {
-              setDisabled(
-                !(
-                  startingDate !== null &&
-                  endingDate !== null &&
-                  disabledDate &&
-                  customisedDay.length > 0 &&
-                  times.every(
-                    (obj) =>
-                      isValidDate(obj.endTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                      isValidDate(obj.startTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.startTime).getTime()),
-                  )
-                ),
-              );
-            } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
-              setDisabled(
-                !(
-                  startingDate !== null &&
-                  endingDate !== null &&
-                  disabledDate &&
-                  times.every(
-                    (obj) =>
-                      isValidDate(obj.endTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                      isValidDate(obj.startTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.startTime).getTime()),
-                  )
-                ),
-              );
-            }
-          }
-        }
-      }
-      if (menu === 'Offer on the whole Menu') {
-        if (selected === 3) {
-          if (duration === 'Program the offer duration') {
-            setSteps([0, 1, 2, 3, 4, 5]);
-            setDisabled(!customDay);
-          } else {
-            setSteps([0, 1, 2, 3, 4]);
-            setDisabled(
-              !(
-                endingDate !== null &&
-                disabledDate &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
                     obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()),
+                    !Number.isNaN(new Date(obj.startTime).getTime()),
                 )
               ),
             );
           }
         }
-        if (duration === 'Program the offer duration') {
-          if (selected === 4) {
-            if (customDay === 'Same day every week') {
-              setDisabled(
-                !(
-                  startingDate !== null &&
-                  endingDate !== null &&
-                  disabledDate &&
-                  everyWeek &&
-                  times.every(
-                    (obj) =>
-                      isValidDate(obj.endTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                      isValidDate(obj.startTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.startTime).getTime()),
-                  )
-                ),
-              );
-            }
-            if (customDay === 'Customised Days') {
-              setDisabled(
-                !(
-                  startingDate !== null &&
-                  endingDate !== null &&
-                  disabledDate &&
-                  customisedDay.length > 0 &&
-                  times.every(
-                    (obj) =>
-                      isValidDate(obj.endTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                      isValidDate(obj.startTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.startTime).getTime()),
-                  )
-                ),
-              );
-            } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
-              setDisabled(
-                !(
-                  startingDate !== null &&
-                  endingDate !== null &&
-                  disabledDate &&
-                  times.every(
-                    (obj) =>
-                      isValidDate(obj.endTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                      isValidDate(obj.startTime) &&
-                      obj.startTime !== null &&
-                      !Number.isNaN(new Date(obj.startTime).getTime()),
-                  )
-                ),
-              );
-            }
-          }
-        }
-      }
-    } else if (platform === 'talabat') {
-      if (selected === 1) {
-        setDisabled(!branch);
-      }
-      if (selected === 2) {
-        setDisabled(!(menu && discountPercentage && minOrder));
       }
     }
   }, [
@@ -618,93 +612,250 @@ const MarketingSetup = ({ active, setActive }) => {
     setActive(false);
     body.style.overflowY = 'visible';
   };
+  const [recap, setRecap] = useState(false);
+  const getItemMenuNamePrice = () => {
+    const arr = [];
+    checked.forEach((c) => {
+      category.forEach((obj) =>
+        obj.name === c ? arr.push({ name: obj.name, price: obj.price }) : false,
+      );
+    });
+    return arr;
+  };
+  const getRecap = () => {
+    if (recap) {
+      return (
+        <div>
+          <div className="left-part-top">
+            <div>
+              <TypographyKit variant="h4">Offer Recap </TypographyKit>
+
+              <img
+                tabIndex={-1}
+                role="presentation"
+                onClick={() => closeSetup()}
+                src={CloseIcon}
+                alt="close icon"
+              />
+            </div>
+          </div>
+          <BoxKit className="left-part-radio recap-left-part">
+            <div>
+              <img width={35} height={35} src={selectIcon} alt="select" />
+              <div>{branch}</div>
+            </div>
+            <div className="recap-left-part-inside">
+              <div>
+                <p>Offer Date:</p>
+                <b>{format(new Date(), 'dd/MM/yy')}</b>
+              </div>
+              <div>
+                <p>Platform:</p>
+                <img src={platform === 'talabat' ? talabat : deliveroo} alt={platform} />
+              </div>
+            </div>
+          </BoxKit>
+          <BoxKit className="left-part-radio recap-left-part">
+            <div className="radio recap-box-wrapper">
+              <div className="recap-box">
+                <div>
+                  <span>
+                    <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
+                  </span>
+                  <div>
+                    <div>{duration}</div>
+                  </div>
+                  <div />
+                  {duration !== 'Starting Now' ? (
+                    <div>
+                      <img className="arrow-icon" src={ArrowIcon} alt="arrow" />
+                      <div>{customDay}</div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="radio recap-box-wrapper column">
+              <div>
+                {customisedDay === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
+              </div>
+              <div className="recap-between">
+                <div>
+                  <div>Starting Date</div>
+                  <div>{format(startingDate, 'dd MMM yyyy')}</div>
+                </div>
+                <div>
+                  <div>Ending Date</div>
+                  <div>{format(endingDate, 'dd MMM yyyy')}</div>
+                </div>
+              </div>
+            </div>
+            <div className="radio recap-box-wrapper border-none">
+              {times.map((obj, index) => (
+                <div key={obj.pos}>
+                  <div>
+                    <div>Start Time {index + 1}</div>
+                    <div>{format(obj.startTime, 'HH:00 aaa')}</div>
+                  </div>
+                  <div>
+                    <div>End Time {index + 1}</div>
+                    <div>{format(obj.endTime, 'HH:00 aaa')}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </BoxKit>
+          <BoxKit className="left-part-radio under-textfields recap-left-part radio-dates active">
+            <div className="radio">
+              <div>
+                <span>
+                  <img
+                    src={menu === 'Offer on the whole Menu' ? menuIcon : ItemMenuIcon}
+                    alt={menu}
+                  />
+                </span>
+                <div>
+                  <div>{menu}</div>
+                </div>
+              </div>
+            </div>
+            <div
+              className={`radio recap-box-wrapper between under ${
+                menu === 'Offer on An Item from the Menu' ? 'border-none' : ''
+              }`}>
+              {menu === 'Offer on An Item from the Menu' ? (
+                <div className="item-menu-recap">
+                  <img className="arrow-icon" src={ArrowIcon} alt="arrow" />
+                  <div>{itemMenu}</div>
+                </div>
+              ) : (
+                ''
+              )}
+              <div>
+                <div>Percentage Discount</div>
+                <p>{discountPercentage}</p>
+              </div>
+              <div>
+                <div>Min Order</div>
+                <p>{minOrder}</p>
+              </div>
+            </div>
+            <div className="radio recap-box-wrapper column border-none">
+              {getItemMenuNamePrice().map((obj) => (
+                <div className="recap-between">
+                  <div>{obj.name}</div>
+                  <div>{obj.price}$</div>
+                </div>
+              ))}
+            </div>
+          </BoxKit>
+        </div>
+      );
+    }
+    return (
+      <div>
+        <div className="left-part-top">
+          <div>
+            <TypographyKit variant="h4">Set up an offer</TypographyKit>
+
+            <img
+              tabIndex={-1}
+              role="presentation"
+              onClick={() => closeSetup()}
+              src={CloseIcon}
+              alt="close icon"
+            />
+          </div>
+          <MarketingSetupStepper selected={selected} steps={steps} />
+        </div>
+        <GetProgress
+          selected={selected}
+          getPlatform={getPlatform}
+          platform={platform}
+          handleCategoryDataChange={handleCategoryDataChange}
+          userPlatformData={userPlatformData}
+          vendorsContext={vendorsContext}
+          setBranch={setBranch}
+          branch={branch}
+          menu={menu}
+          setMenu={setMenu}
+          setDiscountPercentage={setDiscountPercentage}
+          discountPercentage={discountPercentage}
+          setMinOrder={setMinOrder}
+          minOrder={minOrder}
+          itemMenu={itemMenu}
+          setItemMenu={setItemMenu}
+          getDiscountOrMov={getDiscountOrMov}
+          categoryData={categoryData}
+          categoryDataList={categoryDataList}
+          filteredCategoryData={filteredCategoryData}
+          category={category}
+          setChecked={setChecked}
+          checked={checked}
+          duration={duration}
+          setDuration={setDuration}
+          endingDate={endingDate}
+          onChange={onChange}
+          setEndingDate={setEndingDate}
+          times={times}
+          setTimes={setTimes}
+          customDay={customDay}
+          setCustomDay={setCustomDay}
+          targetAudience={targetAudience}
+          setTargetAudience={setTargetAudience}
+          setSteps={setSteps}
+          setSelected={setSelected}
+          setEveryWeek={setEveryWeek}
+          everyWeek={everyWeek}
+          days={days}
+          setCustomisedDay={setCustomisedDay}
+          customisedDay={customisedDay}
+          disableWeekends={disableWeekends}
+          startingDate={startingDate}
+          setStartingDate={setStartingDate}
+        />
+      </div>
+    );
+  };
+  const getRecapBtn = () => {
+    if (recap) {
+      return 'Lanch Offer';
+    }
+    if (steps.length - 1 === selected) {
+      return 'Confirm';
+    }
+    return 'Next Step';
+  };
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit className="marketing-paper">
         <ContainerKit className="setup-container">
           <div className="left-part">
-            <div>
-              <div className="left-part-top">
-                <div>
-                  <TypographyKit variant="h4">Set up an offer</TypographyKit>
-
-                  <img
-                    tabIndex={-1}
-                    role="presentation"
-                    onClick={() => closeSetup()}
-                    src={CloseIcon}
-                    alt="close icon"
-                  />
-                </div>
-                <MarketingSetupStepper selected={selected} steps={steps} />
-              </div>
-              <GetProgress
-                selected={selected}
-                getPlatform={getPlatform}
-                platform={platform}
-                handleCategoryDataChange={handleCategoryDataChange}
-                userPlatformData={userPlatformData}
-                vendorsContext={vendorsContext}
-                setBranch={setBranch}
-                branch={branch}
-                menu={menu}
-                setMenu={setMenu}
-                setDiscountPercentage={setDiscountPercentage}
-                discountPercentage={discountPercentage}
-                setMinOrder={setMinOrder}
-                minOrder={minOrder}
-                itemMenu={itemMenu}
-                setItemMenu={setItemMenu}
-                getDiscountOrMov={getDiscountOrMov}
-                categoryData={categoryData}
-                categoryDataList={categoryDataList}
-                filteredCategoryData={filteredCategoryData}
-                category={category}
-                setChecked={setChecked}
-                checked={checked}
-                duration={duration}
-                setDuration={setDuration}
-                endingDate={endingDate}
-                onChange={onChange}
-                setEndingDate={setEndingDate}
-                times={times}
-                setTimes={setTimes}
-                customDay={customDay}
-                setCustomDay={setCustomDay}
-                targetAudience={targetAudience}
-                setTargetAudience={setTargetAudience}
-                setSteps={setSteps}
-                setSelected={setSelected}
-                setEveryWeek={setEveryWeek}
-                everyWeek={everyWeek}
-                days={days}
-                setCustomisedDay={setCustomisedDay}
-                customisedDay={customisedDay}
-                disableWeekends={disableWeekends}
-                startingDate={startingDate}
-                setStartingDate={setStartingDate}
-              />
-            </div>
+            {getRecap()}
             <div className="left-part-bottom">
               <ButtonKit
-                onClick={() => setSelected(selected - 1)}
+                onClick={() => (recap ? setRecap(false) : setSelected(selected - 1))}
                 variant="outlined"
                 disabled={!(selected >= 2)}>
                 Previous Step
               </ButtonKit>
-              {/* TODO: create Schedule Offer Button here on last step for each platform */}
-              {selected === steps.length - 1 ? (
-                <ButtonKit onClick={handleSchedule} disabled={disabled} variant="contained">
-                  Next Step
-                </ButtonKit>
-              ) : (
-                <ButtonKit
-                  onClick={() => setSelected(selected + 1)}
-                  disabled={disabled}
-                  variant="contained">
-                  Next Step
-                </ButtonKit>
-              )}
+              <ButtonKit
+                onClick={() => {
+                  if (recap) {
+                    handleSchedule();
+                  }
+                  if (steps.length - 1 === selected) {
+                    setRecap(true);
+                  } else {
+                    setSelected(selected + 1);
+                  }
+                }}
+                disabled={disabled}
+                variant="contained">
+                {getRecapBtn()}
+              </ButtonKit>
             </div>
           </div>
           <div className="right-part">
