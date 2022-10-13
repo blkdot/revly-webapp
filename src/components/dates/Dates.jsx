@@ -45,12 +45,12 @@ const Dates = (props) => {
     setTitlecompareDateValue,
     titlecompareDateValue,
     typeDateContext,
+    setTypeDateContext,
   } = useDate();
   const [opened, setOpened] = useState(false);
   const [openedCompareDateValue, setOpenedCompareDateValue] = useState(false);
   const [selected, setSelected] = useState(false);
   const [typeDate, setTypeDate] = useState(typeDateContext);
-  const [type, setType] = useState('');
   const getExpanded = () => {
     if (!isMarketingHeatMap) {
       if (typeDate === 'day') {
@@ -97,7 +97,7 @@ const Dates = (props) => {
     const dateLocal = date.toLocaleDateString();
     setOpened(false); // Closing dateFromContext date picker
     if (isDashboard) {
-      setType(typeDate);
+      setTypeDateContext(typeDate);
       // its will work on dashboard
       setDateFromContext({ startDate, endDate }); // Sending data to context state
       if (typeDate === 'day') {
@@ -305,7 +305,7 @@ const Dates = (props) => {
           startDate: new Date(compareDateValueContext.startDate),
           endDate: new Date(compareDateValueContext.endDate),
         },
-        typeDate: type,
+        typeDate: typeDateContext,
       }),
     );
   }, [
@@ -314,7 +314,6 @@ const Dates = (props) => {
     dateFromBtn,
     dateFromContext,
     compareDateValueContext,
-    type,
     typeDateContext,
   ]);
   const handleOnChange = (ranges) => {

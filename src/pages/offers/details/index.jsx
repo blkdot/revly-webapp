@@ -59,7 +59,7 @@ const OfferDetailComponent = () => {
       ended: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
       scheduled: ['#1890FF', 'rgba(24, 144, 255, 0.16)'],
       paused: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
-      live: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
+      live: ['#229A16', 'rgba(84, 214, 44, 0.16)'],
       default: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
     };
     return (
@@ -166,7 +166,7 @@ const OfferDetailComponent = () => {
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
               <div>
-                {['Active', 'Scheduled'].includes(status) && (
+                {['Live', 'Active', 'Scheduled'].includes(status) && (
                   <button onClick={openCancelModal} className="cancel-btn" type="button">
                     <Warning />
                     <span style={{ color: '#FF4842' }}>Cancel Offer</span>
@@ -365,13 +365,13 @@ const OfferDetailComponent = () => {
                     <FastFood />
                   </div>
                   <span className="offer-duration width-left-icon width-right-icon">
-                    {discount_type !== 'Menu discount'
+                    {discount_type && discount_type !== 'Menu discount'
                       ? 'Offer on an item from the Menu'
                       : 'Offer on the whole Menu'}
                   </span>
                   <ExpandIcon />
                 </div>
-                {discount_type !== 'Menu discount' && (
+                {discount_type && discount_type !== 'Menu discount' && (
                   <div
                     style={{
                       display: 'flex',
@@ -449,13 +449,14 @@ const OfferDetailComponent = () => {
                       lineHeight: '24px',
                       color: '#212B36',
                     }}>
-                    {minimum_order_value}
+                    {minimum_order_value} AED
                   </div>
                 </div>
               </div>
             </div>
-            {discount_type !== 'Menu discount' &&
-              menu_items.map((menuItem) => (
+            {discount_type &&
+              discount_type !== 'Menu discount' &&
+              (menu_items || []).map((menuItem) => (
                 <MenuItem
                   key={menuItem.drn_id}
                   itemId={menuItem.id}
