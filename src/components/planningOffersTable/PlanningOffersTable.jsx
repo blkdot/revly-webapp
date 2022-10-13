@@ -46,7 +46,6 @@ const PlanningOffersTable = ({ rows }) => {
 
   const renderSimpleRow = (r, h) => (
     <TableCellKit
-      onClick={() => navigateToOfferDetails(r)}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}>
       <span style={{ textAlign: 'justify' }} key={h.id}>
@@ -134,7 +133,12 @@ const PlanningOffersTable = ({ rows }) => {
       );
 
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
-      <TableRowKit key={row.id} selected={false} style={{ marginTop: '0.5rem' }}>
+      <TableRowKit
+        onClick={() => navigateToOfferDetails(row)}
+        className="offer-row"
+        key={row.id}
+        selected={false}
+        style={{ marginTop: '0.5rem' }}>
         {renderRowsByHeader(row)}
       </TableRowKit>
     ));

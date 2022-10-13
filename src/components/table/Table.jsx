@@ -57,7 +57,7 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
       return 'Avg.basket';
     }
     if (title === 'accrued_discounts') {
-      return 'marketing express';
+      return 'discount offered';
     }
     return title;
   };

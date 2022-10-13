@@ -85,9 +85,10 @@ const GetProgress = (props) => {
   if (selected === 1) {
     return (
       <div className="left-part-middle">
-        <TypographyKit variant="h6">{selected}.Select platform and branches</TypographyKit>
+        <TypographyKit variant="h6">{selected}. Select platform and branches</TypographyKit>
         <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+          Create and manage all your offers. Set personalised rules to automatically trigger your
+          offers.
         </TypographyKit>
         <div className="left-part-radio-wrapper">
           <RadioGroupKit
@@ -117,9 +118,10 @@ const GetProgress = (props) => {
   if (selected === 2) {
     return (
       <div className="left-part-middle">
-        <TypographyKit variant="h6">{selected}.Select the Type of the offer</TypographyKit>
+        <TypographyKit variant="h6">{selected}. Select the Type of the offer</TypographyKit>
         <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+          Create and manage all your offers. Set personalised rules to automatically trigger your
+          offers.
         </TypographyKit>
         <RadioGroupKit
           aria-labelledby="demo-radio-buttons-group-label"
@@ -137,8 +139,8 @@ const GetProgress = (props) => {
                   <img src={menuIcon} alt="Menu Icon" />
                 </span>
                 <div>
-                  <div>Offer on the whole Menu</div>
-                  <p>Ex : Lorme Ipsum 24%</p>
+                  <div>Discount on the whole Menu</div>
+                  <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
               <FormControlLabelKit value="Offer on the whole Menu" control={<RadioKit />} />
@@ -148,7 +150,7 @@ const GetProgress = (props) => {
                 <div className="dropdown-wrapper">
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Procentage Discount
+                      Percentage Discount
                       <MarketingPlaceholderDropdown
                         names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
                         title="%"
@@ -159,7 +161,7 @@ const GetProgress = (props) => {
                   </TypographyKit>
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Min Order Value
+                      Min. Order Value
                       <MarketingPlaceholderDropdown
                         names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
                         title="0.0 AED"
@@ -184,7 +186,7 @@ const GetProgress = (props) => {
                 </span>
                 <div>
                   <div>Offer on An Item from the Menu</div>
-                  <p>Ex : Lorme Ipsum 24%</p>
+                  <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
               {platform === 'deliveroo' ? (
@@ -212,14 +214,14 @@ const GetProgress = (props) => {
                     subtitle: 'Attract larger orders from groupes and famillies',
                   },
                   { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
-                  { title: 'Free item', subtitle: 'Allow customers ro choose a free item' },
+                  { title: 'Free item', subtitle: 'Allow customers to choose a free item' },
                 ].map((obj) => (
                   <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
                 ))}
                 <div className="dropdown-wrapper">
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Procentage Discount
+                      Percentage Discount
                       <MarketingPlaceholderDropdown
                         names={getDiscountOrMov('discount')}
                         title="%"
@@ -230,7 +232,7 @@ const GetProgress = (props) => {
                   </TypographyKit>
                   <TypographyKit className="min-max-textfields" variant="div">
                     <TypographyKit variant="div">
-                      Min Order Value
+                      Min. Order Value
                       <MarketingPlaceholderDropdown
                         names={getDiscountOrMov('mov')}
                         title="0.0 AED"
@@ -251,9 +253,10 @@ const GetProgress = (props) => {
     if (selected === 3) {
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h6">{selected}.Select the discounted items</TypographyKit>
+          <TypographyKit variant="h6">{selected}. Select the discounted items</TypographyKit>
           <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
           </TypographyKit>
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
@@ -332,9 +335,10 @@ const GetProgress = (props) => {
     if (selected === 4) {
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h6">{selected}.Select the Duration</TypographyKit>
+          <TypographyKit variant="h6">{selected}. Select the Duration</TypographyKit>
           <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
           </TypographyKit>
           <RadioGroupKit
             className="duration-wrapper"
@@ -422,7 +426,7 @@ const GetProgress = (props) => {
                   onChange={(e) => setCustomDay(e.target.value)}
                   name="radio-buttons-group-days">
                   {[
-                    'Continues Offer',
+                    'Continuous Offer',
                     'Every Day',
                     'Work Week',
                     'Same day every week',
@@ -450,7 +454,8 @@ const GetProgress = (props) => {
               ''
             )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
             {platform !== 'talabat' ? (
               <BoxKit className="left-part-radio under-textfields active">
@@ -506,9 +511,10 @@ const GetProgress = (props) => {
         if (customDay) {
           return (
             <div className="left-part-middle">
-              <TypographyKit variant="h6">{selected}.Select the Recurrence detail</TypographyKit>
+              <TypographyKit variant="h6">{selected}. Select the Recurrence detail</TypographyKit>
               <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+                Create and manage all your offers. Set personalised rules to automatically trigger
+                your offers.
               </TypographyKit>
               <BoxKit className="left-part-radio under-textfields radio-dates active">
                 <div className="radio">
@@ -527,7 +533,7 @@ const GetProgress = (props) => {
                     rows={[
                       'Every Monday',
                       'Every Tuesday',
-                      'Every Wendensday',
+                      'Every Wendnesday',
                       'Every Thursday',
                       'Every Friday',
                       'Every Saturday',
@@ -639,7 +645,7 @@ const GetProgress = (props) => {
                     </div>
                   ),
                 )}
-                {customDay === 'Continues Offer' || times.length === 3 ? (
+                {customDay === 'Continuous Offer' || times.length === 3 ? (
                   ''
                 ) : (
                   <ButtonKit
@@ -685,7 +691,8 @@ const GetProgress = (props) => {
               ''
             )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
             {platform !== 'talabat' ? (
               <BoxKit className="left-part-radio under-textfields active">
@@ -741,9 +748,10 @@ const GetProgress = (props) => {
     if (selected === 3) {
       return (
         <div className="left-part-middle">
-          <TypographyKit variant="h6">{selected}.Select the Duration</TypographyKit>
+          <TypographyKit variant="h6">{selected}. Select the Duration</TypographyKit>
           <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
           </TypographyKit>
           <RadioGroupKit
             className="duration-wrapper"
@@ -831,7 +839,7 @@ const GetProgress = (props) => {
                   onChange={(e) => setCustomDay(e.target.value)}
                   name="radio-buttons-group-days">
                   {[
-                    'Continues Offer',
+                    'Continuous Offer',
                     'Every Day',
                     'Work Week',
                     'Same day every week',
@@ -859,7 +867,8 @@ const GetProgress = (props) => {
               ''
             )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
             {platform !== 'talabat' ? (
               <BoxKit className="left-part-radio under-textfields active">
@@ -915,9 +924,10 @@ const GetProgress = (props) => {
         if (customDay) {
           return (
             <div className="left-part-middle">
-              <TypographyKit variant="h6">{selected}.Select the Recurrence detail</TypographyKit>
+              <TypographyKit variant="h6">{selected}. Select the Recurrence detail</TypographyKit>
               <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-                Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+                Create and manage all your offers. Set personalised rules to automatically trigger
+                your offers.
               </TypographyKit>
               <BoxKit className="left-part-radio under-textfields radio-dates active">
                 <div className="radio">
@@ -936,7 +946,7 @@ const GetProgress = (props) => {
                     rows={[
                       'Every Monday',
                       'Every Tuesday',
-                      'Every Wendensday',
+                      'Every Wendnesday',
                       'Every Thursday',
                       'Every Friday',
                       'Every Saturday',
@@ -1037,7 +1047,6 @@ const GetProgress = (props) => {
                       <div>
                         End Time
                         <BasicTimePicker
-                          minTime={new Date(addHours(new Date(obj.startTime), 1))}
                           value={obj.endTime}
                           setValue={setTimes}
                           times={times}
@@ -1048,7 +1057,7 @@ const GetProgress = (props) => {
                     </div>
                   ),
                 )}
-                {customDay === 'Continues Offer' || times.length === 3 ? (
+                {customDay === 'Continuous Offer' || times.length === 3 ? (
                   ''
                 ) : (
                   <ButtonKit
@@ -1094,7 +1103,8 @@ const GetProgress = (props) => {
               ''
             )}
             <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
             {platform !== 'talabat' ? (
               <BoxKit className="left-part-radio under-textfields active">

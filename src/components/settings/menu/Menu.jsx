@@ -5,20 +5,21 @@ import './Menu.scss';
 import iccategory from '../../../assets/images/ic_menu-category.png';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
-import icdeliveroo from '../../../assets/images/deliveroo.png';
-import ictalabat from '../../../assets/images/talabat.png';
+import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
+import ictalabat from '../../../assets/images/talabat-favicon.png';
 
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';
 
 import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
+import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
+import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useVendors from '../../../hooks/useVendors';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
-import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
-import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
+
 import { platformList } from '../../../data/platformList';
 
 const Menu = () => {
@@ -124,12 +125,12 @@ const Menu = () => {
             value={branch}
             renderOption={(v) => (
               <MenuItemKit key={v.vendor_id} value={v}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <img
                     src={v.platform === 'deliveroo' ? icdeliveroo : ictalabat}
+                    width={24}
+                    height={24}
                     style={{ objectFit: 'contain' }}
-                    width={50}
-                    height={30}
                     alt="icon"
                   />
                   <ListItemTextKit primary={v.data.vendor_name} />
@@ -147,12 +148,18 @@ const Menu = () => {
             value={platform}
             renderOption={(v) => (
               <MenuItemKit key={v.name} value={v.name}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    textTransform: 'capitalize',
+                  }}>
                   <img
-                    src={v.src}
+                    src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                    width={24}
+                    height={24}
                     style={{ objectFit: 'contain' }}
-                    width={50}
-                    height={30}
                     alt="icon"
                   />
                   <ListItemTextKit primary={v.name} />
