@@ -82,6 +82,18 @@ const GetProgress = (props) => {
     startingDate,
     setStartingDate,
   } = props;
+  const getWorkWeek = () => {
+    if (customDay === 'Work Week') {
+      if (new Date(endingDate).getDay() === 0) {
+        return new Date(addDays(endingDate, 1));
+      }
+      if (new Date(endingDate).getDay() === 6) {
+        return new Date(addDays(endingDate, 2));
+      }
+      return endingDate;
+    }
+    return endingDate;
+  };
   if (selected === 1) {
     return (
       <div className="left-part-middle">
@@ -561,7 +573,7 @@ const GetProgress = (props) => {
                     Starting Date
                     <DatePickerDayKit
                       className="date-error"
-                      shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
+                      shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
                       value={startingDate}
                       onChange={(newValue) => {
                         onChange(newValue, setStartingDate);
@@ -573,9 +585,9 @@ const GetProgress = (props) => {
                     Ending Date
                     <DatePickerDayKit
                       className="date-error"
-                      shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
-                      minDate={new Date(addDays(startingDate, 1))}
-                      value={endingDate}
+                      shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
+                      minDate={new Date(startingDate)}
+                      value={getWorkWeek()}
                       onChange={(newValue) => {
                         onChange(newValue, setEndingDate);
                       }}
@@ -974,7 +986,7 @@ const GetProgress = (props) => {
                     Starting Date
                     <DatePickerDayKit
                       className="date-error"
-                      shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
+                      shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
                       value={startingDate}
                       onChange={(newValue) => {
                         onChange(newValue, setStartingDate);
@@ -986,9 +998,9 @@ const GetProgress = (props) => {
                     Ending Date
                     <DatePickerDayKit
                       className="date-error"
-                      shouldDisableDate={customDay === 'Every Day' ? null : disableWeekends}
-                      minDate={new Date(addDays(startingDate, 1))}
-                      value={endingDate}
+                      shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
+                      minDate={new Date(startingDate)}
+                      value={getWorkWeek()}
                       onChange={(newValue) => {
                         onChange(newValue, setEndingDate);
                       }}
