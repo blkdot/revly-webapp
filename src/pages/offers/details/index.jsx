@@ -59,7 +59,7 @@ const OfferDetailComponent = () => {
       ended: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
       scheduled: ['#1890FF', 'rgba(24, 144, 255, 0.16)'],
       paused: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
-      live: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
+      live: ['#229A16', 'rgba(84, 214, 44, 0.16)'],
       default: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
     };
     return (
@@ -166,7 +166,7 @@ const OfferDetailComponent = () => {
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
               <div>
-                {['Active', 'Scheduled'].includes(status) && (
+                {['Live', 'Active', 'Scheduled'].includes(status) && (
                   <button onClick={openCancelModal} className="cancel-btn" type="button">
                     <Warning />
                     <span style={{ color: '#FF4842' }}>Cancel Offer</span>

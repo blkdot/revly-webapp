@@ -46,6 +46,7 @@ const PlanningOffersTable = ({ rows }) => {
 
   const renderSimpleRow = (r, h) => (
     <TableCellKit
+      id={h.id}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}>
       <span style={{ textAlign: 'justify' }} key={h.id}>
@@ -55,7 +56,10 @@ const PlanningOffersTable = ({ rows }) => {
   );
 
   const renderSimpleRowNotCentered = (r, h) => (
-    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', minWidth: '14rem' }}>
+    <TableCellKit
+      id={h.id}
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem' }}>
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
       </span>
@@ -63,7 +67,10 @@ const PlanningOffersTable = ({ rows }) => {
   );
 
   const renderPlatform = (r, h) => (
-    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', minWidth: '8rem' }}>
+    <TableCellKit
+      id={h.id}
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '8rem' }}>
       <img
         className="planning-platform"
         style={{ marginRight: '1.5rem' }}
@@ -74,7 +81,10 @@ const PlanningOffersTable = ({ rows }) => {
   );
 
   const renderPercent = (r, h) => (
-    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+    <TableCellKit
+      id={h.id}
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', textAlign: 'center' }}>
       <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
         {r[h.id]}%
       </span>
@@ -82,13 +92,19 @@ const PlanningOffersTable = ({ rows }) => {
   );
 
   const renderCurrency = (r, h) => (
-    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+    <TableCellKit
+      id={h.id}
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', textAlign: 'center' }}>
       <span style={{ whiteSpace: 'nowrap' }}>{r[h.id]}&nbsp;AED</span>
     </TableCellKit>
   );
 
   const renderCalculatedPercent = (r, h) => (
-    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+    <TableCellKit
+      id={h.id}
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', textAlign: 'center' }}>
       <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
         {r[h.id] * 10}%
       </span>
@@ -96,7 +112,7 @@ const PlanningOffersTable = ({ rows }) => {
   );
 
   const renderStatus = (r, h) => (
-    <TableCellKit key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem' }}>
+    <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem' }}>
       <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
         {r[h.id]}
       </span>
@@ -147,7 +163,7 @@ const PlanningOffersTable = ({ rows }) => {
   return (
     <BoxKit className="planning-box" sx={{ width: '100%' }}>
       <PaperKit className="planning-box__paper" sx={{ width: '100%', mb: 2 }}>
-        <TableContainerKit className="planning-table-container">
+        <TableContainerKit id="adsContainer" className="planning-table-container">
           <TableKit aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
               order={order}
