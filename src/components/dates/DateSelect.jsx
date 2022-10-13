@@ -19,12 +19,10 @@ import ButtonKit from '../../kits/button/ButtonKit';
 import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
 import AccordionKit from '../../kits/accordion/AccordionKit';
 import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
-import useDate from '../../hooks/useDate';
 
 const DateSelect = React.memo(
   ({ type, setSelections, setTypeDate, expanded, setExpanded, index, dateFrom }) => {
     const [active, setActive] = useState('current');
-    const { setTypeDateContext } = useDate();
 
     useEffect(() => {
       const date = new Date();
@@ -139,7 +137,6 @@ const DateSelect = React.memo(
     };
     const changeSelect = () => {
       setTypeDate(type);
-      setTypeDateContext(type);
       if (type === 'day') {
         setSelections([{ startDate: new Date(), endDate: new Date(), key: 'selection' }]);
       } else if (type === 'week') {

@@ -54,19 +54,23 @@ const OfferDetailComponent = () => {
 
   const renderOfferStatus = (status) => {
     const statusColor = {
-      Cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
-      Active: ['#229A16', 'rgba(84, 214, 44, 0.16)'],
-      Ended: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
-      Scheduled: ['#1890FF', 'rgba(24, 144, 255, 0.16)'],
-      Paused: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
-      Live: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
+      cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
+      active: ['#229A16', 'rgba(84, 214, 44, 0.16)'],
+      ended: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
+      scheduled: ['#1890FF', 'rgba(24, 144, 255, 0.16)'],
+      paused: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
+      live: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
+      default: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
     };
     return (
       <div>
         <span className="offer-title">Offer Status :</span>
         <span
           className="offer-status"
-          style={{ color: statusColor[status][0], backgroundColor: statusColor[status][1] }}>
+          style={{
+            color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
+            backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
+          }}>
           {status}
         </span>
       </div>
