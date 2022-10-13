@@ -114,7 +114,7 @@ const PlanningOffersTable = ({ rows }) => {
   const renderStatus = (r, h) => (
     <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem' }}>
       <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
-        {r[h.id]}
+        {r[h.id] === 'Upcoming' ? 'Scheduled' : r[h.id]}
       </span>
     </TableCellKit>
   );

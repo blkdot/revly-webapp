@@ -26,19 +26,12 @@ const customStyles = {
 };
 
 const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
   const closeModal = () => {
     setIsOpen(false);
   };
 
   return (
     <div>
-      <button type="button" onClick={openModal}>
-        Open Modal
-      </button>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}

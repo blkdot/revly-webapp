@@ -365,13 +365,13 @@ const OfferDetailComponent = () => {
                     <FastFood />
                   </div>
                   <span className="offer-duration width-left-icon width-right-icon">
-                    {discount_type !== 'Menu discount'
+                    {discount_type && discount_type !== 'Menu discount'
                       ? 'Offer on an item from the Menu'
                       : 'Offer on the whole Menu'}
                   </span>
                   <ExpandIcon />
                 </div>
-                {discount_type !== 'Menu discount' && (
+                {discount_type && discount_type !== 'Menu discount' && (
                   <div
                     style={{
                       display: 'flex',
@@ -449,13 +449,14 @@ const OfferDetailComponent = () => {
                       lineHeight: '24px',
                       color: '#212B36',
                     }}>
-                    {minimum_order_value}
+                    {minimum_order_value} AED
                   </div>
                 </div>
               </div>
             </div>
-            {discount_type !== 'Menu discount' &&
-              menu_items.map((menuItem) => (
+            {discount_type &&
+              discount_type !== 'Menu discount' &&
+              (menu_items || []).map((menuItem) => (
                 <MenuItem
                   key={menuItem.drn_id}
                   itemId={menuItem.id}

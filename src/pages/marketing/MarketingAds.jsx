@@ -51,7 +51,6 @@ const MarketingAds = () => {
   const handleScroll = () => {
     const cont = document.querySelector('#adsContainer');
     const position = cont.scrollLeft;
-    console.log({ position });
     setScrollPosition(position);
   };
   const [adsData] = useState(AdsTableData);
@@ -86,7 +85,7 @@ const MarketingAds = () => {
     return () => {
       cont.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [ads]);
 
   useEffect(() => {
     const preHead = adsData.reduce(
@@ -245,16 +244,16 @@ const MarketingAds = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 488 ? 'active' : ''}`}
+              className={`right-part-header_link ${scrollPosition > 200 ? 'active' : ''}`}
               variant="div">
               <HashLink to="#vendor_name">
-                <BoxKit className={scrollPosition < 488 ? 'active' : ''}>
+                <BoxKit className={scrollPosition < 200 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Ads Management
                 </BoxKit>
               </HashLink>
               <HashLink to="#return_on_ad_spent">
-                <BoxKit className={scrollPosition > 488 ? 'active' : ''}>
+                <BoxKit className={scrollPosition > 200 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Ads Performance
                 </BoxKit>
