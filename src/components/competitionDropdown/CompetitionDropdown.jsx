@@ -70,7 +70,7 @@ const CompetitionDropdown = (props) => {
           {type === 'platform' ? (
             <img
               className="flag-img"
-              src={name === 'Deliveroo' ? icdeliveroo : ictalabat}
+              src={name === 'deliveroo' ? icdeliveroo : ictalabat}
               alt={name}
             />
           ) : (
@@ -110,7 +110,7 @@ const CompetitionDropdown = (props) => {
                 )}
                 {type === 'platform' ? (
                   <img
-                    src={selected === 'Deliveroo' ? icdeliveroo : ictalabat}
+                    src={selected === 'deliveroo' ? icdeliveroo : ictalabat}
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}

@@ -2,5 +2,14 @@
 
 .wrapper {
   color: $color-wrapper;
+
+  .top-inputs {
+    background-color: white;
+    padding: 1.5em 2em;
+    border-radius: 8px;
+    top: 0;
+    position: sticky;
+    z-index: 100;
+  }
 }
 

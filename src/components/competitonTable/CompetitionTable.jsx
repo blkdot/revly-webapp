@@ -195,7 +195,6 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                   <td />
                   <td />
                   <td />
-                  {type !== 'ranking' && <td />}
                   <td>
                     <SpinnerKit sx={{ margin: '1em 0' }} />
                   </td>
