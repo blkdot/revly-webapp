@@ -6,7 +6,7 @@
   grid-gap: 20px;
   align-items: center;
   flex-wrap: wrap;
-
+  position: relative;
   .dashboard-date {
     display: flex;
     align-items: center;
@@ -111,8 +111,10 @@
   display: flex;
   position: absolute;
   justify-content: center;
-  width: 100%;
+  width: fit-content;
   top: 65px;
+  left: auto;
+  right: 22%;
 
   transition: .4s;
 

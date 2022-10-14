@@ -13,14 +13,10 @@ import CuisineIcon from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import lines from '../../assets/images/lines.png';
 import loadingImage from '../../assets/images/loading-image.png';
-import { usePlatform } from '../../hooks/usePlatform';
 
 const Competitor = ({ open, opened }) => {
   const [restaurant, setRestaurant] = useState('');
-  const { userPlatformData } = usePlatform();
-  const [platform, setPlatform] = useState(
-    userPlatformData.platforms.talabat.active ? 'talabat' : 'deliveroo',
-  );
+  const [platform, setPlatform] = useState('');
   const [area, setArea] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
@@ -82,10 +78,11 @@ const Competitor = ({ open, opened }) => {
                     <CompetitionDropdown
                       icon={PlatformIcon}
                       select={platform}
-                      rows={[platform]}
+                      rows={['Deliveroo']}
                       title="Select a Platform"
                       className="competitor-dropdown"
                       setRow={setPlatform}
+                      type="platform"
                     />
                     <CompetitionDropdown
                       icon={CountryIcon}

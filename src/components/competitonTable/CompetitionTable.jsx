@@ -263,7 +263,9 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                       <TableCellKit>
                         <span className={`competition-status ${row?.status}`}>{row?.status}</span>
                       </TableCellKit>
-                      <TableCellKit align="center">{row?.mov} AED</TableCellKit>
+                      <TableCellKit align="center">
+                        {row?.mov === null ? 0 : row?.mov} AED
+                      </TableCellKit>
                     </TableRowKit>
                   );
                 })
