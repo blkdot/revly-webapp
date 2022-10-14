@@ -98,7 +98,7 @@ const CompetitionRanking = () => {
   };
 
   useEffect(() => {
-    if (vendors.length) {
+    if (platform && vendors.length) {
       getData(platform, vendorsContext[platform]);
     }
   }, [platform, vendorsContext]);
