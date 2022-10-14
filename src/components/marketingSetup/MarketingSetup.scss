@@ -1000,6 +1000,11 @@
 
     >div {
       margin-left: 10px;
+      display: flex;
+      align-items: center;
+      >div{
+        margin-left: 10px;
+      }
     }
   }
 }
@@ -1008,7 +1013,11 @@
   padding: 20px 10px;
   width: 100%;
   border-bottom: 1px solid #919EAB3D;
-
+  flex-wrap: wrap;
+  >div{
+    flex-direction: row !important;
+    grid-gap: 15px;
+  }
   p {
     font-size: 14px;
   }
@@ -1027,6 +1036,7 @@
     margin: 0 !important;
     flex-wrap: wrap;
     >div {
+      width: fit-content !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: flex-start !important;
