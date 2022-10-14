@@ -102,30 +102,6 @@ const headCellsAlerts = [
     label: 'Alert',
   },
   {
-    id: 'start_date',
-    numeric: true,
-    disablePadding: false,
-    label: 'Starting Date',
-  },
-  {
-    id: 'end_date',
-    numeric: true,
-    disablePadding: false,
-    label: 'Ending Date',
-  },
-  {
-    id: 'start_hour',
-    numeric: true,
-    disablePadding: false,
-    label: 'Starting Hour',
-  },
-  {
-    id: 'end_hour',
-    numeric: true,
-    disablePadding: false,
-    label: 'Ending Hour',
-  },
-  {
     id: 'status',
     numeric: true,
     disablePadding: false,
@@ -135,7 +111,7 @@ const headCellsAlerts = [
     id: 'mov',
     numeric: true,
     disablePadding: false,
-    label: 'MOV',
+    label: 'Minimum Order Value',
   },
 ];
 
@@ -146,7 +122,7 @@ const EnhancedTableHead = (props) => {
   };
 
   return (
-    <TableHeadKit>
+    <TableHeadKit className={type !== 'ranking' ? 'competition-thead' : ''}>
       <TableRowKit>
         {(type === 'ranking' ? headCells : headCellsAlerts).map((headCell) => (
           <TableCellKit
@@ -187,25 +163,6 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
   const getNumArr = () => {
     const numArr = [];
     for (let i = 0; i < 5 - rows.length; i++) {
@@ -249,71 +206,64 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                 </tr>
               ) : (
                 stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row?.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   if (type === 'ranking') {
                     return (
                       <TableRowKit
-                        onClick={(event) => handleClick(event, row.id)}
                         role="checkbox"
                         sx={{ height: '72px' }}
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.id}
+                        key={row?.id}
                         selected={isItemSelected}>
                         <TableCellKit component="th" id={labelId} scope="row">
-                          {row.name}
+                          {row?.name}
                         </TableCellKit>
                         <TableCellKit>
                           <img
                             className="competition-table-icon"
-                            src={row.platform === 'deliveroo' ? deliveroo : talabat}
-                            alt={row.platform}
+                            src={row?.platform === 'deliveroo' ? deliveroo : talabat}
+                            alt={row?.platform}
                           />
                         </TableCellKit>
                         <TableCellKit>
-                          {ordinalSuffixOf(row.r_offers) >= 100 && '> '}
-                          {ordinalSuffixOf(row.r_offers)}
+                          {ordinalSuffixOf(row?.r_offers) >= 100 && '> '}
+                          {ordinalSuffixOf(row?.r_offers)}
                         </TableCellKit>
                         <TableCellKit>
-                          {ordinalSuffixOf(row.r_cuis) >= 100 && '> '}
-                          {ordinalSuffixOf(row.r_cuis)}
+                          {ordinalSuffixOf(row?.r_cuis) >= 100 && '> '}
+                          {ordinalSuffixOf(row?.r_cuis)}
                         </TableCellKit>
                         <TableCellKit>
-                          {ordinalSuffixOf(row.r_all) >= 100 && '> '}
-                          {ordinalSuffixOf(row.r_all)}
+                          {ordinalSuffixOf(row?.r_all) >= 100 && '> '}
+                          {ordinalSuffixOf(row?.r_all)}
                         </TableCellKit>
                         <TableCellKit>
-                          {ordinalSuffixOf(row.ov) >= 100 && '> '}
-                          {ordinalSuffixOf(row.ov)}
+                          {ordinalSuffixOf(row?.ov) >= 100 && '> '}
+                          {ordinalSuffixOf(row?.ov)}
                         </TableCellKit>
                       </TableRowKit>
                     );
                   }
-
                   return (
                     <TableRowKit
-                      onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row?.name}
                       selected={isItemSelected}>
                       <TableCellKit component="th" id={labelId} scope="row">
-                        {row.name}
+                        {row?.name}
                       </TableCellKit>
-                      <TableCellKit>{row.type}</TableCellKit>
+                      <TableCellKit>{row?.type}</TableCellKit>
                       <TableCellKit>
-                        <span className="competition-table-alert">{row.alert}%</span>
+                        <span className="competition-table-alert">{row?.alert}%</span>
                       </TableCellKit>
-                      <TableCellKit>{row.start_date}</TableCellKit>
-                      <TableCellKit>{row.end_date || '-'}</TableCellKit>
-                      <TableCellKit>{row.start_hour || '-'}</TableCellKit>
-                      <TableCellKit>{row.end_hour || '-'}</TableCellKit>
                       <TableCellKit>
-                        <span className={`competition-status ${row.status}`}>{row.status}</span>
+                        <span className={`competition-status ${row?.status}`}>{row?.status}</span>
                       </TableCellKit>
-                      <TableCellKit>{row.mov} AED</TableCellKit>
+                      <TableCellKit align="center">{row?.mov} AED</TableCellKit>
                     </TableRowKit>
                   );
                 })

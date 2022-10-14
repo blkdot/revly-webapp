@@ -88,8 +88,6 @@ const MarketingOffer = () => {
     vendor_name: "Adam's Kitchen";
   } */
 
-  console.log({ offers });
-
   const [scrollPosition, setScrollPosition] = useState(0);
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
@@ -108,8 +106,6 @@ const MarketingOffer = () => {
     setOffersData(fomatOffers(offers));
     setRow(fomatOffers(offers));
   }, [offers]);
-
-  console.log({ offersData });
 
   const [filters, setFilters] = useState({
     platform: [],
@@ -276,7 +272,7 @@ const MarketingOffer = () => {
           </TypographyKit>
         </div>
         <div className="markting-top-btns">
-          <ButtonKit className="sm-rule-btn" variant="outlined">
+          <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
             <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
             Create a smart rule
           </ButtonKit>
@@ -290,16 +286,16 @@ const MarketingOffer = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 578 ? 'active' : ''}`}
+              className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div">
               <HashLink to="#dateMn">
-                <BoxKit className={scrollPosition < 578 ? 'active' : ''}>
+                <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
               </HashLink>
               <HashLink to="#revenuePr">
-                <BoxKit className={scrollPosition > 578 ? 'active' : ''}>
+                <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
                 </BoxKit>

@@ -44,8 +44,6 @@
 
       >td:last-of-type {
         border-radius: 0 8px 8px 0;
-        display: flex;
-        align-items: center;
         padding: 20px 15px;
         grid-gap: 8px;
 
@@ -166,5 +164,12 @@
 @media(max-width: 695px) {
   .competition-table-conatiner.competition-table-conatiner {
     width: 250%;
+  }
+}
+.competition-thead{
+  >tr{
+    >th:last-of-type{
+      text-align: center;
+    }
   }
 }
