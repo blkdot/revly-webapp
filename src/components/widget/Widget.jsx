@@ -108,6 +108,7 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
               {metricsDateFrom.all[title] !== null ? metricsDateFrom.all[title] : '-'}
+              {getTitle() === 'roi' && metricsDateFrom.all[title] && ' %'}
             </TypographyKit>
           </div>
           <TypographyKit className="card-typography card-icon">{getIcon()}</TypographyKit>
