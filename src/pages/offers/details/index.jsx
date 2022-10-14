@@ -39,7 +39,7 @@ const scheduleTypeMapping = {
 const OfferDetailComponent = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const {
-    state: { offerDetail: data },
+    state: { offerDetail: data, prevPath },
   } = useLocation();
 
   const [offerDetail, setOfferDetail] = useState(data);
@@ -169,7 +169,7 @@ const OfferDetailComponent = () => {
         <PaperKit className="marketing-paper offer-paper">
           <div>
             <div className="offer-details-actions">
-              <button onClick={() => navigate('/planning')} type="button" className="back-icon">
+              <button onClick={() => navigate(prevPath)} type="button" className="back-icon">
                 <Arrow />
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>

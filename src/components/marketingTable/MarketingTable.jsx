@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
@@ -200,6 +200,7 @@ const EnhancedTableHead = (props) => {
 
 const MarketingTable = ({ rows, selected, setSelected, offers }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const handleRequestSort = (event, property) => {
@@ -235,8 +236,12 @@ const MarketingTable = ({ rows, selected, setSelected, offers }) => {
     }
 
     setSelected(newSelected); */
+
     navigate(`/offer/detail/${offerId}`, {
-      state: { offerDetail: offers.find((o) => o.offer_id === offerId) },
+      state: {
+        offerDetail: offers.find((o) => o.offer_id === offerId),
+        prevPath: location.pathname,
+      },
     });
   };
 
