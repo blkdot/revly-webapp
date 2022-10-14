@@ -588,17 +588,19 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }, [customDay, duration]);
 
   const renderGradientValue = (v, i) => {
+    const indices = links === 'revenue' ? 'AED' : '';
+
     if (i === 0) {
       return (
         <>
-          AED&nbsp;{0} - AED&nbsp;{v}
+          {indices}&nbsp;{0} - {indices}&nbsp;{v}
         </>
       );
     }
 
     return (
       <>
-        AED&nbsp;{rangeColorIndices[links][i - 1]} - AED&nbsp;{v}
+        {indices}&nbsp;{rangeColorIndices[links][i - 1]} - {indices}&nbsp;{v}
       </>
     );
   };
@@ -625,6 +627,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       </div>
     </div>
   );
+
   const closeSetup = () => {
     const body = document.querySelector('body');
     setActive(false);
@@ -637,6 +640,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setSelected(1);
     setRecap(false);
   }, [active]);
+
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
     const arr = [];
