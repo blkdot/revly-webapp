@@ -189,7 +189,7 @@ const GetProgress = (props) => {
           </BoxKit>
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
-              platform === 'talabat' ? 'disabled' : ''
+              platform === 'talabat' || category.length === 0 ? 'disabled' : ''
             } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}>
             <div className="radio">
@@ -202,7 +202,7 @@ const GetProgress = (props) => {
                   <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
-              {platform === 'deliveroo' ? (
+              {platform === 'deliveroo' && category.length > 0 ? (
                 <FormControlLabelKit
                   value="Offer on An Item from the Menu"
                   control={<RadioKit />}
