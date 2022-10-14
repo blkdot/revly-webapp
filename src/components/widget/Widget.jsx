@@ -90,6 +90,17 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
     }
     return <img src={RoiIcon} alt={title} />;
   };
+
+  const renderMetrics = () => {
+    if (metricsDateFrom.all[title]) {
+      return getTitle() === 'roi'
+        ? Math.round(metricsDateFrom.all[title] * 100)
+        : metricsDateFrom.all[title];
+    }
+
+    return '-';
+  };
+
   return (
     <CardKit
       className={`card_wrapper ${table === title ? 'active' : ''}`}
@@ -107,7 +118,7 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
               {getTitle()}
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
-              {metricsDateFrom.all[title] !== null ? metricsDateFrom.all[title] : '-'}
+              {renderMetrics()}
               {getTitle() === 'roi' && metricsDateFrom.all[title] && ' %'}
             </TypographyKit>
           </div>
