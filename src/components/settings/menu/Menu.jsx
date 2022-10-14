@@ -41,20 +41,16 @@ const Menu = () => {
     setLoading(true);
     try {
       const res = await getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor },
+        { master_email: user.email, access_token: user.accessToken, vendor: vendor || [] },
         platforms,
       );
 
-      if (!res.data) {
-        throw new Error('');
-      }
-
-      const resp = Object.keys(res.data.menu_items)
+      const resp = Object.keys(res.data.menu_items || {})
         .map((v) => res.data.menu_items[v])
         .map((k) => Object.keys(k).map((el) => k[el]))
         .flat();
 
-      setCategoryList(res.data.categories);
+      setCategoryList(res.data.categories || []);
       setData(resp);
       setLoading(false);
     } catch (err) {

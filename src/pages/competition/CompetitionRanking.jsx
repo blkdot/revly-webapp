@@ -69,7 +69,7 @@ const CompetitionRanking = () => {
       const body = {
         master_email: user.email,
         access_token: user.accessToken,
-        vendors: vend,
+        vendors: vend || [],
       };
 
       const ranking = await getRanking(body, plat);

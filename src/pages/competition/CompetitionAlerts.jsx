@@ -74,18 +74,14 @@ const CompetitionAlerts = () => {
       const body = {
         master_email: user.email,
         access_token: user.accessToken,
-        vendors: vend,
+        vendors: vend || {},
       };
 
       const alerts = await getAlerts(body, plat);
 
       const comp = await getCompetitors(body, plat);
 
-      if (!alerts) {
-        throw new Error('');
-      }
-
-      const filt = alerts.data.data.map((v) => ({
+      const filt = alerts.data?.data.map((v) => ({
         name: v.vendor_name,
         type: v.discount_type,
         alert: v.discount,
@@ -94,8 +90,10 @@ const CompetitionAlerts = () => {
         status: v.status === 'Live' ? 'active' : 'inactive',
       }));
 
-      setCompetitorList(comp.data.data);
-      setCompetitionAlertsData(filt);
+      setCompetitionAlertsData(filt || []);
+
+      setCompetitorList(comp.data ? comp.data.data : []);
+
       setLoading(false);
     } catch (err) {
       setCompetitionAlertsData([]);
@@ -106,7 +104,7 @@ const CompetitionAlerts = () => {
   };
 
   useEffect(() => {
-    if (vendors.length) {
+    if (platform && vendors.length) {
       const arr = Object.keys(vendorsContext).filter((v) => v === platform);
 
       const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsContext[arr] }), {});
