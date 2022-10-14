@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { noCase, sentenceCase } from 'change-case';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './PlanningOffersTable.scss';
 
@@ -30,6 +30,7 @@ const PlanningOffersTable = ({ rows, type }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const navigate = useNavigate();
+  const location = useLocation();
   // const [selected, setSelected] = useState([]);
 
   const handleRequestSort = (event, property) => {
@@ -52,7 +53,9 @@ const PlanningOffersTable = ({ rows, type }) => {
   };
 
   const navigateToOfferDetails = (offer) =>
-    navigate(`/offer/detail/${offer.offer_id}`, { state: { offerDetail: offer } });
+    navigate(`/offer/detail/${offer.offer_id}`, {
+      state: { offerDetail: offer, prevPath: location.pathname },
+    });
 
   const renderSimpleRow = (r, h) => (
     <TableCellKit
