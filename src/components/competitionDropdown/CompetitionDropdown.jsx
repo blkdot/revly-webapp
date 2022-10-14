@@ -67,6 +67,15 @@ const CompetitionDropdown = (props) => {
       ) : (
         <MenuItemKit key={name} value={name}>
           {title === 'Country' ? <img className="flag-img" src={getFlag(name)} alt={name} /> : ''}
+          {type === 'platform' ? (
+            <img
+              className="flag-img"
+              src={name === 'Deliveroo' ? icdeliveroo : ictalabat}
+              alt={name}
+            />
+          ) : (
+            ''
+          )}
           <ListItemTextKit primary={name} />
         </MenuItemKit>
       ),
@@ -94,17 +103,21 @@ const CompetitionDropdown = (props) => {
               renderValue(selected)
             ) : (
               <div className="country-wrapper">
-                {title === 'Country' && (
+                {title === 'Country' ? (
                   <img className="flag-img" src={getFlag(selected)} alt={selected} />
+                ) : (
+                  ''
                 )}
-                {type === 'platform' && (
+                {type === 'platform' ? (
                   <img
-                    src={selected === 'deliveroo' ? icdeliveroo : ictalabat}
+                    src={selected === 'Deliveroo' ? icdeliveroo : ictalabat}
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}
                     alt="icon"
                   />
+                ) : (
+                  ''
                 )}
                 {selected}
               </div>
