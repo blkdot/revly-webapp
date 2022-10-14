@@ -29,10 +29,17 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 
+const scheduleTypeMapping = {
+  once: 'Once',
+  now: 'Now',
+  workweek: 'Work week',
+  everyday: 'Everyday',
+};
+
 const OfferDetailComponent = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const {
-    state: { offerDetail: data },
+    state: { offerDetail: data, prevPath },
   } = useLocation();
 
   const [offerDetail, setOfferDetail] = useState(data);
@@ -104,6 +111,7 @@ const OfferDetailComponent = () => {
     vendor_name,
     vendor_id,
     offer_id,
+    type_schedule,
   } = offerDetail;
 
   const vendor = vendorsContext[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
@@ -144,7 +152,8 @@ const OfferDetailComponent = () => {
           <div className="marketing-top-text">
             <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
             <TypographyKit color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
           </div>
           <div className="markting-top-btns">
@@ -161,7 +170,7 @@ const OfferDetailComponent = () => {
         <PaperKit className="marketing-paper offer-paper">
           <div>
             <div className="offer-details-actions">
-              <button onClick={() => navigate('/planning')} type="button" className="back-icon">
+              <button onClick={() => navigate(prevPath)} type="button" className="back-icon">
                 <Arrow />
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
@@ -179,7 +188,6 @@ const OfferDetailComponent = () => {
                 <Calendar />
                 <div className="restau-infos">
                   <div className="restau-name">{vendor_name}</div>
-                  <div className="restau-branch">Branch Name</div>
                 </div>
               </div>
               <div className="offer">
@@ -262,12 +270,15 @@ const OfferDetailComponent = () => {
                       <ExpandIcon />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span className="offer-duration  width-right-icon">Customized days</span>
-                      <ExpandIcon />
+                      <span className="offer-duration  width-right-icon">
+                        {scheduleTypeMapping[type_schedule] || ''}
+                      </span>
+                      {/*                       <ExpandIcon />
+                       */}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {/* <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span className="offer-duration">Monday, Thursday, Sunday</span>
-                    </div>
+                    </div> */}
                   </div>
                   <div
                     style={{
@@ -339,7 +350,7 @@ const OfferDetailComponent = () => {
                   </div>
                 </div>
 
-                <div
+                {/* <div
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -349,7 +360,7 @@ const OfferDetailComponent = () => {
                   <TimeSlot status={status} />
                   <TimeSlot status={status} />
                   <TimeSlot status={status} />
-                </div>
+                </div> */}
               </>
             )}
             <div className="offer-duration-container">
@@ -474,6 +485,7 @@ const OfferDetailComponent = () => {
 
 export default OfferDetailComponent;
 
+// eslint-disable-next-line no-unused-vars
 const TimeSlot = ({ status }) => (
   <div
     style={{

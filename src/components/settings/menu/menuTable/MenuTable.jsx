@@ -100,7 +100,7 @@ const MenuTable = (props) => {
         <TableRowKit key={row.id} tabIndex={-1}>
           <TableCellKit>{row.name}</TableCellKit>
           <TableCellKit>{row.category}</TableCellKit>
-          <TableCellKit>${row.price}</TableCellKit>
+          <TableCellKit>AED {row.price}</TableCellKit>
         </TableRowKit>
       ))
     ) : (

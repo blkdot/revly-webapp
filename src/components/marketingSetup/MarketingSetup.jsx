@@ -25,10 +25,16 @@ import GetProgress from './MarketingGetProgress';
 import talabat from '../../assets/images/talabat.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import ArrowIcon from '../../assets/images/arrow.png';
+import AudienceIcon from '../../assets/images/ic_audience.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
 import menuIcon from '../../assets/images/ic_menu.png';
 import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
 import selectIcon from '../../assets/images/ic_select.png';
+import CalendarCheckGrayIcon from '../../assets/images/ic_calendar-check-gray.png';
+import CalendarCloseGrayIcon from '../../assets/images/ic_calendar-close-gray.png';
+import TimerCheckGrayIcon from '../../assets/images/ic_timer-check-gray.png';
+import TimerCloseGrayIcon from '../../assets/images/ic_timer-close-gray.png';
+import CreatedIcon from '../../assets/images/ic_created.png';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -42,7 +48,7 @@ const defaultHeatmapState = {
 
 const defaultRangeColorIndices = [0, 0, 0, 0];
 
-const MarketingSetup = ({ active, setActive }) => {
+const MarketingSetup = ({ active, setActive, ads }) => {
   const [branch, setBranch] = useState('');
   const { userPlatformData } = usePlatform();
   const [platform, setPlatform] = useState(
@@ -87,6 +93,7 @@ const MarketingSetup = ({ active, setActive }) => {
   const [category, setCategory] = useState([]);
   const [filteredCategoryData, setFilteredCategoryData] = useState([]);
   const [targetAudience, setTargetAudience] = useState('All customers');
+  const [created, setCreated] = useState(false);
 
   const [checked, setChecked] = useState([]);
   const getDiscountOrMov = (type) => {
@@ -192,11 +199,12 @@ const MarketingSetup = ({ active, setActive }) => {
     return 'free-items';
   };
 
-  const [steps, setSteps] = useState([0, 1, 2, 3]);
+  const [steps, setSteps] = useState([0, 1, 2, 3, 4]);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   useEffect(() => {
     setBranch('');
+    setMenu('Offer on the whole Menu');
   }, [platform]);
 
   // TODO: Send request
@@ -235,8 +243,8 @@ const MarketingSetup = ({ active, setActive }) => {
       return;
     }
 
-    // TODO: get new offers list in the table on close here
-    closeSetup();
+    setCreated(true);
+    setRecap(false);
   };
 
   const heatMapFormatter = (type) => {
@@ -577,20 +585,22 @@ const MarketingSetup = ({ active, setActive }) => {
         pos: 1,
       },
     ]);
-  }, [customDay]);
+  }, [customDay, duration]);
 
   const renderGradientValue = (v, i) => {
+    const indices = links === 'revenue' ? 'AED' : '';
+
     if (i === 0) {
       return (
         <>
-          AED&nbsp;{0} - AED&nbsp;{v}
+          {indices}&nbsp;{0} - {indices}&nbsp;{v}
         </>
       );
     }
 
     return (
       <>
-        AED&nbsp;{rangeColorIndices[links][i - 1]} - AED&nbsp;{v}
+        {indices}&nbsp;{rangeColorIndices[links][i - 1]} - {indices}&nbsp;{v}
       </>
     );
   };
@@ -617,10 +627,12 @@ const MarketingSetup = ({ active, setActive }) => {
       </div>
     </div>
   );
+
   const closeSetup = () => {
     const body = document.querySelector('body');
     setActive(false);
     setSelected(1);
+    setCreated(false);
     body.style.overflowY = 'visible';
   };
 
@@ -628,6 +640,7 @@ const MarketingSetup = ({ active, setActive }) => {
     setSelected(1);
     setRecap(false);
   }, [active]);
+
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
     const arr = [];
@@ -639,12 +652,12 @@ const MarketingSetup = ({ active, setActive }) => {
     return arr;
   };
   const getRecap = () => {
-    if (recap) {
+    if (created) {
       return (
-        <div>
+        <div style={{ height: '100%' }}>
           <div className="left-part-top">
             <div>
-              <TypographyKit variant="h4">Offer Recap </TypographyKit>
+              <TypographyKit variant="h4"> </TypographyKit>
 
               <img
                 tabIndex={-1}
@@ -655,20 +668,38 @@ const MarketingSetup = ({ active, setActive }) => {
               />
             </div>
           </div>
-          <BoxKit className="left-part-radio recap-left-part">
+          <div className="created-wrapper">
+            <img src={CreatedIcon} alt="Created Icon" />
+            <TypographyKit variant="h3">Let’s Go !!</TypographyKit>
+            <p>The {ads ? 'Ads' : 'Offer'} has Been Created Successfuly</p>
+          </div>
+        </div>
+      );
+    }
+    if (recap) {
+      return (
+        <div>
+          <div className="left-part-top">
+            <div>
+              <TypographyKit variant="h4">{ads ? 'Ads' : 'Offer'} Recap </TypographyKit>
+
+              <img
+                tabIndex={-1}
+                role="presentation"
+                onClick={() => closeSetup()}
+                src={CloseIcon}
+                alt="close icon"
+              />
+            </div>
+          </div>
+          <BoxKit className="left-part-radio recap-left-part recap-left-part-inside">
             <div>
               <img width={35} height={35} src={selectIcon} alt="select" />
               <div>{branch}</div>
             </div>
-            <div className="recap-left-part-inside">
-              <div>
-                <p>Offer Date:</p>
-                <b>{format(new Date(), 'dd/MM/yy')}</b>
-              </div>
-              <div>
-                <p>Platform:</p>
-                <img src={platform === 'talabat' ? talabat : deliveroo} alt={platform} />
-              </div>
+            <div>
+              <p>Platform:</p>
+              <img src={platform === 'talabat' ? talabat : deliveroo} alt={platform} />
             </div>
           </BoxKit>
           <BoxKit className="left-part-radio recap-left-part">
@@ -680,12 +711,18 @@ const MarketingSetup = ({ active, setActive }) => {
                   </span>
                   <div>
                     <div>{duration}</div>
-                  </div>
-                  <div />
-                  {duration !== 'Starting Now' ? (
-                    <div>
+                    {duration === 'Program the offer duration' ? (
                       <img className="arrow-icon" src={ArrowIcon} alt="arrow" />
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                  {duration === 'Program the offer duration' ? (
+                    <div className="customised-column">
                       <div>{customDay}</div>
+                      <p>
+                        {customDay === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
+                      </p>
                     </div>
                   ) : (
                     ''
@@ -694,77 +731,124 @@ const MarketingSetup = ({ active, setActive }) => {
               </div>
             </div>
             <div className="radio recap-box-wrapper column">
-              <div>
-                {customisedDay === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
-              </div>
               <div className="recap-between">
                 <div>
-                  <div>Starting Date</div>
-                  <div>{format(startingDate, 'dd MMM yyyy')}</div>
+                  <img src={CalendarCheckGrayIcon} alt="calendar check icon" />
+                  <div>
+                    <div>Starting Date</div>
+                    <div>{format(startingDate, 'dd MMM yyyy')}</div>
+                  </div>
                 </div>
-                <div>
-                  <div>Ending Date</div>
-                  <div>{format(endingDate, 'dd MMM yyyy')}</div>
+                <div className="right">
+                  <img src={CalendarCloseGrayIcon} alt="calendar close icon" />
+                  <div>
+                    <div>Ending Date</div>
+                    <div>{format(endingDate, 'dd MMM yyyy')}</div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="radio recap-box-wrapper border-none">
+            <div className="radio recap-box-wrapper column">
               {times.map((obj, index) => (
-                <div key={obj.pos}>
+                <div className="recap-between" key={obj.pos}>
                   <div>
-                    <div>Start Time {index + 1}</div>
-                    <div>{format(obj.startTime, 'HH:00 aaa')}</div>
+                    <img src={TimerCheckGrayIcon} alt="timer check icon" />
+                    <div>
+                      <div>Start Time {index + 1}</div>
+                      <div>{format(obj.startTime, 'HH:00 aaa')}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div>End Time {index + 1}</div>
-                    <div>{format(obj.endTime, 'HH:00 aaa')}</div>
+                  <div className="right">
+                    <img src={TimerCloseGrayIcon} alt="timer check icon" />
+                    <div>
+                      <div>End Time {index + 1}</div>
+                      <div>{format(obj.endTime, 'HH:00 aaa')}</div>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </BoxKit>
+          {platform === 'deliveroo' ? (
+            <BoxKit className="left-part-radio recap-left-part">
+              <div className="radio recap-box-wrapper">
+                <div className="recap-box">
+                  <div>
+                    <span>
+                      <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
+                    </span>
+                    <div>
+                      <div>Target Audience</div>
+                      <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                    </div>
+                    <div style={{ marginLeft: 0 }}>
+                      <div>{targetAudience}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </BoxKit>
+          ) : (
+            ''
+          )}
           <BoxKit className="left-part-radio under-textfields recap-left-part radio-dates active">
-            <div className="radio">
-              <div>
-                <span>
-                  <img
-                    src={menu === 'Offer on the whole Menu' ? menuIcon : ItemMenuIcon}
-                    alt={menu}
-                  />
-                </span>
+            <div className="radio recap-box-wrapper">
+              <div className="recap-box">
                 <div>
-                  <div>{menu}</div>
+                  <span>
+                    <img
+                      src={menu === 'Offer on An Item from the Menu' ? ItemMenuIcon : menuIcon}
+                      alt={menu}
+                    />
+                  </span>
+                  <div>
+                    <div>{menu}</div>
+                    {menu === 'Offer on An Item from the Menu' ? (
+                      <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                  {menu === 'Offer on An Item from the Menu' ? (
+                    <div style={{ marginLeft: 0 }}>
+                      <div>{itemMenu}</div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             </div>
             <div
               className={`radio recap-box-wrapper between under ${
-                menu === 'Offer on An Item from the Menu' ? 'border-none' : ''
+                menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
               }`}>
+              <div className="recap-between mov">
+                <div>
+                  <div>
+                    <div>Procentage Discount</div>
+                    <div>{discountPercentage}</div>
+                  </div>
+                </div>
+                <div className="right">
+                  <div>
+                    <div>Minimum Order</div>
+                    <div>{minOrder}</div>
+                  </div>
+                </div>
+              </div>
               {menu === 'Offer on An Item from the Menu' ? (
-                <div className="item-menu-recap">
-                  <img className="arrow-icon" src={ArrowIcon} alt="arrow" />
-                  <div>{itemMenu}</div>
+                <div className="recap-between no-border">
+                  {getItemMenuNamePrice().map((obj) => (
+                    <div>
+                      <div>{obj.name}</div>
+                      <div>{obj.price} AED</div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 ''
               )}
-              <div>
-                <div>Percentage Discount</div>
-                <p>{discountPercentage}</p>
-              </div>
-              <div>
-                <div>Min Order</div>
-                <p>{minOrder}</p>
-              </div>
-            </div>
-            <div className="radio recap-box-wrapper column border-none">
-              {getItemMenuNamePrice().map((obj) => (
-                <div className="recap-between">
-                  <div>{obj.name}</div>
-                  <div>{obj.price}$</div>
-                </div>
-              ))}
             </div>
           </BoxKit>
         </div>
@@ -774,7 +858,7 @@ const MarketingSetup = ({ active, setActive }) => {
       <div>
         <div className="left-part-top">
           <div>
-            <TypographyKit variant="h4">Set up an offer</TypographyKit>
+            <TypographyKit variant="h4">Set up an {ads ? 'Ads' : 'Offer'}</TypographyKit>
 
             <img
               tabIndex={-1}
@@ -850,29 +934,37 @@ const MarketingSetup = ({ active, setActive }) => {
         <ContainerKit className="setup-container">
           <div className="left-part">
             {getRecap()}
-            <div className="left-part-bottom">
-              <ButtonKit
-                onClick={() => (recap ? setRecap(false) : setSelected(selected - 1))}
-                variant="outlined"
-                disabled={!(selected >= 2)}>
-                Previous Step
-              </ButtonKit>
-              <ButtonKit
-                onClick={() => {
-                  if (recap) {
-                    handleSchedule();
-                  }
-                  if (steps.length - 1 === selected) {
-                    setRecap(true);
-                  } else {
-                    setSelected(selected + 1);
-                  }
-                }}
-                disabled={disabled}
-                variant="contained">
-                {getRecapBtn()}
-              </ButtonKit>
-            </div>
+            {created ? (
+              <div className="left-part-bottom">
+                <ButtonKit onClick={() => closeSetup()} variant="outlined">
+                  CLose
+                </ButtonKit>
+              </div>
+            ) : (
+              <div className="left-part-bottom">
+                <ButtonKit
+                  onClick={() => (recap ? setRecap(false) : setSelected(selected - 1))}
+                  variant="outlined"
+                  disabled={!(selected >= 2)}>
+                  Previous Step
+                </ButtonKit>
+                <ButtonKit
+                  onClick={() => {
+                    if (recap) {
+                      handleSchedule();
+                    }
+                    if (steps.length - 1 === selected) {
+                      setRecap(true);
+                    } else {
+                      setSelected(selected + 1);
+                    }
+                  }}
+                  disabled={disabled}
+                  variant="contained">
+                  {getRecapBtn()}
+                </ButtonKit>
+              </div>
+            )}
           </div>
           <div className="right-part">
             <div className="right-part-header">

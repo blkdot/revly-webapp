@@ -955,6 +955,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  flex-direction: row !important;
 
   >div {
     width: fit-content;
@@ -979,7 +980,13 @@
   width: 12px;
   height: 12px;
   object-fit: contain;
-  margin-left: 3px;
+  position: relative;
+  left: -12px;
+  margin-left: 5px;
+
+  &.not-display {
+    left: 0;
+  }
 }
 
 .recap-box {
@@ -1000,14 +1007,27 @@
 
     >div {
       margin-left: 10px;
+      display: flex;
+      align-items: center;
+      position: relative;
+
+      >div {
+        margin-left: 10px;
+        padding-right: 5px;
+      }
     }
   }
 }
 
 .recap-box-wrapper {
-  padding: 20px 10px;
+  padding: 20px 10px 0 10px;
   width: 100%;
-  border-bottom: 1px solid #919EAB3D;
+  flex-wrap: wrap;
+
+  >div {
+    flex-direction: row !important;
+    grid-gap: 15px;
+  }
 
   p {
     font-size: 14px;
@@ -1019,6 +1039,7 @@
     grid-gap: 20px;
     align-items: flex-start !important;
   }
+
   &.between {
     display: flex;
     justify-content: space-between !important;
@@ -1026,11 +1047,8 @@
     flex-direction: row !important;
     margin: 0 !important;
     flex-wrap: wrap;
+
     >div {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      grid-gap: 5px !important;
       &.item-menu-recap.item-menu-recap {
         width: 100%;
         flex-direction: row !important;
@@ -1052,10 +1070,101 @@
   justify-content: space-between !important;
   align-items: center;
   flex-direction: row !important;
+  background-color: #F4F6F8;
+  padding: 13px 18px;
+  border-radius: 6px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 60%;
+    width: 1px;
+    background-color: #919EAB3D;
+    left: 50%;
+  }
+
+  &.mov {
+    &::before {
+      left: 55%;
+    }
+  }
+
+  &.no-border {
+    flex-direction: column !important;
+    justify-content: center !important;
+
+    >div {
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      width: 100%;
+    }
+
+    &::before {
+      content: none;
+    }
+  }
+
+  img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+  }
 
   >div {
+    width: 45%;
     display: flex;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    grid-gap: 10px;
+
+    &.right {
+      justify-content: flex-end;
+    }
+
+    >div {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+}
+
+.customised-column {
+  display: flex;
+  flex-direction: column !important;
+  width: 50%;
+
+  >div {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+.created-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+
+  img {
+    width: 350px;
+  }
+
+  h3 {
+    margin-top: 45px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #637381;
   }
 }

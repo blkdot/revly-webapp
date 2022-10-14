@@ -201,25 +201,19 @@ const MarketingAds = () => {
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
 
-  const OpenSetup = () => {
-    const body = document.querySelector('body');
-    setActive(true);
-    body.style.overflowY = 'hidden';
-  };
-
   const getAdsTable = () => {
     if (isLoadingAds) {
       return <PlanningOffersTableEmpty />;
     }
 
-    return <PlanningOffersTable rows={ads} />;
+    return <PlanningOffersTable type="ad" rows={ads} />;
   };
 
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
+        <Dates offer dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
       </div>
       <div className="marketing-top">
         <div className="marketing-top-text">
@@ -230,11 +224,11 @@ const MarketingAds = () => {
           </TypographyKit>
         </div>
         <div className="markting-top-btns">
-          <ButtonKit className="sm-rule-btn" variant="outlined">
+          <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
             <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
             Create a smart rule
           </ButtonKit>
-          <ButtonKit onClick={() => OpenSetup()} variant="contained">
+          <ButtonKit disabled variant="contained">
             <img src={SettingFuture} alt="Setting future icon" />
             Set up an ad
           </ButtonKit>
@@ -307,7 +301,7 @@ const MarketingAds = () => {
         {getAdsTable()}
         {/* <MarketingTable selected={selected} rows={adsDataFiltered} /> */}
       </PaperKit>
-      <MarketingSetup active={active} setActive={setActive} />
+      <MarketingSetup ads active={active} setActive={setActive} />
       <div
         role="presentation"
         tabIndex={-1}

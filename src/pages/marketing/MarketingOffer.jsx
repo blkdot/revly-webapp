@@ -19,7 +19,7 @@ import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
 import MarketingTable from '../../components/marketingTable/MarketingTable';
-import { OffersTableData } from '../../data/fakeDataMarketing';
+// import { OffersTableData } from '../../data/fakeDataMarketing';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
@@ -29,6 +29,31 @@ import Basket from '../../assets/icons/Basket';
 import { platformObject } from '../../data/platformList';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
+import usePlanningOffers from '../../hooks/usePlanningOffers';
+
+const fomatOffers = (os) =>
+  os.map((o) => ({
+    date: o.start_date,
+    branche: o.vendor_name,
+    platform: o.platform,
+    // day: 'Mocked',
+    // slot: 'Mocked',
+    discountType: o.discount_type,
+    procent: o.discount_rate,
+    minOrder: o.minimum_order_value,
+    target: o.target,
+    status: o.status,
+    // discountTypePr: 'Mocked',
+    // targetPr: 'Mocked',
+    // statusPr: 'Mocked',
+    // caroussel: 'Mocked',
+    // rank: 'Mocked',
+    orders: o.data?.n_orders || '-',
+    avgBasket: o.data?.average_basket || '-',
+    roi: o.data?.roi || '-',
+    revenue: o.data?.revenue || '-',
+    id: o.offer_id,
+  }));
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
@@ -37,19 +62,50 @@ const MarketingOffer = () => {
     startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
     endDate: new Date(),
   });
+  const { offers } = usePlanningOffers({ dateRange: dateFromBtn });
+
+  /*  {
+    data: {
+      accrued_discount: 29.4;
+      average_basket: 98;
+      n_orders: 1;
+      revenue: 98;
+      roi: 2.33;
+    }
+    discount_rate: 30;
+    discount_type: 'Menu discount';
+    end_date: '22/09 at 18:59';
+    master_id: null;
+    menu_items: null;
+    minimum_order_value: 30;
+    offer_id: 2839815;
+    platform: 'deliveroo';
+    start_date: '22/09 at 15:00';
+    status: 'Ended';
+    target: 'Everyone';
+    type_schedule: null;
+    vendor_id: 126601;
+    vendor_name: "Adam's Kitchen";
+  } */
+
   const [scrollPosition, setScrollPosition] = useState(0);
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(OffersTableData);
+  const [row, setRow] = useState(fomatOffers(offers));
   const handleScroll = () => {
     const cont = document.querySelector('#markeitngContainer');
     const position = cont.scrollLeft;
     setScrollPosition(position);
   };
-  const [offersData] = useState(OffersTableData);
+  const [offersData, setOffersData] = useState(fomatOffers(offers));
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
   const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
+
+  useEffect(() => {
+    setOffersData(fomatOffers(offers));
+    setRow(fomatOffers(offers));
+  }, [offers]);
 
   const [filters, setFilters] = useState({
     platform: [],
@@ -176,7 +232,7 @@ const MarketingOffer = () => {
     }
 
     setOffersDataFiltered(filteredData);
-  }, [JSON.stringify(filters), JSON.stringify(avgBasketRange)]);
+  }, [JSON.stringify(filters), JSON.stringify(avgBasketRange), offersData]);
 
   const handleChangeMultipleFilter = (k) => (v) => {
     const propertyFilter = filters[k];
@@ -216,7 +272,7 @@ const MarketingOffer = () => {
           </TypographyKit>
         </div>
         <div className="markting-top-btns">
-          <ButtonKit className="sm-rule-btn" variant="outlined">
+          <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
             <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
             Create a smart rule
           </ButtonKit>
@@ -230,16 +286,16 @@ const MarketingOffer = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 578 ? 'active' : ''}`}
+              className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div">
               <HashLink to="#dateMn">
-                <BoxKit className={scrollPosition < 578 ? 'active' : ''}>
+                <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
               </HashLink>
               <HashLink to="#revenuePr">
-                <BoxKit className={scrollPosition > 578 ? 'active' : ''}>
+                <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
                 </BoxKit>
@@ -286,7 +342,7 @@ const MarketingOffer = () => {
             </ButtonKit>
           </div>
         </TypographyKit>
-        <MarketingTable selected={selected} rows={offersDataFiltered} />
+        <MarketingTable selected={selected} rows={offersDataFiltered} offers={offers} />
       </PaperKit>
       <MarketingSetup active={active} setActive={setActive} />
       <div

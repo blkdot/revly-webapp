@@ -13,7 +13,6 @@ const Dashboard = () => {
   const { metricsDateFrom, metricsCompareDateValue } = useMetrics();
   const { vendors, vendorsPlatform } = useVendors();
 
-  console.log(metricsDateFrom);
   return (
     <div className="wrapper">
       <div className="top-inputs">

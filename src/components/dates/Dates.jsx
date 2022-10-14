@@ -50,7 +50,7 @@ const Dates = (props) => {
   const [opened, setOpened] = useState(false);
   const [openedCompareDateValue, setOpenedCompareDateValue] = useState(false);
   const [selected, setSelected] = useState(false);
-  const [typeDate, setTypeDate] = useState(typeDateContext);
+  const [typeDate, setTypeDate] = useState(isMarketingHeatMap ? 'week' : typeDateContext);
   const getExpanded = () => {
     if (!isMarketingHeatMap) {
       if (typeDate === 'day') {
@@ -67,8 +67,12 @@ const Dates = (props) => {
   const [title, setTitle] = useState(isMarketingHeatMap ? 'current week' : titleDate);
   const [dateFrom, setdateFrom] = useState([
     {
-      startDate: new Date(dateFromContext.startDate),
-      endDate: new Date(dateFromContext.endDate),
+      startDate: new Date(
+        isMarketingHeatMap
+          ? startOfWeek(new Date(), { weekStartsOn: 1 })
+          : dateFromContext.startDate,
+      ),
+      endDate: new Date(isMarketingHeatMap ? new Date() : dateFromContext.endDate),
       key: 'selection',
     },
   ]);
@@ -592,7 +596,7 @@ const Dates = (props) => {
         <DatePickerKit
           onRangeFocusChange={(e) => e}
           minDate={new Date(minDate)}
-          maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
+          maxDate={maxDate}
           onChange={handleOnChange}
           showSelectionPreview
           moveRangeOnFirstSelection={false}

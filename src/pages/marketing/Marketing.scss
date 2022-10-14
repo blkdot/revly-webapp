@@ -415,3 +415,12 @@
     }
   }
 }
+.sm-rule-btn{
+  &.disabled{
+    cursor: not-allowed !important;
+    pointer-events: all !important;
+    img{
+      filter: invert(46%) sepia(14%) saturate(484%) hue-rotate(166deg) brightness(92%) contrast(91%);
+    }
+  }
+}

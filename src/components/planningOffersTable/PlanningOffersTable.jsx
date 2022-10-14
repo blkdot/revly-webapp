@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { noCase, sentenceCase } from 'change-case';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './PlanningOffersTable.scss';
 
@@ -13,13 +13,24 @@ import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
-import { ignoredFields, headCells } from '../../data/planningOffers';
+import { ignoredFields, headCellsOffre, headCellsAds } from '../../data/planningOffers';
 import { platformObject } from '../../data/platformList';
 
-const PlanningOffersTable = ({ rows }) => {
+const columnLabel = {
+  type_schedule: 'Schedule type',
+  total_budget: 'Budget',
+  cost_per_click: 'Bid',
+};
+const headCells = {
+  offer: headCellsOffre,
+  ad: headCellsAds,
+};
+
+const PlanningOffersTable = ({ rows, type }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const navigate = useNavigate();
+  const location = useLocation();
   // const [selected, setSelected] = useState([]);
 
   const handleRequestSort = (event, property) => {
@@ -29,20 +40,22 @@ const PlanningOffersTable = ({ rows }) => {
   };
 
   const getHeadCells = () => {
-    if (!rows[0]) return headCells;
+    if (!rows[0]) return headCells[type];
     return Object.keys(rows[0])
       .map((k) => ({
         key: k,
         id: k,
         numeric: Number.isNaN(rows[0][k]),
         disablePadding: true,
-        label: k === 'type_schedule' ? 'Schedule type' : sentenceCase(noCase(k)),
+        label: columnLabel[k] ? columnLabel[k] : sentenceCase(noCase(k)),
       }))
       .filter((el) => !ignoredFields.includes(el.id));
   };
 
   const navigateToOfferDetails = (offer) =>
-    navigate(`/offer/detail/${offer.offer_id}`, { state: { offerDetail: offer } });
+    navigate(`/offer/detail/${offer.offer_id || offer.ad_id}`, {
+      state: { offerDetail: offer, prevPath: location.pathname },
+    });
 
   const renderSimpleRow = (r, h) => (
     <TableCellKit
@@ -59,7 +72,7 @@ const PlanningOffersTable = ({ rows }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '14rem' }}>
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}>
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
       </span>
@@ -70,7 +83,7 @@ const PlanningOffersTable = ({ rows }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '8rem' }}>
+      style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}>
       <img
         className="planning-platform"
         style={{ marginRight: '1.5rem' }}
@@ -112,12 +125,43 @@ const PlanningOffersTable = ({ rows }) => {
   );
 
   const renderStatus = (r, h) => (
-    <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ marginTop: '0.5rem' }}>
+    <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
       <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
         {r[h.id] === 'Upcoming' ? 'Scheduled' : r[h.id]}
       </span>
     </TableCellKit>
   );
+
+  const renderScheduleType = (r, h) => {
+    const scheduleTypeMapping = {
+      once: 'Once',
+      now: 'Now',
+      workweek: 'Work week',
+      everyday: 'Everyday',
+    };
+    return (
+      <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
+        <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
+          {scheduleTypeMapping[r[h.id]] || r[h.id] || '-'}
+        </span>
+      </TableCellKit>
+    );
+  };
+
+  const renderTarget = (r, h) => {
+    const targetMapping = {
+      orders: 'Everyone',
+      new_customers: 'New customers only',
+      subscribers: 'Deliveroo Plus',
+    };
+    return (
+      <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
+        <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
+          {targetMapping[r[h.id]] || r[h.id] || '-'}
+        </span>
+      </TableCellKit>
+    );
+  };
 
   const cellTemplatesObject = {
     platform: renderPlatform,
@@ -132,7 +176,8 @@ const PlanningOffersTable = ({ rows }) => {
     ad_status: renderStatus,
     conversion_rate: renderCalculatedPercent,
     vendor_name: renderSimpleRowNotCentered,
-    target: renderSimpleRowNotCentered,
+    target: renderTarget,
+    type_schedule: renderScheduleType,
   };
 
   const renderRowsByHeader = (r) =>
@@ -147,10 +192,9 @@ const PlanningOffersTable = ({ rows }) => {
           <span>No data retrieved</span>
         </TableCellKit>
       );
-
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
       <TableRowKit
-        onClick={() => navigateToOfferDetails(row)}
+        onClick={() => type !== 'ad' && navigateToOfferDetails(row)}
         className="offer-row"
         key={row.id}
         selected={false}
