@@ -30,22 +30,25 @@ function useVendors() {
       delete newData?.master_email;
 
       const restaurantTemp = [];
+      const vendorTemp = { deliveroo: [], talabat: [] };
 
       if (newData) {
         platformList
           .filter((p) => {
             if (!newData[p.name]) delete newData[p.name];
-
             return newData[p.name];
           })
-          .flatMap((p) =>
-            newData[p.name].forEach((v) => {
+          .flatMap((p, indexP) =>
+            newData[p.name].forEach((v, index) => {
               setVendors((cur) => [...cur, { ...v, platform: p.name }]);
+              if (index === 0 && indexP === 0) {
+                vendorTemp[p.name] = [v];
+              }
               restaurantTemp.push(v.data.vendor_name);
             }),
           );
         setRestaurants([restaurantTemp[0]]);
-        setVendorsContext(newData);
+        setVendorsContext(vendorTemp);
         setVendorsPlatform(Object.keys(newData));
       }
     });
@@ -53,7 +56,6 @@ function useVendors() {
       isCancelled = true;
     };
   };
-
   useMemo(() => {
     handleRequest();
   }, []);
