@@ -212,7 +212,7 @@ const MarketingAds = () => {
       return <PlanningOffersTableEmpty />;
     }
 
-    return <PlanningOffersTable rows={ads} />;
+    return <PlanningOffersTable type="ad" rows={ads} />;
   };
 
   return (
