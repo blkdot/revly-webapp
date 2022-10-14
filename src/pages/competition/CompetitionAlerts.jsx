@@ -63,7 +63,7 @@ const CompetitionAlerts = () => {
         }))
         .filter((k) => k.registered === true);
 
-      setPlatform(list[0].name);
+      setPlatform(list[0]?.name);
       setPlatformList(list);
     }
   }, [userPlatformData]);

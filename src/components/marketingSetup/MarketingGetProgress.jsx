@@ -22,6 +22,7 @@ import BasicTimePicker from '../timePicker/TimePicker';
 import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
 import ArrowIcon from '../../assets/images/arrow.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
+import AudienceIcon from '../../assets/images/ic_audience.png';
 import { platformList, platformObject } from '../../data/platformList';
 import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
 import trash from '../../assets/images/ic_trash.png';
@@ -188,7 +189,7 @@ const GetProgress = (props) => {
           </BoxKit>
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
-              platform === 'talabat' ? 'disabled' : ''
+              platform === 'talabat' || category.length === 0 ? 'disabled' : ''
             } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}>
             <div className="radio">
@@ -201,7 +202,7 @@ const GetProgress = (props) => {
                   <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
-              {platform === 'deliveroo' ? (
+              {platform === 'deliveroo' && category.length > 0 ? (
                 <FormControlLabelKit
                   value="Offer on An Item from the Menu"
                   control={<RadioKit />}
@@ -336,7 +337,7 @@ const GetProgress = (props) => {
                     />
                     <ListItemTextKit primary={obj.name} />
                   </div>
-                  <b>${obj.price}</b>
+                  <b>{obj.price} AED</b>
                 </MenuItemKit>
               ))}
             </FormcontrolKit>
@@ -369,7 +370,7 @@ const GetProgress = (props) => {
                   </span>
                   <div>
                     <div>Starting Now</div>
-                    <p>{format(new Date(), 'dd MMM yyyy HH:00')}</p>
+                    <p>{format(addHours(new Date(), 1), 'dd MMM yyyy HH:00')}</p>
                   </div>
                 </div>
                 <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
@@ -392,14 +393,6 @@ const GetProgress = (props) => {
                     <div>
                       End Time
                       <BasicTimePicker
-                        minTime={
-                          new Date(
-                            null,
-                            null,
-                            null,
-                            format(addHours(new Date(obj.startTime), 1), 'HH', 0),
-                          )
-                        }
                         value={obj.endTime}
                         setValue={setTimes}
                         times={times}
@@ -474,7 +467,7 @@ const GetProgress = (props) => {
                 <div className="radio">
                   <div>
                     <span>
-                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                      <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
                     </span>
                     <div>
                       <div>Target Audience</div>
@@ -711,7 +704,7 @@ const GetProgress = (props) => {
                 <div className="radio">
                   <div>
                     <span>
-                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                      <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
                     </span>
                     <div>
                       <div>Target Audience</div>
@@ -782,7 +775,7 @@ const GetProgress = (props) => {
                   </span>
                   <div>
                     <div>Starting Now</div>
-                    <p>{format(new Date(), 'dd MMM yyyy HH:00')}</p>
+                    <p>{format(addHours(new Date(), 1), 'dd MMM yyyy HH:00')}</p>
                   </div>
                 </div>
                 <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
@@ -805,14 +798,6 @@ const GetProgress = (props) => {
                     <div>
                       End Time
                       <BasicTimePicker
-                        minTime={
-                          new Date(
-                            null,
-                            null,
-                            null,
-                            format(addHours(new Date(obj.startTime), 1), 'HH', 0),
-                          )
-                        }
                         value={obj.endTime}
                         setValue={setTimes}
                         times={times}
@@ -887,7 +872,7 @@ const GetProgress = (props) => {
                 <div className="radio">
                   <div>
                     <span>
-                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                      <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
                     </span>
                     <div>
                       <div>Target Audience</div>
@@ -1123,7 +1108,7 @@ const GetProgress = (props) => {
                 <div className="radio">
                   <div>
                     <span>
-                      <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                      <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
                     </span>
                     <div>
                       <div>Target Audience</div>

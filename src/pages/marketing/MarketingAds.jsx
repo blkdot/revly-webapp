@@ -307,7 +307,7 @@ const MarketingAds = () => {
         {getAdsTable()}
         {/* <MarketingTable selected={selected} rows={adsDataFiltered} /> */}
       </PaperKit>
-      <MarketingSetup active={active} setActive={setActive} />
+      <MarketingSetup ads active={active} setActive={setActive} />
       <div
         role="presentation"
         tabIndex={-1}

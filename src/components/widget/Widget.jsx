@@ -28,7 +28,7 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
   const procent = () => {
-    if (metricsDateFrom[0] && metricsCompareDateValue[0]) {
+    if (metricsDateFrom && metricsCompareDateValue) {
       if (Number(metricsCompareDateValue.all[title]) === 0) {
         return 0;
       }
@@ -37,7 +37,7 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
         (metricsDateFrom.all[title] / (metricsCompareDateValue.all[title] / 100) - 100).toFixed(2),
       );
     }
-    return '-';
+    return 0;
   };
   const getTitle = () => {
     if (title === 'n_orders') {
