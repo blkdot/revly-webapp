@@ -86,8 +86,8 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
         </div>
       </div>
       <div className="price">
-        <span style={{ marginRight: '12px' }}>{`$${price}`}</span>
-        <span>{`$${price * (discountRate / 100)}`}</span>
+        <span style={{ marginRight: '12px' }}>{`${price} AED`}</span>
+        <span>{`${price * (discountRate / 100)} AED`}</span>
       </div>
     </div>
   );

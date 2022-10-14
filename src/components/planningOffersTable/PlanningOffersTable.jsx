@@ -53,7 +53,7 @@ const PlanningOffersTable = ({ rows, type }) => {
   };
 
   const navigateToOfferDetails = (offer) =>
-    navigate(`/offer/detail/${offer.offer_id}`, {
+    navigate(`/offer/detail/${offer.offer_id || offer.ad_id}`, {
       state: { offerDetail: offer, prevPath: location.pathname },
     });
 
@@ -192,10 +192,9 @@ const PlanningOffersTable = ({ rows, type }) => {
           <span>No data retrieved</span>
         </TableCellKit>
       );
-
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
       <TableRowKit
-        onClick={() => navigateToOfferDetails(row)}
+        onClick={() => type !== 'ad' && navigateToOfferDetails(row)}
         className="offer-row"
         key={row.id}
         selected={false}

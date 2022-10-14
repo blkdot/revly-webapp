@@ -152,7 +152,8 @@ const OfferDetailComponent = () => {
           <div className="marketing-top-text">
             <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
             <TypographyKit color="#637381" variant="subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id.
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
             </TypographyKit>
           </div>
           <div className="markting-top-btns">
