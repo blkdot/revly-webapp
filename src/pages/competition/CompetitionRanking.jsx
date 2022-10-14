@@ -69,7 +69,7 @@ const CompetitionRanking = () => {
       const body = {
         master_email: user.email,
         access_token: user.accessToken,
-        vendors: vend,
+        vendors: vend || [],
       };
 
       const ranking = await getRanking(body, plat);
@@ -98,7 +98,7 @@ const CompetitionRanking = () => {
   };
 
   useEffect(() => {
-    if (vendors.length) {
+    if (platform && vendors.length) {
       getData(platform, vendorsContext[platform]);
     }
   }, [platform, vendorsContext]);
