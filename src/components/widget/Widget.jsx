@@ -20,7 +20,8 @@ import CardKit from '../../kits/card/CardKit';
 import PaperKit from '../../kits/paper/PaperKit';
 
 const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateValue }) => {
-  const { titlecompareDateValue, compareDateValueContext: compareDateValue } = useDate();
+  const { date } = useDate();
+  const { compareDateValue, titlecompareDateValue } = date;
   const startDate = parseISO(compareDateValue.startDate);
   const endDate = parseISO(compareDateValue.endDate);
   const startLocal = startDate.toLocaleDateString();

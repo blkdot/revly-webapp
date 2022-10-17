@@ -7,7 +7,6 @@ import {
   endOfWeek,
   getWeek,
   getMonth,
-  lastDayOfMonth,
   startOfWeek,
   startOfMonth,
   subDays,
@@ -35,22 +34,21 @@ import switchIcon from '../../assets/images/Switch.png';
 
 const Dates = (props) => {
   const { isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap, offer } = props;
+  const { date: dateContext, setDate: setDateContext } = useDate();
   const {
-    setDateFromContext,
-    setCompareDateValueContext,
-    dateFromContext,
-    compareDateValueContext,
-    setTitleDate,
-    titleDate,
-    setTitlecompareDateValue,
-    titlecompareDateValue,
-    typeDateContext,
-    setTypeDateContext,
-  } = useDate();
+    dateFrom: dateFromContext,
+    compareDateValue: afterPeriod,
+    titleDate: titleDateContext,
+    titlecompareDateValue: titlecompareDateValueContext,
+    typeDate: typeDateContext,
+  } = dateContext;
   const [opened, setOpened] = useState(false);
   const [openedCompareDateValue, setOpenedCompareDateValue] = useState(false);
   const [selected, setSelected] = useState(false);
   const [typeDate, setTypeDate] = useState(isMarketingHeatMap ? 'week' : typeDateContext);
+  const [titleDate, setTitleDate] = useState(titleDateContext);
+  const [titlecompareDateValue, setTitlecompareDateValue] = useState(titlecompareDateValueContext);
+  const [compareDateValueContext, setCompareDateValueContext] = useState(afterPeriod);
   const getExpanded = () => {
     if (!isMarketingHeatMap) {
       if (typeDate === 'day') {
@@ -64,7 +62,7 @@ const Dates = (props) => {
     return 'panel2';
   };
   const [expanded, setExpanded] = useState(getExpanded());
-  const [title, setTitle] = useState(isMarketingHeatMap ? 'current week' : titleDate);
+  const [title, setTitle] = useState(isMarketingHeatMap ? 'current week' : titleDateContext);
   const [dateFrom, setdateFrom] = useState([
     {
       startDate: new Date(
@@ -101,9 +99,8 @@ const Dates = (props) => {
     const dateLocal = date.toLocaleDateString();
     setOpened(false); // Closing dateFromContext date picker
     if (isDashboard) {
-      setTypeDateContext(typeDate);
       // its will work on dashboard
-      setDateFromContext({ startDate, endDate }); // Sending data to context state
+      setDateContext({ ...dateContext, dateFrom: { startDate, endDate }, typeDate }); // Sending data to context state
       if (typeDate === 'day') {
         setCompareDateValueContext({
           startDate: subDays(startDate, 1),
@@ -127,7 +124,7 @@ const Dates = (props) => {
 
     if (isDashboard) {
       // its will work on dashboard
-      if (startLocal === endLocal) {
+      if (startLocal === endLocal && typeDate === 'day') {
         // It checks that what date is currently selected in dateFromContext date picker
         if (startLocal === dateLocal) {
           setTitleDate('today'); // Sending data to state which will be needed for the introduction in the dateFromContext input
@@ -140,7 +137,8 @@ const Dates = (props) => {
           setTitlecompareDateValue('custom');
         }
       } else if (
-        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
+        typeDate === 'week'
       ) {
         if (endGetDay === dateGetDay && startGetDay === 1) {
           setTitleDate('current week');
@@ -261,7 +259,7 @@ const Dates = (props) => {
     const dateGetDate = date.getDate();
     setOpenedCompareDateValue(false); // Closing CompareDateValue date picker
     setSelected(false); // Closing CompareDateValue Select
-    setCompareDateValueContext({ startDate, endDate }); // Sending data to context state
+    setDateContext({ ...dateContext, compareDateValue: { startDate, endDate } }); // Sending data to context state
 
     if (startLocal === endLocal) {
       // It checks that what date is currently selected in CompareDateValue date picker
@@ -369,104 +367,32 @@ const Dates = (props) => {
     // This function should check if the date of the dateFromContext date is the same as the date of the compareDateValueContext date
 
     // We put in variables for later use
-    const date = new Date();
     const startDate = new Date(dateFromContext.startDate);
-    const endDate = new Date(dateFromContext.endDate);
     const startDateCompareDateValue = new Date(compareDateValue[0].startDate);
-    const endDateCompareDateValue = new Date(compareDateValue[0].endDate);
     const startLocalCompareDateValue = startDateCompareDateValue.toLocaleDateString();
-    const endLocalCompareDateValue = endDateCompareDateValue.toLocaleDateString();
-    const startGetDateCompareDateValue = startDateCompareDateValue.getDate();
-    const endGetDateCompareDateValue = endDateCompareDateValue.getDate();
-    const startGetDayCompareDateValue = startDateCompareDateValue.getDay();
-    const endGetDayCompareDateValue = endDateCompareDateValue.getDay();
     const startLocal = startDate.toLocaleDateString();
-    const endLocal = endDate.toLocaleDateString();
-    const startGetDate = startDate.getDate();
-    const endGetDate = endDate.getDate();
-    const startGetDay = startDate.getDay();
-    const endGetDay = endDate.getDay();
-    const dateGetDay = date.getDay();
-    const dateGetDate = date.getDate();
 
-    // This comparison needed for compareDateValueContext date picker button, check if dateFromContext date picker not more then chosed date and have the same type
-    if (getMonth(startDateCompareDateValue) === getMonth(date)) {
-      // check if month of clicked date equal with today`s month
-      if (startLocal === endLocal) {
-        if (
-          startLocalCompareDateValue === endLocalCompareDateValue &&
-          startLocal > startLocalCompareDateValue
-        )
-          return true;
+    if (typeDate === 'day') {
+      if (startLocalCompareDateValue >= startLocal) {
         return false;
       }
-      if (
-        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
-        startGetDay === 1 &&
-        endGetDay === dateGetDay
-      ) {
-        if (
-          startGetDayCompareDateValue === 1 &&
-          endGetDayCompareDateValue === 0 &&
-          getWeek(date, { weekStartsOn: 1 }) !==
-            getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) &&
-          getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) ===
-            getWeek(endDateCompareDateValue, { weekStartsOn: 1 })
-        )
-          return true;
-        return false;
-      }
-      if (
-        getMonth(startDate, 1) === getMonth(endDate, 1) &&
-        startGetDate === 1 &&
-        endGetDate >= dateGetDate &&
-        startGetDate <= lastDayOfMonth(endDate).getDate()
-      ) {
-        if (
-          startGetDateCompareDateValue === 1 &&
-          endGetDateCompareDateValue >= dateGetDate &&
-          startGetDateCompareDateValue <= lastDayOfMonth(endDateCompareDateValue).getDate() &&
-          getMonth(startDate, 1) > getMonth(startDateCompareDateValue, 1)
-        )
-          return true;
-        return false;
-      }
-
-      if (startGetDate - endGetDate === startGetDateCompareDateValue - endGetDateCompareDateValue)
-        return true;
-      return false;
+      return true;
     }
-
     if (typeDate === 'week') {
       if (
-        startGetDayCompareDateValue === 1 &&
-        endGetDayCompareDateValue === 0 &&
-        getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) <
-          getWeek(startDate, { weekStartsOn: 1 })
-      )
-        return true;
-      return false;
-    }
-    if (
-      getMonth(startDate, 1) === getMonth(endDate, 1) &&
-      startGetDate === 1 &&
-      endGetDate >= dateGetDate &&
-      startGetDate <= endOfMonth(endDate).getDate()
-    ) {
-      if (
-        startGetDateCompareDateValue === 1 &&
-        endGetDateCompareDateValue === endOfMonth(endDateCompareDateValue).getDate() &&
-        getMonth(startDate, 1) > getMonth(startDateCompareDateValue, 1)
-      )
-        return true;
-      return false;
-    }
-
-    if (
-      startGetDate - endGetDate === startGetDateCompareDateValue - endGetDateCompareDateValue &&
-      getMonth(startDate, 1) > getMonth(startDateCompareDateValue, 1)
-    )
+        getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) >=
+        getWeek(startDate, { weekStartsOn: 1 })
+      ) {
+        return false;
+      }
       return true;
+    }
+    if (typeDate === 'month') {
+      if (getMonth(startDateCompareDateValue) >= getMonth(startDate)) {
+        return false;
+      }
+      return true;
+    }
     return false;
   };
 
@@ -513,14 +439,16 @@ const Dates = (props) => {
   // dateFromContext date picker variables
   const dateFromContextStart = new Date(dateFromContext.startDate);
   const dateFromContextEnd = new Date(dateFromContext.endDate);
-  const dateFromContextStartBtn = new Date(dateFromBtn?.startDate);
-  const dateFromContextEndBtn = new Date(dateFromBtn?.endDate);
   const dateFromContextStartLocal = new Date(dateFromContext.startDate).toLocaleDateString();
   const dateFromContextEndLocal = new Date(dateFromContext.endDate).toLocaleDateString();
-  const dateFromContextBtnStartLocal = new Date(dateFromBtn?.startDate).toLocaleDateString();
-  const dateFromContextBtnEndLocal = new Date(dateFromBtn?.endDate).toLocaleDateString();
   const dateFromContextStartGetDate = new Date(dateFromContext.startDate).getDate();
   const dateFromContextEndGetDate = new Date(dateFromContext.endDate).getDate();
+
+  // dateFromContextBtn date picker variables
+  const dateFromContextStartBtn = new Date(dateFromBtn?.startDate);
+  const dateFromContextEndBtn = new Date(dateFromBtn?.endDate);
+  const dateFromContextBtnStartLocal = new Date(dateFromBtn?.startDate).toLocaleDateString();
+  const dateFromContextBtnEndLocal = new Date(dateFromBtn?.endDate).toLocaleDateString();
   const dateFromContextBtnStartGetDate = new Date(dateFromBtn?.startDate).getDate();
   const dateFromContextBtnEndGetDate = new Date(dateFromBtn?.endDate).getDate();
 

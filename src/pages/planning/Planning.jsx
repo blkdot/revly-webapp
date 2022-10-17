@@ -12,12 +12,11 @@ import './Planning.scss';
 
 const Planning = () => {
   const [active, setActive] = useState(1);
-  const { dateFromContext: dateFrom } = useDate();
+  const { date } = useDate();
   const [dateRange, setDateRange] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+    startDate: date.dateFrom.startDate,
+    endDate: date.dateFrom.endDate,
   });
-
   const { vendors, vendorsPlatform } = useVendors();
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });

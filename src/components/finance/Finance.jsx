@@ -10,9 +10,10 @@ import useDate from '../../hooks/useDate';
 
 const Finance = ({ metricsDateFrom, metricsCompareDateValue, vendors }) => {
   const [table, setTable] = useState('revenue');
-  const { titleDate, dateFromContext, restaurants } = useDate();
-  const startDate = new Date(dateFromContext.startDate);
-  const endDate = new Date(dateFromContext.endDate);
+  const { date, restaurants } = useDate();
+  const { dateFrom, titleDate } = date;
+  const startDate = new Date(dateFrom.startDate);
+  const endDate = new Date(dateFrom.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();

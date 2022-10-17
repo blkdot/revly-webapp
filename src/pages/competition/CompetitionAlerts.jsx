@@ -36,10 +36,10 @@ const CompetitionAlerts = () => {
   const [loading, setLoading] = useState(true);
   const { getAlerts, getCompetitors } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
-  const { dateFromContext: dateFrom } = useDate();
+  const { date } = useDate();
   const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+    startDate: date.dateFrom.startDate,
+    endDate: date.dateFrom.endDate,
   });
   const { userPlatformData } = usePlatform();
 

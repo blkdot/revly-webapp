@@ -51,12 +51,11 @@ const OfferDetailComponent = () => {
   const { cancelOffer } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
-  const { vendorsContext } = useDate();
   const { vendors, vendorsPlatform } = useVendors();
-  const { dateFromContext: dateFrom } = useDate();
+  const { date, vendorsContext } = useDate();
   const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+    startDate: date.dateFrom.startDate,
+    endDate: date.dateFrom.endDate,
   });
 
   const renderOfferStatus = (status) => {

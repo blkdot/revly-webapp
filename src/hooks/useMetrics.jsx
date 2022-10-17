@@ -6,7 +6,8 @@ import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function useMetrics() {
-  const { dateFromContext, compareDateValueContext, vendorsContext } = useDate();
+  const { date: dateContext, vendorsContext } = useDate();
+  const { dateFrom, compareDateValue } = dateContext;
   const { getMetrics } = useApi();
   const [metricsDateFrom, setMetricsDateFrom] = useState([]);
   const [metricsCompareDateValue, setMetricsCompareDateValue] = useState([]);
@@ -37,12 +38,12 @@ function useMetrics() {
     };
   };
   useMemo(() => {
-    handleRequest(compareDateValueContext, setMetricsCompareDateValue);
-  }, [compareDateValueContext, vendorsContext]);
+    handleRequest(compareDateValue, setMetricsCompareDateValue);
+  }, [compareDateValue, vendorsContext]);
 
   useMemo(() => {
-    handleRequest(dateFromContext, setMetricsDateFrom);
-  }, [dateFromContext, vendorsContext]);
+    handleRequest(dateFrom, setMetricsDateFrom);
+  }, [dateFrom, vendorsContext]);
 
   return { metricsDateFrom, metricsCompareDateValue };
 }
