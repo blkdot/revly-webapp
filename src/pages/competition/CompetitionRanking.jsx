@@ -29,10 +29,10 @@ const CompetitionRanking = () => {
   const [loading, setLoading] = useState(true);
   const [competitionRankingData, setCompetitionRankingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
-  const { dateFromContext: dateFrom } = useDate();
+  const { date } = useDate();
   const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+    startDate: date.dateFrom.startDate,
+    endDate: date.dateFrom.endDate,
   });
   const { getRanking } = useApi();
   const { user } = useUserAuth();

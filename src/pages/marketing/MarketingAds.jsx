@@ -37,10 +37,10 @@ import PlanningOffersTable from '../../components/planningOffersTable/PlanningOf
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { vendors, vendorsPlatform } = useVendors();
-  const { dateFromContext: dateFrom } = useDate();
+  const { date } = useDate();
   const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+    startDate: date.dateFrom.startDate,
+    endDate: date.dateFrom.endDate,
   });
   const [scrollPosition, setScrollPosition] = useState(0);
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: dateFromBtn });

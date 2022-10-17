@@ -34,12 +34,8 @@ const EnhancedTableHead = ({ headCells }) => (
 );
 
 const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
-  const {
-    titlecompareDateValue,
-    compareDateValueContext: compareDateValue,
-    titleDate,
-    dateFromContext: dateFrom,
-  } = useDate();
+  const { date } = useDate();
+  const { dateFrom, compareDateValue, titleDate, titlecompareDateValue } = date;
   const { userPlatformData } = usePlatform();
 
   const startDate = parseISO(dateFrom.startDate);
