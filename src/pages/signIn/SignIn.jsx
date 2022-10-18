@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 import './SignIn.scss';
 
@@ -10,19 +10,40 @@ import { firebaseCodeError } from '../../data/firebaseCodeError';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '', remembered: true });
-  const [processing, setProcessing] = useState(false); // set to true if an API call is running
-  const { triggerAlertWithMessageError } = useAlert('error');
+  const [processing, setProcessing] = useState(false);
+  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert('error');
   const [errorData, setErrorData] = useState({ email: false, password: false });
+  const [params] = useSearchParams();
+
+  const oobCode = params.get('oobCode');
+  const mode = params.get('mode');
 
   const navigate = useNavigate();
 
-  const { signIn, googleSignIn, user, logOut } = useUserAuth();
+  const { signIn, googleSignIn, user, logOut, verifyCodeEmail } = useUserAuth();
+
+  const verifyEmail = async (code) => {
+    try {
+      await verifyCodeEmail(code);
+      triggerAlertWithMessageSuccess('Email verified , you can sign in now');
+      navigate('/');
+    } catch (err) {
+      navigate('/');
+    }
+  };
 
   useEffect(() => {
-    if (user) {
+    if (oobCode) {
+      logOut();
+      if (mode === 'resetPassword') {
+        navigate(`/reset-password?oobCode=${oobCode}`);
+      } else if (mode === 'verifyEmail') {
+        verifyEmail(oobCode);
+      }
+    } else if (user) {
       navigate('/dashboard');
     }
-  }, []);
+  }, [oobCode, mode]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
