@@ -27,28 +27,28 @@ import DatePickerKit from '../../kits/datePicker/DatePickerKit';
 import ButtonKit from '../../kits/button/ButtonKit';
 import useDate from '../../hooks/useDate';
 import DateSelect from './DateSelect';
-import CompareDateValueSelect from './CompareDateValueSelect';
+import AfterPeriodSelect from './AfterPeriodSelect';
 import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderkit';
 import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
 import switchIcon from '../../assets/images/Switch.png';
 
 const Dates = (props) => {
-  const { isDashboard, dateFromBtn, setdateFromBtn, isMarketingHeatMap, offer } = props;
+  const { isDashboard, beforePeriodBtn, setbeforePeriodBtn, isMarketingHeatMap, offer } = props;
   const { date: dateContext, setDate: setDateContext } = useDate();
   const {
-    dateFrom: dateFromContext,
-    compareDateValue: afterPeriod,
+    beforePeriod: beforePeriodContext,
+    afterPeriod: afterPeriodDateContext,
     titleDate: titleDateContext,
-    titlecompareDateValue: titlecompareDateValueContext,
+    titleafterPeriod: titleafterPeriodContext,
     typeDate: typeDateContext,
   } = dateContext;
   const [opened, setOpened] = useState(false);
-  const [openedCompareDateValue, setOpenedCompareDateValue] = useState(false);
+  const [openedAfterPeriod, setOpenedAfterPeriod] = useState(false);
   const [selected, setSelected] = useState(false);
   const [typeDate, setTypeDate] = useState(isMarketingHeatMap ? 'week' : typeDateContext);
   const [titleDate, setTitleDate] = useState(titleDateContext);
-  const [titlecompareDateValue, setTitlecompareDateValue] = useState(titlecompareDateValueContext);
-  const [compareDateValueContext, setCompareDateValueContext] = useState(afterPeriod);
+  const [titleafterPeriod, setTitleafterPeriod] = useState(titleafterPeriodContext);
+  const [afterPeriodContext, setAfterPeriodContext] = useState(afterPeriodDateContext);
   const getExpanded = () => {
     if (!isMarketingHeatMap) {
       if (typeDate === 'day') {
@@ -63,30 +63,62 @@ const Dates = (props) => {
   };
   const [expanded, setExpanded] = useState(getExpanded());
   const [title, setTitle] = useState(isMarketingHeatMap ? 'current week' : titleDateContext);
-  const [dateFrom, setdateFrom] = useState([
+  const [beforePeriod, setbeforePeriod] = useState([
     {
       startDate: new Date(
         isMarketingHeatMap
           ? startOfWeek(new Date(), { weekStartsOn: 1 })
-          : dateFromContext.startDate,
+          : beforePeriodContext.startDate,
       ),
-      endDate: new Date(isMarketingHeatMap ? new Date() : dateFromContext.endDate),
+      endDate: new Date(isMarketingHeatMap ? new Date() : beforePeriodContext.endDate),
       key: 'selection',
     },
   ]);
-  const [compareDateValue, setcompareDateValue] = useState([
+  const [afterPeriod, setafterPeriod] = useState([
     {
-      startDate: new Date(compareDateValueContext.startDate),
-      endDate: new Date(compareDateValueContext.endDate),
+      startDate: new Date(afterPeriodContext.startDate),
+      endDate: new Date(afterPeriodContext.endDate),
       key: 'selection',
     },
   ]);
+
+  const minDate = dayjs('2021-01-01T00:00:00.000');
+  const maxDate = new Date();
+
+  // beforePeriodContext date picker variables
+  const beforePeriodContextStart = new Date(beforePeriodContext.startDate);
+  const beforePeriodContextEnd = new Date(beforePeriodContext.endDate);
+  const beforePeriodContextStartLocal = new Date(
+    beforePeriodContext.startDate,
+  ).toLocaleDateString();
+  const beforePeriodContextEndLocal = new Date(beforePeriodContext.endDate).toLocaleDateString();
+  const beforePeriodContextStartGetDate = new Date(beforePeriodContext.startDate).getDate();
+  const beforePeriodContextEndGetDate = new Date(beforePeriodContext.endDate).getDate();
+
+  // beforePeriodContextBtn date picker variables
+  const beforePeriodContextStartBtn = new Date(beforePeriodBtn?.startDate);
+  const beforePeriodContextEndBtn = new Date(beforePeriodBtn?.endDate);
+  const beforePeriodContextBtnStartLocal = new Date(
+    beforePeriodBtn?.startDate,
+  ).toLocaleDateString();
+  const beforePeriodContextBtnEndLocal = new Date(beforePeriodBtn?.endDate).toLocaleDateString();
+  const beforePeriodContextBtnStartGetDate = new Date(beforePeriodBtn?.startDate).getDate();
+  const beforePeriodContextBtnEndGetDate = new Date(beforePeriodBtn?.endDate).getDate();
+
+  // afterPeriodContext date picker variables
+  const afterPeriodContextStart = new Date(afterPeriodContext.startDate);
+  const afterPeriodContextEnd = new Date(afterPeriodContext.endDate);
+  const afterPeriodContextStartLocal = new Date(afterPeriodContext.startDate).toLocaleDateString();
+  const afterPeriodContextEndLocal = new Date(afterPeriodContext.endDate).toLocaleDateString();
+  const afterPeriodContextStartGetDate = new Date(afterPeriodContext.startDate).getDate();
+  const afterPeriodContextEndGetDate = new Date(afterPeriodContext.endDate).getDate();
+
   const handleClick = () => {
-    // handleClick happens when you click on button "OK" on dateFromContext date picker
+    // handleClick happens when you click on button "OK" on beforePeriodContext date picker
 
     // We put in variables for later use
-    const startDate = new Date(dateFrom[0].startDate);
-    const endDate = new Date(dateFrom[0].endDate);
+    const startDate = new Date(beforePeriod[0].startDate);
+    const endDate = new Date(beforePeriod[0].endDate);
     const date = new Date();
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
@@ -97,44 +129,44 @@ const Dates = (props) => {
     const dateGetDay = date.getDay();
     const dateGetDate = date.getDate();
     const dateLocal = date.toLocaleDateString();
-    setOpened(false); // Closing dateFromContext date picker
+    setOpened(false); // Closing beforePeriodContext date picker
     if (isDashboard) {
       // its will work on dashboard
-      setDateContext({ ...dateContext, dateFrom: { startDate, endDate }, typeDate }); // Sending data to context state
+      setDateContext({ ...dateContext, beforePeriod: { startDate, endDate }, typeDate }); // Sending data to context state
       if (typeDate === 'day') {
-        setCompareDateValueContext({
+        setAfterPeriodContext({
           startDate: subDays(startDate, 1),
           endDate: subDays(endDate, 1),
         }); // Sending previous day to context state
       } else if (typeDate === 'week') {
-        setCompareDateValueContext({
+        setAfterPeriodContext({
           startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
           endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
         }); // Sending previous week to context state
       } else if (typeDate === 'month') {
-        setCompareDateValueContext({
+        setAfterPeriodContext({
           startDate: subMonths(startDate, 1),
           endDate: endOfMonth(subMonths(endDate, 1)),
         }); // Sending previous month to context state
       }
     } else {
       // its will work on other pages
-      setdateFromBtn({ startDate, endDate });
+      setbeforePeriodBtn({ startDate, endDate });
     }
 
     if (isDashboard) {
       // its will work on dashboard
       if (startLocal === endLocal && typeDate === 'day') {
-        // It checks that what date is currently selected in dateFromContext date picker
+        // It checks that what date is currently selected in beforePeriodContext date picker
         if (startLocal === dateLocal) {
-          setTitleDate('today'); // Sending data to state which will be needed for the introduction in the dateFromContext input
-          setTitlecompareDateValue('yesterday'); // Sending data to state which will be needed for the introduction in the compareDateValueContext input
+          setTitleDate('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
+          setTitleafterPeriod('yesterday'); // Sending data to state which will be needed for the introduction in the afterPeriodContext input
         } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
           setTitleDate('yesterday');
-          setTitlecompareDateValue('custom');
+          setTitleafterPeriod('custom');
         } else {
           setTitleDate('custom');
-          setTitlecompareDateValue('custom');
+          setTitleafterPeriod('custom');
         }
       } else if (
         getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
@@ -142,7 +174,7 @@ const Dates = (props) => {
       ) {
         if (endGetDay === dateGetDay && startGetDay === 1) {
           setTitleDate('current week');
-          setTitlecompareDateValue('last week');
+          setTitleafterPeriod('last week');
         } else if (
           startGetDay === 1 &&
           endGetDay === 0 &&
@@ -150,21 +182,21 @@ const Dates = (props) => {
             getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
         ) {
           setTitleDate('last week');
-          setTitlecompareDateValue('custom');
+          setTitleafterPeriod('custom');
         } else {
           setTitleDate('custom');
-          setTitlecompareDateValue('custom');
+          setTitleafterPeriod('custom');
         }
       } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
         if (startGetDate === 1 && endGetDate === dateGetDate) {
           setTitleDate('current month');
-          setTitlecompareDateValue('last month');
+          setTitleafterPeriod('last month');
         } else if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
           setTitleDate('last month');
-          setTitlecompareDateValue('custom');
+          setTitleafterPeriod('custom');
         } else {
           setTitleDate('custom');
-          setTitlecompareDateValue('custom');
+          setTitleafterPeriod('custom');
         }
       } else if (
         startGetDate === 1 &&
@@ -172,20 +204,20 @@ const Dates = (props) => {
         endGetDate === endOfMonth(endDate).getDate()
       ) {
         setTitleDate('current month');
-        setTitlecompareDateValue('last month');
+        setTitleafterPeriod('last month');
       } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
         setTitleDate('last month');
-        setTitlecompareDateValue('custom');
+        setTitleafterPeriod('custom');
       } else {
         setTitleDate('custom');
-        setTitlecompareDateValue('custom');
+        setTitleafterPeriod('custom');
       }
     } else if (!isDashboard) {
       // its will work on other pages
       if (startLocal === endLocal) {
-        // It checks that what date is currently selected in dateFromContext date picker
+        // It checks that what date is currently selected in beforePeriodContext date picker
         if (startLocal === dateLocal) {
-          setTitle('today'); // Sending data to state which will be needed for the introduction in the dateFromContext input
+          setTitle('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
         } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
           setTitle('yesterday');
         } else {
@@ -243,12 +275,12 @@ const Dates = (props) => {
       }
     }
   };
-  const handleClickCompareDateValue = () => {
-    // handleClickCompareDateValue happens when you click on button "OK" on CompareDateValue date picker
+  const handleClickAfterPeriod = () => {
+    // handleClickAfterPeriod happens when you click on button "OK" on AfterPeriod date picker
 
     // We put in variables for later use
-    const startDate = new Date(compareDateValue[0].startDate);
-    const endDate = new Date(compareDateValue[0].endDate);
+    const startDate = new Date(afterPeriod[0].startDate);
+    const endDate = new Date(afterPeriod[0].endDate);
     const date = new Date();
     const startLocal = startDate.toLocaleDateString();
     const endLocal = endDate.toLocaleDateString();
@@ -257,18 +289,18 @@ const Dates = (props) => {
     const startGetDay = startDate.getDay();
     const endGetDay = endDate.getDay();
     const dateGetDate = date.getDate();
-    setOpenedCompareDateValue(false); // Closing CompareDateValue date picker
-    setSelected(false); // Closing CompareDateValue Select
-    setDateContext({ ...dateContext, compareDateValue: { startDate, endDate } }); // Sending data to context state
-
+    setOpenedAfterPeriod(false); // Closing AfterPeriod date picker
+    setSelected(false); // Closing AfterPeriod Select
+    setDateContext({ ...dateContext, afterPeriod: { startDate, endDate } }); // Sending data to context state
+    setAfterPeriodContext({ startDate, endDate });
     if (startLocal === endLocal) {
-      // It checks that what date is currently selected in CompareDateValue date picker
+      // It checks that what date is currently selected in AfterPeriod date picker
 
-      // Sending data to state which will be needed for the introduction in the compareDateValueContext input
+      // Sending data to state which will be needed for the introduction in the afterPeriodContext input
       if (startLocal === subDays(date, 1).toLocaleDateString()) {
-        setTitlecompareDateValue('yesterday');
+        setTitleafterPeriod('yesterday');
       } else {
-        setTitlecompareDateValue('custom');
+        setTitleafterPeriod('custom');
       }
     } else if (getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })) {
       if (
@@ -276,20 +308,20 @@ const Dates = (props) => {
         endGetDay === 0 &&
         getWeek(startDate, { weekStartsOn: 1 }) === getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
       ) {
-        setTitlecompareDateValue('last week');
+        setTitleafterPeriod('last week');
       } else {
-        setTitlecompareDateValue('custom');
+        setTitleafterPeriod('custom');
       }
     } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
       if (startGetDate === 1 && endGetDate === dateGetDate) {
-        setTitlecompareDateValue('last month');
+        setTitleafterPeriod('last month');
       } else {
-        setTitlecompareDateValue('custom');
+        setTitleafterPeriod('custom');
       }
     } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-      setTitlecompareDateValue('last month');
+      setTitleafterPeriod('last month');
     } else {
-      setTitlecompareDateValue('custom');
+      setTitleafterPeriod('custom');
     }
   };
   useMemo(() => {
@@ -297,35 +329,35 @@ const Dates = (props) => {
       'date',
       JSON.stringify({
         titleDate,
-        titlecompareDateValue,
-        dateFromBtn,
-        dateFrom: {
-          startDate: new Date(dateFromContext.startDate),
-          endDate: new Date(dateFromContext.endDate),
+        titleafterPeriod,
+        beforePeriodBtn,
+        beforePeriod: {
+          startDate: new Date(beforePeriodContext.startDate),
+          endDate: new Date(beforePeriodContext.endDate),
         },
-        compareDateValue: {
-          startDate: new Date(compareDateValueContext.startDate),
-          endDate: new Date(compareDateValueContext.endDate),
+        afterPeriod: {
+          startDate: new Date(afterPeriodContext.startDate),
+          endDate: new Date(afterPeriodContext.endDate),
         },
         typeDate: typeDateContext,
       }),
     );
   }, [
     titleDate,
-    titlecompareDateValue,
-    dateFromBtn,
-    dateFromContext,
-    compareDateValueContext,
+    titleafterPeriod,
+    beforePeriodBtn,
+    beforePeriodContext,
+    afterPeriodContext,
     typeDateContext,
   ]);
   const handleOnChange = (ranges) => {
-    // handleOnChagne happens when you click on some day on dateFromContext date picker
+    // handleOnChagne happens when you click on some day on beforePeriodContext date picker
     const { selection } = ranges;
     if (getMonth(selection.startDate) === getMonth(new Date())) {
       // This will check if today's month is equal to the month of the clicked day
       if (typeDate === 'day') {
         // These checks the typeDate
-        setdateFrom([selection]); // here we send day
+        setbeforePeriod([selection]); // here we send day
       } else if (typeDate === 'week') {
         const getOfferWeek = () => {
           if (offer) {
@@ -341,7 +373,7 @@ const Dates = (props) => {
           return endOfWeek(selection.startDate, { weekStartsOn: 1 });
         };
         // These checks the typeDate
-        setdateFrom([
+        setbeforePeriod([
           {
             startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
             endDate: getOfferWeek(),
@@ -351,10 +383,10 @@ const Dates = (props) => {
       }
     } else if (typeDate === 'day') {
       // These checks the typeDate
-      setdateFrom([selection]); // here we send day
+      setbeforePeriod([selection]); // here we send day
     } else if (typeDate === 'week') {
       // These checks the typeDate
-      setdateFrom([
+      setbeforePeriod([
         {
           startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }),
           endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }),
@@ -363,32 +395,30 @@ const Dates = (props) => {
       ]);
     }
   };
-  const getcompareDateValue = () => {
-    // This function should check if the date of the dateFromContext date is the same as the date of the compareDateValueContext date
+  const getafterPeriod = () => {
+    // This function should check if the date of the beforePeriodContext date is the same as the date of the afterPeriodContext date
 
     // We put in variables for later use
-    const startDate = new Date(dateFromContext.startDate);
-    const startDateCompareDateValue = new Date(compareDateValue[0].startDate);
-    const startLocalCompareDateValue = startDateCompareDateValue.toLocaleDateString();
-    const startLocal = startDate.toLocaleDateString();
+    const startDateAfterPeriod = new Date(afterPeriod[0].startDate);
+    const startLocalAfterPeriod = startDateAfterPeriod.toLocaleDateString();
 
     if (typeDate === 'day') {
-      if (startLocalCompareDateValue >= startLocal) {
+      if (startLocalAfterPeriod >= beforePeriodContextStartLocal) {
         return false;
       }
       return true;
     }
     if (typeDate === 'week') {
       if (
-        getWeek(startDateCompareDateValue, { weekStartsOn: 1 }) >=
-        getWeek(startDate, { weekStartsOn: 1 })
+        getWeek(startDateAfterPeriod, { weekStartsOn: 1 }) >=
+        getWeek(beforePeriodContextStart, { weekStartsOn: 1 })
       ) {
         return false;
       }
       return true;
     }
     if (typeDate === 'month') {
-      if (getMonth(startDateCompareDateValue) >= getMonth(startDate)) {
+      if (getMonth(startDateAfterPeriod) >= getMonth(beforePeriodContextStart)) {
         return false;
       }
       return true;
@@ -396,17 +426,17 @@ const Dates = (props) => {
     return false;
   };
 
-  const handleOnChangeCompareDateValue = (ranges) => {
-    // handleOnChagneCompareDateValue happens when you click on some day on CompareDateValue date picker
+  const handleOnChangeAfterPeriod = (ranges) => {
+    // handleOnChagneAfterPeriod happens when you click on some day on AfterPeriod date picker
     const { selection } = ranges;
     if (getMonth(selection.startDate) === getMonth(new Date())) {
       // This will check if today's month is equal to the month of the clicked day
       if (typeDate === 'day') {
         // These checks the typeDate
-        setcompareDateValue([selection]); // here we send day
+        setafterPeriod([selection]); // here we send day
       } else if (typeDate === 'week') {
         // These checks the typeDate
-        setcompareDateValue([
+        setafterPeriod([
           {
             startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
             endDate:
@@ -420,10 +450,10 @@ const Dates = (props) => {
       }
     } else if (typeDate === 'day') {
       // These checks the typeDate
-      setcompareDateValue([selection]); // here we send day
+      setafterPeriod([selection]); // here we send day
     } else if (typeDate === 'week') {
       // These checks the typeDate
-      setcompareDateValue([
+      setafterPeriod([
         {
           startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
           endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send end of week
@@ -433,90 +463,60 @@ const Dates = (props) => {
     }
   };
 
-  const minDate = dayjs('2021-01-01T00:00:00.000');
-  const maxDate = new Date();
-
-  // dateFromContext date picker variables
-  const dateFromContextStart = new Date(dateFromContext.startDate);
-  const dateFromContextEnd = new Date(dateFromContext.endDate);
-  const dateFromContextStartLocal = new Date(dateFromContext.startDate).toLocaleDateString();
-  const dateFromContextEndLocal = new Date(dateFromContext.endDate).toLocaleDateString();
-  const dateFromContextStartGetDate = new Date(dateFromContext.startDate).getDate();
-  const dateFromContextEndGetDate = new Date(dateFromContext.endDate).getDate();
-
-  // dateFromContextBtn date picker variables
-  const dateFromContextStartBtn = new Date(dateFromBtn?.startDate);
-  const dateFromContextEndBtn = new Date(dateFromBtn?.endDate);
-  const dateFromContextBtnStartLocal = new Date(dateFromBtn?.startDate).toLocaleDateString();
-  const dateFromContextBtnEndLocal = new Date(dateFromBtn?.endDate).toLocaleDateString();
-  const dateFromContextBtnStartGetDate = new Date(dateFromBtn?.startDate).getDate();
-  const dateFromContextBtnEndGetDate = new Date(dateFromBtn?.endDate).getDate();
-
-  // compareDateValueContext date picker variables
-  const compareDateValueContextStart = new Date(compareDateValueContext.startDate);
-  const compareDateValueContextEnd = new Date(compareDateValueContext.endDate);
-  const compareDateValueContextStartLocal = new Date(
-    compareDateValueContext.startDate,
-  ).toLocaleDateString();
-  const compareDateValueContextEndLocal = new Date(
-    compareDateValueContext.endDate,
-  ).toLocaleDateString();
-  const compareDateValueContextStartGetDate = new Date(compareDateValueContext.startDate).getDate();
-  const compareDateValueContextEndGetDate = new Date(compareDateValueContext.endDate).getDate();
-
-  const getdateFrom = () => {
+  const getbeforePeriod = () => {
     if (isDashboard) {
       if (titleDate === 'custom') {
         // if titleDate === "custom"  i return the date
-        if (dateFromContextStartLocal === dateFromContextEndLocal) {
-          return dateFromContextStartLocal;
+        if (beforePeriodContextStartLocal === beforePeriodContextEndLocal) {
+          return beforePeriodContextStartLocal;
         }
         if (
-          dateFromContextStartGetDate === 1 &&
-          dateFromContextEndGetDate === endOfMonth(dateFromContextEnd, 1).getDate()
+          beforePeriodContextStartGetDate === 1 &&
+          beforePeriodContextEndGetDate === endOfMonth(beforePeriodContextEnd, 1).getDate()
         ) {
-          return `${format(dateFromContextStart, 'LLL', { locale: enUS })} - ${getYear(
-            dateFromContextStart,
+          return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
+            beforePeriodContextStart,
           )}`;
         }
-        return `${dateFromContextStartLocal} - ${dateFromContextEndLocal}`;
+        return `${beforePeriodContextStartLocal} - ${beforePeriodContextEndLocal}`;
       }
       return titleDate; // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
     }
     if (title === 'custom') {
       // if titleDate === "custom"  i return the date
-      if (dateFromContextBtnStartLocal === dateFromContextBtnEndLocal) {
-        return dateFromContextBtnStartLocal;
+      if (beforePeriodContextBtnStartLocal === beforePeriodContextBtnEndLocal) {
+        return beforePeriodContextBtnStartLocal;
       }
       if (
-        dateFromContextBtnStartGetDate === 1 &&
-        dateFromContextBtnEndGetDate === endOfMonth(dateFromContextEndBtn, 1).getDate()
+        beforePeriodContextBtnStartGetDate === 1 &&
+        beforePeriodContextBtnEndGetDate === endOfMonth(beforePeriodContextEndBtn, 1).getDate()
       ) {
-        return `${format(dateFromContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
-          dateFromContextStartBtn,
+        return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
+          beforePeriodContextStartBtn,
         )}`;
       }
-      return `${dateFromContextBtnStartLocal} - ${dateFromContextBtnEndLocal}`;
+      return `${beforePeriodContextBtnStartLocal} - ${beforePeriodContextBtnEndLocal}`;
     }
     return title; // if title!== "custom" i only return title ("today", "yesterday", "current week" and etc)
   };
-  const getDateCompareDateValue = () => {
-    if (titlecompareDateValue === 'custom') {
-      // if titlecompareDateValue === "custom"  i return the date
-      if (compareDateValueContextStartLocal === compareDateValueContextEndLocal) {
-        return compareDateValueContextStartLocal;
+
+  const getDateAfterPeriod = () => {
+    if (titleafterPeriod === 'custom') {
+      // if titleafterPeriod === "custom"  i return the date
+      if (afterPeriodContextStartLocal === afterPeriodContextEndLocal) {
+        return afterPeriodContextStartLocal;
       }
       if (
-        compareDateValueContextStartGetDate === 1 &&
-        compareDateValueContextEndGetDate === endOfMonth(compareDateValueContextEnd, 1).getDate()
+        afterPeriodContextStartGetDate === 1 &&
+        afterPeriodContextEndGetDate === endOfMonth(afterPeriodContextEnd, 1).getDate()
       ) {
-        return `${format(compareDateValueContextStart, 'LLL', { locale: enUS })} - ${getYear(
-          compareDateValueContextStart,
+        return `${format(afterPeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
+          afterPeriodContextStart,
         )}`;
       }
-      return `${compareDateValueContextStartLocal} - ${compareDateValueContextEndLocal}`;
+      return `${afterPeriodContextStartLocal} - ${afterPeriodContextEndLocal}`;
     }
-    return titlecompareDateValue; // if titlecompareDateValue !== "custom" i only return titlecompareDateValue ("today", "yesterday", "current week" and etc)
+    return titleafterPeriod; // if titleafterPeriod !== "custom" i only return titleafterPeriod ("today", "yesterday", "current week" and etc)
   };
   const getMarketingHeatMap = () => {
     if (isMarketingHeatMap) {
@@ -529,7 +529,7 @@ const Dates = (props) => {
           showSelectionPreview
           moveRangeOnFirstSelection={false}
           months={2}
-          ranges={dateFrom}
+          ranges={beforePeriod}
           direction="horizontal"
           dragSelectionEnabled={false}
           weekStartsOn={1}
@@ -540,11 +540,11 @@ const Dates = (props) => {
       <LocalizationProviderKit dateAdapter={AdapterDayjs}>
         <MonthPickerKit
           className="month_picker"
-          date={dayjs(dateFrom[0].startDate)}
+          date={dayjs(beforePeriod[0].startDate)}
           minDate={minDate}
           maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
           onChange={(newDateMonth) =>
-            setdateFrom([
+            setbeforePeriod([
               {
                 startDate: startOfMonth(new Date(newDateMonth)),
                 endDate:
@@ -566,7 +566,7 @@ const Dates = (props) => {
         showSelectionPreview
         moveRangeOnFirstSelection={false}
         months={2}
-        ranges={dateFrom}
+        ranges={beforePeriod}
         direction="horizontal"
         dragSelectionEnabled={false}
         weekStartsOn={1}
@@ -586,7 +586,7 @@ const Dates = (props) => {
           className="date-input">
           <TypographyKit className="date-typography">
             <CalendarMonthIcon />
-            <span>{getdateFrom()}</span>
+            <span>{getbeforePeriod()}</span>
           </TypographyKit>
           <ExpandMoreIcon className={`expand-img ${opened ? 'active' : ''}`} />
         </PaperKit>
@@ -604,9 +604,9 @@ const Dates = (props) => {
               setExpanded={setExpanded}
               index="1"
               type="day"
-              setSelections={setdateFrom}
+              setSelections={setbeforePeriod}
               setTypeDate={setTypeDate}
-              dateFrom={dateFrom}
+              beforePeriod={beforePeriod}
             />
           ) : (
             ''
@@ -616,9 +616,9 @@ const Dates = (props) => {
             setExpanded={setExpanded}
             index="2"
             type="week"
-            setSelections={setdateFrom}
+            setSelections={setbeforePeriod}
             setTypeDate={setTypeDate}
-            dateFrom={dateFrom}
+            beforePeriod={beforePeriod}
           />
           {!isMarketingHeatMap ? (
             <DateSelect
@@ -626,9 +626,9 @@ const Dates = (props) => {
               setExpanded={setExpanded}
               index="3"
               type="month"
-              setSelections={setdateFrom}
+              setSelections={setbeforePeriod}
               setTypeDate={setTypeDate}
-              dateFrom={dateFrom}
+              beforePeriod={beforePeriod}
             />
           ) : (
             ''
@@ -655,19 +655,19 @@ const Dates = (props) => {
                 className={`date-input ${selected ? 'selected' : ''}`}>
                 <TypographyKit component="div" className="date-typography">
                   <CalendarMonthIcon />
-                  <span>{getDateCompareDateValue()}</span>
+                  <span>{getDateAfterPeriod()}</span>
                 </TypographyKit>
                 <ExpandMoreIcon className={`expand-img ${selected ? 'active' : ''}`} />
               </PaperKit>
-              <CompareDateValueSelect
-                setcompareDateValueBtn={setCompareDateValueContext}
-                setOpenedCompareDateValue={setOpenedCompareDateValue}
-                setcompareDateValue={setcompareDateValue}
+              <AfterPeriodSelect
+                setafterPeriodBtn={setAfterPeriodContext}
+                setOpenedAfterPeriod={setOpenedAfterPeriod}
+                setafterPeriod={setafterPeriod}
                 selected={selected}
-                compareDateValue={compareDateValueContext}
-                setTitleCompareDateValue={setTitlecompareDateValue}
-                dateFrom={dateFromContext}
-                titledateFromContext={titleDate}
+                afterPeriod={afterPeriodContext}
+                setTitleAfterPeriod={setTitleafterPeriod}
+                beforePeriod={beforePeriodContext}
+                titlebeforePeriodContext={titleDate}
                 typeDate={typeDate}
                 setSelected={setSelected}
               />
@@ -676,9 +676,7 @@ const Dates = (props) => {
           <div
             role="presentation"
             tabIndex={-1}
-            className={`date-range range-compareDateValueContext ${
-              openedCompareDateValue ? 'opened' : ''
-            }`}
+            className={`date-range range-afterPeriodContext ${openedAfterPeriod ? 'opened' : ''}`}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}>
             <PaperKit style={{ background: '#fff' }} className="date-picker">
@@ -687,33 +685,33 @@ const Dates = (props) => {
                 setExpanded={setExpanded}
                 index="1"
                 type="day"
-                setSelections={setcompareDateValue}
+                setSelections={setafterPeriod}
                 setTypeDate={setTypeDate}
-                dateFrom={compareDateValue}
+                beforePeriod={afterPeriod}
               />
               <DateSelect
                 expanded={expanded}
                 setExpanded={setExpanded}
                 index="2"
                 type="week"
-                setSelections={setcompareDateValue}
+                setSelections={setafterPeriod}
                 setTypeDate={setTypeDate}
-                dateFrom={compareDateValue}
+                beforePeriod={afterPeriod}
               />
               <DateSelect
                 expanded={expanded}
                 setExpanded={setExpanded}
                 index="3"
                 type="month"
-                setSelections={setcompareDateValue}
+                setSelections={setafterPeriod}
                 setTypeDate={setTypeDate}
-                dateFrom={compareDateValue}
+                beforePeriod={afterPeriod}
               />
               <div className="date-btn-wrapper">
                 <ButtonKit
-                  disabled={!getcompareDateValue()}
-                  onClick={handleClickCompareDateValue}
-                  className={`date-save-btn ${getcompareDateValue() ? '' : 'date-disabled-btn'}`}
+                  disabled={!getafterPeriod()}
+                  onClick={handleClickAfterPeriod}
+                  className={`date-save-btn ${getafterPeriod() ? '' : 'date-disabled-btn'}`}
                   variant="contained">
                   Ok
                 </ButtonKit>
@@ -723,11 +721,11 @@ const Dates = (props) => {
               <LocalizationProviderKit dateAdapter={AdapterDayjs}>
                 <MonthPickerKit
                   className="month_picker"
-                  date={dayjs(compareDateValue[0].startDate)}
+                  date={dayjs(afterPeriod[0].startDate)}
                   minDate={minDate}
                   maxDate={maxDate}
                   onChange={(newDateMonth) =>
-                    setcompareDateValue([
+                    setafterPeriod([
                       {
                         startDate: startOfMonth(new Date(newDateMonth)),
                         endDate:
@@ -745,11 +743,11 @@ const Dates = (props) => {
                 onRangeFocusChange={(e) => e}
                 minDate={new Date(minDate)}
                 maxDate={new Date()}
-                onChange={handleOnChangeCompareDateValue}
+                onChange={handleOnChangeAfterPeriod}
                 showSelectionPreview
                 moveRangeOnFirstSelection={false}
                 months={2}
-                ranges={compareDateValue}
+                ranges={afterPeriod}
                 direction="horizontal"
                 dragSelectionEnabled={false}
                 weekStartsOn={1}
@@ -770,9 +768,9 @@ const Dates = (props) => {
       <div
         role="presentation"
         tabIndex={-1}
-        className={`date-range-overlay ${openedCompareDateValue ? 'opened' : ''}`}
-        onClick={() => setOpenedCompareDateValue(false)}
-        onKeyDown={() => setOpenedCompareDateValue(false)}
+        className={`date-range-overlay ${openedAfterPeriod ? 'opened' : ''}`}
+        onClick={() => setOpenedAfterPeriod(false)}
+        onKeyDown={() => setOpenedAfterPeriod(false)}
       />
       <div
         role="presentation"

@@ -33,13 +33,13 @@ const EnhancedTableHead = ({ headCells }) => (
   </TableHeadKit>
 );
 
-const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
+const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
   const { date } = useDate();
-  const { dateFrom, compareDateValue, titleDate, titlecompareDateValue } = date;
+  const { beforePeriod, afterPeriod, titleDate, titleafterPeriod } = date;
   const { userPlatformData } = usePlatform();
 
-  const startDate = parseISO(dateFrom.startDate);
-  const endDate = parseISO(dateFrom.endDate);
+  const startDate = parseISO(beforePeriod.startDate);
+  const endDate = parseISO(beforePeriod.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
@@ -57,51 +57,51 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
     }
     return title;
   };
-  const getcompareDateValue = () => {
-    if (titlecompareDateValue === 'custom') {
+  const getafterPeriod = () => {
+    if (titleafterPeriod === 'custom') {
       if (startLocalRight === endLocalRight) {
-        return `${dayjs(compareDateValue.startDate).format('DD/MM')}`;
+        return `${dayjs(afterPeriod.startDate).format('DD/MM')}`;
       }
       if (
         startGetDateRight === 1 &&
-        endGetDateRight === endOfMonth(parseISO(compareDateValue.startDate), 1).getDate()
+        endGetDateRight === endOfMonth(parseISO(afterPeriod.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(compareDateValue.startDate), 'LLL', {
+        return `${format(parseISO(afterPeriod.startDate), 'LLL', {
           locale: enUS,
-        })}  -  ${getYear(parseISO(compareDateValue.startDate))}`;
+        })}  -  ${getYear(parseISO(afterPeriod.startDate))}`;
       }
 
-      return `${dayjs(compareDateValue.startDate).format('DD/MM')} - ${dayjs(
-        compareDateValue.endDate,
-      ).format('DD/MM')}`;
+      return `${dayjs(afterPeriod.startDate).format('DD/MM')} - ${dayjs(afterPeriod.endDate).format(
+        'DD/MM',
+      )}`;
     }
 
-    return `${titlecompareDateValue}'s`;
+    return `${titleafterPeriod}'s`;
   };
-  const getdateFrom = () => {
+  const getbeforePeriod = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(dateFrom.startDate).format('DD/MM')}`;
+        return `${dayjs(beforePeriod.startDate).format('DD/MM')}`;
       }
       if (
         startGetDate === 1 &&
-        endGetDate === endOfMonth(parseISO(dateFrom.startDate), 1).getDate()
+        endGetDate === endOfMonth(parseISO(beforePeriod.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(dateFrom.startDate), 'LLL', {
+        return `${format(parseISO(beforePeriod.startDate), 'LLL', {
           locale: enUS,
-        })}  -  ${getYear(parseISO(dateFrom.startDate))}`;
+        })}  -  ${getYear(parseISO(beforePeriod.startDate))}`;
       }
 
-      return `${dayjs(dateFrom.startDate).format('DD/MM')} - ${dayjs(dateFrom.endDate).format(
-        'DD/MM',
-      )}`;
+      return `${dayjs(beforePeriod.startDate).format('DD/MM')} - ${dayjs(
+        beforePeriod.endDate,
+      ).format('DD/MM')}`;
     }
 
     return `${titleDate}'s`;
   };
 
-  const startDateRight = parseISO(compareDateValue.startDate);
-  const endDateRight = parseISO(compareDateValue.endDate);
+  const startDateRight = parseISO(afterPeriod.startDate);
+  const endDateRight = parseISO(afterPeriod.endDate);
   const startLocalRight = startDateRight.toLocaleDateString();
   const endLocalRight = endDateRight.toLocaleDateString();
   const startGetDateRight = startDateRight.getDate();
@@ -117,13 +117,13 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
       id: 'date',
       numeric: true,
       disablePadding: false,
-      label: getdateFrom(),
+      label: getbeforePeriod(),
     },
     {
       id: 'date1',
       numeric: true,
       disablePadding: false,
-      label: getcompareDateValue(),
+      label: getafterPeriod(),
     },
     {
       id: 'evolution',
@@ -134,14 +134,14 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
   ];
 
   const procentTalabat = () => {
-    if (metricsDateFrom.talabat && metricsCompareDateValue.talabat) {
-      if (Number(metricsCompareDateValue.talabat[title]) === 0) {
+    if (metricsbeforePeriod.talabat && metricsafterPeriod.talabat) {
+      if (Number(metricsafterPeriod.talabat[title]) === 0) {
         return 0;
       }
 
       return Number(
         (
-          metricsDateFrom.talabat[title] / (metricsCompareDateValue.talabat[title] / 100) -
+          metricsbeforePeriod.talabat[title] / (metricsafterPeriod.talabat[title] / 100) -
           100
         ).toFixed(2),
       );
@@ -150,14 +150,14 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
   };
 
   const procentDeliveroo = () => {
-    if (metricsDateFrom.deliveroo && metricsCompareDateValue.deliveroo) {
-      if (Number(metricsCompareDateValue.deliveroo[title]) === 0) {
+    if (metricsbeforePeriod.deliveroo && metricsafterPeriod.deliveroo) {
+      if (Number(metricsafterPeriod.deliveroo[title]) === 0) {
         return 0;
       }
 
       return Number(
         (
-          metricsDateFrom.deliveroo[title] / (metricsCompareDateValue.deliveroo[title] / 100) -
+          metricsbeforePeriod.deliveroo[title] / (metricsafterPeriod.deliveroo[title] / 100) -
           100
         ).toFixed(2),
       );
@@ -165,13 +165,13 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
     return '-';
   };
   const procentTotal = () => {
-    if (metricsDateFrom.all && metricsCompareDateValue.all) {
-      if (Number(metricsCompareDateValue.all[title]) === 0) {
+    if (metricsbeforePeriod.all && metricsafterPeriod.all) {
+      if (Number(metricsafterPeriod.all[title]) === 0) {
         return 0;
       }
 
       return Number(
-        (metricsDateFrom.all[title] / (metricsCompareDateValue.all[title] / 100) - 100).toFixed(2),
+        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(2),
       );
     }
     return '-';
@@ -210,8 +210,8 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
                       alt={title}
                     />
                   </TableCellKit>
-                  <TableCellKit>{getNum(metricsDateFrom.deliveroo)}</TableCellKit>
-                  <TableCellKit>{getNum(metricsCompareDateValue.deliveroo)}</TableCellKit>
+                  <TableCellKit>{getNum(metricsbeforePeriod.deliveroo)}</TableCellKit>
+                  <TableCellKit>{getNum(metricsafterPeriod.deliveroo)}</TableCellKit>
                   <TableCellKit>
                     <div
                       className={`table_evolution ${
@@ -231,8 +231,8 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
                       alt={title}
                     />
                   </TableCellKit>
-                  <TableCellKit>{getNum(metricsDateFrom.talabat)}</TableCellKit>
-                  <TableCellKit>{getNum(metricsCompareDateValue.talabat)}</TableCellKit>
+                  <TableCellKit>{getNum(metricsbeforePeriod.talabat)}</TableCellKit>
+                  <TableCellKit>{getNum(metricsafterPeriod.talabat)}</TableCellKit>
                   <TableCellKit>
                     <div
                       className={`table_evolution ${
@@ -249,8 +249,8 @@ const EnhancedTable = ({ title, metricsDateFrom, metricsCompareDateValue }) => {
                 <TableCellKit component="th" scope="row">
                   Total
                 </TableCellKit>
-                <TableCellKit>{getNum(metricsDateFrom.all)}</TableCellKit>
-                <TableCellKit>{getNum(metricsCompareDateValue.all)}</TableCellKit>
+                <TableCellKit>{getNum(metricsbeforePeriod.all)}</TableCellKit>
+                <TableCellKit>{getNum(metricsafterPeriod.all)}</TableCellKit>
                 <TableCellKit>
                   <div
                     className={`table_evolution ${procentTotal() > 0 ? 'table_increased' : ''} ${

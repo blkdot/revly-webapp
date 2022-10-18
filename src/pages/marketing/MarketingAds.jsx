@@ -38,12 +38,12 @@ const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { vendors, vendorsPlatform } = useVendors();
   const { date } = useDate();
-  const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: date.dateFrom.startDate,
-    endDate: date.dateFrom.endDate,
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: date.beforePeriod.startDate,
+    endDate: date.beforePeriod.endDate,
   });
   const [scrollPosition, setScrollPosition] = useState(0);
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: dateFromBtn });
+  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
@@ -213,7 +213,7 @@ const MarketingAds = () => {
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates offer dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
+        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">
         <div className="marketing-top-text">

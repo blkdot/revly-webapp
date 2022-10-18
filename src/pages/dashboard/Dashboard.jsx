@@ -10,7 +10,7 @@ import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import useVendors from '../../hooks/useVendors';
 
 const Dashboard = () => {
-  const { metricsDateFrom, metricsCompareDateValue } = useMetrics();
+  const { metricsbeforePeriod, metricsafterPeriod } = useMetrics();
   const { vendors, vendorsPlatform } = useVendors();
 
   return (
@@ -19,19 +19,19 @@ const Dashboard = () => {
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
         <Dates isDashboard />
       </div>
-      {metricsDateFrom.length !== 0 && metricsCompareDateValue.length !== 0 ? (
+      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Finance
-          metricsDateFrom={metricsDateFrom}
-          metricsCompareDateValue={metricsCompareDateValue}
+          metricsbeforePeriod={metricsbeforePeriod}
+          metricsafterPeriod={metricsafterPeriod}
           vendors={vendors}
         />
       ) : (
         <FinanceEmpty vendors={vendors} />
       )}
-      {metricsDateFrom.length !== 0 && metricsCompareDateValue.length !== 0 ? (
+      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Marketing
-          metricsDateFrom={metricsDateFrom}
-          metricsCompareDateValue={metricsCompareDateValue}
+          metricsbeforePeriod={metricsbeforePeriod}
+          metricsafterPeriod={metricsafterPeriod}
         />
       ) : (
         <MarketingEmpty />

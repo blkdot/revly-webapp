@@ -8,17 +8,17 @@ import Table from '../table/Table';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
 
-const Marketing = ({ metricsDateFrom, metricsCompareDateValue }) => {
+const Marketing = ({ metricsbeforePeriod, metricsafterPeriod }) => {
   const [table, setTable] = useState('accrued_discounts');
   const { date } = useDate();
-  const { dateFrom, titleDate } = date;
-  const startDate = new Date(dateFrom.startDate);
-  const endDate = new Date(dateFrom.endDate);
+  const { beforePeriod, titleDate } = date;
+  const startDate = new Date(beforePeriod.startDate);
+  const endDate = new Date(beforePeriod.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const getdateFrom = () => {
+  const getbeforePeriod = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
@@ -54,13 +54,13 @@ const Marketing = ({ metricsDateFrom, metricsCompareDateValue }) => {
             setTable={setTable}
             key={info}
             title={info}
-            metricsDateFrom={metricsDateFrom}
-            metricsCompareDateValue={metricsCompareDateValue}
+            metricsbeforePeriod={metricsbeforePeriod}
+            metricsafterPeriod={metricsafterPeriod}
           />
         ))}
       </div>
       <TypographyKit variant="h5">
-        <span>{getdateFrom()}</span>
+        <span>{getbeforePeriod()}</span>
         &apos;s
         <span> {getTable()}</span>
       </TypographyKit>
@@ -69,8 +69,8 @@ const Marketing = ({ metricsDateFrom, metricsCompareDateValue }) => {
           <Table
             key={info}
             title={info}
-            metricsDateFrom={metricsDateFrom}
-            metricsCompareDateValue={metricsCompareDateValue}
+            metricsbeforePeriod={metricsbeforePeriod}
+            metricsafterPeriod={metricsafterPeriod}
           />
         ) : (
           ''

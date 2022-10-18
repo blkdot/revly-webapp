@@ -986,8 +986,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               </TypographyKit>
               <Dates
                 isMarketingHeatMap
-                dateFromBtn={beforePeriodBtn}
-                setdateFromBtn={setBeforePeriodBtn}
+                beforePeriodBtn={beforePeriodBtn}
+                setbeforePeriodBtn={setBeforePeriodBtn}
               />
             </div>
             <TypographyKit variant="div" className="right-part-main">
