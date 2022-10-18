@@ -8,17 +8,17 @@ import Table from '../table/Table';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
 
-const Finance = ({ metricsDateFrom, metricsCompareDateValue, vendors }) => {
+const Finance = ({ metricsbeforePeriod, metricsafterPeriod, vendors }) => {
   const [table, setTable] = useState('revenue');
   const { date, restaurants } = useDate();
-  const { dateFrom, titleDate } = date;
-  const startDate = new Date(dateFrom.startDate);
-  const endDate = new Date(dateFrom.endDate);
+  const { beforePeriod, titleDate } = date;
+  const startDate = new Date(beforePeriod.startDate);
+  const endDate = new Date(beforePeriod.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
-  const getdateFrom = () => {
+  const getbeforePeriod = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
@@ -47,7 +47,7 @@ const Finance = ({ metricsDateFrom, metricsCompareDateValue, vendors }) => {
   return (
     <div className="block">
       <TypographyKit variant="h4">
-        <span>{getdateFrom()} </span>
+        <span>{getbeforePeriod()} </span>
         results for{' '}
         {restaurants.length === vendors.length || restaurants.length === 0 ? (
           <p>
@@ -65,13 +65,13 @@ const Finance = ({ metricsDateFrom, metricsCompareDateValue, vendors }) => {
             setTable={setTable}
             key={info}
             title={info}
-            metricsDateFrom={metricsDateFrom}
-            metricsCompareDateValue={metricsCompareDateValue}
+            metricsbeforePeriod={metricsbeforePeriod}
+            metricsafterPeriod={metricsafterPeriod}
           />
         ))}
       </div>
       <TypographyKit variant="h5">
-        <span>{getdateFrom()}</span>
+        <span>{getbeforePeriod()}</span>
         &apos;s
         <span> {getTable()}</span>
       </TypographyKit>
@@ -80,8 +80,8 @@ const Finance = ({ metricsDateFrom, metricsCompareDateValue, vendors }) => {
           <Table
             key={info}
             title={info}
-            metricsDateFrom={metricsDateFrom}
-            metricsCompareDateValue={metricsCompareDateValue}
+            metricsbeforePeriod={metricsbeforePeriod}
+            metricsafterPeriod={metricsafterPeriod}
           />
         ) : (
           ''

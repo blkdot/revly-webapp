@@ -19,23 +19,23 @@ import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
 import PaperKit from '../../kits/paper/PaperKit';
 
-const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateValue }) => {
+const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod }) => {
   const { date } = useDate();
-  const { compareDateValue, titlecompareDateValue } = date;
-  const startDate = parseISO(compareDateValue.startDate);
-  const endDate = parseISO(compareDateValue.endDate);
+  const { afterPeriod, titleafterPeriod } = date;
+  const startDate = parseISO(afterPeriod.startDate);
+  const endDate = parseISO(afterPeriod.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
   const procent = () => {
-    if (metricsDateFrom && metricsCompareDateValue) {
-      if (Number(metricsCompareDateValue.all[title]) === 0) {
+    if (metricsbeforePeriod && metricsafterPeriod) {
+      if (Number(metricsafterPeriod.all[title]) === 0) {
         return 0;
       }
 
       return Number(
-        (metricsDateFrom.all[title] / (metricsCompareDateValue.all[title] / 100) - 100).toFixed(2),
+        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(2),
       );
     }
     return 0;
@@ -52,26 +52,26 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
     }
     return title;
   };
-  const getcompareDateValue = () => {
-    if (titlecompareDateValue === 'custom') {
+  const getafterPeriod = () => {
+    if (titleafterPeriod === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(compareDateValue.startDate).format('DD/MM')}`;
+        return `${dayjs(afterPeriod.startDate).format('DD/MM')}`;
       }
       if (
         startGetDate === 1 &&
-        endGetDate === endOfMonth(parseISO(compareDateValue.startDate), 1).getDate()
+        endGetDate === endOfMonth(parseISO(afterPeriod.startDate), 1).getDate()
       ) {
-        return `${format(parseISO(compareDateValue.startDate), 'LLL', {
+        return `${format(parseISO(afterPeriod.startDate), 'LLL', {
           locale: enUS,
-        })}  -  ${getYear(parseISO(compareDateValue.startDate))}`;
+        })}  -  ${getYear(parseISO(afterPeriod.startDate))}`;
       }
 
-      return `${dayjs(compareDateValue.startDate).format('DD/MM')} - ${dayjs(
-        compareDateValue.endDate,
-      ).format('DD/MM')}`;
+      return `${dayjs(afterPeriod.startDate).format('DD/MM')} - ${dayjs(afterPeriod.endDate).format(
+        'DD/MM',
+      )}`;
     }
 
-    return `${titlecompareDateValue}`;
+    return `${titleafterPeriod}`;
   };
   const getIcon = () => {
     if (title === 'reveunue') {
@@ -93,10 +93,10 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
   };
 
   const renderMetrics = () => {
-    if (metricsDateFrom.all[title]) {
+    if (metricsbeforePeriod.all[title]) {
       return getTitle() === 'roi'
-        ? Math.round(metricsDateFrom.all[title] * 100)
-        : metricsDateFrom.all[title];
+        ? Math.round(metricsbeforePeriod.all[title] * 100)
+        : metricsbeforePeriod.all[title];
     }
 
     return '-';
@@ -120,7 +120,7 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
               {renderMetrics()}
-              {getTitle() === 'roi' && metricsDateFrom.all[title] && ' %'}
+              {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
             </TypographyKit>
           </div>
           <TypographyKit className="card-typography card-icon">{getIcon()}</TypographyKit>
@@ -144,7 +144,7 @@ const Widget = ({ title, setTable, table, metricsDateFrom, metricsCompareDateVal
             {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
           </TypographyKit>
           <TypographyKit className="card-week" variant="body3">
-            than {getcompareDateValue()}
+            than {getafterPeriod()}
           </TypographyKit>
         </div>
       </CardContentKit>

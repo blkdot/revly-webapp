@@ -58,11 +58,11 @@ const fomatOffers = (os) =>
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { vendors, vendorsPlatform } = useVendors();
-  const [dateFromBtn, setDateFromBtn] = useState({
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
     endDate: new Date(),
   });
-  const { offers } = usePlanningOffers({ dateRange: dateFromBtn });
+  const { offers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
   /*  {
     data: {
@@ -261,7 +261,7 @@ const MarketingOffer = () => {
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates offer dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
+        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">
         <div className="marketing-top-text">

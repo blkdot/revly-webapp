@@ -17,25 +17,25 @@ import ButtonKit from '../../kits/button/ButtonKit';
 const date = new Date();
 
 const Day = ({
-  setTitleCompareDateValue,
-  setcompareDateValueBtn,
+  setTitleAfterPeriod,
+  setafterPeriodBtn,
   startDateLeft,
   endDateLeft,
-  openCompareDateValue,
-  titledateFromContext,
+  openAfterPeriod,
+  titlebeforePeriodContext,
 }) => (
   <div>
-    {titledateFromContext === 'yesterday' || titledateFromContext === 'custom' ? (
+    {titlebeforePeriodContext === 'yesterday' || titlebeforePeriodContext === 'custom' ? (
       ''
     ) : (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
-          setcompareDateValueBtn({
+          setafterPeriodBtn({
             startDate: subDays(date, 1),
             endDate: subDays(date, 1),
           });
-          setTitleCompareDateValue('yesterday');
+          setTitleAfterPeriod('yesterday');
         }}>
         Yesterday
       </ButtonKit>
@@ -43,50 +43,50 @@ const Day = ({
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
-        setcompareDateValueBtn({
+        setafterPeriodBtn({
           startDate: subDays(date, 1),
           endDate: subDays(date, 1),
         });
-        setTitleCompareDateValue('the day before');
+        setTitleAfterPeriod('the day before');
       }}>
       Day before
     </ButtonKit>
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
-        setcompareDateValueBtn({
+        setafterPeriodBtn({
           startDate: subWeeks(startDateLeft, 1),
           endDate: subWeeks(endDateLeft, 1),
         });
-        setTitleCompareDateValue('the same day last week');
+        setTitleAfterPeriod('the same day last week');
       }}>
       Same day last week
     </ButtonKit>
-    <ButtonKit className="navbar-button-kit" onClick={openCompareDateValue}>
+    <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
       Custom Day
     </ButtonKit>
   </div>
 );
 const Week = ({
-  setTitleCompareDateValue,
-  setcompareDateValueBtn,
+  setTitleAfterPeriod,
+  setafterPeriodBtn,
   startDateLeft,
   endDateLeft,
-  openCompareDateValue,
-  titledateFromContext,
+  openAfterPeriod,
+  titlebeforePeriodContext,
 }) => (
   <div>
-    {titledateFromContext === 'last week' || titledateFromContext === 'custom' ? (
+    {titlebeforePeriodContext === 'last week' || titlebeforePeriodContext === 'custom' ? (
       ''
     ) : (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
-          setcompareDateValueBtn({
+          setafterPeriodBtn({
             startDate: startOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
             endDate: endOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
           });
-          setTitleCompareDateValue('last week');
+          setTitleAfterPeriod('last week');
         }}>
         Last week
       </ButtonKit>
@@ -94,69 +94,69 @@ const Week = ({
     <ButtonKit
       className="navbar-button-kit"
       onClick={() => {
-        setcompareDateValueBtn({
+        setafterPeriodBtn({
           startDate: startOfWeek(subWeeks(startDateLeft, 1), { weekStartsOn: 1 }),
           endDate: endOfWeek(subWeeks(endDateLeft, 1), { weekStartsOn: 1 }),
         });
-        setTitleCompareDateValue('week before');
+        setTitleAfterPeriod('week before');
       }}>
       Week before
     </ButtonKit>
-    <ButtonKit className="navbar-button-kit" onClick={openCompareDateValue}>
+    <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
       Custom Week
     </ButtonKit>
   </div>
 );
 const Month = ({
-  setTitleCompareDateValue,
-  setcompareDateValueBtn,
-  openCompareDateValue,
-  titledateFromContext,
+  setTitleAfterPeriod,
+  setafterPeriodBtn,
+  openAfterPeriod,
+  titlebeforePeriodContext,
 }) => (
   <div>
-    {titledateFromContext === 'last month' || titledateFromContext === 'custom' ? (
+    {titlebeforePeriodContext === 'last month' || titlebeforePeriodContext === 'custom' ? (
       ''
     ) : (
       <ButtonKit
         className="navbar-button-kit"
         onClick={() => {
-          setcompareDateValueBtn({
+          setafterPeriodBtn({
             startDate: startOfMonth(subMonths(date, 1)),
             endDate: endOfMonth(subMonths(date, 1)),
           });
-          setTitleCompareDateValue('last month');
+          setTitleAfterPeriod('last month');
         }}>
         Last month
       </ButtonKit>
     )}
 
-    <ButtonKit className="navbar-button-kit" onClick={openCompareDateValue}>
+    <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
       Custom Month
     </ButtonKit>
   </div>
 );
 
-const CompareDateValueSelect = ({
-  setcompareDateValue,
-  compareDateValue,
+const AfterPeriodSelect = ({
+  setafterPeriod,
+  afterPeriod,
   selected,
-  setOpenedCompareDateValue,
-  setcompareDateValueBtn,
-  setTitleCompareDateValue,
-  dateFrom,
-  titledateFromContext,
+  setOpenedAfterPeriod,
+  setafterPeriodBtn,
+  setTitleAfterPeriod,
+  beforePeriod,
+  titlebeforePeriodContext,
   typeDate,
   setSelected,
 }) => {
-  const startDate = new Date(compareDateValue.startDate);
-  const endDate = new Date(compareDateValue.endDate);
-  const startDateLeft = new Date(dateFrom.startDate);
-  const endDateLeft = new Date(dateFrom.endDate);
+  const startDate = new Date(afterPeriod.startDate);
+  const endDate = new Date(afterPeriod.endDate);
+  const startDateLeft = new Date(beforePeriod.startDate);
+  const endDateLeft = new Date(beforePeriod.endDate);
 
-  const openCompareDateValue = () => {
-    setcompareDateValue([{ startDate, endDate, key: 'selection' }]);
-    setcompareDateValueBtn({ startDate, endDate });
-    setOpenedCompareDateValue(true);
+  const openAfterPeriod = () => {
+    setafterPeriod([{ startDate, endDate, key: 'selection' }]);
+    setafterPeriodBtn({ startDate, endDate });
+    setOpenedAfterPeriod(true);
     setSelected(false);
   };
 
@@ -164,34 +164,34 @@ const CompareDateValueSelect = ({
     if (typeDate === 'day') {
       return (
         <Day
-          titledateFromContext={titledateFromContext}
-          openCompareDateValue={openCompareDateValue}
+          titlebeforePeriodContext={titlebeforePeriodContext}
+          openAfterPeriod={openAfterPeriod}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
-          setcompareDateValueBtn={setcompareDateValueBtn}
-          setTitleCompareDateValue={setTitleCompareDateValue}
+          setafterPeriodBtn={setafterPeriodBtn}
+          setTitleAfterPeriod={setTitleAfterPeriod}
         />
       );
     }
     if (typeDate === 'week') {
       return (
         <Week
-          titledateFromContext={titledateFromContext}
-          openCompareDateValue={openCompareDateValue}
+          titlebeforePeriodContext={titlebeforePeriodContext}
+          openAfterPeriod={openAfterPeriod}
           startDateLeft={startDateLeft}
           endDateLeft={endDateLeft}
-          setcompareDateValueBtn={setcompareDateValueBtn}
-          setTitleCompareDateValue={setTitleCompareDateValue}
+          setafterPeriodBtn={setafterPeriodBtn}
+          setTitleAfterPeriod={setTitleAfterPeriod}
         />
       );
     }
     if (typeDate === 'month') {
       return (
         <Month
-          titledateFromContext={titledateFromContext}
-          openCompareDateValue={openCompareDateValue}
-          setcompareDateValueBtn={setcompareDateValueBtn}
-          setTitleCompareDateValue={setTitleCompareDateValue}
+          titlebeforePeriodContext={titlebeforePeriodContext}
+          openAfterPeriod={openAfterPeriod}
+          setafterPeriodBtn={setafterPeriodBtn}
+          setTitleAfterPeriod={setTitleAfterPeriod}
         />
       );
     }
@@ -207,4 +207,4 @@ const CompareDateValueSelect = ({
   );
 };
 
-export default React.memo(CompareDateValueSelect);
+export default React.memo(AfterPeriodSelect);

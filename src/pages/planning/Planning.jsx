@@ -14,8 +14,8 @@ const Planning = () => {
   const [active, setActive] = useState(1);
   const { date } = useDate();
   const [dateRange, setDateRange] = useState({
-    startDate: date.dateFrom.startDate,
-    endDate: date.dateFrom.endDate,
+    startDate: date.beforePeriod.startDate,
+    endDate: date.beforePeriod.endDate,
   });
   const { vendors, vendorsPlatform } = useVendors();
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
@@ -47,7 +47,7 @@ const Planning = () => {
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-        <Dates offer dateFromBtn={dateRange} setdateFromBtn={setDateRange} />
+        <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
       <div className={`planning_top-nav ${!active ? 'active' : ''}`}>
         <TypographyKit className={active ? 'active' : ''} onClick={() => setActive(1)} variant="h4">

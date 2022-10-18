@@ -21,16 +21,16 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const storageDate = JSON.parse(localStorage.getItem('date')) || null;
   const [date, setDate] = useState(
     storageDate || {
-      dateFrom: {
+      beforePeriod: {
         startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
         endDate: new Date(),
       },
-      compareDateValue: {
+      afterPeriod: {
         startDate: startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
         endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
       },
       titleDate: 'current week',
-      titlecompareDateValue: 'last week',
+      titleafterPeriod: 'last week',
       typeDate: 'week',
     },
   );

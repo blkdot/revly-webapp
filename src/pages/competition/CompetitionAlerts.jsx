@@ -37,9 +37,9 @@ const CompetitionAlerts = () => {
   const { getAlerts, getCompetitors } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
   const { date } = useDate();
-  const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: date.dateFrom.startDate,
-    endDate: date.dateFrom.endDate,
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: date.beforePeriod.startDate,
+    endDate: date.beforePeriod.endDate,
   });
   const { userPlatformData } = usePlatform();
 
@@ -138,7 +138,7 @@ const CompetitionAlerts = () => {
           vendors={vendors.filter((v) => v.platform === platform)}
           vendorsPlatform={vendorsPlatform}
         />
-        <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
+        <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
         Competition - Alerts
