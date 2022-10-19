@@ -41,7 +41,8 @@ const BranchMarketingDropdown = ({
       <FormcontrolKit sx={{ m: 1, width: 250 }}>
         <InputLabelKit
           className="restaurant-dropdown-input competition-dropdown"
-          id="demo-multiple-checkbox-label">
+          id="demo-multiple-checkbox-label"
+        >
           {icon ? <img src={icon} alt="Select Icon" /> : ''}
           {title}
         </InputLabelKit>
@@ -53,7 +54,8 @@ const BranchMarketingDropdown = ({
           onChange={handleChange}
           input={<OutlindeInputKit label={title} />}
           renderValue={(selected) => selected}
-          MenuProps={MenuProps}>
+          MenuProps={MenuProps}
+        >
           {rows?.map((info) => (
             <MenuItemKit key={info.vendor_id} value={info.data.vendor_name}>
               <CheckboxKit checked={select === info.data.vendor_name} />

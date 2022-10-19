@@ -165,13 +165,16 @@ const DateSelect = React.memo(
         id={`panel${index}bh-header`}
         expanded={expanded === `panel${index}`}
         onChange={handleChange(`panel${index}`)}
-        className="navbar-accordion">
+        className="navbar-accordion"
+      >
         <ButtonKit
           onClick={changeSelect}
-          className={`navbar-button-kit ${expanded === `panel${index}` ? 'active' : ''}`}>
+          className={`navbar-button-kit ${expanded === `panel${index}` ? 'active' : ''}`}
+        >
           <AccordionSummaryKit className="accordion-sum" expandIcon={<ExpandMoreIcon />}>
             <TypographyKit
-              sx={{ display: 'flex', alignItems: 'center', gridGap: '5px', fontSize: '16px' }}>
+              sx={{ display: 'flex', alignItems: 'center', gridGap: '5px', fontSize: '16px' }}
+            >
               <span>{type}</span>
             </TypographyKit>
           </AccordionSummaryKit>
@@ -179,17 +182,20 @@ const DateSelect = React.memo(
         <AccordionDetailsKit className="date-accordion-details">
           <ButtonKit
             className={`navbar-button-kit ${active === 'current' ? 'active' : ''}`}
-            onClick={() => getDate(type === 'day' ? 'today' : type)}>
+            onClick={() => getDate(type === 'day' ? 'today' : type)}
+          >
             Current {type}
           </ButtonKit>
           <ButtonKit
             className={`navbar-button-kit ${active === 'last' ? 'active' : ''}`}
-            onClick={() => getDate(type === 'day' ? 'yesterday' : `last ${type}`)}>
+            onClick={() => getDate(type === 'day' ? 'yesterday' : `last ${type}`)}
+          >
             {type === 'day' ? 'yesterday' : `last ${type}`}
           </ButtonKit>
           <ButtonKit
             className={`navbar-button-kit ${active === 'custom' ? 'active' : ''}`}
-            onClick={handleCustomClick}>
+            onClick={handleCustomClick}
+          >
             Custom {type}
           </ButtonKit>
         </AccordionDetailsKit>

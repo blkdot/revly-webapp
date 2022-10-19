@@ -76,7 +76,8 @@ const OfferDetailComponent = () => {
           style={{
             color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
             backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
-          }}>
+          }}
+        >
           {status}
         </span>
       </div>
@@ -160,6 +161,7 @@ const OfferDetailComponent = () => {
               <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
               Create a smart rule
             </ButtonKit>
+            {/* eslint-disable-next-line no-console */}
             <ButtonKit onClick={() => console.log('ok')} variant="contained">
               <img src={SettingFuture} alt="Setting future icon" />
               Set up an offer
@@ -260,7 +262,8 @@ const OfferDetailComponent = () => {
                           background: 'rgba(144, 107, 255, 0.08)',
                           padding: '5px',
                           borderRadius: '50px',
-                        }}>
+                        }}
+                      >
                         <Timer />
                       </div>
                       <span className="offer-duration width-left-icon width-right-icon">
@@ -285,14 +288,16 @@ const OfferDetailComponent = () => {
                       flex: '1',
                       justifyContent: 'space-around',
                       minHeight: '36px',
-                    }}>
+                    }}
+                  >
                     <div
                       style={{
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         height: '100%',
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           fontFamily: 'Public Sans',
@@ -301,7 +306,8 @@ const OfferDetailComponent = () => {
                           fontSize: '12px',
                           lineHeight: '18px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         Starting date
                       </div>
                       <div
@@ -312,7 +318,8 @@ const OfferDetailComponent = () => {
                           fontSize: '14px',
                           lineHeight: '22px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         {start_date}
                       </div>
                     </div>
@@ -322,7 +329,8 @@ const OfferDetailComponent = () => {
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         height: '100%',
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           fontFamily: 'Public Sans',
@@ -331,7 +339,8 @@ const OfferDetailComponent = () => {
                           fontSize: '12px',
                           lineHeight: '18px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         Ending date
                       </div>
                       <div
@@ -342,7 +351,8 @@ const OfferDetailComponent = () => {
                           fontSize: '14px',
                           lineHeight: '22px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         {end_date}
                       </div>
                     </div>
@@ -371,7 +381,8 @@ const OfferDetailComponent = () => {
                       padding: '5px',
                       borderRadius: '50px',
                       cursor: 'pointer',
-                    }}>
+                    }}
+                  >
                     <FastFood />
                   </div>
                   <span className="offer-duration width-left-icon width-right-icon">
@@ -387,7 +398,8 @@ const OfferDetailComponent = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       marginLeft: '20px',
-                    }}>
+                    }}
+                  >
                     <span
                       style={{
                         fontFamily: 'Public Sans',
@@ -396,7 +408,8 @@ const OfferDetailComponent = () => {
                         fontSize: '14px',
                         lineHeight: '22px',
                         color: '#212B36',
-                      }}>
+                      }}
+                    >
                       {discount_type}
                     </span>
                     <span
@@ -407,7 +420,8 @@ const OfferDetailComponent = () => {
                         fontSize: '12px',
                         lineHeight: '18px',
                         color: '#637381',
-                      }}>
+                      }}
+                    >
                       Sell Off extra stock when you’re about to close
                     </span>
                   </div>
@@ -423,7 +437,8 @@ const OfferDetailComponent = () => {
                       fontSize: '12px',
                       lineHeight: '18px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     Percentage Discount
                   </div>
                   <div
@@ -434,7 +449,8 @@ const OfferDetailComponent = () => {
                       fontSize: '16px',
                       lineHeight: '24px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     {`${discount_rate}%`}
                   </div>
                 </div>
@@ -447,7 +463,8 @@ const OfferDetailComponent = () => {
                       fontSize: '12px',
                       lineHeight: '18px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     Min Order
                   </div>
                   <div
@@ -458,7 +475,8 @@ const OfferDetailComponent = () => {
                       fontSize: '16px',
                       lineHeight: '24px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     {minimum_order_value} AED
                   </div>
                 </div>
@@ -494,7 +512,8 @@ const TimeSlot = ({ status }) => (
       alignItems: 'center',
       minHeight: '40px',
       borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
-    }}>
+    }}
+  >
     <div
       style={{
         display: 'flex',
@@ -502,7 +521,8 @@ const TimeSlot = ({ status }) => (
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         height: '100%',
-      }}>
+      }}
+    >
       <span
         style={{
           fontFamily: 'Public Sans',
@@ -511,7 +531,8 @@ const TimeSlot = ({ status }) => (
           fontSize: '12px',
           lineHeight: '18px',
           color: '#212B36',
-        }}>
+        }}
+      >
         Start date
       </span>
       <span
@@ -523,7 +544,8 @@ const TimeSlot = ({ status }) => (
           lineHeight: '22px',
           textAlign: 'center',
           color: '#212B36',
-        }}>
+        }}
+      >
         10 am
       </span>
     </div>
@@ -533,7 +555,8 @@ const TimeSlot = ({ status }) => (
         flexDirection: 'column',
         justifyContent: 'space-between',
         height: '100%',
-      }}>
+      }}
+    >
       <span
         style={{
           fontFamily: 'Public Sans',
@@ -542,7 +565,8 @@ const TimeSlot = ({ status }) => (
           fontSize: '12px',
           lineHeight: '18px',
           color: '#212B36',
-        }}>
+        }}
+      >
         End date
       </span>
       <span
@@ -554,7 +578,8 @@ const TimeSlot = ({ status }) => (
           lineHeight: '22px',
           textAlign: 'center',
           color: '#212B36',
-        }}>
+        }}
+      >
         10 am
       </span>
     </div>
@@ -568,7 +593,8 @@ const TimeSlot = ({ status }) => (
           padding: '3px',
           borderRadius: '50px',
           cursor: 'pointer',
-        }}>
+        }}
+      >
         <Trash />
       </button>
     )}

@@ -36,7 +36,8 @@ const Day = ({
             endDate: subDays(date, 1),
           });
           setTitleAfterPeriod('yesterday');
-        }}>
+        }}
+      >
         Yesterday
       </ButtonKit>
     )}
@@ -48,7 +49,8 @@ const Day = ({
           endDate: subDays(date, 1),
         });
         setTitleAfterPeriod('the day before');
-      }}>
+      }}
+    >
       Day before
     </ButtonKit>
     <ButtonKit
@@ -59,7 +61,8 @@ const Day = ({
           endDate: subWeeks(endDateLeft, 1),
         });
         setTitleAfterPeriod('the same day last week');
-      }}>
+      }}
+    >
       Same day last week
     </ButtonKit>
     <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
@@ -87,7 +90,8 @@ const Week = ({
             endDate: endOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
           });
           setTitleAfterPeriod('last week');
-        }}>
+        }}
+      >
         Last week
       </ButtonKit>
     )}
@@ -99,7 +103,8 @@ const Week = ({
           endDate: endOfWeek(subWeeks(endDateLeft, 1), { weekStartsOn: 1 }),
         });
         setTitleAfterPeriod('week before');
-      }}>
+      }}
+    >
       Week before
     </ButtonKit>
     <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
@@ -125,7 +130,8 @@ const Month = ({
             endDate: endOfMonth(subMonths(date, 1)),
           });
           setTitleAfterPeriod('last month');
-        }}>
+        }}
+      >
         Last month
       </ButtonKit>
     )}
@@ -201,7 +207,8 @@ const AfterPeriodSelect = ({
     <PaperKit
       onClick={(e) => e.preventDefault()}
       style={{ background: '#fff' }}
-      className={`date-select ${selected ? 'selected' : ''}`}>
+      className={`date-select ${selected ? 'selected' : ''}`}
+    >
       {render()}
     </PaperKit>
   );

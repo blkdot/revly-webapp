@@ -105,17 +105,20 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
   return (
     <CardKit
       className={`card_wrapper ${table === title ? 'active' : ''}`}
-      onClick={() => setTable(title)}>
+      onClick={() => setTable(title)}
+    >
       <CardContentKit>
         <TypographyKit
           component="div"
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
           <div>
             <TypographyKit
               style={{ textTransform: 'capitalize' }}
               variant="subtitle2"
               className="card-typography"
-              component="div">
+              component="div"
+            >
               {getTitle()}
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
@@ -129,7 +132,8 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
           <PaperKit
             className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
               procent() < 0 ? 'decreased' : ''
-            }`}>
+            }`}
+          >
             {procent() === 0 ? (
               <ArrowRightAltIcon />
             ) : (
@@ -140,7 +144,8 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
             className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
               procent() < 0 ? 'decreased' : ''
             }`}
-            variant="body2">
+            variant="body2"
+          >
             {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
           </TypographyKit>
           <TypographyKit className="card-week" variant="body3">

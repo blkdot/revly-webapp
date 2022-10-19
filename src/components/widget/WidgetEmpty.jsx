@@ -19,13 +19,15 @@ const Widget = () => (
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <div>
           <TypographyKit
             sx={{ marginBottom: '15px' }}
             variant="subtitle2"
             className="card-typography"
-            component="div">
+            component="div"
+          >
             <SkeletonKit variant="rectangular" width={100} />
           </TypographyKit>
           <TypographyKit variant="h3" className="card-typography">

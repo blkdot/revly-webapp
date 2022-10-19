@@ -40,11 +40,13 @@ const TableHead = ({ order, orderBy, onRequestSort }) => {
             key={headCell.id}
             width={headCell.width}
             align="left"
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabelKit
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
             </TableSortLabelKit>
           </TableCellKit>

@@ -179,11 +179,13 @@ const EnhancedTableHead = (props) => {
             key={headCell.id}
             align="left"
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabelKit
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <BoxKit component="span" sx={{ display: 'none' }}>
@@ -271,7 +273,8 @@ const MarketingTable = ({ rows, selected, setSelected, offers }) => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    selected={isItemSelected}>
+                    selected={isItemSelected}
+                  >
                     <TableCellKit component="th" id="dateMn" scope="row">
                       {row.date}
                     </TableCellKit>

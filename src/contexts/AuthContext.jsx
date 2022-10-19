@@ -139,7 +139,8 @@ export const AuthContextProvider = ({ children }) => {
         verifyEmail,
         verifyCodeEmail,
         reAuthGoogle,
-      }}>
+      }}
+    >
       {children}
     </UserAuthContext.Provider>
   );

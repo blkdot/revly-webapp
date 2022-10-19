@@ -36,7 +36,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Cancel Offer">
+        contentLabel="Cancel Offer"
+      >
         <div>
           <div
             style={{
@@ -47,7 +48,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
               gap: '16px',
               width: '480px',
               height: '72px',
-            }}>
+            }}
+          >
             <BaseIcon />
             <span
               style={{
@@ -57,7 +59,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
                 fontSize: '16px',
                 lineHeight: '24px',
                 color: '#212B36',
-              }}>
+              }}
+            >
               Are you sure you want to delete this offer ?
             </span>
           </div>
@@ -70,7 +73,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
               gap: '16px',
               width: '480px',
               height: '72px',
-            }}>
+            }}
+          >
             <p
               style={{
                 width: '416px',
@@ -81,7 +85,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
                 fontSize: '16px',
                 lineHeight: '24px',
                 color: '#637381',
-              }}>
+              }}
+            >
               Amet, morbi egestas ultrices id non a. Est morbi consequat quis ac, duis elit,
               eleifend. Tellus diam mi phasellus facilisi id iaculis egestas.
             </p>
@@ -108,7 +113,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
                 cursor: 'pointer',
               }}
               type="button"
-              onClick={cancelOffer}>
+              onClick={cancelOffer}
+            >
               Yes, Cancel this Offer
             </button>
             <button
@@ -123,7 +129,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
                 cursor: 'pointer',
               }}
               type="button"
-              onClick={closeModal}>
+              onClick={closeModal}
+            >
               Close
             </button>
           </div>

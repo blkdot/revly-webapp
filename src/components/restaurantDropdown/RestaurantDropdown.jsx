@@ -64,7 +64,8 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform }) => {
           input={<OutlindeInputKit />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
-          sx={{ textTransform: 'capitalize' }}>
+          sx={{ textTransform: 'capitalize' }}
+        >
           {vendors?.map((info) => (
             <MenuItemKit key={info.vendor_id} value={info.data.vendor_name}>
               <CheckboxKit checked={restaurants.indexOf(info.data.vendor_name) > -1} />

@@ -18,13 +18,9 @@ import useDate from '../../hooks/useDate';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
-// import TrashIcon from '../../assets/images/ic_trash.png';
-// import MarketingTable from '../../components/marketingTable/MarketingTable';
 import { AdsTableData } from '../../data/fakeDataMarketing';
-// import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
-// import Vector from '../../assets/icons/Vector';
 import Switch from '../../assets/icons/Switch';
 import Basket from '../../assets/icons/Basket';
 import { platformObject } from '../../data/platformList';
@@ -54,7 +50,6 @@ const MarketingAds = () => {
     setScrollPosition(position);
   };
   const [adsData] = useState(AdsTableData);
-  // const [adsDataFiltered, setadsDataFiltered] = useState([]);
   const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
 
   const [filters, setFilters] = useState({
@@ -156,34 +151,6 @@ const MarketingAds = () => {
     setOpenedFilter(false);
   };
 
-  /* useEffect(() => {
-    let filteredData = adsData;
-
-    if (avgBasketRange.min && avgBasketRange.max && avgBasketRange.max > avgBasketRange.min) {
-      filteredData = filteredData.filter(
-        (f) => f.avgBasket >= avgBasketRange.min && f.avgBasket <= avgBasketRange.max,
-      );
-    }
-
-    if (filters.platform.length > 0) {
-      filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
-    }
-
-    if (filters.discountType.length > 0) {
-      filteredData = filteredData.filter((f) => filters.discountType.includes(f.discountType));
-    }
-
-    if (filters.procent.length > 0) {
-      filteredData = filteredData.filter((f) => filters.procent.includes(f.procent));
-    }
-
-    if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
-    }
-
-    setadsDataFiltered(filteredData);
-  }, [JSON.stringify(filters), JSON.stringify(avgBasketRange)]); */
-
   const handleChangeMultipleFilter = (k) => (v) => {
     const propertyFilter = filters[k];
 
@@ -239,7 +206,8 @@ const MarketingAds = () => {
           <div className="right-part-header marketing-links">
             <TypographyKit
               className={`right-part-header_link ${scrollPosition > 200 ? 'active' : ''}`}
-              variant="div">
+              variant="div"
+            >
               <HashLink to="#vendor_name">
                 <BoxKit className={scrollPosition < 200 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
@@ -306,7 +274,8 @@ const MarketingAds = () => {
         role="presentation"
         tabIndex={-1}
         onClick={() => setOpened(false)}
-        className={`delete-overlay ${opened ? 'active' : ''}`}>
+        className={`delete-overlay ${opened ? 'active' : ''}`}
+      >
         <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper">
           <div>
             <img src={logo} alt="logo" />
@@ -330,7 +299,8 @@ const MarketingAds = () => {
         role="presentation"
         tabIndex={-1}
         onClick={() => CloseFilterPopup(true)}
-        className={`filter-overlay${openedFilter ? ' active' : ''}`}>
+        className={`filter-overlay${openedFilter ? ' active' : ''}`}
+      >
         <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper filter-paper">
           <div>
             <TypographyKit>More Filters</TypographyKit>
@@ -349,7 +319,8 @@ const MarketingAds = () => {
               alignItems: 'flex-start',
               marginTop: '2rem',
               flexDirection: 'column',
-            }}>
+            }}
+          >
             <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
               <Layers /> Platform
             </span>
@@ -362,7 +333,8 @@ const MarketingAds = () => {
                     alignSelf: 'center',
                     fontWeight: 'bold',
                     width: '42%',
-                  }}>
+                  }}
+                >
                   <CheckboxKit
                     checked={filters.platform.includes(item.value)}
                     onChange={() => handleChangeMultipleFilter('platform')(item.value)}
@@ -380,7 +352,8 @@ const MarketingAds = () => {
               alignItems: 'flex-start',
               marginTop: '2rem',
               flexDirection: 'column',
-            }}>
+            }}
+          >
             <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
               <Tag /> Discount Type
             </span>
@@ -395,7 +368,8 @@ const MarketingAds = () => {
                     marginRight: '1rem',
                     marginTop: '1rem',
                     width: '80%',
-                  }}>
+                  }}
+                >
                   <CheckboxKit
                     checked={filters.discountType.includes(item.value)}
                     onChange={() => handleChangeMultipleFilter('discountType')(item.value)}
@@ -413,7 +387,8 @@ const MarketingAds = () => {
               alignItems: 'flex-start',
               marginTop: '2rem',
               flexDirection: 'column',
-            }}>
+            }}
+          >
             <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
               <Tag /> Discount Amount %
             </span>
@@ -428,7 +403,8 @@ const MarketingAds = () => {
                     marginRight: '1rem',
                     marginTop: '1rem',
                     width: '18%',
-                  }}>
+                  }}
+                >
                   <CheckboxKit
                     checked={filters.procent.includes(item.value)}
                     onChange={() => handleChangeMultipleFilter('procent')(item.value)}
@@ -446,14 +422,16 @@ const MarketingAds = () => {
               alignItems: 'flex-start',
               marginTop: '2rem',
               flexDirection: 'column',
-            }}>
+            }}
+          >
             <span
               style={{
                 fontSize: '13px',
                 fontWeight: 'bold',
                 display: 'flex',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <Switch />
               &nbsp; Status
             </span>
@@ -468,7 +446,8 @@ const MarketingAds = () => {
                     marginRight: '1rem',
                     marginTop: '1rem',
                     width: '42%',
-                  }}>
+                  }}
+                >
                   <CheckboxKit
                     checked={filters.status.includes(item.value) || false}
                     onChange={() => handleChangeMultipleFilter('status')(item.value)}
@@ -486,14 +465,16 @@ const MarketingAds = () => {
               alignItems: 'flex-start',
               marginTop: '2rem',
               flexDirection: 'column',
-            }}>
+            }}
+          >
             <span
               style={{
                 fontSize: '13px',
                 fontWeight: 'bold',
                 display: 'flex',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <Basket />
               &nbsp; Avg Basket
             </span>
@@ -505,7 +486,8 @@ const MarketingAds = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   width: '100%',
-                }}>
+                }}
+              >
                 <span style={{ fontSize: '12px' }}>Min</span>
                 <TextfieldKit
                   placeholder="$ 0"
@@ -520,7 +502,8 @@ const MarketingAds = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   width: '100%',
-                }}>
+                }}
+              >
                 <span style={{ fontSize: '12px' }}>Max</span>
                 <TextfieldKit
                   placeholder="-"
@@ -535,7 +518,8 @@ const MarketingAds = () => {
             <ButtonKit
               variant="contained"
               style={{ marginRight: '1rem' }}
-              onClick={() => CloseFilterPopup(false)}>
+              onClick={() => CloseFilterPopup(false)}
+            >
               Confirm and Filter
             </ButtonKit>
             <ButtonKit variant="outlined" onClick={() => CloseFilterPopup(true)}>

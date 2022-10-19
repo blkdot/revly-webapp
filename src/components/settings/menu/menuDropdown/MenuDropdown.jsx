@@ -36,7 +36,8 @@ const MenuDropdown = (props) => {
         defaultValue={defaultValue}
         sx={{ height: '55px' }}
         onChange={onChange}
-        label={label}>
+        label={label}
+      >
         {renderSelectItem(items)}
       </SelectKit>
     </FormcontrolKit>

@@ -169,7 +169,8 @@ const Menu = () => {
                     alignItems: 'center',
                     gap: 10,
                     textTransform: 'capitalize',
-                  }}>
+                  }}
+                >
                   <img
                     src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
                     width={24}

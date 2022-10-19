@@ -49,7 +49,8 @@ const AuthForm = (props) => {
           onClick={onSubmit}
           className="auth-form__input"
           disabled={disabled}
-          size="large">
+          size="large"
+        >
           {isSignin ? 'Sign In' : 'Sign Up'}
         </ButtonKit>
         <div className="auth-form__or">

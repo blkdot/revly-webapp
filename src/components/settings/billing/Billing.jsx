@@ -103,7 +103,8 @@ const Billing = () => {
           <ButtonKit
             className="__btn-add"
             onClick={() => addMethod('card')}
-            startIcon={<Add fontSize="large" />}>
+            startIcon={<Add fontSize="large" />}
+          >
             Add New Card
           </ButtonKit>
         </div>
@@ -136,7 +137,8 @@ const Billing = () => {
           style={{ marginTop: 8 }}
           className="__btn-add"
           onClick={() => addMethod('address')}
-          startIcon={<Add />}>
+          startIcon={<Add />}
+        >
           Add New Address
         </ButtonKit>
         <AddAddressForm

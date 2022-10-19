@@ -33,7 +33,8 @@ const VerifyCodeForm = (props) => {
         variant="contained"
         size="large"
         onClick={onVerify}
-        className="__btn">
+        className="__btn"
+      >
         Verify
       </ButtonKit>
     </div>

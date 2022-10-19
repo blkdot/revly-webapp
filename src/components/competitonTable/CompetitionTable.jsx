@@ -129,11 +129,13 @@ const EnhancedTableHead = (props) => {
             key={headCell.id}
             align="left"
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabelKit
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
             </TableSortLabelKit>
           </TableCellKit>
@@ -215,7 +217,8 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row?.id}
-                        selected={isItemSelected}>
+                        selected={isItemSelected}
+                      >
                         <TableCellKit component="th" id={labelId} scope="row">
                           {row?.name}
                         </TableCellKit>
@@ -251,7 +254,8 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row?.name}
-                      selected={isItemSelected}>
+                      selected={isItemSelected}
+                    >
                       <TableCellKit component="th" id={labelId} scope="row">
                         {row?.name}
                       </TableCellKit>
@@ -277,7 +281,8 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                   onClick={() => open()}
                   key={num}
                   variant="contained"
-                  className="competition-add competiton-table-btn">
+                  className="competition-add competiton-table-btn"
+                >
                   <AddIcon />
                   Add a Competitor
                 </ButtonKit>

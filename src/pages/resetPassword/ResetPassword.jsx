@@ -83,7 +83,8 @@ const ResetPassword = () => {
           fullWidth
           loading={loading}
           onClick={handleReset}
-          variant="contained">
+          variant="contained"
+        >
           Change Password
         </ButtonLoadingKit>
       </div>

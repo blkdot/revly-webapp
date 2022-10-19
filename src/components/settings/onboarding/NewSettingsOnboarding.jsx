@@ -170,7 +170,8 @@ const NewSettingsOnboarding = () => {
         open={isOpenModal}
         onClose={closeWithoutConnecting}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <div style={style}>
           <div className="settings-onboarding__form">
             <span>
@@ -183,7 +184,8 @@ const NewSettingsOnboarding = () => {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-beetween',
-              }}>
+              }}
+            >
               <TextfieldKit
                 label="Email"
                 size="small"
@@ -208,7 +210,8 @@ const NewSettingsOnboarding = () => {
                 variant="contained"
                 disabled={!formData.email || !formData.password}
                 onClick={handleSubmit}
-                loading={isLoading}>
+                loading={isLoading}
+              >
                 Confirm
               </ButtonLoadingKit>
             </div>

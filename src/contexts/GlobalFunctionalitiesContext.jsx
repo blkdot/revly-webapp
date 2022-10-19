@@ -87,7 +87,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         setVendorsContext,
         date,
         setDate,
-      }}>
+      }}
+    >
       {renderAlert()}
       {children}
     </GlobalFunctionalitiesContext.Provider>
