@@ -3,17 +3,11 @@ import MovingIcon from '@mui/icons-material/Moving';
 
 import './Widget.scss';
 
-import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
-import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
-import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
-import RedeemOutlinedIcon from '@mui/icons-material/RedeemOutlined';
 import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import dayjs from 'dayjs';
 import useDate from '../../hooks/useDate';
-import RoiIcon from '../../assets/images/roi.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
@@ -45,7 +39,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
       return 'orders';
     }
     if (title === 'average_basket') {
-      return 'Avg.  basket';
+      return 'Avg.basket';
     }
     if (title === 'accrued_discounts') {
       return 'discount offered';
@@ -72,24 +66,6 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
     }
 
     return `${titleafterPeriod}`;
-  };
-  const getIcon = () => {
-    if (title === 'reveunue') {
-      return <PaymentsOutlinedIcon />;
-    }
-    if (title === 'n_orders') {
-      return <ShoppingBasketOutlinedIcon />;
-    }
-    if (title === 'profit') {
-      return <AccountBalanceWalletOutlinedIcon />;
-    }
-    if (title === 'average_basket') {
-      return <ShoppingBagOutlinedIcon />;
-    }
-    if (title === 'accrued_discounts') {
-      return <RedeemOutlinedIcon />;
-    }
-    return <img src={RoiIcon} alt={title} />;
   };
 
   const renderMetrics = () => {
@@ -123,7 +99,6 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
               {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
             </TypographyKit>
           </div>
-          <TypographyKit className="card-typography card-icon">{getIcon()}</TypographyKit>
         </TypographyKit>
         <div className="card_bottom">
           <PaperKit
