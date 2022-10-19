@@ -54,7 +54,8 @@ const AddAddressForm = (props) => {
           className="add-address-form__input-flex__input"
           onChange={handleInputChange}
           onClick={onCancel}
-          variant="outlined">
+          variant="outlined"
+        >
           Cancel
         </ButtonKit>
         <ButtonKit
@@ -63,7 +64,8 @@ const AddAddressForm = (props) => {
           className="add-address-form__input-flex__input"
           onChange={handleInputChange}
           onClick={onSaveChange}
-          variant="contained">
+          variant="contained"
+        >
           Save Change
         </ButtonKit>
       </div>

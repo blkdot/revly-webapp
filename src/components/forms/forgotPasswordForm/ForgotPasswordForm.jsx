@@ -24,7 +24,8 @@ const ForgotPasswordForm = (props) => {
         className="forgot-password-form__input"
         disabled={disabled}
         size="large"
-        loading={isLoading}>
+        loading={isLoading}
+      >
         Send Email
       </ButtonLoadingKit>
     </FormcontrolKit>

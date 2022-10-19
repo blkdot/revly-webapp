@@ -22,7 +22,8 @@ const Dev = () => (
       <div style={{ marginBottom: '1.6rem' }}>
         <TypographyKit
           variant="h5"
-          style={{ textAlign: 'start', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+          style={{ textAlign: 'start', marginBottom: '0.5rem', fontWeight: 'bold' }}
+        >
           Sign in to Revly
         </TypographyKit>
         <TypographyKit variant="body2" color="#637381" style={{ textAlign: 'start' }}>
@@ -51,7 +52,8 @@ const Dev = () => (
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-        }}>
+        }}
+      >
         <FormGroupKit>
           <FormControlLabelKit
             control={<CheckboxKit defaultChecked />}
@@ -65,7 +67,8 @@ const Dev = () => (
             fontSize: '12.25px',
             alignSelf: 'center',
           }}
-          to="/forgot-password">
+          to="/forgot-password"
+        >
           Forgot Password ?
         </Link>
       </div>

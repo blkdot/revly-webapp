@@ -75,7 +75,8 @@ const EnhancedTableHead = () => (
         <TableCellKit
           key={headCell.id}
           align="left"
-          padding={headCell.disablePadding ? 'none' : 'normal'}>
+          padding={headCell.disablePadding ? 'none' : 'normal'}
+        >
           <TableSortLabelKit>{headCell.label}</TableSortLabelKit>
         </TableCellKit>
       ))}
@@ -88,7 +89,8 @@ const PlanningOffersTableEmpty = () => (
     <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
       <TableContainerKit
         id="adsContainer"
-        className="planning-table-container competition-table-conatiner">
+        className="planning-table-container competition-table-conatiner"
+      >
         <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
           <EnhancedTableHead />
           <TableBodyKit>

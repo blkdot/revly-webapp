@@ -583,7 +583,8 @@ const Dates = (props) => {
           onClick={() => setOpened(true)}
           style={{ background: '#fff' }}
           component="div"
-          className="date-input">
+          className="date-input"
+        >
           <TypographyKit className="date-typography">
             <CalendarMonthIcon />
             <span>{getbeforePeriod()}</span>
@@ -596,7 +597,8 @@ const Dates = (props) => {
         tabIndex={-1}
         className={`date-range ${opened ? 'opened ' : ''}${typeDate === 'month' ? 'month' : ''}`}
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}>
+        onKeyDown={(e) => e.stopPropagation()}
+      >
         <PaperKit style={{ background: '#fff' }} className="date-picker">
           {!isMarketingHeatMap ? (
             <DateSelect
@@ -652,7 +654,8 @@ const Dates = (props) => {
               <PaperKit
                 style={{ background: '#fff' }}
                 onClick={() => setSelected(isDashboard ? !selected : false)}
-                className={`date-input ${selected ? 'selected' : ''}`}>
+                className={`date-input ${selected ? 'selected' : ''}`}
+              >
                 <TypographyKit component="div" className="date-typography">
                   <CalendarMonthIcon />
                   <span>{getDateAfterPeriod()}</span>
@@ -678,7 +681,8 @@ const Dates = (props) => {
             tabIndex={-1}
             className={`date-range range-afterPeriodContext ${openedAfterPeriod ? 'opened' : ''}`}
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}>
+            onKeyDown={(e) => e.stopPropagation()}
+          >
             <PaperKit style={{ background: '#fff' }} className="date-picker">
               <DateSelect
                 expanded={expanded}
@@ -712,7 +716,8 @@ const Dates = (props) => {
                   disabled={!getafterPeriod()}
                   onClick={handleClickAfterPeriod}
                   className={`date-save-btn ${getafterPeriod() ? '' : 'date-disabled-btn'}`}
-                  variant="contained">
+                  variant="contained"
+                >
                   Ok
                 </ButtonKit>
               </div>

@@ -216,7 +216,8 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
                     <div
                       className={`table_evolution ${
                         procentDeliveroo() > 0 ? 'table_increased' : ''
-                      } ${procentDeliveroo() < 0 ? 'table_decreased' : ''}`}>
+                      } ${procentDeliveroo() < 0 ? 'table_decreased' : ''}`}
+                    >
                       <span>{evolution(procentDeliveroo())}</span>
                     </div>
                   </TableCellKit>
@@ -237,7 +238,8 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
                     <div
                       className={`table_evolution ${
                         procentTalabat() > 0 ? 'table_increased' : ''
-                      } ${procentTalabat() < 0 ? 'table_decreased' : ''}`}>
+                      } ${procentTalabat() < 0 ? 'table_decreased' : ''}`}
+                    >
                       <span>{evolution(procentTalabat())}</span>
                     </div>
                   </TableCellKit>
@@ -255,7 +257,8 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
                   <div
                     className={`table_evolution ${procentTotal() > 0 ? 'table_increased' : ''} ${
                       procentTotal() < 0 ? 'table_decreased' : ''
-                    }`}>
+                    }`}
+                  >
                     <span>
                       <span>{evolution(procentTotal())}</span>
                     </span>

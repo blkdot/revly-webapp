@@ -151,7 +151,8 @@ const SignUpForm = (props) => {
           onClick={onSubmit}
           className="signup-form__input"
           disabled={disabled}
-          size="large">
+          size="large"
+        >
           Register
         </ButtonKit>
       </div>

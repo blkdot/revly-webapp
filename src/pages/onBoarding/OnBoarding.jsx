@@ -272,7 +272,8 @@ const OnBoarding = () => {
             variant="contained"
             loading={isRedirecting}
             fullWidth
-            onClick={handleClickStart}>
+            onClick={handleClickStart}
+          >
             Start using Revly
           </ButtonLoadingKit>
         </div>
@@ -314,7 +315,8 @@ const OnBoarding = () => {
         onClick={handleSubmitLoginInfo}
         loading={isLoading}
         disabled={!currentPlatform || !formValues.email || !formValues.password}
-        fullWidth>
+        fullWidth
+      >
         Connect
       </ButtonLoadingKit>
     );
@@ -348,7 +350,8 @@ const OnBoarding = () => {
             fontSize: '16px',
             color: '#4D2681',
             marginLeft: '1rem',
-          }}>
+          }}
+        >
           Connecting
         </span>
       </div>
@@ -417,7 +420,8 @@ const OnBoarding = () => {
         onClick={handleLogout}
         tabIndex={0}
         onKeyDown={handleLogout}
-        role="button">
+        role="button"
+      >
         <HighOrderBlock style={{ cursor: 'pointer' }}>
           <MdLogout style={{ fontSize: '20px' }} />
         </HighOrderBlock>

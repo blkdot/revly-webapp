@@ -822,7 +822,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
             <div
               className={`radio recap-box-wrapper between under ${
                 menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
-              }`}>
+              }`}
+            >
               <div className="recap-between mov">
                 <div>
                   <div>
@@ -945,7 +946,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                 <ButtonKit
                   onClick={() => (recap ? setRecap(false) : setSelected(selected - 1))}
                   variant="outlined"
-                  disabled={!(selected >= 2)}>
+                  disabled={!(selected >= 2)}
+                >
                   Previous Step
                 </ButtonKit>
                 <ButtonKit
@@ -960,7 +962,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                     }
                   }}
                   disabled={disabled}
-                  variant="contained">
+                  variant="contained"
+                >
                   {getRecapBtn()}
                 </ButtonKit>
               </div>
@@ -970,16 +973,19 @@ const MarketingSetup = ({ active, setActive, ads }) => {
             <div className="right-part-header">
               <TypographyKit
                 className={`right-part-header_link ${links === 'orders' ? 'active' : ''}`}
-                variant="div">
+                variant="div"
+              >
                 <BoxKit
                   className={links === 'revenue' ? 'active' : ''}
-                  onClick={() => setLinks('revenue')}>
+                  onClick={() => setLinks('revenue')}
+                >
                   <img src={RevenueHeatMapIcon} alt="Revenue Heat Map Icon" />
                   Revenue
                 </BoxKit>
                 <BoxKit
                   className={links === 'orders' ? 'active' : ''}
-                  onClick={() => setLinks('orders')}>
+                  onClick={() => setLinks('orders')}
+                >
                   <img src={PlatformIcon} alt="Order Heat Map Icon" />
                   Orders
                 </BoxKit>
@@ -994,7 +1000,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               <TypographyKit className="right-part-main-title" variant="div">
                 <TypographyKit
                   variant="div"
-                  sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
+                >
                   <TypographyKit variant="h6" style={{ fontSize: '15px' }}>
                     Min {links === 'revenue' ? 'revenue' : 'number of orders'} from{' '}
                     {dayjs(beforePeriodBtn.startDate).format('MM-DD')} to{' '}
@@ -1040,7 +1047,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                               <TypographyKit
                                 className="heatmap-btn"
                                 key={num}
-                                sx={{ background: '#919EAB1F' }}>
+                                sx={{ background: '#919EAB1F' }}
+                              >
                                 {renderHeatmapBox()}
                               </TypographyKit>
                             );
@@ -1049,11 +1057,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                             <Tooltip
                               title={renderTooltipContent(obj[indexObj + 5].data)}
                               key={num}
-                              arrow>
+                              arrow
+                            >
                               <ItemHeatmap>
                                 <TypographyKit
                                   className="heatmap-btn"
-                                  sx={{ background: obj[indexObj + 5].color }}>
+                                  sx={{ background: obj[indexObj + 5].color }}
+                                >
                                   {renderHeatmapBox()}
                                 </TypographyKit>
                               </ItemHeatmap>

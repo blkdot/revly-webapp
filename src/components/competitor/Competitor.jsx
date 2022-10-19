@@ -48,7 +48,8 @@ const Competitor = ({ open, opened }) => {
         role="presentation"
         tabIndex={-1}
         onClick={() => open()}
-        className={`competitor-overlay ${opened ? 'active' : ''}`}>
+        className={`competitor-overlay ${opened ? 'active' : ''}`}
+      >
         <form role="presentation" tabIndex={-1} onSubmit={(e) => submit(e)}>
           <PaperKit onClick={(e) => e.stopPropagation()} className="competitor-paper">
             <div>
@@ -123,7 +124,8 @@ const Competitor = ({ open, opened }) => {
               <ButtonKit
                 type="submit"
                 variant="contained"
-                className={`competition-add ${loading ? 'active' : ''}`}>
+                className={`competition-add ${loading ? 'active' : ''}`}
+              >
                 Add this competitor
               </ButtonKit>
               <ButtonKit
@@ -132,7 +134,8 @@ const Competitor = ({ open, opened }) => {
                   setLoading(false);
                 }}
                 variant="outlined"
-                className="competition-cancel">
+                className="competition-cancel"
+              >
                 Cancel
               </ButtonKit>
             </div>

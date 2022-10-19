@@ -51,7 +51,8 @@ const FilterDropdown = (props) => {
         onClick={() => selectItem(item.value)}
         onKeyDown={() => selectItem(item.value)}
         role="button"
-        tabIndex={0}>
+        tabIndex={0}
+      >
         <CheckboxKit
           checked={values.includes(item.value)}
           onChange={() => selectItem(item.value)}
@@ -86,7 +87,8 @@ const FilterDropdown = (props) => {
     return (
       <i
         style={{ marginRight: '0.5rem', alignItems: 'center' }}
-        className={`${values.length > 0 ? '__active' : ''}`}>
+        className={`${values.length > 0 ? '__active' : ''}`}
+      >
         {icon}
       </i>
     );
@@ -101,7 +103,8 @@ const FilterDropdown = (props) => {
         role="button"
         style={{ display: 'flex', justifyContent: 'flex-start' }}
         className={`${values.length > 0 ? '__active' : ''}`}
-        tabIndex={0}>
+        tabIndex={0}
+      >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {renderIcon()}
           {getCurrentValue()}

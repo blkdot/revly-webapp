@@ -59,7 +59,8 @@ const EnhancedTableHead = () => (
         <TableCellKit
           key={headCell.id}
           align="left"
-          padding={headCell.disablePadding ? 'none' : 'normal'}>
+          padding={headCell.disablePadding ? 'none' : 'normal'}
+        >
           <TableSortLabelKit>{headCell.label}</TableSortLabelKit>
         </TableCellKit>
       ))}

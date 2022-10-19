@@ -45,7 +45,8 @@ const MarketingPlaceholderDropdown = ({ setPersonName, personName, title, names 
           input={<OutlindeInputKit />}
           renderValue={(selected) => <em>{selected || title}</em>}
           MenuProps={MenuProps}
-          inputProps={{ 'aria-label': 'Without label' }}>
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
           {names.map((name) => (
             <MenuItemKit key={name} value={name} style={getStyles(name, personName, theme)}>
               {name}

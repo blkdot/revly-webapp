@@ -108,7 +108,8 @@ const GetProgress = (props) => {
             aria-labelledby="demo-radio-buttons-group-label"
             value={platform}
             onChange={(e) => getPlatform(e)}
-            name="radio-buttons-group">
+            name="radio-buttons-group"
+          >
             {platformList
               .filter((pf) => userPlatformData.platforms[pf.name].active)
               .map((p) => (
@@ -140,12 +141,14 @@ const GetProgress = (props) => {
           aria-labelledby="demo-radio-buttons-group-label"
           value={menu}
           onChange={(e) => setMenu(e.target.value)}
-          name="radio-buttons-group-menu">
+          name="radio-buttons-group-menu"
+        >
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
               menu === 'Offer on the whole Menu' ? 'active' : ''
             }
-                  `}>
+                  `}
+          >
             <div className="radio">
               <div>
                 <span>
@@ -191,7 +194,8 @@ const GetProgress = (props) => {
             className={`left-part-radio under-textfields radio-dates ${
               platform === 'talabat' || category.length === 0 ? 'disabled' : ''
             } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
-                  `}>
+                  `}
+          >
             <div className="radio">
               <div>
                 <span>
@@ -216,7 +220,8 @@ const GetProgress = (props) => {
                 aria-labelledby="demo-radio-buttons-group-label"
                 value={itemMenu}
                 onChange={(e) => setItemMenu(e.target.value)}
-                name="radio-buttons-group-menu">
+                name="radio-buttons-group-menu"
+              >
                 {[
                   {
                     title: 'Flash Deal',
@@ -275,7 +280,8 @@ const GetProgress = (props) => {
             className={`left-part-radio under-textfields radio-dates ${
               menu === 'Offer on An Item from the Menu' ? 'active' : ''
             }
-                  `}>
+                  `}
+          >
             <div className="radio">
               <div>
                 <span>
@@ -358,11 +364,13 @@ const GetProgress = (props) => {
             aria-labelledby="demo-radio-buttons-group-label"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
-            name="radio-buttons-group-duration">
+            name="radio-buttons-group-duration"
+          >
             <BoxKit
               className={`left-part-radio under-textfields radio-dates ${
                 duration === 'Starting Now' ? 'active' : ''
-              }`}>
+              }`}
+            >
               <div className="radio">
                 <div>
                   <span>
@@ -407,7 +415,8 @@ const GetProgress = (props) => {
             <BoxKit
               className={`left-part-radio under-textfields ${
                 duration === 'Program the offer duration' ? 'active' : ''
-              }`}>
+              }`}
+            >
               <div className="radio">
                 <div>
                   <span>
@@ -429,7 +438,8 @@ const GetProgress = (props) => {
                   aria-labelledby="demo-radio-buttons-group-label"
                   value={customDay}
                   onChange={(e) => setCustomDay(e.target.value)}
-                  name="radio-buttons-group-days">
+                  name="radio-buttons-group-days"
+                >
                   {[
                     'Continuous Offer',
                     'Every Day',
@@ -480,7 +490,8 @@ const GetProgress = (props) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={targetAudience}
                     onChange={(e) => setTargetAudience(e.target.value)}
-                    name="radio-buttons-group-days">
+                    name="radio-buttons-group-days"
+                  >
                     {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
                       <div key={day}>
                         <FormControlLabelKit value={day} control={<RadioKit />} />
@@ -499,7 +510,8 @@ const GetProgress = (props) => {
                 setSelected(5);
               }}
               className="another-slot remove grey"
-              variant="contained">
+              variant="contained"
+            >
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
             </ButtonKit>
@@ -677,7 +689,8 @@ const GetProgress = (props) => {
                       ])
                     }
                     className="another-slot"
-                    variant="contained">
+                    variant="contained"
+                  >
                     <img src={plus} alt="plus" />
                     Add Another Slot
                   </ButtonKit>
@@ -717,7 +730,8 @@ const GetProgress = (props) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={targetAudience}
                     onChange={(e) => setTargetAudience(e.target.value)}
-                    name="radio-buttons-group-days">
+                    name="radio-buttons-group-days"
+                  >
                     {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
                       <div key={day}>
                         <FormControlLabelKit value={day} control={<RadioKit />} />
@@ -736,7 +750,8 @@ const GetProgress = (props) => {
                 setSelected(6);
               }}
               className="another-slot remove grey"
-              variant="contained">
+              variant="contained"
+            >
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
             </ButtonKit>
@@ -763,11 +778,13 @@ const GetProgress = (props) => {
             aria-labelledby="demo-radio-buttons-group-label"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
-            name="radio-buttons-group-duration">
+            name="radio-buttons-group-duration"
+          >
             <BoxKit
               className={`left-part-radio under-textfields radio-dates ${
                 duration === 'Starting Now' ? 'active' : ''
-              }`}>
+              }`}
+            >
               <div className="radio">
                 <div>
                   <span>
@@ -812,7 +829,8 @@ const GetProgress = (props) => {
             <BoxKit
               className={`left-part-radio under-textfields ${
                 duration === 'Program the offer duration' ? 'active' : ''
-              }`}>
+              }`}
+            >
               <div className="radio">
                 <div>
                   <span>
@@ -834,7 +852,8 @@ const GetProgress = (props) => {
                   aria-labelledby="demo-radio-buttons-group-label"
                   value={customDay}
                   onChange={(e) => setCustomDay(e.target.value)}
-                  name="radio-buttons-group-days">
+                  name="radio-buttons-group-days"
+                >
                   {[
                     'Continuous Offer',
                     'Every Day',
@@ -885,7 +904,8 @@ const GetProgress = (props) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={targetAudience}
                     onChange={(e) => setTargetAudience(e.target.value)}
-                    name="radio-buttons-group-days">
+                    name="radio-buttons-group-days"
+                  >
                     {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
                       <div key={day}>
                         <FormControlLabelKit value={day} control={<RadioKit />} />
@@ -904,7 +924,8 @@ const GetProgress = (props) => {
                 setSelected(5);
               }}
               className="another-slot remove grey"
-              variant="contained">
+              variant="contained"
+            >
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
             </ButtonKit>
@@ -1081,7 +1102,8 @@ const GetProgress = (props) => {
                       ])
                     }
                     className="another-slot"
-                    variant="contained">
+                    variant="contained"
+                  >
                     <img src={plus} alt="plus" />
                     Add Another Slot
                   </ButtonKit>
@@ -1121,7 +1143,8 @@ const GetProgress = (props) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={targetAudience}
                     onChange={(e) => setTargetAudience(e.target.value)}
-                    name="radio-buttons-group-days">
+                    name="radio-buttons-group-days"
+                  >
                     {['All customers', 'New customer', 'Deliveroo plus'].map((day) => (
                       <div key={day}>
                         <FormControlLabelKit value={day} control={<RadioKit />} />
@@ -1140,7 +1163,8 @@ const GetProgress = (props) => {
                 setSelected(6);
               }}
               className="another-slot remove grey"
-              variant="contained">
+              variant="contained"
+            >
               <img src={SmRuleIcon} alt="Sm Rule" />
               Combine with a smart rule
             </ButtonKit>

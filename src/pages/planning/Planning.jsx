@@ -56,7 +56,8 @@ const Planning = () => {
         <TypographyKit
           className={!active ? 'active' : ''}
           onClick={() => setActive(0)}
-          variant="h4">
+          variant="h4"
+        >
           Ads
         </TypographyKit>
       </div>

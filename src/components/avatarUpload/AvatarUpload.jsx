@@ -28,7 +28,8 @@ const AvatarUpload = (props) => {
           <AvatarKit
             className="image-upload__avatar"
             alt="avatar"
-            src={typeof file === 'string' ? file : ''}>
+            src={typeof file === 'string' ? file : ''}
+          >
             N
           </AvatarKit>
         )}
