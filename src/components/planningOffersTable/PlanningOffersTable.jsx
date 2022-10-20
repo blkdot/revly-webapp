@@ -31,7 +31,6 @@ const PlanningOffersTable = ({ rows, type }) => {
   const [orderBy, setOrderBy] = useState('name');
   const navigate = useNavigate();
   const location = useLocation();
-  // const [selected, setSelected] = useState([]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -41,6 +40,7 @@ const PlanningOffersTable = ({ rows, type }) => {
 
   const getHeadCells = () => {
     if (!rows[0]) return headCells[type];
+
     return Object.keys(rows[0])
       .map((k) => ({
         key: k,
@@ -198,6 +198,7 @@ const PlanningOffersTable = ({ rows, type }) => {
           <span>No data retrieved</span>
         </TableCellKit>
       );
+
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
       <TableRowKit
         onClick={() => type !== 'ad' && navigateToOfferDetails(row)}

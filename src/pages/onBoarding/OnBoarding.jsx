@@ -104,6 +104,7 @@ const OnBoarding = () => {
     if (step === END_KEY) return null;
 
     if (!currentPlatform) return [START_KEY];
+
     const indexSteps = steps.findIndex((s) => s.key === currentPlatform.name);
 
     if (indexSteps < 0) return [steps[indexSteps - 1].key];

@@ -31,6 +31,7 @@ import AfterPeriodSelect from './AfterPeriodSelect';
 import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderkit';
 import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
 import switchIcon from '../../assets/images/Switch.png';
+import { getAllDateSetup } from '../../utlls/date/getAllDateSetup';
 
 const Dates = (props) => {
   const { isDashboard, beforePeriodBtn, setbeforePeriodBtn, isMarketingHeatMap, offer } = props;
@@ -120,16 +121,21 @@ const Dates = (props) => {
     const startDate = new Date(beforePeriod[0].startDate);
     const endDate = new Date(beforePeriod[0].endDate);
     const date = new Date();
-    const startLocal = startDate.toLocaleDateString();
-    const endLocal = endDate.toLocaleDateString();
-    const startGetDate = startDate.getDate();
-    const endGetDate = endDate.getDate();
-    const startGetDay = startDate.getDay();
-    const endGetDay = endDate.getDay();
-    const dateGetDay = date.getDay();
-    const dateGetDate = date.getDate();
-    const dateLocal = date.toLocaleDateString();
+
+    const {
+      startLocal,
+      endLocal,
+      startGetDate,
+      endGetDate,
+      startGetDay,
+      endGetDay,
+      dateGetDate,
+      dateGetDay,
+      dateLocal,
+    } = getAllDateSetup(beforePeriod[0].startDate, beforePeriod[0].endDate);
+
     setOpened(false); // Closing beforePeriodContext date picker
+
     if (isDashboard) {
       // its will work on dashboard
       setDateContext({ ...dateContext, beforePeriod: { startDate, endDate }, typeDate }); // Sending data to context state
@@ -282,13 +288,9 @@ const Dates = (props) => {
     const startDate = new Date(afterPeriod[0].startDate);
     const endDate = new Date(afterPeriod[0].endDate);
     const date = new Date();
-    const startLocal = startDate.toLocaleDateString();
-    const endLocal = endDate.toLocaleDateString();
-    const startGetDate = startDate.getDate();
-    const endGetDate = endDate.getDate();
-    const startGetDay = startDate.getDay();
-    const endGetDay = endDate.getDay();
-    const dateGetDate = date.getDate();
+    const { startLocal, endLocal, startGetDate, endGetDate, startGetDay, endGetDay, dateGetDate } =
+      getAllDateSetup(afterPeriod[0].startDate, afterPeriod[0].endDate);
+
     setOpenedAfterPeriod(false); // Closing AfterPeriod date picker
     setSelected(false); // Closing AfterPeriod Select
     setDateContext({ ...dateContext, afterPeriod: { startDate, endDate } }); // Sending data to context state
@@ -403,26 +405,20 @@ const Dates = (props) => {
     const startLocalAfterPeriod = startDateAfterPeriod.toLocaleDateString();
 
     if (typeDate === 'day') {
-      if (startLocalAfterPeriod >= beforePeriodContextStartLocal) {
-        return false;
-      }
-      return true;
+      return startLocalAfterPeriod < beforePeriodContextStartLocal;
     }
+
     if (typeDate === 'week') {
-      if (
-        getWeek(startDateAfterPeriod, { weekStartsOn: 1 }) >=
+      return (
+        getWeek(startDateAfterPeriod, { weekStartsOn: 1 }) <
         getWeek(beforePeriodContextStart, { weekStartsOn: 1 })
-      ) {
-        return false;
-      }
-      return true;
+      );
     }
+
     if (typeDate === 'month') {
-      if (getMonth(startDateAfterPeriod) >= getMonth(beforePeriodContextStart)) {
-        return false;
-      }
-      return true;
+      return getMonth(startDateAfterPeriod) < getMonth(beforePeriodContextStart);
     }
+
     return false;
   };
 
@@ -482,6 +478,7 @@ const Dates = (props) => {
       }
       return titleDate; // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
     }
+
     if (title === 'custom') {
       // if titleDate === "custom"  i return the date
       if (beforePeriodContextBtnStartLocal === beforePeriodContextBtnEndLocal) {
