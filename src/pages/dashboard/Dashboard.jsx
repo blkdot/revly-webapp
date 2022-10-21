@@ -9,6 +9,7 @@ import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import useVendors from '../../hooks/useVendors';
 import Table from '../../components/table/Table';
+import TableEmpty from '../../components/table/TableEmpty';
 import PaperKit from '../../kits/paper/PaperKit';
 import RevenueIcon from '../../assets/images/ic_offers-mn.png';
 import OrdersIcon from '../../assets/images/ic_orders.png';
@@ -78,37 +79,42 @@ const Dashboard = () => {
       ) : (
         <MarketingEmpty />
       )}
-      <PaperKit className="dashboard-paper-wrapper">
-        <div className="dashboard-links">
+      {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 ? (
+        <PaperKit className="dashboard-paper-wrapper">
+          <div className="dashboard-links">
+            {['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'].map(
+              (title) => (
+                <div
+                  role="presentation"
+                  tabIndex={-1}
+                  onClick={() => setTable(title)}
+                  className={title === table ? 'active' : ''}
+                  key={title}
+                >
+                  <img src={getIcon(title)} alt={title} />
+                  {getTitle(title)}
+                </div>
+              ),
+            )}
+            <div className="indicator" />
+          </div>
           {['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'].map(
-            (title) => (
-              <div
-                role="presentation"
-                tabIndex={-1}
-                onClick={() => setTable(title)}
-                className={title === table ? 'active' : ''}
-                key={title}>
-                <img src={getIcon(title)} alt={title} />
-                {getTitle(title)}
-              </div>
-            ),
+            (info) =>
+              info === table ? (
+                <Table
+                  key={info}
+                  title={info}
+                  metricsafterPeriod={metricsafterPeriod}
+                  metricsbeforePeriod={metricsbeforePeriod}
+                />
+              ) : (
+                ''
+              ),
           )}
-          <div className="indicator" />
-        </div>
-        {['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'].map(
-          (info) =>
-            info === table ? (
-              <Table
-                key={info}
-                title={info}
-                metricsafterPeriod={metricsafterPeriod}
-                metricsbeforePeriod={metricsbeforePeriod}
-              />
-            ) : (
-              ''
-            ),
-        )}
-      </PaperKit>
+        </PaperKit>
+      ) : (
+        <TableEmpty />
+      )}
     </div>
   );
 };

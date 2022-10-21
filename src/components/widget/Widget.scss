@@ -78,25 +78,10 @@
     background: $color-third;
     color: #4d2681;
 
-    .icon-paper.icon-paper {
-      background-color: #4d2681 !important;
-    }
-
-    svg {
-      filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(101deg) brightness(200%) contrast(200%);
-    }
-
-    img {
-      filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(101deg) brightness(200%) contrast(200%);
-    }
-
     .card-week {
       color: #4d2681 !important;
     }
 
-    .card-procent {
-      color: #4d2681 !important;
-    }
   }
 
   .card-typography {

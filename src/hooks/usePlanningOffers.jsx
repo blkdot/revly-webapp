@@ -36,7 +36,9 @@ function usePlanningOffers({ dateRange }) {
   };
 
   useMemo(() => {
-    handleRequest();
+    if (Object.keys(vendorsContext).length !== 0) {
+      handleRequest();
+    }
   }, [dateRange, vendorsContext]);
 
   return { offers, dateRange, reloadRequest, isLoading };

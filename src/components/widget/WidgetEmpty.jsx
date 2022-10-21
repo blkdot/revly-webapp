@@ -37,10 +37,6 @@ const Widget = () => (
             <SkeletonKit variant="rectangular" width={100} />
           </TypographyKit>
         </div>
-        <TypographyKit className="card-typography card-icon">
-          <SkeletonKit variant="rectangular" width={50} />
-          <SkeletonKit variant="rectangular" width={50} />
-        </TypographyKit>
       </TypographyKit>
       <div className="card_bottom">
         <PaperKit className="icon-paper">
