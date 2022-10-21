@@ -29,7 +29,7 @@ export const accordionLink = [
     src: competitionIcon,
     subs: [
       { title: 'Ranking', path: '/competition/ranking', src: rankingIcon },
-      { title: 'Alerts', path: '/marketing/alerts', src: alertsIcon },
+      { title: 'Alerts', path: '/competition/alerts', src: alertsIcon },
     ],
   },
 ];

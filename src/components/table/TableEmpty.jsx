@@ -81,7 +81,7 @@ const renderRow = () =>
     </TableRowKit>
   ));
 
-const Table = () => (
+const TableEmpty = () => (
   <BoxKit sx={{ width: '100%' }}>
     <PaperKit className="table-paper-wrapper">
       <TableContainerKit>
@@ -112,4 +112,4 @@ const Table = () => (
   </BoxKit>
 );
 
-export default Table;
+export default TableEmpty;

@@ -194,16 +194,18 @@ const PlanningOffersTable = ({ rows, type }) => {
   const renderTableBody = () => {
     if (!rows || rows.length < 1)
       return (
-        <TableCellKit colSpan={getHeadCells().length} style={{ textAlign: 'center' }}>
-          <span>No data retrieved</span>
-        </TableCellKit>
+        <TableRowKit>
+          <TableCellKit colSpan={getHeadCells().length} style={{ textAlign: 'center' }}>
+            <span>No data retrieved</span>
+          </TableCellKit>
+        </TableRowKit>
       );
 
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
       <TableRowKit
         onClick={() => type !== 'ad' && navigateToOfferDetails(row)}
         className="offer-row"
-        key={row.id}
+        key={row.offer_id}
         selected={false}
         style={{ marginTop: '0.5rem' }}
       >
