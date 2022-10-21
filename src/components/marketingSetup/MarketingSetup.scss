@@ -1168,3 +1168,58 @@
     color: #637381;
   }
 }
+
+.smart-rule_drowdown {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 45px;
+  >div:nth-of-type(1){
+    width: 30%;
+    >div{
+      width: 100%;
+    }
+  }
+  >div:nth-of-type(2){
+    width: 22%;
+    label{
+      font-weight: 900;
+    }
+    >div{
+      width: 100%;
+    }
+  }
+  >div>div {
+    height: 45px !important;
+    >div {
+      height: 45px !important;
+
+      >div {
+        padding-left: 15px !important;
+      }
+    }
+  }
+}
+.smart-rule-textfield{
+  width: 40%;
+  border-radius: 30px;
+  >div{
+    width: 100%;
+    border-radius: 30px;
+  }
+  fieldset{
+    border-radius: 30px !important;
+  }
+}
+.sm-rule-and{
+  width: 30%;
+  margin-top: 10px;
+  height: 45px;
+  >div>div{
+    height: 45px;
+    >div{
+      height: 45px;
+    }
+  }
+}

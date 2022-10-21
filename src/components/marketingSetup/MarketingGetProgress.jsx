@@ -1,6 +1,7 @@
 import { addDays, addHours, format } from 'date-fns';
 import React from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
+import RemoveIcon from '@mui/icons-material/Remove';
 import MarketingRadio from './MarketingRadio';
 import plus from '../../assets/images/plus.png';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -82,6 +83,8 @@ const GetProgress = (props) => {
     disableWeekends,
     startingDate,
     setStartingDate,
+    setLaunchOrder,
+    launchOrder,
   } = props;
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
@@ -522,6 +525,205 @@ const GetProgress = (props) => {
           </div>
         );
       }
+      if (selected === 6) {
+        return (
+          <div className="left-part-middle">
+            <TypographyKit variant="h6">Create a Smart Rule</TypographyKit>
+            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
+            </TypographyKit>
+            <BoxKit className="left-part-radio">
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Launch the offer if the </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Stop the offer if </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+            </BoxKit>
+          </div>
+        );
+      }
     }
     if (duration === 'Program the offer duration') {
       if (selected === 5) {
@@ -762,6 +964,205 @@ const GetProgress = (props) => {
           </div>
         );
       }
+      if (selected === 7) {
+        return (
+          <div className="left-part-middle">
+            <TypographyKit variant="h6">Create a Smart Rule</TypographyKit>
+            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
+            </TypographyKit>
+            <BoxKit className="left-part-radio">
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Launch the offer if the </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Stop the offer if </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+            </BoxKit>
+          </div>
+        );
+      }
     }
   }
   if (menu === 'Offer on the whole Menu') {
@@ -933,6 +1334,205 @@ const GetProgress = (props) => {
               <img src={SpeakerIcon} alt="Speaker" />
               Combine with an Ads
             </ButtonKit>
+          </div>
+        );
+      }
+      if (selected === 5) {
+        return (
+          <div className="left-part-middle">
+            <TypographyKit variant="h6">Create a Smart Rule</TypographyKit>
+            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
+            </TypographyKit>
+            <BoxKit className="left-part-radio">
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Launch the offer if the </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Stop the offer if </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+            </BoxKit>
           </div>
         );
       }
@@ -1172,6 +1772,205 @@ const GetProgress = (props) => {
               <img src={SpeakerIcon} alt="Speaker" />
               Combine with an Ads
             </ButtonKit>
+          </div>
+        );
+      }
+      if (selected === 6) {
+        return (
+          <div className="left-part-middle">
+            <TypographyKit variant="h6">Create a Smart Rule</TypographyKit>
+            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
+            </TypographyKit>
+            <BoxKit className="left-part-radio">
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Launch the offer if the </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+              <TypographyKit sx={{ width: '100%' }} variant="div">
+                <b>Stop the offer if </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={[]}
+                        title="And"
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['Order 1', 'Order 2']}
+                          title="Order"
+                          type="sm-rule-order"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.order}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['Order 1', 'Order 2']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+            </BoxKit>
           </div>
         );
       }

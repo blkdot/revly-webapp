@@ -95,6 +95,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [targetAudience, setTargetAudience] = useState('All customers');
   const [created, setCreated] = useState(false);
 
+  const [launchOrder, setLaunchOrder] = useState([{ order: '', arrow: '', number: '', id: 1 }]);
+
   const [checked, setChecked] = useState([]);
   const getDiscountOrMov = (type) => {
     if (type === 'discount') {
@@ -916,6 +918,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           disableWeekends={disableWeekends}
           startingDate={startingDate}
           setStartingDate={setStartingDate}
+          setLaunchOrder={setLaunchOrder}
+          launchOrder={launchOrder}
         />
       </div>
     );

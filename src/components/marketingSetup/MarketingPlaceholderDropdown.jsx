@@ -25,18 +25,38 @@ function getStyles(name, personName, theme) {
   };
 }
 
-const MarketingPlaceholderDropdown = ({ setPersonName, personName, title, names }) => {
+const MarketingPlaceholderDropdown = ({
+  setPersonName,
+  personName,
+  title,
+  names,
+  type,
+  rowArr,
+  indexArr,
+  className,
+}) => {
   const theme = useTheme();
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(value);
+    if (setPersonName) {
+      if (type === 'sm-rule-order') {
+        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], order: value });
+        setPersonName([...rowArr]);
+      }
+      if (type === 'sm-rule-arrow') {
+        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], arrow: value });
+        setPersonName([...rowArr]);
+      } else if (type !== 'sm-rule-arrow' && type !== 'sm-rule-order') {
+        setPersonName(value);
+      }
+    }
   };
 
   return (
-    <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''}`}>
+    <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''} ${className}`}>
       <FormcontrolKit sx={{ m: 1, width: 300, mt: 3 }}>
         <SelectKit
           displayEmpty
