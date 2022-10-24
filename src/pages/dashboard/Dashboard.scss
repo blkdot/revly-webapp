@@ -18,6 +18,7 @@
   box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12) !important;
   border-radius: 16px !important;
   margin-bottom: 50px;
+
   .paper-table {
     padding: 0px 20px;
 
@@ -31,8 +32,26 @@
   margin-bottom: 25px;
   position: relative;
   grid-gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 5px;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #F3F3F3;
+    border-radius: 31px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #637381;
+    border-radius: 31px;
+  }
 
   >div {
+    white-space: nowrap;
     text-transform: capitalize;
     padding: 8px 20px;
     font-weight: 600;
@@ -78,7 +97,7 @@
     padding: 0;
     background-color: #906BFF;
     position: absolute;
-    bottom: -5px;
+    bottom: 5px;
     left: 0px;
   }
 

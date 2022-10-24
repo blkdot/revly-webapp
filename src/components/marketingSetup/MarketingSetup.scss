@@ -2,7 +2,7 @@
   position: fixed;
   right: -100vw;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   transition: .4s;
   z-index: 1000;
@@ -31,7 +31,7 @@
 
     .left-part {
       grid-gap: 30px;
-      height: 100%;
+      height: fit-content;
       width: 35%;
       display: flex;
       flex-direction: column;
@@ -282,10 +282,11 @@
     justify-content: space-between;
     align-items: center;
     height: 30px;
+    grid-gap: 3px;
 
     >p {
       display: inline-block;
-      width: 80px;
+      width: 95%;
       height: 30px;
       color: #212B36;
       font-weight: 600;
@@ -304,8 +305,12 @@
       flex-direction: column;
     }
 
+    >span {
+      width: 100%;
+    }
+
     p {
-      width: 80px;
+      width: 95%;
       height: 30px;
       border-radius: 4px;
       margin-bottom: 4px;
@@ -1175,23 +1180,30 @@
   justify-content: space-between;
   width: 100%;
   height: 45px;
-  >div:nth-of-type(1){
+
+  >div:nth-of-type(1) {
     width: 30%;
-    >div{
+
+    >div {
       width: 100%;
     }
   }
-  >div:nth-of-type(2){
+
+  >div:nth-of-type(2) {
     width: 22%;
-    label{
+
+    label {
       font-weight: 900;
     }
-    >div{
+
+    >div {
       width: 100%;
     }
   }
+
   >div>div {
     height: 45px !important;
+
     >div {
       height: 45px !important;
 
@@ -1201,25 +1213,84 @@
     }
   }
 }
-.smart-rule-textfield{
+
+.smart-rule-textfield {
   width: 40%;
   border-radius: 30px;
-  >div{
+
+  >div {
     width: 100%;
     border-radius: 30px;
   }
-  fieldset{
+
+  fieldset {
     border-radius: 30px !important;
   }
 }
-.sm-rule-and{
+
+.sm-rule-and {
   width: 30%;
   margin-top: 10px;
   height: 45px;
-  >div>div{
+
+  >div>div {
     height: 45px;
-    >div{
+
+    >div {
       height: 45px;
+    }
+  }
+}
+
+@media(max-width: 1080px) {
+  .recap-between.recap-between {
+    flex-direction: column !important;
+
+    &::before {
+      width: 90%;
+      height: 1px;
+      top: 50%;
+      left: 5%;
+    }
+
+    >div {
+      width: 100%;
+      justify-content: flex-start !important;
+    }
+  }
+}
+
+@media(max-width: 1000px) {
+  .left-part {
+    width: 100% !important;
+  }
+
+  .right-part {
+    width: 100% !important;
+  }
+
+  .marketing-paper>div {
+    flex-direction: column;
+    grid-gap: 30px;
+  }
+
+  .recap-between.recap-between {
+    flex-direction: row !important;
+
+    &::before {
+      height: 60%;
+      width: 1px;
+      top: 15%;
+      left: 50%;
+    }
+
+    >div {
+      width: 45%;
+      justify-content: flex-start !important;
+
+      &.right {
+        justify-content: flex-end !important;
+      }
     }
   }
 }

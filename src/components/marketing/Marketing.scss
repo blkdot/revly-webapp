@@ -26,9 +26,12 @@
   }
 }
 
-@media(max-width: 960px) {
+@media(max-width: 995px) {
   .cardsWrapper {
     grid-gap: 25px;
+    &.marketing>div{
+      width: 100%;
+    }
   }
 }
 
