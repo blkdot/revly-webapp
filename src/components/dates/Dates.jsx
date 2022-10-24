@@ -114,218 +114,6 @@ const Dates = (props) => {
   const afterPeriodContextStartGetDate = new Date(afterPeriodContext.startDate).getDate();
   const afterPeriodContextEndGetDate = new Date(afterPeriodContext.endDate).getDate();
 
-  const handleClick = () => {
-    // handleClick happens when you click on button "OK" on beforePeriodContext date picker
-
-    // We put in variables for later use
-    const startDate = new Date(beforePeriod[0].startDate);
-    const endDate = new Date(beforePeriod[0].endDate);
-    const date = new Date();
-
-    const {
-      startLocal,
-      endLocal,
-      startGetDate,
-      endGetDate,
-      startGetDay,
-      endGetDay,
-      dateGetDate,
-      dateGetDay,
-      dateLocal,
-    } = getAllDateSetup(beforePeriod[0].startDate, beforePeriod[0].endDate);
-
-    setOpened(false); // Closing beforePeriodContext date picker
-
-    if (isDashboard) {
-      // its will work on dashboard
-      setDateContext({ ...dateContext, beforePeriod: { startDate, endDate }, typeDate }); // Sending data to context state
-      if (typeDate === 'day') {
-        setAfterPeriodContext({
-          startDate: subDays(startDate, 1),
-          endDate: subDays(endDate, 1),
-        }); // Sending previous day to context state
-      } else if (typeDate === 'week') {
-        setAfterPeriodContext({
-          startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
-          endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
-        }); // Sending previous week to context state
-      } else if (typeDate === 'month') {
-        setAfterPeriodContext({
-          startDate: subMonths(startDate, 1),
-          endDate: endOfMonth(subMonths(endDate, 1)),
-        }); // Sending previous month to context state
-      }
-    } else {
-      // its will work on other pages
-      setbeforePeriodBtn({ startDate, endDate });
-    }
-
-    if (isDashboard) {
-      // its will work on dashboard
-      if (startLocal === endLocal && typeDate === 'day') {
-        // It checks that what date is currently selected in beforePeriodContext date picker
-        if (startLocal === dateLocal) {
-          setTitleDate('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
-          setTitleafterPeriod('yesterday'); // Sending data to state which will be needed for the introduction in the afterPeriodContext input
-        } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
-          setTitleDate('yesterday');
-          setTitleafterPeriod('custom');
-        } else {
-          setTitleDate('custom');
-          setTitleafterPeriod('custom');
-        }
-      } else if (
-        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
-        typeDate === 'week'
-      ) {
-        if (endGetDay === dateGetDay && startGetDay === 1) {
-          setTitleDate('current week');
-          setTitleafterPeriod('last week');
-        } else if (
-          startGetDay === 1 &&
-          endGetDay === 0 &&
-          getWeek(startDate, { weekStartsOn: 1 }) ===
-            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
-        ) {
-          setTitleDate('last week');
-          setTitleafterPeriod('custom');
-        } else {
-          setTitleDate('custom');
-          setTitleafterPeriod('custom');
-        }
-      } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
-        if (startGetDate === 1 && endGetDate === dateGetDate) {
-          setTitleDate('current month');
-          setTitleafterPeriod('last month');
-        } else if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-          setTitleDate('last month');
-          setTitleafterPeriod('custom');
-        } else {
-          setTitleDate('custom');
-          setTitleafterPeriod('custom');
-        }
-      } else if (
-        startGetDate === 1 &&
-        endGetDate <= dateGetDate &&
-        endGetDate === endOfMonth(endDate).getDate()
-      ) {
-        setTitleDate('current month');
-        setTitleafterPeriod('last month');
-      } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-        setTitleDate('last month');
-        setTitleafterPeriod('custom');
-      } else {
-        setTitleDate('custom');
-        setTitleafterPeriod('custom');
-      }
-    } else if (!isDashboard) {
-      // its will work on other pages
-      if (startLocal === endLocal) {
-        // It checks that what date is currently selected in beforePeriodContext date picker
-        if (startLocal === dateLocal) {
-          setTitle('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
-        } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
-          setTitle('yesterday');
-        } else {
-          setTitle('custom');
-        }
-      } else if (
-        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })
-      ) {
-        if (offer) {
-          if (
-            getWeek(startDate, { weekStartsOn: 1 }) === getWeek(date, { weekStartsOn: 1 }) &&
-            startGetDay === 1
-          ) {
-            setTitle('current week');
-          } else if (
-            startGetDay === 1 &&
-            endGetDay === 0 &&
-            getWeek(startDate, { weekStartsOn: 1 }) ===
-              getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
-          ) {
-            setTitle('last week');
-          } else {
-            setTitle('custom');
-          }
-        } else if (endGetDay === dateGetDay && startGetDay === 1) {
-          setTitle('current week');
-        } else if (
-          startGetDay === 1 &&
-          endGetDay === 0 &&
-          getWeek(startDate, { weekStartsOn: 1 }) ===
-            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
-        ) {
-          setTitle('last week');
-        } else {
-          setTitle('custom');
-        }
-      } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
-        if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-          setTitle('current month');
-        } else if (startGetDate === 1 && endGetDate === dateGetDate) {
-          setTitle('last month');
-        } else {
-          setTitle('custom');
-        }
-      } else if (
-        startGetDate === 1 &&
-        endGetDate <= dateGetDate &&
-        endGetDate === endOfMonth(endDate).getDate()
-      ) {
-        setTitle('current month');
-      } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-        setTitle('last month');
-      } else {
-        setTitle('custom');
-      }
-    }
-  };
-  const handleClickAfterPeriod = () => {
-    // handleClickAfterPeriod happens when you click on button "OK" on AfterPeriod date picker
-
-    // We put in variables for later use
-    const startDate = new Date(afterPeriod[0].startDate);
-    const endDate = new Date(afterPeriod[0].endDate);
-    const date = new Date();
-    const { startLocal, endLocal, startGetDate, endGetDate, startGetDay, endGetDay, dateGetDate } =
-      getAllDateSetup(afterPeriod[0].startDate, afterPeriod[0].endDate);
-
-    setOpenedAfterPeriod(false); // Closing AfterPeriod date picker
-    setSelected(false); // Closing AfterPeriod Select
-    setDateContext({ ...dateContext, afterPeriod: { startDate, endDate } }); // Sending data to context state
-    setAfterPeriodContext({ startDate, endDate });
-    if (startLocal === endLocal) {
-      // It checks that what date is currently selected in AfterPeriod date picker
-
-      // Sending data to state which will be needed for the introduction in the afterPeriodContext input
-      if (startLocal === subDays(date, 1).toLocaleDateString()) {
-        setTitleafterPeriod('yesterday');
-      } else {
-        setTitleafterPeriod('custom');
-      }
-    } else if (getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })) {
-      if (
-        startGetDay === 1 &&
-        endGetDay === 0 &&
-        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
-      ) {
-        setTitleafterPeriod('last week');
-      } else {
-        setTitleafterPeriod('custom');
-      }
-    } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
-      if (startGetDate === 1 && endGetDate === dateGetDate) {
-        setTitleafterPeriod('last month');
-      } else {
-        setTitleafterPeriod('custom');
-      }
-    } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-      setTitleafterPeriod('last month');
-    } else {
-      setTitleafterPeriod('custom');
-    }
-  };
   useMemo(() => {
     localStorage.setItem(
       'date',
@@ -352,15 +140,312 @@ const Dates = (props) => {
     afterPeriodContext,
     typeDateContext,
   ]);
+
+  const setAfterPeriodContextDashboard = (startDate, endDate) => {
+    setDateContext({ ...dateContext, beforePeriod: { startDate, endDate }, typeDate });
+
+    if (typeDate === 'day') {
+      setAfterPeriodContext({
+        startDate: subDays(startDate, 1),
+        endDate: subDays(endDate, 1),
+      });
+
+      return;
+    }
+
+    if (typeDate === 'week') {
+      setAfterPeriodContext({
+        startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+        endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
+      });
+
+      return;
+    }
+
+    setAfterPeriodContext({
+      startDate: subMonths(startDate, 1),
+      endDate: endOfMonth(subMonths(endDate, 1)),
+    });
+  };
+
+  const handleClickDashboard = () => {
+    const startDate = new Date(beforePeriod[0].startDate);
+    const endDate = new Date(beforePeriod[0].endDate);
+    const date = new Date();
+
+    const {
+      startLocal,
+      endLocal,
+      startGetDate,
+      endGetDate,
+      startGetDay,
+      endGetDay,
+      dateGetDate,
+      dateGetDay,
+      dateLocal,
+    } = getAllDateSetup(beforePeriod[0].startDate, beforePeriod[0].endDate);
+    setAfterPeriodContextDashboard(startDate, endDate);
+
+    if (startLocal === endLocal && typeDate === 'day') {
+      // It checks that what date is currently selected in beforePeriodContext date picker
+      if (startLocal === dateLocal) {
+        setTitleDate('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
+        setTitleafterPeriod('yesterday'); // Sending data to state which will be needed for the introduction in the afterPeriodContext input
+        return;
+      }
+
+      if (startLocal === subDays(date, 1).toLocaleDateString()) {
+        setTitleDate('yesterday');
+        setTitleafterPeriod('custom');
+        return;
+      }
+
+      setTitleDate('custom');
+      setTitleafterPeriod('custom');
+      return;
+    }
+
+    if (
+      getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 }) &&
+      typeDate === 'week'
+    ) {
+      if (endGetDay === dateGetDay && startGetDay === 1) {
+        setTitleDate('current week');
+        setTitleafterPeriod('last week');
+        return;
+      }
+
+      if (
+        startGetDay === 1 &&
+        endGetDay === 0 &&
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+      ) {
+        setTitleDate('last week');
+        setTitleafterPeriod('custom');
+        return;
+      }
+
+      setTitleDate('custom');
+      setTitleafterPeriod('custom');
+      return;
+    }
+
+    if (getMonth(startDate, 1) === getMonth(date, 1)) {
+      if (startGetDate === 1 && endGetDate === dateGetDate) {
+        setTitleDate('current month');
+        setTitleafterPeriod('last month');
+        return;
+      }
+
+      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
+        setTitleDate('last month');
+        setTitleafterPeriod('custom');
+        return;
+      }
+
+      setTitleDate('custom');
+      setTitleafterPeriod('custom');
+      return;
+    }
+
+    if (
+      startGetDate === 1 &&
+      endGetDate <= dateGetDate &&
+      endGetDate === endOfMonth(endDate).getDate()
+    ) {
+      setTitleDate('current month');
+      setTitleafterPeriod('last month');
+      return;
+    }
+
+    if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+      setTitleDate('last month');
+      setTitleafterPeriod('custom');
+      return;
+    }
+
+    setTitleDate('custom');
+    setTitleafterPeriod('custom');
+  };
+
+  const handleClick = () => {
+    setOpened(false); // Closing beforePeriodContext date picker
+
+    if (isDashboard) {
+      handleClickDashboard();
+      return;
+    }
+
+    const startDate = new Date(beforePeriod[0].startDate);
+    const endDate = new Date(beforePeriod[0].endDate);
+    const date = new Date();
+
+    const {
+      startLocal,
+      endLocal,
+      startGetDate,
+      endGetDate,
+      startGetDay,
+      endGetDay,
+      dateGetDate,
+      dateGetDay,
+      dateLocal,
+    } = getAllDateSetup(beforePeriod[0].startDate, beforePeriod[0].endDate);
+
+    setbeforePeriodBtn({ startDate, endDate });
+
+    if (startLocal === endLocal) {
+      if (startLocal === dateLocal) {
+        setTitle('today');
+        return;
+      }
+
+      if (startLocal === subDays(date, 1).toLocaleDateString()) {
+        setTitle('yesterday');
+        return;
+      }
+
+      setTitle('custom');
+      return;
+    }
+
+    if (getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })) {
+      if (offer) {
+        if (
+          getWeek(startDate, { weekStartsOn: 1 }) === getWeek(date, { weekStartsOn: 1 }) &&
+          startGetDay === 1
+        ) {
+          setTitle('current week');
+          return;
+        }
+
+        if (
+          startGetDay === 1 &&
+          endGetDay === 0 &&
+          getWeek(startDate, { weekStartsOn: 1 }) ===
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+        ) {
+          setTitle('last week');
+          return;
+        }
+
+        setTitle('custom');
+        return;
+      }
+
+      if (endGetDay === dateGetDay && startGetDay === 1) {
+        setTitle('current week');
+        return;
+      }
+
+      if (
+        startGetDay === 1 &&
+        endGetDay === 0 &&
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+      ) {
+        setTitle('last week');
+        return;
+      }
+
+      setTitle('custom');
+      return;
+    }
+
+    if (getMonth(startDate, 1) === getMonth(date, 1)) {
+      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
+        setTitle('current month');
+        return;
+      }
+
+      if (startGetDate === 1 && endGetDate === dateGetDate) {
+        setTitle('last month');
+        return;
+      }
+
+      setTitle('custom');
+      return;
+    }
+
+    if (
+      startGetDate === 1 &&
+      endGetDate <= dateGetDate &&
+      endGetDate === endOfMonth(endDate).getDate()
+    ) {
+      setTitle('current month');
+      return;
+    }
+
+    if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+      setTitle('last month');
+      return;
+    }
+
+    setTitle('custom');
+  };
+  const handleClickAfterPeriod = () => {
+    // handleClickAfterPeriod happens when you click on button "OK" on AfterPeriod date picker
+
+    // We put in variables for later use
+    const startDate = new Date(afterPeriod[0].startDate);
+    const endDate = new Date(afterPeriod[0].endDate);
+    const date = new Date();
+    const { startLocal, endLocal, startGetDate, endGetDate, startGetDay, endGetDay, dateGetDate } =
+      getAllDateSetup(afterPeriod[0].startDate, afterPeriod[0].endDate);
+
+    setOpenedAfterPeriod(false);
+    setSelected(false);
+    setDateContext({ ...dateContext, afterPeriod: { startDate, endDate } });
+    setAfterPeriodContext({ startDate, endDate });
+
+    if (startLocal === endLocal) {
+      if (startLocal === subDays(date, 1).toLocaleDateString()) {
+        setTitleafterPeriod('yesterday');
+      } else {
+        setTitleafterPeriod('custom');
+      }
+    }
+
+    if (getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })) {
+      if (
+        startGetDay === 1 &&
+        endGetDay === 0 &&
+        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+      ) {
+        setTitleafterPeriod('last week');
+        return;
+      }
+
+      setTitleafterPeriod('custom');
+    }
+
+    if (getMonth(startDate, 1) === getMonth(date, 1)) {
+      if (startGetDate === 1 && endGetDate === dateGetDate) {
+        setTitleafterPeriod('last month');
+        return;
+      }
+
+      setTitleafterPeriod('custom');
+    }
+
+    if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+      setTitleafterPeriod('last month');
+      return;
+    }
+
+    setTitleafterPeriod('custom');
+  };
+
   const handleOnChange = (ranges) => {
-    // handleOnChagne happens when you click on some day on beforePeriodContext date picker
     const { selection } = ranges;
+
     if (getMonth(selection.startDate) === getMonth(new Date())) {
-      // This will check if today's month is equal to the month of the clicked day
       if (typeDate === 'day') {
         // These checks the typeDate
-        setbeforePeriod([selection]); // here we send day
-      } else if (typeDate === 'week') {
+        setbeforePeriod([selection]);
+        return;
+      }
+
+      if (typeDate === 'week') {
         const getOfferWeek = () => {
           if (offer) {
             return endOfWeek(selection.startDate, { weekStartsOn: 1 });
@@ -372,9 +457,10 @@ const Dates = (props) => {
           ) {
             return new Date();
           }
+
           return endOfWeek(selection.startDate, { weekStartsOn: 1 });
         };
-        // These checks the typeDate
+
         setbeforePeriod([
           {
             startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
@@ -382,25 +468,26 @@ const Dates = (props) => {
             key: 'selection',
           },
         ]);
+
+        return;
       }
-    } else if (typeDate === 'day') {
-      // These checks the typeDate
-      setbeforePeriod([selection]); // here we send day
-    } else if (typeDate === 'week') {
-      // These checks the typeDate
-      setbeforePeriod([
-        {
-          startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }),
-          endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }),
-          key: 'selection',
-        },
-      ]);
     }
+
+    if (typeDate === 'day') {
+      // These checks the typeDate
+      setbeforePeriod([selection]);
+      return;
+    }
+
+    setbeforePeriod([
+      {
+        startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }),
+        endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }),
+        key: 'selection',
+      },
+    ]);
   };
   const getafterPeriod = () => {
-    // This function should check if the date of the beforePeriodContext date is the same as the date of the afterPeriodContext date
-
-    // We put in variables for later use
     const startDateAfterPeriod = new Date(afterPeriod[0].startDate);
     const startLocalAfterPeriod = startDateAfterPeriod.toLocaleDateString();
 
@@ -423,97 +510,100 @@ const Dates = (props) => {
   };
 
   const handleOnChangeAfterPeriod = (ranges) => {
-    // handleOnChagneAfterPeriod happens when you click on some day on AfterPeriod date picker
     const { selection } = ranges;
+
+    if (typeDate === 'day') {
+      setafterPeriod([selection]);
+      return;
+    }
+
     if (getMonth(selection.startDate) === getMonth(new Date())) {
-      // This will check if today's month is equal to the month of the clicked day
-      if (typeDate === 'day') {
-        // These checks the typeDate
-        setafterPeriod([selection]); // here we send day
-      } else if (typeDate === 'week') {
-        // These checks the typeDate
+      if (typeDate === 'week') {
         setafterPeriod([
           {
-            startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
+            startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }),
             endDate:
               getWeek(new Date(), { weekStartsOn: 1 }) ===
               getWeek(selection.startDate, { weekStartsOn: 1 })
                 ? new Date()
-                : endOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we compare if the week of today is equal to the week of the clicked day
+                : endOfWeek(selection.startDate, { weekStartsOn: 1 }),
             key: 'selection',
           },
         ]);
+        return;
       }
-    } else if (typeDate === 'day') {
-      // These checks the typeDate
-      setafterPeriod([selection]); // here we send day
-    } else if (typeDate === 'week') {
-      // These checks the typeDate
-      setafterPeriod([
-        {
-          startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send start of week
-          endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }), // here we send end of week
-          key: 'selection',
-        },
-      ]);
     }
+
+    setafterPeriod([
+      {
+        startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }),
+        endDate: endOfWeek(selection.startDate, { weekStartsOn: 1 }),
+        key: 'selection',
+      },
+    ]);
+  };
+
+  const getbeforePeriodDashboard = () => {
+    if (beforePeriodContextStartLocal === beforePeriodContextEndLocal) {
+      return beforePeriodContextStartLocal;
+    }
+
+    if (
+      beforePeriodContextStartGetDate === 1 &&
+      beforePeriodContextEndGetDate === endOfMonth(beforePeriodContextEnd, 1).getDate()
+    ) {
+      return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
+        beforePeriodContextStart,
+      )}`;
+    }
+
+    return `${beforePeriodContextStartLocal} - ${beforePeriodContextEndLocal}`;
   };
 
   const getbeforePeriod = () => {
-    if (isDashboard) {
-      if (titleDate === 'custom') {
-        // if titleDate === "custom"  i return the date
-        if (beforePeriodContextStartLocal === beforePeriodContextEndLocal) {
-          return beforePeriodContextStartLocal;
-        }
-        if (
-          beforePeriodContextStartGetDate === 1 &&
-          beforePeriodContextEndGetDate === endOfMonth(beforePeriodContextEnd, 1).getDate()
-        ) {
-          return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
-            beforePeriodContextStart,
-          )}`;
-        }
-        return `${beforePeriodContextStartLocal} - ${beforePeriodContextEndLocal}`;
-      }
-      return titleDate; // if titleDate !== "custom" i only return titleDate ("today", "yesterday", "current week" and etc)
+    if (title !== 'custom') {
+      return title;
     }
 
-    if (title === 'custom') {
-      // if titleDate === "custom"  i return the date
-      if (beforePeriodContextBtnStartLocal === beforePeriodContextBtnEndLocal) {
-        return beforePeriodContextBtnStartLocal;
-      }
-      if (
-        beforePeriodContextBtnStartGetDate === 1 &&
-        beforePeriodContextBtnEndGetDate === endOfMonth(beforePeriodContextEndBtn, 1).getDate()
-      ) {
-        return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
-          beforePeriodContextStartBtn,
-        )}`;
-      }
-      return `${beforePeriodContextBtnStartLocal} - ${beforePeriodContextBtnEndLocal}`;
+    if (isDashboard) {
+      return getbeforePeriodDashboard();
     }
-    return title; // if title!== "custom" i only return title ("today", "yesterday", "current week" and etc)
+
+    if (beforePeriodContextBtnStartLocal === beforePeriodContextBtnEndLocal) {
+      return beforePeriodContextBtnStartLocal;
+    }
+
+    if (
+      beforePeriodContextBtnStartGetDate === 1 &&
+      beforePeriodContextBtnEndGetDate === endOfMonth(beforePeriodContextEndBtn, 1).getDate()
+    ) {
+      return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
+        beforePeriodContextStartBtn,
+      )}`;
+    }
+
+    return `${beforePeriodContextBtnStartLocal} - ${beforePeriodContextBtnEndLocal}`;
   };
 
   const getDateAfterPeriod = () => {
-    if (titleafterPeriod === 'custom') {
-      // if titleafterPeriod === "custom"  i return the date
-      if (afterPeriodContextStartLocal === afterPeriodContextEndLocal) {
-        return afterPeriodContextStartLocal;
-      }
-      if (
-        afterPeriodContextStartGetDate === 1 &&
-        afterPeriodContextEndGetDate === endOfMonth(afterPeriodContextEnd, 1).getDate()
-      ) {
-        return `${format(afterPeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
-          afterPeriodContextStart,
-        )}`;
-      }
-      return `${afterPeriodContextStartLocal} - ${afterPeriodContextEndLocal}`;
+    if (titleafterPeriod !== 'custom') {
+      return titleafterPeriod;
     }
-    return titleafterPeriod; // if titleafterPeriod !== "custom" i only return titleafterPeriod ("today", "yesterday", "current week" and etc)
+
+    if (afterPeriodContextStartLocal === afterPeriodContextEndLocal) {
+      return afterPeriodContextStartLocal;
+    }
+
+    if (
+      afterPeriodContextStartGetDate === 1 &&
+      afterPeriodContextEndGetDate === endOfMonth(afterPeriodContextEnd, 1).getDate()
+    ) {
+      return `${format(afterPeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
+        afterPeriodContextStart,
+      )}`;
+    }
+
+    return `${afterPeriodContextStartLocal} - ${afterPeriodContextEndLocal}`;
   };
   const getMarketingHeatMap = () => {
     if (isMarketingHeatMap) {
