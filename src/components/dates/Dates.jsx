@@ -1,7 +1,7 @@
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import './Dates.scss';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   endOfMonth,
   endOfWeek,
@@ -114,7 +114,7 @@ const Dates = (props) => {
   const afterPeriodContextStartGetDate = new Date(afterPeriodContext.startDate).getDate();
   const afterPeriodContextEndGetDate = new Date(afterPeriodContext.endDate).getDate();
 
-  useMemo(() => {
+  useEffect(() => {
     localStorage.setItem(
       'date',
       JSON.stringify({
@@ -191,18 +191,15 @@ const Dates = (props) => {
       if (startLocal === dateLocal) {
         setTitleDate('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
         setTitleafterPeriod('yesterday'); // Sending data to state which will be needed for the introduction in the afterPeriodContext input
-        return;
       }
 
       if (startLocal === subDays(date, 1).toLocaleDateString()) {
         setTitleDate('yesterday');
         setTitleafterPeriod('custom');
-        return;
+      } else {
+        setTitleDate('custom');
+        setTitleafterPeriod('custom');
       }
-
-      setTitleDate('custom');
-      setTitleafterPeriod('custom');
-      return;
     }
 
     if (
@@ -257,13 +254,11 @@ const Dates = (props) => {
       setTitleafterPeriod('last month');
       return;
     }
-
     if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
       setTitleDate('last month');
       setTitleafterPeriod('custom');
       return;
     }
-
     setTitleDate('custom');
     setTitleafterPeriod('custom');
   };
@@ -416,6 +411,7 @@ const Dates = (props) => {
       }
 
       setTitleafterPeriod('custom');
+      return;
     }
 
     if (getMonth(startDate, 1) === getMonth(date, 1)) {
@@ -544,45 +540,44 @@ const Dates = (props) => {
   };
 
   const getbeforePeriodDashboard = () => {
-    if (beforePeriodContextStartLocal === beforePeriodContextEndLocal) {
-      return beforePeriodContextStartLocal;
+    if (titleDate === 'custom') {
+      // if titleDate === "custom"  i return the date
+      if (beforePeriodContextStartLocal === beforePeriodContextEndLocal) {
+        return beforePeriodContextStartLocal;
+      }
+      if (
+        beforePeriodContextStartGetDate === 1 &&
+        beforePeriodContextEndGetDate === endOfMonth(beforePeriodContextEnd, 1).getDate()
+      ) {
+        return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
+          beforePeriodContextStart,
+        )}`;
+      }
+      return `${beforePeriodContextStartLocal} - ${beforePeriodContextEndLocal}`;
     }
-
-    if (
-      beforePeriodContextStartGetDate === 1 &&
-      beforePeriodContextEndGetDate === endOfMonth(beforePeriodContextEnd, 1).getDate()
-    ) {
-      return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
-        beforePeriodContextStart,
-      )}`;
-    }
-
-    return `${beforePeriodContextStartLocal} - ${beforePeriodContextEndLocal}`;
+    return titleDate;
   };
 
   const getbeforePeriod = () => {
-    if (title !== 'custom') {
-      return title;
-    }
-
     if (isDashboard) {
       return getbeforePeriodDashboard();
     }
 
-    if (beforePeriodContextBtnStartLocal === beforePeriodContextBtnEndLocal) {
-      return beforePeriodContextBtnStartLocal;
+    if (title === 'custom') {
+      if (beforePeriodContextBtnStartLocal === beforePeriodContextBtnEndLocal) {
+        return beforePeriodContextBtnStartLocal;
+      }
+      if (
+        beforePeriodContextBtnStartGetDate === 1 &&
+        beforePeriodContextBtnEndGetDate === endOfMonth(beforePeriodContextEndBtn, 1).getDate()
+      ) {
+        return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
+          beforePeriodContextStartBtn,
+        )}`;
+      }
+      return `${beforePeriodContextBtnStartLocal} - ${beforePeriodContextBtnEndLocal}`;
     }
-
-    if (
-      beforePeriodContextBtnStartGetDate === 1 &&
-      beforePeriodContextBtnEndGetDate === endOfMonth(beforePeriodContextEndBtn, 1).getDate()
-    ) {
-      return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
-        beforePeriodContextStartBtn,
-      )}`;
-    }
-
-    return `${beforePeriodContextBtnStartLocal} - ${beforePeriodContextBtnEndLocal}`;
+    return title;
   };
 
   const getDateAfterPeriod = () => {
