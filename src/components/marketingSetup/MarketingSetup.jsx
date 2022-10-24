@@ -89,7 +89,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     },
   ]);
   const [everyWeek, setEveryWeek] = useState('');
-  const [itemMenu, setItemMenu] = useState('Flash Deal');
+  const [itemMenu, setItemMenu] = useState('');
   const [category, setCategory] = useState([]);
   const [filteredCategoryData, setFilteredCategoryData] = useState([]);
   const [targetAudience, setTargetAudience] = useState('All customers');
@@ -97,6 +97,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   const [launchOrder, setLaunchOrder] = useState([{ order: '', arrow: '', number: '', id: 1 }]);
   const [stopOffer, setStopOffer] = useState([{ order: '', arrow: '', number: '', id: 1 }]);
+
+  const [smRule, setSmRule] = useState(false);
 
   const [checked, setChecked] = useState([]);
   const getDiscountOrMov = (type) => {
@@ -110,7 +112,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (itemMenu === 'Restaurent Pick') {
         return ['20%', '25%', '30%', '35%', '40%', '45%', '50%'];
       }
-      return ['100%'];
+      if (itemMenu === 'Free Item') {
+        return ['100%'];
+      }
+      return ['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%'];
     }
     if (type === 'mov') {
       if (itemMenu === 'Flash Deal') {
@@ -122,7 +127,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (itemMenu === 'Restaurent Pick') {
         return ['0 AED', '15 AED', '30 AED'];
       }
-      return ['15 AED', '30 AED', '60 AED'];
+      if (itemMenu === 'Free Item') {
+        return ['15 AED', '30 AED', '60 AED'];
+      }
+      return ['0 AED', '10 AED', '20 AED', '30 AED'];
     }
     return [];
   };
@@ -644,6 +652,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setRecap(false);
   }, [active]);
 
+  useEffect(() => {
+    setItemMenu('');
+  }, [menu]);
+
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
     const arr = [];
@@ -923,6 +935,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           launchOrder={launchOrder}
           setStopOffer={setStopOffer}
           stopOffer={stopOffer}
+          setSmRule={setSmRule}
         />
       </div>
     );
@@ -935,6 +948,19 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       return 'Confirm';
     }
     return 'Next Step';
+  };
+
+  const handleBack = () => {
+    if (recap) {
+      setRecap(false);
+    } else if (smRule) {
+      setSelected(selected - 1);
+      steps.pop();
+      setSteps([...steps]);
+      setSmRule(false);
+    } else {
+      setSelected(selected - 1);
+    }
   };
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
@@ -951,7 +977,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
             ) : (
               <div className="left-part-bottom">
                 <ButtonKit
-                  onClick={() => (recap ? setRecap(false) : setSelected(selected - 1))}
+                  onClick={() => handleBack()}
                   variant="outlined"
                   disabled={!(selected >= 2)}
                 >
