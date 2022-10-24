@@ -85,6 +85,8 @@ const GetProgress = (props) => {
     setStartingDate,
     setLaunchOrder,
     launchOrder,
+    setStopOffer,
+    stopOffer,
   } = props;
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
@@ -533,7 +535,7 @@ const GetProgress = (props) => {
               Create and manage all your offers. Set personalised rules to automatically trigger
               your offers.
             </TypographyKit>
-            <BoxKit className="left-part-radio">
+            <BoxKit className="left-part-radio sm-rule">
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Launch the offer if the </b>
                 {launchOrder.map((obj, index) =>
@@ -629,7 +631,7 @@ const GetProgress = (props) => {
               </TypographyKit>
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Stop the offer if </b>
-                {launchOrder.map((obj, index) =>
+                {stopOffer.map((obj, index) =>
                   index === 1 ? (
                     <div key={obj.id}>
                       <MarketingPlaceholderDropdown
@@ -642,18 +644,18 @@ const GetProgress = (props) => {
                           names={['Order 1', 'Order 2']}
                           title="Order"
                           type="sm-rule-order"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.order}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <MarketingPlaceholderDropdown
                           names={['>', '<']}
                           title="<"
                           type="sm-rule-arrow"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.arrow}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <TextfieldKit
@@ -661,8 +663,8 @@ const GetProgress = (props) => {
                           placeholder="Enter a Number"
                           variant="outlined"
                           onChange={({ target }) => {
-                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                            setLaunchOrder([...launchOrder]);
+                            stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...stopOffer]);
                           }}
                         />
                       </div>
@@ -673,18 +675,18 @@ const GetProgress = (props) => {
                         names={['Order 1', 'Order 2']}
                         title="Order"
                         type="sm-rule-order"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.order}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
                         title="<"
                         type="sm-rule-arrow"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.arrow}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <TextfieldKit
@@ -692,18 +694,18 @@ const GetProgress = (props) => {
                         placeholder="Enter a Number"
                         variant="outlined"
                         onChange={({ target }) => {
-                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                          setLaunchOrder([...launchOrder]);
+                          stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...stopOffer]);
                         }}
                       />
                     </div>
                   ),
                 )}
-                {launchOrder.length === 2 ? (
+                {stopOffer.length === 2 ? (
                   <ButtonKit
                     onClick={() => {
-                      launchOrder.splice(1, 1);
-                      setLaunchOrder([...launchOrder]);
+                      stopOffer.splice(1, 1);
+                      setStopOffer([...stopOffer]);
                     }}
                     className="another-slot remove"
                   >
@@ -712,7 +714,7 @@ const GetProgress = (props) => {
                 ) : (
                   <ButtonKit
                     onClick={() => {
-                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                      setStopOffer([...stopOffer, { order: '', arrow: '', number: '', id: 2 }]);
                     }}
                     className="another-slot"
                   >
@@ -972,7 +974,7 @@ const GetProgress = (props) => {
               Create and manage all your offers. Set personalised rules to automatically trigger
               your offers.
             </TypographyKit>
-            <BoxKit className="left-part-radio">
+            <BoxKit className="left-part-radio sm-rule">
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Launch the offer if the </b>
                 {launchOrder.map((obj, index) =>
@@ -1068,7 +1070,7 @@ const GetProgress = (props) => {
               </TypographyKit>
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Stop the offer if </b>
-                {launchOrder.map((obj, index) =>
+                {stopOffer.map((obj, index) =>
                   index === 1 ? (
                     <div key={obj.id}>
                       <MarketingPlaceholderDropdown
@@ -1081,18 +1083,18 @@ const GetProgress = (props) => {
                           names={['Order 1', 'Order 2']}
                           title="Order"
                           type="sm-rule-order"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.order}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <MarketingPlaceholderDropdown
                           names={['>', '<']}
                           title="<"
                           type="sm-rule-arrow"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.arrow}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <TextfieldKit
@@ -1100,8 +1102,8 @@ const GetProgress = (props) => {
                           placeholder="Enter a Number"
                           variant="outlined"
                           onChange={({ target }) => {
-                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                            setLaunchOrder([...launchOrder]);
+                            stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...stopOffer]);
                           }}
                         />
                       </div>
@@ -1112,18 +1114,18 @@ const GetProgress = (props) => {
                         names={['Order 1', 'Order 2']}
                         title="Order"
                         type="sm-rule-order"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.order}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
                         title="<"
                         type="sm-rule-arrow"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.arrow}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <TextfieldKit
@@ -1131,18 +1133,18 @@ const GetProgress = (props) => {
                         placeholder="Enter a Number"
                         variant="outlined"
                         onChange={({ target }) => {
-                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                          setLaunchOrder([...launchOrder]);
+                          stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...stopOffer]);
                         }}
                       />
                     </div>
                   ),
                 )}
-                {launchOrder.length === 2 ? (
+                {stopOffer.length === 2 ? (
                   <ButtonKit
                     onClick={() => {
-                      launchOrder.splice(1, 1);
-                      setLaunchOrder([...launchOrder]);
+                      stopOffer.splice(1, 1);
+                      setStopOffer([...stopOffer]);
                     }}
                     className="another-slot remove"
                   >
@@ -1151,7 +1153,7 @@ const GetProgress = (props) => {
                 ) : (
                   <ButtonKit
                     onClick={() => {
-                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                      setStopOffer([...stopOffer, { order: '', arrow: '', number: '', id: 2 }]);
                     }}
                     className="another-slot"
                   >
@@ -1345,7 +1347,7 @@ const GetProgress = (props) => {
               Create and manage all your offers. Set personalised rules to automatically trigger
               your offers.
             </TypographyKit>
-            <BoxKit className="left-part-radio">
+            <BoxKit className="left-part-radio sm-rule">
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Launch the offer if the </b>
                 {launchOrder.map((obj, index) =>
@@ -1441,7 +1443,7 @@ const GetProgress = (props) => {
               </TypographyKit>
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Stop the offer if </b>
-                {launchOrder.map((obj, index) =>
+                {stopOffer.map((obj, index) =>
                   index === 1 ? (
                     <div key={obj.id}>
                       <MarketingPlaceholderDropdown
@@ -1454,18 +1456,18 @@ const GetProgress = (props) => {
                           names={['Order 1', 'Order 2']}
                           title="Order"
                           type="sm-rule-order"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.order}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <MarketingPlaceholderDropdown
                           names={['>', '<']}
                           title="<"
                           type="sm-rule-arrow"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.arrow}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <TextfieldKit
@@ -1473,8 +1475,8 @@ const GetProgress = (props) => {
                           placeholder="Enter a Number"
                           variant="outlined"
                           onChange={({ target }) => {
-                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                            setLaunchOrder([...launchOrder]);
+                            stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...stopOffer]);
                           }}
                         />
                       </div>
@@ -1485,18 +1487,18 @@ const GetProgress = (props) => {
                         names={['Order 1', 'Order 2']}
                         title="Order"
                         type="sm-rule-order"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.order}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
                         title="<"
                         type="sm-rule-arrow"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.arrow}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <TextfieldKit
@@ -1504,18 +1506,18 @@ const GetProgress = (props) => {
                         placeholder="Enter a Number"
                         variant="outlined"
                         onChange={({ target }) => {
-                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                          setLaunchOrder([...launchOrder]);
+                          stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...stopOffer]);
                         }}
                       />
                     </div>
                   ),
                 )}
-                {launchOrder.length === 2 ? (
+                {stopOffer.length === 2 ? (
                   <ButtonKit
                     onClick={() => {
-                      launchOrder.splice(1, 1);
-                      setLaunchOrder([...launchOrder]);
+                      stopOffer.splice(1, 1);
+                      setStopOffer([...stopOffer]);
                     }}
                     className="another-slot remove"
                   >
@@ -1524,7 +1526,7 @@ const GetProgress = (props) => {
                 ) : (
                   <ButtonKit
                     onClick={() => {
-                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                      setStopOffer([...stopOffer, { order: '', arrow: '', number: '', id: 2 }]);
                     }}
                     className="another-slot"
                   >
@@ -1783,7 +1785,7 @@ const GetProgress = (props) => {
               Create and manage all your offers. Set personalised rules to automatically trigger
               your offers.
             </TypographyKit>
-            <BoxKit className="left-part-radio">
+            <BoxKit className="left-part-radio sm-rule">
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Launch the offer if the </b>
                 {launchOrder.map((obj, index) =>
@@ -1879,7 +1881,7 @@ const GetProgress = (props) => {
               </TypographyKit>
               <TypographyKit sx={{ width: '100%' }} variant="div">
                 <b>Stop the offer if </b>
-                {launchOrder.map((obj, index) =>
+                {stopOffer.map((obj, index) =>
                   index === 1 ? (
                     <div key={obj.id}>
                       <MarketingPlaceholderDropdown
@@ -1892,18 +1894,18 @@ const GetProgress = (props) => {
                           names={['Order 1', 'Order 2']}
                           title="Order"
                           type="sm-rule-order"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.order}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <MarketingPlaceholderDropdown
                           names={['>', '<']}
                           title="<"
                           type="sm-rule-arrow"
-                          setPersonName={setLaunchOrder}
+                          setPersonName={setStopOffer}
                           personName={obj.arrow}
-                          rowArr={launchOrder}
+                          rowArr={stopOffer}
                           indexArr={index}
                         />
                         <TextfieldKit
@@ -1911,8 +1913,8 @@ const GetProgress = (props) => {
                           placeholder="Enter a Number"
                           variant="outlined"
                           onChange={({ target }) => {
-                            launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                            setLaunchOrder([...launchOrder]);
+                            stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                            setLaunchOrder([...stopOffer]);
                           }}
                         />
                       </div>
@@ -1923,18 +1925,18 @@ const GetProgress = (props) => {
                         names={['Order 1', 'Order 2']}
                         title="Order"
                         type="sm-rule-order"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.order}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
                         title="<"
                         type="sm-rule-arrow"
-                        setPersonName={setLaunchOrder}
+                        setPersonName={setStopOffer}
                         personName={obj.arrow}
-                        rowArr={launchOrder}
+                        rowArr={stopOffer}
                         indexArr={index}
                       />
                       <TextfieldKit
@@ -1942,18 +1944,18 @@ const GetProgress = (props) => {
                         placeholder="Enter a Number"
                         variant="outlined"
                         onChange={({ target }) => {
-                          launchOrder.splice(index, 1, { ...obj, arrow: target.value });
-                          setLaunchOrder([...launchOrder]);
+                          stopOffer.splice(index, 1, { ...obj, arrow: target.value });
+                          setLaunchOrder([...stopOffer]);
                         }}
                       />
                     </div>
                   ),
                 )}
-                {launchOrder.length === 2 ? (
+                {stopOffer.length === 2 ? (
                   <ButtonKit
                     onClick={() => {
-                      launchOrder.splice(1, 1);
-                      setLaunchOrder([...launchOrder]);
+                      stopOffer.splice(1, 1);
+                      setStopOffer([...stopOffer]);
                     }}
                     className="another-slot remove"
                   >
@@ -1962,7 +1964,7 @@ const GetProgress = (props) => {
                 ) : (
                   <ButtonKit
                     onClick={() => {
-                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                      setStopOffer([...stopOffer, { order: '', arrow: '', number: '', id: 2 }]);
                     }}
                     className="another-slot"
                   >

@@ -96,6 +96,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [created, setCreated] = useState(false);
 
   const [launchOrder, setLaunchOrder] = useState([{ order: '', arrow: '', number: '', id: 1 }]);
+  const [stopOffer, setStopOffer] = useState([{ order: '', arrow: '', number: '', id: 1 }]);
 
   const [checked, setChecked] = useState([]);
   const getDiscountOrMov = (type) => {
@@ -920,6 +921,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           setStartingDate={setStartingDate}
           setLaunchOrder={setLaunchOrder}
           launchOrder={launchOrder}
+          setStopOffer={setStopOffer}
+          stopOffer={stopOffer}
         />
       </div>
     );
