@@ -60,7 +60,7 @@ const MarketingPlaceholderDropdown = ({
       <FormcontrolKit sx={{ m: 1, width: 300, mt: 3 }}>
         <SelectKit
           displayEmpty
-          value={personName}
+          value={personName || ''}
           onChange={handleChange}
           input={<OutlindeInputKit />}
           renderValue={(selected) => <em>{selected || title}</em>}

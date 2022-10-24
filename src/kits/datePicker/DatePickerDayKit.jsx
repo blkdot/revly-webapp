@@ -5,7 +5,7 @@ import enGB from 'date-fns/esm/locale/en-GB';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const DatePickerDayKit = (props) => (
-  <LocalizationProvider dateAdapter={AdapterDateFns} locale={enGB}>
+  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
     <DatePicker {...props} />
   </LocalizationProvider>
 );

@@ -87,6 +87,7 @@ const GetProgress = (props) => {
     launchOrder,
     setStopOffer,
     stopOffer,
+    setSmRule,
   } = props;
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
@@ -184,8 +185,8 @@ const GetProgress = (props) => {
                     <TypographyKit variant="div">
                       Min. Order Value
                       <MarketingPlaceholderDropdown
-                        names={['0.0 AED', '10.0 AED', '20.0 AED', '30.0 AED']}
-                        title="0.0 AED"
+                        names={['0 AED', '10 AED', '20 AED', '30 AED']}
+                        title="0 AED"
                         setPersonName={setMinOrder}
                         personName={minOrder}
                       />
@@ -258,7 +259,7 @@ const GetProgress = (props) => {
                       Min. Order Value
                       <MarketingPlaceholderDropdown
                         names={getDiscountOrMov('mov')}
-                        title="0.0 AED"
+                        title="0 AED"
                         setPersonName={setMinOrder}
                         personName={minOrder}
                       />
@@ -513,6 +514,7 @@ const GetProgress = (props) => {
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5]);
                 setSelected(5);
+                setSmRule(true);
               }}
               className="another-slot remove grey"
               variant="contained"
@@ -952,6 +954,7 @@ const GetProgress = (props) => {
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5, 6]);
                 setSelected(6);
+                setSmRule(true);
               }}
               className="another-slot remove grey"
               variant="contained"
@@ -1325,6 +1328,7 @@ const GetProgress = (props) => {
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5]);
                 setSelected(5);
+                setSmRule(true);
               }}
               className="another-slot remove grey"
               variant="contained"
@@ -1763,6 +1767,7 @@ const GetProgress = (props) => {
               onClick={() => {
                 setSteps([0, 1, 2, 3, 4, 5, 6]);
                 setSelected(6);
+                setSmRule(true);
               }}
               className="another-slot remove grey"
               variant="contained"
