@@ -472,6 +472,11 @@
   justify-content: space-between;
   overflow: hidden;
 
+  &.sm-rule {
+    flex-direction: column;
+    grid-gap: 15px;
+  }
+
   &.reversed {
     flex-direction: row-reverse;
     justify-content: flex-end;
