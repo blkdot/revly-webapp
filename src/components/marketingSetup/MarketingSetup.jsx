@@ -95,8 +95,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [targetAudience, setTargetAudience] = useState('All customers');
   const [created, setCreated] = useState(false);
 
-  const [launchOrder, setLaunchOrder] = useState([{ order: '', arrow: '', number: '', id: 1 }]);
-  const [stopOffer, setStopOffer] = useState([{ order: '', arrow: '', number: '', id: 1 }]);
+  const [launchOrder, setLaunchOrder] = useState([
+    { order: 'order', arrow: '<', number: '', id: 1 },
+  ]);
+  const [stopOffer, setStopOffer] = useState([{ order: 'order', arrow: '<', number: '', id: 1 }]);
 
   const [smRule, setSmRule] = useState(false);
 

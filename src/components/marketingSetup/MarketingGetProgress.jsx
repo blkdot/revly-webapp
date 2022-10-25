@@ -1359,12 +1359,12 @@ const GetProgress = (props) => {
                     <div key={obj.id}>
                       <MarketingPlaceholderDropdown
                         className="sm-rule-and"
-                        names={[]}
+                        names={['and', 'or']}
                         title="And"
                       />
                       <div className="smart-rule_drowdown">
                         <MarketingPlaceholderDropdown
-                          names={['Order 1', 'Order 2']}
+                          names={['order', 'time']}
                           title="Order"
                           type="sm-rule-order"
                           setPersonName={setLaunchOrder}
@@ -1373,7 +1373,7 @@ const GetProgress = (props) => {
                           indexArr={index}
                         />
                         <MarketingPlaceholderDropdown
-                          names={['>', '<']}
+                          names={['<', '>']}
                           title="<"
                           type="sm-rule-arrow"
                           setPersonName={setLaunchOrder}
@@ -1395,8 +1395,8 @@ const GetProgress = (props) => {
                   ) : (
                     <div key={obj.id} className="smart-rule_drowdown">
                       <MarketingPlaceholderDropdown
-                        names={['Order 1', 'Order 2']}
-                        title="Order"
+                        names={['order', 'time']}
+                        title="order"
                         type="sm-rule-order"
                         setPersonName={setLaunchOrder}
                         personName={obj.order}
@@ -1404,7 +1404,7 @@ const GetProgress = (props) => {
                         indexArr={index}
                       />
                       <MarketingPlaceholderDropdown
-                        names={['>', '<']}
+                        names={['<', '>']}
                         title="<"
                         type="sm-rule-arrow"
                         setPersonName={setLaunchOrder}
@@ -1437,7 +1437,10 @@ const GetProgress = (props) => {
                 ) : (
                   <ButtonKit
                     onClick={() => {
-                      setLaunchOrder([...launchOrder, { order: '', arrow: '', number: '', id: 2 }]);
+                      setLaunchOrder([
+                        ...launchOrder,
+                        { order: 'order', arrow: '<', number: '', id: 2 },
+                      ]);
                     }}
                     className="another-slot"
                   >
@@ -1530,7 +1533,10 @@ const GetProgress = (props) => {
                 ) : (
                   <ButtonKit
                     onClick={() => {
-                      setStopOffer([...stopOffer, { order: '', arrow: '', number: '', id: 2 }]);
+                      setStopOffer([
+                        ...stopOffer,
+                        { order: 'order', arrow: '<', number: '', id: 2 },
+                      ]);
                     }}
                     className="another-slot"
                   >

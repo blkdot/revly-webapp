@@ -37,7 +37,7 @@ const Dates = (props) => {
   const { isDashboard, beforePeriodBtn, setbeforePeriodBtn, isMarketingHeatMap, offer } = props;
   const { date: dateContext, setDate: setDateContext } = useDate();
   const {
-    beforePeriod: beforePeriodContext,
+    beforePeriod: beforePeriodDateContext,
     afterPeriod: afterPeriodDateContext,
     titleDate: titleDateContext,
     titleafterPeriod: titleafterPeriodContext,
@@ -50,6 +50,7 @@ const Dates = (props) => {
   const [titleDate, setTitleDate] = useState(titleDateContext);
   const [titleafterPeriod, setTitleafterPeriod] = useState(titleafterPeriodContext);
   const [afterPeriodContext, setAfterPeriodContext] = useState(afterPeriodDateContext);
+  const [beforePeriodContext, setBeforePeriodContext] = useState(beforePeriodDateContext);
   const getExpanded = () => {
     if (!isMarketingHeatMap) {
       if (typeDate === 'day') {
@@ -140,32 +141,56 @@ const Dates = (props) => {
     afterPeriodContext,
     typeDateContext,
   ]);
-
   const setAfterPeriodContextDashboard = (startDate, endDate) => {
-    setDateContext({ ...dateContext, beforePeriod: { startDate, endDate }, typeDate });
-
     if (typeDate === 'day') {
+      setDateContext({
+        ...dateContext,
+        afterPeriod: {
+          startDate: subDays(startDate, 1),
+          endDate: subDays(endDate, 1),
+          beforePeriod: { startDate, endDate },
+          typeDate,
+        },
+      });
       setAfterPeriodContext({
         startDate: subDays(startDate, 1),
         endDate: subDays(endDate, 1),
       });
-
+      setBeforePeriodContext({ startDate, endDate });
       return;
     }
-
     if (typeDate === 'week') {
+      setDateContext({
+        ...dateContext,
+        afterPeriod: {
+          startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+          endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
+        },
+        beforePeriod: { startDate, endDate },
+        typeDate,
+      });
       setAfterPeriodContext({
         startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
         endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
       });
+      setBeforePeriodContext({ startDate, endDate });
 
       return;
     }
-
+    setDateContext({
+      ...dateContext,
+      afterPeriod: {
+        startDate: subMonths(startDate, 1),
+        endDate: endOfMonth(subMonths(endDate, 1)),
+      },
+      beforePeriod: { startDate, endDate },
+      typeDate,
+    });
     setAfterPeriodContext({
       startDate: subMonths(startDate, 1),
       endDate: endOfMonth(subMonths(endDate, 1)),
     });
+    setBeforePeriodContext({ startDate, endDate });
   };
 
   const handleClickDashboard = () => {
@@ -265,7 +290,6 @@ const Dates = (props) => {
 
   const handleClick = () => {
     setOpened(false); // Closing beforePeriodContext date picker
-
     if (isDashboard) {
       handleClickDashboard();
       return;
