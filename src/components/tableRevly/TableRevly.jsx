@@ -52,11 +52,7 @@ const TableRevly = (props) => {
 
   const renderRowsContent = () =>
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit key={r.id}>
-        {headers.map((h) => (
-          <TableCellKit key={`${h.id}_${r.id}`}>{r[h.id]}</TableCellKit>
-        ))}
-      </TableRowKit>
+      <TableRowKit key={r.id}>{headers.map((h) => r[h.id])}</TableRowKit>
     ));
 
   return (

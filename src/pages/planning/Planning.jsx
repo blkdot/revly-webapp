@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Planning.scss';
 import Dates from '../../components/dates/Dates';
 import PlanningOffersTable from '../../components/planningOffersTable/PlanningOffersTable';
 import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
@@ -8,7 +9,8 @@ import usePlanningOffers from '../../hooks/usePlanningOffers';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import useVendors from '../../hooks/useVendors';
 import TypographyKit from '../../kits/typography/TypographyKit';
-import './Planning.scss';
+import TableRevly from '../../components/tableRevly/TableRevly';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 
 const Planning = () => {
   const [active, setActive] = useState(1);
@@ -21,13 +23,62 @@ const Planning = () => {
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
 
-  const getOffersTable = () => {
-    if (isLoadingOffers) {
-      return <PlanningOffersTableEmpty />;
-    }
+  const {
+    renderPlatform,
+    renderPercent,
+    renderCurrency,
+    renderStatus,
+    renderSimpleRowNotCentered,
+    renderTarget,
+    renderScheduleType,
+    renderSimpleRow,
+  } = useTableContentFormatter();
 
-    return <PlanningOffersTable type="offer" rows={offers} />;
+  const headersOffers = [
+    { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
+    { id: 'start_date', disablePadding: true, label: 'Start date' },
+    { id: 'end_date', disablePadding: true, label: 'End date' },
+    { id: 'type_schedule', disablePadding: true, label: 'Schedule type' },
+    { id: 'discount_type', disablePadding: true, label: 'Discount type' },
+    { id: 'discount_rate', disablePadding: true, label: 'Discount rate' },
+    { id: 'minimum_order_value', disablePadding: true, label: 'Minimum order value' },
+    { id: 'target', disablePadding: true, label: 'Target' },
+    { id: 'status', disablePadding: true, label: 'Status' },
+  ];
+
+  const cellTemplatesObject = {
+    vendor_name: renderSimpleRowNotCentered,
+    platform: renderPlatform,
+    start_date: renderSimpleRow,
+    end_date: renderSimpleRow,
+    type_schedule: renderScheduleType,
+    discount_type: renderSimpleRow,
+    discount_rate: renderPercent,
+    minimum_order_value: renderCurrency,
+    target: renderTarget,
+    status: renderStatus,
   };
+
+  const renderRowsOffersByHeader = (r) =>
+    headersOffers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id](r, cur),
+        id: `${cur.id}_${r.offer_id}`,
+      }),
+      {},
+    );
+
+  console.log(offers.map(renderRowsOffersByHeader));
+
+  const getOffersTable = () => (
+    <TableRevly
+      isLoading={isLoadingOffers}
+      headers={headersOffers}
+      rows={offers.map(renderRowsOffersByHeader)}
+    />
+  );
 
   const getAdsTable = () => {
     if (isLoadingAds) {
