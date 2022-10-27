@@ -27,8 +27,8 @@ import { platformObject } from '../../data/platformList';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import usePlanningAds from '../../hooks/usePlanningAds';
-import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
-import PlanningOffersTable from '../../components/planningOffersTable/PlanningOffersTable';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from '../../components/tableRevly/TableRevly';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
@@ -40,12 +40,113 @@ const MarketingAds = () => {
   });
   const [scrollPosition, setScrollPosition] = useState(0);
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
+
+  const {
+    renderPlatform,
+    renderPercent,
+    renderCurrency,
+    renderStatus,
+    renderTarget,
+    renderSimpleRow,
+  } = useTableContentFormatter();
+
+  const headersOffers = [
+    {
+      id: 'date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Date',
+    },
+    {
+      id: 'branche',
+      numeric: false,
+      disablePadding: false,
+      label: 'Branche',
+    },
+    {
+      id: 'platform',
+      numeric: true,
+      disablePadding: false,
+      label: 'Platfrom',
+    },
+    {
+      id: 'discountType',
+      numeric: true,
+      disablePadding: false,
+      label: 'Discount Type',
+    },
+    {
+      id: 'procent',
+      numeric: true,
+      disablePadding: false,
+      label: '%',
+    },
+    {
+      id: 'minOrder',
+      numeric: true,
+      disablePadding: false,
+      label: 'Min Order',
+    },
+    {
+      id: 'target',
+      numeric: true,
+      disablePadding: false,
+      label: 'Target',
+    },
+    {
+      id: 'status',
+      numeric: true,
+      disablePadding: false,
+      label: 'Status',
+    },
+    {
+      id: 'orders',
+      numeric: true,
+      disablePadding: false,
+      label: '#Orders',
+    },
+    {
+      id: 'avgBasket',
+      numeric: true,
+      disablePadding: false,
+      label: 'Avg Basket',
+    },
+    {
+      id: 'roi',
+      numeric: true,
+      disablePadding: false,
+      label: 'ROI',
+    },
+    {
+      id: 'revenue',
+      numeric: true,
+      disablePadding: false,
+      label: 'Revenue',
+    },
+  ];
+
+  const cellTemplatesObject = {
+    branche: renderSimpleRow,
+    platform: renderPlatform,
+    date: renderSimpleRow,
+    discountType: renderSimpleRow,
+    procent: renderPercent,
+    target: renderTarget,
+    minOrder: renderSimpleRow,
+    status: renderStatus,
+    orders: renderSimpleRow,
+    avgBasket: renderSimpleRow,
+    roi: renderSimpleRow,
+    revenue: renderCurrency,
+  };
+
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
   const [row, setRow] = useState(AdsTableData);
+
   const handleScroll = () => {
-    const cont = document.querySelector('#adsContainer');
+    const cont = document.querySelector('#tableContainer');
     const position = cont.scrollLeft;
     setScrollPosition(position);
   };
@@ -65,17 +166,8 @@ const MarketingAds = () => {
     status: [],
   });
 
-  const renderStatus = (s) => {
-    if (!s) return null;
-
-    return (
-      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${s}`}>
-        {s}
-      </span>
-    );
-  };
   useEffect(() => {
-    const cont = document.querySelector('#adsContainer');
+    const cont = document.querySelector('#tableContainer');
     cont.addEventListener('scroll', handleScroll);
     return () => {
       cont.removeEventListener('scroll', handleScroll);
@@ -135,6 +227,16 @@ const MarketingAds = () => {
     setOpened(false);
   };
 
+  const renderRowsByHeader = (r) =>
+    headersOffers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id](r, cur),
+        id: `${cur.id}_${r.offer_id}`,
+      }),
+      {},
+    );
+
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
       setFilters({
@@ -168,13 +270,13 @@ const MarketingAds = () => {
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
 
-  const getAdsTable = () => {
-    if (isLoadingAds) {
-      return <PlanningOffersTableEmpty />;
-    }
-
-    return <PlanningOffersTable type="ad" rows={ads} />;
-  };
+  const getAdsTable = () => (
+    <TableRevly
+      isLoading={isLoadingAds}
+      headers={headersOffers}
+      rows={ads.map(renderRowsByHeader)}
+    />
+  );
 
   return (
     <div className="wrapper marketing-wrapper">
@@ -208,13 +310,13 @@ const MarketingAds = () => {
               className={`right-part-header_link ${scrollPosition > 200 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#vendor_name">
+              <HashLink to="#date">
                 <BoxKit className={scrollPosition < 200 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Ads Management
                 </BoxKit>
               </HashLink>
-              <HashLink to="#return_on_ad_spent">
+              <HashLink to="#revenue">
                 <BoxKit className={scrollPosition > 200 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Ads Performance

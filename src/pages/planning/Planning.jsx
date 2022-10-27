@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './Planning.scss';
 import Dates from '../../components/dates/Dates';
-import PlanningOffersTable from '../../components/planningOffersTable/PlanningOffersTable';
-import PlanningOffersTableEmpty from '../../components/planningOffersTable/PlanningOffersTableEmpty';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import useDate from '../../hooks/useDate';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
@@ -60,7 +58,7 @@ const Planning = () => {
     status: renderStatus,
   };
 
-  const renderRowsOffersByHeader = (r) =>
+  const renderRowsByHeader = (r) =>
     headersOffers.reduce(
       (acc, cur) => ({
         ...acc,
@@ -70,23 +68,21 @@ const Planning = () => {
       {},
     );
 
-  console.log(offers.map(renderRowsOffersByHeader));
-
   const getOffersTable = () => (
     <TableRevly
       isLoading={isLoadingOffers}
       headers={headersOffers}
-      rows={offers.map(renderRowsOffersByHeader)}
+      rows={ads.map(renderRowsByHeader)}
     />
   );
 
-  const getAdsTable = () => {
-    if (isLoadingAds) {
-      return <PlanningOffersTableEmpty />;
-    }
-
-    return <PlanningOffersTable type="ad" rows={ads} />;
-  };
+  const getAdsTable = () => (
+    <TableRevly
+      isLoading={isLoadingAds}
+      headers={headersOffers}
+      rows={offers.map(renderRowsByHeader)}
+    />
+  );
 
   const renderTable = () => {
     if (active) return getOffersTable();

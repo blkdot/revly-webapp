@@ -29,7 +29,7 @@
     background-color: #fff;
   }
   .offer-row:hover {
-    background-color: rgba(144, 107, 255, 0.08);;
+    background-color: rgba(144, 107, 255, 0.08);
   }
 
   tbody {
@@ -57,5 +57,35 @@
 
   th:nth-of-type(1) {
     padding-left: 15px;
+  }
+}
+
+.marketing-table-top:hover {
+  background: rgba(144, 107, 255, 0.08) !important;
+}
+
+.marketing-table-top {
+  cursor: pointer;
+  background: #fff !important;
+  border-bottom: 1px solid #919eab3d;
+  &.selected {
+    th,
+    td {
+      background: #ff484214 !important;
+    }
+  }
+
+  th,
+  td {
+    white-space: nowrap;
+    > span {
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+
+  td {
+    padding-right: 40px;
+    text-align: center;
   }
 }

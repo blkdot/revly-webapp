@@ -8,10 +8,11 @@ import './Marketing.scss';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
-import MarketingTable from '../../components/marketingTable/MarketingTable';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from '../../components/marketingOfferRemove/MarketingOfferRemove';
+import TableRevly from '../../components/tableRevly/TableRevly';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 
 import { platformObject } from '../../data/platformList';
 
@@ -40,7 +41,7 @@ const MarketingOffer = () => {
     startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
     endDate: new Date(),
   });
-  const { offers } = usePlanningOffers({ dateRange: beforePeriodBtn });
+  const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
   const [scrollPosition, setScrollPosition] = useState(0);
   const [selected, setSelected] = useState([]);
@@ -49,24 +50,134 @@ const MarketingOffer = () => {
   const [row, setRow] = useState(fomatOffers(offers));
 
   const handleScroll = () => {
-    const cont = document.querySelector('#markeitngContainer');
+    const cont = document.querySelector('#tableContainer');
     const position = cont.scrollLeft;
+
     setScrollPosition(position);
   };
   const [offersData, setOffersData] = useState(fomatOffers(offers));
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
   const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
 
+  const [filters, setFilters] = useState(defaultFilterStateFormat);
+
+  const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
+
   useEffect(() => {
     setOffersData(fomatOffers(offers));
     setRow(fomatOffers(offers));
   }, [offers]);
 
-  const [filters, setFilters] = useState(defaultFilterStateFormat);
+  const {
+    renderPlatform,
+    renderPercent,
+    renderCurrency,
+    renderStatus,
+    renderTarget,
+    renderSimpleRow,
+  } = useTableContentFormatter();
 
-  const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
+  const headersOffers = [
+    {
+      id: 'date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Date',
+    },
+    {
+      id: 'branche',
+      numeric: false,
+      disablePadding: false,
+      label: 'Branche',
+    },
+    {
+      id: 'platform',
+      numeric: true,
+      disablePadding: false,
+      label: 'Platfrom',
+    },
+    {
+      id: 'discountType',
+      numeric: true,
+      disablePadding: false,
+      label: 'Discount Type',
+    },
+    {
+      id: 'procent',
+      numeric: true,
+      disablePadding: false,
+      label: '%',
+    },
+    {
+      id: 'minOrder',
+      numeric: true,
+      disablePadding: false,
+      label: 'Min Order',
+    },
+    {
+      id: 'target',
+      numeric: true,
+      disablePadding: false,
+      label: 'Target',
+    },
+    {
+      id: 'status',
+      numeric: true,
+      disablePadding: false,
+      label: 'Status',
+    },
+    {
+      id: 'orders',
+      numeric: true,
+      disablePadding: false,
+      label: '#Orders',
+    },
+    {
+      id: 'avgBasket',
+      numeric: true,
+      disablePadding: false,
+      label: 'Avg Basket',
+    },
+    {
+      id: 'roi',
+      numeric: true,
+      disablePadding: false,
+      label: 'ROI',
+    },
+    {
+      id: 'revenue',
+      numeric: true,
+      disablePadding: false,
+      label: 'Revenue',
+    },
+  ];
 
-  const renderStatus = (s) => {
+  const cellTemplatesObject = {
+    branche: renderSimpleRow,
+    platform: renderPlatform,
+    date: renderSimpleRow,
+    discountType: renderSimpleRow,
+    procent: renderPercent,
+    target: renderTarget,
+    minOrder: renderSimpleRow,
+    status: renderStatus,
+    orders: renderSimpleRow,
+    avgBasket: renderSimpleRow,
+    roi: renderSimpleRow,
+    revenue: renderCurrency,
+  };
+
+  const renderRowsByHeader = (r) =>
+    headersOffers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
+        id: `${cur.id}_${r.id}`,
+      }),
+      {},
+    );
+
+  const renderStatusFilter = (s) => {
     if (!s) return null;
 
     return (
@@ -75,8 +186,9 @@ const MarketingOffer = () => {
       </span>
     );
   };
+
   useEffect(() => {
-    const cont = document.querySelector('#markeitngContainer');
+    const cont = document.querySelector('#tableContainer');
     cont.addEventListener('scroll', handleScroll);
     return () => {
       cont.removeEventListener('scroll', handleScroll);
@@ -107,7 +219,7 @@ const MarketingOffer = () => {
     }));
     const preHeadDiscountType = preHead.discountType.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.procent.map((s) => ({ value: s, text: `${s} %` }));
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatus(s) }));
+    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
@@ -230,13 +342,13 @@ const MarketingOffer = () => {
               className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#dateMn">
+              <HashLink to="#date">
                 <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
               </HashLink>
-              <HashLink to="#revenuePr">
+              <HashLink to="#revenue">
                 <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
@@ -285,7 +397,11 @@ const MarketingOffer = () => {
             </ButtonKit>
           </div>
         </TypographyKit>
-        <MarketingTable selected={selected} rows={offersDataFiltered} offers={offers} />
+        <TableRevly
+          isLoading={isLoadingOffers}
+          headers={headersOffers}
+          rows={offersDataFiltered.map(renderRowsByHeader)}
+        />
       </PaperKit>
       <MarketingSetup active={active} setActive={setActive} />
       <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />

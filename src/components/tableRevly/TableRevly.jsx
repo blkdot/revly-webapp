@@ -27,8 +27,8 @@ const TableRevly = (props) => {
   const renderSkeleton = () =>
     [1, 2, 3, 4, 5].map((n) => (
       <TableRowKit key={n}>
-        {[1, 2, 3, 4, 5].map((r) => (
-          <TableCellKit key={r}>
+        {headers.map((h) => (
+          <TableCellKit key={h.id}>
             <SkeletonKit />
           </TableCellKit>
         ))}
@@ -41,7 +41,7 @@ const TableRevly = (props) => {
     if (!rows || rows.length < 1)
       return (
         <TableRowKit>
-          <TableCellKit colSpan={headers.length} style={{ textAlign: 'center' }}>
+          <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
             <span>No data retrieved</span>
           </TableCellKit>
         </TableRowKit>
@@ -52,16 +52,15 @@ const TableRevly = (props) => {
 
   const renderRowsContent = () =>
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit key={r.id}>{headers.map((h) => r[h.id])}</TableRowKit>
+      <TableRowKit className="marketing-table-top" key={r.id}>
+        {headers.map((h) => r[h.id])}
+      </TableRowKit>
     ));
 
   return (
-    <BoxKit className="competition-box planning-box" sx={{ width: '100%' }}>
+    <BoxKit className="competition-box" sx={{ width: '100%' }}>
       <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
-        <TableContainerKit
-          id="adsContainer"
-          className="planning-table-container competition-table-conatiner"
-        >
+        <TableContainerKit id="tableContainer">
           <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
               header={headers}
