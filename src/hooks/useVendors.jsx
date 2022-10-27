@@ -30,7 +30,6 @@ function useVendors() {
       delete newData?.master_email;
 
       const restaurantTemp = [];
-      const vendorTemp = { deliveroo: [], talabat: [] };
 
       if (newData) {
         platformList
@@ -38,18 +37,15 @@ function useVendors() {
             if (!newData[p.name]) delete newData[p.name];
             return newData[p.name];
           })
-          .flatMap((p, indexP) =>
-            newData[p.name].forEach((v, index) => {
+          .flatMap((p) =>
+            newData[p.name].forEach((v) => {
               setVendors((cur) => [...cur, { ...v, platform: p.name }]);
-              if (index === 0 && indexP === 0) {
-                vendorTemp[p.name] = [v];
-              }
               restaurantTemp.push(v.data.vendor_name);
             }),
           );
-        setRestaurants([restaurantTemp[0]]);
-        setVendorsContext(vendorTemp);
+        setRestaurants(restaurantTemp);
         setVendorsPlatform(Object.keys(newData));
+        setVendorsContext(newData);
       }
     });
     return () => {
