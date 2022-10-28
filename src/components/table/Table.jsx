@@ -67,7 +67,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
       )}`;
     }
 
-    return `${titleafterPeriod}'s`;
+    return titleafterPeriod;
   };
 
   const getbeforePeriod = () => {
@@ -86,7 +86,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
       ).format('DD/MM')}`;
     }
 
-    return `${titleDate}'s`;
+    return titleDate;
   };
 
   const headCells = [

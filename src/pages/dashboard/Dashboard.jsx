@@ -7,7 +7,6 @@ import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDr
 import useMetrics from '../../hooks/useMetrics';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
-import useVendors from '../../hooks/useVendors';
 import Table from '../../components/table/Table';
 import TableEmpty from '../../components/table/TableEmpty';
 import PaperKit from '../../kits/paper/PaperKit';
@@ -17,10 +16,14 @@ import ProfitIcon from '../../assets/images/ic_offers-pr.png';
 import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
+// import { useGlobal } from '../../hooks/useGlobal';
+import useVendors from '../../hooks/useVendors';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod } = useMetrics();
-  const { vendors, vendorsPlatform } = useVendors();
+  // const { vendors } = useGlobal();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsPlatform, restaurants } = vendors;
   const [table, setTable] = useState('revenue');
   const getTitle = (title) => {
     if (title === 'n_orders') {
@@ -55,19 +58,24 @@ const Dashboard = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+        <RestaurantDropdown
+          restaurants={restaurants}
+          vendors={vendorsArr}
+          vendorsPlatform={vendorsPlatform}
+        />
         <Dates isDashboard />
       </div>
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Finance
+          restaurants={restaurants}
           setTable={setTable}
           table={table}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
-          vendors={vendors}
+          vendors={vendorsArr}
         />
       ) : (
-        <FinanceEmpty vendors={vendors} />
+        <FinanceEmpty vendors={vendorsArr} />
       )}
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Marketing

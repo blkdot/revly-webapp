@@ -27,16 +27,14 @@ const MenuProps = {
   },
 };
 
-const RestaurantDropdown = ({ vendors, vendorsPlatform }) => {
-  const { setRestaurants, restaurants, setVendorsContext } = useDate();
-
+const RestaurantDropdown = ({ vendors, vendorsPlatform, restaurants }) => {
+  const { setVendors, vendors: vendorsContext } = useDate();
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
     const platforms = vendorsPlatform.reduce((a, v) => ({ ...a, [v]: [] }), {});
     if (value.length > 0) {
-      setRestaurants(typeof value === 'string' ? value.split(',') : value);
       value.forEach((el) => {
         vendors.forEach((e) => {
           if (el === e.data.vendor_name) {
@@ -44,10 +42,21 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform }) => {
           }
         });
       });
+      setVendors({
+        ...vendorsContext,
+        vendorsObj: platforms,
+        restaurants: typeof value === 'string' ? value.split(',') : value,
+      });
+      localStorage.setItem(
+        'vendors',
+        JSON.stringify({
+          ...vendorsContext,
+          vendorsObj: platforms,
+          restaurants: typeof value === 'string' ? value.split(',') : value,
+        }),
+      );
     }
-    setVendorsContext(platforms);
   };
-
   return (
     <div className="restaurant-dropdown_wrapper">
       <TypographyKit className="top-text-inputs" variant="subtitle">

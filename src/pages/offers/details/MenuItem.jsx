@@ -11,8 +11,9 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
   const { getOfferDetails } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
-  const { vendorsContext } = useDate();
-  const vendor = vendorsContext[platform]?.find((v) => v.vendor_id === `${vendorId}`);
+  const { vendors } = useDate();
+  const { vendorsObj } = vendors;
+  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === `${vendorId}`);
 
   const getOfferDetailData = () => {
     getOfferDetails(

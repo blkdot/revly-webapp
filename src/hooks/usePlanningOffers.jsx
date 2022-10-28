@@ -6,7 +6,8 @@ import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function usePlanningOffers({ dateRange }) {
-  const { vendorsContext } = useDate();
+  const { vendors } = useDate();
+  const { vendorsObj } = vendors;
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +22,7 @@ function usePlanningOffers({ dateRange }) {
     getOffers({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
-      vendors: vendorsContext,
+      vendors: vendorsObj,
       start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
@@ -36,10 +37,10 @@ function usePlanningOffers({ dateRange }) {
   };
 
   useMemo(() => {
-    if (Object.keys(vendorsContext).length !== 0) {
+    if (Object.keys(vendorsObj).length !== 0) {
       handleRequest();
     }
-  }, [dateRange, vendorsContext]);
+  }, [dateRange, vendorsObj]);
 
   return { offers, dateRange, reloadRequest, isLoading };
 }

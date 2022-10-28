@@ -48,7 +48,7 @@ const Day = ({
           startDate: subDays(date, 1),
           endDate: subDays(date, 1),
         });
-        setTitleAfterPeriod('the day before');
+        setTitleAfterPeriod('day before');
       }}
     >
       Day before
@@ -60,7 +60,7 @@ const Day = ({
           startDate: subWeeks(startDateLeft, 1),
           endDate: subWeeks(endDateLeft, 1),
         });
-        setTitleAfterPeriod('the same day last week');
+        setTitleAfterPeriod('same day last week');
       }}
     >
       Same day last week

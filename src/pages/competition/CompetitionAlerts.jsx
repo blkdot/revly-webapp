@@ -4,7 +4,6 @@ import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDr
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
-import useVendors from '../../hooks/useVendors';
 import CompetitionTable from '../../components/competitonTable/CompetitionTable';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -21,10 +20,12 @@ import CompetitionDropdown from '../../components/competitionDropdown/Competitio
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
+import useVendors from '../../hooks/useVendors';
 
 const CompetitionAlerts = () => {
-  const { vendors, vendorsPlatform } = useVendors();
-  const { vendorsContext, setRestaurants } = useGlobal();
+  const { setVendors } = useGlobal();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsPlatform, vendorsObj, restaurants } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -104,18 +105,19 @@ const CompetitionAlerts = () => {
   };
 
   useEffect(() => {
-    if (platform && vendors.length) {
-      const arr = Object.keys(vendorsContext).filter((v) => v === platform);
+    if (platform && vendorsArr.length) {
+      const arr = Object.keys(vendorsObj).filter((v) => v === platform);
 
-      const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsContext[arr] }), {});
+      const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsObj[arr] }), {});
 
       getData(platform, red);
     }
-  }, [platform, vendorsContext]);
+  }, [platform, vendorsObj]);
 
   useEffect(() => {
-    const arr = vendors.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
-    setRestaurants(arr);
+    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
+    setVendors({ ...vendors, restaurants: arr });
+    localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
   }, [platform]);
 
   const handleCompetitorChange = (e) => {
@@ -135,8 +137,9 @@ const CompetitionAlerts = () => {
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown
-          vendors={vendors.filter((v) => v.platform === platform)}
+          vendors={vendorsArr.filter((v) => v.platform === platform)}
           vendorsPlatform={vendorsPlatform}
+          restaurants={restaurants}
         />
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>

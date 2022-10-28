@@ -44,7 +44,7 @@ const GetProgress = (props) => {
     platform,
     handleCategoryDataChange,
     userPlatformData,
-    vendorsContext,
+    vendorsObj,
     setBranch,
     branch,
     menu,
@@ -124,7 +124,7 @@ const GetProgress = (props) => {
           </RadioGroupKit>
         </div>
         <BranchMarketingDropdown
-          rows={vendorsContext[platform]}
+          rows={vendorsObj[platform]}
           icon={BranchesIcon}
           title="Select Branches"
           className="top-competition marketing-dropdown"

@@ -15,8 +15,15 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('error');
 
-  const [restaurants, setRestaurants] = useState([]);
-  const [vendorsContext, setVendorsContext] = useState({});
+  const storageVendors = JSON.parse(localStorage.getItem('vendors')) || null;
+  const [vendors, setVendors] = useState(
+    storageVendors || {
+      restaurants: [],
+      vendorsObj: {},
+      vendorsArr: [],
+      vendorsPlatform: [],
+    },
+  );
 
   const storageDate = JSON.parse(localStorage.getItem('date')) || null;
   const [date, setDate] = useState(
@@ -81,12 +88,10 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         showAlert,
         triggerAlertWithMessageError,
         triggerAlertWithMessageSuccess,
-        restaurants,
-        setRestaurants,
-        vendorsContext,
-        setVendorsContext,
         date,
         setDate,
+        vendors,
+        setVendors,
       }}
     >
       {renderAlert()}
