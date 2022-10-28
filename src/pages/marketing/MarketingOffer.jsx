@@ -21,7 +21,6 @@ import PaperKit from '../../kits/paper/PaperKit';
 import ButtonKit from '../../kits/button/ButtonKit';
 
 import usePlanningOffers from '../../hooks/usePlanningOffers';
-import useVendors from '../../hooks/useVendors';
 
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
@@ -32,10 +31,12 @@ import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
 
 import { fomatOffers, defaultFilterStateFormat } from './marketingOfferData';
+import useVendors from '../../hooks/useVendors';
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
-  const { vendors, vendorsPlatform } = useVendors();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsPlatform, restaurants } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
     endDate: new Date(),
@@ -201,7 +202,11 @@ const MarketingOffer = () => {
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+        <RestaurantDropdown
+          restaurants={restaurants}
+          vendors={vendorsArr}
+          vendorsPlatform={vendorsPlatform}
+        />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">

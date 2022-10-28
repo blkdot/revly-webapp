@@ -17,7 +17,6 @@ import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import { useUserAuth } from '../../contexts/AuthContext';
-import useVendors from '../../hooks/useVendors';
 import useApi from '../../hooks/useApi';
 import { useAlert } from '../../hooks/useAlert';
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
@@ -75,7 +74,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   });
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
-  const { vendorsContext } = useGlobal();
+  const { vendors } = useGlobal();
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
   const [customDay, setCustomDay] = useState('');
@@ -140,7 +139,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
-  const { vendors: vendorsList } = useVendors();
+  const { vendorsArr: vendorsList, vendorsObj } = vendors;
   const [branchData, setBranchData] = useState('');
 
   const getHourArr = (hour) => {
@@ -278,7 +277,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
-      vendors: vendorsContext,
+      vendors: vendorsObj,
     };
 
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
@@ -311,10 +310,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
 
   useEffect(() => {
-    if (!vendorsContext) return;
+    if (!vendorsObj) return;
 
     getHeatmapData();
-  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsContext)]);
+  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj)]);
 
   const getPlatform = (e) => {
     const { value } = e.target;
@@ -894,7 +893,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           platform={platform}
           handleCategoryDataChange={handleCategoryDataChange}
           userPlatformData={userPlatformData}
-          vendorsContext={vendorsContext}
+          vendorsObj={vendorsObj}
           setBranch={setBranch}
           branch={branch}
           menu={menu}
