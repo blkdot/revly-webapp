@@ -28,6 +28,7 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import useVendors from '../../../hooks/useVendors';
+import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -58,6 +59,7 @@ const OfferDetailComponent = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
+  const [active, setActive] = useState(false);
 
   const renderOfferStatus = (status) => {
     const statusColor = {
@@ -137,6 +139,12 @@ const OfferDetailComponent = () => {
     });
   };
 
+  const OpenSetup = () => {
+    const body = document.querySelector('body');
+    setActive(true);
+    body.style.overflowY = 'hidden';
+  };
+
   return (
     <>
       <CancelOfferModal
@@ -144,6 +152,7 @@ const OfferDetailComponent = () => {
         setIsOpen={setIsOpen}
         cancelOffer={handleCancelOffer}
       />
+      <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
           <RestaurantDropdown
@@ -162,12 +171,11 @@ const OfferDetailComponent = () => {
             </TypographyKit>
           </div>
           <div className="markting-top-btns">
-            <ButtonKit className="sm-rule-btn" variant="outlined">
+            <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
               <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
               Create a smart rule
             </ButtonKit>
-            {/* eslint-disable-next-line no-console */}
-            <ButtonKit onClick={() => console.log('ok')} variant="contained">
+            <ButtonKit onClick={() => OpenSetup()} variant="contained">
               <img src={SettingFuture} alt="Setting future icon" />
               Set up an offer
             </ButtonKit>
