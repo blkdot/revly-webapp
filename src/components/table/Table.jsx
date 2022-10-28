@@ -35,8 +35,7 @@ const EnhancedTableHead = ({ headCells }) => (
 
 const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
   const { date } = useDate();
-  const { beforePeriod, afterPeriod, titleDate, titleafterPeriod, typeDate, typeafterPeriod } =
-    date;
+  const { beforePeriod, afterPeriod, titleDate, titleafterPeriod, typeDate } = date;
   const { userPlatformData } = usePlatform();
 
   const getTitle = () => {
@@ -53,10 +52,10 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
   };
   const getafterPeriod = () => {
     if (titleafterPeriod === 'custom') {
-      if (typeafterPeriod === 'day') {
+      if (typeDate === 'day') {
         return `${dayjs(afterPeriod.startDate).format('DD/MM')}`;
       }
-      if (typeafterPeriod === 'month') {
+      if (typeDate === 'month') {
         return `${format(new Date(afterPeriod.startDate), 'LLL', {
           locale: enUS,
         })}  -  ${getYear(new Date(afterPeriod.startDate))}`;
@@ -172,6 +171,9 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
     if (metrics) {
       if (Number.isNaN(metrics[title]) || metrics[title] === null) {
         return '-';
+      }
+      if (getTitle() === 'roi') {
+        return `${Math.round(metrics[title] * 100)} %`;
       }
       return metrics[title];
     }
