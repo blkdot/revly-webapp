@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
-import { startOfWeek } from 'date-fns';
 import { pascalCase } from 'change-case';
 
 import './Marketing.scss';
@@ -32,14 +31,16 @@ import Vector from '../../assets/icons/Vector';
 
 import { fomatOffers, defaultFilterStateFormat } from './marketingOfferData';
 import useVendors from '../../hooks/useVendors';
+import useDate from '../../hooks/useDate';
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
+  const { date: dateContext } = useDate();
   const { vendors } = useVendors();
   const { vendorsArr, vendorsPlatform, restaurants } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    endDate: new Date(),
+    startDate: dateContext.beforePeriod.startDate,
+    endDate: dateContext.beforePeriod.endDate,
   });
   const { offers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
