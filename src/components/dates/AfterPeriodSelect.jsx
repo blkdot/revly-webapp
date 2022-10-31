@@ -163,6 +163,7 @@ const Month = ({
   titlebeforePeriodContext,
   setDateContext,
   dateContext,
+  startDate,
 }) => (
   <div>
     {titlebeforePeriodContext === 'last month' || titlebeforePeriodContext === 'custom' ? (
@@ -189,7 +190,26 @@ const Month = ({
         Last month
       </ButtonKit>
     )}
-
+    <ButtonKit
+      className="navbar-button-kit"
+      onClick={() => {
+        setafterPeriodBtn({
+          startDate: startOfMonth(subMonths(startDate, 1)),
+          endDate: endOfMonth(subMonths(startDate, 1)),
+        });
+        setTitleAfterPeriod('month before');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: {
+            startDate: startOfMonth(subMonths(date, 1)),
+            endDate: endOfMonth(subMonths(date, 1)),
+          },
+          titleafterPeriod: 'month before',
+        });
+      }}
+    >
+      Month before
+    </ButtonKit>
     <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
       Custom Month
     </ButtonKit>
@@ -259,6 +279,7 @@ const AfterPeriodSelect = ({
           setTitleAfterPeriod={setTitleAfterPeriod}
           setDateContext={setDateContext}
           dateContext={dateContext}
+          startDate={startDate}
         />
       );
     }

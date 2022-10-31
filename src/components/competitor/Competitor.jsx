@@ -13,8 +13,12 @@ import CuisineIcon from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import lines from '../../assets/images/lines.png';
 import loadingImage from '../../assets/images/loading-image.png';
+import ictalabat from '../../assets/images/talabat-favicon.png';
+import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 
-const Competitor = ({ open, opened }) => {
+const Competitor = ({ open, opened, platformList }) => {
   const [restaurant, setRestaurant] = useState('');
   const [platform, setPlatform] = useState('');
   const [area, setArea] = useState('');
@@ -77,13 +81,35 @@ const Competitor = ({ open, opened }) => {
                       required
                     />
                     <CompetitionDropdown
+                      rows={platformList}
+                      renderOptions={(v) => (
+                        <MenuItemKit key={v.name} value={v.name}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 10,
+                              textTransform: 'capitalize',
+                            }}
+                          >
+                            <img
+                              src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                              width={24}
+                              height={24}
+                              style={{ objectFit: 'contain' }}
+                              alt="icon"
+                            />
+                            <ListItemTextKit primary={v.name} />
+                          </div>
+                        </MenuItemKit>
+                      )}
                       icon={PlatformIcon}
-                      select={platform}
-                      rows={['Deliveroo']}
-                      title="Select a Platform"
+                      title="Platform"
+                      id="platform_dropdown_menu"
+                      type="platform"
                       className="competitor-dropdown"
                       setRow={setPlatform}
-                      type="platform"
+                      select={platform}
                     />
                     <CompetitionDropdown
                       icon={CountryIcon}

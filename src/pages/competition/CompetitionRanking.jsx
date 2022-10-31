@@ -159,7 +159,7 @@ const CompetitionRanking = () => {
             setRow={setPlatform}
             select={platform}
           />
-          <Competitor open={Open} opened={opened} />
+          <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>
         <TypographyKit variant="subtitle">
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3

@@ -146,16 +146,10 @@ const Dates = (props) => {
     const endDate = new Date(beforePeriod[0].endDate);
     const date = new Date();
 
-    const {
-      startLocal,
-      startGetDate,
-      endGetDate,
-      startGetDay,
-      endGetDay,
-      dateGetDate,
-      dateGetDay,
-      dateLocal,
-    } = getAllDateSetup(startDate, endDate);
+    const { startLocal, startGetDay, endGetDay, dateGetDay, dateLocal } = getAllDateSetup(
+      startDate,
+      endDate,
+    );
 
     if (typeDate === 'day') {
       setAfterPeriodContext({
@@ -278,62 +272,7 @@ const Dates = (props) => {
         endDate: endOfMonth(subMonths(endDate, 1)),
       });
       setBeforePeriodContext({ startDate, endDate });
-      if (getMonth(startDate, 1) === getMonth(date, 1)) {
-        if (startGetDate === 1 && endGetDate === dateGetDate) {
-          setTitleDate('current month');
-          setTitleafterPeriod('last month');
-          setDateContext({
-            ...dateContext,
-            afterPeriod: {
-              startDate: subMonths(startDate, 1),
-              endDate: endOfMonth(subMonths(endDate, 1)),
-            },
-            beforePeriod: { startDate, endDate },
-            typeDate,
-            titleDate: 'current month',
-            titleafterPeriod: 'last month',
-          });
-          return;
-        }
-
-        if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-          setTitleDate('last month');
-          setTitleafterPeriod('month before');
-          setDateContext({
-            ...dateContext,
-            afterPeriod: {
-              startDate: subMonths(startDate, 1),
-              endDate: endOfMonth(subMonths(endDate, 1)),
-            },
-            beforePeriod: { startDate, endDate },
-            typeDate,
-            titleDate: 'last month',
-            titleafterPeriod: 'month before',
-          });
-          return;
-        }
-
-        setTitleDate('custom');
-        setTitleafterPeriod('month before');
-        setDateContext({
-          ...dateContext,
-          afterPeriod: {
-            startDate: subMonths(startDate, 1),
-            endDate: endOfMonth(subMonths(endDate, 1)),
-          },
-          beforePeriod: { startDate, endDate },
-          typeDate,
-          titleDate: 'custom',
-          titleafterPeriod: 'month before',
-        });
-        return;
-      }
-
-      if (
-        startGetDate === 1 &&
-        endGetDate <= dateGetDate &&
-        endGetDate === endOfMonth(endDate).getDate()
-      ) {
+      if (getMonth(startDate) === getMonth(date)) {
         setTitleDate('current month');
         setTitleafterPeriod('last month');
         setDateContext({
@@ -349,7 +288,7 @@ const Dates = (props) => {
         });
         return;
       }
-      if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+      if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
         setTitleDate('last month');
         setTitleafterPeriod('month before');
         setDateContext({
@@ -363,21 +302,21 @@ const Dates = (props) => {
           titleDate: 'last month',
           titleafterPeriod: 'month before',
         });
-        return;
+      } else {
+        setTitleDate('custom');
+        setTitleafterPeriod('month before');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: {
+            startDate: subMonths(startDate, 1),
+            endDate: endOfMonth(subMonths(endDate, 1)),
+          },
+          beforePeriod: { startDate, endDate },
+          typeDate,
+          titleDate: 'custom',
+          titleafterPeriod: 'month before',
+        });
       }
-      setTitleDate('custom');
-      setTitleafterPeriod('month before');
-      setDateContext({
-        ...dateContext,
-        afterPeriod: {
-          startDate: subMonths(startDate, 1),
-          endDate: endOfMonth(subMonths(endDate, 1)),
-        },
-        beforePeriod: { startDate, endDate },
-        typeDate,
-        titleDate: 'custom',
-        titleafterPeriod: 'month before',
-      });
     }
   };
 
@@ -392,21 +331,14 @@ const Dates = (props) => {
     const endDate = new Date(beforePeriod[0].endDate);
     const date = new Date();
 
-    const {
-      startLocal,
-      endLocal,
-      startGetDate,
-      endGetDate,
-      startGetDay,
-      endGetDay,
-      dateGetDate,
-      dateGetDay,
-      dateLocal,
-    } = getAllDateSetup(beforePeriod[0].startDate, beforePeriod[0].endDate);
+    const { startLocal, startGetDay, endGetDay, dateGetDay, dateLocal } = getAllDateSetup(
+      beforePeriod[0].startDate,
+      beforePeriod[0].endDate,
+    );
 
     setbeforePeriodBtn({ startDate, endDate });
 
-    if (startLocal === endLocal) {
+    if (typeDate === 'day') {
       if (startLocal === dateLocal) {
         setTitle('today');
         return;
@@ -421,7 +353,7 @@ const Dates = (props) => {
       return;
     }
 
-    if (getWeek(startDate, { weekStartsOn: 1 }) === getWeek(endDate, { weekStartsOn: 1 })) {
+    if (typeDate === 'week') {
       if (offer) {
         if (
           getWeek(startDate, { weekStartsOn: 1 }) === getWeek(date, { weekStartsOn: 1 }) &&
@@ -463,31 +395,12 @@ const Dates = (props) => {
       return;
     }
 
-    if (getMonth(startDate, 1) === getMonth(date, 1)) {
-      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-        setTitle('current month');
-        return;
-      }
-
-      if (startGetDate === 1 && endGetDate === dateGetDate) {
-        setTitle('last month');
-        return;
-      }
-
-      setTitle('custom');
-      return;
-    }
-
-    if (
-      startGetDate === 1 &&
-      endGetDate <= dateGetDate &&
-      endGetDate === endOfMonth(endDate).getDate()
-    ) {
+    if (getMonth(startDate) === getMonth(date)) {
       setTitle('current month');
       return;
     }
 
-    if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+    if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
       setTitle('last month');
       return;
     }
