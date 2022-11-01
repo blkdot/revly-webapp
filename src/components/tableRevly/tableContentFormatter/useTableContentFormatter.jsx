@@ -4,9 +4,9 @@ import TableCellKit from '../../../kits/tablecell/TableCellKit';
 import { platformObject } from '../../../data/platformList';
 
 const useTableContentFormatter = () => {
-  const renderSimpleRow = (r, h) => (
+  const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
-      id={h.id}
+      id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
@@ -16,9 +16,9 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderSimpleRowNotCentered = (r, h) => (
+  const renderSimpleRowNotCentered = (r, h, i = 0) => (
     <TableCellKit
-      id={h.id}
+      id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}
     >
@@ -28,9 +28,9 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderPlatform = (r, h) => (
+  const renderPlatform = (r, h, i = 0) => (
     <TableCellKit
-      id={h.id}
+      id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}
     >
@@ -43,9 +43,9 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderPercent = (r, h) => (
+  const renderPercent = (r, h, i = 0) => (
     <TableCellKit
-      id={h.id}
+      id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
@@ -55,9 +55,9 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderCurrency = (r, h) => (
+  const renderCurrency = (r, h, i = 0) => (
     <TableCellKit
-      id={h.id}
+      id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
@@ -65,9 +65,9 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderCalculatedPercent = (r, h) => (
+  const renderCalculatedPercent = (r, h, i = 0) => (
     <TableCellKit
-      id={h.id}
+      id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
@@ -77,15 +77,15 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderStatus = (r, h) => (
-    <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
+  const renderStatus = (r, h, i = 0) => (
+    <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
       <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
         {r[h.id] === 'Upcoming' ? 'Scheduled' : r[h.id]}
       </span>
     </TableCellKit>
   );
 
-  const renderScheduleType = (r, h) => {
+  const renderScheduleType = (r, h, i = 0) => {
     const scheduleTypeMapping = {
       once: 'Once',
       now: 'Now',
@@ -93,7 +93,7 @@ const useTableContentFormatter = () => {
       everyday: 'Everyday',
     };
     return (
-      <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
+      <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
         <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
           {scheduleTypeMapping[r[h.id]] || r[h.id] || '-'}
         </span>
@@ -101,14 +101,14 @@ const useTableContentFormatter = () => {
     );
   };
 
-  const renderTarget = (r, h) => {
+  const renderTarget = (r, h, i = 0) => {
     const targetMapping = {
       orders: 'Everyone',
       new_customers: 'New customers only',
       subscribers: 'Deliveroo Plus',
     };
     return (
-      <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
+      <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
         <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
           {targetMapping[r[h.id]] || r[h.id] || '-'}
         </span>

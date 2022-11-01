@@ -57,13 +57,8 @@ const TableRevly = (props) => {
   };
 
   const renderRowsContent = () =>
-    stableSort(rows, getComparator(order, orderBy)).map((r, i) => (
-      <TableRowKit
-        className="marketing-table-top"
-        onClick={handleRowClick(r.id)}
-        // eslint-disable-next-line react/no-array-index-key
-        key={`${r.id}_${i}`}
-      >
+    stableSort(rows, getComparator(order, orderBy)).map((r) => (
+      <TableRowKit className="marketing-table-top" onClick={handleRowClick(r.id)} key={r.id}>
         {headers.map((h) => r[h.id])}
       </TableRowKit>
     ));

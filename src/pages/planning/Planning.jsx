@@ -9,6 +9,10 @@ import useVendors from '../../hooks/useVendors';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import offerIcon from '../../assets/images/ic_offers.png';
+import adsIcon from '../../assets/images/ic_ads.png';
+import PaperKit from '../../kits/paper/PaperKit';
+import BoxKit from '../../kits/box/BoxKit';
 
 const Planning = () => {
   const [active, setActive] = useState(1);
@@ -90,25 +94,36 @@ const Planning = () => {
     return getAdsTable();
   };
 
+  const renderLayout = () => (
+    <PaperKit className="marketing-paper offer-paper">
+      <div className="right-part">
+        <div className="right-part-header marketing-links">
+          <TypographyKit
+            className={`right-part-header_link ${active ? 'active' : ''}`}
+            variant="div"
+          >
+            <BoxKit className={!active ? 'active' : ''} onClick={() => setActive(0)}>
+              <img src={offerIcon} alt="Offers managment icon" />
+              Planning Offers
+            </BoxKit>
+            <BoxKit className={active ? 'active' : ''} onClick={() => setActive(1)}>
+              <img src={adsIcon} alt="Offer Performence icon" />
+              Planning Ads
+            </BoxKit>
+          </TypographyKit>
+        </div>
+      </div>
+      {renderTable()}
+    </PaperKit>
+  );
+
   return (
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
-      <div className={`planning_top-nav ${!active ? 'active' : ''}`}>
-        <TypographyKit className={active ? 'active' : ''} onClick={() => setActive(1)} variant="h4">
-          Offers
-        </TypographyKit>
-        <TypographyKit
-          className={!active ? 'active' : ''}
-          onClick={() => setActive(0)}
-          variant="h4"
-        >
-          Ads
-        </TypographyKit>
-      </div>
-      {renderTable()}
+      {renderLayout()}
     </div>
   );
 };

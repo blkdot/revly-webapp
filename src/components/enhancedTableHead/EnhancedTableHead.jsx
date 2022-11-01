@@ -22,6 +22,7 @@ const EnhancedTableHead = (props) => {
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{ height: '4rem' }}
+            id={`${headCell.id}_header`}
           >
             <TableSortLabelKit
               active={orderBy === headCell.id}

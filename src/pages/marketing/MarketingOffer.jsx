@@ -171,12 +171,12 @@ const MarketingOffer = () => {
     'data.revenue': renderCurrency,
   };
 
-  const renderRowsByHeader = (r) =>
+  const renderRowsByHeader = (r, i) =>
     headersOffers.reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]
-          ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur)
+          ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
           : r[cur.id],
         id: `${cur.id}_${r.offer_id}`,
       }),
@@ -363,13 +363,13 @@ const MarketingOffer = () => {
               className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#start_date">
+              <HashLink to="#start_date_header">
                 <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
               </HashLink>
-              <HashLink to="#data.revenue">
+              <HashLink to="#data.revenue_header">
                 <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
