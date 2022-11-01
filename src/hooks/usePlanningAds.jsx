@@ -6,7 +6,8 @@ import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function usePlanningAds({ dateRange }) {
-  const { vendorsContext } = useDate();
+  const { vendors } = useDate();
+  const { vendorsObj } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +20,7 @@ function usePlanningAds({ dateRange }) {
     getAds({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
-      vendors: vendorsContext,
+      vendors: vendorsObj,
       start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
@@ -35,7 +36,7 @@ function usePlanningAds({ dateRange }) {
 
   useMemo(() => {
     handleRequest();
-  }, [dateRange, vendorsContext]);
+  }, [dateRange, vendorsObj]);
 
   return { ads, dateRange, isLoading };
 }

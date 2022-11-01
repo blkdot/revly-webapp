@@ -7,8 +7,15 @@ import Widget from '../widget/Widget';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
 
-const Finance = ({ metricsbeforePeriod, metricsafterPeriod, vendors, setTable, table }) => {
-  const { date, restaurants } = useDate();
+const Finance = ({
+  metricsbeforePeriod,
+  metricsafterPeriod,
+  vendors,
+  setTable,
+  table,
+  restaurants,
+}) => {
+  const { date } = useDate();
   const { beforePeriod, titleDate } = date;
   const startDate = new Date(beforePeriod.startDate);
   const endDate = new Date(beforePeriod.endDate);

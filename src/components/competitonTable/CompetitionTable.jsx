@@ -198,10 +198,8 @@ const CompetitionTable = ({ rows, open, type, loading }) => {
                   <td />
                   <td />
                   <td>
-                    <SpinnerKit sx={{ margin: '1em 0' }} />
+                    <SpinnerKit sx={{ margin: '1em 0 1em 50px' }} />
                   </td>
-                  <td />
-                  <td />
                   <td />
                   <td />
                 </tr>

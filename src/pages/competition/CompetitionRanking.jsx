@@ -4,7 +4,6 @@ import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDr
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
-import useVendors from '../../hooks/useVendors';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import CompetitionTable from '../../components/competitonTable/CompetitionTable';
 import Competitor from '../../components/competitor/Competitor';
@@ -19,10 +18,12 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
+import useVendors from '../../hooks/useVendors';
 
 const CompetitionRanking = () => {
-  const { vendors, vendorsPlatform } = useVendors();
-  const { vendorsContext, setRestaurants } = useGlobal();
+  const { setVendors } = useGlobal();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsPlatform, vendorsObj, restaurants } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
@@ -98,22 +99,24 @@ const CompetitionRanking = () => {
   };
 
   useEffect(() => {
-    if (platform && vendors.length) {
-      getData(platform, vendorsContext[platform]);
+    if (platform && vendorsArr.length) {
+      getData(platform, vendorsObj[platform]);
     }
-  }, [platform, vendorsContext]);
+  }, [platform, vendorsObj]);
 
   useEffect(() => {
-    const arr = vendors.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
-    setRestaurants(arr);
+    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
+    setVendors({ ...vendors, restaurants: arr });
+    localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
   }, [platform]);
 
   return (
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown
-          vendors={vendors.filter((v) => v.platform === platform)}
+          vendors={vendorsArr.filter((v) => v.platform === platform)}
           vendorsPlatform={vendorsPlatform}
+          restaurants={restaurants}
         />
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
@@ -156,7 +159,7 @@ const CompetitionRanking = () => {
             setRow={setPlatform}
             select={platform}
           />
-          <Competitor open={Open} opened={opened} />
+          <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>
         <TypographyKit variant="subtitle">
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3

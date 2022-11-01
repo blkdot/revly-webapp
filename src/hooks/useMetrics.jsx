@@ -6,7 +6,8 @@ import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function useMetrics() {
-  const { date: dateContext, vendorsContext } = useDate();
+  const { date: dateContext, vendors } = useDate();
+  const { vendorsObj } = vendors;
   const { beforePeriod, afterPeriod } = dateContext;
   const { getMetrics } = useApi();
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
@@ -16,16 +17,16 @@ function useMetrics() {
 
   const handleRequest = (date, setMetrics) => {
     let isCancelled = false;
-    const keys = Object.keys(vendorsContext);
+    const keys = Object.keys(vendorsObj);
     keys.forEach((name) => {
-      if (!vendorsContext[name] || vendorsContext[name].length === 0) {
-        delete vendorsContext[name];
+      if (!vendorsObj[name] || vendorsObj[name].length === 0) {
+        delete vendorsObj[name];
       }
     });
     getMetrics({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
-      vendors: vendorsContext,
+      vendors: vendorsObj,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
@@ -39,11 +40,11 @@ function useMetrics() {
   };
   useMemo(() => {
     handleRequest(afterPeriod, setMetricsafterPeriod);
-  }, [afterPeriod, vendorsContext]);
+  }, [afterPeriod, vendorsObj]);
 
   useMemo(() => {
     handleRequest(beforePeriod, setMetricsbeforePeriod);
-  }, [beforePeriod, vendorsContext]);
+  }, [beforePeriod, vendorsObj]);
 
   return { metricsbeforePeriod, metricsafterPeriod };
 }

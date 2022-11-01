@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import { startOfWeek } from 'date-fns';
 import { pascalCase } from 'change-case';
 import _ from 'lodash';
 
@@ -24,7 +23,6 @@ import PaperKit from '../../kits/paper/PaperKit';
 import ButtonKit from '../../kits/button/ButtonKit';
 
 import usePlanningOffers from '../../hooks/usePlanningOffers';
-import useVendors from '../../hooks/useVendors';
 
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
@@ -35,15 +33,19 @@ import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
 
 import { defaultFilterStateFormat } from './marketingOfferData';
+import useVendors from '../../hooks/useVendors';
+import useDate from '../../hooks/useDate';
 
 const MarketingOffer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [active, setActive] = useState(false);
-  const { vendors, vendorsPlatform } = useVendors();
+  const { date: dateContext } = useDate();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsPlatform, restaurants } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    endDate: new Date(),
+    startDate: dateContext.beforePeriod.startDate,
+    endDate: dateContext.beforePeriod.endDate,
   });
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
@@ -334,7 +336,11 @@ const MarketingOffer = () => {
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+        <RestaurantDropdown
+          restaurants={restaurants}
+          vendors={vendorsArr}
+          vendorsPlatform={vendorsPlatform}
+        />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">

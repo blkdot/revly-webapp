@@ -5,7 +5,7 @@
 import React from 'react';
 import './Table.scss';
 
-import { endOfMonth, format, getYear, parseISO } from 'date-fns';
+import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import BoxKit from '../../kits/box/BoxKit';
@@ -35,15 +35,8 @@ const EnhancedTableHead = ({ headCells }) => (
 
 const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
   const { date } = useDate();
-  const { beforePeriod, afterPeriod, titleDate, titleafterPeriod } = date;
+  const { beforePeriod, afterPeriod, titleDate, titleafterPeriod, typeDate } = date;
   const { userPlatformData } = usePlatform();
-
-  const startDate = parseISO(beforePeriod.startDate);
-  const endDate = parseISO(beforePeriod.endDate);
-  const startLocal = startDate.toLocaleDateString();
-  const endLocal = endDate.toLocaleDateString();
-  const startGetDate = startDate.getDate();
-  const endGetDate = endDate.getDate();
 
   const getTitle = () => {
     if (title === 'n_orders') {
@@ -59,16 +52,13 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
   };
   const getafterPeriod = () => {
     if (titleafterPeriod === 'custom') {
-      if (startLocalRight === endLocalRight) {
+      if (typeDate === 'day') {
         return `${dayjs(afterPeriod.startDate).format('DD/MM')}`;
       }
-      if (
-        startGetDateRight === 1 &&
-        endGetDateRight === endOfMonth(parseISO(afterPeriod.startDate), 1).getDate()
-      ) {
-        return `${format(parseISO(afterPeriod.startDate), 'LLL', {
+      if (typeDate === 'month') {
+        return `${format(new Date(afterPeriod.startDate), 'LLL', {
           locale: enUS,
-        })}  -  ${getYear(parseISO(afterPeriod.startDate))}`;
+        })}  -  ${getYear(new Date(afterPeriod.startDate))}`;
       }
 
       return `${dayjs(afterPeriod.startDate).format('DD/MM')} - ${dayjs(afterPeriod.endDate).format(
@@ -76,20 +66,18 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
       )}`;
     }
 
-    return `${titleafterPeriod}'s`;
+    return titleafterPeriod;
   };
+
   const getbeforePeriod = () => {
     if (titleDate === 'custom') {
-      if (startLocal === endLocal) {
+      if (typeDate === 'day') {
         return `${dayjs(beforePeriod.startDate).format('DD/MM')}`;
       }
-      if (
-        startGetDate === 1 &&
-        endGetDate === endOfMonth(parseISO(beforePeriod.startDate), 1).getDate()
-      ) {
-        return `${format(parseISO(beforePeriod.startDate), 'LLL', {
+      if (typeDate === 'month') {
+        return `${format(new Date(beforePeriod.startDate), 'LLL', {
           locale: enUS,
-        })}  -  ${getYear(parseISO(beforePeriod.startDate))}`;
+        })}  -  ${getYear(new Date(beforePeriod.startDate))}`;
       }
 
       return `${dayjs(beforePeriod.startDate).format('DD/MM')} - ${dayjs(
@@ -97,15 +85,9 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
       ).format('DD/MM')}`;
     }
 
-    return `${titleDate}'s`;
+    return titleDate;
   };
 
-  const startDateRight = parseISO(afterPeriod.startDate);
-  const endDateRight = parseISO(afterPeriod.endDate);
-  const startLocalRight = startDateRight.toLocaleDateString();
-  const endLocalRight = endDateRight.toLocaleDateString();
-  const startGetDateRight = startDateRight.getDate();
-  const endGetDateRight = endDateRight.getDate();
   const headCells = [
     {
       id: 'type',
@@ -189,6 +171,9 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
     if (metrics) {
       if (Number.isNaN(metrics[title]) || metrics[title] === null) {
         return '-';
+      }
+      if (getTitle() === 'roi') {
+        return `${Math.round(metrics[title] * 100)} %`;
       }
       return metrics[title];
     }

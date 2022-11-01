@@ -23,6 +23,8 @@ const Day = ({
   endDateLeft,
   openAfterPeriod,
   titlebeforePeriodContext,
+  setDateContext,
+  dateContext,
 }) => (
   <div>
     {titlebeforePeriodContext === 'yesterday' || titlebeforePeriodContext === 'custom' ? (
@@ -36,6 +38,14 @@ const Day = ({
             endDate: subDays(date, 1),
           });
           setTitleAfterPeriod('yesterday');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: subDays(date, 1),
+              endDate: subDays(date, 1),
+            },
+            titleafterPeriod: 'yesterday',
+          });
         }}
       >
         Yesterday
@@ -45,10 +55,18 @@ const Day = ({
       className="navbar-button-kit"
       onClick={() => {
         setafterPeriodBtn({
-          startDate: subDays(date, 1),
-          endDate: subDays(date, 1),
+          startDate: subDays(startDateLeft, 1),
+          endDate: subDays(endDateLeft, 1),
         });
-        setTitleAfterPeriod('the day before');
+        setTitleAfterPeriod('day before');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: {
+            startDate: subDays(startDateLeft, 1),
+            endDate: subDays(endDateLeft, 1),
+          },
+          titleafterPeriod: 'day before',
+        });
       }}
     >
       Day before
@@ -60,7 +78,15 @@ const Day = ({
           startDate: subWeeks(startDateLeft, 1),
           endDate: subWeeks(endDateLeft, 1),
         });
-        setTitleAfterPeriod('the same day last week');
+        setTitleAfterPeriod('same day last week');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: {
+            startDate: subWeeks(startDateLeft, 1),
+            endDate: subWeeks(endDateLeft, 1),
+          },
+          titleafterPeriod: 'same day last week',
+        });
       }}
     >
       Same day last week
@@ -77,6 +103,8 @@ const Week = ({
   endDateLeft,
   openAfterPeriod,
   titlebeforePeriodContext,
+  setDateContext,
+  dateContext,
 }) => (
   <div>
     {titlebeforePeriodContext === 'last week' || titlebeforePeriodContext === 'custom' ? (
@@ -90,6 +118,14 @@ const Week = ({
             endDate: endOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
           });
           setTitleAfterPeriod('last week');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: startOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
+              endDate: endOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
+            },
+            titleafterPeriod: 'last week',
+          });
         }}
       >
         Last week
@@ -103,6 +139,14 @@ const Week = ({
           endDate: endOfWeek(subWeeks(endDateLeft, 1), { weekStartsOn: 1 }),
         });
         setTitleAfterPeriod('week before');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: {
+            startDate: startOfWeek(subWeeks(startDateLeft, 1), { weekStartsOn: 1 }),
+            endDate: endOfWeek(subWeeks(endDateLeft, 1), { weekStartsOn: 1 }),
+          },
+          titleafterPeriod: 'week before',
+        });
       }}
     >
       Week before
@@ -117,6 +161,9 @@ const Month = ({
   setafterPeriodBtn,
   openAfterPeriod,
   titlebeforePeriodContext,
+  setDateContext,
+  dateContext,
+  startDate,
 }) => (
   <div>
     {titlebeforePeriodContext === 'last month' || titlebeforePeriodContext === 'custom' ? (
@@ -130,12 +177,39 @@ const Month = ({
             endDate: endOfMonth(subMonths(date, 1)),
           });
           setTitleAfterPeriod('last month');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: startOfMonth(subMonths(date, 1)),
+              endDate: endOfMonth(subMonths(date, 1)),
+            },
+            titleafterPeriod: 'last month',
+          });
         }}
       >
         Last month
       </ButtonKit>
     )}
-
+    <ButtonKit
+      className="navbar-button-kit"
+      onClick={() => {
+        setafterPeriodBtn({
+          startDate: startOfMonth(subMonths(startDate, 1)),
+          endDate: endOfMonth(subMonths(startDate, 1)),
+        });
+        setTitleAfterPeriod('month before');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: {
+            startDate: startOfMonth(subMonths(date, 1)),
+            endDate: endOfMonth(subMonths(date, 1)),
+          },
+          titleafterPeriod: 'month before',
+        });
+      }}
+    >
+      Month before
+    </ButtonKit>
     <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
       Custom Month
     </ButtonKit>
@@ -153,6 +227,8 @@ const AfterPeriodSelect = ({
   titlebeforePeriodContext,
   typeDate,
   setSelected,
+  setDateContext,
+  dateContext,
 }) => {
   const startDate = new Date(afterPeriod.startDate);
   const endDate = new Date(afterPeriod.endDate);
@@ -165,7 +241,6 @@ const AfterPeriodSelect = ({
     setOpenedAfterPeriod(true);
     setSelected(false);
   };
-
   function render() {
     if (typeDate === 'day') {
       return (
@@ -176,6 +251,8 @@ const AfterPeriodSelect = ({
           endDateLeft={endDateLeft}
           setafterPeriodBtn={setafterPeriodBtn}
           setTitleAfterPeriod={setTitleAfterPeriod}
+          setDateContext={setDateContext}
+          dateContext={dateContext}
         />
       );
     }
@@ -188,6 +265,8 @@ const AfterPeriodSelect = ({
           endDateLeft={endDateLeft}
           setafterPeriodBtn={setafterPeriodBtn}
           setTitleAfterPeriod={setTitleAfterPeriod}
+          setDateContext={setDateContext}
+          dateContext={dateContext}
         />
       );
     }
@@ -198,6 +277,9 @@ const AfterPeriodSelect = ({
           openAfterPeriod={openAfterPeriod}
           setafterPeriodBtn={setafterPeriodBtn}
           setTitleAfterPeriod={setTitleAfterPeriod}
+          setDateContext={setDateContext}
+          dateContext={dateContext}
+          startDate={startDate}
         />
       );
     }

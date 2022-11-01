@@ -5,7 +5,6 @@ import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDr
 import useDate from '../../hooks/useDate';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
 import usePlanningAds from '../../hooks/usePlanningAds';
-import useVendors from '../../hooks/useVendors';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
@@ -13,15 +12,17 @@ import offerIcon from '../../assets/images/ic_offers.png';
 import adsIcon from '../../assets/images/ic_ads.png';
 import PaperKit from '../../kits/paper/PaperKit';
 import BoxKit from '../../kits/box/BoxKit';
+import useVendors from '../../hooks/useVendors';
 
 const Planning = () => {
   const [active, setActive] = useState(1);
   const { date } = useDate();
+  const { vendors } = useVendors();
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
-  const { vendors, vendorsPlatform } = useVendors();
+  const { vendorsArr, vendorsPlatform, restaurants } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
 
@@ -120,7 +121,11 @@ const Planning = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+        <RestaurantDropdown
+          restaurants={restaurants}
+          vendors={vendorsArr}
+          vendorsPlatform={vendorsPlatform}
+        />
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
       {renderLayout()}

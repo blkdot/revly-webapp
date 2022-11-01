@@ -16,10 +16,10 @@ import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
-import useVendors from '../../../hooks/useVendors';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
 import { usePlatform } from '../../../hooks/usePlatform';
+import useDate from '../../../hooks/useDate';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -33,7 +33,8 @@ const Menu = () => {
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
-  const { vendors: vendorsList } = useVendors();
+  const { vendors } = useDate();
+  const { vendors: vendorsList } = vendors;
   const [branch, setBranch] = useState('');
   const { user } = useUserAuth();
 

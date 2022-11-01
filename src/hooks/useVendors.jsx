@@ -1,17 +1,20 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import useApi from './useApi';
-import useDate from './useDate';
 import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
+import useDate from './useDate';
 
 function useVendors() {
-  const { setRestaurants, setVendorsContext } = useDate();
-  const [vendors, setVendors] = useState([]);
-  const [vendorsPlatform, setVendorsPlatform] = useState([]);
   const { getVendors } = useApi();
   const { environment } = config;
+  const { vendors, setVendors } = useDate();
   const { user } = useUserAuth();
+  // const [vendorsHook, setVendorsHook] = useState({
+  //   vendorsObj: {},
+  //   vendorsArr: [],
+  //   vendorsPlatform: [],
+  // });
 
   const requestVendorsDefaultParam = {
     master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
@@ -22,15 +25,13 @@ function useVendors() {
     let isCancelled = false;
     getVendors(requestVendorsDefaultParam).then((data) => {
       if (isCancelled) return;
-      setRestaurants([]);
-      setVendors([]);
 
       const newData = data.data;
 
       delete newData?.master_email;
 
       const restaurantTemp = [];
-      const vendorTemp = { deliveroo: [], talabat: [] };
+      const vendorsTemp = [];
 
       if (newData) {
         platformList
@@ -38,18 +39,29 @@ function useVendors() {
             if (!newData[p.name]) delete newData[p.name];
             return newData[p.name];
           })
-          .flatMap((p, indexP) =>
-            newData[p.name].forEach((v, index) => {
-              setVendors((cur) => [...cur, { ...v, platform: p.name }]);
-              if (index === 0 && indexP === 0) {
-                vendorTemp[p.name] = [v];
-              }
+          .flatMap((p) =>
+            newData[p.name].forEach((v) => {
+              vendorsTemp.push({ ...v, platform: p.name });
               restaurantTemp.push(v.data.vendor_name);
             }),
           );
-        setRestaurants([restaurantTemp[0]]);
-        setVendorsContext(vendorTemp);
-        setVendorsPlatform(Object.keys(newData));
+      }
+      if (vendorsTemp.length !== vendors.vendorsArr.length) {
+        setVendors({
+          restaurants: restaurantTemp,
+          vendorsObj: newData,
+          vendorsPlatform: Object.keys(newData),
+          vendorsArr: vendorsTemp,
+        });
+        localStorage.setItem(
+          'vendors',
+          JSON.stringify({
+            restaurants: restaurantTemp,
+            vendorsObj: newData,
+            vendorsPlatform: Object.keys(newData),
+            vendorsArr: vendorsTemp,
+          }),
+        );
       }
     });
     return () => {
@@ -60,7 +72,7 @@ function useVendors() {
     handleRequest();
   }, []);
 
-  return { vendors, vendorsPlatform };
+  return { vendors };
 }
 
 export default useVendors;

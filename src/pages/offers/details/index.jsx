@@ -9,7 +9,6 @@ import ButtonKit from '../../../kits/button/ButtonKit';
 import TypographyKit from '../../../kits/typography/TypographyKit';
 import SmartRuleBtnIcon from '../../../assets/images/ic_sm-rule.png';
 import SettingFuture from '../../../assets/images/ic_setting-future.png';
-import useVendors from '../../../hooks/useVendors';
 import useDate from '../../../hooks/useDate';
 import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
@@ -28,6 +27,8 @@ import config from '../../../setup/config';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
+import useVendors from '../../../hooks/useVendors';
+import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -51,12 +52,14 @@ const OfferDetailComponent = () => {
   const { cancelOffer } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
-  const { vendors, vendorsPlatform } = useVendors();
-  const { date, vendorsContext } = useDate();
+  const { date } = useDate();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsPlatform, vendorsObj, restaurants } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
+  const [active, setActive] = useState(false);
 
   const renderOfferStatus = (status) => {
     const statusColor = {
@@ -114,7 +117,7 @@ const OfferDetailComponent = () => {
     type_schedule,
   } = offerDetail;
 
-  const vendor = vendorsContext[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
+  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
   const chain_id = vendor ? vendor.chain_id : '';
 
   const openCancelModal = () => setIsOpen(true);
@@ -136,6 +139,12 @@ const OfferDetailComponent = () => {
     });
   };
 
+  const OpenSetup = () => {
+    const body = document.querySelector('body');
+    setActive(true);
+    body.style.overflowY = 'hidden';
+  };
+
   return (
     <>
       <CancelOfferModal
@@ -143,9 +152,14 @@ const OfferDetailComponent = () => {
         setIsOpen={setIsOpen}
         cancelOffer={handleCancelOffer}
       />
+      <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
-          <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+          <RestaurantDropdown
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={vendorsPlatform}
+          />
           <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
         </div>
         <div className="marketing-top">
@@ -157,12 +171,11 @@ const OfferDetailComponent = () => {
             </TypographyKit>
           </div>
           <div className="markting-top-btns">
-            <ButtonKit className="sm-rule-btn" variant="outlined">
+            <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
               <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
               Create a smart rule
             </ButtonKit>
-            {/* eslint-disable-next-line no-console */}
-            <ButtonKit onClick={() => console.log('ok')} variant="contained">
+            <ButtonKit onClick={() => OpenSetup()} variant="contained">
               <img src={SettingFuture} alt="Setting future icon" />
               Set up an offer
             </ButtonKit>

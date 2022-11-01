@@ -13,7 +13,6 @@ import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import BoxKit from '../../kits/box/BoxKit';
-import useVendors from '../../hooks/useVendors';
 import useDate from '../../hooks/useDate';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
@@ -30,11 +29,13 @@ import usePlanningAds from '../../hooks/usePlanningAds';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { fomatOffers, defaultFilterStateFormat } from './marketingOfferData';
+import useVendors from '../../hooks/useVendors';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
-  const { vendors, vendorsPlatform } = useVendors();
   const { date } = useDate();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsPlatform, restaurants } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
@@ -278,7 +279,11 @@ const MarketingAds = () => {
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
+        <RestaurantDropdown
+          restaurants={restaurants}
+          vendors={vendorsArr}
+          vendorsPlatform={vendorsPlatform}
+        />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">

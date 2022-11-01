@@ -29,7 +29,6 @@ const DateSelect = React.memo(
       const startDate = new Date(beforePeriod[0].startDate);
       const endDate = new Date(beforePeriod[0].endDate);
       const startLocal = startDate.toLocaleDateString();
-      const endLocal = endDate.toLocaleDateString();
       const startGetDate = startDate.getDate();
       const endGetDate = endDate.getDate();
       const startGetDay = startDate.getDay();
@@ -39,14 +38,12 @@ const DateSelect = React.memo(
       const dateLocal = date.toLocaleDateString();
       const getActive = () => {
         if (type === 'day') {
-          if (startLocal === endLocal) {
-            if (startLocal === dateLocal) {
-              setActive('current');
-            } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
-              setActive('last');
-            } else {
-              setActive('custom');
-            }
+          if (startLocal === dateLocal) {
+            setActive('current');
+          } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
+            setActive('last');
+          } else {
+            setActive('custom');
           }
         } else if (type === 'week') {
           if (endGetDay === dateGetDay && startGetDay === 1) {
