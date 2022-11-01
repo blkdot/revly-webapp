@@ -1,5 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonKit from '../../kits/button/ButtonKit';
 import PaperKit from '../../kits/paper/PaperKit';
@@ -17,6 +17,11 @@ import ictalabat from '../../assets/images/talabat-favicon.png';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import { sendMail } from '../../api/competitionApi';
+import { useUserAuth } from '../../contexts/AuthContext';
+import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import { useAlert } from '../../hooks/useAlert';
+import { settingsLoad } from '../../api/settingsApi';
 
 const Competitor = ({ open, opened, platformList }) => {
   const [restaurant, setRestaurant] = useState('');
@@ -26,20 +31,147 @@ const Competitor = ({ open, opened, platformList }) => {
   const [country, setCountry] = useState('');
   const [cuisineFilter, setCuisineFilter] = useState('');
   const [loading, setLoading] = useState(false);
-  const submit = (e) => {
+  const [loadingReq, setLoadingReq] = useState(false);
+  const { user } = useUserAuth();
+  const { showAlert, setAlertMessage } = useAlert();
+  const [userRestoName, setUserRestoName] = useState('');
+  const getUserData = async () => {
+    try {
+      const data = await settingsLoad({
+        master_email: user.email,
+        access_token: user.accessToken,
+      });
+      setUserRestoName(data.restoname || '');
+    } catch (err) {
+      setAlertMessage(err.code);
+      showAlert();
+    }
+  };
+  useEffect(() => {
+    getUserData();
+  }, []);
+  const submit = async (e) => {
     e.preventDefault();
+    setLoadingReq(true);
     const data = {
-      restaurant,
+      userRestaurant: userRestoName,
+      name: restaurant,
       platform,
-      area,
-      city,
       country,
-      cuisineFilter,
+      city,
+      areaName: area,
+      cuisine: cuisineFilter,
     };
     // TODO: fix this code
     // eslint-disable-next-line no-console
-    console.log(data);
+    await sendMail({ ...data, emailTo: 'amine@revly.ae' });
+    await sendMail({ ...data, emailTo: 'chiekh@revly.ae' });
     setLoading(true);
+    setLoadingReq(false);
+    setRestaurant('');
+    setPlatform('');
+    setArea('');
+    setCity('');
+    setCountry('');
+    setCuisineFilter('');
+  };
+
+  const render = () => {
+    if (loadingReq) {
+      return (
+        <div className="competitor-loading">
+          <SpinnerKit />
+        </div>
+      );
+    }
+    if (loading) {
+      return (
+        <div className="progress-bar">
+          <img src={loadingImage} alt="Procces" />
+          <TypographyKit variant="h5">Competitor on process</TypographyKit>
+          <TypographyKit className="competitor-top-text-span">
+            We are processing your competitor data. You can check your competitor ranking after 24
+            hours.
+          </TypographyKit>
+        </div>
+      );
+    }
+    return (
+      <div className="competitor-inputs">
+        <span>Your Competitor data</span>
+        <div>
+          <TextfieldKit
+            className="competition-textfield"
+            label="Restaurant name"
+            variant="outlined"
+            onChange={(e) => setRestaurant(e.target.value)}
+            required
+          />
+          <CompetitionDropdown
+            rows={platformList}
+            renderOptions={(v) => (
+              <MenuItemKit key={v.name} value={v.name}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  <img
+                    src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                    width={24}
+                    height={24}
+                    style={{ objectFit: 'contain' }}
+                    alt="icon"
+                  />
+                  <ListItemTextKit primary={v.name} />
+                </div>
+              </MenuItemKit>
+            )}
+            icon={PlatformIcon}
+            title="Platform"
+            id="platform_dropdown_menu"
+            type="platform"
+            className="competitor-dropdown"
+            setRow={setPlatform}
+            select={platform}
+          />
+          <CompetitionDropdown
+            icon={CountryIcon}
+            setRow={setCountry}
+            title="Country"
+            className="competitor-dropdown"
+            rows={['UAE', 'Kuwait', 'Qatar']}
+            select={country}
+          />
+          <CompetitionDropdown
+            icon={CityIcon}
+            setRow={setCity}
+            title="City"
+            className="competitor-dropdown"
+            rows={['Dubai', 'Sharjah', 'Abu Dhabi', 'Kuwait City', 'Doha']}
+            select={city}
+          />
+          <TextfieldKit
+            className="competition-textfield"
+            label="Area Name"
+            variant="outlined"
+            onChange={(e) => setArea(e.target.value)}
+            required
+          />
+          <CompetitionDropdown
+            icon={CuisineIcon}
+            title="Cuisine filter"
+            className="competitor-dropdown"
+            setRow={setCuisineFilter}
+            rows={['Italian', 'Burgers', 'Pizza', 'Sushi', 'Indian']}
+            select={cuisineFilter}
+          />
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -56,95 +188,11 @@ const Competitor = ({ open, opened, platformList }) => {
       >
         <form role="presentation" tabIndex={-1} onSubmit={(e) => submit(e)}>
           <PaperKit onClick={(e) => e.stopPropagation()} className="competitor-paper">
-            <div>
+            <div style={{ height: '100%' }}>
               <CloseIcon onClick={() => open()} className="competitor-close" />
               <img className="competitor-lines" src={lines} alt="Lines" />
               <TypographyKit className="competitor-top-text">Add a competitor</TypographyKit>
-              {loading ? (
-                <div className="progress-bar">
-                  <img src={loadingImage} alt="Procces" />
-                  <TypographyKit variant="h5">Competitor on process</TypographyKit>
-                  <TypographyKit className="competitor-top-text-span">
-                    We are processing your competitor data. You can check your competitor ranking
-                    after 24 hours.
-                  </TypographyKit>
-                </div>
-              ) : (
-                <div className="competitor-inputs">
-                  <span>Your Competitor data</span>
-                  <div>
-                    <TextfieldKit
-                      className="competition-textfield"
-                      label="Restaurant name"
-                      variant="outlined"
-                      onChange={(e) => setRestaurant(e.target.value)}
-                      required
-                    />
-                    <CompetitionDropdown
-                      rows={platformList}
-                      renderOptions={(v) => (
-                        <MenuItemKit key={v.name} value={v.name}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
-                              textTransform: 'capitalize',
-                            }}
-                          >
-                            <img
-                              src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                              width={24}
-                              height={24}
-                              style={{ objectFit: 'contain' }}
-                              alt="icon"
-                            />
-                            <ListItemTextKit primary={v.name} />
-                          </div>
-                        </MenuItemKit>
-                      )}
-                      icon={PlatformIcon}
-                      title="Platform"
-                      id="platform_dropdown_menu"
-                      type="platform"
-                      className="competitor-dropdown"
-                      setRow={setPlatform}
-                      select={platform}
-                    />
-                    <CompetitionDropdown
-                      icon={CountryIcon}
-                      setRow={setCountry}
-                      title="Country"
-                      className="competitor-dropdown"
-                      rows={['UAE', 'Kuwait', 'Qatar']}
-                      select={country}
-                    />
-                    <CompetitionDropdown
-                      icon={CityIcon}
-                      setRow={setCity}
-                      title="City"
-                      className="competitor-dropdown"
-                      rows={['Dubai', 'Sharjah', 'Abu Dhabi', 'Kuwait City', 'Doha']}
-                      select={city}
-                    />
-                    <TextfieldKit
-                      className="competition-textfield"
-                      label="Area Name"
-                      variant="outlined"
-                      onChange={(e) => setArea(e.target.value)}
-                      required
-                    />
-                    <CompetitionDropdown
-                      icon={CuisineIcon}
-                      title="Cuisine filter"
-                      className="competitor-dropdown"
-                      setRow={setCuisineFilter}
-                      rows={['Italian', 'Burgers', 'Pizza', 'Sushi', 'Indian']}
-                      select={cuisineFilter}
-                    />
-                  </div>
-                </div>
-              )}
+              {render()}
             </div>
             <div className="competition_btn-wrapper">
               <ButtonKit
