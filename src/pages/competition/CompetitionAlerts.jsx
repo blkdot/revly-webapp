@@ -5,7 +5,6 @@ import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
 import useVendors from '../../hooks/useVendors';
-import CompetitionTable from '../../components/competitonTable/CompetitionTable';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import competitorIcon from '../../assets/images/ic_competitor.png';
@@ -18,9 +17,11 @@ import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
+import TableRevly from '../../components/tableRevly/TableRevly';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 
 const CompetitionAlerts = () => {
   const { vendors, vendorsPlatform } = useVendors();
@@ -51,6 +52,50 @@ const CompetitionAlerts = () => {
     } else {
       body.style.overflowY = 'hidden';
     }
+  };
+
+  const headersAlert = [
+    {
+      id: 'name',
+      numeric: false,
+      disablePadding: true,
+      label: 'Name',
+    },
+    {
+      id: 'type',
+      numeric: false,
+      disablePadding: true,
+      label: 'Type',
+    },
+    {
+      id: 'alert',
+      numeric: false,
+      disablePadding: true,
+      label: 'Alert',
+    },
+    {
+      id: 'status',
+      numeric: false,
+      disablePadding: true,
+      label: 'Status',
+    },
+    {
+      id: 'mov',
+      numeric: false,
+      disablePadding: true,
+      label: 'Minimum Order Value',
+    },
+  ];
+
+  const { renderPercent, renderCurrency, renderStatus, renderSimpleRow } =
+    useTableContentFormatter();
+
+  const cellTemplatesObject = {
+    name: renderSimpleRow,
+    type: renderSimpleRow,
+    alert: renderPercent,
+    status: renderStatus,
+    mov: renderCurrency,
   };
 
   useEffect(() => {
@@ -85,7 +130,7 @@ const CompetitionAlerts = () => {
         name: v.vendor_name,
         type: v.discount_type,
         alert: v.discount,
-        mov: v.mov,
+        mov: v.mov ?? 0,
         start_date: v.start_date,
         status: v.status === 'Live' ? 'active' : 'inactive',
       }));
@@ -130,6 +175,16 @@ const CompetitionAlerts = () => {
     }
     setCompetitor(value);
   };
+
+  const renderRowsByHeader = (r) =>
+    headersAlert.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
+        id: `${cur.id}_${r.id}`,
+      }),
+      {},
+    );
 
   return (
     <div className="wrapper">
@@ -203,11 +258,13 @@ const CompetitionAlerts = () => {
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
-        <CompetitionTable
+        <TableRevly
           loading={loading}
           type="alerts"
-          open={Open}
-          rows={filteredData.length > 0 ? filteredData : competitionAlertsData}
+          headers={headersAlert}
+          rows={(filteredData.length > 0 ? filteredData : competitionAlertsData).map(
+            renderRowsByHeader,
+          )}
         />
       </PaperKit>
     </div>

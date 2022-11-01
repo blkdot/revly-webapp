@@ -15,12 +15,12 @@ import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
 import Warning from '../../../assets/icons/Warning';
 import Calendar from '../../../assets/icons/Calendar';
-// import ArrowDown from '../../../assets/icons/ArrowDown';
+
 import Timer from '../../../assets/icons/Timer';
 import ExpandIcon from '../../../assets/icons/ExpandIcon';
 import Trash from '../../../assets/icons/Trash';
 import FastFood from '../../../assets/icons/FastFood';
-// import { useUserAuth } from '../../../contexts/AuthContext';
+
 import { platformObject } from '../../../data/platformList';
 import './OfferDetails.scss';
 import useApi from '../../../hooks/useApi';

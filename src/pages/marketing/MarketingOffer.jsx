@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { startOfWeek } from 'date-fns';
 import { pascalCase } from 'change-case';
+import _ from 'lodash';
 
 import './Marketing.scss';
 
@@ -32,9 +34,11 @@ import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
 
-import { fomatOffers, defaultFilterStateFormat } from './marketingOfferData';
+import { defaultFilterStateFormat } from './marketingOfferData';
 
 const MarketingOffer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [active, setActive] = useState(false);
   const { vendors, vendorsPlatform } = useVendors();
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
@@ -47,7 +51,7 @@ const MarketingOffer = () => {
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(fomatOffers(offers));
+  const [row, setRow] = useState(offers);
 
   const handleScroll = () => {
     const cont = document.querySelector('#tableContainer');
@@ -55,7 +59,7 @@ const MarketingOffer = () => {
 
     setScrollPosition(position);
   };
-  const [offersData, setOffersData] = useState(fomatOffers(offers));
+  const [offersData, setOffersData] = useState(offers);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
   const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
 
@@ -64,8 +68,8 @@ const MarketingOffer = () => {
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
 
   useEffect(() => {
-    setOffersData(fomatOffers(offers));
-    setRow(fomatOffers(offers));
+    setOffersData(offers);
+    setRow(offers);
   }, [offers]);
 
   const {
@@ -79,13 +83,13 @@ const MarketingOffer = () => {
 
   const headersOffers = [
     {
-      id: 'date',
+      id: 'start_date',
       numeric: false,
       disablePadding: true,
       label: 'Date',
     },
     {
-      id: 'branche',
+      id: 'vendor_name',
       numeric: false,
       disablePadding: false,
       label: 'Branche',
@@ -97,19 +101,19 @@ const MarketingOffer = () => {
       label: 'Platfrom',
     },
     {
-      id: 'discountType',
+      id: 'discount_type',
       numeric: true,
       disablePadding: false,
       label: 'Discount Type',
     },
     {
-      id: 'procent',
+      id: 'discount_rate',
       numeric: true,
       disablePadding: false,
       label: '%',
     },
     {
-      id: 'minOrder',
+      id: 'minimum_order_value',
       numeric: true,
       disablePadding: false,
       label: 'Min Order',
@@ -127,25 +131,25 @@ const MarketingOffer = () => {
       label: 'Status',
     },
     {
-      id: 'orders',
+      id: 'data.n_orders',
       numeric: true,
       disablePadding: false,
       label: '#Orders',
     },
     {
-      id: 'avgBasket',
+      id: 'data.average_basket',
       numeric: true,
       disablePadding: false,
       label: 'Avg Basket',
     },
     {
-      id: 'roi',
+      id: 'data.roi',
       numeric: true,
       disablePadding: false,
       label: 'ROI',
     },
     {
-      id: 'revenue',
+      id: 'data.revenue',
       numeric: true,
       disablePadding: false,
       label: 'Revenue',
@@ -153,26 +157,28 @@ const MarketingOffer = () => {
   ];
 
   const cellTemplatesObject = {
-    branche: renderSimpleRow,
+    vendor_name: renderSimpleRow,
     platform: renderPlatform,
-    date: renderSimpleRow,
-    discountType: renderSimpleRow,
-    procent: renderPercent,
+    start_date: renderSimpleRow,
+    discount_type: renderSimpleRow,
+    discount_rate: renderPercent,
     target: renderTarget,
-    minOrder: renderSimpleRow,
+    minimum_order_value: renderSimpleRow,
     status: renderStatus,
-    orders: renderSimpleRow,
-    avgBasket: renderSimpleRow,
-    roi: renderSimpleRow,
-    revenue: renderCurrency,
+    'data.n_orders': renderSimpleRow,
+    'data.average_basket': renderSimpleRow,
+    'data.roi': renderSimpleRow,
+    'data.revenue': renderCurrency,
   };
 
   const renderRowsByHeader = (r) =>
     headersOffers.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
-        id: `${cur.id}_${r.id}`,
+        [cur.id]: cellTemplatesObject[cur.id]
+          ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur)
+          : r[cur.id],
+        id: `${cur.id}_${r.offer_id}`,
       }),
       {},
     );
@@ -198,7 +204,7 @@ const MarketingOffer = () => {
   useEffect(() => {
     const preHead = offersData.reduce(
       (acc, cur) => {
-        const { platform, discountType, procent, status } = acc;
+        const { platform, discount_type: discountType, discount_rate: procent, status } = acc;
 
         if (!platform.includes(cur.platform)) platform.push(cur.platform);
 
@@ -210,21 +216,22 @@ const MarketingOffer = () => {
 
         return { ...acc, platform, discountType, procent, status };
       },
-      { discountType: [], platform: [], procent: [], status: [] },
+      { discount_type: [], platform: [], discount_rate: [], status: [] },
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
       value: s,
       text: renderPlatformInsideFilter(s),
     }));
-    const preHeadDiscountType = preHead.discountType.map((s) => ({ value: s, text: s }));
-    const preHeadProcent = preHead.procent.map((s) => ({ value: s, text: `${s} %` }));
+
+    const preHeadDiscountType = preHead.discount_type.map((s) => ({ value: s, text: s }));
+    const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
-      discountType: preHeadDiscountType,
-      procent: preHeadProcent,
+      discount_type: preHeadDiscountType,
+      discount_rate: preHeadProcent,
       status: preHeadStatus,
     });
   }, [JSON.stringify(offersData)]);
@@ -264,7 +271,9 @@ const MarketingOffer = () => {
 
     if (avgBasketRange.min && avgBasketRange.max && avgBasketRange.max > avgBasketRange.min) {
       filteredData = filteredData.filter(
-        (f) => f.avgBasket >= avgBasketRange.min && f.avgBasket <= avgBasketRange.max,
+        (f) =>
+          f['data.average_basket'] >= avgBasketRange.min &&
+          f['data.average_basket'] <= avgBasketRange.max,
       );
     }
 
@@ -272,12 +281,12 @@ const MarketingOffer = () => {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
     }
 
-    if (filters.discountType.length > 0) {
-      filteredData = filteredData.filter((f) => filters.discountType.includes(f.discountType));
+    if (filters.discount_type.length > 0) {
+      filteredData = filteredData.filter((f) => filters.discount_type.includes(f.discount_type));
     }
 
-    if (filters.procent.length > 0) {
-      filteredData = filteredData.filter((f) => filters.procent.includes(f.procent));
+    if (filters.discount_rate.length > 0) {
+      filteredData = filteredData.filter((f) => filters.discount_rate.includes(f.discount_rate));
     }
 
     if (filters.status.length > 0) {
@@ -308,6 +317,18 @@ const MarketingOffer = () => {
     const body = document.querySelector('body');
     setActive(true);
     body.style.overflowY = 'hidden';
+  };
+
+  const handleRowClick = (id) => {
+    const rowId = id.split('_');
+
+    navigate(`/offer/detail/${rowId[1]}`, {
+      state: {
+        // eslint-disable-next-line eqeqeq
+        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        prevPath: location.pathname,
+      },
+    });
   };
 
   return (
@@ -342,13 +363,13 @@ const MarketingOffer = () => {
               className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#date">
+              <HashLink to="#start_date">
                 <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
               </HashLink>
-              <HashLink to="#revenue">
+              <HashLink to="#data.revenue">
                 <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
@@ -370,17 +391,17 @@ const MarketingOffer = () => {
                 maxShowned={1}
               />
               <FilterDropdown
-                items={filtersHead.discountType}
-                values={filters.discountType}
-                onChange={handleChangeMultipleFilter('discountType')}
+                items={filtersHead.discount_type}
+                values={filters.discount_type}
+                onChange={handleChangeMultipleFilter('discount_type')}
                 label="Discount Type"
                 icon={<Tag />}
                 maxShowned={1}
               />
               <FilterDropdown
-                items={filtersHead.procent}
-                values={filters.procent}
-                onChange={handleChangeMultipleFilter('procent')}
+                items={filtersHead.discount_rate}
+                values={filters.discount_rate}
+                onChange={handleChangeMultipleFilter('discount_rate')}
                 label="Discount Amount"
                 icon={<Tag />}
                 customTag="%"
@@ -401,6 +422,7 @@ const MarketingOffer = () => {
           isLoading={isLoadingOffers}
           headers={headersOffers}
           rows={offersDataFiltered.map(renderRowsByHeader)}
+          onClickRow={handleRowClick}
         />
       </PaperKit>
       <MarketingSetup active={active} setActive={setActive} />

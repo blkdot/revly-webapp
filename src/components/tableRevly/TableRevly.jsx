@@ -14,7 +14,7 @@ import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 
 const TableRevly = (props) => {
-  const { headers, rows, isLoading, mainFieldOrdered } = props;
+  const { headers, rows, isLoading, mainFieldOrdered, onClickRow } = props;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
@@ -50,9 +50,20 @@ const TableRevly = (props) => {
     return renderRowsContent();
   };
 
+  const handleRowClick = (id) => () => {
+    if (!onClickRow) return;
+
+    onClickRow(id);
+  };
+
   const renderRowsContent = () =>
-    stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit className="marketing-table-top" key={r.id}>
+    stableSort(rows, getComparator(order, orderBy)).map((r, i) => (
+      <TableRowKit
+        className="marketing-table-top"
+        onClick={handleRowClick(r.id)}
+        // eslint-disable-next-line react/no-array-index-key
+        key={`${r.id}_${i}`}
+      >
         {headers.map((h) => r[h.id])}
       </TableRowKit>
     ));

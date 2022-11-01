@@ -87,7 +87,7 @@ const MarketingOfferFilter = (props) => {
             <Tag /> Discount Type
           </span>
           <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.discountType.map((item) => (
+            {filtersHead.discount_type.map((item) => (
               <div
                 key={item.value}
                 style={{
@@ -100,8 +100,8 @@ const MarketingOfferFilter = (props) => {
                 }}
               >
                 <CheckboxKit
-                  checked={filters.discountType.includes(item.value)}
-                  onChange={() => handleChangeMultipleFilter('discountType')(item.value)}
+                  checked={filters.discount_type.includes(item.value)}
+                  onChange={() => handleChangeMultipleFilter('discount_type')(item.value)}
                 />
                 <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
               </div>
@@ -122,7 +122,7 @@ const MarketingOfferFilter = (props) => {
             <Tag /> Discount Amount %
           </span>
           <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.procent.map((item) => (
+            {filtersHead.discount_rate.map((item) => (
               <div
                 key={item.value}
                 style={{
@@ -135,8 +135,8 @@ const MarketingOfferFilter = (props) => {
                 }}
               >
                 <CheckboxKit
-                  checked={filters.procent.includes(item.value)}
-                  onChange={() => handleChangeMultipleFilter('procent')(item.value)}
+                  checked={filters.discount_rate.includes(item.value)}
+                  onChange={() => handleChangeMultipleFilter('discount_rate')(item.value)}
                 />
                 <span style={{ display: 'flex', alignItems: 'center' }}>{item.text}</span>
               </div>

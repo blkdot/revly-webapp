@@ -8,7 +8,7 @@ export const fomatOffers = (os) =>
     minOrder: o.minimum_order_value,
     target: o.target,
     status: o.status,
-    orders: o.data?.n_orders || '-',
+    'data.n_orders': o.data?.n_orders || '-',
     avgBasket: o.data?.average_basket || '-',
     roi: o.data?.roi || '-',
     revenue: o.data?.revenue || '-',
@@ -17,7 +17,7 @@ export const fomatOffers = (os) =>
 
 export const defaultFilterStateFormat = {
   platform: [],
-  discountType: [],
-  procent: [],
+  discount_type: [],
+  discount_rate: [],
   status: [],
 };

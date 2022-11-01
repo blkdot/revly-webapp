@@ -29,6 +29,7 @@ import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
+import { fomatOffers, defaultFilterStateFormat } from './marketingOfferData';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
@@ -50,7 +51,7 @@ const MarketingAds = () => {
     renderSimpleRow,
   } = useTableContentFormatter();
 
-  const headersOffers = [
+  const headersAds = [
     {
       id: 'date',
       numeric: false,
@@ -143,28 +144,23 @@ const MarketingAds = () => {
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(AdsTableData);
+  const [row, setRow] = useState(fomatOffers(AdsTableData));
 
   const handleScroll = () => {
     const cont = document.querySelector('#tableContainer');
     const position = cont.scrollLeft;
     setScrollPosition(position);
   };
-  const [adsData] = useState(AdsTableData);
+  const [adsData, setAdsData] = useState(fomatOffers(AdsTableData));
   const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
 
-  const [filters, setFilters] = useState({
-    platform: [],
-    discountType: [],
-    procent: [],
-    status: [],
-  });
-  const [filtersHead, setFiltersHead] = useState({
-    platform: [],
-    discountType: [],
-    procent: [],
-    status: [],
-  });
+  const [filters, setFilters] = useState(defaultFilterStateFormat);
+  const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
+
+  useEffect(() => {
+    setAdsData(fomatOffers(ads));
+    setRow(fomatOffers(ads));
+  }, [ads]);
 
   useEffect(() => {
     const cont = document.querySelector('#tableContainer');
@@ -173,6 +169,16 @@ const MarketingAds = () => {
       cont.removeEventListener('scroll', handleScroll);
     };
   }, [ads]);
+
+  const renderStatusFilter = (s) => {
+    if (!s) return null;
+
+    return (
+      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${s}`}>
+        {s}
+      </span>
+    );
+  };
 
   useEffect(() => {
     const preHead = adsData.reduce(
@@ -198,7 +204,7 @@ const MarketingAds = () => {
     }));
     const preHeadDiscountType = preHead.discountType.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.procent.map((s) => ({ value: s, text: `${s} %` }));
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatus(s) }));
+    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
@@ -228,7 +234,7 @@ const MarketingAds = () => {
   };
 
   const renderRowsByHeader = (r) =>
-    headersOffers.reduce(
+    headersAds.reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id](r, cur),
@@ -239,12 +245,7 @@ const MarketingAds = () => {
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
-      setFilters({
-        platform: [],
-        discountType: [],
-        procent: [],
-        status: [],
-      });
+      setFilters(defaultFilterStateFormat);
 
       setAvgBasketRange({ min: '', max: '' });
     }
@@ -271,11 +272,7 @@ const MarketingAds = () => {
   };
 
   const getAdsTable = () => (
-    <TableRevly
-      isLoading={isLoadingAds}
-      headers={headersOffers}
-      rows={ads.map(renderRowsByHeader)}
-    />
+    <TableRevly isLoading={isLoadingAds} headers={headersAds} rows={ads.map(renderRowsByHeader)} />
   );
 
   return (
