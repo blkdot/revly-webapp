@@ -184,6 +184,7 @@ const CompetitionAlerts = () => {
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
         id: `${cur.id}_${r.id}`,
+        data: restaurants,
       }),
       {},
     );
