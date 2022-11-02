@@ -88,8 +88,9 @@ const Planning = () => {
     headersOffers.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObject[cur.id](r, cur),
+        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
         id: `${cur.id}_${r.offer_id}`,
+        data: r,
       }),
       {},
     );
