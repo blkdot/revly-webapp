@@ -67,7 +67,11 @@ const TableRevly = (props) => {
     <BoxKit className="competition-box" sx={{ width: '100%' }}>
       <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
         <TableContainerKit id="tableContainer">
-          <TableKit sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
+          <TableKit
+            sx={{ minWidth: 750, maxHeight: 250 }}
+            aria-labelledby="tableTitle"
+            size="medium"
+          >
             <EnhancedTableHead
               header={headers}
               order={order}

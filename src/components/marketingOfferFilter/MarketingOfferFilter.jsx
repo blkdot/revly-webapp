@@ -23,6 +23,69 @@ const MarketingOfferFilter = (props) => {
     setAvgBasketRange,
   } = props;
 
+  const renderAvgBasketFilter = () => {
+    if (!avgBasketRange || !setAvgBasketRange) return null;
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+          marginTop: '2rem',
+          flexDirection: 'column',
+        }}
+      >
+        <span
+          style={{
+            fontSize: '13px',
+            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Basket />
+          &nbsp; Avg Basket
+        </span>
+        <div style={{ display: 'flex', width: '100%' }}>
+          <div
+            style={{
+              marginRight: '0.5rem',
+              marginTop: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+            }}
+          >
+            <span style={{ fontSize: '12px' }}>Min</span>
+            <TextfieldKit
+              placeholder="$ 0"
+              type="number"
+              value={avgBasketRange.min}
+              onChange={(e) => setAvgBasketRange({ ...avgBasketRange, min: e.target.value })}
+            />
+          </div>
+          <div
+            style={{
+              marginTop: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+            }}
+          >
+            <span style={{ fontSize: '12px' }}>Max</span>
+            <TextfieldKit
+              placeholder="-"
+              type="number"
+              value={avgBasketRange.max}
+              onChange={(e) => setAvgBasketRange({ ...avgBasketRange, max: e.target.value })}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div
       role="presentation"
@@ -187,62 +250,7 @@ const MarketingOfferFilter = (props) => {
           </div>
         </div>
         <hr />
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            marginTop: '2rem',
-            flexDirection: 'column',
-          }}
-        >
-          <span
-            style={{
-              fontSize: '13px',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Basket />
-            &nbsp; Avg Basket
-          </span>
-          <div style={{ display: 'flex', width: '100%' }}>
-            <div
-              style={{
-                marginRight: '0.5rem',
-                marginTop: '1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-              }}
-            >
-              <span style={{ fontSize: '12px' }}>Min</span>
-              <TextfieldKit
-                placeholder="$ 0"
-                type="number"
-                value={avgBasketRange.min}
-                onChange={(e) => setAvgBasketRange({ ...avgBasketRange, min: e.target.value })}
-              />
-            </div>
-            <div
-              style={{
-                marginTop: '1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-              }}
-            >
-              <span style={{ fontSize: '12px' }}>Max</span>
-              <TextfieldKit
-                placeholder="-"
-                type="number"
-                value={avgBasketRange.max}
-                onChange={(e) => setAvgBasketRange({ ...avgBasketRange, max: e.target.value })}
-              />
-            </div>
-          </div>
-        </div>
+        {renderAvgBasketFilter()}
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <ButtonKit
             variant="contained"
