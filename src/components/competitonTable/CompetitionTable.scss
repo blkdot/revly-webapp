@@ -110,7 +110,7 @@
     background: #FFF7CD;
     color: #B78103;
   }
-  &.active {
+  &.active, &.Live, &.live {
     background: rgba(84,214,44,.16);
     color: #229A16;
   }
@@ -122,8 +122,14 @@
   }
 
   &.Cancelled, &.cancelled {
-    background: #d62c2c29;
-    color: #9a1616;
+    background: #ffc10729;
+    color: #B78103;
+    text-transform: capitalize;
+  }
+
+  &.Scheduled, &.scheduled {
+    background: #1890ff29;
+    color: #1890FF;
     text-transform: capitalize;
   }
 }
