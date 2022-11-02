@@ -11,6 +11,7 @@ import Tag from '../../assets/icons/Tag';
 import CloseIcon from '../../assets/images/ic_close.png';
 import Switch from '../../assets/icons/Switch';
 import Basket from '../../assets/icons/Basket';
+import UserGroup from '../../assets/icons/UserGroup';
 
 const MarketingOfferFilter = (props) => {
   const {
@@ -243,6 +244,49 @@ const MarketingOfferFilter = (props) => {
                 <CheckboxKit
                   checked={filters.status.includes(item.value) || false}
                   onChange={() => handleChangeMultipleFilter('status')(item.value)}
+                />
+                <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <hr />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            marginTop: '2rem',
+            flexDirection: 'column',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '13px',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <UserGroup />
+            &nbsp; Target
+          </span>
+          <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+            {filtersHead.target.map((item) => (
+              <div
+                key={item.value}
+                style={{
+                  display: 'flex',
+                  alignSelf: 'center',
+                  fontWeight: 'bold',
+                  marginRight: '1rem',
+                  marginTop: '1rem',
+                  width: '42%',
+                }}
+              >
+                <CheckboxKit
+                  checked={filters.target.includes(item.value) || false}
+                  onChange={() => handleChangeMultipleFilter('target')(item.value)}
                 />
                 <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
               </div>

@@ -63,7 +63,6 @@ const MarketingOffer = () => {
   };
   const [offersData, setOffersData] = useState(offers);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
-  const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
 
   const [filters, setFilters] = useState(defaultFilterStateFormat);
 
@@ -85,16 +84,16 @@ const MarketingOffer = () => {
 
   const headersOffers = [
     {
-      id: 'start_date',
-      numeric: false,
-      disablePadding: true,
-      label: 'Date',
-    },
-    {
       id: 'vendor_name',
       numeric: false,
       disablePadding: false,
       label: 'Branche',
+    },
+    {
+      id: 'start_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Date',
     },
     {
       id: 'platform',
@@ -181,6 +180,7 @@ const MarketingOffer = () => {
           ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
           : r[cur.id],
         id: `${cur.id}_${r.offer_id}`,
+        data: r,
       }),
       {},
     );
@@ -206,19 +206,34 @@ const MarketingOffer = () => {
   useEffect(() => {
     const preHead = offersData.reduce(
       (acc, cur) => {
-        const { platform, discount_type: discountType, discount_rate: procent, status } = acc;
+        const {
+          platform,
+          discount_type: discountType,
+          discount_rate: procent,
+          status,
+          target,
+        } = acc;
 
         if (!platform.includes(cur.platform)) platform.push(cur.platform);
 
-        if (!discountType.includes(cur.discountType)) discountType.push(cur.discountType);
+        if (!discountType.includes(cur.discount_type)) discountType.push(cur.discount_type);
 
-        if (!procent.includes(cur.procent)) procent.push(cur.procent);
+        if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
 
         if (!status.includes(cur.status)) status.push(cur.status);
 
-        return { ...acc, platform, discountType, procent, status };
+        if (!target.includes(cur.target)) target.push(cur.target);
+
+        return {
+          ...acc,
+          platform,
+          discount_type: discountType,
+          discount_rate: procent,
+          status,
+          target,
+        };
       },
-      { discount_type: [], platform: [], discount_rate: [], status: [] },
+      { discount_type: [], platform: [], discount_rate: [], status: [], target: [] },
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
@@ -227,6 +242,7 @@ const MarketingOffer = () => {
     }));
 
     const preHeadDiscountType = preHead.discount_type.map((s) => ({ value: s, text: s }));
+    const preHeadTarget = preHead.target.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
@@ -235,6 +251,7 @@ const MarketingOffer = () => {
       discount_type: preHeadDiscountType,
       discount_rate: preHeadProcent,
       status: preHeadStatus,
+      target: preHeadTarget,
     });
   }, [JSON.stringify(offersData)]);
 
@@ -260,24 +277,16 @@ const MarketingOffer = () => {
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
       setFilters(defaultFilterStateFormat);
-
-      setAvgBasketRange({ min: '', max: '' });
     }
     const body = document.querySelector('body');
     body.style.overflow = 'visible';
     setOpenedFilter(false);
   };
 
+  const isEmptyList = () => offersData.length < 1;
+
   useEffect(() => {
     let filteredData = offersData;
-
-    if (avgBasketRange.min && avgBasketRange.max && avgBasketRange.max > avgBasketRange.min) {
-      filteredData = filteredData.filter(
-        (f) =>
-          f['data.average_basket'] >= avgBasketRange.min &&
-          f['data.average_basket'] <= avgBasketRange.max,
-      );
-    }
 
     if (filters.platform.length > 0) {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
@@ -295,8 +304,12 @@ const MarketingOffer = () => {
       filteredData = filteredData.filter((f) => filters.status.includes(f.status));
     }
 
+    if (filters.target.length > 0) {
+      filteredData = filteredData.filter((f) => filters.target.includes(f.target));
+    }
+
     setOffersDataFiltered(filteredData);
-  }, [JSON.stringify(filters), JSON.stringify(avgBasketRange), offersData]);
+  }, [JSON.stringify(filters), offersData]);
 
   const handleChangeMultipleFilter = (k) => (v) => {
     const propertyFilter = filters[k];
@@ -418,6 +431,7 @@ const MarketingOffer = () => {
               className="more-filter"
               variant="outlined"
               onClick={() => setOpenedFilter(true)}
+              disabled={isEmptyList()}
             >
               <Vector />
               More Filters
@@ -440,8 +454,6 @@ const MarketingOffer = () => {
         filtersHead={filtersHead}
         filters={filters}
         handleChangeMultipleFilter={handleChangeMultipleFilter}
-        avgBasketRange={avgBasketRange}
-        setAvgBasketRange={setAvgBasketRange}
       />
     </div>
   );

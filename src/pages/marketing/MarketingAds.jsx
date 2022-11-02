@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import { pascalCase } from 'change-case';
 
-import CloseIcon from '../../assets/images/ic_close.png';
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
@@ -18,18 +17,17 @@ import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
 import { AdsTableData } from '../../data/fakeDataMarketing';
-import Layers from '../../assets/icons/Layers';
-import Tag from '../../assets/icons/Tag';
-import Switch from '../../assets/icons/Switch';
-import Basket from '../../assets/icons/Basket';
 import { platformObject } from '../../data/platformList';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
-import { fomatOffers, defaultFilterStateFormat } from './marketingOfferData';
+import { defaultFilterStateFormat } from './marketingOfferData';
 import useVendors from '../../hooks/useVendors';
+import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
+import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
+import Layers from '../../assets/icons/Layers';
+import Tag from '../../assets/icons/Tag';
+import Vector from '../../assets/icons/Vector';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
@@ -54,16 +52,16 @@ const MarketingAds = () => {
 
   const headersAds = [
     {
-      id: 'date',
-      numeric: false,
-      disablePadding: true,
-      label: 'Date',
-    },
-    {
-      id: 'branche',
+      id: 'vendor_name',
       numeric: false,
       disablePadding: false,
       label: 'Branche',
+    },
+    {
+      id: 'start_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Date',
     },
     {
       id: 'platform',
@@ -72,19 +70,19 @@ const MarketingAds = () => {
       label: 'Platfrom',
     },
     {
-      id: 'discountType',
+      id: 'discount_type',
       numeric: true,
       disablePadding: false,
       label: 'Discount Type',
     },
     {
-      id: 'procent',
+      id: 'discount_rate',
       numeric: true,
       disablePadding: false,
       label: '%',
     },
     {
-      id: 'minOrder',
+      id: 'minimum_order_value',
       numeric: true,
       disablePadding: false,
       label: 'Min Order',
@@ -102,25 +100,25 @@ const MarketingAds = () => {
       label: 'Status',
     },
     {
-      id: 'orders',
+      id: 'data.n_orders',
       numeric: true,
       disablePadding: false,
       label: '#Orders',
     },
     {
-      id: 'avgBasket',
+      id: 'data.average_basket',
       numeric: true,
       disablePadding: false,
       label: 'Avg Basket',
     },
     {
-      id: 'roi',
+      id: 'data.roi',
       numeric: true,
       disablePadding: false,
       label: 'ROI',
     },
     {
-      id: 'revenue',
+      id: 'data.revenue',
       numeric: true,
       disablePadding: false,
       label: 'Revenue',
@@ -128,39 +126,39 @@ const MarketingAds = () => {
   ];
 
   const cellTemplatesObject = {
-    branche: renderSimpleRow,
+    vendor_name: renderSimpleRow,
     platform: renderPlatform,
-    date: renderSimpleRow,
-    discountType: renderSimpleRow,
-    procent: renderPercent,
+    start_date: renderSimpleRow,
+    discount_type: renderSimpleRow,
+    discount_rate: renderPercent,
     target: renderTarget,
-    minOrder: renderSimpleRow,
+    minimum_order_value: renderSimpleRow,
     status: renderStatus,
-    orders: renderSimpleRow,
-    avgBasket: renderSimpleRow,
-    roi: renderSimpleRow,
-    revenue: renderCurrency,
+    'data.n_orders': renderSimpleRow,
+    'data.average_basket': renderSimpleRow,
+    'data.roi': renderSimpleRow,
+    'data.revenue': renderCurrency,
   };
 
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(fomatOffers(AdsTableData));
+  const [row, setRow] = useState(AdsTableData);
 
   const handleScroll = () => {
     const cont = document.querySelector('#tableContainer');
     const position = cont.scrollLeft;
     setScrollPosition(position);
   };
-  const [adsData, setAdsData] = useState(fomatOffers(AdsTableData));
-  const [avgBasketRange, setAvgBasketRange] = useState({ min: '', max: '' });
+  const [adsData, setAdsData] = useState(AdsTableData);
+  const [adsFilteredData, setAdsFilteredData] = useState(AdsTableData);
 
   const [filters, setFilters] = useState(defaultFilterStateFormat);
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
 
   useEffect(() => {
-    setAdsData(fomatOffers(ads));
-    setRow(fomatOffers(ads));
+    setAdsData(ads);
+    setRow(ads);
   }, [ads]);
 
   useEffect(() => {
@@ -184,36 +182,80 @@ const MarketingAds = () => {
   useEffect(() => {
     const preHead = adsData.reduce(
       (acc, cur) => {
-        const { platform, discountType, procent, status } = acc;
+        const {
+          platform,
+          discount_type: discountType,
+          discount_rate: procent,
+          status,
+          target,
+        } = acc;
 
         if (!platform.includes(cur.platform)) platform.push(cur.platform);
 
-        if (!discountType.includes(cur.discountType)) discountType.push(cur.discountType);
+        if (!discountType.includes(cur.discount_type)) discountType.push(cur.discount_type);
 
-        if (!procent.includes(cur.procent)) procent.push(cur.procent);
+        if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
 
         if (!status.includes(cur.status)) status.push(cur.status);
 
-        return { ...acc, platform, discountType, procent, status };
+        if (!status.includes(cur.status)) status.push(cur.status);
+
+        return {
+          ...acc,
+          platform,
+          discount_type: discountType,
+          discount_rate: procent,
+          status,
+          target,
+        };
       },
-      { discountType: [], platform: [], procent: [], status: [] },
+      { discount_type: [], platform: [], discount_rate: [], status: [], target: [] },
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
       value: s,
       text: renderPlatformInsideFilter(s),
     }));
-    const preHeadDiscountType = preHead.discountType.map((s) => ({ value: s, text: s }));
-    const preHeadProcent = preHead.procent.map((s) => ({ value: s, text: `${s} %` }));
+
+    const preHeadDiscountType = preHead.discount_type.map((s) => ({ value: s, text: s }));
+    const preHeadTarget = preHead.target.map((s) => ({ value: s, text: s }));
+    const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
-      discountType: preHeadDiscountType,
-      procent: preHeadProcent,
+      discount_type: preHeadDiscountType,
+      discount_rate: preHeadProcent,
       status: preHeadStatus,
+      target: preHeadTarget,
     });
   }, [JSON.stringify(adsData)]);
+
+  useEffect(() => {
+    let filteredData = adsData;
+
+    if (filters.platform.length > 0) {
+      filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
+    }
+
+    if (filters.discount_type.length > 0) {
+      filteredData = filteredData.filter((f) => filters.discount_type.includes(f.discount_type));
+    }
+
+    if (filters.discount_rate.length > 0) {
+      filteredData = filteredData.filter((f) => filters.discount_rate.includes(f.discount_rate));
+    }
+
+    if (filters.status.length > 0) {
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+    }
+
+    if (filters.target.length > 0) {
+      filteredData = filteredData.filter((f) => filters.target.includes(f.target));
+    }
+
+    setAdsFilteredData(filteredData);
+  }, [JSON.stringify(filters), adsData]);
 
   const renderPlatformInsideFilter = (s) => (
     <div key={s}>
@@ -240,6 +282,7 @@ const MarketingAds = () => {
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id](r, cur),
         id: `${cur.id}_${r.offer_id}`,
+        data: r,
       }),
       {},
     );
@@ -247,9 +290,8 @@ const MarketingAds = () => {
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
       setFilters(defaultFilterStateFormat);
-
-      setAvgBasketRange({ min: '', max: '' });
     }
+
     const body = document.querySelector('body');
     body.style.overflow = 'visible';
     setOpenedFilter(false);
@@ -272,8 +314,14 @@ const MarketingAds = () => {
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
 
+  const isEmptyList = () => adsData.length < 1;
+
   const getAdsTable = () => (
-    <TableRevly isLoading={isLoadingAds} headers={headersAds} rows={ads.map(renderRowsByHeader)} />
+    <TableRevly
+      isLoading={isLoadingAds}
+      headers={headersAds}
+      rows={adsFilteredData.map(renderRowsByHeader)}
+    />
   );
 
   return (
@@ -312,13 +360,13 @@ const MarketingAds = () => {
               className={`right-part-header_link ${scrollPosition > 200 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#date">
+              <HashLink to="#start_date_header">
                 <BoxKit className={scrollPosition < 200 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Ads Management
                 </BoxKit>
               </HashLink>
-              <HashLink to="#revenue">
+              <HashLink to="#data.revenue_header">
                 <BoxKit className={scrollPosition > 200 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Ads Performance
@@ -327,7 +375,7 @@ const MarketingAds = () => {
             </TypographyKit>
           </div>
         </div>
-        {/* <TypographyKit variant="div" className="marketing-paper-top-btns">
+        <TypographyKit variant="div" className="marketing-paper-top-btns">
           <div className="marketing-filters">
             <div>
               <FilterDropdown
@@ -340,17 +388,17 @@ const MarketingAds = () => {
                 maxShowned={1}
               />
               <FilterDropdown
-                items={filtersHead.discountType}
-                values={filters.discountType}
-                onChange={handleChangeMultipleFilter('discountType')}
+                items={filtersHead.discount_type}
+                values={filters.discount_type}
+                onChange={handleChangeMultipleFilter('discount_type')}
                 label="Discount Type"
                 icon={<Tag />}
                 maxShowned={1}
               />
               <FilterDropdown
-                items={filtersHead.procent}
-                values={filters.procent}
-                onChange={handleChangeMultipleFilter('procent')}
+                items={filtersHead.discount_rate}
+                values={filters.discount_rate}
+                onChange={handleChangeMultipleFilter('discount_rate')}
                 label="Discount Amount"
                 icon={<Tag />}
                 customTag="%"
@@ -360,18 +408,15 @@ const MarketingAds = () => {
             <ButtonKit
               className="more-filter"
               variant="outlined"
-              onClick={() => setOpenedFilter(true)}>
+              onClick={() => setOpenedFilter(true)}
+              disabled={isEmptyList()}
+            >
               <Vector />
               More Filters
             </ButtonKit>
           </div>
-          <ButtonKit className="marketing-delete" variant="outlined">
-            <img src={TrashIcon} alt="Trash Icon" />
-            Delete Offer
-          </ButtonKit>
-        </TypographyKit> */}
+        </TypographyKit>
         {getAdsTable()}
-        {/* <MarketingTable selected={selected} rows={adsDataFiltered} /> */}
       </PaperKit>
       <MarketingSetup ads active={active} setActive={setActive} />
       <div
@@ -399,239 +444,13 @@ const MarketingAds = () => {
           </div>
         </PaperKit>
       </div>
-      <div
-        role="presentation"
-        tabIndex={-1}
-        onClick={() => CloseFilterPopup(true)}
-        className={`filter-overlay${openedFilter ? ' active' : ''}`}
-      >
-        <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper filter-paper">
-          <div>
-            <TypographyKit>More Filters</TypographyKit>
-            <img
-              role="presentation"
-              tabIndex={-1}
-              onClick={() => CloseFilterPopup(true)}
-              src={CloseIcon}
-              alt="close icon"
-            />
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginTop: '2rem',
-              flexDirection: 'column',
-            }}
-          >
-            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
-              <Layers /> Platform
-            </span>
-            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-              {filtersHead.platform.map((item) => (
-                <div
-                  key={item.value}
-                  style={{
-                    display: 'flex',
-                    alignSelf: 'center',
-                    fontWeight: 'bold',
-                    width: '42%',
-                  }}
-                >
-                  <CheckboxKit
-                    checked={filters.platform.includes(item.value)}
-                    onChange={() => handleChangeMultipleFilter('platform')(item.value)}
-                  />
-                  <span style={{ alignSelf: 'center' }}>{item.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <hr />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginTop: '2rem',
-              flexDirection: 'column',
-            }}
-          >
-            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
-              <Tag /> Discount Type
-            </span>
-            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-              {filtersHead.discountType.map((item) => (
-                <div
-                  key={item.value}
-                  style={{
-                    display: 'flex',
-                    alignSelf: 'center',
-                    fontWeight: 'bold',
-                    marginRight: '1rem',
-                    marginTop: '1rem',
-                    width: '80%',
-                  }}
-                >
-                  <CheckboxKit
-                    checked={filters.discountType.includes(item.value)}
-                    onChange={() => handleChangeMultipleFilter('discountType')(item.value)}
-                  />
-                  <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <hr />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginTop: '2rem',
-              flexDirection: 'column',
-            }}
-          >
-            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
-              <Tag /> Discount Amount %
-            </span>
-            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-              {filtersHead.procent.map((item) => (
-                <div
-                  key={item.value}
-                  style={{
-                    display: 'flex',
-                    alignSelf: 'center',
-                    fontWeight: 'bold',
-                    marginRight: '1rem',
-                    marginTop: '1rem',
-                    width: '18%',
-                  }}
-                >
-                  <CheckboxKit
-                    checked={filters.procent.includes(item.value)}
-                    onChange={() => handleChangeMultipleFilter('procent')(item.value)}
-                  />
-                  <span style={{ display: 'flex', alignItems: 'center' }}>{item.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <hr />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginTop: '2rem',
-              flexDirection: 'column',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '13px',
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Switch />
-              &nbsp; Status
-            </span>
-            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-              {filtersHead.status.map((item) => (
-                <div
-                  key={item.value}
-                  style={{
-                    display: 'flex',
-                    alignSelf: 'center',
-                    fontWeight: 'bold',
-                    marginRight: '1rem',
-                    marginTop: '1rem',
-                    width: '42%',
-                  }}
-                >
-                  <CheckboxKit
-                    checked={filters.status.includes(item.value) || false}
-                    onChange={() => handleChangeMultipleFilter('status')(item.value)}
-                  />
-                  <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <hr />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginTop: '2rem',
-              flexDirection: 'column',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '13px',
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Basket />
-              &nbsp; Avg Basket
-            </span>
-            <div style={{ display: 'flex', width: '100%' }}>
-              <div
-                style={{
-                  marginRight: '0.5rem',
-                  marginTop: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '100%',
-                }}
-              >
-                <span style={{ fontSize: '12px' }}>Min</span>
-                <TextfieldKit
-                  placeholder="$ 0"
-                  type="number"
-                  value={avgBasketRange.min}
-                  onChange={(e) => setAvgBasketRange({ ...avgBasketRange, min: e.target.value })}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '100%',
-                }}
-              >
-                <span style={{ fontSize: '12px' }}>Max</span>
-                <TextfieldKit
-                  placeholder="-"
-                  type="number"
-                  value={avgBasketRange.max}
-                  onChange={(e) => setAvgBasketRange({ ...avgBasketRange, max: e.target.value })}
-                />
-              </div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <ButtonKit
-              variant="contained"
-              style={{ marginRight: '1rem' }}
-              onClick={() => CloseFilterPopup(false)}
-            >
-              Confirm and Filter
-            </ButtonKit>
-            <ButtonKit variant="outlined" onClick={() => CloseFilterPopup(true)}>
-              Cancel
-            </ButtonKit>
-          </div>
-        </PaperKit>
-      </div>
+      <MarketingOfferFilter
+        CloseFilterPopup={CloseFilterPopup}
+        openedFilter={openedFilter}
+        filtersHead={filtersHead}
+        filters={filters}
+        handleChangeMultipleFilter={handleChangeMultipleFilter}
+      />
     </div>
   );
 };

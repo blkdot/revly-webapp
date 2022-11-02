@@ -20,4 +20,5 @@ export const defaultFilterStateFormat = {
   discount_type: [],
   discount_rate: [],
   status: [],
+  target: [],
 };
