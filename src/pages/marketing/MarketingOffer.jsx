@@ -429,6 +429,7 @@ const MarketingOffer = () => {
           headers={headersOffers}
           rows={offersDataFiltered.map(renderRowsByHeader)}
           onClickRow={handleRowClick}
+          mainFieldOrdered="start_date"
         />
       </PaperKit>
       <MarketingSetup active={active} setActive={setActive} />

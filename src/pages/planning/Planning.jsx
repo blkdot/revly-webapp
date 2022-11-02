@@ -99,6 +99,7 @@ const Planning = () => {
       isLoading={isLoadingAds || isLoadingOffers}
       headers={headersOffers}
       rows={dataFiltered.map(renderRowsByHeader)}
+      mainFieldOrdered="start_date"
     />
   );
 

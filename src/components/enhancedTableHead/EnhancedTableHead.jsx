@@ -8,8 +8,9 @@ import TableCellKit from '../../kits/tablecell/TableCellKit';
 
 const EnhancedTableHead = (props) => {
   const { order, orderBy, onRequestSort, header } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+
+  const createSortHandler = (property) => () => {
+    onRequestSort(property);
   };
 
   return (
