@@ -116,6 +116,18 @@ const useTableContentFormatter = () => {
     );
   };
 
+  const ordinalSuffixOf = (i) => {
+    const r = Math.round(i);
+    return r >= 100 ? '100' : `${r}`;
+  };
+
+  const renderOrdinalSuffix = (r, h) => (
+    <>
+      {ordinalSuffixOf(r[h.id]) >= 100 && '> '}
+      {ordinalSuffixOf(r[h.id])}
+    </>
+  );
+
   return {
     renderTarget,
     renderScheduleType,
@@ -126,6 +138,7 @@ const useTableContentFormatter = () => {
     renderPlatform,
     renderSimpleRowNotCentered,
     renderSimpleRow,
+    renderOrdinalSuffix,
   };
 };
 
