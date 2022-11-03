@@ -26,7 +26,7 @@ import useTableContentFormatter from '../../components/tableRevly/tableContentFo
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsPlatform, vendorsObj, restaurants } = vendors;
+  const { vendorsArr, vendorsObj, restaurants } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -192,11 +192,7 @@ const CompetitionAlerts = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          vendors={vendorsArr.filter((v) => v.platform === platform)}
-          vendorsPlatform={vendorsPlatform}
-          restaurants={restaurants}
-        />
+        <RestaurantDropdown vendors={vendorsArr} restaurants={restaurants} />
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">

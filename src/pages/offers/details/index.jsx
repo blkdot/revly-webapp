@@ -54,7 +54,7 @@ const OfferDetailComponent = () => {
   const { user } = useUserAuth();
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsPlatform, vendorsObj, restaurants } = vendors;
+  const { vendorsArr, vendorsObj, restaurants } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
@@ -155,11 +155,7 @@ const OfferDetailComponent = () => {
       <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
-          <RestaurantDropdown
-            restaurants={restaurants}
-            vendors={vendorsArr}
-            vendorsPlatform={vendorsPlatform}
-          />
+          <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
           <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
         </div>
         <div className="marketing-top">
