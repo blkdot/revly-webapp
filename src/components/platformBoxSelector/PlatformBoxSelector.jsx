@@ -31,7 +31,8 @@ const PlatformBoxSelector = (props) => {
       onClick={() => onClickItem(name)}
       onKeyDown={() => onClickItem(name)}
       role="button"
-      tabIndex="0">
+      tabIndex="0"
+    >
       {renderIcon()}
       <img src={src} alt={name} width="100" />
     </div>

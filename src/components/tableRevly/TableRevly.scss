@@ -29,7 +29,7 @@
     background-color: #fff;
   }
   .offer-row:hover {
-    background-color: rgba(144, 107, 255, 0.08);;
+    background-color: rgba(144, 107, 255, 0.08);
   }
 
   tbody {
@@ -43,8 +43,6 @@
 
       > td:last-of-type {
         border-radius: 0 8px 8px 0;
-        display: flex;
-        align-items: center;
         padding: 20px 15px;
         grid-gap: 8px;
 
@@ -62,33 +60,32 @@
   }
 }
 
-// @media(max-width: 1400px){
-//   .planning-table-container.planning-table-container{
-//     width: 130% !important;
-//   }
-// }
-// @media(max-width: 1260px) {
-//   .planning-table-container.planning-table-container {
-//     width: 160% !important;
-//   }
-// }
-// @media(max-width: 1190px) {
-//   .planning-table-container.planning-table-container {
-//     width: 190% !important;
-//   }
-// }
-// @media(max-width: 975px) {
-//   .planning-table-container.planning-table-container {
-//     width: 230% !important;
-//   }
-// }
-// @media(max-width: 870px) {
-//   .planning-table-container.planning-table-container {
-//     width: 275% !important;
-//   }
-// }
-// @media(max-width: 780px) {
-//   .planning-table-container.planning-table-container {
-//     width: 300% !important;
-//   }
-// }
+.marketing-table-top:hover {
+  background: rgba(144, 107, 255, 0.08) !important;
+}
+
+.marketing-table-top {
+  cursor: pointer;
+  background: #fff !important;
+  border-bottom: 1px solid #919eab3d;
+  &.selected {
+    th,
+    td {
+      background: #ff484214 !important;
+    }
+  }
+
+  th,
+  td {
+    white-space: nowrap;
+    > span {
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+
+  td {
+    padding-right: 40px;
+    text-align: center;
+  }
+}

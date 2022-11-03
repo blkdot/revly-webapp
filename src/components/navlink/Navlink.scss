@@ -1,0 +1,12 @@
+.navlink {
+  width: 100%;
+  border-radius: 8px;
+
+  span {
+    visibility: visible;
+    transition: .5s;
+    opacity: 1;
+    width: fit-content;
+    display: inline;
+  }
+}

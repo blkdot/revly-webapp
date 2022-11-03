@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
-import useVendors from '../../hooks/useVendors';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
-import CompetitionTable from '../../components/competitonTable/CompetitionTable';
+// import CompetitionTable from '../../components/competitonTable/CompetitionTable';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import useDate from '../../hooks/useDate';
@@ -19,20 +19,25 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
+import useVendors from '../../hooks/useVendors';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from '../../components/tableRevly/TableRevly';
+import ButtonKit from '../../kits/button/ButtonKit';
 
 const CompetitionRanking = () => {
-  const { vendors, vendorsPlatform } = useVendors();
-  const { vendorsContext, setRestaurants } = useGlobal();
+  const { setVendors } = useGlobal();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsObj, restaurants } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
   const [loading, setLoading] = useState(true);
   const [competitionRankingData, setCompetitionRankingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
-  const { dateFromContext: dateFrom } = useDate();
-  const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+  const { date } = useDate();
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: date.beforePeriod.startDate,
+    endDate: date.beforePeriod.endDate,
   });
   const { getRanking } = useApi();
   const { user } = useUserAuth();
@@ -46,6 +51,14 @@ const CompetitionRanking = () => {
     } else {
       body.style.overflowY = 'hidden';
     }
+  };
+
+  const getNumArr = () => {
+    const numArr = [];
+    for (let i = 0; i < 5 - competitionRankingData.length; i++) {
+      numArr.push(i);
+    }
+    return numArr;
   };
 
   useEffect(() => {
@@ -63,13 +76,74 @@ const CompetitionRanking = () => {
     }
   }, [userPlatformData]);
 
+  const headersAlert = [
+    {
+      id: 'name',
+      numeric: false,
+      disablePadding: true,
+      label: 'Name',
+    },
+    {
+      id: 'platform',
+      numeric: false,
+      disablePadding: true,
+      label: 'Platform',
+    },
+    {
+      id: 'r_offers',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ranking in offers',
+    },
+    {
+      id: 'r_cuis',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ranking in cuisine',
+    },
+    {
+      id: 'r_all',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ranking in offers and cuisine',
+    },
+    {
+      id: 'ov',
+      numeric: false,
+      disablePadding: true,
+      label: 'Overall Ranking',
+    },
+  ];
+
+  const { renderPlatform, renderSimpleRow, renderOrdinalSuffix } = useTableContentFormatter();
+
+  const cellTemplatesObject = {
+    name: renderSimpleRow,
+    platform: renderPlatform,
+    r_offers: renderOrdinalSuffix,
+    r_cuis: renderOrdinalSuffix,
+    r_all: renderOrdinalSuffix,
+    ov: renderOrdinalSuffix,
+  };
+
+  const renderRowsByHeader = (r) =>
+    headersAlert.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
+        id: `${cur.id}_${r.id}`,
+        data: r,
+      }),
+      {},
+    );
+
   const getData = async (plat, vend) => {
     setLoading(true);
     try {
       const body = {
         master_email: user.email,
         access_token: user.accessToken,
-        vendors: vend,
+        vendors: vend || [],
       };
 
       const ranking = await getRanking(body, plat);
@@ -98,24 +172,25 @@ const CompetitionRanking = () => {
   };
 
   useEffect(() => {
-    if (vendors.length) {
-      getData(platform, vendorsContext[platform]);
+    if (platform && vendorsArr.length) {
+      getData(platform, vendorsObj[platform]);
     }
-  }, [platform, vendorsContext]);
+  }, [platform, vendorsObj, beforePeriodBtn]);
 
   useEffect(() => {
-    const arr = vendors.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
-    setRestaurants(arr);
+    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
+    setVendors({ ...vendors, restaurants: arr });
+    localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
   }, [platform]);
 
   return (
     <div className="wrapper">
       <div className="top-inputs">
         <RestaurantDropdown
-          vendors={vendors.filter((v) => v.platform === platform)}
-          vendorsPlatform={vendorsPlatform}
+          vendors={vendorsArr.filter((v) => v.platform === platform)}
+          restaurants={restaurants}
         />
-        <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
+        <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
         Competition - Ranking
@@ -135,7 +210,8 @@ const CompetitionRanking = () => {
                     alignItems: 'center',
                     gap: 10,
                     textTransform: 'capitalize',
-                  }}>
+                  }}
+                >
                   <img
                     src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
                     width={24}
@@ -155,18 +231,36 @@ const CompetitionRanking = () => {
             setRow={setPlatform}
             select={platform}
           />
-          <Competitor open={Open} opened={opened} />
+          <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>
         <TypographyKit variant="subtitle">
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
-        <CompetitionTable
+        {/* <CompetitionTable
           loading={loading}
           type="ranking"
           open={Open}
           rows={competitionRankingData}
+        /> */}
+        <TableRevly
+          isLoading={loading}
+          headers={headersAlert}
+          rows={competitionRankingData.map(renderRowsByHeader)}
         />
+        {loading
+          ? null
+          : getNumArr().map((num) => (
+              <ButtonKit
+                onClick={() => Open()}
+                key={num}
+                variant="contained"
+                className="competition-add competiton-table-btn"
+              >
+                <AddIcon />
+                Add a Competitor
+              </ButtonKit>
+            ))}
       </PaperKit>
     </div>
   );

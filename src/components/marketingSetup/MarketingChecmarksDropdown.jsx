@@ -33,7 +33,8 @@ const MarketingCheckmarksDropdown = ({ personName, setName, names }) => {
     <div style={{ width: '100%' }}>
       <FormcontrolKit
         className="top-competition marketing-setup-dropdown"
-        sx={{ m: 1, width: 300 }}>
+        sx={{ m: 1, width: 300 }}
+      >
         <InputLabelKit id="demo-multiple-checkbox-label">Customised Days</InputLabelKit>
         <SelectKit
           labelId="demo-multiple-checkbox-label"
@@ -43,7 +44,8 @@ const MarketingCheckmarksDropdown = ({ personName, setName, names }) => {
           onChange={handleChange}
           input={<OutlindeInputKit uncontrolled label="Customised Days" />}
           renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}>
+          MenuProps={MenuProps}
+        >
           {names.map((name) => (
             <MenuItemKit key={name} value={name}>
               <CheckboxKit checked={personName.indexOf(name) > -1} />

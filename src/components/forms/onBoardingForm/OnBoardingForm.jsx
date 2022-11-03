@@ -31,7 +31,8 @@ const OnBoardingForm = (props) => {
         onClick={onSubmit}
         variant="contained"
         disabled={disabled}
-        loading={isLoading}>
+        loading={isLoading}
+      >
         Onboard
       </ButtonLoadingKit>
     );

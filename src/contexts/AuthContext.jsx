@@ -20,6 +20,7 @@ import {
   updatePhoneNumber,
   confirmPasswordReset,
   verifyPasswordResetCode,
+  applyActionCode,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import config from '../setup/config';
@@ -89,6 +90,8 @@ export const AuthContextProvider = ({ children }) => {
 
   const verifyResetCode = (actionCode) => verifyPasswordResetCode(auth, actionCode);
 
+  const verifyCodeEmail = (actionCode) => applyActionCode(auth, actionCode);
+
   const resetPassword = async (actionCode, pass) => confirmPasswordReset(auth, actionCode, pass);
 
   const verifyPhone = async (phone) => {
@@ -134,8 +137,10 @@ export const AuthContextProvider = ({ children }) => {
         isUpdatingPhone,
         setIsUpdatingPhone,
         verifyEmail,
+        verifyCodeEmail,
         reAuthGoogle,
-      }}>
+      }}
+    >
       {children}
     </UserAuthContext.Provider>
   );

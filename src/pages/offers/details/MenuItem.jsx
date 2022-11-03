@@ -11,8 +11,9 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
   const { getOfferDetails } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
-  const { vendorsContext } = useDate();
-  const vendor = vendorsContext[platform]?.find((v) => v.vendor_id === `${vendorId}`);
+  const { vendors } = useDate();
+  const { vendorsObj } = vendors;
+  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === `${vendorId}`);
 
   const getOfferDetailData = () => {
     getOfferDetails(
@@ -25,6 +26,7 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
       platform,
     )
       .then((res) => setData(res.data))
+      // eslint-disable-next-line no-console
       .catch((err) => console.log({ err }));
   };
   // triggerAlertWithMessageError('Error while retrieving data'+ )
@@ -44,7 +46,8 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
         padding: '15px',
         background: '#F9FAFB',
         borderRadius: '6px',
-      }}>
+      }}
+    >
       <div style={{ display: 'flex' }}>
         <Checkbox classes={{ colorSecondary: '#906BFF' }} checked />
         <img
@@ -60,7 +63,8 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-around',
-          }}>
+          }}
+        >
           <span
             style={{
               fontFamily: 'Public Sans',
@@ -69,7 +73,8 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
               fontSize: '14px',
               lineHeight: '22px',
               color: '#212B36',
-            }}>
+            }}
+          >
             {name}
           </span>
           <span
@@ -80,7 +85,8 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
               fontSize: '12px',
               lineHeight: '18px',
               color: '#637381',
-            }}>
+            }}
+          >
             {category}
           </span>
         </div>

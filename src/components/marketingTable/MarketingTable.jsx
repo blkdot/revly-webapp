@@ -179,11 +179,13 @@ const EnhancedTableHead = (props) => {
             key={headCell.id}
             align="left"
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabelKit
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <BoxKit component="span" sx={{ display: 'none' }}>
@@ -219,24 +221,6 @@ const MarketingTable = ({ rows, selected, setSelected, offers }) => {
   };
 
   const handleClick = (event, name, offerId) => {
-    /*     const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected); */
-
     navigate(`/offer/detail/${offerId}`, {
       state: {
         offerDetail: offers.find((o) => o.offer_id === offerId),
@@ -271,7 +255,8 @@ const MarketingTable = ({ rows, selected, setSelected, offers }) => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    selected={isItemSelected}>
+                    selected={isItemSelected}
+                  >
                     <TableCellKit component="th" id="dateMn" scope="row">
                       {row.date}
                     </TableCellKit>

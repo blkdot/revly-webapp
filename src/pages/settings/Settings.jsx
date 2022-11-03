@@ -108,7 +108,8 @@ const Settings = () => {
           scrollButtons="auto"
           value={currentTab}
           onChange={handleTabChange}
-          className="setting-account__tabs">
+          className="setting-account__tabs"
+        >
           {ACCOUNT_TABS.map((tab) => (
             <TabKit
               className={`setting-account__tabs-tab ${currentTab === tab.value ? '__active' : ''}`}

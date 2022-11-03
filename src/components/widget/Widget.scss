@@ -5,7 +5,43 @@
   cursor: pointer;
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 1px 0 #919eab7a, 0 2px 4px -1px #919eab3d;
+  box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12);
+  border-radius: 16px;
+
+  .icon-paper.icon-paper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: $color-light-grey;
+
+    &.increased {
+      background-color: $color-icon-active !important;
+    }
+
+    &.decreased {
+      background-color: $color-icon !important;
+    }
+
+    >svg {
+      width: 70%;
+      height: 70%;
+      object-fit: cover;
+    }
+
+    &::before {
+      content: '';
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      position: absolute;
+      z-index: -1;
+    }
+  }
 
   .card-icon {
 
@@ -42,13 +78,10 @@
     background: $color-third;
     color: #4d2681;
 
-    svg {
-      filter: none;
+    .card-week {
+      color: #4d2681 !important;
     }
 
-    img {
-      filter: invert(13%) sepia(53%) saturate(3527%) hue-rotate(255deg) brightness(101%) contrast(92%);
-    }
   }
 
   .card-typography {
@@ -57,40 +90,7 @@
 
 
 
-  .icon-paper.icon-paper {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: $color-light-grey;
 
-    &.increased {
-      background-color: $color-icon-active;
-    }
-
-    &.decreased {
-      background-color: $color-icon;
-    }
-
-    >svg {
-      width: 70%;
-      height: 70%;
-      object-fit: cover;
-    }
-
-    &::before {
-      content: '';
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      position: absolute;
-      z-index: -1;
-    }
-  }
 
   .card-procent {
     font-weight: 600;
@@ -132,7 +132,7 @@
   }
 }
 
-@media (max-width: 930px) {
+@media (max-width: 995px) {
   .card_wrapper.card_wrapper {
     width: 100%;
   }

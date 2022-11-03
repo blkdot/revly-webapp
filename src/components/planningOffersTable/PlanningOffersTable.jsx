@@ -31,7 +31,6 @@ const PlanningOffersTable = ({ rows, type }) => {
   const [orderBy, setOrderBy] = useState('name');
   const navigate = useNavigate();
   const location = useLocation();
-  // const [selected, setSelected] = useState([]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -41,6 +40,7 @@ const PlanningOffersTable = ({ rows, type }) => {
 
   const getHeadCells = () => {
     if (!rows[0]) return headCells[type];
+
     return Object.keys(rows[0])
       .map((k) => ({
         key: k,
@@ -61,7 +61,8 @@ const PlanningOffersTable = ({ rows, type }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}>
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
       </span>
@@ -72,7 +73,8 @@ const PlanningOffersTable = ({ rows, type }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}>
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}
+    >
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
       </span>
@@ -83,7 +85,8 @@ const PlanningOffersTable = ({ rows, type }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}>
+      style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}
+    >
       <img
         className="planning-platform"
         style={{ marginRight: '1.5rem' }}
@@ -97,7 +100,8 @@ const PlanningOffersTable = ({ rows, type }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+      style={{ marginTop: '0.5rem', textAlign: 'center' }}
+    >
       <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
         {r[h.id]}%
       </span>
@@ -108,7 +112,8 @@ const PlanningOffersTable = ({ rows, type }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+      style={{ marginTop: '0.5rem', textAlign: 'center' }}
+    >
       <span style={{ whiteSpace: 'nowrap' }}>{r[h.id]}&nbsp;AED</span>
     </TableCellKit>
   );
@@ -117,7 +122,8 @@ const PlanningOffersTable = ({ rows, type }) => {
     <TableCellKit
       id={h.id}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+      style={{ marginTop: '0.5rem', textAlign: 'center' }}
+    >
       <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
         {r[h.id] * 10}%
       </span>
@@ -126,7 +132,10 @@ const PlanningOffersTable = ({ rows, type }) => {
 
   const renderStatus = (r, h) => (
     <TableCellKit id={h.id} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
-      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
+      <span
+        style={{ whiteSpace: 'nowrap' }}
+        className={`competition-status ${r[h.id] === 'Live' ? 'active' : r[h.id]}`}
+      >
         {r[h.id] === 'Upcoming' ? 'Scheduled' : r[h.id]}
       </span>
     </TableCellKit>
@@ -188,17 +197,21 @@ const PlanningOffersTable = ({ rows, type }) => {
   const renderTableBody = () => {
     if (!rows || rows.length < 1)
       return (
-        <TableCellKit colSpan={getHeadCells().length} style={{ textAlign: 'center' }}>
-          <span>No data retrieved</span>
-        </TableCellKit>
+        <TableRowKit>
+          <TableCellKit colSpan={getHeadCells().length} style={{ textAlign: 'center' }}>
+            <span>No data retrieved</span>
+          </TableCellKit>
+        </TableRowKit>
       );
+
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
       <TableRowKit
         onClick={() => type !== 'ad' && navigateToOfferDetails(row)}
         className="offer-row"
-        key={row.id}
+        key={row.offer_id}
         selected={false}
-        style={{ marginTop: '0.5rem' }}>
+        style={{ marginTop: '0.5rem' }}
+      >
         {renderRowsByHeader(row)}
       </TableRowKit>
     ));

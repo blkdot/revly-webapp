@@ -66,7 +66,8 @@ const Stepper = (props) => {
     <StepperKit
       activeStep={steps.findIndex((s) => s.key === step)}
       alternativeLabel
-      connector={<ColorlibConnector />}>
+      connector={<ColorlibConnector />}
+    >
       {steps.map((s) => (
         <StepKit key={s.key}>
           <StepLabelKit StepIconComponent={ColorlibStepIcon}>

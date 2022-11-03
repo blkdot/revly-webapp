@@ -16,10 +16,10 @@ import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
-import useVendors from '../../../hooks/useVendors';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
 import { usePlatform } from '../../../hooks/usePlatform';
+import useDate from '../../../hooks/useDate';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -33,7 +33,8 @@ const Menu = () => {
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
-  const { vendors: vendorsList } = useVendors();
+  const { vendors } = useDate();
+  const { vendors: vendorsList } = vendors;
   const [branch, setBranch] = useState('');
   const { user } = useUserAuth();
 
@@ -41,20 +42,16 @@ const Menu = () => {
     setLoading(true);
     try {
       const res = await getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor },
+        { master_email: user.email, access_token: user.accessToken, vendor: vendor || [] },
         platforms,
       );
 
-      if (!res.data) {
-        throw new Error('');
-      }
-
-      const resp = Object.keys(res.data.menu_items)
+      const resp = Object.keys(res.data.menu_items || {})
         .map((v) => res.data.menu_items[v])
         .map((k) => Object.keys(k).map((el) => k[el]))
         .flat();
 
-      setCategoryList(res.data.categories);
+      setCategoryList(res.data.categories || []);
       setData(resp);
       setLoading(false);
     } catch (err) {
@@ -173,7 +170,8 @@ const Menu = () => {
                     alignItems: 'center',
                     gap: 10,
                     textTransform: 'capitalize',
-                  }}>
+                  }}
+                >
                   <img
                     src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
                     width={24}

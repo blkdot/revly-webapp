@@ -50,7 +50,8 @@ const SigninForm = (props) => {
             variant="outlined"
             size="large"
             className="__block-google__button"
-            onClick={onGoogleSubmit}>
+            onClick={onGoogleSubmit}
+          >
             <FcGoogle className="__block-google__icon" />
           </ButtonKit>
         </div>
@@ -120,7 +121,8 @@ const SigninForm = (props) => {
             size="large"
             variant="contained"
             onClick={onSubmit}
-            disabled={disabled}>
+            disabled={disabled}
+          >
             Login
           </ButtonKit>
         </div>

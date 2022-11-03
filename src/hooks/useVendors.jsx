@@ -1,16 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import useApi from './useApi';
-import useDate from './useDate';
 import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
+import useDate from './useDate';
 
 function useVendors() {
-  const { setRestaurants, setVendorsContext } = useDate();
-  const [vendors, setVendors] = useState([]);
-  const [vendorsPlatform, setVendorsPlatform] = useState([]);
   const { getVendors } = useApi();
   const { environment } = config;
+  const { vendors, setVendors } = useDate();
   const { user } = useUserAuth();
 
   const requestVendorsDefaultParam = {
@@ -22,43 +20,53 @@ function useVendors() {
     let isCancelled = false;
     getVendors(requestVendorsDefaultParam).then((data) => {
       if (isCancelled) return;
-      setRestaurants([]);
-      setVendors([]);
 
       const newData = data.data;
 
       delete newData?.master_email;
 
       const restaurantTemp = [];
+      const vendorsTemp = [];
 
       if (newData) {
         platformList
           .filter((p) => {
             if (!newData[p.name]) delete newData[p.name];
-
             return newData[p.name];
           })
           .flatMap((p) =>
             newData[p.name].forEach((v) => {
-              setVendors((cur) => [...cur, { ...v, platform: p.name }]);
+              vendorsTemp.push({ ...v, platform: p.name });
               restaurantTemp.push(v.data.vendor_name);
             }),
           );
-        setRestaurants([restaurantTemp[0]]);
-        setVendorsContext(newData);
-        setVendorsPlatform(Object.keys(newData));
+      }
+      if (vendorsTemp.length !== vendors.vendorsArr.length) {
+        setVendors({
+          restaurants: restaurantTemp,
+          vendorsObj: newData,
+          vendorsArr: vendorsTemp,
+        });
+        localStorage.setItem(
+          'vendors',
+          JSON.stringify({
+            restaurants: restaurantTemp,
+            vendorsObj: newData,
+
+            vendorsArr: vendorsTemp,
+          }),
+        );
       }
     });
     return () => {
       isCancelled = true;
     };
   };
-
   useMemo(() => {
     handleRequest();
   }, []);
 
-  return { vendors, vendorsPlatform };
+  return { vendors };
 }
 
 export default useVendors;

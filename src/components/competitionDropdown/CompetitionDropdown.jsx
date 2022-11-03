@@ -86,7 +86,8 @@ const CompetitionDropdown = (props) => {
       <FormcontrolKit sx={{ m: 1, width: 250 }}>
         <InputLabelKit
           className="restaurant-dropdown-input competition-dropdown"
-          id="demo-multiple-checkbox-label">
+          id="demo-multiple-checkbox-label"
+        >
           {icon ? <img src={icon} alt="Select Icon" /> : ''}
           {title}
         </InputLabelKit>
@@ -123,7 +124,8 @@ const CompetitionDropdown = (props) => {
               </div>
             )
           }
-          MenuProps={MenuProps}>
+          MenuProps={MenuProps}
+        >
           {renderSelectOption(rows)}
         </SelectKit>
       </FormcontrolKit>

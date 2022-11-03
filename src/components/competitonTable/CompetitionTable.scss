@@ -32,8 +32,14 @@
   }
 
   tbody {
+    >tr{
+      cursor: pointer;
+      transition: .3s;
+      &:hover{
+        background: rgba(144, 107, 255, 0.08);
+      }
+    }
     >tr:nth-of-type(1) {
-      background: rgba(144, 107, 255, 0.08);
       padding-right: 5px;
 
       th {
@@ -104,7 +110,7 @@
     background: #FFF7CD;
     color: #B78103;
   }
-  &.active {
+  &.active, &.Live, &.live {
     background: rgba(84,214,44,.16);
     color: #229A16;
   }
@@ -116,16 +122,20 @@
   }
 
   &.Cancelled, &.cancelled {
-    background: #d62c2c29;
-    color: #9a1616;
+    background: #ffc10729;
+    color: #B78103;
+    text-transform: capitalize;
+  }
+
+  &.Scheduled, &.scheduled {
+    background: #1890ff29;
+    color: #1890FF;
     text-transform: capitalize;
   }
 }
 
 @media(max-width: 1400px) {
-  .competition-box {
-    overflow-x: scroll;
-  }
+  .competition-box {}
 
   .competition-table-conatiner.competition-table-conatiner {
     width: 120%;

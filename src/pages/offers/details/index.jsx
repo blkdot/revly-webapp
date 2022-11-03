@@ -9,18 +9,17 @@ import ButtonKit from '../../../kits/button/ButtonKit';
 import TypographyKit from '../../../kits/typography/TypographyKit';
 import SmartRuleBtnIcon from '../../../assets/images/ic_sm-rule.png';
 import SettingFuture from '../../../assets/images/ic_setting-future.png';
-import useVendors from '../../../hooks/useVendors';
 import useDate from '../../../hooks/useDate';
 import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
 import Warning from '../../../assets/icons/Warning';
 import Calendar from '../../../assets/icons/Calendar';
-// import ArrowDown from '../../../assets/icons/ArrowDown';
+
 import Timer from '../../../assets/icons/Timer';
 import ExpandIcon from '../../../assets/icons/ExpandIcon';
 import Trash from '../../../assets/icons/Trash';
 import FastFood from '../../../assets/icons/FastFood';
-// import { useUserAuth } from '../../../contexts/AuthContext';
+
 import { platformObject } from '../../../data/platformList';
 import './OfferDetails.scss';
 import useApi from '../../../hooks/useApi';
@@ -28,6 +27,8 @@ import config from '../../../setup/config';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
+import useVendors from '../../../hooks/useVendors';
+import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -51,13 +52,14 @@ const OfferDetailComponent = () => {
   const { cancelOffer } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
-  const { vendorsContext } = useDate();
-  const { vendors, vendorsPlatform } = useVendors();
-  const { dateFromContext: dateFrom } = useDate();
-  const [dateFromBtn, setDateFromBtn] = useState({
-    startDate: dateFrom.startDate,
-    endDate: dateFrom.endDate,
+  const { date } = useDate();
+  const { vendors } = useVendors();
+  const { vendorsArr, vendorsObj, restaurants } = vendors;
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: date.beforePeriod.startDate,
+    endDate: date.beforePeriod.endDate,
   });
+  const [active, setActive] = useState(false);
 
   const renderOfferStatus = (status) => {
     const statusColor = {
@@ -77,7 +79,8 @@ const OfferDetailComponent = () => {
           style={{
             color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
             backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
-          }}>
+          }}
+        >
           {status}
         </span>
       </div>
@@ -114,7 +117,7 @@ const OfferDetailComponent = () => {
     type_schedule,
   } = offerDetail;
 
-  const vendor = vendorsContext[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
+  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
   const chain_id = vendor ? vendor.chain_id : '';
 
   const openCancelModal = () => setIsOpen(true);
@@ -136,6 +139,12 @@ const OfferDetailComponent = () => {
     });
   };
 
+  const OpenSetup = () => {
+    const body = document.querySelector('body');
+    setActive(true);
+    body.style.overflowY = 'hidden';
+  };
+
   return (
     <>
       <CancelOfferModal
@@ -143,10 +152,11 @@ const OfferDetailComponent = () => {
         setIsOpen={setIsOpen}
         cancelOffer={handleCancelOffer}
       />
+      <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
-          <RestaurantDropdown vendors={vendors} vendorsPlatform={vendorsPlatform} />
-          <Dates dateFromBtn={dateFromBtn} setdateFromBtn={setDateFromBtn} />
+          <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+          <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
         </div>
         <div className="marketing-top">
           <div className="marketing-top-text">
@@ -157,11 +167,11 @@ const OfferDetailComponent = () => {
             </TypographyKit>
           </div>
           <div className="markting-top-btns">
-            <ButtonKit className="sm-rule-btn" variant="outlined">
+            <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
               <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
               Create a smart rule
             </ButtonKit>
-            <ButtonKit onClick={() => console.log('ok')} variant="contained">
+            <ButtonKit onClick={() => OpenSetup()} variant="contained">
               <img src={SettingFuture} alt="Setting future icon" />
               Set up an offer
             </ButtonKit>
@@ -261,7 +271,8 @@ const OfferDetailComponent = () => {
                           background: 'rgba(144, 107, 255, 0.08)',
                           padding: '5px',
                           borderRadius: '50px',
-                        }}>
+                        }}
+                      >
                         <Timer />
                       </div>
                       <span className="offer-duration width-left-icon width-right-icon">
@@ -286,14 +297,16 @@ const OfferDetailComponent = () => {
                       flex: '1',
                       justifyContent: 'space-around',
                       minHeight: '36px',
-                    }}>
+                    }}
+                  >
                     <div
                       style={{
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         height: '100%',
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           fontFamily: 'Public Sans',
@@ -302,7 +315,8 @@ const OfferDetailComponent = () => {
                           fontSize: '12px',
                           lineHeight: '18px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         Starting date
                       </div>
                       <div
@@ -313,7 +327,8 @@ const OfferDetailComponent = () => {
                           fontSize: '14px',
                           lineHeight: '22px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         {start_date}
                       </div>
                     </div>
@@ -323,7 +338,8 @@ const OfferDetailComponent = () => {
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         height: '100%',
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           fontFamily: 'Public Sans',
@@ -332,7 +348,8 @@ const OfferDetailComponent = () => {
                           fontSize: '12px',
                           lineHeight: '18px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         Ending date
                       </div>
                       <div
@@ -343,7 +360,8 @@ const OfferDetailComponent = () => {
                           fontSize: '14px',
                           lineHeight: '22px',
                           color: '#212B36',
-                        }}>
+                        }}
+                      >
                         {end_date}
                       </div>
                     </div>
@@ -372,7 +390,8 @@ const OfferDetailComponent = () => {
                       padding: '5px',
                       borderRadius: '50px',
                       cursor: 'pointer',
-                    }}>
+                    }}
+                  >
                     <FastFood />
                   </div>
                   <span className="offer-duration width-left-icon width-right-icon">
@@ -388,7 +407,8 @@ const OfferDetailComponent = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       marginLeft: '20px',
-                    }}>
+                    }}
+                  >
                     <span
                       style={{
                         fontFamily: 'Public Sans',
@@ -397,7 +417,8 @@ const OfferDetailComponent = () => {
                         fontSize: '14px',
                         lineHeight: '22px',
                         color: '#212B36',
-                      }}>
+                      }}
+                    >
                       {discount_type}
                     </span>
                     <span
@@ -408,7 +429,8 @@ const OfferDetailComponent = () => {
                         fontSize: '12px',
                         lineHeight: '18px',
                         color: '#637381',
-                      }}>
+                      }}
+                    >
                       Sell Off extra stock when you’re about to close
                     </span>
                   </div>
@@ -424,7 +446,8 @@ const OfferDetailComponent = () => {
                       fontSize: '12px',
                       lineHeight: '18px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     Percentage Discount
                   </div>
                   <div
@@ -435,7 +458,8 @@ const OfferDetailComponent = () => {
                       fontSize: '16px',
                       lineHeight: '24px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     {`${discount_rate}%`}
                   </div>
                 </div>
@@ -448,7 +472,8 @@ const OfferDetailComponent = () => {
                       fontSize: '12px',
                       lineHeight: '18px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     Min Order
                   </div>
                   <div
@@ -459,7 +484,8 @@ const OfferDetailComponent = () => {
                       fontSize: '16px',
                       lineHeight: '24px',
                       color: '#212B36',
-                    }}>
+                    }}
+                  >
                     {minimum_order_value} AED
                   </div>
                 </div>
@@ -495,7 +521,8 @@ const TimeSlot = ({ status }) => (
       alignItems: 'center',
       minHeight: '40px',
       borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
-    }}>
+    }}
+  >
     <div
       style={{
         display: 'flex',
@@ -503,7 +530,8 @@ const TimeSlot = ({ status }) => (
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         height: '100%',
-      }}>
+      }}
+    >
       <span
         style={{
           fontFamily: 'Public Sans',
@@ -512,7 +540,8 @@ const TimeSlot = ({ status }) => (
           fontSize: '12px',
           lineHeight: '18px',
           color: '#212B36',
-        }}>
+        }}
+      >
         Start date
       </span>
       <span
@@ -524,7 +553,8 @@ const TimeSlot = ({ status }) => (
           lineHeight: '22px',
           textAlign: 'center',
           color: '#212B36',
-        }}>
+        }}
+      >
         10 am
       </span>
     </div>
@@ -534,7 +564,8 @@ const TimeSlot = ({ status }) => (
         flexDirection: 'column',
         justifyContent: 'space-between',
         height: '100%',
-      }}>
+      }}
+    >
       <span
         style={{
           fontFamily: 'Public Sans',
@@ -543,7 +574,8 @@ const TimeSlot = ({ status }) => (
           fontSize: '12px',
           lineHeight: '18px',
           color: '#212B36',
-        }}>
+        }}
+      >
         End date
       </span>
       <span
@@ -555,7 +587,8 @@ const TimeSlot = ({ status }) => (
           lineHeight: '22px',
           textAlign: 'center',
           color: '#212B36',
-        }}>
+        }}
+      >
         10 am
       </span>
     </div>
@@ -569,7 +602,8 @@ const TimeSlot = ({ status }) => (
           padding: '3px',
           borderRadius: '50px',
           cursor: 'pointer',
-        }}>
+        }}
+      >
         <Trash />
       </button>
     )}

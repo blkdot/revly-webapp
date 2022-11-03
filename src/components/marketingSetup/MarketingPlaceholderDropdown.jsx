@@ -19,33 +19,60 @@ const MenuProps = {
 function getStyles(name, personName, theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      personName?.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 
-const MarketingPlaceholderDropdown = ({ setPersonName, personName, title, names }) => {
+const MarketingPlaceholderDropdown = ({
+  setPersonName,
+  personName,
+  title,
+  names,
+  type,
+  rowArr,
+  indexArr,
+  className,
+  readOnly,
+}) => {
   const theme = useTheme();
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(value);
+    if (setPersonName) {
+      if (type === 'sm-rule-reletion') {
+        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], reletion: value });
+        setPersonName([...rowArr]);
+      }
+      if (type === 'sm-rule-order') {
+        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], order: value });
+        setPersonName([...rowArr]);
+      }
+      if (type === 'sm-rule-arrow') {
+        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], arrow: value });
+        setPersonName([...rowArr]);
+      } else if (type !== 'sm-rule-arrow' && type !== 'sm-rule-order') {
+        setPersonName(value);
+      }
+    }
   };
 
   return (
-    <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''}`}>
+    <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''} ${className}`}>
       <FormcontrolKit sx={{ m: 1, width: 300, mt: 3 }}>
         <SelectKit
+          readOnly={readOnly}
           displayEmpty
-          value={personName}
+          value={personName || ''}
           onChange={handleChange}
           input={<OutlindeInputKit />}
           renderValue={(selected) => <em>{selected || title}</em>}
           MenuProps={MenuProps}
-          inputProps={{ 'aria-label': 'Without label' }}>
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
           {names.map((name) => (
             <MenuItemKit key={name} value={name} style={getStyles(name, personName, theme)}>
               {name}
