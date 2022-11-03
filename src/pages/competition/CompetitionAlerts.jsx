@@ -134,6 +134,7 @@ const CompetitionAlerts = () => {
         mov: v.mov ?? 0,
         start_date: v.start_date,
         status: v.status === 'Live' ? 'active' : 'inactive',
+        id: v.vendor_id,
       }));
 
       setCompetitionAlertsData(filt || []);
@@ -157,7 +158,7 @@ const CompetitionAlerts = () => {
 
       getData(platform, red);
     }
-  }, [platform, vendorsObj]);
+  }, [platform, vendorsObj, beforePeriodBtn]);
 
   useEffect(() => {
     const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
@@ -184,7 +185,7 @@ const CompetitionAlerts = () => {
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
         id: `${cur.id}_${r.id}`,
-        data: restaurants,
+        data: r,
       }),
       {},
     );
@@ -259,8 +260,7 @@ const CompetitionAlerts = () => {
           months.
         </TypographyKit>
         <TableRevly
-          loading={loading}
-          type="alerts"
+          isLoading={loading}
           headers={headersAlert}
           rows={(filteredData.length > 0 ? filteredData : competitionAlertsData).map(
             renderRowsByHeader,
