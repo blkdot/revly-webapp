@@ -23,7 +23,7 @@ const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod } = useMetrics();
   // const { vendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsPlatform, restaurants } = vendors;
+  const { vendorsArr, restaurants } = vendors;
   const [table, setTable] = useState('revenue');
   const getTitle = (title) => {
     if (title === 'n_orders') {
@@ -58,11 +58,7 @@ const Dashboard = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          restaurants={restaurants}
-          vendors={vendorsArr}
-          vendorsPlatform={vendorsPlatform}
-        />
+        <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
         <Dates isDashboard />
       </div>
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (

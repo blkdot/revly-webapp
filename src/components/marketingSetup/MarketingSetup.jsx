@@ -3,14 +3,13 @@ import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
+import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '../../assets/images/ic_close.png';
 import Dates from '../dates/Dates';
 import ButtonKit from '../../kits/button/ButtonKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import './MarketingSetup.scss';
 import PaperKit from '../../kits/paper/PaperKit';
 import ContainerKit from '../../kits/container/ContainerKit';
-import BoxKit from '../../kits/box/BoxKit';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
@@ -26,7 +25,6 @@ import deliveroo from '../../assets/images/deliveroo.png';
 import ArrowIcon from '../../assets/images/arrow.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
-import menuIcon from '../../assets/images/ic_menu.png';
 import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
 import selectIcon from '../../assets/images/ic_select.png';
 import CalendarCheckGrayIcon from '../../assets/images/ic_calendar-check-gray.png';
@@ -34,6 +32,12 @@ import CalendarCloseGrayIcon from '../../assets/images/ic_calendar-close-gray.pn
 import TimerCheckGrayIcon from '../../assets/images/ic_timer-check-gray.png';
 import TimerCloseGrayIcon from '../../assets/images/ic_timer-close-gray.png';
 import CreatedIcon from '../../assets/images/ic_created.png';
+import plus from '../../assets/images/plus.png';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import BoxKit from '../../kits/box/BoxKit';
+import TextfieldKit from '../../kits/textfield/TextfieldKit';
+import menuIcon from '../../assets/images/ic_menu.png';
+import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -95,9 +99,11 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [created, setCreated] = useState(false);
 
   const [launchOrder, setLaunchOrder] = useState([
-    { order: 'order', arrow: '<', number: '', id: 1 },
+    { order: '# of orders', arrow: '<', number: '', id: 1 },
   ]);
-  const [stopOffer, setStopOffer] = useState([{ order: 'order', arrow: '<', number: '', id: 1 }]);
+  const [stopOrder, setStopOrder] = useState([
+    { order: '# of orders', arrow: '>', number: '', id: 1 },
+  ]);
 
   const [smRule, setSmRule] = useState(false);
 
@@ -668,6 +674,259 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     return arr;
   };
   const getRecap = () => {
+    if (smRule) {
+      return (
+        <div>
+          <div className="left-part-top">
+            <div>
+              <TypographyKit variant="h4">Create a Smart Rule</TypographyKit>
+
+              <img
+                tabIndex={-1}
+                role="presentation"
+                onClick={() => closeSetup()}
+                src={CloseIcon}
+                alt="close icon"
+              />
+            </div>
+          </div>
+          <div className="left-part-middle sm-rule">
+            <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
+            </TypographyKit>
+            <BoxKit className="left-part-radio sm-rule">
+              <TypographyKit
+                className={launchOrder.length === 2 ? 'active' : ''}
+                sx={{ width: '100%' }}
+                variant="div"
+              >
+                <b>Launch the offer if the </b>
+                {launchOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={['And', 'Or']}
+                        title="And"
+                        type="sm-rule-reletion"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.reletion}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          readOnly
+                          names={['# of orders', 'Daily/Slot Revenue']}
+                          title="Order"
+                          type="sm-rule-order"
+                          personName={obj.order}
+                        />
+                        <MarketingPlaceholderDropdown
+                          names={['>', '<']}
+                          title="<"
+                          type="sm-rule-arrow"
+                          setPersonName={setLaunchOrder}
+                          personName={obj.arrow}
+                          rowArr={launchOrder}
+                          indexArr={index}
+                        />
+                        <TextfieldKit
+                          required
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          type="number"
+                          onChange={({ target }) => {
+                            launchOrder.splice(index, 1, { ...obj, number: target.value });
+                            setLaunchOrder([...launchOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['# of orders', 'Daily/Slot Revenue']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.order}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        readOnly={!(launchOrder.length === 2)}
+                        names={['>', '<']}
+                        title="<"
+                        type="sm-rule-arrow"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.arrow}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <TextfieldKit
+                        required
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        type="number"
+                        onChange={({ target }) => {
+                          launchOrder.splice(index, 1, { ...obj, number: target.value });
+                          setLaunchOrder([...launchOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {launchOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      launchOrder.splice(1, 1);
+                      setLaunchOrder([...launchOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setLaunchOrder([
+                        ...launchOrder,
+                        {
+                          order:
+                            launchOrder[0].order === '# of orders'
+                              ? 'Daily/Slot Revenue'
+                              : '# of orders',
+                          arrow: '<',
+                          number: '',
+                          reletion: 'And',
+                          id: 2,
+                        },
+                      ]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+              <TypographyKit
+                className={stopOrder.length === 2 ? 'active' : ''}
+                sx={{ width: '100%' }}
+                variant="div"
+              >
+                <b>Stop the offer if </b>
+                {stopOrder.map((obj, index) =>
+                  index === 1 ? (
+                    <div key={obj.id}>
+                      <MarketingPlaceholderDropdown
+                        className="sm-rule-and"
+                        names={['And', 'Or']}
+                        title="And"
+                        type="sm-rule-reletion"
+                        setPersonName={setLaunchOrder}
+                        personName={obj.reletion}
+                        rowArr={launchOrder}
+                        indexArr={index}
+                      />
+                      <div className="smart-rule_drowdown">
+                        <MarketingPlaceholderDropdown
+                          names={['# of orders', 'Daily/Slot Revenue']}
+                          title="Order"
+                          type="sm-rule-order"
+                          personName={obj.order}
+                        />
+                        <MarketingPlaceholderDropdown
+                          readOnly
+                          names={['>', '<']}
+                          title=">"
+                          type="sm-rule-arrow"
+                          personName={obj.arrow}
+                        />
+                        <TextfieldKit
+                          className="smart-rule-textfield"
+                          placeholder="Enter a Number"
+                          variant="outlined"
+                          type="number"
+                          onChange={({ target }) => {
+                            stopOrder.splice(index, 1, { ...obj, number: target.value });
+                            setStopOrder([...stopOrder]);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={obj.id} className="smart-rule_drowdown">
+                      <MarketingPlaceholderDropdown
+                        names={['# of orders', 'Daily/Slot Revenue']}
+                        title="Order"
+                        type="sm-rule-order"
+                        setPersonName={setStopOrder}
+                        personName={obj.order}
+                        rowArr={stopOrder}
+                        indexArr={index}
+                      />
+                      <MarketingPlaceholderDropdown
+                        readOnly
+                        names={['>', '<']}
+                        title=">"
+                        type="sm-rule-arrow"
+                        personName={obj.arrow}
+                      />
+                      <TextfieldKit
+                        className="smart-rule-textfield"
+                        placeholder="Enter a Number"
+                        variant="outlined"
+                        type="number"
+                        onChange={({ target }) => {
+                          stopOrder.splice(index, 1, { ...obj, number: target.value });
+                          setStopOrder([...stopOrder]);
+                        }}
+                      />
+                    </div>
+                  ),
+                )}
+                {stopOrder.length === 2 ? (
+                  <ButtonKit
+                    onClick={() => {
+                      stopOrder.splice(1, 1);
+                      setStopOrder([...stopOrder]);
+                    }}
+                    className="another-slot remove"
+                  >
+                    <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
+                  </ButtonKit>
+                ) : (
+                  <ButtonKit
+                    onClick={() => {
+                      setStopOrder([
+                        ...stopOrder,
+                        {
+                          order:
+                            stopOrder[0].order === '# of orders'
+                              ? 'Daily/Slot Revenue'
+                              : '# of orders',
+                          arrow: '>',
+                          number: '',
+                          reletion: 'And',
+                          id: 2,
+                        },
+                      ]);
+                    }}
+                    className="another-slot"
+                  >
+                    <img src={plus} alt="plus" /> Add Rule
+                  </ButtonKit>
+                )}
+              </TypographyKit>
+            </BoxKit>
+          </div>
+        </div>
+      );
+    }
     if (created) {
       return (
         <div style={{ height: '100%' }}>
@@ -932,10 +1191,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           disableWeekends={disableWeekends}
           startingDate={startingDate}
           setStartingDate={setStartingDate}
-          setLaunchOrder={setLaunchOrder}
-          launchOrder={launchOrder}
-          setStopOffer={setStopOffer}
-          stopOffer={stopOffer}
           setSmRule={setSmRule}
         />
       </div>
@@ -955,9 +1210,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (recap) {
       setRecap(false);
     } else if (smRule) {
-      setSelected(selected - 1);
-      steps.pop();
-      setSteps([...steps]);
       setSmRule(false);
     } else {
       setSelected(selected - 1);
@@ -986,6 +1238,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                 </ButtonKit>
                 <ButtonKit
                   onClick={() => {
+                    if (smRule) {
+                      setSmRule(false);
+                      setRecap(true);
+                    }
                     if (recap) {
                       handleSchedule();
                     }

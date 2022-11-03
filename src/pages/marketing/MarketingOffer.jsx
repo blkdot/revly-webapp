@@ -37,7 +37,7 @@ const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { date: dateContext } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsPlatform, restaurants } = vendors;
+  const { vendorsArr, restaurants } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: dateContext.beforePeriod.startDate,
     endDate: dateContext.beforePeriod.endDate,
@@ -203,11 +203,7 @@ const MarketingOffer = () => {
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          restaurants={restaurants}
-          vendors={vendorsArr}
-          vendorsPlatform={vendorsPlatform}
-        />
+        <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">
