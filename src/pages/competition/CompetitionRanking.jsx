@@ -102,7 +102,7 @@ const CompetitionRanking = () => {
     if (platform && vendorsArr.length) {
       getData(platform, vendorsObj[platform]);
     }
-  }, [platform, vendorsObj]);
+  }, [platform, vendorsObj, beforePeriodBtn]);
 
   useEffect(() => {
     const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
