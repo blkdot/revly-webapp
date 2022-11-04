@@ -158,7 +158,7 @@ const CompetitionAlerts = () => {
 
       getData(platform, red);
     }
-  }, [platform, vendorsObj, beforePeriodBtn]);
+  }, [platform, vendors, beforePeriodBtn]);
 
   useEffect(() => {
     const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
