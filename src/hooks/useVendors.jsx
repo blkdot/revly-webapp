@@ -10,11 +10,6 @@ function useVendors() {
   const { environment } = config;
   const { vendors, setVendors } = useDate();
   const { user } = useUserAuth();
-  // const [vendorsHook, setVendorsHook] = useState({
-  //   vendorsObj: {},
-  //   vendorsArr: [],
-  //   vendorsPlatform: [],
-  // });
 
   const requestVendorsDefaultParam = {
     master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
@@ -50,7 +45,6 @@ function useVendors() {
         setVendors({
           restaurants: restaurantTemp,
           vendorsObj: newData,
-          vendorsPlatform: Object.keys(newData),
           vendorsArr: vendorsTemp,
         });
         localStorage.setItem(
@@ -58,7 +52,7 @@ function useVendors() {
           JSON.stringify({
             restaurants: restaurantTemp,
             vendorsObj: newData,
-            vendorsPlatform: Object.keys(newData),
+
             vendorsArr: vendorsTemp,
           }),
         );

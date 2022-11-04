@@ -34,6 +34,7 @@ const MarketingPlaceholderDropdown = ({
   rowArr,
   indexArr,
   className,
+  readOnly,
 }) => {
   const theme = useTheme();
 
@@ -42,6 +43,10 @@ const MarketingPlaceholderDropdown = ({
       target: { value },
     } = event;
     if (setPersonName) {
+      if (type === 'sm-rule-reletion') {
+        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], reletion: value });
+        setPersonName([...rowArr]);
+      }
       if (type === 'sm-rule-order') {
         rowArr.splice(indexArr, 1, { ...rowArr[indexArr], order: value });
         setPersonName([...rowArr]);
@@ -59,6 +64,7 @@ const MarketingPlaceholderDropdown = ({
     <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''} ${className}`}>
       <FormcontrolKit sx={{ m: 1, width: 300, mt: 3 }}>
         <SelectKit
+          readOnly={readOnly}
           displayEmpty
           value={personName || ''}
           onChange={handleChange}

@@ -17,12 +17,6 @@ function useMetrics() {
 
   const handleRequest = (date, setMetrics) => {
     let isCancelled = false;
-    const keys = Object.keys(vendorsObj);
-    keys.forEach((name) => {
-      if (!vendorsObj[name] || vendorsObj[name].length === 0) {
-        delete vendorsObj[name];
-      }
-    });
     getMetrics({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',

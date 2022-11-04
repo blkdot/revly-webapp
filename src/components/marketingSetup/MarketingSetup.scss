@@ -81,7 +81,9 @@
 
       .left-part-middle {
         margin-top: 60px;
-
+        &.sm-rule{
+          margin-top: 10px;
+        }
         >h6 {
           font-weight: 700;
           font-size: 18px;
@@ -106,6 +108,7 @@
           >div {
             width: 100%;
             border-radius: 30px;
+            overflow: visible;
 
           }
 
@@ -475,6 +478,15 @@
   &.sm-rule {
     flex-direction: column;
     grid-gap: 15px;
+
+    >span {
+      height: 160px;
+      transition: .3s;
+
+      &.active {
+        height: 100%;
+      }
+    }
   }
 
   &.reversed {
@@ -726,7 +738,8 @@
   margin-top: 20px !important;
   box-shadow: none !important;
 
-  img,svg {
+  img,
+  svg {
     margin-right: 10px;
   }
 
@@ -1187,7 +1200,7 @@
   height: 45px;
 
   >div:nth-of-type(1) {
-    width: 30%;
+    width: 45%;
 
     >div {
       width: 100%;
@@ -1195,7 +1208,9 @@
   }
 
   >div:nth-of-type(2) {
-    width: 22%;
+    width: 15%;
+
+    
 
     label {
       font-weight: 900;
@@ -1203,6 +1218,12 @@
 
     >div {
       width: 100%;
+      >div{
+        >div {
+            text-overflow: clip;
+        
+          }
+      }
     }
   }
 
@@ -1220,7 +1241,7 @@
 }
 
 .smart-rule-textfield {
-  width: 40%;
+  width: 35%;
   border-radius: 30px;
 
   >div {
@@ -1234,7 +1255,7 @@
 }
 
 .sm-rule-and {
-  width: 30%;
+  width: 45%;
   margin-top: 10px;
   height: 45px;
 

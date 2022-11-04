@@ -34,7 +34,7 @@
   justify-content: center;
   flex-direction: column;
   grid-gap: 5px;
-
+  position: relative;
 
 
   >div {
@@ -43,16 +43,24 @@
     margin: 0;
     border: 1px solid rgba(145, 158, 171, 0.32);
     height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    overflow: hidden;
+    padding: 0 15px 0 5px;
+    cursor: pointer;
 
     fieldset {
       border: none;
     }
 
     >div {
+      width: 100%;
       height: 40px;
 
       >div {
-        padding-left: 45px;
+
         color: #212B36;
       }
     }
@@ -90,11 +98,8 @@
 }
 
 .select_icon {
-  position: absolute;
   width: 35px;
   height: 35px;
-  left: 4px;
-  top: 2px;
 }
 
 #restaurant_dropdown_menu {
@@ -107,6 +112,7 @@
   >ul {
     border-radius: 12px;
     background-color: #fff;
+
     &::after {
       border: 1px solid rgba(145, 158, 171, 0.32);
       top: -7px;
@@ -139,5 +145,178 @@
         text-overflow: ellipsis;
       }
     }
+  }
+}
+
+.restaurants-selected {
+  width: 70%;
+  overflow: hidden;
+
+  >div {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.dropdown-paper.dropdown-paper {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 70px;
+  width: 100%;
+  background-color: #fff !important;
+  z-index: 100;
+  cursor: default !important;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px !important;
+  transition: .3s;
+  overflow-y: auto;
+  max-height: 160px;
+  height: fit-content;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 1px;
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #F3F3F3;
+    border-radius: 31px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #637381;
+    border-radius: 31px;
+  }
+
+  .checkbox-accordion {
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &::before {
+      content: none;
+      position: absolute;
+      height: 78%;
+      top: 16px;
+      background-color: #F4F6F8;
+      width: 3px;
+      transition: .3s;
+      left: 10px;
+      z-index: -1;
+    }
+
+    >div {
+      >img {
+        width: 24px;
+        height: 24px;
+        transition: .3s;
+      }
+
+      display: flex;
+      align-items: center;
+      grid-gap: 5px;
+      padding: 0;
+    }
+
+    >svg:last-child {
+      transition: .4s;
+    }
+
+    &.active {
+      &::before {
+        content: '';
+      }
+
+      >svg:last-child {
+        transform: rotate(180deg);
+        transition: .4s;
+      }
+    }
+  }
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .accordion-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s;
+    height: 0;
+    cursor: default;
+    display: none;
+
+    >label {
+      cursor: pointer !important;
+      margin-left: 29px;
+      position: relative;
+      overflow: visible;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -17px;
+        height: 3px;
+        top: 18px;
+        width: 15px;
+        background-color: #F4F6F8;
+        pointer-events: none;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: -7px;
+        height: 3px;
+        top: 13px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #F4F6F8;
+        pointer-events: none;
+
+      }
+    }
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+      height: 100%;
+      display: block;
+    }
+  }
+}
+
+.checkbox-accordion-wrapper {
+  transition: .3s;
+  position: relative;
+
+  &.active {
+    height: 100%;
+  }
+}
+
+.dropdown-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh !important;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 50;
+  cursor: default !important;
+  transition: .3s;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
   }
 }
