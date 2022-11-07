@@ -36,7 +36,9 @@
   grid-gap: 5px;
   position: relative;
 
-
+  > .restaurant-dropdown{
+    overflow: hidden;
+  }
   >div {
     box-shadow: none;
     border-radius: 30px;
@@ -47,7 +49,6 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-    overflow: hidden;
     padding: 0 15px 0 5px;
     cursor: pointer;
 
