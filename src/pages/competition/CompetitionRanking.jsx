@@ -174,10 +174,10 @@ const CompetitionRanking = () => {
     if (platform && vendorsArr.length) {
       getData(platform, vendorsObj[platform]);
     }
-  }, [platform, vendorsObj, beforePeriodBtn]);
+  }, [platform, vendors, beforePeriodBtn]);
 
   useEffect(() => {
-    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
+    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.chain_id);
     setVendors({ ...vendors, restaurants: arr });
     localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
   }, [platform]);
