@@ -3,7 +3,6 @@ import { Description, Password, Person, Send } from '@mui/icons-material';
 
 import './Settings.scss';
 
-// import SettingsOnboarding from '../../components/settings/onboarding/SettingsOnboarding';
 import NewSettingsOnboarding from '../../components/settings/onboarding/NewSettingsOnboarding';
 import General from '../../components/settings/general/General';
 import Billing from '../../components/settings/billing/Billing';

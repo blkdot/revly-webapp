@@ -41,6 +41,7 @@ function useVendors() {
             }),
           );
       }
+
       if (vendorsTemp.length !== vendors.vendorsArr.length) {
         setVendors({
           restaurants: restaurantTemp,
@@ -52,7 +53,6 @@ function useVendors() {
           JSON.stringify({
             restaurants: restaurantTemp,
             vendorsObj: newData,
-
             vendorsArr: vendorsTemp,
           }),
         );

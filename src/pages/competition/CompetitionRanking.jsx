@@ -26,7 +26,7 @@ import ButtonKit from '../../kits/button/ButtonKit';
 const CompetitionRanking = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsPlatform, vendorsObj, restaurants } = vendors;
+  const { vendorsArr, vendorsObj, restaurants } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
@@ -187,7 +187,7 @@ const CompetitionRanking = () => {
       <div className="top-inputs">
         <RestaurantDropdown
           vendors={vendorsArr.filter((v) => v.platform === platform)}
-          vendorsPlatform={vendorsPlatform}
+          vendorsPlatform={Object.keys(vendorsObj)}
           restaurants={restaurants}
         />
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />

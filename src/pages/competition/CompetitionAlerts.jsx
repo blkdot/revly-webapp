@@ -193,7 +193,11 @@ const CompetitionAlerts = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={vendorsArr} restaurants={restaurants} />
+        <RestaurantDropdown
+          vendors={vendorsArr}
+          restaurants={restaurants}
+          vendorsPlatform={Object.keys(vendorsObj)}
+        />
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
