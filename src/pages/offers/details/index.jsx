@@ -155,7 +155,11 @@ const OfferDetailComponent = () => {
       <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
-          <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+          <RestaurantDropdown
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
           <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
         </div>
         <div className="marketing-top">

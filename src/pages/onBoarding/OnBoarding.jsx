@@ -390,7 +390,7 @@ const OnBoarding = () => {
   return (
     <div className="onboarding">
       <div className="top-inputs">
-        <RestaurantDropdown restaurants={[]} vendors={[]} />
+        <RestaurantDropdown vendors={[]} restaurants={[]} vendorsPlatform={[]} />
         <Dates />
       </div>
       <FinanceEmpty />

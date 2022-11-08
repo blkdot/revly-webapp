@@ -16,14 +16,12 @@ import ProfitIcon from '../../assets/images/ic_offers-pr.png';
 import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
-// import { useGlobal } from '../../hooks/useGlobal';
 import useVendors from '../../hooks/useVendors';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod } = useMetrics();
-  // const { vendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants } = vendors;
+  const { vendorsArr, restaurants, vendorsObj } = vendors;
   const [table, setTable] = useState('revenue');
   const getTitle = (title) => {
     if (title === 'n_orders') {
@@ -58,7 +56,11 @@ const Dashboard = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+        <RestaurantDropdown
+          restaurants={restaurants}
+          vendors={vendorsArr}
+          vendorsPlatform={Object.keys(vendorsObj)}
+        />
         <Dates isDashboard />
       </div>
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (

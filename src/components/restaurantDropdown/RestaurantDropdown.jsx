@@ -1,138 +1,95 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 
 import './RestaurantDropdown.scss';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import SelectKit from '../../kits/select/SelectKit';
+import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import useDate from '../../hooks/useDate';
+import talabat from '../../assets/images/talabat-favicon.png';
+import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
-import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 
-const RestaurantDropdown = ({ vendors, restaurants }) => {
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    id: 'restaurant_dropdown_menu',
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+      left: 0,
+    },
+  },
+};
+
+const RestaurantDropdown = ({ vendors, vendorsPlatform, restaurants }) => {
   const { setVendors, vendors: vendorsContext } = useDate();
-  const [active, setActive] = useState(false);
-  const { vendorsObj } = vendorsContext;
-  onbeforeunload = function () {
-    localStorage.removeItem('vendors');
-    return '';
-  };
-  const handleChangeChain = (event, platform) => {
+
+  const handleChange = (event) => {
     const {
-      target: { value, checked },
+      target: { value },
     } = event;
-    if (checked) {
-      restaurants.splice(
-        vendors.findIndex((el) => el.chain_id === value),
-        0,
-        vendors.find((el) => el.chain_id === value).chain_id,
-      );
-      restaurants.forEach((el) =>
-        vendorsObj[platform].forEach((obj, index) => {
-          if (el === obj.chain_id) {
-            vendorsObj[platform].splice(
-              index,
-              0,
-              vendors.find((vObj) => vObj.chain_id === value),
-            );
+
+    const platforms = vendorsPlatform.reduce((a, v) => ({ ...a, [v]: [] }), {});
+
+    if (value.length > 0) {
+      value.forEach((el) => {
+        vendors.forEach((e) => {
+          if (el === e.data.vendor_name) {
+            platforms[e.platform].push(e);
           }
-        }),
-      );
-      setVendors({
-        ...vendorsContext,
-        restaurants,
-        vendorsObj,
-      });
-      localStorage.setItem(
-        'vendors',
-        JSON.stringify({
-          ...vendorsContext,
-          restaurants,
-          vendorsObj,
-        }),
-      );
-    }
-    if (restaurants.length > 1) {
-      if (!checked) {
-        restaurants.splice(
-          restaurants.findIndex((el) => el === value),
-          1,
-        );
-        restaurants.forEach((el) =>
-          vendorsObj[platform].forEach((obj, index) => {
-            if (el === obj.chain_id) {
-              vendorsObj[platform].splice(index, 1);
-            }
-          }),
-        );
-        setVendors({
-          ...vendorsContext,
-          restaurants,
-          vendorsObj,
         });
-        localStorage.setItem(
-          'vendors',
-          JSON.stringify({
-            ...vendorsContext,
-            restaurants,
-            vendorsObj,
-          }),
-        );
-      }
+      });
+      const newValue = {
+        ...vendorsContext,
+        vendorsObj: platforms,
+        restaurants: typeof value === 'string' ? value.split(',') : value,
+      };
+
+      setVendors(newValue);
+      localStorage.setItem('vendors', JSON.stringify(newValue));
     }
   };
-  const handleClick = () => {
-    const body = document.querySelector('body');
-    if (active) {
-      body.style.overflowY = 'visible';
-      setActive(false);
-      return;
-    }
-    body.style.overflowY = 'hidden';
-    setActive(true);
-  };
+
   return (
     <div className="restaurant-dropdown_wrapper">
       <TypographyKit className="top-text-inputs" variant="subtitle">
         Select a Vendor
       </TypographyKit>
-      <div
-        className="restaurant-dropdown"
-        tabIndex={-1}
-        role="presentation"
-        onClick={handleClick}
-        style={{ width: 300 }}
-      >
+      <FormcontrolKit sx={{ m: 1, width: 300 }}>
         <img className="select_icon" src={selectIcon} alt="Select Icon" />
-        <TypographyKit className="restaurants-selected" variant="div">
-          <div>
-            {vendors.map((obj) =>
-              restaurants.find((el) => obj.chain_id === el) ? `${obj.data.chain_name}, ` : '',
-            )}
-          </div>
-        </TypographyKit>
-        <ExpandMoreIcon />
-      </div>
-      <div
-        tabIndex={-1}
-        role="presentation"
-        onClick={(e) => e.stopPropagation()}
-        className={`dropdown-paper ${active ? 'active' : ''}`}
-      >
-        {vendors.map((el) => (
-          <RestaurantCheckboxAccordion
-            key={el.vendor_id}
-            vendors={vendors}
-            restaurants={restaurants}
-            info={el}
-            handleChangeChain={handleChangeChain}
-          />
-        ))}
-      </div>
-      <div
-        tabIndex={-1}
-        role="presentation"
-        onClick={handleClick}
-        className={`dropdown-overlay ${active ? 'active' : ''}`}
-      />
+        <SelectKit
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={restaurants}
+          onChange={handleChange}
+          input={<OutlindeInputKit />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+          sx={{ textTransform: 'capitalize' }}
+        >
+          {vendors?.map((info) => (
+            <MenuItemKit key={info.vendor_id} value={info.data.vendor_name}>
+              <CheckboxKit checked={restaurants.indexOf(info.data.vendor_name) > -1} />
+              <img
+                className="restaurant-img"
+                src={info.platform === 'talabat' ? talabat : deliveroo}
+                alt={info.platform}
+              />
+              <ListItemTextKit
+                sx={{ textTransform: 'capitalize' }}
+                primary={info.data.vendor_name}
+              />
+            </MenuItemKit>
+          ))}
+        </SelectKit>
+      </FormcontrolKit>
     </div>
   );
 };

@@ -37,10 +37,11 @@ function useVendors() {
           .flatMap((p) =>
             newData[p.name].forEach((v) => {
               vendorsTemp.push({ ...v, platform: p.name });
-              restaurantTemp.push(v.chain_id);
+              restaurantTemp.push(v.data.vendor_name);
             }),
           );
       }
+
       if (vendorsTemp.length !== vendors.vendorsArr.length) {
         setVendors({
           restaurants: restaurantTemp,

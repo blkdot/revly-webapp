@@ -36,6 +36,10 @@
   grid-gap: 5px;
   position: relative;
 
+  .MuiSvgIcon-root {
+    right: 18px;
+  }
+
   > .restaurant-dropdown{
     overflow: hidden;
   }

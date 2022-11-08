@@ -39,7 +39,7 @@ const Planning = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
-  const { vendorsArr, restaurants } = vendors;
+  const { vendorsArr, restaurants, vendorsObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState(defaultFilterStateFormat);
@@ -279,7 +279,11 @@ const Planning = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+        <RestaurantDropdown
+          restaurants={restaurants}
+          vendors={vendorsArr}
+          vendorsPlatform={Object.keys(vendorsObj)}
+        />
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
       {renderLayout()}
