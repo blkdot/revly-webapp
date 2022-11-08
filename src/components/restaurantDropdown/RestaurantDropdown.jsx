@@ -45,19 +45,14 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform, restaurants }) => {
           }
         });
       });
-      setVendors({
+      const newValue = {
         ...vendorsContext,
         vendorsObj: platforms,
         restaurants: typeof value === 'string' ? value.split(',') : value,
-      });
-      localStorage.setItem(
-        'vendors',
-        JSON.stringify({
-          ...vendorsContext,
-          vendorsObj: platforms,
-          restaurants: typeof value === 'string' ? value.split(',') : value,
-        }),
-      );
+      };
+
+      setVendors(newValue);
+      localStorage.setItem('vendors', JSON.stringify(newValue));
     }
   };
 
