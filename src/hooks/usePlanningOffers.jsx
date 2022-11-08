@@ -40,7 +40,7 @@ function usePlanningOffers({ dateRange }) {
     if (Object.keys(vendorsObj).length !== 0) {
       handleRequest();
     }
-  }, [dateRange, vendorsObj]);
+  }, [dateRange, vendors]);
 
   return { offers, dateRange, reloadRequest, isLoading };
 }

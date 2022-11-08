@@ -45,7 +45,12 @@ const Finance = ({
         {restaurants.length === vendors.length || restaurants.length === 0 ? (
           <p>All Points of sales</p>
         ) : (
-          <p>{restaurants.join(', ')}</p>
+          <p>
+            {' '}
+            {vendors.map((obj) =>
+              restaurants.find((el) => obj.chain_id === el) ? `${obj.data.chain_name}, ` : '',
+            )}
+          </p>
         )}
       </TypographyKit>
       <div className="cardsWrapper finance-wrapper">

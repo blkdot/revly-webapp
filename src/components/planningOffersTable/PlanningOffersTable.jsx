@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { noCase, sentenceCase } from 'change-case';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-// import './PlanningOffersTable.scss';
-
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
 import BoxKit from '../../kits/box/BoxKit';

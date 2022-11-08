@@ -5,7 +5,7 @@ import talabat from '../../assets/images/talabat-favicon.png';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 
-const RestaurantCheckboxAccordion = ({ info, restaurants, handleChange }) => {
+const RestaurantCheckboxAccordion = ({ info, handleChangeChain, restaurants }) => {
   const [active, setActive] = useState(false);
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
@@ -24,27 +24,23 @@ const RestaurantCheckboxAccordion = ({ info, restaurants, handleChange }) => {
             alt={info.platform}
           />
           <CheckboxKit
-            checked={restaurants.indexOf(info.data.vendor_name) > -1}
+            checked={restaurants.indexOf(info.chain_id) > -1}
             onClick={(e) => e.stopPropagation()}
-            value={info.data.vendor_name}
-            onChange={(e) => handleChange(e, info.platform)}
+            value={info.chain_id}
+            onChange={(e) => handleChangeChain(e, info.platform)}
           />
-          {info.data.vendor_name}
+          {info.data.chain_name}
         </div>
         <ExpandMoreIcon />
       </div>
       <div className={`accordion-dropdown ${active ? 'active' : ''}`}>
         <InputLabelKit>
-          <CheckboxKit />
-          restaurant Name
-        </InputLabelKit>
-        <InputLabelKit>
-          <CheckboxKit />
-          restaurant Name
-        </InputLabelKit>
-        <InputLabelKit>
-          <CheckboxKit />
-          restaurant Name
+          <CheckboxKit
+            checked={restaurants.indexOf(info.chain_id) > -1}
+            onChange={(e) => handleChangeChain(e, info.platform)}
+            value={info.chain_id}
+          />
+          {info.data.vendor_name}
         </InputLabelKit>
       </div>
     </div>
