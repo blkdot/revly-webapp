@@ -1,4 +1,4 @@
-import { addDays, addHours, format } from 'date-fns';
+import { addDays, addHours, format, getHours } from 'date-fns';
 import React from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import MarketingRadio from './MarketingRadio';
@@ -36,7 +36,7 @@ import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 
-const GetProgress = (props) => {
+const GetProgress = ({ progressData }) => {
   const {
     selected,
     getPlatform,
@@ -81,7 +81,10 @@ const GetProgress = (props) => {
     startingDate,
     setStartingDate,
     setSmRule,
-  } = props;
+    setHeatmapData,
+    heatmapData,
+    links,
+  } = progressData;
 
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
@@ -629,6 +632,18 @@ const GetProgress = (props) => {
                           onClick={() => {
                             times.splice(index, 1);
                             setTimes([...times]);
+                            Object.values(heatmapData[links]).forEach((objHeat) => {
+                              Object.keys(objHeat).forEach((num) => {
+                                if (num === getHours(obj.startTime)) {
+                                  if (objHeat[num].active) {
+                                    delete heatmapData[links][new Date(startingDate).getDay() - 1][
+                                      num
+                                    ];
+                                    setHeatmapData({ ...heatmapData });
+                                  }
+                                }
+                              });
+                            });
                           }}
                           src={trash}
                           alt="trash"
@@ -680,7 +695,7 @@ const GetProgress = (props) => {
                             null,
                             null,
                             null,
-                            format(addHours(times[times.length - 1].endTime, 2), 'HH'),
+                            format(addHours(times[times.length - 1].endTime, 1), 'HH'),
                             0,
                           ),
                           pos: times[times.length - 1].pos + 1,
@@ -1041,6 +1056,18 @@ const GetProgress = (props) => {
                           onClick={() => {
                             times.splice(index, 1);
                             setTimes([...times]);
+                            Object.values(heatmapData[links]).forEach((objHeat) => {
+                              Object.keys(objHeat).forEach((num) => {
+                                if (num === getHours(obj.startTime)) {
+                                  if (objHeat[num].active) {
+                                    delete heatmapData[links][new Date(startingDate).getDay() - 1][
+                                      num
+                                    ];
+                                    setHeatmapData({ ...heatmapData });
+                                  }
+                                }
+                              });
+                            });
                           }}
                           src={trash}
                           alt="trash"
@@ -1091,7 +1118,7 @@ const GetProgress = (props) => {
                             null,
                             null,
                             null,
-                            format(addHours(times[times.length - 1].endTime, 2), 'HH'),
+                            format(addHours(times[times.length - 1].endTime, 1), 'HH'),
                             0,
                           ),
                           pos: times[times.length - 1].pos + 1,

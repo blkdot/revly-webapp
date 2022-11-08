@@ -81,9 +81,11 @@
 
       .left-part-middle {
         margin-top: 60px;
-        &.sm-rule{
+
+        &.sm-rule {
           margin-top: 10px;
         }
+
         >h6 {
           font-weight: 700;
           font-size: 18px;
@@ -268,7 +270,7 @@
     }
 
     >p {
-      width: 80px;
+      width: 14%;
       padding: 0 10px;
       height: 30px;
       margin-bottom: 4px;
@@ -285,11 +287,11 @@
     justify-content: space-between;
     align-items: center;
     height: 30px;
-    grid-gap: 3px;
+    grid-gap: 5px;
 
     >p {
       display: inline-block;
-      width: 95%;
+      width: 100%;
       height: 30px;
       color: #212B36;
       font-weight: 600;
@@ -300,8 +302,9 @@
   .right-part-main-heatmap {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    position: relative;
+    grid-gap: 5px;
 
     >div {
       display: flex;
@@ -309,11 +312,11 @@
     }
 
     >span {
-      width: 100%;
+      width: 14%;
     }
 
     p {
-      width: 95%;
+      width: 100%;
       height: 30px;
       border-radius: 4px;
       margin-bottom: 4px;
@@ -424,39 +427,65 @@
   overflow: visible !important;
 }
 
+.heatmap-btn_wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: row !important;
+  grid-gap: 5px;
+
+  >span {
+    width: 13.6%;
+  }
+
+  .absolute {
+    width: 13.6% !important;
+    position: absolute;
+    top: calc(34px * var(--i));
+    overflow: hidden;
+    >span {
+        position: absolute;
+        left: -33px;
+        opacity: 0;
+        visibility: hidden;
+        transition: .4s;
+    
+        >span {
+          top: 10px;
+          height: 1px;
+          width: 60px;
+          position: absolute;
+          transform: rotate(-107deg);
+          z-index: 10;
+          background-color: #2D99FF;
+          left: calc(5.5px * var(--i));
+        }
+      }
+
+    &.active {
+      background-color: #83CFFF;
+
+      >span {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
 .heatmap-btn {
   position: relative;
   overflow: hidden;
   transition: .4s;
   cursor: pointer;
 
-  >span {
-    position: absolute;
-    left: -160px;
-    opacity: 0;
-    visibility: hidden;
-    transition: .4s;
+  
 
-    >span {
-      top: 10px;
-      height: 1px;
-      width: 60px;
-      position: absolute;
-      transform: rotate(-107deg);
-      z-index: 10;
-      background-color: #2D99FF;
-      left: calc(5.5px * var(--i));
-    }
-  }
 
-  &.active {
-    background-color: #83CFFF;
-
-    >span {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
 
 }
 
@@ -1210,7 +1239,7 @@
   >div:nth-of-type(2) {
     width: 15%;
 
-    
+
 
     label {
       font-weight: 900;
@@ -1218,11 +1247,12 @@
 
     >div {
       width: 100%;
-      >div{
+
+      >div {
         >div {
-            text-overflow: clip;
-        
-          }
+          text-overflow: clip;
+
+        }
       }
     }
   }

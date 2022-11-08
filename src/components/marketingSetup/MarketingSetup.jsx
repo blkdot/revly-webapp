@@ -1,4 +1,4 @@
-import { addDays, addHours, format, startOfWeek } from 'date-fns';
+import { addDays, addHours, format, getHours, startOfWeek } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
@@ -87,7 +87,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [times, setTimes] = useState([
     {
       startTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
-      endTime: new Date(null, null, null, format(addHours(new Date(), 2), 'HH'), 0),
+      endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
       pos: 1,
     },
   ]);
@@ -264,18 +264,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setCreated(true);
     setRecap(false);
   };
-
-  const heatMapFormatter = (type) => {
-    const tmpData = defaultHeatmapState;
-
-    Object.keys(defaultHeatmapState).forEach((day) => {
-      for (let i = 5; i < 25; i++) {
-        tmpData[day][i] = heatmapData[type][day] ? heatmapData[type][day][i] || {} : {};
-      }
-    });
-    return Object.values(tmpData);
-  };
-
   const getHeatmapData = () => {
     const body = {
       master_email: user.email,
@@ -399,12 +387,82 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         <span style={{ '--i': n }} key={n} />
       </span>
     ));
-
+  const timeSelected = () => {
+    Object.values(heatmapData[links]).forEach((objHeat, indexObjHeat) => {
+      [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].forEach((i) => {
+        times.forEach((obj) => {
+          if (Object.keys(objHeat).length > 0) {
+            Object.keys(objHeat).forEach((num) => {
+              if (num !== getHours(obj.startTime) && num !== getHours(obj.endTime)) {
+                delete heatmapData[links][Object.keys(heatmapData[links])[indexObjHeat]][num];
+              } else if (num === i) {
+                heatmapData[links][days[new Date(startingDate).getDay() - 1]][i] = {
+                  ...heatmapData[links][days[new Date(startingDate).getDay() - 1]][i],
+                  active: true,
+                };
+              } else {
+                heatmapData[links][days[new Date(endingDate).getDay() - 1]][i] = {
+                  ...heatmapData[links][days[new Date(endingDate).getDay() - 1]][i],
+                  active: true,
+                };
+              }
+            });
+          }
+          if (i <= (getHours(obj.endTime) === 0 ? 24 : getHours(obj.endTime))) {
+            heatmapData[links][days[new Date(endingDate).getDay() - 1]][i] = {
+              ...heatmapData[links][days[new Date(endingDate).getDay() - 1]][i],
+              active: true,
+            };
+          }
+          if (i >= (getHours(obj.startTime) === 0 ? 24 : getHours(obj.startTime))) {
+            heatmapData[links][days[new Date(startingDate).getDay() - 1]][i] = {
+              ...heatmapData[links][days[new Date(startingDate).getDay() - 1]][i],
+              active: true,
+            };
+          }
+        });
+        days.forEach((day, index) => {
+          if (day === Object.keys(heatmapData[links])[indexObjHeat]) {
+            if (
+              index > new Date(startingDate).getDay() - 1 &&
+              index < new Date(endingDate).getDay() - 1
+            ) {
+              [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].forEach(
+                (numH) => {
+                  heatmapData[links][day][numH] = {
+                    ...heatmapData[links][day][numH],
+                    active: true,
+                  };
+                },
+              );
+            }
+          }
+        });
+      });
+    });
+    setHeatmapData({ ...heatmapData });
+  };
+  const clearTimeSelected = () => {
+    Object.values(heatmapData[links]).forEach((objHeat, indexObjHeat) => {
+      if (objHeat) {
+        Object.keys(objHeat).forEach((num) => {
+          if (objHeat[num].active) {
+            delete heatmapData[links][Object.keys(heatmapData[links])[indexObjHeat]][num];
+          }
+        });
+      }
+    });
+    setHeatmapData({
+      ...heatmapData,
+    });
+  };
   useEffect(() => {
     if (selected === 1) {
       setDisabled(!branch);
+      clearTimeSelected();
     }
     if (selected === 2) {
+      clearTimeSelected();
       if (menu === 'Offer on An Item from the Menu') {
         setSteps([0, 1, 2, 3, 4, 5]);
         setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
@@ -415,9 +473,11 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
     if (menu === 'Offer on An Item from the Menu') {
       if (selected === 3) {
+        clearTimeSelected();
         setDisabled(checked.length === 0);
       }
       if (selected === 4) {
+        timeSelected();
         if (duration === 'Program the offer duration') {
           setSteps([0, 1, 2, 3, 4, 5, 6]);
           setDisabled(!customDay);
@@ -439,6 +499,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       }
       if (duration === 'Program the offer duration') {
         if (selected === 5) {
+          timeSelected();
           if (customDay === 'Same day every week') {
             setDisabled(
               !(
@@ -499,6 +560,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
     if (menu === 'Offer on the whole Menu') {
       if (selected === 3) {
+        timeSelected();
         if (duration === 'Program the offer duration') {
           setSteps([0, 1, 2, 3, 4, 5]);
           setDisabled(!customDay);
@@ -520,6 +582,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       }
       if (duration === 'Program the offer duration') {
         if (selected === 4) {
+          timeSelected();
           if (customDay === 'Same day every week') {
             setDisabled(
               !(
@@ -599,7 +662,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setTimes([
       {
         startTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 2)), 'HH'), 0),
+        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
         pos: 1,
       },
     ]);
@@ -622,7 +685,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       </>
     );
   };
-
+  // eslint-disable-next-line
   const renderTooltipContent = (data) => (
     <div className="heatmap-tooltip">
       <div className="heatmap-tooltip__item">
@@ -1130,6 +1193,56 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         </div>
       );
     }
+    const progressData = {
+      selected,
+      getPlatform,
+      platform,
+      handleCategoryDataChange,
+      userPlatformData,
+      vendorsObj,
+      setBranch,
+      branch,
+      menu,
+      setMenu,
+      setDiscountPercentage,
+      discountPercentage,
+      setMinOrder,
+      minOrder,
+      itemMenu,
+      setItemMenu,
+      getDiscountOrMov,
+      categoryData,
+      categoryDataList,
+      filteredCategoryData,
+      category,
+      setChecked,
+      checked,
+      duration,
+      setDuration,
+      endingDate,
+      onChange,
+      setEndingDate,
+      times,
+      setTimes,
+      customDay,
+      setCustomDay,
+      targetAudience,
+      setTargetAudience,
+      setSteps,
+      setSelected,
+      setEveryWeek,
+      everyWeek,
+      days,
+      setCustomisedDay,
+      customisedDay,
+      disableWeekends,
+      startingDate,
+      setStartingDate,
+      setSmRule,
+      setHeatmapData,
+      heatmapData,
+      links,
+    };
     return (
       <div>
         <div className="left-part-top">
@@ -1146,56 +1259,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           </div>
           <MarketingSetupStepper selected={selected} steps={steps} />
         </div>
-        <GetProgress
-          selected={selected}
-          getPlatform={getPlatform}
-          platform={platform}
-          handleCategoryDataChange={handleCategoryDataChange}
-          userPlatformData={userPlatformData}
-          vendorsObj={vendorsObj}
-          setBranch={setBranch}
-          branch={branch}
-          menu={menu}
-          setMenu={setMenu}
-          setDiscountPercentage={setDiscountPercentage}
-          discountPercentage={discountPercentage}
-          setMinOrder={setMinOrder}
-          minOrder={minOrder}
-          itemMenu={itemMenu}
-          setItemMenu={setItemMenu}
-          getDiscountOrMov={getDiscountOrMov}
-          categoryData={categoryData}
-          categoryDataList={categoryDataList}
-          filteredCategoryData={filteredCategoryData}
-          category={category}
-          setChecked={setChecked}
-          checked={checked}
-          duration={duration}
-          setDuration={setDuration}
-          endingDate={endingDate}
-          onChange={onChange}
-          setEndingDate={setEndingDate}
-          times={times}
-          setTimes={setTimes}
-          customDay={customDay}
-          setCustomDay={setCustomDay}
-          targetAudience={targetAudience}
-          setTargetAudience={setTargetAudience}
-          setSteps={setSteps}
-          setSelected={setSelected}
-          setEveryWeek={setEveryWeek}
-          everyWeek={everyWeek}
-          days={days}
-          setCustomisedDay={setCustomisedDay}
-          customisedDay={customisedDay}
-          disableWeekends={disableWeekends}
-          startingDate={startingDate}
-          setStartingDate={setStartingDate}
-          setSmRule={setSmRule}
-        />
+        <GetProgress progressData={progressData} />
       </div>
     );
   };
+
+  useEffect(() => {}, [times]);
   const getRecapBtn = () => {
     if (recap) {
       return 'Lanch Offer';
@@ -1329,39 +1398,58 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                     ))}
                   </TypographyKit>
                   <TypographyKit className="right-part-main-heatmap" variant="div">
-                    {heatMapFormatter(links).map((obj, index) => (
-                      <TypographyKit key={Object.keys(obj)[index]} variant="div">
-                        {Object.keys(obj).map((num, indexObj) => {
-                          if (!obj[indexObj + 5].color)
-                            return (
-                              <TypographyKit
-                                className="heatmap-btn"
-                                key={num}
-                                sx={{ background: '#919EAB1F' }}
-                              >
-                                {renderHeatmapBox()}
-                              </TypographyKit>
-                            );
-
-                          return (
-                            <Tooltip
-                              title={renderTooltipContent(obj[indexObj + 5].data)}
-                              key={num}
-                              arrow
-                            >
-                              <ItemHeatmap>
+                    {days.map((day) => (
+                      <TypographyKit key={day} variant="div">
+                        {[
+                          5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0,
+                        ].map((n) => (
+                          <TypographyKit
+                            className={`heatmap-btn `}
+                            key={n}
+                            sx={{ background: '#919EAB1F' }}
+                          >
+                            {renderHeatmapBox()}
+                          </TypographyKit>
+                        ))}
+                      </TypographyKit>
+                    ))}
+                    <div className="heatmap-btn_wrapper">
+                      {Object.values(heatmapData[links]).map((obj, index) => (
+                        <TypographyKit key={Object.keys(heatmapData[links])[index]} variant="div">
+                          {Object.keys(obj).map((num) => {
+                            if (!obj[num].color) {
+                              return (
                                 <TypographyKit
-                                  className="heatmap-btn"
-                                  sx={{ background: obj[indexObj + 5].color }}
+                                  style={{ '--i': num - 5 }}
+                                  className={`absolute ${obj[num].active ? 'active' : ''}`}
+                                  key={num}
                                 >
                                   {renderHeatmapBox()}
                                 </TypographyKit>
-                              </ItemHeatmap>
-                            </Tooltip>
-                          );
-                        })}
-                      </TypographyKit>
-                    ))}
+                              );
+                            }
+                            return (
+                              <Tooltip
+                                className="absolute"
+                                style={{ '--i': num - 5 }}
+                                title={renderTooltipContent(obj[num].data)}
+                                key={num}
+                                arrow
+                              >
+                                <ItemHeatmap>
+                                  <TypographyKit
+                                    className={`heatmap-btn `}
+                                    sx={{ background: obj[num].color || '#919EAB1F' }}
+                                  >
+                                    {renderHeatmapBox()}
+                                  </TypographyKit>
+                                </ItemHeatmap>
+                              </Tooltip>
+                            );
+                          })}
+                        </TypographyKit>
+                      ))}
+                    </div>
                   </TypographyKit>
                 </TypographyKit>
               </TypographyKit>
@@ -1372,7 +1460,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     </div>
   );
 };
-
+// eslint-disable-next-line
 const ItemHeatmap = React.forwardRef((props, ref) => <div {...props} ref={ref} />);
 
 export default MarketingSetup;
