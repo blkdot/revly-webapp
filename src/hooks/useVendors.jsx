@@ -24,6 +24,7 @@ function useVendors() {
       const newData = data.data;
 
       delete newData?.master_email;
+      delete newData?.display;
 
       const restaurantTemp = [];
       const vendorsTemp = [];
