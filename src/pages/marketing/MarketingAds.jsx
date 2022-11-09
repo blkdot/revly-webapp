@@ -4,7 +4,7 @@ import { pascalCase } from 'change-case';
 
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import ButtonKit from '../../kits/button/ButtonKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Marketing.scss';

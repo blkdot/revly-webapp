@@ -7,7 +7,7 @@ import { pascalCase } from 'change-case';
 import './OnBoarding.scss';
 
 import OnBoardingForm from '../../components/onboarding/OnBoarding';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import Dates from '../../components/dates/Dates';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';

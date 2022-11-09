@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import Finance from '../../components/finance/Finance';
 import Marketing from '../../components/marketing/Marketing';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useMetrics from '../../hooks/useMetrics';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';

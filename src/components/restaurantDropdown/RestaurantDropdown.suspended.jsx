@@ -27,58 +27,88 @@ const MenuProps = {
 const RestaurantDropdown = ({ vendors, restaurants }) => {
   // eslint-disable-next-line
   const { setVendors, vendors: vendorsContext } = useDate();
+  // eslint-disable-next-line
+  const { vendorsObj, display, chainObj } = vendorsContext
   const [active, setActive] = useState(false);
+  // eslint-disable-next-line
   const handleChange = (event, platform) => {
     const {
       // eslint-disable-next-line
       target: { value, checked }
     } = event;
-    if (restaurants.length > 0) {
+    if (Object.keys(chainObj).length > 1) {
       if (!checked) {
-        restaurants.splice(
-          restaurants.findIndex((el) => el === value),
-          1,
-        );
-        vendorsContext.vendorsObj[platform].splice(
-          restaurants.findIndex((el) => el === value),
-          1,
-        );
+        delete chainObj[value];
         setVendors({
           ...vendorsContext,
-          restaurants,
-          vendorsObj: vendorsContext.vendorsObj,
+          chainObj,
         });
         localStorage.setItem(
           'vendors',
           JSON.stringify({
             ...vendorsContext,
-            restaurants,
-            vendorsObj: vendorsContext.vendorsObj,
+            chainObj,
           }),
         );
         return;
       }
-      restaurants.splice(
-        vendors.findIndex((el) => el.data.vendor_name === value),
-        0,
-        vendors.find((el) => el.data.vendor_name === value).data.vendor_name,
-      );
-      vendorsContext.vendorsObj[platform].splice(
-        vendors.findIndex((el) => el.data.vendor_name === value),
-        0,
-        vendors.find((el) => el.data.vendor_name === value),
-      );
+    }
+    if (checked) {
+      Object.keys(display)
+        .filter((n) => n === value)
+        .forEach((n) => {
+          chainObj[value] = display[n];
+        });
       setVendors({
         ...vendorsContext,
-        restaurants,
-        vendorsObj: vendorsContext.vendorsObj,
+        chainObj,
       });
       localStorage.setItem(
         'vendors',
         JSON.stringify({
           ...vendorsContext,
-          restaurants,
-          vendorsObj: vendorsContext.vendorsObj,
+          chainObj,
+        }),
+      );
+    }
+  };
+  const handleChangeVendor = (event, chainName) => {
+    const {
+      // eslint-disable-next-line
+      target: { value, checked }
+    } = event;
+    if (Object.keys(chainObj[chainName]).length > 1) {
+      if (!checked) {
+        delete chainObj[chainName][value];
+        setVendors({
+          ...vendorsContext,
+          chainObj,
+        });
+        localStorage.setItem(
+          'vendors',
+          JSON.stringify({
+            ...vendorsContext,
+            chainObj,
+          }),
+        );
+        return;
+      }
+    }
+    if (checked) {
+      Object.keys(display)
+        .filter((n) => n === value)
+        .forEach((n) => {
+          chainObj[chainName][value] = display[n];
+        });
+      setVendors({
+        ...vendorsContext,
+        chainObj,
+      });
+      localStorage.setItem(
+        'vendors',
+        JSON.stringify({
+          ...vendorsContext,
+          chainObj,
         }),
       );
     }
@@ -101,7 +131,17 @@ const RestaurantDropdown = ({ vendors, restaurants }) => {
       <div tabIndex={-1} role="presentation" onClick={handleClick} style={{ width: 300 }}>
         <img className="select_icon" src={selectIcon} alt="Select Icon" />
         <TypographyKit className="restaurants-selected" variant="div">
-          <div>{restaurants.join(', ')}</div>
+          <div>
+            {vendors.map((obj, index) => {
+              if (restaurants.find((el) => obj.chain_id === el)) {
+                return `${obj.data.chain_name}, `;
+              }
+              if (index === vendors.length - 1) {
+                return obj.data.chain_name;
+              }
+              return '';
+            })}
+          </div>
         </TypographyKit>
         <ExpandMoreIcon />
       </div>
@@ -111,13 +151,14 @@ const RestaurantDropdown = ({ vendors, restaurants }) => {
         onClick={(e) => e.stopPropagation()}
         className={`dropdown-paper ${active ? 'active' : ''}`}
       >
-        {vendors.map((el) => (
+        {Object.keys(vendorsContext.display).map((el) => (
           <RestaurantCheckboxAccordion
-            key={el.vendor_id}
+            key={el}
             handleChange={handleChange}
-            restaurants={restaurants}
-            info={el}
-            platform="deliveroo"
+            info={vendorsContext.display[el]}
+            chainName={el}
+            chainArr={Object.keys(chainObj)}
+            handleChangeVendor={handleChangeVendor}
           />
         ))}
       </div>

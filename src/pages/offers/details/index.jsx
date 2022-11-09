@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import MenuItem from './MenuItem';
 import Dates from '../../../components/dates/Dates';
-import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import ButtonKit from '../../../kits/button/ButtonKit';
 import TypographyKit from '../../../kits/typography/TypographyKit';
 import SmartRuleBtnIcon from '../../../assets/images/ic_sm-rule.png';

@@ -40,9 +40,10 @@
     right: 18px;
   }
 
-  > .restaurant-dropdown{
+  >.restaurant-dropdown {
     overflow: hidden;
   }
+
   >div {
     box-shadow: none;
     border-radius: 30px;
@@ -255,10 +256,15 @@
     visibility: hidden;
     transition: .3s;
     height: 0;
-    cursor: default;
+    cursor: pointer;
     display: none;
 
     >label {
+      width: 100%;
+    }
+
+    >div,
+    label {
       cursor: pointer !important;
       margin-left: 29px;
       position: relative;
@@ -294,7 +300,23 @@
       opacity: 1;
       visibility: visible;
       height: 100%;
-      display: block;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &.vendor {
+      >label {
+        margin-left: 40px;
+
+        &::before {
+          content: none;
+        }
+
+        &::after {
+          content: none;
+        }
+      }
     }
   }
 }

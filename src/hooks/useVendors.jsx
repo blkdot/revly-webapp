@@ -37,25 +37,24 @@ function useVendors() {
           .flatMap((p) =>
             newData[p.name].forEach((v) => {
               vendorsTemp.push({ ...v, platform: p.name });
-              restaurantTemp.push(v.data.vendor_name);
+              restaurantTemp.push(v.chain_id);
             }),
           );
       }
-
+      const chainObjTemp = {};
+      Object.keys(newData.display).forEach((n) => {
+        chainObjTemp[n] = newData.display[n];
+      });
       if (vendorsTemp.length !== vendors.vendorsArr.length) {
-        setVendors({
+        const dataV = {
           restaurants: restaurantTemp,
           vendorsObj: newData,
           vendorsArr: vendorsTemp,
-        });
-        localStorage.setItem(
-          'vendors',
-          JSON.stringify({
-            restaurants: restaurantTemp,
-            vendorsObj: newData,
-            vendorsArr: vendorsTemp,
-          }),
-        );
+          display: newData.display,
+          chainObj: chainObjTemp,
+        };
+        setVendors(dataV);
+        localStorage.setItem('vendors', JSON.stringify(dataV));
       }
     });
     return () => {
