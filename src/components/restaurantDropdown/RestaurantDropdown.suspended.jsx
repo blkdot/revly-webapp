@@ -8,6 +8,7 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 
 const RestaurantDropdown = () => {
+  onbeforeunload = function () { localStorage.removeItem('vendors'); return ''; };
   const { setVendors, vendors: vendorsContext } = useDate();
   const { vendorsObj, display, chainObj } = vendorsContext;
   const [active, setActive] = useState(false);
