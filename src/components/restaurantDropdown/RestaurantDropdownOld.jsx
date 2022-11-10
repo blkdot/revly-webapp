@@ -21,13 +21,13 @@ const MenuProps = {
     id: 'restaurant_dropdown_menu',
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+      width: 300,
       left: 0,
     },
   },
 };
 
-const RestaurantDropdown = ({ vendors, vendorsPlatform, restaurants }) => {
+const RestaurantDropdownOld = ({ vendors, vendorsPlatform, restaurants }) => {
   const { setVendors, vendors: vendorsContext } = useDate();
 
   const handleChange = (event) => {
@@ -57,12 +57,17 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform, restaurants }) => {
   };
 
   return (
-    <div className="restaurant-dropdown_wrapper">
+    <div className="restaurant-dropdown_wrapper old">
       <TypographyKit className="top-text-inputs" variant="subtitle">
         Select a Vendor
       </TypographyKit>
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
-        <img className="select_icon" src={selectIcon} alt="Select Icon" />
+        <img
+          style={{ position: 'absolute' }}
+          className="select_icon"
+          src={selectIcon}
+          alt="Select Icon"
+        />
         <SelectKit
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
@@ -72,7 +77,7 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform, restaurants }) => {
           input={<OutlindeInputKit />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
-          sx={{ textTransform: 'capitalize' }}
+          sx={{ textTransform: 'capitalize', paddingLeft: '25px', paddingRight: '0px' }}
         >
           {vendors?.map((info) => (
             <MenuItemKit key={info.vendor_id} value={info.data.vendor_name}>
@@ -94,4 +99,4 @@ const RestaurantDropdown = ({ vendors, vendorsPlatform, restaurants }) => {
   );
 };
 
-export default RestaurantDropdown;
+export default RestaurantDropdownOld;

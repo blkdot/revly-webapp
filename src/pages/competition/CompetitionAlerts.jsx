@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
@@ -22,11 +22,12 @@ import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsObj, restaurants } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -193,11 +194,15 @@ const CompetitionAlerts = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          vendors={vendorsArr}
-          restaurants={restaurants}
-          vendorsPlatform={Object.keys(vendorsObj)}
-        />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">

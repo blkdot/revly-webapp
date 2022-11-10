@@ -21,6 +21,8 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
       restaurants: [],
       vendorsObj: {},
       vendorsArr: [],
+      display: {},
+      chainObj: {},
     },
   );
 

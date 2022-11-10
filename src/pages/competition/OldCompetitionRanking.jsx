@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
@@ -19,11 +19,12 @@ import { useAlert } from '../../hooks/useAlert';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useVendors from '../../hooks/useVendors';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const CompetitionRanking = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsObj, restaurants } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
@@ -113,10 +114,15 @@ const CompetitionRanking = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          vendors={vendorsArr.filter((v) => v.platform === platform)}
-          restaurants={restaurants}
-        />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr.filter((v) => v.platform === platform)}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">

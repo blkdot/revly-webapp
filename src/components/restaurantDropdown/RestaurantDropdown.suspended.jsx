@@ -1,84 +1,112 @@
 import React, { useState } from 'react';
 
 import './RestaurantDropdown.scss';
-// import SelectKit from '../../kits/select/SelectKit';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import useDate from '../../hooks/useDate';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
-
-// import PaperKit from '../../kits/paper/PaperKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-// eslint-disable-next-line
-const MenuProps = {
-  PaperProps: {
-    id: 'restaurant_dropdown_menu',
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-      left: 0,
-    },
-  },
-};
-// eslint-disable-next-line
-const RestaurantDropdown = ({ vendors, restaurants }) => {
-  // eslint-disable-next-line
+const RestaurantDropdown = () => {
   const { setVendors, vendors: vendorsContext } = useDate();
+  const { vendorsObj, display, chainObj } = vendorsContext;
   const [active, setActive] = useState(false);
-  const handleChange = (event, platform) => {
+  const handleChange = (event) => {
     const {
-      // eslint-disable-next-line
-      target: { value, checked }
+      target: { value, checked },
     } = event;
-    if (restaurants.length > 0) {
+    if (Object.keys(chainObj).length > 1) {
       if (!checked) {
-        restaurants.splice(
-          restaurants.findIndex((el) => el === value),
-          1,
-        );
-        vendorsContext.vendorsObj[platform].splice(
-          restaurants.findIndex((el) => el === value),
-          1,
-        );
+        Object.keys(chainObj[value]).forEach((n) => {
+          chainObj[value][n].checked = false;
+          Object.keys(chainObj[value][n]).forEach((platform) => {
+            vendorsObj[platform]?.forEach((obj, index) => {
+              if (+obj.chain_id === chainObj[value][n][platform].chain_id) {
+                vendorsObj[platform].splice(index, 1);
+              }
+            });
+          });
+        });
         setVendors({
           ...vendorsContext,
-          restaurants,
-          vendorsObj: vendorsContext.vendorsObj,
+          chainObj,
         });
         localStorage.setItem(
           'vendors',
           JSON.stringify({
             ...vendorsContext,
-            restaurants,
-            vendorsObj: vendorsContext.vendorsObj,
+            chainObj,
           }),
         );
         return;
       }
-      restaurants.splice(
-        vendors.findIndex((el) => el.data.vendor_name === value),
-        0,
-        vendors.find((el) => el.data.vendor_name === value).data.vendor_name,
-      );
-      vendorsContext.vendorsObj[platform].splice(
-        vendors.findIndex((el) => el.data.vendor_name === value),
-        0,
-        vendors.find((el) => el.data.vendor_name === value),
-      );
+    }
+    if (checked) {
+      Object.keys(chainObj[value]).forEach((n) => {
+        chainObj[value][n].checked = true;
+        Object.keys(chainObj[value][n]).forEach((platform) => {
+          vendorsObj[platform]?.splice(0, 0, chainObj[value][n][platform]);
+        });
+      });
       setVendors({
         ...vendorsContext,
-        restaurants,
-        vendorsObj: vendorsContext.vendorsObj,
+        chainObj,
       });
       localStorage.setItem(
         'vendors',
         JSON.stringify({
           ...vendorsContext,
-          restaurants,
-          vendorsObj: vendorsContext.vendorsObj,
+          chainObj,
+        }),
+      );
+    }
+  };
+  const handleChangeVendor = (event, chainName) => {
+    const {
+      target: { value, checked },
+    } = event;
+    if (Object.keys(chainObj[chainName]).length > 0) {
+      if (!checked) {
+        chainObj[chainName][value].checked = false;
+        Object.keys(chainObj[chainName][value]).forEach((platform) => {
+          vendorsObj[platform]?.forEach((obj, index) => {
+            if (+obj.chain_id === chainObj[chainName][value][platform].chain_id) {
+              vendorsObj[platform].splice(index, 1);
+            }
+          });
+        });
+        setVendors({
+          ...vendorsContext,
+          chainObj,
+          vendorsObj,
+        });
+        localStorage.setItem(
+          'vendors',
+          JSON.stringify({
+            ...vendorsContext,
+            chainObj,
+            vendorsObj,
+          }),
+        );
+        return;
+      }
+    }
+    if (checked) {
+      chainObj[chainName][value].checked = true;
+      Object.keys(chainObj[chainName][value]).forEach((platform) => {
+        vendorsObj[platform]?.splice(0, 0, chainObj[chainName][value][platform]);
+      });
+      setVendors({
+        ...vendorsContext,
+        chainObj,
+        vendorsObj,
+      });
+      localStorage.setItem(
+        'vendors',
+        JSON.stringify({
+          ...vendorsContext,
+          chainObj,
+          vendorsObj,
         }),
       );
     }
@@ -93,6 +121,10 @@ const RestaurantDropdown = ({ vendors, restaurants }) => {
     body.style.overflowY = 'hidden';
     setActive(true);
   };
+  const getChecked = (chainName) => {
+    const arr = Object.keys(chainObj[chainName]).map((n) => chainObj[chainName][n].checked);
+    return arr.every((bool) => bool === true);
+  };
   return (
     <div className="restaurant-dropdown_wrapper">
       <TypographyKit className="top-text-inputs" variant="subtitle">
@@ -101,7 +133,17 @@ const RestaurantDropdown = ({ vendors, restaurants }) => {
       <div tabIndex={-1} role="presentation" onClick={handleClick} style={{ width: 300 }}>
         <img className="select_icon" src={selectIcon} alt="Select Icon" />
         <TypographyKit className="restaurants-selected" variant="div">
-          <div>{restaurants.join(', ')}</div>
+          <div>
+            {Object.keys(chainObj).map((chainName, index) => {
+              if (index === Object.keys(chainObj).length - 1 && getChecked(chainName)) {
+                return chainName;
+              }
+              if (getChecked(chainName)) {
+                return `${chainName}, `;
+              }
+              return '';
+            })}
+          </div>
         </TypographyKit>
         <ExpandMoreIcon />
       </div>
@@ -111,13 +153,15 @@ const RestaurantDropdown = ({ vendors, restaurants }) => {
         onClick={(e) => e.stopPropagation()}
         className={`dropdown-paper ${active ? 'active' : ''}`}
       >
-        {vendors.map((el) => (
+        {Object.keys(display).map((el) => (
           <RestaurantCheckboxAccordion
-            key={el.vendor_id}
+            key={el}
             handleChange={handleChange}
-            restaurants={restaurants}
-            info={el}
-            platform="deliveroo"
+            info={display[el]}
+            chainName={el}
+            chainArr={Object.keys(chainObj)}
+            handleChangeVendor={handleChangeVendor}
+            chainObj={chainObj}
           />
         ))}
       </div>

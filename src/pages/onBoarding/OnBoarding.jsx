@@ -7,7 +7,6 @@ import { pascalCase } from 'change-case';
 import './OnBoarding.scss';
 
 import OnBoardingForm from '../../components/onboarding/OnBoarding';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
 import Dates from '../../components/dates/Dates';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
@@ -26,6 +25,7 @@ import { usePlatform } from '../../hooks/usePlatform';
 import { useAlert } from '../../hooks/useAlert';
 
 import { platformList } from '../../data/platformList';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const START_KEY = 'start';
 const END_KEY = 'last';
@@ -390,7 +390,7 @@ const OnBoarding = () => {
   return (
     <div className="onboarding">
       <div className="top-inputs">
-        <RestaurantDropdown vendors={[]} restaurants={[]} vendorsPlatform={[]} />
+        <RestaurantDropdownOld vendors={[]} restaurants={[]} vendorsPlatform={[]} />
         <Dates />
       </div>
       <FinanceEmpty />

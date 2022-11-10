@@ -24,7 +24,7 @@ function useVendors() {
       const newData = data.data;
 
       delete newData?.master_email;
-      delete newData?.display;
+      const chainObjTemp = {};
 
       const restaurantTemp = [];
       const vendorsTemp = [];
@@ -43,20 +43,24 @@ function useVendors() {
           );
       }
 
-      if (vendorsTemp.length !== vendors.vendorsArr.length) {
-        setVendors({
-          restaurants: restaurantTemp,
-          vendorsObj: newData,
-          vendorsArr: vendorsTemp,
+      Object.keys(newData.display).forEach((n) => {
+        chainObjTemp[n] = newData.display[n];
+        Object.keys(newData.display[n]).forEach((v) => {
+          chainObjTemp[n][v].checked = true;
         });
-        localStorage.setItem(
-          'vendors',
-          JSON.stringify({
-            restaurants: restaurantTemp,
-            vendorsObj: newData,
-            vendorsArr: vendorsTemp,
-          }),
-        );
+      });
+      const vendorsObjTemp = { ...newData };
+      delete vendorsObjTemp.display;
+      if (vendorsTemp.length !== vendors.vendorsArr.length) {
+        const dataV = {
+          restaurants: restaurantTemp,
+          vendorsArr: vendorsTemp,
+          vendorsObj: vendorsObjTemp,
+          display: newData.display,
+          chainObj: chainObjTemp,
+        };
+        setVendors(dataV);
+        localStorage.setItem('vendors', JSON.stringify(dataV));
       }
     });
     return () => {

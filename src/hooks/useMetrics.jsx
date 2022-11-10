@@ -34,11 +34,11 @@ function useMetrics() {
   };
   useMemo(() => {
     handleRequest(afterPeriod, setMetricsafterPeriod);
-  }, [afterPeriod, vendorsObj]);
+  }, [afterPeriod, vendors]);
 
   useMemo(() => {
     handleRequest(beforePeriod, setMetricsbeforePeriod);
-  }, [beforePeriod, vendorsObj]);
+  }, [beforePeriod, vendors]);
 
   return { metricsbeforePeriod, metricsafterPeriod };
 }
