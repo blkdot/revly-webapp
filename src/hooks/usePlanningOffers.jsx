@@ -19,6 +19,7 @@ function usePlanningOffers({ dateRange }) {
   const handleRequest = () => {
     let isCancelled = false;
     setIsLoading(true);
+    delete vendorsObj.display;
     getOffers({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
