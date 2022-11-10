@@ -22,8 +22,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
       vendorsObj: {},
       vendorsArr: [],
       display: {},
-      displayChanging: {},
-      chainArr: [],
+      chainObj: {},
     },
   );
 

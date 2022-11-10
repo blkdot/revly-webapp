@@ -17,11 +17,12 @@ import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
 import useVendors from '../../hooks/useVendors';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod } = useMetrics();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj } = vendors;
+  const { chainObj, vendorsObj, display, restaurants, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
   const getTitle = (title) => {
     if (title === 'n_orders') {
@@ -53,27 +54,34 @@ const Dashboard = () => {
     }
     return RoiIcon;
   };
+
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          restaurants={restaurants}
-          vendors={vendorsArr}
-          vendorsPlatform={Object.keys(vendorsObj)}
-        />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates isDashboard />
       </div>
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Finance
-          restaurants={restaurants}
+          chainObj={chainObj}
           setTable={setTable}
           table={table}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
+          display={display}
+          restaurants={restaurants}
           vendors={vendorsArr}
         />
       ) : (
-        <FinanceEmpty vendors={vendorsArr} />
+        <FinanceEmpty />
       )}
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Marketing

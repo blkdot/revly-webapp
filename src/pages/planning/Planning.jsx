@@ -23,6 +23,7 @@ import Layers from '../../assets/icons/Layers';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import Vector from '../../assets/icons/Vector';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -39,7 +40,7 @@ const Planning = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
-  const { vendorsArr, restaurants, vendorsObj } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState(defaultFilterStateFormat);
@@ -279,11 +280,15 @@ const Planning = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          restaurants={restaurants}
-          vendors={vendorsArr}
-          vendorsPlatform={Object.keys(vendorsObj)}
-        />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
       {renderLayout()}

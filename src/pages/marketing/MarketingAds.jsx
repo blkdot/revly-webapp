@@ -28,12 +28,13 @@ import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdow
 import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
@@ -327,11 +328,15 @@ const MarketingAds = () => {
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown
-          restaurants={restaurants}
-          vendors={vendorsArr}
-          vendorsPlatform={Object.keys(vendorsObj)}
-        />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">

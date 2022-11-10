@@ -37,12 +37,14 @@
   position: relative;
 
   .MuiSvgIcon-root {
-    right: 18px;
+    right: 0px;
   }
 
   >.restaurant-dropdown {
     overflow: hidden;
   }
+
+
 
   >div {
     box-shadow: none;
@@ -68,6 +70,12 @@
       >div {
 
         color: #212B36;
+      }
+    }
+
+    &.old {
+      >div {
+        padding: 0 5px 0 5px;
       }
     }
   }
@@ -111,7 +119,6 @@
 #restaurant_dropdown_menu {
   border-radius: 12px;
   overflow: visible;
-  top: 95px !important;
   box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
   border: 1px solid rgba(145, 158, 171, 0.32);
 
@@ -199,6 +206,7 @@
   }
 
   .checkbox-accordion {
+    color: black;
     width: 100%;
     cursor: pointer;
     display: flex;
@@ -208,12 +216,12 @@
     &::before {
       content: none;
       position: absolute;
-      height: 78%;
-      top: 16px;
+      height: calc(40px * var(--l));
+      top: 20px;
       background-color: #F4F6F8;
       width: 3px;
       transition: .3s;
-      left: 10px;
+      left: 11px;
       z-index: -1;
     }
 
@@ -259,16 +267,18 @@
     cursor: pointer;
     display: none;
 
-    >label {
+    >div {
       width: 100%;
-    }
-
-    >div,
-    label {
       cursor: pointer !important;
       margin-left: 29px;
       position: relative;
       overflow: visible;
+      z-index: 50;
+      color: black;
+
+      >span {
+        margin-right: 5px;
+      }
 
       &::before {
         content: '';
