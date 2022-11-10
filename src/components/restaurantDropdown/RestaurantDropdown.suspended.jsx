@@ -8,7 +8,10 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 
 const RestaurantDropdown = () => {
-  onbeforeunload = function () { localStorage.removeItem('vendors'); return ''; };
+  onbeforeunload = function () {
+    localStorage.removeItem('vendors');
+    return '';
+  };
   const { setVendors, vendors: vendorsContext } = useDate();
   const { vendorsObj, display, chainObj } = vendorsContext;
   const [active, setActive] = useState(false);
@@ -122,9 +125,16 @@ const RestaurantDropdown = () => {
     body.style.overflowY = 'hidden';
     setActive(true);
   };
-  const getChecked = (chainName) => {
-    const arr = Object.keys(chainObj[chainName]).map((n) => chainObj[chainName][n].checked);
-    return arr.every((bool) => bool === true);
+  const getChain = () => {
+    const obj = {};
+    Object.keys(chainObj).forEach((chainName) => {
+      Object.keys(chainObj[chainName]).forEach((n) => {
+        if (chainObj[chainName][n].checked) {
+          obj[chainName] = {};
+        }
+      });
+    });
+    return Object.keys(obj);
   };
   return (
     <div className="restaurant-dropdown_wrapper">
@@ -134,17 +144,7 @@ const RestaurantDropdown = () => {
       <div tabIndex={-1} role="presentation" onClick={handleClick} style={{ width: 300 }}>
         <img className="select_icon" src={selectIcon} alt="Select Icon" />
         <TypographyKit className="restaurants-selected" variant="div">
-          <div>
-            {Object.keys(chainObj).map((chainName, index) => {
-              if (index === Object.keys(chainObj).length - 1 && getChecked(chainName)) {
-                return chainName;
-              }
-              if (getChecked(chainName)) {
-                return `${chainName}, `;
-              }
-              return '';
-            })}
-          </div>
+          <div>{getChain().join(', ')}</div>
         </TypographyKit>
         <ExpandMoreIcon />
       </div>

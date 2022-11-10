@@ -60,14 +60,16 @@ const Finance = ({
     return Object.keys(obj);
   };
   const isDisplay = () => {
-    if (display) {
+    if (!display) {
       return restaurants.length === vendors.length || restaurants.length === 0 ? (
         <p>All Points of sales</p>
       ) : (
         <p>
           {' '}
           {vendors.map((obj) =>
-            restaurants.find((el) => obj.chain_id === el) ? `${obj.data.chain_name}, ` : '',
+            restaurants.find((el) => obj.data.vendor_name === el)
+              ? `${obj.data.vendor_name}, `
+              : '',
           )}
         </p>
       );
