@@ -43,7 +43,6 @@ const OfferDetailComponent = () => {
   const {
     state: { offerDetail: data, prevPath },
   } = useLocation();
-
   const [offerDetail, setOfferDetail] = useState(data);
   const navigate = useNavigate();
   const {
@@ -167,25 +166,27 @@ const OfferDetailComponent = () => {
           )}
           <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
         </div>
-        <div className="marketing-top">
-          <div className="marketing-top-text">
-            <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
-            <TypographyKit color="#637381" variant="subtitle">
-              Create and manage all your offers. Set personalised rules to automatically trigger
-              your offers.
-            </TypographyKit>
+        {prevPath === '/marketing/offer' ? (
+          <div className="marketing-top">
+            <div className="marketing-top-text">
+              <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
+              <TypographyKit color="#637381" variant="subtitle">
+                Create and manage all your offers. Set personalised rules to automatically trigger
+                your offers.
+              </TypographyKit>
+            </div>
+            <div className="markting-top-btns">
+              <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
+                <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
+                Create a smart rule
+              </ButtonKit>
+              <ButtonKit onClick={() => OpenSetup()} variant="contained">
+                <img src={SettingFuture} alt="Setting future icon" />
+                Set up an offer
+              </ButtonKit>
+            </div>
           </div>
-          <div className="markting-top-btns">
-            <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
-              <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
-              Create a smart rule
-            </ButtonKit>
-            <ButtonKit onClick={() => OpenSetup()} variant="contained">
-              <img src={SettingFuture} alt="Setting future icon" />
-              Set up an offer
-            </ButtonKit>
-          </div>
-        </div>
+        ) : null}
         <PaperKit className="marketing-paper offer-paper">
           <div>
             <div className="offer-details-actions">

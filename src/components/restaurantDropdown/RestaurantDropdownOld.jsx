@@ -28,7 +28,7 @@ const MenuProps = {
 };
 
 const RestaurantDropdownOld = ({ vendors, vendorsPlatform, restaurants }) => {
-  onbeforeunload = function () {
+  onbeforeunload = () => {
     localStorage.removeItem('vendors');
     return '';
   };

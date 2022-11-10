@@ -44,6 +44,9 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
     if (title === 'accrued_discounts') {
       return 'discount offered';
     }
+    if (title === 'profit') {
+      return 'net revenue';
+    }
     return title;
   };
   const getafterPeriod = () => {

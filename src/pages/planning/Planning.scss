@@ -97,3 +97,15 @@
     }
   }
 }
+.right-part-header_link{
+  &.planning{
+    &::before{
+      width: 160px !important;
+    }
+    &.active{
+      &::before{
+        left: 160px !important;
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { pascalCase } from 'change-case';
 
 import './Planning.scss';
-
+import { useLocation, useNavigate } from 'react-router-dom';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useDate from '../../hooks/useDate';
@@ -47,6 +47,9 @@ const Planning = () => {
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     renderPlatform,
@@ -96,12 +99,25 @@ const Planning = () => {
       {},
     );
 
+  const handleRowClick = (id) => {
+    const rowId = id.split('_');
+
+    navigate(`/offer/detail/${rowId[1]}`, {
+      state: {
+        // eslint-disable-next-line eqeqeq
+        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        prevPath: location.pathname,
+      },
+    });
+  };
+
   const renderTable = () => (
     <TableRevly
       isLoading={isLoadingAds || isLoadingOffers}
       headers={headersOffers}
       rows={dataFiltered.map(renderRowsByHeader)}
       mainFieldOrdered="start_date"
+      onClickRow={handleRowClick}
     />
   );
 
@@ -216,9 +232,9 @@ const Planning = () => {
   const renderLayout = () => (
     <PaperKit className="marketing-paper offer-paper">
       <div className="right-part">
-        <div className="right-part-header marketing-links">
+        <div className="right-part-header planning-links">
           <TypographyKit
-            className={`right-part-header_link ${active ? 'active' : ''}`}
+            className={`right-part-header_link planning ${active ? 'active' : ''}`}
             variant="div"
           >
             <BoxKit className={!active ? 'active' : ''} onClick={() => setActive(0)}>
