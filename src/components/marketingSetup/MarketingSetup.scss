@@ -967,7 +967,9 @@
   justify-content: space-between !important;
   align-items: center !important;
   width: 100% !important;
-
+  b{
+    margin: 0 15px;
+  }
   > div {
     display: flex;
     align-items: center;

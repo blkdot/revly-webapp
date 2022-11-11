@@ -35,7 +35,9 @@ function usePlanningAds({ dateRange }) {
   };
 
   useMemo(() => {
-    handleRequest();
+    if (Object.keys(vendorsObj).length > 0) {
+      handleRequest();
+    }
   }, [dateRange, vendors]);
 
   return { ads, dateRange, isLoading };
