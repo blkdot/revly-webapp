@@ -76,28 +76,48 @@ const CompetitionAlerts = () => {
       label: 'Alert',
     },
     {
+      id: 'start_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Starting Date',
+    },
+    {
+      id: 'end_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ending Date',
+    },
+    {
+      id: 'start_hour',
+      numeric: false,
+      disablePadding: true,
+      label: 'Starting Hour',
+    },
+    {
+      id: 'end_hour',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ending Hour',
+    },
+    {
       id: 'status',
       numeric: false,
       disablePadding: true,
       label: 'Status',
     },
-    {
-      id: 'mov',
-      numeric: false,
-      disablePadding: true,
-      label: 'Minimum Order Value',
-    },
   ];
 
-  const { renderPercent, renderCurrency, renderStatus, renderSimpleRow } =
-    useTableContentFormatter();
+  const { renderPercent, renderStatus, renderSimpleRow } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
     type: renderSimpleRow,
     alert: renderPercent,
+    start_date: renderSimpleRow,
+    end_date: renderSimpleRow,
+    start_hour: renderSimpleRow,
+    end_hour: renderSimpleRow,
     status: renderStatus,
-    mov: renderCurrency,
   };
 
   useEffect(() => {
@@ -132,8 +152,10 @@ const CompetitionAlerts = () => {
         name: v.vendor_name,
         type: v.discount_type,
         alert: v.discount,
-        mov: v.mov ?? 0,
         start_date: v.start_date,
+        end_date: v.start_date,
+        start_hour: '00:00',
+        end_hour: '00:00',
         status: v.status === 'Live' ? 'active' : 'inactive',
         id: v.vendor_id,
       }));
