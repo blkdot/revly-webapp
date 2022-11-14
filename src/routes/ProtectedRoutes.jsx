@@ -20,7 +20,7 @@ const ProtectedRoutes = () => {
   const renderLayout = () => (
     <div className="user-page">
       <Navbar />
-      <ContainerKit>
+      <ContainerKit sx={{ zIndex: 5000 }}>
         <Outlet />
       </ContainerKit>
     </div>
