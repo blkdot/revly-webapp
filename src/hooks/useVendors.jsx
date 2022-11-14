@@ -6,7 +6,7 @@ import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
 import useDate from './useDate';
 
-function useVendors() {
+const useVendors = () => {
   const { getVendors } = useApi();
   const { environment } = config;
   const { vendors, setVendors } = useDate();
@@ -69,6 +69,6 @@ function useVendors() {
   const values = useMemo(() => ({ vendors, setVendors }), [vendors]);
 
   return values;
-}
+};
 
 export default useVendors;
