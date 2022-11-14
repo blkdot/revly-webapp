@@ -463,7 +463,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       };
     });
 
-    setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
+    // setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
   };
 
   const timeSelected = () => {
@@ -513,7 +513,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       };
     });
 
-    setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
+    // setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
   };
 
   const clearTimeSelected = () => {

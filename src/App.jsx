@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { QueryClientProvider, QueryClient } from 'react-query';
 
 import './App.scss';
 
@@ -42,43 +43,53 @@ const theme = createTheme({
   },
 });
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 const App = () => (
-  <div className="App">
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <ThemeProvider theme={theme}>
-        <GlobalFunctionalitiesContextProvider>
-          <PlatformProvider>
-            <AuthContextProvider>
-              <Routes>
-                <Route element={<AuthLayout />}>
-                  <Route path="/" element={<SignIn />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                </Route>
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route element={<ProtectedRoutes />}>
-                  <Route element={<ProtectedOnboardRoutes />}>
-                    {/* <Route path='/account' element={<Account />} /> */}
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/planning" element={<Planning />} />
-                    <Route path="/competition/ranking" element={<CompetitionRanking />} />
-                    <Route path="/competition/alerts" element={<CompetitionAlerts />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/marketing/offer" element={<MarketingOffer />} />
-                    <Route path="/marketing/ads" element={<MarketingAds />} />
-                    <Route path="/verify-code" element={<VerifyCode />} />
-                    <Route path="/offer/detail/:offerId" element={<OfferDetails />} />
+  <QueryClientProvider client={queryClient}>
+    <div className="App">
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <ThemeProvider theme={theme}>
+          <GlobalFunctionalitiesContextProvider>
+            <PlatformProvider>
+              <AuthContextProvider>
+                <Routes>
+                  <Route element={<AuthLayout />}>
+                    <Route path="/" element={<SignIn />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                   </Route>
-                  <Route path="/onboarding" element={<OnBoarding />} />
-                  <Route path="/check" element={<Check />} />
-                </Route>
-              </Routes>
-            </AuthContextProvider>
-          </PlatformProvider>
-        </GlobalFunctionalitiesContextProvider>
-      </ThemeProvider>
-    </LocalizationProvider>
-  </div>
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route element={<ProtectedRoutes />}>
+                    <Route element={<ProtectedOnboardRoutes />}>
+                      {/* <Route path='/account' element={<Account />} /> */}
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/planning" element={<Planning />} />
+                      <Route path="/competition/ranking" element={<CompetitionRanking />} />
+                      <Route path="/competition/alerts" element={<CompetitionAlerts />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/marketing/offer" element={<MarketingOffer />} />
+                      <Route path="/marketing/ads" element={<MarketingAds />} />
+                      <Route path="/verify-code" element={<VerifyCode />} />
+                      <Route path="/offer/detail/:offerId" element={<OfferDetails />} />
+                    </Route>
+                    <Route path="/onboarding" element={<OnBoarding />} />
+                    <Route path="/check" element={<Check />} />
+                  </Route>
+                </Routes>
+              </AuthContextProvider>
+            </PlatformProvider>
+          </GlobalFunctionalitiesContextProvider>
+        </ThemeProvider>
+      </LocalizationProvider>
+    </div>
+  </QueryClientProvider>
 );
 
 export default App;
