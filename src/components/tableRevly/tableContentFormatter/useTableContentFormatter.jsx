@@ -122,10 +122,10 @@ const useTableContentFormatter = () => {
   };
 
   const renderOrdinalSuffix = (r, h) => (
-    <>
+    <TableCellKit>
       {ordinalSuffixOf(r[h.id]) >= 100 && '> '}
       {ordinalSuffixOf(r[h.id])}
-    </>
+    </TableCellKit>
   );
 
   return {

@@ -4,7 +4,7 @@ import { pascalCase } from 'change-case';
 
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import ButtonKit from '../../kits/button/ButtonKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Marketing.scss';
@@ -28,12 +28,13 @@ import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdow
 import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
@@ -327,7 +328,15 @@ const MarketingAds = () => {
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className="marketing-top">

@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import talabat from '../../assets/images/talabat-favicon.png';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import deliveroo from '../../assets/images/deliveroo-favicon.webp';
+import selectIcon from '../../assets/images/ic_select.png';
 
-const RestaurantCheckboxAccordion = ({ info, restaurants, handleChange }) => {
+const RestaurantCheckboxAccordion = ({
+  info,
+  chainName,
+  handleChange,
+  handleChangeVendor,
+  chainObj,
+}) => {
   const [active, setActive] = useState(false);
+  const getChecked = () => {
+    const arr = Object.keys(chainObj[chainName]).map((n) => chainObj[chainName][n].checked);
+    return arr.every((bool) => bool === true);
+  };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       <div
@@ -14,39 +23,41 @@ const RestaurantCheckboxAccordion = ({ info, restaurants, handleChange }) => {
         role="presentation"
         className={`checkbox-accordion ${active ? 'active' : ''}`}
         onClick={() => setActive(!active)}
+        style={{ '--l': Object.keys(info).length }}
       >
         <div>
           <img
             tabIndex={-1}
             role="presentation"
             onClick={(e) => e.stopPropagation()}
-            src={info.platform === 'deliveroo' ? deliveroo : talabat}
-            alt={info.platform}
+            src={selectIcon}
+            alt="select icon"
           />
           <CheckboxKit
-            checked={restaurants.indexOf(info.data.vendor_name) > -1}
+            checked={getChecked()}
             onClick={(e) => e.stopPropagation()}
-            value={info.data.vendor_name}
-            onChange={(e) => handleChange(e, info.platform)}
+            value={chainName}
+            onChange={(e) => handleChange(e)}
           />
-          {info.data.vendor_name}
+          {chainName}
         </div>
         <ExpandMoreIcon />
       </div>
-      <div className={`accordion-dropdown ${active ? 'active' : ''}`}>
-        <InputLabelKit>
-          <CheckboxKit />
-          restaurant Name
+      {Object.keys(info).map((vendorName) => (
+        <InputLabelKit key={vendorName} className={`accordion-dropdown ${active ? 'active' : ''}`}>
+          <div>
+            <CheckboxKit
+              checked={
+                chainObj[chainName]?.checked ? true : chainObj[chainName][vendorName]?.checked
+              }
+              onChange={(e) => handleChangeVendor(e, chainName)}
+              value={vendorName}
+              onClick={(e) => e.stopPropagation()}
+            />
+            {vendorName}
+          </div>
         </InputLabelKit>
-        <InputLabelKit>
-          <CheckboxKit />
-          restaurant Name
-        </InputLabelKit>
-        <InputLabelKit>
-          <CheckboxKit />
-          restaurant Name
-        </InputLabelKit>
-      </div>
+      ))}
     </div>
   );
 };

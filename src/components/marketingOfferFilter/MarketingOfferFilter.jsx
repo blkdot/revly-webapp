@@ -87,6 +87,58 @@ const MarketingOfferFilter = (props) => {
     );
   };
 
+  const renderTargetFilter = () => {
+    if (!filtersHead.target) return null;
+
+    return (
+      <>
+        <hr />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            marginTop: '2rem',
+            flexDirection: 'column',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '13px',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <UserGroup />
+            &nbsp; Target
+          </span>
+          <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+            {filtersHead.target.map((item) => (
+              <div
+                key={item.value}
+                style={{
+                  display: 'flex',
+                  alignSelf: 'center',
+                  fontWeight: 'bold',
+                  marginRight: '1rem',
+                  marginTop: '1rem',
+                  width: '42%',
+                }}
+              >
+                <CheckboxKit
+                  checked={filters.target.includes(item.value) || false}
+                  onChange={() => handleChangeMultipleFilter('target')(item.value)}
+                />
+                <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </>
+    );
+  };
+
   return (
     <div
       role="presentation"
@@ -250,50 +302,7 @@ const MarketingOfferFilter = (props) => {
             ))}
           </div>
         </div>
-        <hr />
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            marginTop: '2rem',
-            flexDirection: 'column',
-          }}
-        >
-          <span
-            style={{
-              fontSize: '13px',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <UserGroup />
-            &nbsp; Target
-          </span>
-          <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.target.map((item) => (
-              <div
-                key={item.value}
-                style={{
-                  display: 'flex',
-                  alignSelf: 'center',
-                  fontWeight: 'bold',
-                  marginRight: '1rem',
-                  marginTop: '1rem',
-                  width: '42%',
-                }}
-              >
-                <CheckboxKit
-                  checked={filters.target.includes(item.value) || false}
-                  onChange={() => handleChangeMultipleFilter('target')(item.value)}
-                />
-                <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <hr />
+        {renderTargetFilter()}
         {renderAvgBasketFilter()}
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <ButtonKit

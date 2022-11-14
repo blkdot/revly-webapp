@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import MenuItem from './MenuItem';
 import Dates from '../../../components/dates/Dates';
-import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import ButtonKit from '../../../kits/button/ButtonKit';
 import TypographyKit from '../../../kits/typography/TypographyKit';
 import SmartRuleBtnIcon from '../../../assets/images/ic_sm-rule.png';
@@ -29,6 +29,7 @@ import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import useVendors from '../../../hooks/useVendors';
 import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
+import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -42,7 +43,6 @@ const OfferDetailComponent = () => {
   const {
     state: { offerDetail: data, prevPath },
   } = useLocation();
-
   const [offerDetail, setOfferDetail] = useState(data);
   const navigate = useNavigate();
   const {
@@ -54,7 +54,7 @@ const OfferDetailComponent = () => {
   const { user } = useUserAuth();
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, vendorsObj, restaurants } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
@@ -155,28 +155,38 @@ const OfferDetailComponent = () => {
       <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
-          <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+          {display ? (
+            <RestaurantDropdown />
+          ) : (
+            <RestaurantDropdownOld
+              restaurants={restaurants}
+              vendors={vendorsArr}
+              vendorsPlatform={Object.keys(vendorsObj)}
+            />
+          )}
           <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
         </div>
-        <div className="marketing-top">
-          <div className="marketing-top-text">
-            <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
-            <TypographyKit color="#637381" variant="subtitle">
-              Create and manage all your offers. Set personalised rules to automatically trigger
-              your offers.
-            </TypographyKit>
+        {prevPath === '/marketing/offer' ? (
+          <div className="marketing-top">
+            <div className="marketing-top-text">
+              <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
+              <TypographyKit color="#637381" variant="subtitle">
+                Create and manage all your offers. Set personalised rules to automatically trigger
+                your offers.
+              </TypographyKit>
+            </div>
+            <div className="markting-top-btns">
+              <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
+                <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
+                Create a smart rule
+              </ButtonKit>
+              <ButtonKit onClick={() => OpenSetup()} variant="contained">
+                <img src={SettingFuture} alt="Setting future icon" />
+                Set up an offer
+              </ButtonKit>
+            </div>
           </div>
-          <div className="markting-top-btns">
-            <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
-              <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
-              Create a smart rule
-            </ButtonKit>
-            <ButtonKit onClick={() => OpenSetup()} variant="contained">
-              <img src={SettingFuture} alt="Setting future icon" />
-              Set up an offer
-            </ButtonKit>
-          </div>
-        </div>
+        ) : null}
         <PaperKit className="marketing-paper offer-paper">
           <div>
             <div className="offer-details-actions">

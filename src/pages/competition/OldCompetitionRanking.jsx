@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import AddIcon from '@mui/icons-material/Add';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
+import CompetitionTable from '../../components/competitonTable/CompetitionTable';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import useDate from '../../hooks/useDate';
@@ -19,9 +19,6 @@ import { useAlert } from '../../hooks/useAlert';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useVendors from '../../hooks/useVendors';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
-import ButtonKit from '../../kits/button/ButtonKit';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const CompetitionRanking = () => {
@@ -53,14 +50,6 @@ const CompetitionRanking = () => {
     }
   };
 
-  const getNumArr = () => {
-    const numArr = [];
-    for (let i = 0; i < 5 - competitionRankingData.length; i++) {
-      numArr.push(i);
-    }
-    return numArr;
-  };
-
   useEffect(() => {
     if (userPlatformData) {
       const pl = userPlatformData.platforms;
@@ -75,67 +64,6 @@ const CompetitionRanking = () => {
       setPlatformList(list);
     }
   }, [userPlatformData]);
-
-  const headersAlert = [
-    {
-      id: 'name',
-      numeric: false,
-      disablePadding: true,
-      label: 'Name',
-    },
-    {
-      id: 'platform',
-      numeric: false,
-      disablePadding: true,
-      label: 'Platform',
-    },
-    {
-      id: 'r_offers',
-      numeric: false,
-      disablePadding: true,
-      label: 'Ranking in offers',
-    },
-    {
-      id: 'r_cuis',
-      numeric: false,
-      disablePadding: true,
-      label: 'Ranking in cuisine',
-    },
-    {
-      id: 'r_all',
-      numeric: false,
-      disablePadding: true,
-      label: 'Ranking in offers and cuisine',
-    },
-    {
-      id: 'ov',
-      numeric: false,
-      disablePadding: true,
-      label: 'Overall Ranking',
-    },
-  ];
-
-  const { renderPlatform, renderSimpleRow, renderOrdinalSuffix } = useTableContentFormatter();
-
-  const cellTemplatesObject = {
-    name: renderSimpleRow,
-    platform: renderPlatform,
-    r_offers: renderOrdinalSuffix,
-    r_cuis: renderOrdinalSuffix,
-    r_all: renderOrdinalSuffix,
-    ov: renderOrdinalSuffix,
-  };
-
-  const renderRowsByHeader = (r) =>
-    headersAlert.reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
-        id: `${cur.id}_${r.id}`,
-        data: r,
-      }),
-      {},
-    );
 
   const getData = async (plat, vend) => {
     setLoading(true);
@@ -175,10 +103,10 @@ const CompetitionRanking = () => {
     if (platform && vendorsArr.length) {
       getData(platform, vendorsObj[platform]);
     }
-  }, [platform, vendors, beforePeriodBtn]);
+  }, [platform, vendorsObj, beforePeriodBtn]);
 
   useEffect(() => {
-    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.chain_id);
+    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.data.vendor_name);
     setVendors({ ...vendors, restaurants: arr });
     localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
   }, [platform]);
@@ -242,30 +170,12 @@ const CompetitionRanking = () => {
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
-        {/* <CompetitionTable
+        <CompetitionTable
           loading={loading}
           type="ranking"
           open={Open}
           rows={competitionRankingData}
-        /> */}
-        <TableRevly
-          isLoading={loading}
-          headers={headersAlert}
-          rows={competitionRankingData.map(renderRowsByHeader)}
         />
-        {loading
-          ? null
-          : getNumArr().map((num) => (
-              <ButtonKit
-                onClick={() => Open()}
-                key={num}
-                variant="contained"
-                className="competition-add competiton-table-btn"
-              >
-                <AddIcon />
-                Add a Competitor
-              </ButtonKit>
-            ))}
       </PaperKit>
     </div>
   );

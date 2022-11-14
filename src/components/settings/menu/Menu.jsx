@@ -19,7 +19,7 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
 import { usePlatform } from '../../../hooks/usePlatform';
-import useDate from '../../../hooks/useDate';
+import useVendors from '../../../hooks/useVendors';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -33,8 +33,8 @@ const Menu = () => {
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
-  const { vendors } = useDate();
-  const { vendors: vendorsList } = vendors;
+  const { vendors } = useVendors();
+  const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState('');
   const { user } = useUserAuth();
 
@@ -77,11 +77,12 @@ const Menu = () => {
   }, [userPlatformData]);
 
   useEffect(() => {
-    if (vendorsList.length) {
-      const ve = vendorsList.filter((v) => v.platform === platform);
+    console.log(vendorList);
+    if (vendorList && vendorList.length) {
+      const ve = vendorList?.filter((v) => v.platform === platform);
       setBranch(ve[0] || '');
     }
-  }, [vendorsList, platform]);
+  }, [vendorList, platform]);
 
   useEffect(() => {
     if (branch) {
@@ -136,7 +137,7 @@ const Menu = () => {
             startIcon={
               <img src={icbranch} alt="category" style={{ position: 'relative', bottom: '2px' }} />
             }
-            items={vendorsList.filter((v) => v.platform === platform)}
+            items={vendorList?.filter((v) => v.platform === platform)}
             label="Select a branch"
             value={branch}
             renderOption={(v) => (

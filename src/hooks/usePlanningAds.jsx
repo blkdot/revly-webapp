@@ -1,5 +1,6 @@
+import { useMemo, useState, useEffect } from 'react';
+import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
 import useApi from './useApi';
 import useDate from './useDate';
 import config from '../setup/config';
@@ -10,35 +11,31 @@ function usePlanningAds({ dateRange }) {
   const { vendorsObj } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { environment } = config;
   const { user } = useUserAuth();
 
-  const handleRequest = () => {
-    let isCancelled = false;
-    setIsLoading(true);
-    getAds({
-      master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
-      access_token: '',
-      vendors: vendorsObj,
-      start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
-      end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
-    }).then((data) => {
-      setIsLoading(false);
-      if (isCancelled) return;
+  const { data, isLoading, isError } = useQuery(['getAds', { dateRange, vendorsObj }], () =>
+    getAds(
+      {
+        master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+        access_token: '',
+        vendors: vendorsObj,
+        start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
+      },
+      { enabled: Object.keys(vendorsObj).length > 0 },
+    ),
+  );
 
-      setAds(data.data.ads);
-    });
-    return () => {
-      isCancelled = true;
-    };
-  };
+  useEffect(() => {
+    if (isLoading || isError) return;
 
-  useMemo(() => {
-    handleRequest();
-  }, [dateRange, vendorsObj]);
+    setAds(data.data.ads);
+  }, [isLoading, data, dateRange, JSON.stringify(vendorsObj)]);
 
-  return { ads, dateRange, isLoading };
+  const values = useMemo(() => ({ ads, dateRange, isLoading }), [isLoading, ads, dateRange]);
+
+  return values;
 }
 
 export default usePlanningAds;

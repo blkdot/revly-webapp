@@ -10,10 +10,12 @@ import useDate from '../../hooks/useDate';
 const Finance = ({
   metricsbeforePeriod,
   metricsafterPeriod,
-  vendors,
+  chainObj,
   setTable,
   table,
   restaurants,
+  display,
+  vendors,
 }) => {
   const { date } = useDate();
   const { beforePeriod, titleDate } = date;
@@ -37,16 +39,49 @@ const Finance = ({
 
     return `${titleDate}`;
   };
+  const getChecked = () => {
+    const checked = [];
+    Object.keys(chainObj).forEach((chainName) => {
+      checked.push(
+        Object.keys(chainObj[chainName]).every((n) => chainObj[chainName][n].checked === true),
+      );
+    });
+    return checked.every((bool) => bool === true);
+  };
+  const getChain = () => {
+    const obj = {};
+    Object.keys(chainObj).forEach((chainName) => {
+      Object.keys(chainObj[chainName]).forEach((n) => {
+        if (chainObj[chainName][n].checked) {
+          obj[chainName] = {};
+        }
+      });
+    });
+    return Object.keys(obj);
+  };
+  const isDisplay = () => {
+    if (!display) {
+      return restaurants.length === vendors.length || restaurants.length === 0 ? (
+        <p>All Points of sales</p>
+      ) : (
+        <p>
+          {' '}
+          {vendors.map((obj) =>
+            restaurants.find((el) => obj.data.vendor_name === el)
+              ? `${obj.data.vendor_name}, `
+              : '',
+          )}
+        </p>
+      );
+    }
+    return getChecked() ? <p>All Points of sales</p> : getChain().join(', ');
+  };
   return (
     <div className="block">
       <TypographyKit variant="h4">
         <p>{getbeforePeriod()}</p>
         <span> results for </span>
-        {restaurants.length === vendors.length || restaurants.length === 0 ? (
-          <p>All Points of sales</p>
-        ) : (
-          <p>{restaurants.join(', ')}</p>
-        )}
+        {isDisplay()}
       </TypographyKit>
       <div className="cardsWrapper finance-wrapper">
         {['revenue', 'n_orders', 'average_basket', 'profit'].map((info) => (

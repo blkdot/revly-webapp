@@ -28,8 +28,10 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
         return 0;
       }
 
-      return Number(
-        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(2),
+      return parseFloat(
+        Number(
+          (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0),
+        ),
       );
     }
     return 0;
@@ -43,6 +45,9 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
     }
     if (title === 'accrued_discounts') {
       return 'discount offered';
+    }
+    if (title === 'profit') {
+      return 'net revenue';
     }
     return title;
   };
@@ -99,7 +104,9 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
               {renderMetrics()}
-              {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
+              {getTitle() === 'roi' &&
+                parseFloat(Number(metricsbeforePeriod.all[title]).toFixed(1)) &&
+                ' %'}
             </TypographyKit>
           </div>
         </TypographyKit>

@@ -1,11 +1,12 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useQuery } from 'react-query';
 import useApi from './useApi';
 import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
 import useDate from './useDate';
 
-function useVendors() {
+const useVendors = () => {
   const { getVendors } = useApi();
   const { environment } = config;
   const { vendors, setVendors } = useDate();
@@ -16,57 +17,58 @@ function useVendors() {
     access_token: user.accessToken,
   };
 
-  const handleRequest = () => {
-    let isCancelled = false;
-    getVendors(requestVendorsDefaultParam).then((data) => {
-      if (isCancelled) return;
+  const { data, isLoading, isError } = useQuery(['getVendors'], () =>
+    getVendors(requestVendorsDefaultParam),
+  );
 
-      const newData = data.data;
+  useEffect(() => {
+    if (isLoading || isError) return;
 
-      delete newData?.master_email;
+    const newData = data.data;
 
-      const restaurantTemp = [];
-      const vendorsTemp = [];
+    delete newData?.master_email;
 
-      if (newData) {
-        platformList
-          .filter((p) => {
-            if (!newData[p.name]) delete newData[p.name];
-            return newData[p.name];
-          })
-          .flatMap((p) =>
-            newData[p.name].forEach((v) => {
-              vendorsTemp.push({ ...v, platform: p.name });
-              restaurantTemp.push(v.data.vendor_name);
-            }),
-          );
-      }
-      if (vendorsTemp.length !== vendors.vendorsArr.length) {
-        setVendors({
-          restaurants: restaurantTemp,
-          vendorsObj: newData,
-          vendorsArr: vendorsTemp,
-        });
-        localStorage.setItem(
-          'vendors',
-          JSON.stringify({
-            restaurants: restaurantTemp,
-            vendorsObj: newData,
+    const chainObjTemp = {};
+    const restaurantTemp = [];
+    const vendorsTemp = [];
 
-            vendorsArr: vendorsTemp,
-          }),
-        );
-      }
+    platformList
+      .filter((p) => {
+        if (!newData[p.name]) delete newData[p.name];
+        return newData[p.name];
+      })
+      .flatMap((p) =>
+        newData[p.name].forEach((v) => {
+          vendorsTemp.push({ ...v, platform: p.name });
+          restaurantTemp.push(v.data.vendor_name);
+        }),
+      );
+
+    Object.keys(newData.display).forEach((n) => {
+      chainObjTemp[n] = newData.display[n];
+      Object.keys(newData.display[n]).forEach((v) => {
+        chainObjTemp[n][v].checked = true;
+      });
     });
-    return () => {
-      isCancelled = true;
-    };
-  };
-  useMemo(() => {
-    handleRequest();
-  }, []);
 
-  return { vendors };
-}
+    if (vendorsTemp.length !== vendors.vendorsArr.length) {
+      const { display, ...rest } = newData;
+
+      const dataV = {
+        restaurants: restaurantTemp,
+        vendorsArr: vendorsTemp,
+        vendorsObj: rest,
+        display,
+        chainObj: chainObjTemp,
+      };
+      setVendors(dataV);
+      localStorage.setItem('vendors', JSON.stringify(dataV));
+    }
+  }, [data]);
+
+  const values = useMemo(() => ({ vendors, setVendors }), [vendors]);
+
+  return values;
+};
 
 export default useVendors;

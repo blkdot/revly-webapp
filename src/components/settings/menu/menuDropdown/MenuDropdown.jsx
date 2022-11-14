@@ -19,7 +19,7 @@ const MenuDropdown = (props) => {
     defaultValue,
   } = props;
 
-  const renderSelectItem = (arr) => arr.map((v) => renderOption(v));
+  const renderSelectItem = (arr) => arr?.map((v) => renderOption(v));
 
   return (
     <FormcontrolKit fullWidth>

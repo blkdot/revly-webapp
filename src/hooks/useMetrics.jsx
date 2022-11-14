@@ -15,12 +15,15 @@ function useMetrics() {
   const { environment } = config;
   const { user } = useUserAuth();
 
+  const clonedVendor = { ...vendorsObj };
+  delete clonedVendor.display;
+
   const handleRequest = (date, setMetrics) => {
     let isCancelled = false;
     getMetrics({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
       access_token: '',
-      vendors: vendorsObj,
+      vendors: clonedVendor,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
@@ -34,11 +37,11 @@ function useMetrics() {
   };
   useMemo(() => {
     handleRequest(afterPeriod, setMetricsafterPeriod);
-  }, [afterPeriod, vendorsObj]);
+  }, [afterPeriod, vendors]);
 
   useMemo(() => {
     handleRequest(beforePeriod, setMetricsbeforePeriod);
-  }, [beforePeriod, vendorsObj]);
+  }, [beforePeriod, vendors]);
 
   return { metricsbeforePeriod, metricsafterPeriod };
 }

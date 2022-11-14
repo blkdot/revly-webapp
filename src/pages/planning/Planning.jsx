@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { pascalCase } from 'change-case';
 
 import './Planning.scss';
-
+import { useLocation, useNavigate } from 'react-router-dom';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useDate from '../../hooks/useDate';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
 import usePlanningAds from '../../hooks/usePlanningAds';
@@ -23,6 +23,7 @@ import Layers from '../../assets/icons/Layers';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import Vector from '../../assets/icons/Vector';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -39,13 +40,16 @@ const Planning = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
-  const { vendorsArr, restaurants } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState(defaultFilterStateFormat);
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     renderPlatform,
@@ -95,12 +99,25 @@ const Planning = () => {
       {},
     );
 
+  const handleRowClick = (id) => {
+    const rowId = id.split('_');
+
+    navigate(`/offer/detail/${rowId[1]}`, {
+      state: {
+        // eslint-disable-next-line eqeqeq
+        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        prevPath: location.pathname,
+      },
+    });
+  };
+
   const renderTable = () => (
     <TableRevly
       isLoading={isLoadingAds || isLoadingOffers}
       headers={headersOffers}
       rows={dataFiltered.map(renderRowsByHeader)}
       mainFieldOrdered="start_date"
+      onClickRow={handleRowClick}
     />
   );
 
@@ -215,9 +232,9 @@ const Planning = () => {
   const renderLayout = () => (
     <PaperKit className="marketing-paper offer-paper">
       <div className="right-part">
-        <div className="right-part-header marketing-links">
+        <div className="right-part-header planning-links">
           <TypographyKit
-            className={`right-part-header_link ${active ? 'active' : ''}`}
+            className={`right-part-header_link planning ${active ? 'active' : ''}`}
             variant="div"
           >
             <BoxKit className={!active ? 'active' : ''} onClick={() => setActive(0)}>
@@ -279,7 +296,15 @@ const Planning = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
       {renderLayout()}

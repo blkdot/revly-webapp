@@ -111,15 +111,16 @@
 
   >div:nth-of-type(4).active~.indicator {
     left: calc(142px * 3);
+    width: 175px;
   }
 
   >div:nth-of-type(5).active~.indicator {
-    left: calc(140px * 4);
+    left: calc(150px * 4);
     width: 180px;
   }
 
   >div:nth-of-type(6).active~.indicator {
-    left: calc(150px * 5);
+    left: calc(160px * 5);
     width: 100px;
   }
 }

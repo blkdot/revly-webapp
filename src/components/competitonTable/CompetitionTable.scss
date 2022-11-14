@@ -135,7 +135,9 @@
 }
 
 @media(max-width: 1400px) {
-  .competition-box {}
+  .competition-box {
+    overflow-x: scroll;
+  }
 
   .competition-table-conatiner.competition-table-conatiner {
     width: 120%;

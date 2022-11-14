@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import Finance from '../../components/finance/Finance';
 import Marketing from '../../components/marketing/Marketing';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useMetrics from '../../hooks/useMetrics';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
@@ -16,14 +16,13 @@ import ProfitIcon from '../../assets/images/ic_offers-pr.png';
 import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
-// import { useGlobal } from '../../hooks/useGlobal';
 import useVendors from '../../hooks/useVendors';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod } = useMetrics();
-  // const { vendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants } = vendors;
+  const { chainObj, vendorsObj, display, restaurants, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
   const getTitle = (title) => {
     if (title === 'n_orders') {
@@ -34,6 +33,9 @@ const Dashboard = () => {
     }
     if (title === 'accrued_discounts') {
       return 'Discount offered';
+    }
+    if (title === 'profit') {
+      return 'net revenue';
     }
     return title;
   };
@@ -55,23 +57,34 @@ const Dashboard = () => {
     }
     return RoiIcon;
   };
+
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        <RestaurantDropdown restaurants={restaurants} vendors={vendorsArr} />
+        {display ? (
+          <RestaurantDropdown />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
         <Dates isDashboard />
       </div>
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Finance
-          restaurants={restaurants}
+          chainObj={chainObj}
           setTable={setTable}
           table={table}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
+          display={display}
+          restaurants={restaurants}
           vendors={vendorsArr}
         />
       ) : (
-        <FinanceEmpty vendors={vendorsArr} />
+        <FinanceEmpty />
       )}
       {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
         <Marketing
