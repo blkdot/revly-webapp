@@ -93,7 +93,7 @@ const Planning = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
-        id: `${cur.id}_${r.offer_id}`,
+        id: `${cur.id}_${r.offer_id}_${active ? 'ads' : 'offers'}`,
         data: r,
       }),
       {},
