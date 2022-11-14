@@ -12,11 +12,7 @@ export const getMetrics = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
-export const getVendors = (body) =>
-  axios
-    .post(`${apiUrl}/user/vendors`, body)
-    .then((res) => res)
-    .catch(handleResponse);
+export const getVendors = (body) => axios.post(`${apiUrl}/user/vendors`, body);
 
 export const getHeatmap = (type, body) =>
   axios.post(`${apiUrl}/user/heatmap/${type}`, body).then(handleResponse).catch(handleResponse);
