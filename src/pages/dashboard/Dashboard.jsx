@@ -34,6 +34,9 @@ const Dashboard = () => {
     if (title === 'accrued_discounts') {
       return 'Discount offered';
     }
+    if (title === 'profit') {
+      return 'net revenue';
+    }
     return title;
   };
   const getIcon = (title) => {

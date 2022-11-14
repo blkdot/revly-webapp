@@ -48,6 +48,9 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
     if (title === 'accrued_discounts') {
       return 'discount offered';
     }
+    if (title === 'profit') {
+      return 'net revenue';
+    }
     return title;
   };
   const getafterPeriod = () => {
@@ -121,11 +124,13 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
         return 0;
       }
 
-      return Number(
-        (
-          metricsbeforePeriod.talabat[title] / (metricsafterPeriod.talabat[title] / 100) -
-          100
-        ).toFixed(2),
+      return parseFloat(
+        Number(
+          (
+            metricsbeforePeriod.talabat[title] / (metricsafterPeriod.talabat[title] / 100) -
+            100
+          ).toFixed(0),
+        ),
       );
     }
     return '-';
@@ -137,11 +142,13 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
         return 0;
       }
 
-      return Number(
-        (
-          metricsbeforePeriod.deliveroo[title] / (metricsafterPeriod.deliveroo[title] / 100) -
-          100
-        ).toFixed(2),
+      return parseFloat(
+        Number(
+          (
+            metricsbeforePeriod.deliveroo[title] / (metricsafterPeriod.deliveroo[title] / 100) -
+            100
+          ).toFixed(0),
+        ),
       );
     }
     return '-';
@@ -153,7 +160,9 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
       }
 
       return Number(
-        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(2),
+        parseFloat(
+          (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0),
+        ),
       );
     }
     return '-';
@@ -175,7 +184,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
       if (getTitle() === 'roi') {
         return `${Math.round(metrics[title] * 100)} %`;
       }
-      return metrics[title];
+      return parseFloat(Number(metrics[title]).toFixed(1));
     }
     return '-';
   };

@@ -1,6 +1,7 @@
 @import '../../library.scss';
 
 .dates {
+  z-index: 10;
   display: flex;
   justify-content: flex-end;
   grid-gap: 20px;
@@ -114,7 +115,7 @@
   width: fit-content;
   top: 65px;
   left: auto;
-  right: 22%;
+  right: 0;
 
   transition: .4s;
 
@@ -123,7 +124,9 @@
     visibility: visible;
   }
 
-
+  &.month{
+    right: 30%;
+  }
 
 
   .month_picker {
@@ -397,8 +400,6 @@
 }
 @media(max-width: 1260px) {
   .date-range.date-range {
-    top: 130px;
-
     .rdrMonths {
       >div:nth-of-type(2) {
         display: none;
@@ -406,18 +407,27 @@
     }
   }
 }
+@media(max-width: 1024px) {
+  .date-range.date-range {
+    &.month {
+      right: 10%;
+    }
+  }
+}
 
+@media(max-width: 818px) {
+  .date-range.date-range {
+    &.month {
+      right: 0%;
+    }
+    &.range-afterPeriodContext{
+      top: 135px;
+    }
+  }
+}
 @media(max-width: 960px) {
   .dates {
     grid-gap: 10px;
-  }
-
-  .date-range.date-range {
-    top: 140px;
-
-    &.range-right {
-      top: 220px;
-    }
   }
 }
 
