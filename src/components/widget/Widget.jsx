@@ -104,9 +104,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
             </TypographyKit>
             <TypographyKit variant="h3" className="card-typography">
               {renderMetrics()}
-              {getTitle() === 'roi' &&
-                parseFloat(Number(metricsbeforePeriod.all[title]).toFixed(1)) &&
-                ' %'}
+              {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
             </TypographyKit>
           </div>
         </TypographyKit>
