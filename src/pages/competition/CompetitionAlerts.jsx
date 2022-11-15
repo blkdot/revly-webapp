@@ -148,17 +148,22 @@ const CompetitionAlerts = () => {
 
       const comp = await getCompetitors(body, plat);
 
-      const filt = alerts.data?.data.map((v) => ({
-        name: v.vendor_name,
-        type: v.discount_type,
-        alert: v.discount,
-        start_date: v.start_date,
-        end_date: v.start_date,
-        start_hour: '00:00',
-        end_hour: '00:00',
-        status: v.status === 'Live' ? 'active' : 'inactive',
-        id: v.vendor_id,
-      }));
+      const filt = alerts.data?.data.map((v) => {
+        const startDateTime = v.start_date.split('at').map((d) => d.trim());
+        const endDateTime = v.end_date.split('at').map((d) => d.trim());
+
+        return {
+          name: v.vendor_name,
+          type: v.discount_type,
+          alert: v.discount,
+          start_date: startDateTime[0],
+          end_date: startDateTime[0],
+          start_hour: startDateTime[1],
+          end_hour: endDateTime[1],
+          status: v.status === 'Live' ? 'active' : v.status,
+          id: v.vendor_id,
+        };
+      });
 
       setCompetitionAlertsData(filt || []);
 
