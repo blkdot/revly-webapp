@@ -52,6 +52,7 @@ import BoxKit from '../../kits/box/BoxKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import menuIcon from '../../assets/images/ic_menu.png';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
+import heatmapSelected from '../../utlls/heatmap/heatmapSelected';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -398,122 +399,14 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   const renderHeatmapBox = () => <span />;
 
-  const setSelectedForSample = () => {
-    let heatmapDataActive = heatmapData[links];
-
-    const t = times[0];
-
-    const heatmapStartTime = getHours(t.startTime) === 0 ? 24 : getHours(t.startTime);
-    const heatmapEndTime = getHours(t.endTime) === 0 ? 24 : getHours(t.endTime);
-    const heatmapStartDay = getDay(new Date(startingDate));
-    const heatmapEndDay = getDay(new Date(endingDate));
-
-    const heatmapDayRangeProgramed = _.range(
-      heatmapStartDay - 1,
-      heatmapEndDay === 0 ? 7 : heatmapEndDay,
-    );
-
-    const getHeatmapDataDayNewContent = (d, tms) =>
-      tms.reduce((acc, cur) => {
-        if (cur < 5) return acc;
-        if (!heatmapDataActive[d] || !heatmapDataActive[d][cur]) {
-          return { ...acc, [cur]: { active: true } };
-        }
-
-        return { ...acc, [cur]: { ...heatmapDataActive[d][cur], active: true } };
-      }, {});
-
-    if (heatmapDayRangeProgramed.length === 1) {
-      const labelDay = days[heatmapDayRangeProgramed[0]];
-      heatmapDataActive = {
-        ...heatmapDataActive,
-        [labelDay]: getHeatmapDataDayNewContent(
-          labelDay,
-          _.range(heatmapStartTime, heatmapEndTime + 1),
-        ),
-      };
-
-      return;
-    }
-
-    heatmapDayRangeProgramed.forEach((programmedDay, index) => {
-      const labelDay = days[programmedDay];
-
-      if (index === 0) {
-        heatmapDataActive = {
-          ...heatmapDataActive,
-          [labelDay]: getHeatmapDataDayNewContent(labelDay, _.range(heatmapStartTime, 25)),
-        };
-
-        return;
-      }
-
-      if (index === heatmapDayRangeProgramed.length - 1) {
-        heatmapDataActive = {
-          ...heatmapDataActive,
-          [labelDay]: getHeatmapDataDayNewContent(labelDay, _.range(5, heatmapEndTime)),
-        };
-
-        return;
-      }
-
-      heatmapDataActive = {
-        ...heatmapDataActive,
-        [labelDay]: getHeatmapDataDayNewContent(labelDay, _.range(5, 25)),
-      };
-    });
-
-    // setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
-  };
-
   const timeSelected = () => {
-    if (times.length === 1) {
-      setSelectedForSample();
-      return;
-    }
-
-    let stackTimes = [];
-    let heatmapDataActive = heatmapData[links];
-
-    times.forEach((t) => {
-      const heatmapStartTime = getHours(t.startTime) === 0 ? 24 : getHours(t.startTime);
-      const heatmapEndTime = getHours(t.endTime) === 0 ? 24 : getHours(t.endTime);
-
-      stackTimes = [
-        ...stackTimes,
-        ..._.range(heatmapStartTime <= 5 ? 5 : heatmapStartTime + 1, heatmapEndTime + 1),
-      ];
-    });
-
-    const heatmapStartDay = getDay(new Date(startingDate));
-    const heatmapEndDay = getDay(new Date(endingDate));
-
-    const heatmapDayRangeProgramed = _.range(
-      heatmapStartDay - 1,
-      heatmapEndDay === 0 ? 7 : heatmapEndDay,
+    const response = heatmapSelected(
+      'multi',
+      { startDate: startingDate, endDate: endingDate },
+      times,
     );
 
-    const getHeatmapDataDuplicatedByDay = (d, tms) =>
-      tms.reduce((acc, cur) => {
-        if (cur < 5) return acc;
-
-        if (!heatmapDataActive[d] || !heatmapDataActive[d][cur]) {
-          return { ...acc, [cur]: { active: true } };
-        }
-
-        return { ...acc, [cur]: { ...heatmapDataActive[d][cur], active: true } };
-      }, {});
-
-    heatmapDayRangeProgramed.forEach((programmedDay) => {
-      const labelDay = days[programmedDay];
-
-      heatmapDataActive = {
-        ...heatmapDataActive,
-        [labelDay]: getHeatmapDataDuplicatedByDay(labelDay, stackTimes),
-      };
-    });
-
-    // setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
+    setHeatmapData({ ...heatmapData, [links]: response });
   };
 
   const clearTimeSelected = () => {
