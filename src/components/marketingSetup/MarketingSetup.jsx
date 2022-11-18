@@ -2,16 +2,7 @@
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import {
-  addDays,
-  addHours,
-  format,
-  getHours,
-  startOfWeek,
-  getDate,
-  getDay,
-  isSameDay,
-} from 'date-fns';
+import { addDays, addHours, format, startOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
@@ -53,6 +44,7 @@ import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import menuIcon from '../../assets/images/ic_menu.png';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 import heatmapSelected from '../../utlls/heatmap/heatmapSelected';
+import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -239,7 +231,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setMenu('Offer on the whole Menu');
   }, [platform]);
 
-  // TODO: Send request
   const handleSchedule = async () => {
     const clonedVendor = { ...branchData };
     delete clonedVendor.platform;
@@ -397,31 +388,38 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     return d instanceof Date && !Number.isNaN(d);
   }
 
-  const renderHeatmapBox = () => <span />;
-
   const timeSelected = () => {
+    const typeObject = {
+      once: 'mono',
+      now: 'mono',
+    };
+
     const response = heatmapSelected(
-      'multi',
+      typeObject[getTypeSchedule()] ?? 'multi',
       { startDate: startingDate, endDate: endingDate },
       times,
+      heatmapData[links],
     );
 
     setHeatmapData({ ...heatmapData, [links]: response });
   };
 
   const clearTimeSelected = () => {
-    Object.values(heatmapData[links]).forEach((objHeat, indexObjHeat) => {
+    const clonedheatmapData = { ...heatmapData };
+
+    Object.values(clonedheatmapData[links]).forEach((objHeat, indexObjHeat) => {
       if (objHeat) {
         Object.keys(objHeat).forEach((num) => {
           if (objHeat[num].active) {
-            delete heatmapData[links][Object.keys(heatmapData[links])[indexObjHeat]][num].active;
+            delete clonedheatmapData[links][Object.keys(clonedheatmapData[links])[indexObjHeat]][
+              num
+            ].active;
           }
         });
       }
     });
-    setHeatmapData({
-      ...heatmapData,
-    });
+
+    setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
   };
   useEffect(() => {
     if (selected === 1) {
@@ -696,8 +694,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   useEffect(() => {
     clearTimeSelected();
-    timeSelected();
-  }, [times, startingDate, endingDate]);
+    if (selected >= 3) {
+      timeSelected();
+    }
+  }, [times, startingDate, endingDate, selected, customDay]);
 
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
@@ -1266,7 +1266,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       background: `linear-gradient(45deg, #2D99FF 1%, ${el.color} 1%, ${el.color} 49%, #2D99FF 49%, #2D99FF 51%, ${el.color} 51%, ${el.color} 99%, #2D99FF 99%)`,
       backgroundSize: '6px 6px',
       backgroundPosition: '50px 50px',
-      border: '1px solid #2D99FF',
     };
   };
 
@@ -1284,11 +1283,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               </div>
             ) : (
               <div className="left-part-bottom">
-                <ButtonKit
-                  onClick={() => handleBack()}
-                  variant="outlined"
-                  disabled={!(selected >= 2)}
-                >
+                <ButtonKit onClick={() => handleBack()} variant="outlined" disabled={selected < 2}>
                   Previous Step
                 </ButtonKit>
                 <ButtonKit
@@ -1369,13 +1364,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   <TypographyKit>
                     <img src={OpacityLogo} alt="Logo" />
                   </TypographyKit>
-                  {[5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map(
-                    (num) => (
-                      <TypographyKit key={num}>
-                        {num} <span>{num >= 12 ? 'PM' : 'AM'}</span>
-                      </TypographyKit>
-                    ),
-                  )}
+                  {_.range(minHour, maxHour + 1).map((num) => (
+                    <TypographyKit key={num}>{rangeHoursOpenedDay[num].label ?? num}</TypographyKit>
+                  ))}
                 </TypographyKit>
                 <TypographyKit sx={{ width: '100%' }} variant="div">
                   <TypographyKit variant="div" className="right-part-main-day">
@@ -1386,15 +1377,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   <TypographyKit className="right-part-main-heatmap" variant="div">
                     {days.map((day) => (
                       <TypographyKit key={day} variant="div">
-                        {[
-                          5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-                        ].map((n) => (
+                        {_.range(minHour, maxHour + 1).map((n) => (
                           <TypographyKit
                             className={`heatmap-btn `}
                             key={n}
                             sx={{ background: '#919EAB1F' }}
                           >
-                            {renderHeatmapBox()}
+                            <span />
                           </TypographyKit>
                         ))}
                       </TypographyKit>
@@ -1403,10 +1392,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                       {days.map((obj, index) => (
                         // eslint-disable-next-line react/no-array-index-key
                         <TypographyKit key={`${obj}_${index}`} variant="div">
-                          {[
-                            5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-                            24,
-                          ].map((num) => {
+                          {_.range(minHour, maxHour + 1).map((num) => {
                             if (
                               !heatmapData[links][obj] ||
                               !heatmapData[links][obj][num] ||
@@ -1424,7 +1410,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                                   }`}
                                   key={num}
                                 >
-                                  {renderHeatmapBox()}
+                                  <span />
                                 </TypographyKit>
                               );
                             }
@@ -1441,7 +1427,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                                     className="heatmap-btn "
                                     sx={getStyleHashureActive(heatmapData[links][obj][num])}
                                   >
-                                    {renderHeatmapBox()}
+                                    <span />
                                   </TypographyKit>
                                 </ItemHeatmap>
                               </Tooltip>

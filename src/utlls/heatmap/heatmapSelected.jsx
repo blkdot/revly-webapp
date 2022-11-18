@@ -1,13 +1,7 @@
 import _ from 'lodash';
 import { getDay, isSameDay, getHours, differenceInDays } from 'date-fns';
 
-import {
-  daysOrder,
-  rangeHoursOpenedDay,
-  daysObject,
-  maxHour,
-  minHour,
-} from './heatmapSelectedData';
+import { daysOrder, rangeHoursOpenedDay, maxHour, minHour } from './heatmapSelectedData';
 
 const typeMono = (dateRange, times, data) => {
   const { startDate, endDate } = dateRange;
@@ -20,7 +14,7 @@ const typeMono = (dateRange, times, data) => {
 
   const diff = differenceInDays(endDate, startDate);
 
-  if (diff >= 7) return setAll();
+  if (diff >= 7) return setAll(data);
 
   const indexDayEnd = getDay(new Date(endDate));
 
@@ -42,12 +36,12 @@ const getHour = (h) => {
 
 const getHeatmapDataDayNewContent = (data, day, tms) =>
   tms.reduce((acc, cur) => {
-    if (!data[day] || !data[day][cur]) {
+    if (!data || !data[day] || !data[day][cur]) {
       return { ...acc, [cur]: { active: true } };
     }
 
     return { ...acc, [cur]: { ...data[day][cur], active: true } };
-  }, {});
+  }, data[day]);
 
 const setSameDayTimeRange = (data, day, times) => {
   const { startTime, endTime } = times;
@@ -60,7 +54,7 @@ const setSameDayTimeRange = (data, day, times) => {
     rangeHoursOpenedDay[valueEndHour].hour + 1,
   );
 
-  return { ...daysObject, [day]: getHeatmapDataDayNewContent(data, day, range) };
+  return { ...data, [day]: getHeatmapDataDayNewContent(data, day, range) };
 };
 
 const setSideBySideDayTimeRange = (data, start, end, times) => {
@@ -73,7 +67,7 @@ const setSideBySideDayTimeRange = (data, start, end, times) => {
   const rangeEnd = _.range(minHour, rangeHoursOpenedDay[valueEndHour].hour + 1);
 
   return {
-    ...daysObject,
+    ...data,
     [start]: getHeatmapDataDayNewContent(data, start, rangeStart),
     [end]: getHeatmapDataDayNewContent(data, end, rangeEnd),
   };
@@ -113,7 +107,7 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
       ...acc,
       [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], rangeUsed),
     };
-  }, daysObject);
+  }, data);
 };
 
 const setAll = (data) =>
@@ -122,7 +116,7 @@ const setAll = (data) =>
       ...acc,
       [cur]: getHeatmapDataDayNewContent(data, daysOrder[cur], _.range(minHour, maxHour + 1)),
     }),
-    daysObject,
+    data,
   );
 
 const typeMulti = (data, dateRange, times) => {
@@ -155,9 +149,9 @@ const typeMulti = (data, dateRange, times) => {
     return daysOrder.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur]: combinedTimesRange,
+        [cur]: getHeatmapDataDayNewContent(data, cur, combinedTimesRange),
       }),
-      daysObject,
+      data,
     );
 
   if (indexDayEnd <= indexDayStart) {
@@ -172,14 +166,14 @@ const typeMulti = (data, dateRange, times) => {
       ...acc,
       [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
     }),
-    daysObject,
+    data,
   );
 };
 
 const heatmapSelected = (type, dateRange, times, data) => {
   if (type === 'mono') return typeMono(dateRange, times[0], data);
 
-  return typeMulti(dateRange, times);
+  return typeMulti(data, dateRange, times);
 };
 
 export default heatmapSelected;
