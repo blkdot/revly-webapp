@@ -13,7 +13,7 @@ import { getOffers, getAds } from '../api/planningApi';
 
 import { getCompetitors, getAlerts, getRanking } from '../api/competitionApi';
 
-import { triggerOffers, cancelOffer } from '../api/marketingApi';
+import { triggerOffers, cancelOffer, OfferCrossPlatforms } from '../api/marketingApi';
 
 const useApi = () => ({
   settingsOnboardPlatform,
@@ -34,6 +34,7 @@ const useApi = () => ({
   getOfferDetails,
   cancelOffer,
   triggerOffers,
+  OfferCrossPlatforms,
 });
 
 export default useApi;

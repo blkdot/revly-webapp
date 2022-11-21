@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import MenuItem from './MenuItem';
@@ -14,10 +14,9 @@ import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
 import Warning from '../../../assets/icons/Warning';
 import Calendar from '../../../assets/icons/Calendar';
-
+import Trash from '../../../assets/icons/Trash';
 import Timer from '../../../assets/icons/Timer';
 import ExpandIcon from '../../../assets/icons/ExpandIcon';
-import Trash from '../../../assets/icons/Trash';
 import FastFood from '../../../assets/icons/FastFood';
 
 import { platformObject } from '../../../data/platformList';
@@ -30,6 +29,7 @@ import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import useVendors from '../../../hooks/useVendors';
 import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
+import { getPlanningOfferDetails } from '../../../api/userApi';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -44,23 +44,23 @@ const OfferDetailComponent = () => {
     state: { offerDetail: data, prevPath },
   } = useLocation();
   const [offerDetail, setOfferDetail] = useState(data);
+  // eslint-disable-next-line
+  const [menu, setMenu] = useState([]);
   const navigate = useNavigate();
   const {
     userPlatformData: { platforms },
   } = usePlatform();
-  // const { user } = useUserAuth();
   const { cancelOffer } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
   const [active, setActive] = useState(false);
-
   const renderOfferStatus = (status) => {
     const statusColor = {
       cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
@@ -105,8 +105,8 @@ const OfferDetailComponent = () => {
     discount_rate,
     discount_type,
     end_date,
-    master_id,
-    menu_items,
+    master_offer_id,
+    // menu_items,
     minimum_order_value,
     platform,
     start_date,
@@ -116,7 +116,6 @@ const OfferDetailComponent = () => {
     offer_id,
     type_schedule,
   } = offerDetail;
-
   const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
   const chain_id = vendor ? vendor.chain_id : '';
 
@@ -145,6 +144,19 @@ const OfferDetailComponent = () => {
     body.style.overflowY = 'hidden';
   };
 
+  useEffect(() => {
+    getPlanningOfferDetails({
+      master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+      access_token: '',
+      vendors: vendorsObj,
+      platform,
+      master_offer_id,
+    })
+      .then((res) => setMenu(res.data))
+      // eslint-disable-next-line no-console
+      .catch((err) => console.log({ err }));
+  }, [vendors]);
+
   return (
     <>
       <CancelOfferModal
@@ -155,8 +167,8 @@ const OfferDetailComponent = () => {
       <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
-          {display ? (
-            <RestaurantDropdown />
+          {Object.keys(display).length > 0 ? (
+            <RestaurantDropdown chainObj={chainObj} />
           ) : (
             <RestaurantDropdownOld
               restaurants={restaurants}
@@ -221,19 +233,21 @@ const OfferDetailComponent = () => {
             </div>
             {status !== 'Scheduled' && (
               <div className="offer-visibility-container">
-                {/* <div className="offer-visibility-block">
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span className="offer-visibility-title with-icon">Caroussel Visibility</span>
-                <ArrowDown />
-              </div>
-              <div className="offer-visibility-sub-title">Caroussel</div>
-            </div> */}
-                {/* <div className="offer-visibility-block">
-              <div>
-                <span className="offer-visibility-title">Visibility Rank</span>
-              </div>
-              <div className="offer-visibility-sub-title">{offerData?.accrued_discount}</div>
-            </div> */}
+                <div className="offer-visibility-block">
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span className="offer-visibility-title with-icon">Caroussel Visibility</span>
+                    <Arrow />
+                  </div>
+                  <div className="offer-visibility-sub-title">Caroussel</div>
+                </div>
+                <div className="offer-visibility-block">
+                  <div>
+                    <span className="offer-visibility-title">Visibility Rank</span>
+                  </div>
+                  <div className="offer-visibility-sub-title">
+                    {offerData?.accrued_discount || '-'}
+                  </div>
+                </div>
                 <div className="offer-visibility-block">
                   <div>
                     <span className="offer-visibility-title">#Orders</span>
@@ -271,7 +285,7 @@ const OfferDetailComponent = () => {
                 </div>
               </div>
             )}
-            {master_id && (
+            {!master_offer_id && (
               <>
                 <div className="offer-duration-container">
                   <div className="offer-duration-block">
@@ -292,14 +306,13 @@ const OfferDetailComponent = () => {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span className="offer-duration  width-right-icon">
-                        {scheduleTypeMapping[type_schedule] || ''}
+                        {scheduleTypeMapping[type_schedule] || 'Customised day'}
                       </span>
-                      {/*                       <ExpandIcon />
-                       */}
+                      <ExpandIcon />
                     </div>
-                    {/* <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span className="offer-duration">Monday, Thursday, Sunday</span>
-                    </div> */}
+                    </div>
                   </div>
                   <div
                     style={{
@@ -378,17 +391,16 @@ const OfferDetailComponent = () => {
                   </div>
                 </div>
 
-                {/* <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '20px',
-                    background: '#F9FAFB',
-                  }}>
-                  <TimeSlot status={status} />
-                  <TimeSlot status={status} />
-                  <TimeSlot status={status} />
-                </div> */}
+                <div className="offerdetails_time_slots_scroll">
+                  <div className="offerdetails_time_slots">
+                    <TimeSlot status={status} />
+                    <TimeSlot status={status} />
+                    <TimeSlot status={status} />
+                    <TimeSlot status={status} />
+                    <TimeSlot status={status} />
+                    <TimeSlot status={status} />
+                  </div>
+                </div>
               </>
             )}
             <div className="offer-duration-container">
@@ -503,10 +515,13 @@ const OfferDetailComponent = () => {
             </div>
             {discount_type &&
               discount_type !== 'Menu discount' &&
-              (menu_items || []).map((menuItem) => (
+              [
+                { drn_id: 'e8cee7b9-f191-4392-8f53-8d019ee02c41' },
+                { drn_id: '5a9e1ab0-69a2-48b8-bed3-2858b5b9aa1d' },
+              ].map((menuItem) => (
                 <MenuItem
                   key={menuItem.drn_id}
-                  itemId={menuItem.id}
+                  drnId={menuItem.drn_id}
                   discountRate={discount_rate}
                   platform={platform}
                   vendorId={vendor_id}
@@ -518,18 +533,15 @@ const OfferDetailComponent = () => {
     </>
   );
 };
-
 export default OfferDetailComponent;
 
 // eslint-disable-next-line no-unused-vars
-const TimeSlot = ({ status }) => (
+const TimeSlot = () => (
   <div
     style={{
       display: 'flex',
-      flex: '1',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      minHeight: '40px',
+      marginLeft: '30px',
+      width: '200px',
       borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
     }}
   >
@@ -537,85 +549,128 @@ const TimeSlot = ({ status }) => (
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        height: '100%',
       }}
     >
-      <span
+      <div
         style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '400',
-          fontSize: '12px',
-          lineHeight: '18px',
-          color: '#212B36',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          height: 'fit-content',
         }}
       >
-        Start date
-      </span>
-      <span
+        <span
+          style={{
+            fontFamily: 'Public Sans',
+            fontStyle: 'normal',
+            fontWeight: '400',
+            fontSize: '12px',
+            lineHeight: '18px',
+            color: '#212B36',
+          }}
+        >
+          Date
+        </span>
+        <span
+          style={{
+            fontFamily: 'Public Sans',
+            fontStyle: 'normal',
+            fontWeight: '600',
+            fontSize: '14px',
+            lineHeight: '22px',
+            textAlign: 'center',
+            color: '#212B36',
+          }}
+        >
+          15/11/22
+        </span>
+      </div>
+
+      <div
         style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '600',
-          fontSize: '14px',
-          lineHeight: '22px',
-          textAlign: 'center',
-          color: '#212B36',
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          minHeight: '40px',
+          gridGap: '15px',
+          maxWidth: '100%',
         }}
       >
-        10 am
-      </span>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '400',
+              fontSize: '12px',
+              lineHeight: '18px',
+              color: '#212B36',
+            }}
+          >
+            Start time
+          </span>
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              fontSize: '14px',
+              lineHeight: '22px',
+              textAlign: 'center',
+              color: '#212B36',
+            }}
+          >
+            10 am
+          </span>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            height: '100%',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '400',
+              fontSize: '12px',
+              lineHeight: '18px',
+              color: '#212B36',
+            }}
+          >
+            End time
+          </span>
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              fontSize: '14px',
+              lineHeight: '22px',
+              textAlign: 'center',
+              color: '#212B36',
+            }}
+          >
+            10 am
+          </span>
+        </div>
+      </div>
     </div>
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: '100%',
-      }}
-    >
-      <span
-        style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '400',
-          fontSize: '12px',
-          lineHeight: '18px',
-          color: '#212B36',
-        }}
-      >
-        End date
-      </span>
-      <span
-        style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '600',
-          fontSize: '14px',
-          lineHeight: '22px',
-          textAlign: 'center',
-          color: '#212B36',
-        }}
-      >
-        10 am
-      </span>
-    </div>
-    {['Active', 'Scheduled'].includes(status) && (
-      <button
-        type="button"
-        className="trash-btn"
-        style={{
-          border: 'solid 1px #FF4842',
-          background: 'rgba(255, 72, 66, 0.08)',
-          padding: '3px',
-          borderRadius: '50px',
-          cursor: 'pointer',
-        }}
-      >
-        <Trash />
-      </button>
-    )}
+    <span className="cancel_api">
+      <Trash />
+    </span>
   </div>
 );

@@ -27,7 +27,7 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -194,8 +194,8 @@ const CompetitionAlerts = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}
