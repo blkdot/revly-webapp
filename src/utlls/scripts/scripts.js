@@ -1,8 +1,19 @@
 export const descendingComparator = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
+  let next = b[orderBy];
+  let prev = a[orderBy];
+
+  const sp = prev.split(' at ');
+  const sn = next.split(' at ');
+
+  if (sp.length > 1 && sn.length > 1) {
+    prev = sp.join('').replace('/', '').replace(':', '');
+    next = sn.join('').replace('/', '').replace(':', '');
+  }
+
+  if (next < prev) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (next > prev) {
     return 1;
   }
   return 0;
