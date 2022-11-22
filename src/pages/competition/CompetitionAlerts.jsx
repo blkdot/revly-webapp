@@ -76,28 +76,48 @@ const CompetitionAlerts = () => {
       label: 'Alert',
     },
     {
+      id: 'start_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Starting Date',
+    },
+    {
+      id: 'end_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ending Date',
+    },
+    {
+      id: 'start_hour',
+      numeric: false,
+      disablePadding: true,
+      label: 'Starting Hour',
+    },
+    {
+      id: 'end_hour',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ending Hour',
+    },
+    {
       id: 'status',
       numeric: false,
       disablePadding: true,
       label: 'Status',
     },
-    {
-      id: 'mov',
-      numeric: false,
-      disablePadding: true,
-      label: 'Minimum Order Value',
-    },
   ];
 
-  const { renderPercent, renderCurrency, renderStatus, renderSimpleRow } =
-    useTableContentFormatter();
+  const { renderPercent, renderStatus, renderSimpleRow } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
     type: renderSimpleRow,
     alert: renderPercent,
+    start_date: renderSimpleRow,
+    end_date: renderSimpleRow,
+    start_hour: renderSimpleRow,
+    end_hour: renderSimpleRow,
     status: renderStatus,
-    mov: renderCurrency,
   };
 
   useEffect(() => {
@@ -128,15 +148,22 @@ const CompetitionAlerts = () => {
 
       const comp = await getCompetitors(body, plat);
 
-      const filt = alerts.data?.data.map((v) => ({
-        name: v.vendor_name,
-        type: v.discount_type,
-        alert: v.discount,
-        mov: v.mov ?? 0,
-        start_date: v.start_date,
-        status: v.status === 'Live' ? 'active' : 'inactive',
-        id: v.vendor_id,
-      }));
+      const filt = alerts.data?.data.map((v) => {
+        const startDateTime = v.start_date.split('at').map((d) => d.trim());
+        const endDateTime = v.end_date.split('at').map((d) => d.trim());
+
+        return {
+          name: v.vendor_name,
+          type: v.discount_type,
+          alert: v.discount,
+          start_date: startDateTime[0],
+          end_date: startDateTime[0],
+          start_hour: startDateTime[1],
+          end_hour: endDateTime[1],
+          status: v.status === 'Live' ? 'active' : v.status,
+          id: v.vendor_id,
+        };
+      });
 
       setCompetitionAlertsData(filt || []);
 

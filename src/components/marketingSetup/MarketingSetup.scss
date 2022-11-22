@@ -468,15 +468,17 @@
     overflow: hidden;
 
     &.active {
-      background: linear-gradient(45deg,
-          #2d99ff 1%,
-          #83CFFF 1%,
-          #83CFFF 49%,
-          #2d99ff 49%,
-          #2d99ff 51%,
-          #83CFFF 51%,
-          #83CFFF 99%,
-          #2d99ff 99%);
+      background: linear-gradient(
+        45deg,
+        #2d99ff 1%,
+        #f6f3ff 1%,
+        #f6f3ff 49%,
+        #2d99ff 49%,
+        #2d99ff 51%,
+        #f6f3ff 51%,
+        #f6f3ff 99%,
+        #2d99ff 99%
+      );
       background-size: 6px 6px;
       background-position: 50px 50px;
     }
@@ -488,12 +490,6 @@
   overflow: hidden;
   transition: 0.4s;
   cursor: pointer;
-}
-
-.active_selected {
-  span {
-    border: 1px solid #2d99ff;
-  }
 }
 
 .left-part-subtitle {

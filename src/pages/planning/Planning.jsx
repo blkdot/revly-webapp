@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { pascalCase } from 'change-case';
+import shortid from 'shortid';
 
 import './Planning.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -60,6 +61,7 @@ const Planning = () => {
     renderTarget,
     renderScheduleType,
     renderSimpleRow,
+    renderCalculatedPercent,
   } = useTableContentFormatter();
 
   const headersOffers = [
@@ -76,6 +78,24 @@ const Planning = () => {
     { id: 'status', disablePadding: true, label: 'Status' },
   ];
 
+  const headersAds = [
+    { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
+    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
+    { id: 'start_date', disablePadding: true, label: 'Start date' },
+    { id: 'end_date', disablePadding: true, label: 'End date' },
+    { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
+    { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
+    { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
+    { id: 'new_customer_count', disablePadding: true, label: 'New customer' },
+    { id: 'orders_count', disablePadding: true, label: 'Orders' },
+    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
+    { id: 'spend', disablePadding: true, label: 'Spend' },
+    { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
+    { id: 'total_budget', disablePadding: true, label: 'Total budget' },
+    { id: 'ad_status', disablePadding: true, label: 'Status' },
+  ];
+
   const cellTemplatesObject = {
     vendor_name: renderSimpleRowNotCentered,
     platform: renderPlatform,
@@ -86,16 +106,38 @@ const Planning = () => {
     discount_type: renderSimpleRow,
     discount_rate: renderPercent,
     minimum_order_value: renderCurrency,
+    attributed_order_value: renderCurrency,
     target: renderTarget,
     status: renderStatus,
+    ad_status: renderStatus,
+    ad_serving_count: renderSimpleRow,
+    clicks_count: renderSimpleRow,
+    conversion_rate: renderCalculatedPercent,
+    new_customer_count: renderSimpleRow,
+    orders_count: renderSimpleRow,
+    remaining_budget: renderCurrency,
+    return_on_ad_spent: renderCurrency,
+    spend: renderCurrency,
+    total_budget: renderCurrency,
   };
 
-  const renderRowsByHeader = (r) =>
+  const renderRowsByHeaderOffer = (r) =>
     headersOffers.reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
-        id: `${cur.id}_${r.offer_id}`,
+        id: `${cur.id}_${r.start_date}_${r.end_date}_offers_${shortid.generate()}`,
+        data: r,
+      }),
+      {},
+    );
+
+  const renderRowsByHeaderAds = (r) =>
+    headersAds.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
+        id: `${cur.id}_${r.ad_id}_ads_${shortid.generate()}`,
         data: r,
       }),
       {},
@@ -114,8 +156,8 @@ const Planning = () => {
   const renderTable = () => (
     <TableRevly
       isLoading={isLoadingAds || isLoadingOffers}
-      headers={headersOffers}
-      rows={dataFiltered.map(renderRowsByHeader)}
+      headers={active ? headersAds : headersOffers}
+      rows={dataFiltered.map(active ? renderRowsByHeaderAds : renderRowsByHeaderOffer)}
       mainFieldOrdered="start_date"
       onClickRow={handleRowClick}
     />
