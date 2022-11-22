@@ -51,7 +51,7 @@ const PlanningOffersTable = ({ rows, type }) => {
   };
 
   const navigateToOfferDetails = (offer) =>
-    navigate(`/offer/detail/${offer.offer_id || offer.ad_id}`, {
+    navigate(`/offer/detail/${offer.master_offer_id}`, {
       state: { offerDetail: offer, prevPath: location.pathname },
     });
 

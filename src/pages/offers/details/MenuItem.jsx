@@ -6,7 +6,7 @@ import config from '../../../setup/config';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useDate from '../../../hooks/useDate';
 
-const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
+const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const [data, setData] = useState(null);
   const { getOfferDetails } = useApi();
   const { environment } = config;
@@ -21,7 +21,7 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
         access_token: '',
         vendor,
-        id: itemId,
+        drn_id: drnId,
       },
       platform,
     )
@@ -30,7 +30,7 @@ const MenuItem = ({ itemId, discountRate, platform, vendorId }) => {
       .catch((err) => console.log({ err }));
   };
   // triggerAlertWithMessageError('Error while retrieving data'+ )
-  useEffect(() => getOfferDetailData(), [itemId]);
+  useEffect(() => getOfferDetailData(), [drnId]);
 
   if (!data || !data.item) return null;
   const {

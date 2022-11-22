@@ -40,7 +40,7 @@ const Planning = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState(defaultFilterStateFormat);
@@ -68,6 +68,7 @@ const Planning = () => {
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
     { id: 'type_schedule', disablePadding: true, label: 'Schedule type' },
+    { id: 'slot_schedule', disablePadding: true, label: 'Slot Schedule' },
     { id: 'discount_type', disablePadding: true, label: 'Discount type' },
     { id: 'discount_rate', disablePadding: true, label: 'Discount rate' },
     { id: 'minimum_order_value', disablePadding: true, label: 'Minimum order value' },
@@ -81,6 +82,7 @@ const Planning = () => {
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
     type_schedule: renderScheduleType,
+    slot_schedule: renderSimpleRow,
     discount_type: renderSimpleRow,
     discount_rate: renderPercent,
     minimum_order_value: renderCurrency,
@@ -100,12 +102,10 @@ const Planning = () => {
     );
 
   const handleRowClick = (id) => {
-    const rowId = id.split('_');
-
-    navigate(`/offer/detail/${rowId[1]}`, {
+    navigate(`/offer/detail/${id}`, {
       state: {
         // eslint-disable-next-line eqeqeq
-        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        offerDetail: offers.find((o) => o.master_offer_id == id),
         prevPath: location.pathname,
       },
     });
@@ -296,8 +296,8 @@ const Planning = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}
