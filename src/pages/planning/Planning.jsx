@@ -61,6 +61,7 @@ const Planning = () => {
     renderTarget,
     renderScheduleType,
     renderSimpleRow,
+    renderCalculatedPercent,
   } = useTableContentFormatter();
 
   const headersOffers = [
@@ -79,9 +80,18 @@ const Planning = () => {
   const headersAds = [
     { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
+    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
     { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
+    { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
+    { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
+    { id: 'new_customer_count', disablePadding: true, label: 'New customer' },
+    { id: 'orders_count', disablePadding: true, label: 'Orders' },
+    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
+    { id: 'spend', disablePadding: true, label: 'Spend' },
+    { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
+    { id: 'total_budget', disablePadding: true, label: 'Total budget' },
     { id: 'ad_status', disablePadding: true, label: 'Status' },
   ];
 
@@ -98,6 +108,15 @@ const Planning = () => {
     target: renderTarget,
     status: renderStatus,
     ad_status: renderStatus,
+    ad_serving_count: renderSimpleRow,
+    clicks_count: renderSimpleRow,
+    conversion_rate: renderCalculatedPercent,
+    new_customer_count: renderSimpleRow,
+    orders_count: renderSimpleRow,
+    remaining_budget: renderCurrency,
+    return_on_ad_spent: renderCurrency,
+    spend: renderCurrency,
+    total_budget: renderCurrency,
   };
 
   const renderRowsByHeaderOffer = (r) =>
