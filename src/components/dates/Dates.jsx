@@ -32,6 +32,9 @@ import LocalizationProviderKit from '../../kits/localizationProvider/Localizatio
 import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
 import switchIcon from '../../assets/images/Switch.png';
 import { getAllDateSetup } from '../../utlls/date/getAllDateSetup';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import SelectKit from '../../kits/select/SelectKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 
 const Dates = (props) => {
   const { isDashboard, beforePeriodBtn, setbeforePeriodBtn, isMarketingHeatMap, offer } = props;
@@ -51,6 +54,10 @@ const Dates = (props) => {
   const [titleafterPeriod, setTitleafterPeriod] = useState(titleafterPeriodContext);
   const [afterPeriodContext, setAfterPeriodContext] = useState(afterPeriodDateContext);
   const [beforePeriodContext, setBeforePeriodContext] = useState(beforePeriodDateContext);
+  const [year, setYear] = useState(new Date(beforePeriodContext.startDate).getFullYear());
+  const [yearAfterPeriod, setYearAfterPeriod] = useState(
+    new Date(afterPeriodContext.startDate).getFullYear(),
+  );
   const getExpanded = () => {
     if (!isMarketingHeatMap) {
       if (typeDate === 'day') {
@@ -142,8 +149,14 @@ const Dates = (props) => {
     typeDateContext,
   ]);
   const handleClickDashboard = () => {
-    const startDate = new Date(beforePeriod[0].startDate);
-    const endDate = new Date(beforePeriod[0].endDate);
+    const startDate =
+      typeDate === 'month'
+        ? new Date(beforePeriod[0].startDate).setFullYear(year)
+        : new Date(beforePeriod[0].startDate);
+    const endDate =
+      typeDate === 'month'
+        ? new Date(beforePeriod[0].endDate).setFullYear(year)
+        : new Date(beforePeriod[0].endDate);
     const date = new Date();
 
     const { startLocal, startGetDay, endGetDay, dateGetDay, dateLocal } = getAllDateSetup(
@@ -335,8 +348,14 @@ const Dates = (props) => {
       beforePeriod[0].startDate,
       beforePeriod[0].endDate,
     );
-
-    setbeforePeriodBtn({ startDate, endDate });
+    if (typeDate === 'month') {
+      setbeforePeriodBtn({
+        startDate: new Date(startDate).setFullYear(year),
+        endDate: new Date(endDate).setFullYear(year),
+      });
+    } else {
+      setbeforePeriodBtn({ startDate, endDate });
+    }
 
     if (typeDate === 'day') {
       if (startLocal === dateLocal) {
@@ -411,8 +430,14 @@ const Dates = (props) => {
     // handleClickAfterPeriod happens when you click on button "OK" on AfterPeriod date picker
 
     // We put in variables for later use
-    const startDate = new Date(afterPeriod[0].startDate);
-    const endDate = new Date(afterPeriod[0].endDate);
+    const startDate =
+      typeDate === 'month'
+        ? new Date(afterPeriod[0].startDate).setFullYear(yearAfterPeriod)
+        : new Date(afterPeriod[0].startDate);
+    const endDate =
+      typeDate === 'month'
+        ? new Date(afterPeriod[0].endDate).setFullYear(yearAfterPeriod)
+        : new Date(afterPeriod[0].endDate);
     const startDateBeforePeriod = new Date(beforePeriodContext.startDate);
     const date = new Date();
     const { startLocal, startGetDate, endGetDate, startGetDay, dateGetDate } = getAllDateSetup(
@@ -599,7 +624,16 @@ const Dates = (props) => {
     }
 
     if (typeDate === 'month') {
-      return getMonth(startDateAfterPeriod) < getMonth(beforePeriodContextStart);
+      if (
+        getYear(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod)) ===
+        getYear(new Date(beforePeriodContextStart).setFullYear(year))
+      ) {
+        return (
+          getMonth(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod)) <
+          getMonth(new Date(beforePeriodContextStart).setFullYear(year))
+        );
+      }
+      return false;
     }
 
     return false;
@@ -700,6 +734,26 @@ const Dates = (props) => {
 
     return `${afterPeriodContextStartLocal} - ${afterPeriodContextEndLocal}`;
   };
+  const [yearArr, setYearArr] = useState([]);
+
+  useEffect(() => {
+    const yearStart = 2021;
+    const yearEnd = new Date().getFullYear();
+    const arr = [];
+
+    for (let i = yearStart; i <= yearEnd; i++) {
+      arr.push(i);
+    }
+    setYearArr(arr);
+  }, []);
+
+  const handleChangeYear = (event) => {
+    setYear(event.target.value);
+    setYearAfterPeriod(event.target.value);
+  };
+  const handleChangeYearAfterPeriod = (event) => {
+    setYearAfterPeriod(event.target.value);
+  };
   const getMarketingHeatMap = () => {
     if (isMarketingHeatMap) {
       return (
@@ -720,24 +774,37 @@ const Dates = (props) => {
     }
     return typeDate === 'month' ? (
       <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-        <MonthPickerKit
-          className="month_picker"
-          date={dayjs(beforePeriod[0].startDate)}
-          minDate={minDate}
-          maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
-          onChange={(newDateMonth) =>
-            setbeforePeriod([
-              {
-                startDate: startOfMonth(new Date(newDateMonth)),
-                endDate:
-                  getMonth(new Date(newDateMonth)) === getMonth(new Date())
-                    ? new Date()
-                    : endOfMonth(new Date(newDateMonth)),
-                key: 'selection',
-              },
-            ])
-          }
-        />
+        <div className="month-wrapper">
+          <PaperKit className="year-dropdown-paper">
+            <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size="small">
+              <SelectKit id="demo-select-small" value={year} onChange={(e) => handleChangeYear(e)}>
+                {yearArr.map((y) => (
+                  <MenuItemKit value={y} key={y}>
+                    {y}
+                  </MenuItemKit>
+                ))}
+              </SelectKit>
+            </FormcontrolKit>
+          </PaperKit>
+          <MonthPickerKit
+            className="month_picker"
+            date={dayjs(beforePeriod[0].startDate)}
+            minDate={minDate}
+            maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
+            onChange={(newDateMonth) =>
+              setbeforePeriod([
+                {
+                  startDate: startOfMonth(new Date(newDateMonth).setFullYear(year)),
+                  endDate:
+                    getMonth(new Date(newDateMonth)) === getMonth(new Date())
+                      ? new Date().setFullYear(year)
+                      : endOfMonth(new Date(newDateMonth).setFullYear(year)),
+                  key: 'selection',
+                },
+              ])
+            }
+          />
+        </div>
       </LocalizationProviderKit>
     ) : (
       <DatePickerKit
@@ -908,24 +975,43 @@ const Dates = (props) => {
             </PaperKit>
             {typeDate === 'month' ? (
               <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-                <MonthPickerKit
-                  className="month_picker"
-                  date={dayjs(afterPeriod[0].startDate)}
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  onChange={(newDateMonth) =>
-                    setafterPeriod([
-                      {
-                        startDate: startOfMonth(new Date(newDateMonth)),
-                        endDate:
-                          getMonth(new Date()) === getMonth(new Date(newDateMonth))
-                            ? new Date()
-                            : endOfMonth(new Date(newDateMonth)),
-                        key: 'selection',
-                      },
-                    ])
-                  }
-                />
+                <div className="month-wrapper">
+                  <PaperKit className="year-dropdown-paper">
+                    <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size="small">
+                      <SelectKit
+                        id="demo-select-small"
+                        value={yearAfterPeriod}
+                        onChange={(e) => handleChangeYearAfterPeriod(e)}
+                      >
+                        {yearArr.map((y) => (
+                          <MenuItemKit value={y} key={y}>
+                            {y}
+                          </MenuItemKit>
+                        ))}
+                      </SelectKit>
+                    </FormcontrolKit>
+                  </PaperKit>
+                  <MonthPickerKit
+                    className="month_picker"
+                    date={dayjs(afterPeriod[0].startDate)}
+                    minDate={minDate}
+                    maxDate={maxDate}
+                    onChange={(newDateMonth) =>
+                      setafterPeriod([
+                        {
+                          startDate: startOfMonth(
+                            new Date(newDateMonth).setFullYear(yearAfterPeriod),
+                          ),
+                          endDate:
+                            getMonth(new Date()) === getMonth(new Date(newDateMonth))
+                              ? new Date().setFullYear(yearAfterPeriod)
+                              : endOfMonth(new Date(newDateMonth).setFullYear(yearAfterPeriod)),
+                          key: 'selection',
+                        },
+                      ])
+                    }
+                  />
+                </div>
               </LocalizationProviderKit>
             ) : (
               <DatePickerKit

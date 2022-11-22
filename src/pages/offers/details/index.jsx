@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { format } from 'date-fns';
 import MenuItem from './MenuItem';
 import Dates from '../../../components/dates/Dates';
 import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -30,6 +30,7 @@ import useVendors from '../../../hooks/useVendors';
 import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
 import { getPlanningOfferDetails } from '../../../api/userApi';
+import SpinnerKit from '../../../kits/spinner/SpinnerKit';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -45,12 +46,12 @@ const OfferDetailComponent = () => {
   } = useLocation();
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
-  const [menu, setMenu] = useState([]);
+  const [menu, setMenu] = useState({});
   const navigate = useNavigate();
   const {
     userPlatformData: { platforms },
   } = usePlatform();
-  const { cancelOffer } = useApi();
+  const { cancelOffer, cancelOfferMaster } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
   const { date } = useDate();
@@ -121,15 +122,16 @@ const OfferDetailComponent = () => {
 
   const openCancelModal = () => setIsOpen(true);
 
-  const handleCancelOffer = () => {
-    cancelOffer(
+  const handleCancelOfferMaster = () => {
+    cancelOfferMaster(
       {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
         access_token: '',
         platform_token: platforms[platform].access_token,
         vendors: [vendor],
-        offer_id,
+        offer_id: offer_id || null,
         chain_id,
+        master_offer_id,
       },
       platform,
     ).then((res) => {
@@ -137,7 +139,19 @@ const OfferDetailComponent = () => {
       setIsOpen(false);
     });
   };
-
+  const handleCancelOffer = (offerId) => {
+    cancelOffer(
+      {
+        master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+        access_token: '',
+        platform_token: platforms[platform].access_token,
+        vendors: [vendor],
+        offer_id: offerId,
+        chain_id,
+      },
+      platform,
+    );
+  };
   const OpenSetup = () => {
     const body = document.querySelector('body');
     setActive(true);
@@ -162,7 +176,7 @@ const OfferDetailComponent = () => {
       <CancelOfferModal
         modalIsOpen={modalIsOpen}
         setIsOpen={setIsOpen}
-        cancelOffer={handleCancelOffer}
+        cancelOffer={handleCancelOfferMaster}
       />
       <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
@@ -285,8 +299,8 @@ const OfferDetailComponent = () => {
                 </div>
               </div>
             )}
-            {!master_offer_id && (
-              <>
+            {master_offer_id && (
+              <div>
                 <div className="offer-duration-container">
                   <div className="offer-duration-block">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -302,16 +316,12 @@ const OfferDetailComponent = () => {
                       <span className="offer-duration width-left-icon width-right-icon">
                         Program the offer duration
                       </span>
-                      <ExpandIcon />
+                      {scheduleTypeMapping[type_schedule] ? <ExpandIcon /> : ''}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span className="offer-duration  width-right-icon">
-                        {scheduleTypeMapping[type_schedule] || 'Customised day'}
+                        {scheduleTypeMapping[type_schedule] || ''}
                       </span>
-                      <ExpandIcon />
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span className="offer-duration">Monday, Thursday, Sunday</span>
                     </div>
                   </div>
                   <div
@@ -392,16 +402,24 @@ const OfferDetailComponent = () => {
                 </div>
 
                 <div className="offerdetails_time_slots_scroll">
-                  <div className="offerdetails_time_slots">
-                    <TimeSlot status={status} />
-                    <TimeSlot status={status} />
-                    <TimeSlot status={status} />
-                    <TimeSlot status={status} />
-                    <TimeSlot status={status} />
-                    <TimeSlot status={status} />
-                  </div>
+                  {Object.keys(menu?.children_offers || {}).length === 0 ? (
+                    <div className="offerdetails_time_slots" style={{ width: '100%' }}>
+                      <SpinnerKit />
+                    </div>
+                  ) : (
+                    <div style={{ width: 'fit-content' }} className="offerdetails_time_slots">
+                      {Object.keys(menu?.children_offers || {}).map((id) => (
+                        <TimeSlot
+                          handleCancelOffer={handleCancelOffer}
+                          key={id}
+                          data={menu.children_offers[id]}
+                          status={status}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </>
+              </div>
             )}
             <div className="offer-duration-container">
               <div className="offer-duration-block">
@@ -421,7 +439,7 @@ const OfferDetailComponent = () => {
                       ? 'Offer on an item from the Menu'
                       : 'Offer on the whole Menu'}
                   </span>
-                  <ExpandIcon />
+                  {discount_type && discount_type !== 'Menu discount' ? <ExpandIcon /> : ''}
                 </div>
                 {discount_type && discount_type !== 'Menu discount' && (
                   <div
@@ -536,7 +554,7 @@ const OfferDetailComponent = () => {
 export default OfferDetailComponent;
 
 // eslint-disable-next-line no-unused-vars
-const TimeSlot = () => (
+const TimeSlot = ({ data, handleCancelOffer, status }) => (
   <div
     style={{
       display: 'flex',
@@ -583,7 +601,10 @@ const TimeSlot = () => (
             color: '#212B36',
           }}
         >
-          15/11/22
+          {new Date(data.start_date).toLocaleDateString() ===
+          new Date(data.end_date).toLocaleDateString()
+            ? data.start_date
+            : `${data.start_date} - ${data.end_date}`}
         </span>
       </div>
 
@@ -630,7 +651,7 @@ const TimeSlot = () => (
               color: '#212B36',
             }}
           >
-            10 am
+            {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
           </span>
         </div>
         <div
@@ -664,13 +685,17 @@ const TimeSlot = () => (
               color: '#212B36',
             }}
           >
-            10 am
+            {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
           </span>
         </div>
       </div>
     </div>
-    <span className="cancel_api">
-      <Trash />
-    </span>
+    {status !== 'Scheduled' && status !== 'Live' ? (
+      <span className="cancel_api">
+        <Trash onClick={() => handleCancelOffer(data.offer_id)} />
+      </span>
+    ) : (
+      ''
+    )}
   </div>
 );

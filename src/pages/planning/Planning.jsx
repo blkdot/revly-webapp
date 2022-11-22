@@ -102,12 +102,10 @@ const Planning = () => {
     );
 
   const handleRowClick = (id) => {
-    const rowId = id.split('_');
-
-    navigate(`/offer/detail/${rowId[1]}`, {
+    navigate(`/offer/detail/${id}`, {
       state: {
         // eslint-disable-next-line eqeqeq
-        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        offerDetail: offers.find((o) => o.master_offer_id == id),
         prevPath: location.pathname,
       },
     });

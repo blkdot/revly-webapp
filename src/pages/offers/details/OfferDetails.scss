@@ -606,7 +606,7 @@
 }
 
 .offerdetails_time_slots_scroll {
-  overflow-x: scroll;
+  overflow-x: auto;
   scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
@@ -637,7 +637,7 @@
   >div:nth-of-type(1){
     margin-left: 0 !important;
   }
-  width: fit-content;
+  
 }
 
 .cancel_api {

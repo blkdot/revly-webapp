@@ -88,7 +88,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const { user } = useUserAuth();
   const { vendors } = useVendors();
   const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
-  const [branchData, setBranchData] = useState('');
+  const [branchData, setBranchData] = useState(
+    vendors?.vendorsObj[platformData]?.[0]?.data?.vendor_name || '',
+  );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
   const [customDay, setCustomDay] = useState('');
@@ -431,9 +433,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
   };
   useEffect(() => {
-    const newBranchData = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
-    if (platform.length < 2) {
-      getMenuData(newBranchData, platformData);
+    const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
+    if (platform.length < 2 && branchData) {
+      getMenuData(vendor, platformData);
     }
   }, [platformData, branchData]);
 
