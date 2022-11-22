@@ -11,7 +11,6 @@ import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import MenuDropdown from '../settings/menu/menuDropdown/MenuDropdown';
 import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
-import BranchesIcon from '../../assets/images/ic_branch.png';
 import menuIcon from '../../assets/images/ic_menu.png';
 import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
 import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
@@ -24,7 +23,6 @@ import ArrowIcon from '../../assets/images/arrow.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
 import { platformList, platformObject } from '../../data/platformList';
-import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
 import trash from '../../assets/images/ic_trash.png';
 import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
@@ -35,6 +33,10 @@ import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import RestaurantDropdown from '../restaurantDropdown/RestaurantDropdown.suspended';
+import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
+import useDate from '../../hooks/useDate';
+import BranchesIcon from '../../assets/images/ic_branch.png';
 
 const GetProgress = ({ progressData }) => {
   const {
@@ -43,7 +45,6 @@ const GetProgress = ({ progressData }) => {
     platform,
     handleCategoryDataChange,
     userPlatformData,
-    vendorsObj,
     setBranch,
     branch,
     menu,
@@ -84,8 +85,11 @@ const GetProgress = ({ progressData }) => {
     setHeatmapData,
     heatmapData,
     links,
+    getPlatformData,
+    platformData,
+    setBranchData,
+    branchData,
   } = progressData;
-
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
       if (new Date(endingDate).getDay() === 0) {
@@ -444,6 +448,8 @@ const GetProgress = ({ progressData }) => {
       </BoxKit>
     </div>
   );
+  const { vendors } = useDate();
+  const { vendorsObj } = vendors;
   if (selected === 1) {
     return (
       <div className="left-part-middle">
@@ -453,28 +459,66 @@ const GetProgress = ({ progressData }) => {
           offers.
         </TypographyKit>
         <div className="left-part-radio-wrapper">
-          <RadioGroupKit
-            aria-labelledby="demo-radio-buttons-group-label"
-            value={platform}
-            onChange={(e) => getPlatform(e)}
-            name="radio-buttons-group"
-          >
-            {platformList
-              .filter((pf) => userPlatformData.platforms[pf.name].active)
-              .map((p) => (
-                <MarketingRadio key={p.name} className={p.name} icon={p.src} title={p.name} />
-              ))}
-          </RadioGroupKit>
+          {Object.keys(branch.display).length > 0 ? (
+            <RadioGroupKit
+              aria-labelledby="demo-radio-buttons-group-label"
+              name="radio-buttons-group"
+              value=""
+            >
+              {platformList
+                .filter((pf) => userPlatformData.platforms[pf.name].active)
+                .map((p) => (
+                  <MarketingRadio
+                    setState={getPlatform}
+                    state={platform}
+                    checkbox
+                    key={p.name}
+                    className={p.name}
+                    icon={p.src}
+                    title={p.name}
+                  />
+                ))}
+            </RadioGroupKit>
+          ) : (
+            <RadioGroupKit
+              aria-labelledby="demo-radio-buttons-group-label"
+              name="radio-buttons-group"
+              onChange={(e) => getPlatformData(e)}
+              value={platformData || ''}
+            >
+              {platformList
+                .filter((pf) => userPlatformData.platforms[pf.name].active)
+                .map((p) => (
+                  <MarketingRadio
+                    state={platformData}
+                    key={p.name}
+                    className={p.name}
+                    icon={p.src}
+                    title={p.name}
+                  />
+                ))}
+            </RadioGroupKit>
+          )}
         </div>
-        <BranchMarketingDropdown
-          rows={vendorsObj[platform]}
-          icon={BranchesIcon}
-          title="Select Branches"
-          className="top-competition marketing-dropdown"
-          setRow={setBranch}
-          select={branch}
-          platformData={platformObject[platform]}
-        />
+        {Object.keys(branch.display).length > 0 ? (
+          <RestaurantDropdown
+            platforms={platform}
+            chainObj={branch.chainObj}
+            branch
+            setState={setBranch}
+            state={branch}
+          />
+        ) : (
+          <BranchMarketingDropdown
+            rows={vendorsObj[platformData]}
+            icon={BranchesIcon}
+            title="Select Branches"
+            className="top-competition marketing-dropdown"
+            setRow={setBranchData}
+            select={branchData}
+            platformData={platformObject[platformData]}
+          />
+        )}
       </div>
     );
   }
@@ -539,79 +583,83 @@ const GetProgress = ({ progressData }) => {
               </div>
             </div>
           </BoxKit>
-          <BoxKit
-            className={`left-part-radio under-textfields radio-dates ${
-              platform === 'talabat' || category.length === 0 ? 'disabled' : ''
-            } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
+          {platform.length === 1 ? (
+            <BoxKit
+              className={`left-part-radio under-textfields radio-dates ${
+                platformData === 'talabat' || category.length === 0 ? 'disabled' : ''
+              } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}
-          >
-            <div className="radio">
-              <div>
-                <span>
-                  <img src={ItemMenuIcon} alt="Item Menu Icon" />
-                </span>
+            >
+              <div className="radio">
                 <div>
-                  <div>Offer on An Item from the Menu</div>
-                  <p>Ex :&nbsp; -20% on the full menu</p>
+                  <span>
+                    <img src={ItemMenuIcon} alt="Item Menu Icon" />
+                  </span>
+                  <div>
+                    <div>Offer on An Item from the Menu</div>
+                    <p>Ex :&nbsp; -20% on the full menu</p>
+                  </div>
                 </div>
+                {platformData === 'deliveroo' && category.length > 0 ? (
+                  <FormControlLabelKit
+                    value="Offer on An Item from the Menu"
+                    control={<RadioKit />}
+                  />
+                ) : (
+                  ''
+                )}
               </div>
-              {platform === 'deliveroo' && category.length > 0 ? (
-                <FormControlLabelKit
-                  value="Offer on An Item from the Menu"
-                  control={<RadioKit />}
-                />
-              ) : (
-                ''
-              )}
-            </div>
-            <div>
-              <RadioGroupKit
-                aria-labelledby="demo-radio-buttons-group-label"
-                value={itemMenu}
-                onChange={(e) => setItemMenu(e.target.value)}
-                name="radio-buttons-group-menu"
-              >
-                {[
-                  {
-                    title: 'Flash Deal',
-                    subtitle: 'Sell Off extra stock when you’re about to close',
-                  },
-                  {
-                    title: 'Order more , save more',
-                    subtitle: 'Attract larger orders from groupes and famillies',
-                  },
-                  { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
-                  { title: 'Free item', subtitle: 'Allow customers to choose a free item' },
-                ].map((obj) => (
-                  <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
-                ))}
-                <div className="dropdown-wrapper">
-                  <TypographyKit className="min-max-textfields" variant="div">
-                    <TypographyKit variant="div">
-                      Percentage Discount
-                      <MarketingPlaceholderDropdown
-                        names={getDiscountOrMov('discount')}
-                        title="%"
-                        setPersonName={setDiscountPercentage}
-                        personName={discountPercentage}
-                      />
+              <div>
+                <RadioGroupKit
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  value={itemMenu}
+                  onChange={(e) => setItemMenu(e.target.value)}
+                  name="radio-buttons-group-menu"
+                >
+                  {[
+                    {
+                      title: 'Flash Deal',
+                      subtitle: 'Sell Off extra stock when you’re about to close',
+                    },
+                    {
+                      title: 'Order more , save more',
+                      subtitle: 'Attract larger orders from groupes and famillies',
+                    },
+                    { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
+                    { title: 'Free item', subtitle: 'Allow customers to choose a free item' },
+                  ].map((obj) => (
+                    <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
+                  ))}
+                  <div className="dropdown-wrapper">
+                    <TypographyKit className="min-max-textfields" variant="div">
+                      <TypographyKit variant="div">
+                        Percentage Discount
+                        <MarketingPlaceholderDropdown
+                          names={getDiscountOrMov('discount')}
+                          title="%"
+                          setPersonName={setDiscountPercentage}
+                          personName={discountPercentage}
+                        />
+                      </TypographyKit>
                     </TypographyKit>
-                  </TypographyKit>
-                  <TypographyKit className="min-max-textfields" variant="div">
-                    <TypographyKit variant="div">
-                      Min. Order Value
-                      <MarketingPlaceholderDropdown
-                        names={getDiscountOrMov('mov')}
-                        title="0 AED"
-                        setPersonName={setMinOrder}
-                        personName={minOrder}
-                      />
+                    <TypographyKit className="min-max-textfields" variant="div">
+                      <TypographyKit variant="div">
+                        Min. Order Value
+                        <MarketingPlaceholderDropdown
+                          names={getDiscountOrMov('mov')}
+                          title="0 AED"
+                          setPersonName={setMinOrder}
+                          personName={minOrder}
+                        />
+                      </TypographyKit>
                     </TypographyKit>
-                  </TypographyKit>
-                </div>
-              </RadioGroupKit>
-            </div>
-          </BoxKit>
+                  </div>
+                </RadioGroupKit>
+              </div>
+            </BoxKit>
+          ) : (
+            ''
+          )}
         </RadioGroupKit>
       </div>
     );

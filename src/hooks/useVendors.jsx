@@ -28,7 +28,6 @@ const useVendors = () => {
 
     delete newData?.master_email;
 
-    const chainObjTemp = {};
     const restaurantTemp = [];
     const vendorsTemp = [];
 
@@ -44,13 +43,6 @@ const useVendors = () => {
         }),
       );
 
-    Object.keys(newData.display).forEach((n) => {
-      chainObjTemp[n] = newData.display[n];
-      Object.keys(newData.display[n]).forEach((v) => {
-        chainObjTemp[n][v].checked = true;
-      });
-    });
-
     if (vendorsTemp.length !== vendors.vendorsArr.length) {
       const { display, ...rest } = newData;
 
@@ -59,7 +51,7 @@ const useVendors = () => {
         vendorsArr: vendorsTemp,
         vendorsObj: rest,
         display,
-        chainObj: chainObjTemp,
+        chainObj: JSON.parse(JSON.stringify(display)),
       };
       setVendors(dataV);
       localStorage.setItem('vendors', JSON.stringify(dataV));

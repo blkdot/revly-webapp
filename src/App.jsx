@@ -77,7 +77,7 @@ const App = () => (
                       <Route path="/marketing/offer" element={<MarketingOffer />} />
                       <Route path="/marketing/ads" element={<MarketingAds />} />
                       <Route path="/verify-code" element={<VerifyCode />} />
-                      <Route path="/offer/detail/:offerId" element={<OfferDetails />} />
+                      <Route path="/offer/detail/:masterId" element={<OfferDetails />} />
                     </Route>
                     <Route path="/onboarding" element={<OnBoarding />} />
                     <Route path="/check" element={<Check />} />
