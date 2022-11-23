@@ -25,7 +25,6 @@ import useVendors from '../../hooks/useVendors';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import Layers from '../../assets/icons/Layers';
-import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
@@ -114,8 +113,14 @@ const MarketingAds = () => {
   const [adsData, setAdsData] = useState(AdsTableData);
   const [adsFilteredData, setAdsFilteredData] = useState(AdsTableData);
 
-  const [filters, setFilters] = useState(defaultFilterStateFormat);
-  const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
+  const [filters, setFilters] = useState({
+    platform: [],
+    status: [],
+  });
+  const [filtersHead, setFiltersHead] = useState({
+    platform: [],
+    status: [],
+  });
 
   useEffect(() => {
     setAdsData(ads);
@@ -143,34 +148,19 @@ const MarketingAds = () => {
   useEffect(() => {
     const preHead = adsData.reduce(
       (acc, cur) => {
-        const {
-          platform,
-          discount_type: discountType,
-          discount_rate: procent,
-          status,
-          target,
-        } = acc;
+        const { platform, status } = acc;
 
         if (!platform.includes(cur.platform)) platform.push(cur.platform);
 
-        if (!discountType.includes(cur.discount_type)) discountType.push(cur.discount_type);
-
-        if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
-
-        if (!status.includes(cur.status)) status.push(cur.status);
-
-        if (!status.includes(cur.status)) status.push(cur.status);
+        if (!status.includes(cur.status)) status.push(cur.ad_status);
 
         return {
           ...acc,
           platform,
-          discount_type: discountType,
-          discount_rate: procent,
           status,
-          target,
         };
       },
-      { discount_type: [], platform: [], discount_rate: [], status: [], target: [] },
+      { platform: [], status: [] },
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
@@ -178,17 +168,11 @@ const MarketingAds = () => {
       text: renderPlatformInsideFilter(s),
     }));
 
-    const preHeadDiscountType = preHead.discount_type.map((s) => ({ value: s, text: s }));
-    const preHeadTarget = preHead.target.map((s) => ({ value: s, text: s }));
-    const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
-      discount_type: preHeadDiscountType,
-      discount_rate: preHeadProcent,
       status: preHeadStatus,
-      target: preHeadTarget,
     });
   }, [JSON.stringify(adsData)]);
 
@@ -199,20 +183,8 @@ const MarketingAds = () => {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
     }
 
-    if (filters.discount_type.length > 0) {
-      filteredData = filteredData.filter((f) => filters.discount_type.includes(f.discount_type));
-    }
-
-    if (filters.discount_rate.length > 0) {
-      filteredData = filteredData.filter((f) => filters.discount_rate.includes(f.discount_rate));
-    }
-
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
-    }
-
-    if (filters.target.length > 0) {
-      filteredData = filteredData.filter((f) => filters.target.includes(f.target));
+      filteredData = filteredData.filter((f) => filters.status.includes(f.ad_status));
     }
 
     setAdsFilteredData(filteredData);
@@ -352,23 +324,6 @@ const MarketingAds = () => {
                 icon={<Layers />}
                 internalIconOnActive={platformObject}
                 maxShowned={1}
-              />
-              <FilterDropdown
-                items={filtersHead.discount_type}
-                values={filters.discount_type}
-                onChange={handleChangeMultipleFilter('discount_type')}
-                label="Discount Type"
-                icon={<Tag />}
-                maxShowned={1}
-              />
-              <FilterDropdown
-                items={filtersHead.discount_rate}
-                values={filters.discount_rate}
-                onChange={handleChangeMultipleFilter('discount_rate')}
-                label="Discount Amount"
-                icon={<Tag />}
-                customTag="%"
-                maxShowned={5}
               />
             </div>
             <ButtonKit

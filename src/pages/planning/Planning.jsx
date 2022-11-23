@@ -191,7 +191,7 @@ const Planning = () => {
 
         if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status)) status.push(cur.status);
+        if (!status.includes(cur.status)) status.push(active ? cur.ad_status : cur.status);
 
         return { ...acc, platform, discount_type: discountType, discount_rate: procent, status };
       },
@@ -209,8 +209,8 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
-      discount_type: preHeadDiscountType,
-      discount_rate: preHeadProcent,
+      discount_type: active ? [] : preHeadDiscountType,
+      discount_rate: active ? [] : preHeadProcent,
       status: preHeadStatus,
     });
   }, [ads, offers, active]);
@@ -265,7 +265,9 @@ const Planning = () => {
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredData = filteredData.filter((f) =>
+        filters.status.includes(active ? f.ad_status : f.status),
+      );
     }
 
     setDataFiltered(filteredData);
@@ -302,23 +304,27 @@ const Planning = () => {
               internalIconOnActive={platformObject}
               maxShowned={1}
             />
-            <FilterDropdown
-              items={filtersHead.discount_type}
-              values={filters.discount_type}
-              onChange={handleChangeMultipleFilter('discount_type')}
-              label="Discount Type"
-              icon={<Tag />}
-              maxShowned={1}
-            />
-            <FilterDropdown
-              items={filtersHead.discount_rate}
-              values={filters.discount_rate}
-              onChange={handleChangeMultipleFilter('discount_rate')}
-              label="Discount Amount"
-              icon={<Tag />}
-              customTag="%"
-              maxShowned={5}
-            />
+            {active ? null : (
+              <FilterDropdown
+                items={filtersHead.discount_type}
+                values={filters.discount_type}
+                onChange={handleChangeMultipleFilter('discount_type')}
+                label="Discount Type"
+                icon={<Tag />}
+                maxShowned={1}
+              />
+            )}
+            {active ? null : (
+              <FilterDropdown
+                items={filtersHead.discount_rate}
+                values={filters.discount_rate}
+                onChange={handleChangeMultipleFilter('discount_rate')}
+                label="Discount Amount"
+                icon={<Tag />}
+                customTag="%"
+                maxShowned={5}
+              />
+            )}
           </div>
           <ButtonKit
             className="more-filter"
