@@ -18,7 +18,7 @@ const AuthLayout = () => (
         </div>
         <div className="auth-layout__cover__center">
           <p className="auth-layout__cover__center__text">
-            All in one software to optimize your revenue on online channels
+            All-in-one solution to optimize your restaurants' revenue on delivery platforms
           </p>
           <div className="__img-frame">
             <img loading="lazy" src={icframe} alt="card" />
