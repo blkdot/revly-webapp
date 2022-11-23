@@ -2,16 +2,7 @@
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import {
-  addDays,
-  addHours,
-  format,
-  getHours,
-  startOfWeek,
-  getDate,
-  getDay,
-  isSameDay,
-} from 'date-fns';
+import { addDays, addHours, format, getHours, startOfWeek, getDay } from 'date-fns';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
@@ -52,6 +43,9 @@ import BoxKit from '../../kits/box/BoxKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import menuIcon from '../../assets/images/ic_menu.png';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
+import heatmapSelected from '../../utlls/heatmap/heatmapSelected';
+import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
+import { OfferCrossPlatforms } from '../../api/marketingApi';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -66,9 +60,11 @@ const defaultHeatmapState = {
 const defaultRangeColorIndices = [0, 0, 0, 0];
 
 const MarketingSetup = ({ active, setActive, ads }) => {
-  const [branch, setBranch] = useState('');
   const { userPlatformData } = usePlatform();
-  const [platform, setPlatform] = useState(
+  const [platform, setPlatform] = useState([
+    userPlatformData.platforms.talabat.active ? 'talabat' : 'deliveroo',
+  ]);
+  const [platformData, setPlatformData] = useState(
     userPlatformData.platforms.talabat.active ? 'talabat' : 'deliveroo',
   );
   const [selected, setSelected] = useState(1);
@@ -93,6 +89,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
   const { vendors } = useVendors();
+  const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
+  const [branchData, setBranchData] = useState(
+    vendors?.vendorsObj[platformData]?.[0]?.data?.vendor_name || '',
+  );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
   const [customDay, setCustomDay] = useState('');
@@ -161,8 +161,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
-  const { vendorsArr: vendorsList, vendorsObj } = vendors;
-  const [branchData, setBranchData] = useState('');
+  const { vendorsObj } = vendors;
 
   const getHourArr = (hour) => {
     const arr = [];
@@ -234,15 +233,49 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
 
   useEffect(() => {
-    setBranch('');
+    const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
+    const chainObjTemp = JSON.parse(JSON.stringify(vendors.chainObj));
+    const newVendorsObj = { talabat: [], deliveroo: [] };
+    const newVendorsArr = [];
+    const newRestaurants = [];
+    if (Object.keys(vendors.chainObj).length > 0) {
+      Object.keys(newChainObj).forEach((chainName, index) => {
+        if (index !== 0) {
+          Object.keys(newChainObj[chainName]).forEach((vendorName) => {
+            delete newChainObj[chainName][vendorName];
+          });
+        }
+      });
+      Object.keys(newChainObj).forEach((cName) => {
+        Object.keys(newChainObj[cName]).forEach((vName) => {
+          platform.forEach((p) => {
+            newVendorsObj[p]?.push(newChainObj[cName][vName][p]);
+          });
+        });
+      });
+      Object.keys(chainObjTemp).forEach((cName) => {
+        Object.keys(chainObjTemp[cName]).forEach((vName) => {
+          platform.forEach((p) => {
+            newVendorsArr?.push({ ...chainObjTemp[cName][vName][p], platform: p });
+            newRestaurants?.push(chainObjTemp[cName][vName][p].data.vendor_name);
+          });
+        });
+      });
+    }
+    setBranch({
+      ...vendors,
+      restaurants: newRestaurants,
+      vendorsArr: newVendorsArr,
+      vendorsObj: newVendorsObj,
+      chainObj: newChainObj,
+    });
     setMenu('Offer on the whole Menu');
-  }, [platform]);
-
+  }, [platform, vendors]);
   // TODO: Send request
   const handleSchedule = async () => {
-    const clonedVendor = { ...branchData };
+    const newBranchData = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
+    const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
     delete clonedVendor.platform;
-
     const menuType =
       menu === 'Offer on the whole Menu'
         ? null
@@ -261,17 +294,40 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       master_email: user.email,
       access_token: user.accessToken,
       platform_token:
-        userPlatformData.platforms[platform].access_token ??
-        userPlatformData.platforms[platform].access_token_bis,
+        userPlatformData.platforms[platformData].access_token ??
+        userPlatformData.platforms[platformData].access_token_bis,
       vendors: [clonedVendor],
       chain_id: clonedVendor.chain_id,
     };
-
-    const res = await triggerOffers(platform, dataReq);
-
-    if (res instanceof Error) {
-      triggerAlertWithMessageError(res.message);
-      return;
+    const dataReqOfferCross = {
+      start_date: format(startingDate, 'yyyy-MM-dd'),
+      start_hour: getHourArr('startTime'),
+      end_date: format(endingDate, 'yyyy-MM-dd'),
+      end_hour: getHourArr('endTime'),
+      type_schedule: getTypeSchedule(),
+      menu_type: menuType,
+      goal: getTargetAudience(),
+      discount: Number(discountPercentage.replace('%', '')),
+      mov: Number(minOrder.toLowerCase().replace('aed', '')),
+      master_email: user.email,
+      access_token: user.accessToken,
+      platform_token:
+        userPlatformData.platforms[platform[0]].access_token ??
+        userPlatformData.platforms[platform[0]].access_token_bis,
+      vendors: branch.vendorsObj,
+    };
+    if (platform.length < 2) {
+      const res = await triggerOffers(platformData, dataReq);
+      if (res instanceof Error) {
+        triggerAlertWithMessageError(res.message);
+        return;
+      }
+    } else {
+      const res = await OfferCrossPlatforms(dataReqOfferCross);
+      if (res instanceof Error) {
+        triggerAlertWithMessageError(res.message);
+        return;
+      }
     }
 
     setCreated(true);
@@ -326,8 +382,21 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   const getPlatform = (e) => {
     const { value } = e.target;
-    setPlatform(value);
-    setSteps([0, 1, 2, 3, 4]);
+    if (e.target.checked) {
+      setPlatform([...platform, value]);
+      return;
+    }
+    if (platform.length > 1) {
+      platform.splice(
+        platform.findIndex((el) => el === value),
+        1,
+      );
+    }
+    setPlatform([...platform]);
+  };
+  const getPlatformData = (e) => {
+    const { value } = e.target;
+    setPlatformData(value);
   };
   const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
   const onChange = async (newValue, setDate) => {
@@ -365,22 +434,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       triggerAlertWithMessageError('Error while retrieving data');
     }
   };
-
   useEffect(() => {
-    const newBranchData = vendorsList.find((v) => v.data.vendor_name === branch);
-
-    setBranchData(newBranchData);
-  }, [branch]);
-
-  useEffect(() => {
-    if (!branchData && vendorsList.length) {
-      setBranchData(vendorsList[0]);
+    const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
+    if (platform.length < 2 && branchData) {
+      getMenuData(vendor, platformData);
     }
-
-    if (branchData) {
-      getMenuData(branchData, platform);
-    }
-  }, [vendorsList, branchData, platform]);
+  }, [platformData, branchData]);
 
   const handleCategoryDataChange = (e) => {
     const { value } = e.target;
@@ -396,144 +455,48 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     return d instanceof Date && !Number.isNaN(d);
   }
 
-  const renderHeatmapBox = () => <span />;
-
-  const setSelectedForSample = () => {
-    let heatmapDataActive = heatmapData[links];
-
-    const t = times[0];
-
-    const heatmapStartTime = getHours(t.startTime) === 0 ? 24 : getHours(t.startTime);
-    const heatmapEndTime = getHours(t.endTime) === 0 ? 24 : getHours(t.endTime);
-    const heatmapStartDay = getDay(new Date(startingDate));
-    const heatmapEndDay = getDay(new Date(endingDate));
-
-    const heatmapDayRangeProgramed = _.range(
-      heatmapStartDay - 1,
-      heatmapEndDay === 0 ? 7 : heatmapEndDay,
-    );
-
-    const getHeatmapDataDayNewContent = (d, tms) =>
-      tms.reduce((acc, cur) => {
-        if (cur < 5) return acc;
-        if (!heatmapDataActive[d] || !heatmapDataActive[d][cur]) {
-          return { ...acc, [cur]: { active: true } };
-        }
-
-        return { ...acc, [cur]: { ...heatmapDataActive[d][cur], active: true } };
-      }, {});
-
-    if (heatmapDayRangeProgramed.length === 1) {
-      const labelDay = days[heatmapDayRangeProgramed[0]];
-      heatmapDataActive = {
-        ...heatmapDataActive,
-        [labelDay]: getHeatmapDataDayNewContent(
-          labelDay,
-          _.range(heatmapStartTime, heatmapEndTime + 1),
-        ),
-      };
-
-      return;
-    }
-
-    heatmapDayRangeProgramed.forEach((programmedDay, index) => {
-      const labelDay = days[programmedDay];
-
-      if (index === 0) {
-        heatmapDataActive = {
-          ...heatmapDataActive,
-          [labelDay]: getHeatmapDataDayNewContent(labelDay, _.range(heatmapStartTime, 25)),
-        };
-
-        return;
-      }
-
-      if (index === heatmapDayRangeProgramed.length - 1) {
-        heatmapDataActive = {
-          ...heatmapDataActive,
-          [labelDay]: getHeatmapDataDayNewContent(labelDay, _.range(5, heatmapEndTime)),
-        };
-
-        return;
-      }
-
-      heatmapDataActive = {
-        ...heatmapDataActive,
-        [labelDay]: getHeatmapDataDayNewContent(labelDay, _.range(5, 25)),
-      };
-    });
-
-    // setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
-  };
-
   const timeSelected = () => {
-    if (times.length === 1) {
-      setSelectedForSample();
-      return;
-    }
+    const typeObject = {
+      once: 'mono',
+      now: 'mono',
+    };
 
-    let stackTimes = [];
-    let heatmapDataActive = heatmapData[links];
-
-    times.forEach((t) => {
-      const heatmapStartTime = getHours(t.startTime) === 0 ? 24 : getHours(t.startTime);
-      const heatmapEndTime = getHours(t.endTime) === 0 ? 24 : getHours(t.endTime);
-
-      stackTimes = [
-        ...stackTimes,
-        ..._.range(heatmapStartTime <= 5 ? 5 : heatmapStartTime + 1, heatmapEndTime + 1),
-      ];
-    });
-
-    const heatmapStartDay = getDay(new Date(startingDate));
-    const heatmapEndDay = getDay(new Date(endingDate));
-
-    const heatmapDayRangeProgramed = _.range(
-      heatmapStartDay - 1,
-      heatmapEndDay === 0 ? 7 : heatmapEndDay,
+    const response = heatmapSelected(
+      typeObject[getTypeSchedule()] ?? 'multi',
+      { startDate: startingDate, endDate: endingDate },
+      times,
+      heatmapData[links],
     );
 
-    const getHeatmapDataDuplicatedByDay = (d, tms) =>
-      tms.reduce((acc, cur) => {
-        if (cur < 5) return acc;
-
-        if (!heatmapDataActive[d] || !heatmapDataActive[d][cur]) {
-          return { ...acc, [cur]: { active: true } };
-        }
-
-        return { ...acc, [cur]: { ...heatmapDataActive[d][cur], active: true } };
-      }, {});
-
-    heatmapDayRangeProgramed.forEach((programmedDay) => {
-      const labelDay = days[programmedDay];
-
-      heatmapDataActive = {
-        ...heatmapDataActive,
-        [labelDay]: getHeatmapDataDuplicatedByDay(labelDay, stackTimes),
-      };
-    });
-
-    // setHeatmapData({ ...heatmapData, [links]: heatmapDataActive });
+    setHeatmapData({ ...heatmapData, [links]: response });
   };
 
   const clearTimeSelected = () => {
-    Object.values(heatmapData[links]).forEach((objHeat, indexObjHeat) => {
+    const clonedheatmapData = { ...heatmapData };
+
+    Object.values(clonedheatmapData[links]).forEach((objHeat, indexObjHeat) => {
       if (objHeat) {
         Object.keys(objHeat).forEach((num) => {
           if (objHeat[num].active) {
-            delete heatmapData[links][Object.keys(heatmapData[links])[indexObjHeat]][num].active;
+            delete clonedheatmapData[links][Object.keys(clonedheatmapData[links])[indexObjHeat]][
+              num
+            ].active;
           }
         });
       }
     });
-    setHeatmapData({
-      ...heatmapData,
-    });
+
+    setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
   };
   useEffect(() => {
     if (selected === 1) {
-      setDisabled(!branch);
-      clearTimeSelected();
+      if (Object.keys(vendors.display).length > 0) {
+        setDisabled(!(branch && platform.length));
+        clearTimeSelected();
+      } else {
+        setDisabled(!branchData);
+        clearTimeSelected();
+      }
     }
     if (selected === 2) {
       clearTimeSelected();
@@ -732,6 +695,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     customisedDay,
     itemMenu,
     checked,
+    vendors,
+    branchData,
   ]);
   useEffect(() => {
     setTimes([
@@ -803,8 +768,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   useEffect(() => {
     clearTimeSelected();
-    timeSelected();
-  }, [times, startingDate, endingDate]);
+    if (selected >= 3) {
+      timeSelected();
+    }
+  }, [times, startingDate, endingDate, selected, customDay]);
 
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
@@ -1095,6 +1062,203 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       );
     }
     if (recap) {
+      const recapChainObj = JSON.parse(JSON.stringify(branch.chainObj));
+      Object.keys(recapChainObj).forEach((cName) => {
+        if (Object.keys(recapChainObj[cName]).length === 0) {
+          delete recapChainObj[cName];
+        }
+      });
+      if (Object.keys(vendors.display).length > 0) {
+        return (
+          <div>
+            <div className="left-part-top">
+              <div>
+                <TypographyKit variant="h4">{ads ? 'Ads' : 'Offer'} Recap </TypographyKit>
+
+                <img
+                  tabIndex={-1}
+                  role="presentation"
+                  onClick={() => closeSetup()}
+                  src={CloseIcon}
+                  alt="close icon"
+                />
+              </div>
+            </div>
+            <BoxKit className="left-part-radio recap-left-part recap-left-part-inside">
+              <div>
+                <img width={35} height={35} src={selectIcon} alt="select" />
+                {Object.keys(recapChainObj).map((cName, index) => {
+                  if (Object.keys(recapChainObj[cName]).length > 0) {
+                    if (index === Object.keys(recapChainObj).length - 1) {
+                      return <div key={cName}>{cName}</div>;
+                    }
+
+                    return <div key={cName}>{`${cName}, `}</div>;
+                  }
+                  return '';
+                })}
+              </div>
+              <div>
+                <p>Platforms:</p>
+                {platform.map((p) => (
+                  <img key={p} src={p === 'talabat' ? talabat : deliveroo} alt={p} />
+                ))}
+              </div>
+            </BoxKit>
+            <BoxKit className="left-part-radio recap-left-part">
+              <div className="radio recap-box-wrapper">
+                <div className="recap-box">
+                  <div>
+                    <span>
+                      <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
+                    </span>
+                    <div>
+                      <div>{duration}</div>
+                      {duration === 'Program the offer duration' ? (
+                        <img className="arrow-icon" src={ArrowIcon} alt="arrow" />
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                    {duration === 'Program the offer duration' ? (
+                      <div className="customised-column">
+                        <div>{customDay}</div>
+                        <p>
+                          {customDay === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
+                        </p>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="radio recap-box-wrapper column">
+                <div className="recap-between">
+                  <div>
+                    <img src={CalendarCheckGrayIcon} alt="calendar check icon" />
+                    <div>
+                      <div>Starting Date</div>
+                      <div>{format(startingDate, 'dd MMM yyyy')}</div>
+                    </div>
+                  </div>
+                  <div className="right">
+                    <img src={CalendarCloseGrayIcon} alt="calendar close icon" />
+                    <div>
+                      <div>Ending Date</div>
+                      <div>{format(endingDate, 'dd MMM yyyy')}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="radio recap-box-wrapper column">
+                {times.map((obj, index) => (
+                  <div className="recap-between" key={obj.pos}>
+                    <div>
+                      <img src={TimerCheckGrayIcon} alt="timer check icon" />
+                      <div>
+                        <div>Start Time {index + 1}</div>
+                        <div>{format(obj.startTime, 'HH:00 aaa')}</div>
+                      </div>
+                    </div>
+                    <div className="right">
+                      <img src={TimerCloseGrayIcon} alt="timer check icon" />
+                      <div>
+                        <div>End Time {index + 1}</div>
+                        <div>{format(obj.endTime, 'HH:00 aaa')}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </BoxKit>
+            {platform === 'deliveroo' ? (
+              <BoxKit className="left-part-radio recap-left-part">
+                <div className="radio recap-box-wrapper">
+                  <div className="recap-box">
+                    <div>
+                      <span>
+                        <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
+                      </span>
+                      <div>
+                        <div>Target Audience</div>
+                        <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                      </div>
+                      <div style={{ marginLeft: 0 }}>
+                        <div>{targetAudience}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </BoxKit>
+            ) : (
+              ''
+            )}
+            <BoxKit className="left-part-radio under-textfields recap-left-part radio-dates active">
+              <div className="radio recap-box-wrapper">
+                <div className="recap-box">
+                  <div>
+                    <span>
+                      <img
+                        src={menu === 'Offer on An Item from the Menu' ? ItemMenuIcon : menuIcon}
+                        alt={menu}
+                      />
+                    </span>
+                    <div>
+                      <div>{menu}</div>
+                      {menu === 'Offer on An Item from the Menu' ? (
+                        <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                    {menu === 'Offer on An Item from the Menu' ? (
+                      <div style={{ marginLeft: 0 }}>
+                        <div>{itemMenu}</div>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div
+                className={`radio recap-box-wrapper between under ${
+                  menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
+                }`}
+              >
+                <div className="recap-between mov">
+                  <div>
+                    <div>
+                      <div>Procentage Discount</div>
+                      <div>{discountPercentage}</div>
+                    </div>
+                  </div>
+                  <div className="right">
+                    <div>
+                      <div>Minimum Order</div>
+                      <div>{minOrder}</div>
+                    </div>
+                  </div>
+                </div>
+                {menu === 'Offer on An Item from the Menu' ? (
+                  <div className="recap-between no-border">
+                    {getItemMenuNamePrice().map((obj) => (
+                      <div>
+                        <div>{obj.name}</div>
+                        <div>{obj.price} AED</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+            </BoxKit>
+          </div>
+        );
+      }
+
       return (
         <div>
           <div className="left-part-top">
@@ -1113,11 +1277,11 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           <BoxKit className="left-part-radio recap-left-part recap-left-part-inside">
             <div>
               <img width={35} height={35} src={selectIcon} alt="select" />
-              <div>{branch}</div>
+              <div>{branchData}</div>
             </div>
             <div>
               <p>Platform:</p>
-              <img src={platform === 'talabat' ? talabat : deliveroo} alt={platform} />
+              <img src={platformData === 'talabat' ? talabat : deliveroo} alt={platformData} />
             </div>
           </BoxKit>
           <BoxKit className="left-part-radio recap-left-part">
@@ -1187,7 +1351,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               ))}
             </div>
           </BoxKit>
-          {platform === 'deliveroo' ? (
+          {platformData === 'deliveroo' ? (
             <BoxKit className="left-part-radio recap-left-part">
               <div className="radio recap-box-wrapper">
                 <div className="recap-box">
@@ -1322,6 +1486,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       setHeatmapData,
       heatmapData,
       links,
+      getPlatformData,
+      platformData,
+      setBranchData,
+      branchData,
     };
     return (
       <div>
@@ -1373,13 +1541,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       background: `linear-gradient(45deg, #2D99FF 1%, ${el.color} 1%, ${el.color} 49%, #2D99FF 49%, #2D99FF 51%, ${el.color} 51%, ${el.color} 99%, #2D99FF 99%)`,
       backgroundSize: '6px 6px',
       backgroundPosition: '50px 50px',
-      border: '1px solid #2D99FF',
     };
   };
 
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
-      <PaperKit className="marketing-paper">
+      <PaperKit id="marketing-setup" className="marketing-paper">
         <ContainerKit className="setup-container">
           <div className="left-part">
             {getRecap()}
@@ -1391,11 +1558,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               </div>
             ) : (
               <div className="left-part-bottom">
-                <ButtonKit
-                  onClick={() => handleBack()}
-                  variant="outlined"
-                  disabled={!(selected >= 2)}
-                >
+                <ButtonKit onClick={() => handleBack()} variant="outlined" disabled={selected < 2}>
                   Previous Step
                 </ButtonKit>
                 <ButtonKit
@@ -1424,7 +1587,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           <div className="right-part">
             <div className="right-part-header">
               <TypographyKit
-                className={`right-part-header_link ${links === 'orders' ? 'active' : ''}`}
+                className={`right-part-header_link setup ${links === 'orders' ? 'active' : ''}`}
                 variant="div"
               >
                 <BoxKit
@@ -1476,13 +1639,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   <TypographyKit>
                     <img src={OpacityLogo} alt="Logo" />
                   </TypographyKit>
-                  {[5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map(
-                    (num) => (
-                      <TypographyKit key={num}>
-                        {num} <span>{num >= 12 ? 'PM' : 'AM'}</span>
-                      </TypographyKit>
-                    ),
-                  )}
+                  {_.range(minHour, maxHour + 1).map((num) => (
+                    <TypographyKit key={num}>{rangeHoursOpenedDay[num].label ?? num}</TypographyKit>
+                  ))}
                 </TypographyKit>
                 <TypographyKit sx={{ width: '100%' }} variant="div">
                   <TypographyKit variant="div" className="right-part-main-day">
@@ -1493,15 +1652,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   <TypographyKit className="right-part-main-heatmap" variant="div">
                     {days.map((day) => (
                       <TypographyKit key={day} variant="div">
-                        {[
-                          5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-                        ].map((n) => (
+                        {_.range(minHour, maxHour + 1).map((n) => (
                           <TypographyKit
                             className={`heatmap-btn `}
                             key={n}
                             sx={{ background: '#919EAB1F' }}
                           >
-                            {renderHeatmapBox()}
+                            <span />
                           </TypographyKit>
                         ))}
                       </TypographyKit>
@@ -1510,10 +1667,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                       {days.map((obj, index) => (
                         // eslint-disable-next-line react/no-array-index-key
                         <TypographyKit key={`${obj}_${index}`} variant="div">
-                          {[
-                            5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-                            24,
-                          ].map((num) => {
+                          {_.range(minHour, maxHour + 1).map((num) => {
                             if (
                               !heatmapData[links][obj] ||
                               !heatmapData[links][obj][num] ||
@@ -1531,7 +1685,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                                   }`}
                                   key={num}
                                 >
-                                  {renderHeatmapBox()}
+                                  <span />
                                 </TypographyKit>
                               );
                             }
@@ -1548,7 +1702,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                                     className="heatmap-btn "
                                     sx={getStyleHashureActive(heatmapData[links][obj][num])}
                                   >
-                                    {renderHeatmapBox()}
+                                    <span />
                                   </TypographyKit>
                                 </ItemHeatmap>
                               </Tooltip>

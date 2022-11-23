@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { HashLink } from 'react-router-hash-link';
 import { pascalCase } from 'change-case';
 
 import logo from '../../assets/images/small-logo.png';
@@ -34,7 +33,7 @@ const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
@@ -49,96 +48,52 @@ const MarketingAds = () => {
     renderStatus,
     renderTarget,
     renderSimpleRow,
+    renderSimpleRowNotCentered,
+    renderScheduleType,
+    renderCalculatedPercent,
   } = useTableContentFormatter();
 
   const headersAds = [
-    {
-      id: 'vendor_name',
-      numeric: false,
-      disablePadding: false,
-      label: 'Branche',
-    },
-    {
-      id: 'start_date',
-      numeric: false,
-      disablePadding: true,
-      label: 'Date',
-    },
-    {
-      id: 'platform',
-      numeric: true,
-      disablePadding: false,
-      label: 'Platfrom',
-    },
-    {
-      id: 'discount_type',
-      numeric: true,
-      disablePadding: false,
-      label: 'Discount Type',
-    },
-    {
-      id: 'discount_rate',
-      numeric: true,
-      disablePadding: false,
-      label: '%',
-    },
-    {
-      id: 'minimum_order_value',
-      numeric: true,
-      disablePadding: false,
-      label: 'Min Order',
-    },
-    {
-      id: 'target',
-      numeric: true,
-      disablePadding: false,
-      label: 'Target',
-    },
-    {
-      id: 'status',
-      numeric: true,
-      disablePadding: false,
-      label: 'Status',
-    },
-    {
-      id: 'data.n_orders',
-      numeric: true,
-      disablePadding: false,
-      label: '#Orders',
-    },
-    {
-      id: 'data.average_basket',
-      numeric: true,
-      disablePadding: false,
-      label: 'Avg Basket',
-    },
-    {
-      id: 'data.roi',
-      numeric: true,
-      disablePadding: false,
-      label: 'ROI',
-    },
-    {
-      id: 'data.revenue',
-      numeric: true,
-      disablePadding: false,
-      label: 'Revenue',
-    },
+    { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
+    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
+    { id: 'start_date', disablePadding: true, label: 'Start date' },
+    { id: 'end_date', disablePadding: true, label: 'End date' },
+    { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
+    { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
+    { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
+    { id: 'new_customer_count', disablePadding: true, label: 'New customer' },
+    { id: 'orders_count', disablePadding: true, label: 'Orders' },
+    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
+    { id: 'spend', disablePadding: true, label: 'Spend' },
+    { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
+    { id: 'total_budget', disablePadding: true, label: 'Total budget' },
+    { id: 'ad_status', disablePadding: true, label: 'Status' },
   ];
 
   const cellTemplatesObject = {
-    vendor_name: renderSimpleRow,
+    vendor_name: renderSimpleRowNotCentered,
     platform: renderPlatform,
     start_date: renderSimpleRow,
+    end_date: renderSimpleRow,
+    type_schedule: renderScheduleType,
+    slot_schedule: renderSimpleRow,
     discount_type: renderSimpleRow,
     discount_rate: renderPercent,
+    minimum_order_value: renderCurrency,
+    attributed_order_value: renderCurrency,
     target: renderTarget,
-    minimum_order_value: renderSimpleRow,
     status: renderStatus,
-    'data.n_orders': renderSimpleRow,
-    'data.average_basket': renderSimpleRow,
-    'data.roi': renderSimpleRow,
-    'data.revenue': renderCurrency,
+    ad_status: renderStatus,
+    ad_serving_count: renderSimpleRow,
+    clicks_count: renderSimpleRow,
+    conversion_rate: renderCalculatedPercent,
+    new_customer_count: renderSimpleRow,
+    orders_count: renderSimpleRow,
+    remaining_budget: renderCurrency,
+    return_on_ad_spent: renderCurrency,
+    spend: renderCurrency,
+    total_budget: renderCurrency,
   };
 
   const [selected, setSelected] = useState([]);
@@ -150,6 +105,11 @@ const MarketingAds = () => {
     const cont = document.querySelector('#tableContainer');
     const position = cont.scrollLeft;
     setScrollPosition(position);
+  };
+
+  const scrollToPos = (pos) => {
+    const cont = document.querySelector('#tableContainer');
+    cont?.scrollTo(pos, 0);
   };
   const [adsData, setAdsData] = useState(AdsTableData);
   const [adsFilteredData, setAdsFilteredData] = useState(AdsTableData);
@@ -322,14 +282,15 @@ const MarketingAds = () => {
       isLoading={isLoadingAds}
       headers={headersAds}
       rows={adsFilteredData.map(renderRowsByHeader)}
+      mainFieldOrdered="start_date"
     />
   );
 
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}
@@ -365,18 +326,18 @@ const MarketingAds = () => {
               className={`right-part-header_link ${scrollPosition > 200 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#start_date_header">
-                <BoxKit className={scrollPosition < 200 ? 'active' : ''}>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(0)}>
+                <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
-                  Ads Management
+                  Offers Management
                 </BoxKit>
-              </HashLink>
-              <HashLink to="#data.revenue_header">
-                <BoxKit className={scrollPosition > 200 ? 'active' : ''}>
+              </div>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1253)}>
+                <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
-                  Ads Performance
+                  Offers Performance
                 </BoxKit>
-              </HashLink>
+              </div>
             </TypographyKit>
           </div>
         </div>

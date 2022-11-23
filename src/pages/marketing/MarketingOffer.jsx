@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { HashLink } from 'react-router-hash-link';
 import { pascalCase } from 'change-case';
 import _ from 'lodash';
 
@@ -43,7 +42,7 @@ const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { date: dateContext } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: dateContext.beforePeriod.startDate,
     endDate: dateContext.beforePeriod.endDate,
@@ -346,12 +345,15 @@ const MarketingOffer = () => {
       },
     });
   };
-
+  const scrollToPos = (pos) => {
+    const cont = document.querySelector('#tableContainer');
+    cont?.scrollTo(pos, 0);
+  };
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}
@@ -384,21 +386,21 @@ const MarketingOffer = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
+              className={`right-part-header_link marketing ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#start_date_header">
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(0)}>
                 <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
-              </HashLink>
-              <HashLink to="#data.revenue_header">
+              </div>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1253)}>
                 <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
                 </BoxKit>
-              </HashLink>
+              </div>
             </TypographyKit>
           </div>
         </div>
