@@ -139,7 +139,7 @@ const OfferDetailComponent = () => {
       setIsOpen(false);
     });
   };
-  const handleCancelOffer = (offerId) => {
+  const handleCancelOffer = (offerId, setState) => {
     cancelOffer(
       {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
@@ -151,6 +151,7 @@ const OfferDetailComponent = () => {
       },
       platform,
     );
+    setState(false);
   };
   const OpenSetup = () => {
     const body = document.querySelector('body');
@@ -554,148 +555,151 @@ const OfferDetailComponent = () => {
 export default OfferDetailComponent;
 
 // eslint-disable-next-line no-unused-vars
-const TimeSlot = ({ data, handleCancelOffer, status }) => (
-  <div
-    style={{
-      display: 'flex',
-      marginLeft: '30px',
-      width: '200px',
-      borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
-    }}
-  >
+const TimeSlot = ({ data, handleCancelOffer, status }) => {
+  const [active, setActive] = useState(true);
+  return (
     <div
       style={{
         display: 'flex',
-        flexDirection: 'column',
+        marginLeft: '30px',
+        width: '200px',
+        borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
       }}
     >
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          height: 'fit-content',
         }}
       >
-        <span
+        <div
           style={{
-            fontFamily: 'Public Sans',
-            fontStyle: 'normal',
-            fontWeight: '400',
-            fontSize: '12px',
-            lineHeight: '18px',
-            color: '#212B36',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            height: 'fit-content',
           }}
         >
-          Date
-        </span>
-        <span
-          style={{
-            fontFamily: 'Public Sans',
-            fontStyle: 'normal',
-            fontWeight: '600',
-            fontSize: '14px',
-            lineHeight: '22px',
-            textAlign: 'center',
-            color: '#212B36',
-          }}
-        >
-          {new Date(data.start_date).toLocaleDateString() ===
-          new Date(data.end_date).toLocaleDateString()
-            ? data.start_date
-            : `${data.start_date} - ${data.end_date}`}
-        </span>
-      </div>
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '400',
+              fontSize: '12px',
+              lineHeight: '18px',
+              color: '#212B36',
+            }}
+          >
+            Date
+          </span>
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              fontSize: '14px',
+              lineHeight: '22px',
+              textAlign: 'center',
+              color: '#212B36',
+            }}
+          >
+            {new Date(data.start_date).toLocaleDateString() ===
+            new Date(data.end_date).toLocaleDateString()
+              ? data.start_date
+              : `${data.start_date} - ${data.end_date}`}
+          </span>
+        </div>
 
-      <div
-        style={{
-          display: 'flex',
-          width: '100%',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          minHeight: '40px',
-          gridGap: '15px',
-          maxWidth: '100%',
-        }}
-      >
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
+            width: '100%',
+            justifyContent: 'flex-start',
             alignItems: 'center',
-            height: '100%',
+            minHeight: '40px',
+            gridGap: '15px',
+            maxWidth: '100%',
           }}
         >
-          <span
+          <div
             style={{
-              fontFamily: 'Public Sans',
-              fontStyle: 'normal',
-              fontWeight: '400',
-              fontSize: '12px',
-              lineHeight: '18px',
-              color: '#212B36',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: '100%',
             }}
           >
-            Start time
-          </span>
-          <span
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '400',
+                fontSize: '12px',
+                lineHeight: '18px',
+                color: '#212B36',
+              }}
+            >
+              Start time
+            </span>
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '600',
+                fontSize: '14px',
+                lineHeight: '22px',
+                textAlign: 'center',
+                color: '#212B36',
+              }}
+            >
+              {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
+            </span>
+          </div>
+          <div
             style={{
-              fontFamily: 'Public Sans',
-              fontStyle: 'normal',
-              fontWeight: '600',
-              fontSize: '14px',
-              lineHeight: '22px',
-              textAlign: 'center',
-              color: '#212B36',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              height: '100%',
             }}
           >
-            {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
-          </span>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            height: '100%',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: 'Public Sans',
-              fontStyle: 'normal',
-              fontWeight: '400',
-              fontSize: '12px',
-              lineHeight: '18px',
-              color: '#212B36',
-            }}
-          >
-            End time
-          </span>
-          <span
-            style={{
-              fontFamily: 'Public Sans',
-              fontStyle: 'normal',
-              fontWeight: '600',
-              fontSize: '14px',
-              lineHeight: '22px',
-              textAlign: 'center',
-              color: '#212B36',
-            }}
-          >
-            {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
-          </span>
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '400',
+                fontSize: '12px',
+                lineHeight: '18px',
+                color: '#212B36',
+              }}
+            >
+              End time
+            </span>
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '600',
+                fontSize: '14px',
+                lineHeight: '22px',
+                textAlign: 'center',
+                color: '#212B36',
+              }}
+            >
+              {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
+            </span>
+          </div>
         </div>
       </div>
+      {(status === 'Scheduled' || status === 'Live') && active ? (
+        <span className="cancel_api">
+          <Trash onClick={() => handleCancelOffer(data.offer_id, setActive)} />
+        </span>
+      ) : (
+        ''
+      )}
     </div>
-    {status !== 'Scheduled' && status !== 'Live' ? (
-      <span className="cancel_api">
-        <Trash onClick={() => handleCancelOffer(data.offer_id)} />
-      </span>
-    ) : (
-      ''
-    )}
-  </div>
-);
+  );
+};

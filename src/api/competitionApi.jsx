@@ -8,7 +8,7 @@ const { apiUrl } = config;
 
 export const getAlerts = (body, platform) =>
   axios
-    .post(`${apiUrl}/competition/alertv2/${platform}`, body)
+    .post(`${apiUrl}/competition/alert/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 
