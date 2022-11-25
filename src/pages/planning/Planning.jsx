@@ -159,7 +159,7 @@ const Planning = () => {
       headers={active ? headersAds : headersOffers}
       rows={dataFiltered.map(active ? renderRowsByHeaderAds : renderRowsByHeaderOffer)}
       mainFieldOrdered="start_date"
-      onClickRow={handleRowClick}
+      onClickRow={!active ? handleRowClick : false}
     />
   );
 

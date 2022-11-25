@@ -98,6 +98,33 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
           );
         }
       }
+      if (checked) {
+        const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
+        Object.keys(display).forEach((cName) => {
+          if (cName === value) {
+            Object.keys(display[value]).forEach((n) => {
+              Object.keys(display[value][n]).forEach((platform) => {
+                vendorsObj[platform]?.splice(0, 0, display[value][n][platform]);
+              });
+            });
+            chainObjTemp[value] = display[value];
+          }
+        });
+
+        setVendors({
+          ...vendorsContext,
+          vendorsObj,
+          chainObj: chainObjTemp,
+        });
+        localStorage.setItem(
+          'vendors',
+          JSON.stringify({
+            ...vendorsContext,
+            vendorsObj,
+            chainObj: chainObjTemp,
+          }),
+        );
+      }
     }
   };
   const handleChangeVendor = (event, chainName) => {
@@ -147,11 +174,17 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
       }
       return;
     }
-    if (Object.keys(chainObj[chainName]).length > 0) {
+    const chainObjClear = JSON.parse(JSON.stringify(chainObj));
+    Object.keys(chainObjClear).forEach((cName) => {
+      if (Object.keys(chainObjClear[cName]).length === 0) {
+        delete chainObjClear[cName];
+      }
+    });
+    if (Object.keys(chainObjClear).length > 1) {
       if (!checked) {
         const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
         delete chainObjTemp[chainName][value];
-        Object.keys(chainObjTemp[chainName][value]).forEach((platform) => {
+        Object?.keys(chainObjTemp?.[chainName]?.[value] || {})?.forEach((platform) => {
           vendorsObj[platform]?.forEach((obj, index) => {
             if (+obj.chain_id === chainObjTemp[chainName][value][platform].chain_id) {
               vendorsObj[platform].splice(index, 1);
@@ -256,6 +289,7 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
               chainArr={Object.keys(chainObj)}
               handleChangeVendor={handleChangeVendor}
               chainObj={chainObj}
+              branch
             />
           ))}
         </div>

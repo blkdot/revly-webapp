@@ -37,7 +37,15 @@ import SelectKit from '../../kits/select/SelectKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 
 const Dates = (props) => {
-  const { isDashboard, beforePeriodBtn, setbeforePeriodBtn, isMarketingHeatMap, offer } = props;
+  const {
+    isDashboard,
+    beforePeriodBtn,
+    setbeforePeriodBtn,
+    isMarketingHeatMap,
+    offer,
+    defaultTypeDate,
+    defaultTitle,
+  } = props;
   const { date: dateContext, setDate: setDateContext } = useDate();
   const {
     beforePeriod: beforePeriodDateContext,
@@ -49,7 +57,7 @@ const Dates = (props) => {
   const [opened, setOpened] = useState(false);
   const [openedAfterPeriod, setOpenedAfterPeriod] = useState(false);
   const [selected, setSelected] = useState(false);
-  const [typeDate, setTypeDate] = useState(isMarketingHeatMap ? 'week' : typeDateContext);
+  const [typeDate, setTypeDate] = useState(defaultTypeDate || typeDateContext);
   const [titleDate, setTitleDate] = useState(titleDateContext);
   const [titleafterPeriod, setTitleafterPeriod] = useState(titleafterPeriodContext);
   const [afterPeriodContext, setAfterPeriodContext] = useState(afterPeriodDateContext);
@@ -71,15 +79,13 @@ const Dates = (props) => {
     return 'panel2';
   };
   const [expanded, setExpanded] = useState(getExpanded());
-  const [title, setTitle] = useState(isMarketingHeatMap ? 'current week' : titleDateContext);
+  const [title, setTitle] = useState(defaultTitle || titleDateContext);
   const [beforePeriod, setbeforePeriod] = useState([
     {
       startDate: new Date(
-        isMarketingHeatMap
-          ? startOfWeek(new Date(), { weekStartsOn: 1 })
-          : beforePeriodContext.startDate,
+        beforePeriodBtn ? beforePeriodBtn.startDate : beforePeriodContext.startDate,
       ),
-      endDate: new Date(isMarketingHeatMap ? new Date() : beforePeriodContext.endDate),
+      endDate: new Date(beforePeriodBtn ? beforePeriodBtn.endDate : beforePeriodContext.endDate),
       key: 'selection',
     },
   ]);
