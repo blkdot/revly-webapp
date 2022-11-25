@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import { addDays, addHours, format, getHours, startOfWeek, getDay } from 'date-fns';
+import { addDays, addHours, format, startOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
@@ -466,6 +466,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       { startDate: startingDate, endDate: endingDate },
       times,
       heatmapData[links],
+      getTypeSchedule() === 'workweek',
     );
 
     setHeatmapData({ ...heatmapData, [links]: response });
