@@ -220,10 +220,10 @@ const MarketingTable = ({ rows, selected, setSelected, offers }) => {
     setSelected([]);
   };
 
-  const handleClick = (event, name, offerId) => {
-    navigate(`/offer/detail/${offerId}`, {
+  const handleClick = (event, name, id) => {
+    navigate(`/offer/detail/${id}`, {
       state: {
-        offerDetail: offers.find((o) => o.offer_id === offerId),
+        offerDetail: offers.find((o) => o.master_offer_id === id),
         prevPath: location.pathname,
       },
     });

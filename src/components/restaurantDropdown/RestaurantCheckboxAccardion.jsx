@@ -10,6 +10,7 @@ const RestaurantCheckboxAccordion = ({
   handleChange,
   handleChangeVendor,
   chainObj,
+  branch,
 }) => {
   const [active, setActive] = useState(false);
   const getChecked = () =>
@@ -45,7 +46,7 @@ const RestaurantCheckboxAccordion = ({
         <InputLabelKit key={vendorName} className={`accordion-dropdown ${active ? 'active' : ''}`}>
           <div>
             <CheckboxKit
-              disabled={!(Object.keys(chainObj?.[chainName] || {}).length > 0)}
+              disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
               checked={!!chainObj?.[chainName]?.[vendorName]}
               onChange={(e) => handleChangeVendor(e, chainName)}
               value={vendorName}
