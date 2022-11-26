@@ -533,6 +533,12 @@
 
     .picker-duration {
       margin-top: 20px;
+
+      .MuiFormControl-root {
+        width: 100%;
+      }
+
+      max-width: 479px;
     }
 
     >div:nth-of-type(2) {

@@ -180,6 +180,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     );
     return arr;
   };
+
+  useEffect(() => {
+    if (duration === 'Starting Now') {
+      setStartingDate(new Date());
+    }
+  }, [duration]);
+
   const getTypeSchedule = () => {
     if (customDay === 'Continues Offer') {
       return 'once';

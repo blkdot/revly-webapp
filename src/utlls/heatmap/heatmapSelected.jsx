@@ -14,12 +14,25 @@ const typeMono = (dateRange, times, data) => {
 
   const diff = differenceInDays(endDate, startDate);
 
-  if (diff >= 7) return setAll(data);
+  if (diff >= 7) {
+    return setAll(data);
+  }
 
   const indexDayEnd = getDay(new Date(endDate));
 
   if (diff === 0)
     return setSideBySideDayTimeRange(data, daysOrder[indexDayStart], daysOrder[indexDayEnd], times);
+
+  if (diff === 6) {
+    const { startTime, endTime } = times;
+
+    const valueStartHour = getHour(startTime);
+    const valueEndHour = getHour(endTime);
+
+    if (valueEndHour >= valueStartHour - 1) {
+      return setAll(data);
+    }
+  }
 
   return setContinuesDayRange(data, indexDayStart, indexDayEnd, times);
 };
@@ -92,6 +105,10 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
     daysSelectedOrder = [...rearPart, ...frontPart];
   }
 
+  if (indexDayStart === indexDayEnd) {
+    daysSelectedOrder = _.range(0, 7);
+  }
+
   return daysSelectedOrder.reduce((acc, cur) => {
     let rangeUsed = rangeFull;
 
@@ -100,7 +117,20 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
     }
 
     if (cur === indexDayEnd) {
-      rangeUsed = rangeEnd;
+      if (indexDayStart === indexDayEnd) {
+        const gap = _.range(
+          rangeHoursOpenedDay[valueEndHour].hour,
+          rangeHoursOpenedDay[valueStartHour].hour,
+        );
+        rangeUsed = rangeFull;
+
+        const removeIndex = rangeFull.findIndex(
+          (v) => v === rangeHoursOpenedDay[valueEndHour].hour,
+        );
+        rangeUsed.splice(removeIndex, gap.length);
+      } else {
+        rangeUsed = rangeEnd;
+      }
     }
 
     return {
@@ -111,7 +141,7 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
 };
 
 const setAll = (data) =>
-  data.reduce(
+  daysOrder.reduce(
     (acc, cur) => ({
       ...acc,
       [cur]: getHeatmapDataDayNewContent(data, cur, _.range(minHour, maxHour + 1)),
@@ -126,8 +156,11 @@ const getWorkweek = (data, isWorkweek) => {
     return cData;
   }
 
-  cData.splice(0, 1);
-  cData.splice(5, 1);
+  const sundayIndex = cData.findIndex((v) => v === 'Sunday');
+  cData.splice(sundayIndex, 1);
+
+  const saturdayIndex = cData.findIndex((v) => v === 'Saturday');
+  cData.splice(saturdayIndex, 1);
 
   return cData;
 };
