@@ -90,6 +90,7 @@ const GetProgress = ({ progressData }) => {
     setBranchData,
     branchData,
   } = progressData;
+
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
       if (new Date(endingDate).getDay() === 0) {
@@ -367,7 +368,7 @@ const GetProgress = ({ progressData }) => {
               <div style={{ width: '100%' }}>
                 End Time {obj.pos}
                 <TimePickerDropdown
-                  startLimit={obj.startTime}
+                  startLimit={customDay === 'Continuous Offer' ? null : obj.startTime}
                   value={obj.endTime}
                   setValue={setTimes}
                   times={times}
@@ -418,7 +419,7 @@ const GetProgress = ({ progressData }) => {
               <div style={{ width: '100%' }}>
                 End Time
                 <TimePickerDropdown
-                  startLimit={obj.startTime}
+                  startLimit={customDay === 'Continuous Offer' ? null : obj.startTime}
                   value={obj.endTime}
                   setValue={setTimes}
                   times={times}

@@ -76,7 +76,7 @@ const setSideBySideDayTimeRange = (data, start, end, times) => {
   const valueStartHour = getHour(startTime);
   const valueEndHour = getHour(endTime);
 
-  const rangeStart = _.range(rangeHoursOpenedDay[valueStartHour].hour, maxHour);
+  const rangeStart = _.range(rangeHoursOpenedDay[valueStartHour].hour, maxHour + 1);
   const rangeEnd = _.range(minHour, rangeHoursOpenedDay[valueEndHour].hour);
 
   return {
@@ -118,16 +118,7 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
 
     if (cur === indexDayEnd) {
       if (indexDayStart === indexDayEnd) {
-        const gap = _.range(
-          rangeHoursOpenedDay[valueEndHour].hour,
-          rangeHoursOpenedDay[valueStartHour].hour,
-        );
-        rangeUsed = rangeFull;
-
-        const removeIndex = rangeFull.findIndex(
-          (v) => v === rangeHoursOpenedDay[valueEndHour].hour,
-        );
-        rangeUsed.splice(removeIndex, gap.length);
+        rangeUsed = [...rangeEnd, ...rangeStart];
       } else {
         rangeUsed = rangeEnd;
       }
@@ -165,7 +156,32 @@ const getWorkweek = (data, isWorkweek) => {
   return cData;
 };
 
-const typeMulti = (data, dateRange, times, isWorkweek) => {
+const clearTimeSelected = (data) => {
+  const clonedheatmapData = { ...data };
+
+  Object.values(clonedheatmapData).forEach((objHeat, indexObjHeat) => {
+    if (objHeat) {
+      Object.keys(objHeat).forEach((num) => {
+        if (objHeat[num].active) {
+          delete clonedheatmapData[Object.keys(clonedheatmapData)[indexObjHeat]][num].active;
+        }
+      });
+    }
+  });
+
+  return { ...data, ...clonedheatmapData };
+};
+
+const typeMulti = (
+  data,
+  dateRange,
+  times,
+  isWorkweek,
+  isCustomdays,
+  customisedDay,
+  isEveryWeek,
+  everyWeek,
+) => {
   const combinedTimesRange = times
     .map((t) => {
       const { startTime, endTime } = t;
@@ -182,6 +198,41 @@ const typeMulti = (data, dateRange, times, isWorkweek) => {
     })
     .flat(1);
 
+  if (isEveryWeek) {
+    const day = everyWeek.replace('Every ', '').trim();
+
+    const dayEveryWeekIndex = daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase());
+
+    const newData = clearTimeSelected(data);
+
+    if (dayEveryWeekIndex > -1) {
+      return {
+        ...newData,
+        [daysOrder[dayEveryWeekIndex]]: getHeatmapDataDayNewContent(
+          newData,
+          daysOrder[dayEveryWeekIndex],
+          combinedTimesRange,
+        ),
+      };
+    }
+  }
+
+  if (isCustomdays) {
+    const daysSelectedOrderCustom = customisedDay.map((v) =>
+      daysOrder.findIndex((va) => v.toLowerCase() === va.toLowerCase()),
+    );
+
+    const newData = clearTimeSelected(data);
+
+    return daysSelectedOrderCustom.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [daysOrder[cur]]: getHeatmapDataDayNewContent(newData, daysOrder[cur], combinedTimesRange),
+      }),
+      newData,
+    );
+  }
+
   const { startDate, endDate } = dateRange;
 
   const indexDayStart = getDay(new Date(startDate));
@@ -192,12 +243,10 @@ const typeMulti = (data, dateRange, times, isWorkweek) => {
   const diff = differenceInDays(endDate, startDate);
 
   if (diff >= 7) {
-    daysSelectedOrder = getWorkweek(daysSelectedOrder, isWorkweek);
-
     return getWorkweek(daysOrder, isWorkweek).reduce(
       (acc, cur) => ({
         ...acc,
-        [cur]: getHeatmapDataDayNewContent(data, [cur], combinedTimesRange),
+        [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
       }),
       data,
     );
@@ -222,10 +271,29 @@ const typeMulti = (data, dateRange, times, isWorkweek) => {
   );
 };
 
-const heatmapSelected = (type, dateRange, times, data = [], isWorkweek = false) => {
+const heatmapSelected = (
+  type,
+  dateRange,
+  times,
+  data = [],
+  isWorkweek = false,
+  isCustomdays = false,
+  customisedDay = [],
+  isEveryWeek = false,
+  everyWeek = '',
+) => {
   if (type === 'mono') return typeMono(dateRange, times[0], data);
 
-  return typeMulti(data, dateRange, times, isWorkweek);
+  return typeMulti(
+    data,
+    dateRange,
+    times,
+    isWorkweek,
+    isCustomdays,
+    customisedDay,
+    isEveryWeek,
+    everyWeek,
+  );
 };
 
 export default heatmapSelected;
