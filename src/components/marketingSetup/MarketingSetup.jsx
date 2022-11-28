@@ -436,10 +436,15 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
   useEffect(() => {
     const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
-    if (platform.length < 2 && branchData) {
-      getMenuData(vendor, platformData);
+    if (Object.keys(vendors.display).length === 0) {
+      if (branchData && vendor) {
+        getMenuData(vendor, platformData);
+      }
+    } else if (platform.length < 2 && branch && platform[0] !== 'talabat' && selected === 2) {
+      const vendorDisplay = vendors.vendorsObj[platform[0]][0];
+      getMenuData(vendorDisplay, platform[0]);
     }
-  }, [platformData, branchData]);
+  }, [platformData, branchData, platform, selected]);
 
   const handleCategoryDataChange = (e) => {
     const { value } = e.target;

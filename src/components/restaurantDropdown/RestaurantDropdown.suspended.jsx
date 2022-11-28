@@ -10,8 +10,10 @@ import BranchesIcon from '../../assets/images/ic_branch.png';
 
 const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, platforms }) => {
   const chainObj = chainObjProps;
-  onbeforeunload = () => {
+  onbeforeunload = (e) => {
     localStorage.removeItem('vendors');
+    localStorage.setItem('leaveTime', JSON.stringify(new Date()));
+    e.target.hidden = true;
     return '';
   };
   const { setVendors, vendors: vendorsContext } = useDate();

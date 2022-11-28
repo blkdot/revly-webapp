@@ -11,7 +11,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
-        {!r[h.id] ? '-' : r[h.id]}
+        {r[h.id] === null ? '-' : r[h.id]}
       </span>
     </TableCellKit>
   );

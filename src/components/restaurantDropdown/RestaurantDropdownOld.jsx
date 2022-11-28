@@ -28,8 +28,10 @@ const MenuProps = {
 };
 
 const RestaurantDropdownOld = ({ vendors, vendorsPlatform, restaurants }) => {
-  onbeforeunload = () => {
+  onbeforeunload = (e) => {
     localStorage.removeItem('vendors');
+    localStorage.setItem('leaveTime', JSON.stringify(new Date()));
+    e.target.hidden = true;
     return '';
   };
   const { setVendors, vendors: vendorsContext } = useDate();
