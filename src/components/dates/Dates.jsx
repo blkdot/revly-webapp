@@ -45,6 +45,7 @@ const Dates = (props) => {
     offer,
     defaultTypeDate,
     defaultTitle,
+    setupOffer,
   } = props;
   const { date: dateContext, setDate: setDateContext } = useDate();
   const {
@@ -876,6 +877,7 @@ const Dates = (props) => {
             setSelections={setbeforePeriod}
             setTypeDate={setTypeDate}
             beforePeriod={beforePeriod}
+            setupOffer={setupOffer}
           />
           {!isMarketingHeatMap ? (
             <DateSelect
