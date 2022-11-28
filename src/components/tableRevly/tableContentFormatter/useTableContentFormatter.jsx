@@ -49,8 +49,11 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
-        {r[h.id]}%
+      <span
+        className={r[h.id] !== null ? 'competition-table-alert' : ''}
+        style={{ whiteSpace: 'nowrap' }}
+      >
+        {r[h.id] === null ? '-' : `${r[h.id]}%`}
       </span>
     </TableCellKit>
   );

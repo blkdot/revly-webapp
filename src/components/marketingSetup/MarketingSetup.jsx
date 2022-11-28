@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import { addDays, addHours, format, startOfWeek } from 'date-fns';
+import { addDays, addHours, format, startOfWeek, subWeeks, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
@@ -75,8 +75,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [duration, setDuration] = useState('Starting Now');
   const [disabled, setDisabled] = useState(false);
   const [beforePeriodBtn, setBeforePeriodBtn] = useState({
-    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    endDate: new Date(),
+    startDate: startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
+    endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
   });
   const [heatmapData, setHeatmapData] = useState({
     revenue: defaultHeatmapState,
@@ -1619,9 +1619,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               <Dates
                 isMarketingHeatMap
                 defaultTypeDate="week"
-                defaultTitle="current week"
+                defaultTitle="last week"
                 beforePeriodBtn={beforePeriodBtn}
                 setbeforePeriodBtn={setBeforePeriodBtn}
+                setupOffer
               />
             </div>
             <TypographyKit variant="div" className="right-part-main">
