@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './RestaurantDropdown.scss';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -10,12 +10,22 @@ import BranchesIcon from '../../assets/images/ic_branch.png';
 
 const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, platforms }) => {
   const chainObj = chainObjProps;
-  onbeforeunload = (e) => {
-    localStorage.removeItem('vendors');
-    localStorage.setItem('leaveTime', JSON.stringify(new Date()));
-    e.target.hidden = true;
-    return '';
-  };
+
+  useEffect(() => {
+    window.onbeforeunload = (e) => {
+      localStorage.setItem('leaveTime', JSON.stringify(new Date()));
+      e.target.hidden = true;
+      return '';
+    };
+    window.onunload = () => {
+      const leaveTime = JSON.parse(localStorage.getItem('leaveTime')) || new Date();
+      if (new Date(leaveTime).getHours() === new Date().getHours() - 3) {
+        localStorage.removeItem('vendors');
+        localStorage.removeItem('date');
+      }
+      return '';
+    };
+  }, []);
   const { setVendors, vendors: vendorsContext } = useDate();
   const { vendorsObj, display } = vendorsContext;
   const [active, setActive] = useState(false);
