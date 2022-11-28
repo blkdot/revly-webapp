@@ -292,19 +292,19 @@ const MarketingAds = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 200 ? 'active' : ''}`}
+              className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div"
             >
               <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(0)}>
                 <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
-                  Offers Management
+                  Ads Management
                 </BoxKit>
               </div>
-              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1253)}>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1500)}>
                 <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
-                  Offers Performance
+                  Ads Performance
                 </BoxKit>
               </div>
             </TypographyKit>

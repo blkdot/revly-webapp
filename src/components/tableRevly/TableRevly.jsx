@@ -60,12 +60,11 @@ const TableRevly = (props) => {
       <TableRowKit
         className="marketing-table-top"
         onClick={handleRowClick(r.data.master_offer_id)}
-        key={r.data.master_offer_id}
+        key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
       >
         {headers.map((h) => r[h.id])}
       </TableRowKit>
     ));
-
   return (
     <BoxKit className="competition-box" sx={{ width: '100%' }}>
       <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>

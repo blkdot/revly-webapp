@@ -297,6 +297,7 @@
       justify-content: space-evenly;
       color: #212b36;
       font-weight: 600;
+      white-space: nowrap;
     }
   }
 
@@ -532,6 +533,12 @@
 
     .picker-duration {
       margin-top: 20px;
+
+      .MuiFormControl-root {
+        width: 100%;
+      }
+
+      max-width: 479px;
     }
 
     >div:nth-of-type(2) {

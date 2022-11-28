@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import { addDays, addHours, format, getHours, startOfWeek, getDay } from 'date-fns';
+import { addDays, addHours, format, startOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
@@ -113,10 +113,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [created, setCreated] = useState(false);
 
   const [launchOrder, setLaunchOrder] = useState([
-    { order: '# of orders', arrow: '<', number: '', id: 1 },
+    { order: '# of orders', arrow: '<', number: '', id: 1, reletion: 'And' },
   ]);
   const [stopOrder, setStopOrder] = useState([
-    { order: '# of orders', arrow: '>', number: '', id: 1 },
+    { order: '# of orders', arrow: '>', number: '', id: 1, reletion: 'And' },
   ]);
 
   const [smRule, setSmRule] = useState(false);
@@ -180,6 +180,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     );
     return arr;
   };
+
+  useEffect(() => {
+    if (duration === 'Starting Now') {
+      setStartingDate(new Date());
+    }
+  }, [duration]);
+
   const getTypeSchedule = () => {
     if (customDay === 'Continues Offer') {
       return 'once';
@@ -471,6 +478,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       { startDate: startingDate, endDate: endingDate },
       times,
       heatmapData[links],
+      getTypeSchedule() === 'workweek',
     );
 
     setHeatmapData({ ...heatmapData, [links]: response });
@@ -833,7 +841,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                       <div className="smart-rule_drowdown">
                         <MarketingPlaceholderDropdown
                           readOnly
-                          names={['# of orders', 'Daily/Slot Revenue']}
+                          names={['# of orders', 'Daily Revenue']}
                           title="Order"
                           type="sm-rule-order"
                           personName={obj.order}
@@ -863,7 +871,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   ) : (
                     <div key={obj.id} className="smart-rule_drowdown">
                       <MarketingPlaceholderDropdown
-                        names={['# of orders', 'Daily/Slot Revenue']}
+                        names={['# of orders', 'Daily Revenue']}
                         title="Order"
                         type="sm-rule-order"
                         setPersonName={setLaunchOrder}
@@ -913,7 +921,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                         {
                           order:
                             launchOrder[0].order === '# of orders'
-                              ? 'Daily/Slot Revenue'
+                              ? 'Daily Revenue'
                               : '# of orders',
                           arrow: '<',
                           number: '',
@@ -949,7 +957,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                       />
                       <div className="smart-rule_drowdown">
                         <MarketingPlaceholderDropdown
-                          names={['# of orders', 'Daily/Slot Revenue']}
+                          names={['# of orders', 'Daily Revenue']}
                           title="Order"
                           type="sm-rule-order"
                           personName={obj.order}
@@ -976,7 +984,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   ) : (
                     <div key={obj.id} className="smart-rule_drowdown">
                       <MarketingPlaceholderDropdown
-                        names={['# of orders', 'Daily/Slot Revenue']}
+                        names={['# of orders', 'Daily Revenue']}
                         title="Order"
                         type="sm-rule-order"
                         setPersonName={setStopOrder}
@@ -1021,9 +1029,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                         ...stopOrder,
                         {
                           order:
-                            stopOrder[0].order === '# of orders'
-                              ? 'Daily/Slot Revenue'
-                              : '# of orders',
+                            stopOrder[0].order === '# of orders' ? 'Daily Revenue' : '# of orders',
                           arrow: '>',
                           number: '',
                           reletion: 'And',
@@ -1612,6 +1618,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               </TypographyKit>
               <Dates
                 isMarketingHeatMap
+                defaultTypeDate="week"
+                defaultTitle="current week"
                 beforePeriodBtn={beforePeriodBtn}
                 setbeforePeriodBtn={setBeforePeriodBtn}
               />
