@@ -323,15 +323,17 @@ const MarketingAds = () => {
                 maxShowned={1}
               />
             </div>
-            <ButtonKit
-              className="more-filter"
-              variant="outlined"
-              onClick={() => setOpenedFilter(true)}
-              disabled={isEmptyList()}
-            >
-              <Vector />
-              More Filters
-            </ButtonKit>
+            <div>
+              <ButtonKit
+                className="more-filter"
+                variant="outlined"
+                onClick={() => setOpenedFilter(true)}
+                disabled={isEmptyList()}
+              >
+                <Vector />
+                More Filters
+              </ButtonKit>
+            </div>
           </div>
         </TypographyKit>
         {getAdsTable()}

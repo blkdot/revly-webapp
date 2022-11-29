@@ -85,14 +85,7 @@
     border-right: 1px solid #919EABCC;
     padding-right: 10px;
     margin-right: 10px;
-  }
-
-  >div:nth-of-type(2) {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    grid-gap: 10px;
+    flex-wrap: wrap;
   }
 
   button {
