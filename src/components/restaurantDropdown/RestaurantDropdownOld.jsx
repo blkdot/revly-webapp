@@ -28,10 +28,21 @@ const MenuProps = {
 };
 
 const RestaurantDropdownOld = ({ vendors, vendorsPlatform, restaurants }) => {
-  onbeforeunload = () => {
-    localStorage.removeItem('vendors');
-    return '';
-  };
+  React.useEffect(() => {
+    window.onbeforeunload = (e) => {
+      localStorage.setItem('leaveTime', JSON.stringify(new Date()));
+      e.target.hidden = true;
+      return '';
+    };
+    window.onunload = () => {
+      const leaveTime = JSON.parse(localStorage.getItem('leaveTime')) || new Date();
+      if (new Date(leaveTime).getHours() === new Date().getHours() - 3) {
+        localStorage.removeItem('vendors');
+        localStorage.removeItem('date');
+      }
+      return '';
+    };
+  }, []);
   const { setVendors, vendors: vendorsContext } = useDate();
 
   const handleChange = (event) => {

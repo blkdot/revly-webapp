@@ -475,7 +475,17 @@ const GetProgress = ({ progressData }) => {
     </div>
   );
   const { vendors } = useDate();
-  const { vendorsObj } = vendors;
+  const { vendorsObj, display } = vendors;
+
+  const getMenuActive = () => {
+    if (Object.keys(display).length === 0) {
+      return platformData === 'talabat' || category.length === 0;
+    }
+    if (platform.length < 2) {
+      return platform[0] === 'talabat' || category.length === 0;
+    }
+    return false;
+  };
   if (selected === 1) {
     return (
       <div className="left-part-middle">
@@ -612,7 +622,7 @@ const GetProgress = ({ progressData }) => {
           {platform.length === 1 ? (
             <BoxKit
               className={`left-part-radio under-textfields radio-dates ${
-                platformData === 'talabat' || category.length === 0 ? 'disabled' : ''
+                getMenuActive() ? 'disabled' : ''
               } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}
             >
@@ -626,13 +636,13 @@ const GetProgress = ({ progressData }) => {
                     <p>Ex :&nbsp; -20% on the full menu</p>
                   </div>
                 </div>
-                {platformData === 'deliveroo' && category.length > 0 ? (
+                {getMenuActive() ? (
+                  ''
+                ) : (
                   <FormControlLabelKit
                     value="Offer on An Item from the Menu"
                     control={<RadioKit />}
                   />
-                ) : (
-                  ''
                 )}
               </div>
               <div>

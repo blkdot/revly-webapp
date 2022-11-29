@@ -61,7 +61,7 @@ const MarketingAds = () => {
     { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
     { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
     { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
-    { id: 'new_customer_count', disablePadding: true, label: 'New customer' },
+    { id: 'new_customers_count', disablePadding: true, label: 'New customers' },
     { id: 'orders_count', disablePadding: true, label: 'Orders' },
     { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
     { id: 'spend', disablePadding: true, label: 'Spend' },
@@ -87,7 +87,7 @@ const MarketingAds = () => {
     ad_serving_count: renderSimpleRow,
     clicks_count: renderSimpleRow,
     conversion_rate: renderCalculatedPercent,
-    new_customer_count: renderSimpleRow,
+    new_customers_count: renderSimpleRow,
     orders_count: renderSimpleRow,
     remaining_budget: renderCurrency,
     return_on_ad_spent: renderCurrency,
@@ -186,7 +186,6 @@ const MarketingAds = () => {
     if (filters.status.length > 0) {
       filteredData = filteredData.filter((f) => filters.status.includes(f.ad_status));
     }
-
     setAdsFilteredData(filteredData);
   }, [JSON.stringify(filters), adsData]);
 
@@ -208,7 +207,6 @@ const MarketingAds = () => {
     });
     setOpened(false);
   };
-
   const renderRowsByHeader = (r) =>
     headersAds.reduce(
       (acc, cur) => ({
@@ -219,7 +217,6 @@ const MarketingAds = () => {
       }),
       {},
     );
-
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
       setFilters(defaultFilterStateFormat);
