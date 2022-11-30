@@ -1,4 +1,4 @@
-import { addDays, addHours, format, getHours } from 'date-fns';
+import { addDays, addHours, format, getHours, isSameDay } from 'date-fns';
 import React from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import MarketingRadio from './MarketingRadio';
@@ -90,6 +90,7 @@ const GetProgress = ({ progressData }) => {
     setBranchData,
     branchData,
   } = progressData;
+
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
       if (new Date(endingDate).getDay() === 0) {
@@ -101,6 +102,14 @@ const GetProgress = ({ progressData }) => {
       return endingDate;
     }
     return endingDate;
+  };
+
+  const isEndingLimited = () => {
+    if (isSameDay(new Date(endingDate), new Date(startingDate))) {
+      return true;
+    }
+
+    return customDay !== 'Continuous Offer';
   };
   const durationSelected = () => (
     <div className="left-part-middle">
@@ -367,7 +376,7 @@ const GetProgress = ({ progressData }) => {
               <div style={{ width: '100%' }}>
                 End Time {obj.pos}
                 <TimePickerDropdown
-                  startLimit={obj.startTime}
+                  startLimit={isEndingLimited() ? obj.startTime : null}
                   value={obj.endTime}
                   setValue={setTimes}
                   times={times}
@@ -418,7 +427,7 @@ const GetProgress = ({ progressData }) => {
               <div style={{ width: '100%' }}>
                 End Time
                 <TimePickerDropdown
-                  startLimit={obj.startTime}
+                  startLimit={isEndingLimited() ? obj.startTime : null}
                   value={obj.endTime}
                   setValue={setTimes}
                   times={times}

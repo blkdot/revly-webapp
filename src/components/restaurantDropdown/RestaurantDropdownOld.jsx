@@ -36,7 +36,12 @@ const RestaurantDropdownOld = ({ vendors, vendorsPlatform, restaurants }) => {
     };
     window.onunload = () => {
       const leaveTime = JSON.parse(localStorage.getItem('leaveTime')) || new Date();
-      if (new Date(leaveTime).getHours() === new Date().getHours() - 3) {
+      if (new Date(leaveTime).toLocaleDateString() === new Date().toLocaleDateString()) {
+        if (new Date(leaveTime).getHours() === new Date().getHours() - 3) {
+          localStorage.removeItem('vendors');
+          localStorage.removeItem('date');
+        }
+      } else {
         localStorage.removeItem('vendors');
         localStorage.removeItem('date');
       }

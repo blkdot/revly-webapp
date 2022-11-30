@@ -326,15 +326,17 @@ const Planning = () => {
               />
             )}
           </div>
-          <ButtonKit
-            className="more-filter"
-            variant="outlined"
-            onClick={() => setOpenedFilter(true)}
-            disabled={isEmptyList()}
-          >
-            <Vector />
-            More Filters
-          </ButtonKit>
+          <div>
+            <ButtonKit
+              className="more-filter"
+              variant="outlined"
+              onClick={() => setOpenedFilter(true)}
+              disabled={isEmptyList()}
+            >
+              <Vector />
+              More Filters
+            </ButtonKit>
+          </div>
         </div>
       </TypographyKit>
       {renderTable()}
