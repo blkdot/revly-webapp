@@ -178,6 +178,7 @@ const OfferDetailComponent = () => {
         modalIsOpen={modalIsOpen}
         setIsOpen={setIsOpen}
         cancelOffer={handleCancelOfferMaster}
+        platform={platform}
       />
       <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
@@ -260,42 +261,54 @@ const OfferDetailComponent = () => {
                     <span className="offer-visibility-title">Visibility Rank</span>
                   </div>
                   <div className="offer-visibility-sub-title">
-                    {offerData?.accrued_discount || '-'}
+                    {offerData?.accrued_discount === null || offerData === null
+                      ? '-'
+                      : offerData.accrued_discount}
                   </div>
                 </div>
                 <div className="offer-visibility-block">
                   <div>
                     <span className="offer-visibility-title">#Orders</span>
                   </div>
-                  <div className="offer-visibility-sub-title">{offerData?.n_orders || '-'}</div>
+                  <div className="offer-visibility-sub-title">
+                    {offerData?.n_orders === null || offerData === null ? '-' : offerData.n_orders}
+                  </div>
                 </div>
                 <div className="offer-visibility-block">
                   <div>
                     <span className="offer-visibility-title">Avg Basket</span>
                   </div>
                   <div className="offer-visibility-sub-title">
-                    {offerData?.average_basket || '-'}
+                    {offerData?.average_basket === null || offerData === null
+                      ? '-'
+                      : offerData.average_basket}
                   </div>
                 </div>
                 <div className="offer-visibility-block">
                   <div>
                     <span className="offer-visibility-title">Roi</span>
                   </div>
-                  <div className="offer-visibility-sub-title">{offerData?.roi || '-'}</div>
+                  <div className="offer-visibility-sub-title">
+                    {offerData?.roi === null || offerData === null ? '-' : offerData.roi}
+                  </div>
                 </div>
                 <div className="offer-visibility-block">
                   <div>
                     <span className="offer-visibility-title">Revenue</span>
                   </div>
-                  <div className="offer-visibility-sub-title">{offerData?.revenue || '-'}</div>
+                  <div className="offer-visibility-sub-title">
+                    {offerData?.revenue === null || offerData === null ? '-' : offerData.revenue}
+                  </div>
                 </div>
                 <div className="offer-visibility-block">
                   <div>
                     <span className="offer-visibility-title">Profits</span>
                   </div>
                   <div className="offer-visibility-sub-title">
-                    {(offerData && (offerData.revenue - offerData.accrued_discount).toFixed(2)) ||
-                      '-'}
+                    {offerData === null ||
+                    (offerData?.revenue === null && offerData?.accrued_discount === null)
+                      ? '-'
+                      : ((offerData?.revenue || 0) - (offerData?.accrued_discount || 0)).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -403,7 +416,8 @@ const OfferDetailComponent = () => {
                 </div>
 
                 <div className="offerdetails_time_slots_scroll">
-                  {Object.keys(menu?.children_offers || {}).length === 0 ? (
+                  {Object.keys(menu?.children_offers || {}).length === 0 &&
+                  Object.keys(menu?.master_offer || {}).length === 0 ? (
                     <div className="offerdetails_time_slots" style={{ width: '100%' }}>
                       <SpinnerKit />
                     </div>

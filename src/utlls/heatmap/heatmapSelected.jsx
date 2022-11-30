@@ -14,12 +14,25 @@ const typeMono = (dateRange, times, data) => {
 
   const diff = differenceInDays(endDate, startDate);
 
-  if (diff >= 7) return setAll(data);
+  if (diff >= 7) {
+    return setAll(data);
+  }
 
   const indexDayEnd = getDay(new Date(endDate));
 
   if (diff === 0)
     return setSideBySideDayTimeRange(data, daysOrder[indexDayStart], daysOrder[indexDayEnd], times);
+
+  if (diff === 6) {
+    const { startTime, endTime } = times;
+
+    const valueStartHour = getHour(startTime);
+    const valueEndHour = getHour(endTime);
+
+    if (valueEndHour >= valueStartHour - 1) {
+      return setAll(data);
+    }
+  }
 
   return setContinuesDayRange(data, indexDayStart, indexDayEnd, times);
 };
@@ -51,7 +64,7 @@ const setSameDayTimeRange = (data, day, times) => {
 
   const range = _.range(
     rangeHoursOpenedDay[valueStartHour].hour,
-    rangeHoursOpenedDay[valueEndHour].hour + 1,
+    rangeHoursOpenedDay[valueEndHour].hour,
   );
 
   return { ...data, [day]: getHeatmapDataDayNewContent(data, day, range) };
@@ -64,7 +77,7 @@ const setSideBySideDayTimeRange = (data, start, end, times) => {
   const valueEndHour = getHour(endTime);
 
   const rangeStart = _.range(rangeHoursOpenedDay[valueStartHour].hour, maxHour + 1);
-  const rangeEnd = _.range(minHour, rangeHoursOpenedDay[valueEndHour].hour + 1);
+  const rangeEnd = _.range(minHour, rangeHoursOpenedDay[valueEndHour].hour);
 
   return {
     ...data,
@@ -80,7 +93,7 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
   const valueEndHour = getHour(endTime);
 
   const rangeStart = _.range(rangeHoursOpenedDay[valueStartHour].hour, maxHour + 1);
-  const rangeEnd = _.range(minHour, rangeHoursOpenedDay[valueEndHour].hour + 1);
+  const rangeEnd = _.range(minHour, rangeHoursOpenedDay[valueEndHour].hour);
   const rangeFull = _.range(minHour, maxHour + 1);
 
   let daysSelectedOrder = _.range(indexDayStart, indexDayEnd + 1);
@@ -92,6 +105,10 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
     daysSelectedOrder = [...rearPart, ...frontPart];
   }
 
+  if (indexDayStart === indexDayEnd) {
+    daysSelectedOrder = _.range(0, 7);
+  }
+
   return daysSelectedOrder.reduce((acc, cur) => {
     let rangeUsed = rangeFull;
 
@@ -100,7 +117,11 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
     }
 
     if (cur === indexDayEnd) {
-      rangeUsed = rangeEnd;
+      if (indexDayStart === indexDayEnd) {
+        rangeUsed = [...rangeEnd, ...rangeStart];
+      } else {
+        rangeUsed = rangeEnd;
+      }
     }
 
     return {
@@ -114,12 +135,50 @@ const setAll = (data) =>
   daysOrder.reduce(
     (acc, cur) => ({
       ...acc,
-      [cur]: getHeatmapDataDayNewContent(data, daysOrder[cur], _.range(minHour, maxHour + 1)),
+      [cur]: getHeatmapDataDayNewContent(data, cur, _.range(minHour, maxHour + 1)),
     }),
     data,
   );
 
-const typeMulti = (data, dateRange, times) => {
+const getWorkweek = (data, isWorkweek) => {
+  const cData = [...data];
+
+  if (!isWorkweek) {
+    return cData;
+  }
+
+  cData.splice(0, 1);
+  cData.splice(5, 1);
+
+  return cData;
+};
+
+const clearTimeSelected = (data) => {
+  const clonedheatmapData = { ...data };
+
+  Object.values(clonedheatmapData).forEach((objHeat, indexObjHeat) => {
+    if (objHeat) {
+      Object.keys(objHeat).forEach((num) => {
+        if (objHeat[num].active) {
+          delete clonedheatmapData[Object.keys(clonedheatmapData)[indexObjHeat]][num].active;
+        }
+      });
+    }
+  });
+
+  return { ...data, ...clonedheatmapData };
+};
+
+const typeMulti = (
+  data,
+  dateRange,
+  times,
+  isWorkweek,
+  isCustomdays,
+  customisedDay,
+  isEveryWeek,
+  everyWeek,
+) => {
   const combinedTimesRange = times
     .map((t) => {
       const { startTime, endTime } = t;
@@ -129,12 +188,47 @@ const typeMulti = (data, dateRange, times) => {
 
       const range = _.range(
         rangeHoursOpenedDay[valueStartHour].hour,
-        rangeHoursOpenedDay[valueEndHour].hour + 1,
+        rangeHoursOpenedDay[valueEndHour].hour + (valueEndHour === maxHour + 1 ? 1 : 0),
       );
 
       return range;
     })
     .flat(1);
+
+  if (isEveryWeek) {
+    const day = everyWeek.replace('Every ', '').trim();
+
+    const dayEveryWeekIndex = daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase());
+
+    const newData = clearTimeSelected(data);
+
+    if (dayEveryWeekIndex > -1) {
+      return {
+        ...newData,
+        [daysOrder[dayEveryWeekIndex]]: getHeatmapDataDayNewContent(
+          newData,
+          daysOrder[dayEveryWeekIndex],
+          combinedTimesRange,
+        ),
+      };
+    }
+  }
+
+  if (isCustomdays) {
+    const daysSelectedOrderCustom = customisedDay.map((v) =>
+      daysOrder.findIndex((va) => v.toLowerCase() === va.toLowerCase()),
+    );
+
+    const newData = clearTimeSelected(data);
+
+    return daysSelectedOrderCustom.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [daysOrder[cur]]: getHeatmapDataDayNewContent(newData, daysOrder[cur], combinedTimesRange),
+      }),
+      newData,
+    );
+  }
 
   const { startDate, endDate } = dateRange;
 
@@ -143,22 +237,36 @@ const typeMulti = (data, dateRange, times) => {
 
   let daysSelectedOrder = _.range(indexDayStart, indexDayEnd + 1);
 
-  const diff = differenceInDays(endDate, startDate);
+  const diff = differenceInDays(new Date(endDate), new Date(startDate));
 
-  if (diff >= 7)
-    return daysOrder.reduce(
+  if (diff === 0 && isSameDay(startDate, endDate)) {
+    return getWorkweek([indexDayStart], isWorkweek).reduce(
       (acc, cur) => ({
         ...acc,
-        [cur]: getHeatmapDataDayNewContent(data, cur, combinedTimesRange),
+        [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
       }),
       data,
     );
+  }
+
+  if (diff >= 7) {
+    return getWorkweek(_.range(0, 7), isWorkweek).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
+      }),
+      data,
+    );
+  }
 
   if (indexDayEnd <= indexDayStart) {
     const rearPart = _.range(indexDayStart, 7);
     const frontPart = _.range(0, indexDayEnd + 1);
 
-    daysSelectedOrder = [...rearPart, ...frontPart];
+    daysSelectedOrder = [
+      ...getWorkweek(rearPart, isWorkweek),
+      ...getWorkweek(frontPart, isWorkweek),
+    ];
   }
 
   return daysSelectedOrder.reduce(
@@ -170,10 +278,29 @@ const typeMulti = (data, dateRange, times) => {
   );
 };
 
-const heatmapSelected = (type, dateRange, times, data) => {
+const heatmapSelected = (
+  type,
+  dateRange,
+  times,
+  data = [],
+  isWorkweek = false,
+  isCustomdays = false,
+  customisedDay = [],
+  isEveryWeek = false,
+  everyWeek = '',
+) => {
   if (type === 'mono') return typeMono(dateRange, times[0], data);
 
-  return typeMulti(data, dateRange, times);
+  return typeMulti(
+    data,
+    dateRange,
+    times,
+    isWorkweek,
+    isCustomdays,
+    customisedDay,
+    isEveryWeek,
+    everyWeek,
+  );
 };
 
 export default heatmapSelected;

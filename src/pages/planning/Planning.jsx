@@ -159,7 +159,7 @@ const Planning = () => {
       headers={active ? headersAds : headersOffers}
       rows={dataFiltered.map(active ? renderRowsByHeaderAds : renderRowsByHeaderOffer)}
       mainFieldOrdered="start_date"
-      onClickRow={handleRowClick}
+      onClickRow={!active ? handleRowClick : false}
     />
   );
 
@@ -326,15 +326,17 @@ const Planning = () => {
               />
             )}
           </div>
-          <ButtonKit
-            className="more-filter"
-            variant="outlined"
-            onClick={() => setOpenedFilter(true)}
-            disabled={isEmptyList()}
-          >
-            <Vector />
-            More Filters
-          </ButtonKit>
+          <div>
+            <ButtonKit
+              className="more-filter"
+              variant="outlined"
+              onClick={() => setOpenedFilter(true)}
+              disabled={isEmptyList()}
+            >
+              <Vector />
+              More Filters
+            </ButtonKit>
+          </div>
         </div>
       </TypographyKit>
       {renderTable()}

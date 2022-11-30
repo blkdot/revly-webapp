@@ -335,12 +335,10 @@ const MarketingOffer = () => {
   };
 
   const handleRowClick = (id) => {
-    const rowId = id.split('_');
-
-    navigate(`/offer/detail/${rowId[1]}`, {
+    navigate(`/offer/detail/${id}`, {
       state: {
         // eslint-disable-next-line eqeqeq
-        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        offerDetail: offers.find((o) => o.master_offer_id == id),
         prevPath: location.pathname,
       },
     });
@@ -395,7 +393,7 @@ const MarketingOffer = () => {
                   Offers Management
                 </BoxKit>
               </div>
-              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1253)}>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1300)}>
                 <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
@@ -434,15 +432,17 @@ const MarketingOffer = () => {
                 maxShowned={5}
               />
             </div>
-            <ButtonKit
-              className="more-filter"
-              variant="outlined"
-              onClick={() => setOpenedFilter(true)}
-              disabled={isEmptyList()}
-            >
-              <Vector />
-              More Filters
-            </ButtonKit>
+            <div>
+              <ButtonKit
+                className="more-filter"
+                variant="outlined"
+                onClick={() => setOpenedFilter(true)}
+                disabled={isEmptyList()}
+              >
+                <Vector />
+                More Filters
+              </ButtonKit>
+            </div>
           </div>
         </TypographyKit>
         <TableRevly

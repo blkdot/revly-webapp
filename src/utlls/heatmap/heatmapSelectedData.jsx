@@ -19,13 +19,13 @@ export const rangeHoursOpenedDay = {
   22: { hour: 22, value: 22, label: '22PM' },
   23: { hour: 23, value: 23, label: '23PM' },
   24: { hour: 24, value: 0, label: '24PM' },
-  25: { hour: 25, value: 1, label: '1AM' },
-  26: { hour: 26, value: 2, label: '2AM' },
-  27: { hour: 27, value: 3, label: '3AM' },
-  28: { hour: 28, value: 4, label: '4AM' },
+  25: { hour: 25, value: 1, label: 'J+1 1AM' },
+  26: { hour: 26, value: 2, label: 'J+1 2AM' },
+  27: { hour: 27, value: 3, label: 'J+1 3AM' },
+  28: { hour: 28, value: 4, label: 'J+1 4AM' },
 };
 
-export const maxHour = 28;
+export const maxHour = 27;
 export const minHour = 5;
 
 export const daysOrder = [

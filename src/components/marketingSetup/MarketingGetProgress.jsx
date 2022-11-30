@@ -1,4 +1,4 @@
-import { addDays, addHours, format, getHours } from 'date-fns';
+import { addDays, addHours, format, getHours, isSameDay } from 'date-fns';
 import React from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import MarketingRadio from './MarketingRadio';
@@ -17,7 +17,6 @@ import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
 import RadioKit from '../../kits/radio/RadioKit';
 import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
 import CalendarEventIcon from '../../assets/images/ic_calendar-event.png';
-import BasicTimePicker from '../timePicker/TimePicker';
 import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
 import ArrowIcon from '../../assets/images/arrow.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
@@ -37,6 +36,7 @@ import RestaurantDropdown from '../restaurantDropdown/RestaurantDropdown.suspend
 import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
 import useDate from '../../hooks/useDate';
 import BranchesIcon from '../../assets/images/ic_branch.png';
+import TimePickerDropdown from '../timePicker/TimePickerDropdown';
 
 const GetProgress = ({ progressData }) => {
   const {
@@ -90,6 +90,7 @@ const GetProgress = ({ progressData }) => {
     setBranchData,
     branchData,
   } = progressData;
+
   const getWorkWeek = () => {
     if (customDay === 'Work Week') {
       if (new Date(endingDate).getDay() === 0) {
@@ -102,6 +103,14 @@ const GetProgress = ({ progressData }) => {
     }
     return endingDate;
   };
+
+  const isEndingLimited = () => {
+    if (isSameDay(new Date(endingDate), new Date(startingDate))) {
+      return true;
+    }
+
+    return customDay !== 'Continuous Offer';
+  };
   const durationSelected = () => (
     <div className="left-part-middle">
       <TypographyKit variant="h6">{selected}. Select the Duration</TypographyKit>
@@ -113,7 +122,9 @@ const GetProgress = ({ progressData }) => {
         className="duration-wrapper"
         aria-labelledby="demo-radio-buttons-group-label"
         value={duration}
-        onChange={(e) => setDuration(e.target.value)}
+        onChange={(e) => {
+          setDuration(e.target.value);
+        }}
         name="radio-buttons-group-duration"
       >
         <BoxKit
@@ -133,8 +144,11 @@ const GetProgress = ({ progressData }) => {
             </div>
             <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
           </div>
-          <div className="picker-duration">
-            <div>
+          <div
+            className="picker-duration"
+            style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
+          >
+            <div style={{ width: '100%' }}>
               Ending Date
               <DatePickerDayKit
                 className="date-error"
@@ -147,10 +161,10 @@ const GetProgress = ({ progressData }) => {
               />
             </div>
             {times.map((obj, index) => (
-              <div key={obj.pos} className="picker-duration">
-                <div>
+              <div key={obj.pos} className="picker-duration" style={{ width: '100%' }}>
+                <div style={{ width: '100%' }}>
                   End Time
-                  <BasicTimePicker
+                  <TimePickerDropdown
                     value={obj.endTime}
                     setValue={setTimes}
                     times={times}
@@ -343,10 +357,15 @@ const GetProgress = ({ progressData }) => {
         </div>
         {times.map((obj, index) =>
           times.length > 1 ? (
-            <div key={obj.pos} className="picker-duration">
-              <div>
+            <div
+              key={obj.pos}
+              className="picker-duration"
+              style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
+            >
+              <div style={{ width: '100%' }}>
                 Start Time {obj.pos}
-                <BasicTimePicker
+                <TimePickerDropdown
+                  startLimit={index === 0 ? null : times[index - 1].endTime}
                   value={obj.startTime}
                   setValue={setTimes}
                   times={times}
@@ -354,9 +373,10 @@ const GetProgress = ({ progressData }) => {
                   type="startTime"
                 />
               </div>
-              <div>
+              <div style={{ width: '100%' }}>
                 End Time {obj.pos}
-                <BasicTimePicker
+                <TimePickerDropdown
+                  startLimit={isEndingLimited() ? obj.startTime : null}
                   value={obj.endTime}
                   setValue={setTimes}
                   times={times}
@@ -388,10 +408,15 @@ const GetProgress = ({ progressData }) => {
               </div>
             </div>
           ) : (
-            <div key={obj.pos} className="picker-duration">
-              <div>
+            <div
+              key={obj.pos}
+              className="picker-duration"
+              style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
+            >
+              <div style={{ width: '100%' }}>
                 Start Time
-                <BasicTimePicker
+                <TimePickerDropdown
+                  startLimit={index === 0 ? null : times[index - 1].endTime}
                   value={obj.startTime}
                   setValue={setTimes}
                   times={times}
@@ -399,9 +424,10 @@ const GetProgress = ({ progressData }) => {
                   type="startTime"
                 />
               </div>
-              <div>
+              <div style={{ width: '100%' }}>
                 End Time
-                <BasicTimePicker
+                <TimePickerDropdown
+                  startLimit={isEndingLimited() ? obj.startTime : null}
                   value={obj.endTime}
                   setValue={setTimes}
                   times={times}
@@ -449,7 +475,17 @@ const GetProgress = ({ progressData }) => {
     </div>
   );
   const { vendors } = useDate();
-  const { vendorsObj } = vendors;
+  const { vendorsObj, display } = vendors;
+
+  const getMenuActive = () => {
+    if (Object.keys(display).length === 0) {
+      return platformData === 'talabat' || category.length === 0;
+    }
+    if (platform.length < 2) {
+      return platform[0] === 'talabat' || category.length === 0;
+    }
+    return false;
+  };
   if (selected === 1) {
     return (
       <div className="left-part-middle">
@@ -586,7 +622,7 @@ const GetProgress = ({ progressData }) => {
           {platform.length === 1 ? (
             <BoxKit
               className={`left-part-radio under-textfields radio-dates ${
-                platformData === 'talabat' || category.length === 0 ? 'disabled' : ''
+                getMenuActive() ? 'disabled' : ''
               } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}
             >
@@ -600,13 +636,13 @@ const GetProgress = ({ progressData }) => {
                     <p>Ex :&nbsp; -20% on the full menu</p>
                   </div>
                 </div>
-                {platformData === 'deliveroo' && category.length > 0 ? (
+                {getMenuActive() ? (
+                  ''
+                ) : (
                   <FormControlLabelKit
                     value="Offer on An Item from the Menu"
                     control={<RadioKit />}
                   />
-                ) : (
-                  ''
                 )}
               </div>
               <div>

@@ -37,7 +37,16 @@ import SelectKit from '../../kits/select/SelectKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 
 const Dates = (props) => {
-  const { isDashboard, beforePeriodBtn, setbeforePeriodBtn, isMarketingHeatMap, offer } = props;
+  const {
+    isDashboard,
+    beforePeriodBtn,
+    setbeforePeriodBtn,
+    isMarketingHeatMap,
+    offer,
+    defaultTypeDate,
+    defaultTitle,
+    setupOffer,
+  } = props;
   const { date: dateContext, setDate: setDateContext } = useDate();
   const {
     beforePeriod: beforePeriodDateContext,
@@ -49,7 +58,7 @@ const Dates = (props) => {
   const [opened, setOpened] = useState(false);
   const [openedAfterPeriod, setOpenedAfterPeriod] = useState(false);
   const [selected, setSelected] = useState(false);
-  const [typeDate, setTypeDate] = useState(isMarketingHeatMap ? 'week' : typeDateContext);
+  const [typeDate, setTypeDate] = useState(defaultTypeDate || typeDateContext);
   const [titleDate, setTitleDate] = useState(titleDateContext);
   const [titleafterPeriod, setTitleafterPeriod] = useState(titleafterPeriodContext);
   const [afterPeriodContext, setAfterPeriodContext] = useState(afterPeriodDateContext);
@@ -71,15 +80,13 @@ const Dates = (props) => {
     return 'panel2';
   };
   const [expanded, setExpanded] = useState(getExpanded());
-  const [title, setTitle] = useState(isMarketingHeatMap ? 'current week' : titleDateContext);
+  const [title, setTitle] = useState(defaultTitle || titleDateContext);
   const [beforePeriod, setbeforePeriod] = useState([
     {
       startDate: new Date(
-        isMarketingHeatMap
-          ? startOfWeek(new Date(), { weekStartsOn: 1 })
-          : beforePeriodContext.startDate,
+        beforePeriodBtn ? beforePeriodBtn.startDate : beforePeriodContext.startDate,
       ),
-      endDate: new Date(isMarketingHeatMap ? new Date() : beforePeriodContext.endDate),
+      endDate: new Date(beforePeriodBtn ? beforePeriodBtn.endDate : beforePeriodContext.endDate),
       key: 'selection',
     },
   ]);
@@ -849,40 +856,35 @@ const Dates = (props) => {
         onKeyDown={(e) => e.stopPropagation()}
       >
         <PaperKit style={{ background: '#fff' }} className="date-picker">
-          {!isMarketingHeatMap ? (
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index="1"
-              type="day"
-              setSelections={setbeforePeriod}
-              setTypeDate={setTypeDate}
-              beforePeriod={beforePeriod}
-            />
+          {isMarketingHeatMap ? (
+            <div>
+              <DateSelect
+                expanded={expanded}
+                setExpanded={setExpanded}
+                index="2"
+                type="week"
+                setSelections={setbeforePeriod}
+                setTypeDate={setTypeDate}
+                beforePeriod={beforePeriod}
+                setupOffer={setupOffer}
+              />
+            </div>
           ) : (
-            ''
-          )}
-          <DateSelect
-            expanded={expanded}
-            setExpanded={setExpanded}
-            index="2"
-            type="week"
-            setSelections={setbeforePeriod}
-            setTypeDate={setTypeDate}
-            beforePeriod={beforePeriod}
-          />
-          {!isMarketingHeatMap ? (
-            <DateSelect
-              expanded={expanded}
-              setExpanded={setExpanded}
-              index="3"
-              type="month"
-              setSelections={setbeforePeriod}
-              setTypeDate={setTypeDate}
-              beforePeriod={beforePeriod}
-            />
-          ) : (
-            ''
+            <div>
+              {['day', 'week', 'month'].map((n, index) => (
+                <DateSelect
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  index={index + 1}
+                  key={n}
+                  type={n}
+                  setSelections={setbeforePeriod}
+                  setTypeDate={setTypeDate}
+                  beforePeriod={beforePeriod}
+                  setupOffer={n === 'week' ? setupOffer : false}
+                />
+              ))}
+            </div>
           )}
           <div className="date-btn-wrapper">
             <ButtonKit onClick={handleClick} className="date-save-btn " variant="contained">
@@ -935,33 +937,19 @@ const Dates = (props) => {
             onKeyDown={(e) => e.stopPropagation()}
           >
             <PaperKit style={{ background: '#fff' }} className="date-picker">
-              <DateSelect
-                expanded={expanded}
-                setExpanded={setExpanded}
-                index="1"
-                type="day"
-                setSelections={setafterPeriod}
-                setTypeDate={setTypeDate}
-                beforePeriod={afterPeriod}
-              />
-              <DateSelect
-                expanded={expanded}
-                setExpanded={setExpanded}
-                index="2"
-                type="week"
-                setSelections={setafterPeriod}
-                setTypeDate={setTypeDate}
-                beforePeriod={afterPeriod}
-              />
-              <DateSelect
-                expanded={expanded}
-                setExpanded={setExpanded}
-                index="3"
-                type="month"
-                setSelections={setafterPeriod}
-                setTypeDate={setTypeDate}
-                beforePeriod={afterPeriod}
-              />
+              {['day', 'week', 'month'].map((n, index) => (
+                <DateSelect
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  index={index + 1}
+                  key={n}
+                  type={n}
+                  setSelections={setbeforePeriod}
+                  setTypeDate={setTypeDate}
+                  beforePeriod={beforePeriod}
+                  setupOffer={n === 'week' ? setupOffer : false}
+                />
+              ))}
               <div className="date-btn-wrapper">
                 <ButtonKit
                   disabled={!getafterPeriod()}
