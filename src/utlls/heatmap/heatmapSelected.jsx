@@ -147,11 +147,8 @@ const getWorkweek = (data, isWorkweek) => {
     return cData;
   }
 
-  const sundayIndex = cData.findIndex((v) => v === 'Sunday');
-  cData.splice(sundayIndex, 1);
-
-  const saturdayIndex = cData.findIndex((v) => v === 'Saturday');
-  cData.splice(saturdayIndex, 1);
+  cData.splice(0, 1);
+  cData.splice(5, 1);
 
   return cData;
 };
@@ -191,7 +188,7 @@ const typeMulti = (
 
       const range = _.range(
         rangeHoursOpenedDay[valueStartHour].hour,
-        rangeHoursOpenedDay[valueEndHour].hour + (valueEndHour === maxHour ? 1 : 0),
+        rangeHoursOpenedDay[valueEndHour].hour + (valueEndHour === maxHour + 1 ? 1 : 0),
       );
 
       return range;
@@ -240,10 +237,20 @@ const typeMulti = (
 
   let daysSelectedOrder = _.range(indexDayStart, indexDayEnd + 1);
 
-  const diff = differenceInDays(endDate, startDate);
+  const diff = differenceInDays(new Date(endDate), new Date(startDate));
+
+  if (diff === 0 && isSameDay(startDate, endDate)) {
+    return getWorkweek([indexDayStart], isWorkweek).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
+      }),
+      data,
+    );
+  }
 
   if (diff >= 7) {
-    return getWorkweek(daysOrder, isWorkweek).reduce(
+    return getWorkweek(_.range(0, 7), isWorkweek).reduce(
       (acc, cur) => ({
         ...acc,
         [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
