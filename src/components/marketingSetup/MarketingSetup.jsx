@@ -89,9 +89,14 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
   const { vendors } = useVendors();
+  const [categoryDataList, setCategoryDataList] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const { triggerAlertWithMessageError } = useAlert('error');
+  const { getMenu } = useApi();
+  const { vendorsObj, vendorsArr } = vendors;
   const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
   const [branchData, setBranchData] = useState(
-    vendors?.vendorsObj[platformData]?.[0]?.data?.vendor_name || '',
+    vendorsObj?.[platformData]?.[0]?.data?.vendor_name || '',
   );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
@@ -124,6 +129,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const [checked, setChecked] = useState([]);
+
+  useEffect(() => {
+    console.log(branchData);
+  }, [branchData]);
   const getDiscountOrMov = (type) => {
     if (type === 'discount') {
       if (itemMenu === 'Flash Deal') {
@@ -157,11 +166,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
     return [];
   };
-  const [categoryDataList, setCategoryDataList] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
-  const { triggerAlertWithMessageError } = useAlert('error');
-  const { getMenu } = useApi();
-  const { vendorsObj } = vendors;
 
   const getHourArr = (hour) => {
     const arr = [];
@@ -184,8 +188,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     if (duration === 'Starting Now') {
       setStartingDate(new Date());
+      setCustomDay('now');
     }
-  }, [duration]);
+
+    if (customDay !== 'customised Days') {
+      setCustomisedDay([]);
+    }
+  }, [duration, customDay]);
 
   const getTypeSchedule = () => {
     if (customDay === 'Continues Offer') {
@@ -280,7 +289,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }, [platform, vendors]);
   // TODO: Send request
   const handleSchedule = async () => {
-    const newBranchData = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
+    const newBranchData = vendorsArr.find((v) => v.data.vendor_name === branchData);
     const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
     delete clonedVendor.platform;
     const menuType =
@@ -301,11 +310,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       master_email: user.email,
       access_token: user.accessToken,
       platform_token:
-        userPlatformData.platforms[platformData].access_token ??
-        userPlatformData.platforms[platformData].access_token_bis,
+        userPlatformData.platforms[platform[0]].access_token ??
+        userPlatformData.platforms[platform[0]].access_token_bis,
       vendors: [clonedVendor],
       chain_id: clonedVendor.chain_id,
     };
+
     const dataReqOfferCross = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
       start_hour: getHourArr('startTime'),
@@ -323,8 +333,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         userPlatformData.platforms[platform[0]].access_token_bis,
       vendors: branch.vendorsObj,
     };
+
     if (platform.length < 2) {
-      const res = await triggerOffers(platformData, dataReq);
+      const res = await triggerOffers(platform[0], dataReq);
       if (res instanceof Error) {
         triggerAlertWithMessageError(res.message);
         return;
@@ -479,6 +490,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       times,
       heatmapData[links],
       getTypeSchedule() === 'workweek',
+      customDay === 'Customised Days',
+      customisedDay,
+      customDay === 'Same day every week',
+      everyWeek,
     );
 
     setHeatmapData({ ...heatmapData, [links]: response });
