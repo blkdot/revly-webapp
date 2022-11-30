@@ -108,9 +108,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   const [checked, setChecked] = useState([]);
 
-  useEffect(() => {
-    console.log(branchData);
-  }, [branchData]);
   const getDiscountOrMov = (type) => {
     if (type === 'discount') {
       if (itemMenu === 'Flash Deal') {
