@@ -20,7 +20,7 @@ import useApi from '../../hooks/useApi';
 import { useAlert } from '../../hooks/useAlert';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import BoxKit from '../../kits/box/BoxKit';
-import heatmapSelected from '../../utlls/heatmap/heatmapSelected';
+import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
 import { OfferCrossPlatforms } from '../../api/marketingApi';
 import GetRecap from './GetRecap';
@@ -275,7 +275,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     const dataReq = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
       start_hour: getHourArr('startTime'),
-      end_date: format(endingDate, 'yyyy-MM-dd'),
+      end_date: getFormatedEndDate(endingDate, 'yyyy-MM-dd', times),
       end_hour: getHourArr('endTime'),
       type_schedule: getTypeSchedule(),
       menu_type: menuType,
@@ -294,7 +294,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     const dataReqOfferCross = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
       start_hour: getHourArr('startTime'),
-      end_date: format(endingDate, 'yyyy-MM-dd'),
+      end_date: getFormatedEndDate(endingDate, 'yyyy-MM-dd', times),
       end_hour: getHourArr('endTime'),
       type_schedule: getTypeSchedule(),
       menu_type: menuType,
