@@ -23,6 +23,7 @@ import BoxKit from '../../kits/box/BoxKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import menuIcon from '../../assets/images/ic_menu.png';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
+import { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 
 const GetRecap = ({ recapData }) => {
   const {
@@ -415,7 +416,7 @@ const GetRecap = ({ recapData }) => {
                   <img src={CalendarCloseGrayIcon} alt="calendar close icon" />
                   <div>
                     <div>Ending Date</div>
-                    <div>{format(endingDate, 'dd MMM yyyy')}</div>
+                    <div>{getFormatedEndDate(endingDate, 'dd MMM yyyy', times)}</div>
                   </div>
                 </div>
               </div>
@@ -499,7 +500,7 @@ const GetRecap = ({ recapData }) => {
               <div className="recap-between mov">
                 <div>
                   <div>
-                    <div>Procentage Discount</div>
+                    <div>Discount rate</div>
                     <div>{discountPercentage}</div>
                   </div>
                 </div>

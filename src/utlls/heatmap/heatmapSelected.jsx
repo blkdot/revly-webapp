@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getDay, isSameDay, getHours, differenceInDays } from 'date-fns';
+import { getDay, isSameDay, getHours, differenceInDays, format, addDays } from 'date-fns';
 
 import { daysOrder, rangeHoursOpenedDay, maxHour, minHour } from './heatmapSelectedData';
 
@@ -35,6 +35,24 @@ const typeMono = (dateRange, times, data) => {
   }
 
   return setContinuesDayRange(data, indexDayStart, indexDayEnd, times);
+};
+
+export const getFormatedEndDate = (value, struct, times) => {
+  const len = times.length;
+
+  const endingHour = times[len - 1].endTime;
+
+  const endingIndexHeatmap = getHour(endingHour);
+
+  const isEndedNextDay = rangeHoursOpenedDay[endingIndexHeatmap].isNext ?? false;
+
+  if (isEndedNextDay) {
+    const newDay = addDays(value, 1);
+
+    return format(newDay, struct);
+  }
+
+  return format(value, struct);
 };
 
 const getHour = (h) => {
