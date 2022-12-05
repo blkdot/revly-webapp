@@ -7,6 +7,7 @@ import {
   endOfWeek,
   getMonth,
   getWeek,
+  getYear,
   startOfMonth,
   startOfWeek,
   subDays,
@@ -31,6 +32,8 @@ const DateSelect = React.memo((props) => {
     index,
     beforePeriod,
     setupOffer,
+    setYear,
+    offer,
   } = props;
   useEffect(() => {
     const date = new Date();
@@ -57,6 +60,11 @@ const DateSelect = React.memo((props) => {
         if (endGetDay === dateGetDay && startGetDay === 1) {
           setActive('current');
         } else if (
+          getWeek(startDate, { weekStartsOn: 1 }) === getWeek(date, { weekStartsOn: 1 }) &&
+          offer
+        ) {
+          setActive('current');
+        } else if (
           startGetDay === 1 &&
           endGetDay === 0 &&
           getWeek(startDate, { weekStartsOn: 1 }) ===
@@ -73,19 +81,22 @@ const DateSelect = React.memo((props) => {
         } else {
           setActive('custom');
         }
-      } else if (getMonth(startDate, 1) === getMonth(date, 1)) {
-        if (startGetDate === 1 && endGetDate >= dateGetDate) {
-          setActive('current');
-        } else if (
-          getMonth(startDate, 1) === getMonth(subMonths(date, 1)) &&
-          endDate === endOfMonth(startDate, 1)
+      } else if (getYear(startDate) === getYear(date) && type === 'month') {
+        if (
+          startGetDate === 1 &&
+          endGetDate >= dateGetDate &&
+          getMonth(startDate) === getMonth(date)
         ) {
+          setActive('current');
+        } else if (getMonth(startDate) === getMonth(date) && offer) {
+          if (getMonth(startDate) === getMonth(date)) {
+            setActive('current');
+          }
+        } else if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
           setActive('last');
         } else {
           setActive('custom');
         }
-      } else if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-        setActive('last');
       } else {
         setActive('custom');
       }
@@ -110,7 +121,7 @@ const DateSelect = React.memo((props) => {
         setSelections([
           {
             startDate: startOfWeek(today, { weekStartsOn: 1 }),
-            endDate: today,
+            endDate: offer ? endOfWeek(today, { weekStartsOn: 1 }) : today,
             key: 'selection',
           },
         ]);
@@ -137,8 +148,15 @@ const DateSelect = React.memo((props) => {
         setActive('last 4');
         break;
       case 'month':
-        setSelections([{ startDate: startOfMonth(today), endDate: today, key: 'selection' }]);
+        setSelections([
+          {
+            startDate: startOfMonth(today),
+            endDate: offer ? endOfMonth(today) : today,
+            key: 'selection',
+          },
+        ]);
         setActive('current');
+        setYear(new Date().getFullYear());
         break;
       case 'last month':
         setSelections([
@@ -149,6 +167,7 @@ const DateSelect = React.memo((props) => {
           },
         ]);
         setActive('last');
+        setYear(new Date().getFullYear());
         break;
       default:
     }

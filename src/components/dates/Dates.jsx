@@ -632,7 +632,7 @@ const Dates = (props) => {
 
     if (typeDate === 'month') {
       if (
-        getYear(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod)) ===
+        getYear(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod)) <=
         getYear(new Date(beforePeriodContextStart).setFullYear(year))
       ) {
         return (
@@ -745,7 +745,9 @@ const Dates = (props) => {
 
   useEffect(() => {
     const yearStart = 2021;
-    const yearEnd = new Date().getFullYear();
+    const yearEnd = offer
+      ? new Date(addMonths(maxDate, 1)).getFullYear()
+      : new Date().getFullYear();
     const arr = [];
 
     for (let i = yearStart; i <= yearEnd; i++) {
@@ -756,10 +758,23 @@ const Dates = (props) => {
 
   const handleChangeYear = (event) => {
     setYear(event.target.value);
-    setYearAfterPeriod(event.target.value);
+    setbeforePeriod([
+      {
+        startDate: startOfMonth(new Date(new Date().setMonth(0)).setFullYear(event.target.value)),
+        endDate: endOfMonth(new Date(new Date().setMonth(0)).setFullYear(event.target.value)),
+        key: 'selection',
+      },
+    ]);
   };
   const handleChangeYearAfterPeriod = (event) => {
     setYearAfterPeriod(event.target.value);
+    setafterPeriod([
+      {
+        startDate: startOfMonth(new Date(new Date().setMonth(0)).setFullYear(event.target.value)),
+        endDate: endOfMonth(new Date(new Date().setMonth(0)).setFullYear(event.target.value)),
+        key: 'selection',
+      },
+    ]);
   };
   const getMarketingHeatMap = () => {
     if (isMarketingHeatMap) {
@@ -803,7 +818,7 @@ const Dates = (props) => {
                 {
                   startDate: startOfMonth(new Date(newDateMonth).setFullYear(year)),
                   endDate:
-                    getMonth(new Date(newDateMonth)) === getMonth(new Date())
+                    getMonth(new Date(newDateMonth)) === getMonth(new Date()) && !offer
                       ? new Date().setFullYear(year)
                       : endOfMonth(new Date(newDateMonth).setFullYear(year)),
                   key: 'selection',
@@ -882,6 +897,8 @@ const Dates = (props) => {
                   setTypeDate={setTypeDate}
                   beforePeriod={beforePeriod}
                   setupOffer={n === 'week' ? setupOffer : false}
+                  setYear={setYear}
+                  offer={offer}
                 />
               ))}
             </div>
@@ -944,10 +961,11 @@ const Dates = (props) => {
                   index={index + 1}
                   key={n}
                   type={n}
-                  setSelections={setbeforePeriod}
+                  setSelections={setafterPeriod}
                   setTypeDate={setTypeDate}
-                  beforePeriod={beforePeriod}
+                  beforePeriod={afterPeriod}
                   setupOffer={n === 'week' ? setupOffer : false}
+                  setYear={setYearAfterPeriod}
                 />
               ))}
               <div className="date-btn-wrapper">

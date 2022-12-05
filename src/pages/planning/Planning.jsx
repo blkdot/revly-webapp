@@ -4,6 +4,7 @@ import shortid from 'shortid';
 
 import './Planning.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useDate from '../../hooks/useDate';
@@ -37,9 +38,18 @@ const Planning = () => {
   const [active, setActive] = useState(0);
   const { date } = useDate();
   const { vendors } = useVendors();
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
+  };
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
+    endDate: getOfferDate(),
   });
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });

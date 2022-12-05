@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { pascalCase } from 'change-case';
-
+import { endOfMonth, endOfWeek } from 'date-fns';
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -33,9 +33,18 @@ const MarketingAds = () => {
   const { date } = useDate();
   const { vendors } = useVendors();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
+  };
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
+    endDate: getOfferDate(),
   });
   const [scrollPosition, setScrollPosition] = useState(0);
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });

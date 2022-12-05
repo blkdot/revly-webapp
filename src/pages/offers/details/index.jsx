@@ -75,15 +75,20 @@ const OfferDetailComponent = () => {
     return (
       <div>
         <span className="offer-title">Offer Status :</span>
-        <span
-          className="offer-status"
-          style={{
-            color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
-            backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
-          }}
-        >
-          {status}
-        </span>
+
+        {status ? (
+          <span
+            className="offer-status"
+            style={{
+              color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
+              backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
+            }}
+          >
+            {status}
+          </span>
+        ) : (
+          <SpinnerKit />
+        )}
       </div>
     );
   };
@@ -239,7 +244,7 @@ const OfferDetailComponent = () => {
                 </div>
               </div>
               <div className="offer">
-                {renderOfferStatus(status)}
+                {renderOfferStatus(menu?.master_offer?.offer_status)}
                 <div>
                   <span className="offer-title">Offer Date :</span>
                   <span className="offer-sub-title">{start_date}</span>
@@ -415,25 +420,29 @@ const OfferDetailComponent = () => {
                   </div>
                 </div>
 
-                <div className="offerdetails_time_slots_scroll">
-                  {Object.keys(menu?.children_offers || {}).length === 0 &&
-                  Object.keys(menu?.master_offer || {}).length === 0 ? (
-                    <div className="offerdetails_time_slots" style={{ width: '100%' }}>
-                      <SpinnerKit />
-                    </div>
-                  ) : (
-                    <div style={{ width: 'fit-content' }} className="offerdetails_time_slots">
-                      {Object.keys(menu?.children_offers || {}).map((id) => (
-                        <TimeSlot
-                          handleCancelOffer={handleCancelOffer}
-                          key={id}
-                          data={menu.children_offers[id]}
-                          status={status}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
+                {Object.keys(menu?.children_offers || {}).length === 0 &&
+                Object.keys(menu?.master_offer || {}).length === 0 ? (
+                  <div className="offerdetails_time_slots" style={{ width: '100%' }}>
+                    <SpinnerKit />
+                  </div>
+                ) : (
+                  <div className="offerdetails_time_slots_scroll">
+                    {Object.keys(menu.children_offers).length === 0 ? (
+                      ''
+                    ) : (
+                      <div style={{ width: 'fit-content' }} className="offerdetails_time_slots">
+                        {Object.keys(menu?.children_offers || {}).map((id) => (
+                          <TimeSlot
+                            handleCancelOffer={handleCancelOffer}
+                            key={id}
+                            data={menu.children_offers[id]}
+                            status={status}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             <div className="offer-duration-container">
