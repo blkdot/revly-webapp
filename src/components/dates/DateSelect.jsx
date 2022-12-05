@@ -63,6 +63,13 @@ const DateSelect = React.memo((props) => {
             getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
         ) {
           setActive('last');
+        } else if (
+          startGetDay === 1 &&
+          endGetDay === 0 &&
+          getWeek(startDate, { weekStartsOn: 1 }) ===
+            getWeek(subWeeks(date, 4), { weekStartsOn: 1 })
+        ) {
+          setActive('last 4');
         } else {
           setActive('custom');
         }
@@ -122,8 +129,8 @@ const DateSelect = React.memo((props) => {
       case 'last 4 weeks':
         setSelections([
           {
-            startDate: endOfWeek(subWeeks(today, 1), { weekStartsOn: 1 }),
-            endDate: startOfWeek(subWeeks(today, 4), { weekStartsOn: 1 }),
+            startDate: startOfWeek(subWeeks(today, 4), { weekStartsOn: 1 }),
+            endDate: endOfWeek(subWeeks(today, 1), { weekStartsOn: 1 }),
             key: 'selection',
           },
         ]);
