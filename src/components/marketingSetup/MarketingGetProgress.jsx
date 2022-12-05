@@ -1,4 +1,4 @@
-import { addDays, addHours, format, getHours, isSameDay } from 'date-fns';
+import { addDays, addHours, addMinutes, format, getHours, isSameDay } from 'date-fns';
 import React from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import MarketingRadio from './MarketingRadio';
@@ -139,7 +139,7 @@ const GetProgress = ({ progressData }) => {
               </span>
               <div>
                 <div>Starting Now</div>
-                <p>{format(addHours(new Date(), 1), 'dd MMM yyyy HH:00')}</p>
+                <p>{format(addMinutes(new Date(), 2), 'dd MMM yyyy HH:mm')}</p>
               </div>
             </div>
             <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
