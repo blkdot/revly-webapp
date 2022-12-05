@@ -165,8 +165,17 @@ const getWorkweek = (data, isWorkweek) => {
     return cData;
   }
 
-  cData.splice(0, 1);
-  cData.splice(5, 1);
+  const indexSaturday = cData.findIndex((n) => n === 6);
+
+  if (indexSaturday > -1) {
+    cData.splice(indexSaturday, 1);
+  }
+
+  const indexSunday = cData.findIndex((n) => n === 0);
+
+  if (indexSunday > -1) {
+    cData.splice(indexSunday, 1);
+  }
 
   return cData;
 };
@@ -287,7 +296,7 @@ const typeMulti = (
     ];
   }
 
-  return daysSelectedOrder.reduce(
+  return getWorkweek(daysSelectedOrder, isWorkweek).reduce(
     (acc, cur) => ({
       ...acc,
       [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
