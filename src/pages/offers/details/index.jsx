@@ -46,7 +46,7 @@ const OfferDetailComponent = () => {
   } = useLocation();
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
-  const [menu, setMenu] = useState({});
+  const [offerDetailMaster, setofferDetailMaster] = useState({});
   const navigate = useNavigate();
   const {
     userPlatformData: { platforms },
@@ -112,7 +112,7 @@ const OfferDetailComponent = () => {
     discount_type,
     end_date,
     master_offer_id,
-    // menu_items,
+    // offerDetailMaster_items,
     minimum_order_value,
     platform,
     start_date,
@@ -131,7 +131,7 @@ const OfferDetailComponent = () => {
     cancelOfferMaster(
       {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
-        access_token: '',
+        access_token: user?.access_token || '',
         platform_token: platforms[platform].access_token,
         vendors: [vendor],
         offer_id: offer_id || null,
@@ -139,8 +139,12 @@ const OfferDetailComponent = () => {
         master_offer_id,
       },
       platform,
-    ).then((res) => {
-      setOfferDetail({ ...offerDetail, status: res.data.status });
+    ).then(() => {
+      setOfferDetail({ ...offerDetail, status: 'Cancelled' });
+      setofferDetailMaster({
+        ...offerDetailMaster,
+        master_offer: { offer_status: 'Cancelled' },
+      });
       setIsOpen(false);
     });
   };
@@ -148,7 +152,7 @@ const OfferDetailComponent = () => {
     cancelOffer(
       {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
-        access_token: '',
+        access_token: user?.access_token || '',
         platform_token: platforms[platform].access_token,
         vendors: [vendor],
         offer_id: offerId,
@@ -168,12 +172,12 @@ const OfferDetailComponent = () => {
   useEffect(() => {
     getPlanningOfferDetails({
       master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
-      access_token: '',
+      access_token: user?.access_token || '',
       vendors: vendorsObj,
       platform,
       master_offer_id,
     })
-      .then((res) => setMenu(res.data))
+      .then((res) => setofferDetailMaster(res.data))
       // eslint-disable-next-line no-console
       .catch((err) => console.log({ err }));
   }, [vendors]);
@@ -229,7 +233,9 @@ const OfferDetailComponent = () => {
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
               <div>
-                {['Live', 'Active', 'Scheduled'].includes(status) && (
+                {['Live', 'Active', 'Scheduled'].includes(
+                  offerDetailMaster?.master_offer?.offer_status,
+                ) && (
                   <button onClick={openCancelModal} className="cancel-btn" type="button">
                     <Warning />
                     <span style={{ color: '#FF4842' }}>Cancel Offer</span>
@@ -245,7 +251,7 @@ const OfferDetailComponent = () => {
                 </div>
               </div>
               <div className="offer">
-                {renderOfferStatus(menu?.master_offer?.offer_status)}
+                {renderOfferStatus(offerDetailMaster?.master_offer?.offer_status)}
                 <div>
                   <span className="offer-title">Offer Date :</span>
                   <span className="offer-sub-title">{start_date}</span>
@@ -421,22 +427,22 @@ const OfferDetailComponent = () => {
                   </div>
                 </div>
 
-                {Object.keys(menu?.children_offers || {}).length === 0 &&
-                Object.keys(menu?.master_offer || {}).length === 0 ? (
+                {Object.keys(offerDetailMaster?.children_offers || {}).length === 0 &&
+                Object.keys(offerDetailMaster?.master_offer || {}).length === 0 ? (
                   <div className="offerdetails_time_slots" style={{ width: '100%' }}>
                     <SpinnerKit />
                   </div>
                 ) : (
                   <div className="offerdetails_time_slots_scroll">
-                    {Object.keys(menu.children_offers).length === 0 ? (
+                    {Object.keys(offerDetailMaster.children_offers).length === 0 ? (
                       ''
                     ) : (
                       <div style={{ width: 'fit-content' }} className="offerdetails_time_slots">
-                        {Object.keys(menu?.children_offers || {}).map((id) => (
+                        {Object.keys(offerDetailMaster?.children_offers || {}).map((id) => (
                           <TimeSlot
                             handleCancelOffer={handleCancelOffer}
                             key={id}
-                            data={menu.children_offers[id]}
+                            data={offerDetailMaster.children_offers[id]}
                             status={status}
                           />
                         ))}
@@ -461,8 +467,8 @@ const OfferDetailComponent = () => {
                   </div>
                   <span className="offer-duration width-left-icon width-right-icon">
                     {discount_type && discount_type !== 'Menu discount'
-                      ? 'Offer on an item from the Menu'
-                      : 'Offer on the whole Menu'}
+                      ? 'Offer on an item from the menu'
+                      : 'Offer on the whole menu'}
                   </span>
                   {discount_type && discount_type !== 'Menu discount' ? <ExpandIcon /> : ''}
                 </div>
@@ -717,7 +723,7 @@ const TimeSlot = ({ data, handleCancelOffer, status }) => {
           </div>
         </div>
       </div>
-      {(status === 'Scheduled' || status === 'Live') && active ? (
+      {['Live', 'Active', 'Scheduled'].includes(data.offer_status) && active ? (
         <span className="cancel_api">
           <Trash onClick={() => handleCancelOffer(data.offer_id, setActive)} />
         </span>
