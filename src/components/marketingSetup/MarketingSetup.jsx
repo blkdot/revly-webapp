@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { addDays, addHours, format, startOfWeek, subWeeks, endOfWeek } from 'date-fns';
+import { addDays, addHours, format, startOfWeek, subWeeks, endOfWeek, addMinutes } from 'date-fns';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
@@ -83,7 +83,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [customisedDay, setCustomisedDay] = useState([]);
   const [times, setTimes] = useState([
     {
-      startTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+      startTime: new Date(
+        null,
+        null,
+        null,
+        format(new Date(), 'HH'),
+        format(new Date(addMinutes(new Date(), 2)), 'mm'),
+      ),
       endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
       pos: 1,
     },
@@ -704,7 +710,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     setTimes([
       {
-        startTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+        startTime: new Date(
+          null,
+          null,
+          null,
+          format(new Date(), 'HH'),
+          format(new Date(addMinutes(new Date(), 2)), 'mm'),
+        ),
         endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
         pos: 1,
       },

@@ -153,6 +153,7 @@ const OfferDetailComponent = () => {
         vendors: [vendor],
         offer_id: offerId,
         chain_id,
+        master_offer_id,
       },
       platform,
     );
