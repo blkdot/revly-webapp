@@ -4,6 +4,7 @@ import { pascalCase } from 'change-case';
 import _ from 'lodash';
 
 import './Marketing.scss';
+import { endOfMonth, endOfWeek } from 'date-fns';
 
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -43,9 +44,18 @@ const MarketingOffer = () => {
   const { date: dateContext } = useDate();
   const { vendors } = useVendors();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const getOfferDate = () => {
+    if (dateContext.typeDate === 'month') {
+      return endOfMonth(new Date(dateContext.beforePeriod.endDate));
+    }
+    if (dateContext.typeDate === 'week') {
+      return endOfWeek(new Date(dateContext.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return dateContext.beforePeriod.endDate;
+  };
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: dateContext.beforePeriod.startDate,
-    endDate: dateContext.beforePeriod.endDate,
+    endDate: getOfferDate(),
   });
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
