@@ -1,6 +1,6 @@
 @import '../../../../library.scss';
 
-.invoice {
+.invoice.invoice {
     display: flex;
     justify-content: space-between;
     margin: 14px 0;
@@ -8,6 +8,7 @@
     padding: 12px 30px;
     background-color: #F9FAFB;
     border-radius: 8px;
+    flex-direction: row;
 
     &.snackbar {
         align-items: flex-end;
