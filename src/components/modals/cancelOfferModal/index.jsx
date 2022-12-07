@@ -33,12 +33,7 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer, platform }) => 
 
   return (
     <div>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Cancel Offer"
-      >
+      <Modal isOpen={modalIsOpen} style={customStyles} contentLabel="Cancel Offer">
         <div>
           <div
             style={{
