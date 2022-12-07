@@ -9,7 +9,7 @@ import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOl
 
 const DropdownSnackbar = ({ setInvoice, invoice }) => {
   const { vendors } = useVendors();
-  const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
+  const [costVendors, setCostVendors] = useState({ ...vendors });
   const [procent, setProcent] = useState('');
   const { userPlatformData } = usePlatform();
   const getPlatformActive = () => {
@@ -24,10 +24,11 @@ const DropdownSnackbar = ({ setInvoice, invoice }) => {
   };
   const platform = getPlatformActive();
   useEffect(() => {
-    const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
+    const newChainObj = { ...vendors.chainObj };
     const newVendorsObj = { talabat: [], deliveroo: [] };
     if (Object.keys(vendors.chainObj).length > 0) {
-      if (Object.keys(vendors.display).length < 0) {
+      // Object.keys(xxx).length will always be equal or greater than 0
+      if (vendors.display) {
         Object.keys(newChainObj).forEach((chainName, index) => {
           Object.keys(newChainObj[chainName]).forEach((vendorName) => {
             if (index !== 0) {
@@ -71,7 +72,8 @@ const DropdownSnackbar = ({ setInvoice, invoice }) => {
   return (
     <div className="invoice snackbar">
       <div className="snackbar-wrapper">
-        {Object.keys(costVendors.display).length < 0 ? (
+        {/* Object.keys(xxx).length will always be equal or greater than 0 */}
+        {vendors.display ? (
           <RestaurantDropdown
             setState={setCostVendors}
             state={costVendors}
