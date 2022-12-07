@@ -8,8 +8,9 @@ import ButtonKit from '../../../../kits/button/ButtonKit';
 const Invoice = (props) => {
   const { restaurant, cost, setInvoice, invoice, index } = props;
   const deleteCost = () => {
-    invoice.splice(index, 1);
-    setInvoice([...invoice]);
+    const clonedInvoice = [...invoice];
+    clonedInvoice.splice(index, 1);
+    setInvoice(clonedInvoice);
   };
   return (
     <div className="invoice cost">
@@ -20,16 +21,18 @@ const Invoice = (props) => {
         </p>
       </div>
       <div className="__flex">
-        <div className="__img-block">
-          <CostIcon />
+        <div style={{ marginRight: '40px' }} className="__flex">
+          <div className="__img-block">
+            <CostIcon />
+          </div>
+          <p>
+            Cost: <span>{cost}</span>
+          </p>
         </div>
-        <p>
-          Cost: <span>{cost}</span>
-        </p>
+        <ButtonKit color="error" onClick={deleteCost} variant="outlined">
+          Delete
+        </ButtonKit>
       </div>
-      <ButtonKit color="error" onClick={deleteCost} variant="outlined">
-        Delete
-      </ButtonKit>
     </div>
   );
 };

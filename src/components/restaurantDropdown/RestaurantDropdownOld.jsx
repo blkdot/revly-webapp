@@ -27,7 +27,14 @@ const MenuProps = {
   },
 };
 
-const RestaurantDropdownOld = ({ vendors, vendorsPlatform, restaurants }) => {
+const RestaurantDropdownOld = ({
+  vendors,
+  vendorsPlatform,
+  restaurants,
+  state,
+  setState,
+  cost,
+}) => {
   React.useEffect(() => {
     window.onbeforeunload = (e) => {
       localStorage.setItem('leaveTime', JSON.stringify(new Date()));
@@ -65,14 +72,24 @@ const RestaurantDropdownOld = ({ vendors, vendorsPlatform, restaurants }) => {
           }
         });
       });
-      const newValue = {
-        ...vendorsContext,
-        vendorsObj: platforms,
-        restaurants: typeof value === 'string' ? value.split(',') : value,
-      };
+      if (cost) {
+        const newValue = {
+          ...state,
+          vendorsObj: platforms,
+          restaurants: typeof value === 'string' ? value.split(',') : value,
+        };
 
-      setVendors(newValue);
-      localStorage.setItem('vendors', JSON.stringify(newValue));
+        setState(newValue);
+      } else {
+        const newValue = {
+          ...vendorsContext,
+          vendorsObj: platforms,
+          restaurants: typeof value === 'string' ? value.split(',') : value,
+        };
+
+        setVendors(newValue);
+        localStorage.setItem('vendors', JSON.stringify(newValue));
+      }
     }
   };
 

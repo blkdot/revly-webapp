@@ -42,7 +42,11 @@ const useVendors = () => {
           restaurantTemp.push(v.data.vendor_name);
         }),
       );
-    const { display, ...rest } = newData;
+    const { ...rest } = newData;
+    const display = {
+      ...newData.display,
+      PokeHub: { ...newData.display.PokeHub, Aman: { talabat: {}, deliveroo: {} } },
+    };
     const chainObj = JSON.parse(JSON.stringify(display));
     const dataV = {
       restaurants: restaurantTemp,
