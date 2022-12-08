@@ -42,9 +42,9 @@ const RestaurantDropdown = ({
   const { vendorsObj, display } = vendorsContext;
   const [active, setActive] = useState(false);
   const handleChange = (value, checked) => {
+    const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
     if (branch || cost) {
       if (checked) {
-        const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
         const vendorsObjTemp = JSON.parse(JSON.stringify(state?.vendorsObj));
         Object.keys(display).forEach((cName) => {
           if (cName !== value) {
@@ -71,7 +71,6 @@ const RestaurantDropdown = ({
       });
       if (Object.keys(chainObjClear).length > 1) {
         if (!checked) {
-          const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
           Object.keys(chainObj[value]).forEach((vName) => {
             Object.keys(chainObjTemp[value][vName]).forEach((platform) => {
               vendorsObj[platform]?.forEach((obj, index) => {
@@ -95,7 +94,6 @@ const RestaurantDropdown = ({
           );
         }
         if (checked) {
-          const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
           Object.keys(display).forEach((cName) => {
             if (cName === value) {
               Object.keys(display[value]).forEach((n) => {
@@ -123,7 +121,6 @@ const RestaurantDropdown = ({
         }
       }
       if (checked) {
-        const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
         Object.keys(display).forEach((cName) => {
           if (cName === value) {
             Object.keys(display[value]).forEach((n) => {

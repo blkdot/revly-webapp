@@ -77,7 +77,6 @@ const Menu = () => {
   }, [userPlatformData]);
 
   useEffect(() => {
-    console.log(vendorList);
     if (vendorList && vendorList.length) {
       const ve = vendorList?.filter((v) => v.platform === platform);
       setBranch(ve[0] || '');
