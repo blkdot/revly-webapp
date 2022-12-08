@@ -15,6 +15,7 @@ import {
   format,
   getYear,
   addMonths,
+  addYears,
 } from 'date-fns';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -812,7 +813,7 @@ const Dates = (props) => {
             className="month_picker"
             date={dayjs(beforePeriod[0].startDate)}
             minDate={minDate}
-            maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
+            maxDate={offer ? new Date(addYears(maxDate, 1)) : maxDate}
             onChange={(newDateMonth) =>
               setbeforePeriod([
                 {
@@ -832,7 +833,7 @@ const Dates = (props) => {
       <DatePickerKit
         onRangeFocusChange={(e) => e}
         minDate={new Date(minDate)}
-        maxDate={offer ? new Date(addMonths(maxDate, 1)) : maxDate}
+        maxDate={offer ? new Date(addYears(new Date(), 1)) : new Date()}
         onChange={handleOnChange}
         showSelectionPreview
         moveRangeOnFirstSelection={false}

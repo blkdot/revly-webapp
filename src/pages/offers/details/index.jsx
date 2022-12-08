@@ -31,6 +31,7 @@ import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
 import { getPlanningOfferDetails } from '../../../api/userApi';
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+import SkeletonKit from '../../../kits/skeleton/SkeletonKit';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -73,7 +74,7 @@ const OfferDetailComponent = () => {
       default: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
     };
     return (
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <span className="offer-title">Offer Status :</span>
 
         {status ? (
@@ -87,13 +88,15 @@ const OfferDetailComponent = () => {
             {status}
           </span>
         ) : (
-          <SpinnerKit />
+          <span>
+            <SkeletonKit width={70} height={30} />
+          </span>
         )}
       </div>
     );
   };
   const renderPlatform = (platform) => (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <span className="offer-title">Platform :</span>
       <span className="offer-sub-title">
         <img
@@ -260,67 +263,73 @@ const OfferDetailComponent = () => {
               </div>
             </div>
             {status !== 'Scheduled' && (
-              <div className="offer-visibility-container">
-                <div className="offer-visibility-block">
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span className="offer-visibility-title with-icon">Caroussel Visibility</span>
-                    <Arrow />
+              <div className="offer-visibility-container-scroll">
+                <div className="offer-visibility-container">
+                  <div className="offer-visibility-block">
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span className="offer-visibility-title with-icon">Caroussel Visibility</span>
+                      <Arrow />
+                    </div>
+                    <div className="offer-visibility-sub-title">Caroussel</div>
                   </div>
-                  <div className="offer-visibility-sub-title">Caroussel</div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Visibility Rank</span>
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Visibility Rank</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.accrued_discount === null || offerData === null
+                        ? '-'
+                        : offerData.accrued_discount}
+                    </div>
                   </div>
-                  <div className="offer-visibility-sub-title">
-                    {offerData?.accrued_discount === null || offerData === null
-                      ? '-'
-                      : offerData.accrued_discount}
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">#Orders</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.n_orders === null || offerData === null
+                        ? '-'
+                        : offerData.n_orders}
+                    </div>
                   </div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">#Orders</span>
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Avg Basket</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.average_basket === null || offerData === null
+                        ? '-'
+                        : offerData.average_basket}
+                    </div>
                   </div>
-                  <div className="offer-visibility-sub-title">
-                    {offerData?.n_orders === null || offerData === null ? '-' : offerData.n_orders}
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Roi</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.roi === null || offerData === null ? '-' : offerData.roi}
+                    </div>
                   </div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Avg Basket</span>
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Revenue</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.revenue === null || offerData === null ? '-' : offerData.revenue}
+                    </div>
                   </div>
-                  <div className="offer-visibility-sub-title">
-                    {offerData?.average_basket === null || offerData === null
-                      ? '-'
-                      : offerData.average_basket}
-                  </div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Roi</span>
-                  </div>
-                  <div className="offer-visibility-sub-title">
-                    {offerData?.roi === null || offerData === null ? '-' : offerData.roi}
-                  </div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Revenue</span>
-                  </div>
-                  <div className="offer-visibility-sub-title">
-                    {offerData?.revenue === null || offerData === null ? '-' : offerData.revenue}
-                  </div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Profits</span>
-                  </div>
-                  <div className="offer-visibility-sub-title">
-                    {offerData === null ||
-                    (offerData?.revenue === null && offerData?.accrued_discount === null)
-                      ? '-'
-                      : ((offerData?.revenue || 0) - (offerData?.accrued_discount || 0)).toFixed(2)}
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Profits</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData === null ||
+                      (offerData?.revenue === null && offerData?.accrued_discount === null)
+                        ? '-'
+                        : ((offerData?.revenue || 0) - (offerData?.accrued_discount || 0)).toFixed(
+                            2,
+                          )}
+                    </div>
                   </div>
                 </div>
               </div>

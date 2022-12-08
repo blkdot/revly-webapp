@@ -11,6 +11,7 @@ const RestaurantCheckboxAccordion = ({
   handleChangeVendor,
   chainObj,
   branch,
+  cost,
 }) => {
   const [active, setActive] = useState(false);
   const getChecked = () =>
@@ -32,12 +33,16 @@ const RestaurantCheckboxAccordion = ({
             src={selectIcon}
             alt="select icon"
           />
-          <CheckboxKit
-            checked={getChecked()}
-            onClick={(e) => e.stopPropagation()}
-            value={chainName}
-            onChange={(e) => handleChange(e.target.value, e.target.checked)}
-          />
+          {!cost ? (
+            <CheckboxKit
+              checked={getChecked()}
+              onClick={(e) => e.stopPropagation()}
+              value={chainName}
+              onChange={(e) => handleChange(e.target.value, e.target.checked)}
+            />
+          ) : (
+            <span style={{ height: 40 }} />
+          )}
           {chainName}
         </div>
         <ExpandMoreIcon />

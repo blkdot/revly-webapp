@@ -8,7 +8,14 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 
-const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, platforms }) => {
+const RestaurantDropdown = ({
+  setState,
+  state,
+  branch,
+  cost,
+  chainObj: chainObjProps,
+  platforms,
+}) => {
   const chainObj = chainObjProps;
 
   useEffect(() => {
@@ -35,9 +42,9 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
   const { vendorsObj, display } = vendorsContext;
   const [active, setActive] = useState(false);
   const handleChange = (value, checked) => {
-    if (branch) {
+    const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
+    if (branch || cost) {
       if (checked) {
-        const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
         const vendorsObjTemp = JSON.parse(JSON.stringify(state?.vendorsObj));
         Object.keys(display).forEach((cName) => {
           if (cName !== value) {
@@ -64,7 +71,6 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
       });
       if (Object.keys(chainObjClear).length > 1) {
         if (!checked) {
-          const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
           Object.keys(chainObj[value]).forEach((vName) => {
             Object.keys(chainObjTemp[value][vName]).forEach((platform) => {
               vendorsObj[platform]?.forEach((obj, index) => {
@@ -88,7 +94,6 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
           );
         }
         if (checked) {
-          const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
           Object.keys(display).forEach((cName) => {
             if (cName === value) {
               Object.keys(display[value]).forEach((n) => {
@@ -116,7 +121,6 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
         }
       }
       if (checked) {
-        const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
         Object.keys(display).forEach((cName) => {
           if (cName === value) {
             Object.keys(display[value]).forEach((n) => {
@@ -148,7 +152,7 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
     const {
       target: { value, checked },
     } = event;
-    if (branch) {
+    if (branch || cost) {
       if (Object.keys(chainObj[chainName]).length > 1) {
         if (!checked) {
           const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
@@ -170,6 +174,15 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
       }
       if (checked) {
         const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
+        if (cost) {
+          Object.keys(chainObjTemp).forEach((cName) => {
+            if (cName !== chainName) {
+              Object.keys(chainObjTemp[cName]).forEach((vName) => {
+                delete chainObjTemp[cName][vName];
+              });
+            }
+          });
+        }
         Object.keys(display[chainName]).forEach((vName) => {
           if (vName === value) {
             chainObjTemp[chainName][value] = display[chainName][value];
@@ -262,6 +275,16 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
       setActive(true);
       return;
     }
+    if (cost) {
+      if (active) {
+        body.style.overflowY = 'visible';
+        setActive(false);
+        return;
+      }
+      body.style.overflowY = 'hidden';
+      setActive(true);
+      return;
+    }
     if (active) {
       body.style.overflowY = 'visible';
       setActive(false);
@@ -346,6 +369,7 @@ const RestaurantDropdown = ({ setState, state, branch, chainObj: chainObjProps, 
             chainArr={Object.keys(chainObj)}
             handleChangeVendor={handleChangeVendor}
             chainObj={chainObj}
+            cost={cost}
           />
         ))}
       </div>
