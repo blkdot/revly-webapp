@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { pascalCase } from 'change-case';
+import shortid from 'shortid';
 
 import './Planning.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useDate from '../../hooks/useDate';
@@ -36,11 +38,20 @@ const Planning = () => {
   const [active, setActive] = useState(0);
   const { date } = useDate();
   const { vendors } = useVendors();
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
+  };
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
+    endDate: getOfferDate(),
   });
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState(defaultFilterStateFormat);
@@ -60,6 +71,7 @@ const Planning = () => {
     renderTarget,
     renderScheduleType,
     renderSimpleRow,
+    renderCalculatedPercent,
   } = useTableContentFormatter();
 
   const headersOffers = [
@@ -68,11 +80,30 @@ const Planning = () => {
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
     { id: 'type_schedule', disablePadding: true, label: 'Schedule type' },
+    { id: 'slot_schedule', disablePadding: true, label: 'Slot Schedule' },
     { id: 'discount_type', disablePadding: true, label: 'Discount type' },
     { id: 'discount_rate', disablePadding: true, label: 'Discount rate' },
     { id: 'minimum_order_value', disablePadding: true, label: 'Minimum order value' },
     { id: 'target', disablePadding: true, label: 'Target' },
     { id: 'status', disablePadding: true, label: 'Status' },
+  ];
+
+  const headersAds = [
+    { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
+    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
+    { id: 'start_date', disablePadding: true, label: 'Start date' },
+    { id: 'end_date', disablePadding: true, label: 'End date' },
+    { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
+    { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
+    { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
+    { id: 'new_customer_count', disablePadding: true, label: 'New customer' },
+    { id: 'orders_count', disablePadding: true, label: 'Orders' },
+    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
+    { id: 'spend', disablePadding: true, label: 'Spend' },
+    { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
+    { id: 'total_budget', disablePadding: true, label: 'Total budget' },
+    { id: 'ad_status', disablePadding: true, label: 'Status' },
   ];
 
   const cellTemplatesObject = {
@@ -81,31 +112,52 @@ const Planning = () => {
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
     type_schedule: renderScheduleType,
+    slot_schedule: renderSimpleRow,
     discount_type: renderSimpleRow,
     discount_rate: renderPercent,
     minimum_order_value: renderCurrency,
+    attributed_order_value: renderCurrency,
     target: renderTarget,
     status: renderStatus,
+    ad_status: renderStatus,
+    ad_serving_count: renderSimpleRow,
+    clicks_count: renderSimpleRow,
+    conversion_rate: renderCalculatedPercent,
+    new_customer_count: renderSimpleRow,
+    orders_count: renderSimpleRow,
+    remaining_budget: renderCurrency,
+    return_on_ad_spent: renderCurrency,
+    spend: renderCurrency,
+    total_budget: renderCurrency,
   };
 
-  const renderRowsByHeader = (r) =>
+  const renderRowsByHeaderOffer = (r) =>
     headersOffers.reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
-        id: `${cur.id}_${r.offer_id}`,
+        id: `${cur.id}_${r.start_date}_${r.end_date}_offers_${shortid.generate()}`,
+        data: r,
+      }),
+      {},
+    );
+
+  const renderRowsByHeaderAds = (r) =>
+    headersAds.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
+        id: `${cur.id}_${r.ad_id}_ads_${shortid.generate()}`,
         data: r,
       }),
       {},
     );
 
   const handleRowClick = (id) => {
-    const rowId = id.split('_');
-
-    navigate(`/offer/detail/${rowId[1]}`, {
+    navigate(`/offer/detail/${id}`, {
       state: {
         // eslint-disable-next-line eqeqeq
-        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        offerDetail: offers.find((o) => o.master_offer_id == id),
         prevPath: location.pathname,
       },
     });
@@ -114,10 +166,10 @@ const Planning = () => {
   const renderTable = () => (
     <TableRevly
       isLoading={isLoadingAds || isLoadingOffers}
-      headers={headersOffers}
-      rows={dataFiltered.map(renderRowsByHeader)}
+      headers={active ? headersAds : headersOffers}
+      rows={dataFiltered.map(active ? renderRowsByHeaderAds : renderRowsByHeaderOffer)}
       mainFieldOrdered="start_date"
-      onClickRow={handleRowClick}
+      onClickRow={!active ? handleRowClick : false}
     />
   );
 
@@ -149,7 +201,7 @@ const Planning = () => {
 
         if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status)) status.push(cur.status);
+        if (!status.includes(cur.status)) status.push(active ? cur.ad_status : cur.status);
 
         return { ...acc, platform, discount_type: discountType, discount_rate: procent, status };
       },
@@ -167,8 +219,8 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
-      discount_type: preHeadDiscountType,
-      discount_rate: preHeadProcent,
+      discount_type: active ? [] : preHeadDiscountType,
+      discount_rate: active ? [] : preHeadProcent,
       status: preHeadStatus,
     });
   }, [ads, offers, active]);
@@ -223,7 +275,9 @@ const Planning = () => {
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredData = filteredData.filter((f) =>
+        filters.status.includes(active ? f.ad_status : f.status),
+      );
     }
 
     setDataFiltered(filteredData);
@@ -260,33 +314,39 @@ const Planning = () => {
               internalIconOnActive={platformObject}
               maxShowned={1}
             />
-            <FilterDropdown
-              items={filtersHead.discount_type}
-              values={filters.discount_type}
-              onChange={handleChangeMultipleFilter('discount_type')}
-              label="Discount Type"
-              icon={<Tag />}
-              maxShowned={1}
-            />
-            <FilterDropdown
-              items={filtersHead.discount_rate}
-              values={filters.discount_rate}
-              onChange={handleChangeMultipleFilter('discount_rate')}
-              label="Discount Amount"
-              icon={<Tag />}
-              customTag="%"
-              maxShowned={5}
-            />
+            {active ? null : (
+              <FilterDropdown
+                items={filtersHead.discount_type}
+                values={filters.discount_type}
+                onChange={handleChangeMultipleFilter('discount_type')}
+                label="Discount Type"
+                icon={<Tag />}
+                maxShowned={1}
+              />
+            )}
+            {active ? null : (
+              <FilterDropdown
+                items={filtersHead.discount_rate}
+                values={filters.discount_rate}
+                onChange={handleChangeMultipleFilter('discount_rate')}
+                label="Discount Amount"
+                icon={<Tag />}
+                customTag="%"
+                maxShowned={5}
+              />
+            )}
           </div>
-          <ButtonKit
-            className="more-filter"
-            variant="outlined"
-            onClick={() => setOpenedFilter(true)}
-            disabled={isEmptyList()}
-          >
-            <Vector />
-            More Filters
-          </ButtonKit>
+          <div>
+            <ButtonKit
+              className="more-filter"
+              variant="outlined"
+              onClick={() => setOpenedFilter(true)}
+              disabled={isEmptyList()}
+            >
+              <Vector />
+              More Filters
+            </ButtonKit>
+          </div>
         </div>
       </TypographyKit>
       {renderTable()}
@@ -296,8 +356,8 @@ const Planning = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}

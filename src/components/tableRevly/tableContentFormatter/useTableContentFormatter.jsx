@@ -11,7 +11,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
-        {!r[h.id] ? '-' : r[h.id]}
+        {r[h.id] === null ? '-' : r[h.id]}
       </span>
     </TableCellKit>
   );
@@ -49,8 +49,11 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
-        {r[h.id]}%
+      <span
+        className={r[h.id] !== null ? 'competition-table-alert' : ''}
+        style={{ whiteSpace: 'nowrap' }}
+      >
+        {r[h.id] === null ? '-' : `${r[h.id]}%`}
       </span>
     </TableCellKit>
   );
@@ -72,7 +75,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
       <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
-        {r[h.id] * 10}%
+        {r[h.id] * 100}%
       </span>
     </TableCellKit>
   );

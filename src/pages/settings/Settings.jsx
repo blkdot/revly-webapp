@@ -15,6 +15,8 @@ import TabsKit from '../../kits/tabs/TabsKit';
 import BoxKit from '../../kits/box/BoxKit';
 
 import MenuIcon from '../../assets/icons/MenuIcon';
+import CostIcon from '../../assets/icons/CostIcon';
+import Cost from '../../components/settings/cost/Cost';
 
 const Settings = () => {
   const [currentTab, setCurrentTab] = useState('general');
@@ -82,6 +84,21 @@ const Settings = () => {
         </div>
       ),
       component: <Menu />,
+      subtitle: (
+        <p className="subtitle">
+          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
+          vivamus risus.
+        </p>
+      ),
+    },
+    {
+      value: 'cost',
+      icon: (
+        <div className="icon-block">
+          <CostIcon className="__icon __menu" />
+        </div>
+      ),
+      component: <Cost />,
       subtitle: (
         <p className="subtitle">
           Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa

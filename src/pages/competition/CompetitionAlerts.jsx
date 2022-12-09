@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import PaperKit from '../../kits/paper/PaperKit';
@@ -8,7 +9,6 @@ import useVendors from '../../hooks/useVendors';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import competitorIcon from '../../assets/images/ic_competitor.png';
-import useDate from '../../hooks/useDate';
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
@@ -27,7 +27,7 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -39,10 +39,9 @@ const CompetitionAlerts = () => {
   const [loading, setLoading] = useState(true);
   const { getAlerts, getCompetitors } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
-  const { date } = useDate();
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const { userPlatformData } = usePlatform();
 
@@ -76,28 +75,48 @@ const CompetitionAlerts = () => {
       label: 'Alert',
     },
     {
+      id: 'start_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Starting Date',
+    },
+    {
+      id: 'end_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ending Date',
+    },
+    {
+      id: 'start_hour',
+      numeric: false,
+      disablePadding: true,
+      label: 'Starting Hour',
+    },
+    {
+      id: 'end_hour',
+      numeric: false,
+      disablePadding: true,
+      label: 'Ending Hour',
+    },
+    {
       id: 'status',
       numeric: false,
       disablePadding: true,
       label: 'Status',
     },
-    {
-      id: 'mov',
-      numeric: false,
-      disablePadding: true,
-      label: 'Minimum Order Value',
-    },
   ];
 
-  const { renderPercent, renderCurrency, renderStatus, renderSimpleRow } =
-    useTableContentFormatter();
+  const { renderPercent, renderStatus, renderSimpleRow } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
     type: renderSimpleRow,
     alert: renderPercent,
+    start_date: renderSimpleRow,
+    end_date: renderSimpleRow,
+    start_hour: renderSimpleRow,
+    end_hour: renderSimpleRow,
     status: renderStatus,
-    mov: renderCurrency,
   };
 
   useEffect(() => {
@@ -122,22 +141,26 @@ const CompetitionAlerts = () => {
         master_email: user.email,
         access_token: user.accessToken,
         vendors: vend || {},
+        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       };
-
       const alerts = await getAlerts(body, plat);
 
       const comp = await getCompetitors(body, plat);
 
-      const filt = alerts.data?.data.map((v) => ({
-        name: v.vendor_name,
-        type: v.discount_type,
-        alert: v.discount,
-        mov: v.mov ?? 0,
-        start_date: v.start_date,
-        status: v.status === 'Live' ? 'active' : 'inactive',
-        id: v.vendor_id,
-      }));
-
+      const filt = alerts.data?.data
+        .map((v) => ({
+          name: v.vendor_name,
+          type: v.discount_type,
+          alert: v.discount,
+          start_date: v.start_date,
+          end_date: v.end_date,
+          start_hour: v.start_hour,
+          end_hour: v.end_hour,
+          status: v.status,
+          id: v.vendor_id,
+        }))
+        .sort((a, b) => a.status - b.status);
       setCompetitionAlertsData(filt || []);
 
       setCompetitorList(comp.data ? comp.data.data : []);
@@ -194,8 +217,8 @@ const CompetitionAlerts = () => {
   return (
     <div className="wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}
@@ -203,7 +226,12 @@ const CompetitionAlerts = () => {
             vendorsPlatform={Object.keys(vendorsObj)}
           />
         )}
-        <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+        <Dates
+          defaultTypeDate="day"
+          defaultTitle="today"
+          beforePeriodBtn={beforePeriodBtn}
+          setbeforePeriodBtn={setbeforePeriodBtn}
+        />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
         Competition - Alerts

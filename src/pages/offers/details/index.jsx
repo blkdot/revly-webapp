@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { format } from 'date-fns';
 import MenuItem from './MenuItem';
 import Dates from '../../../components/dates/Dates';
 import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -14,10 +14,9 @@ import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
 import Warning from '../../../assets/icons/Warning';
 import Calendar from '../../../assets/icons/Calendar';
-
+import Trash from '../../../assets/icons/Trash';
 import Timer from '../../../assets/icons/Timer';
 import ExpandIcon from '../../../assets/icons/ExpandIcon';
-import Trash from '../../../assets/icons/Trash';
 import FastFood from '../../../assets/icons/FastFood';
 
 import { platformObject } from '../../../data/platformList';
@@ -30,6 +29,9 @@ import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import useVendors from '../../../hooks/useVendors';
 import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
+import { getPlanningOfferDetails } from '../../../api/userApi';
+import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+import SkeletonKit from '../../../kits/skeleton/SkeletonKit';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -44,23 +46,23 @@ const OfferDetailComponent = () => {
     state: { offerDetail: data, prevPath },
   } = useLocation();
   const [offerDetail, setOfferDetail] = useState(data);
+  // eslint-disable-next-line
+  const [offerDetailMaster, setofferDetailMaster] = useState({});
   const navigate = useNavigate();
   const {
     userPlatformData: { platforms },
   } = usePlatform();
-  // const { user } = useUserAuth();
-  const { cancelOffer } = useApi();
+  const { cancelOffer, cancelOfferMaster } = useApi();
   const { environment } = config;
   const { user } = useUserAuth();
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
   const [active, setActive] = useState(false);
-
   const renderOfferStatus = (status) => {
     const statusColor = {
       cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
@@ -72,22 +74,29 @@ const OfferDetailComponent = () => {
       default: ['#161C24', 'rgba(145, 158, 171, 0.12)'],
     };
     return (
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <span className="offer-title">Offer Status :</span>
-        <span
-          className="offer-status"
-          style={{
-            color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
-            backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
-          }}
-        >
-          {status}
-        </span>
+
+        {status ? (
+          <span
+            className="offer-status"
+            style={{
+              color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
+              backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
+            }}
+          >
+            {status}
+          </span>
+        ) : (
+          <span>
+            <SkeletonKit width={70} height={30} />
+          </span>
+        )}
       </div>
     );
   };
   const renderPlatform = (platform) => (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <span className="offer-title">Platform :</span>
       <span className="offer-sub-title">
         <img
@@ -105,8 +114,8 @@ const OfferDetailComponent = () => {
     discount_rate,
     discount_type,
     end_date,
-    master_id,
-    menu_items,
+    master_offer_id,
+    // offerDetailMaster_items,
     minimum_order_value,
     platform,
     start_date,
@@ -116,47 +125,79 @@ const OfferDetailComponent = () => {
     offer_id,
     type_schedule,
   } = offerDetail;
-
   const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
   const chain_id = vendor ? vendor.chain_id : '';
 
   const openCancelModal = () => setIsOpen(true);
 
-  const handleCancelOffer = () => {
-    cancelOffer(
+  const handleCancelOfferMaster = () => {
+    cancelOfferMaster(
       {
         master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
-        access_token: '',
+        access_token: user?.access_token || '',
         platform_token: platforms[platform].access_token,
         vendors: [vendor],
-        offer_id,
+        offer_id: offer_id || null,
         chain_id,
+        master_offer_id,
       },
       platform,
-    ).then((res) => {
-      setOfferDetail({ ...offerDetail, status: res.data.status });
+    ).then(() => {
+      setOfferDetail({ ...offerDetail, status: 'Cancelled' });
+      setofferDetailMaster({
+        ...offerDetailMaster,
+        master_offer: { offer_status: 'Cancelled' },
+      });
       setIsOpen(false);
     });
   };
-
+  const handleCancelOffer = (offerId, setState) => {
+    cancelOffer(
+      {
+        master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+        access_token: user?.access_token || '',
+        platform_token: platforms[platform].access_token,
+        vendors: [vendor],
+        offer_id: offerId,
+        chain_id,
+        master_offer_id,
+      },
+      platform,
+    );
+    setState(false);
+  };
   const OpenSetup = () => {
     const body = document.querySelector('body');
     setActive(true);
     body.style.overflowY = 'hidden';
   };
 
+  useEffect(() => {
+    getPlanningOfferDetails({
+      master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+      access_token: user?.access_token || '',
+      vendors: vendorsObj,
+      platform,
+      master_offer_id,
+    })
+      .then((res) => setofferDetailMaster(res.data))
+      // eslint-disable-next-line no-console
+      .catch((err) => console.log({ err }));
+  }, [vendors]);
+
   return (
     <>
       <CancelOfferModal
         modalIsOpen={modalIsOpen}
         setIsOpen={setIsOpen}
-        cancelOffer={handleCancelOffer}
+        cancelOffer={handleCancelOfferMaster}
+        platform={platform}
       />
       <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
         <div className="top-inputs">
-          {display ? (
-            <RestaurantDropdown />
+          {Object.keys(display).length > 0 ? (
+            <RestaurantDropdown chainObj={chainObj} />
           ) : (
             <RestaurantDropdownOld
               restaurants={restaurants}
@@ -195,7 +236,9 @@ const OfferDetailComponent = () => {
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
               <div>
-                {['Live', 'Active', 'Scheduled'].includes(status) && (
+                {['Live', 'Active', 'Scheduled'].includes(
+                  offerDetailMaster?.master_offer?.offer_status,
+                ) && (
                   <button onClick={openCancelModal} className="cancel-btn" type="button">
                     <Warning />
                     <span style={{ color: '#FF4842' }}>Cancel Offer</span>
@@ -211,7 +254,7 @@ const OfferDetailComponent = () => {
                 </div>
               </div>
               <div className="offer">
-                {renderOfferStatus(status)}
+                {renderOfferStatus(offerDetailMaster?.master_offer?.offer_status)}
                 <div>
                   <span className="offer-title">Offer Date :</span>
                   <span className="offer-sub-title">{start_date}</span>
@@ -220,59 +263,79 @@ const OfferDetailComponent = () => {
               </div>
             </div>
             {status !== 'Scheduled' && (
-              <div className="offer-visibility-container">
-                {/* <div className="offer-visibility-block">
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span className="offer-visibility-title with-icon">Caroussel Visibility</span>
-                <ArrowDown />
-              </div>
-              <div className="offer-visibility-sub-title">Caroussel</div>
-            </div> */}
-                {/* <div className="offer-visibility-block">
-              <div>
-                <span className="offer-visibility-title">Visibility Rank</span>
-              </div>
-              <div className="offer-visibility-sub-title">{offerData?.accrued_discount}</div>
-            </div> */}
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">#Orders</span>
+              <div className="offer-visibility-container-scroll">
+                <div className="offer-visibility-container">
+                  <div className="offer-visibility-block">
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span className="offer-visibility-title with-icon">Caroussel Visibility</span>
+                      <Arrow />
+                    </div>
+                    <div className="offer-visibility-sub-title">Caroussel</div>
                   </div>
-                  <div className="offer-visibility-sub-title">{offerData?.n_orders || '-'}</div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Avg Basket</span>
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Visibility Rank</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.accrued_discount === null || offerData === null
+                        ? '-'
+                        : offerData.accrued_discount}
+                    </div>
                   </div>
-                  <div className="offer-visibility-sub-title">
-                    {offerData?.average_basket || '-'}
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">#Orders</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.n_orders === null || offerData === null
+                        ? '-'
+                        : offerData.n_orders}
+                    </div>
                   </div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Roi</span>
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Avg Basket</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.average_basket === null || offerData === null
+                        ? '-'
+                        : offerData.average_basket}
+                    </div>
                   </div>
-                  <div className="offer-visibility-sub-title">{offerData?.roi || '-'}</div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Revenue</span>
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Roi</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.roi === null || offerData === null ? '-' : offerData.roi}
+                    </div>
                   </div>
-                  <div className="offer-visibility-sub-title">{offerData?.revenue || '-'}</div>
-                </div>
-                <div className="offer-visibility-block">
-                  <div>
-                    <span className="offer-visibility-title">Profits</span>
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Revenue</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData?.revenue === null || offerData === null ? '-' : offerData.revenue}
+                    </div>
                   </div>
-                  <div className="offer-visibility-sub-title">
-                    {(offerData && (offerData.revenue - offerData.accrued_discount).toFixed(2)) ||
-                      '-'}
+                  <div className="offer-visibility-block">
+                    <div>
+                      <span className="offer-visibility-title">Profits</span>
+                    </div>
+                    <div className="offer-visibility-sub-title">
+                      {offerData === null ||
+                      (offerData?.revenue === null && offerData?.accrued_discount === null)
+                        ? '-'
+                        : ((offerData?.revenue || 0) - (offerData?.accrued_discount || 0)).toFixed(
+                            2,
+                          )}
+                    </div>
                   </div>
                 </div>
               </div>
             )}
-            {master_id && (
-              <>
+            {master_offer_id && (
+              <div>
                 <div className="offer-duration-container">
                   <div className="offer-duration-block">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -288,18 +351,13 @@ const OfferDetailComponent = () => {
                       <span className="offer-duration width-left-icon width-right-icon">
                         Program the offer duration
                       </span>
-                      <ExpandIcon />
+                      {scheduleTypeMapping[type_schedule] ? <ExpandIcon /> : ''}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span className="offer-duration  width-right-icon">
                         {scheduleTypeMapping[type_schedule] || ''}
                       </span>
-                      {/*                       <ExpandIcon />
-                       */}
                     </div>
-                    {/* <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span className="offer-duration">Monday, Thursday, Sunday</span>
-                    </div> */}
                   </div>
                   <div
                     style={{
@@ -378,18 +436,30 @@ const OfferDetailComponent = () => {
                   </div>
                 </div>
 
-                {/* <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '20px',
-                    background: '#F9FAFB',
-                  }}>
-                  <TimeSlot status={status} />
-                  <TimeSlot status={status} />
-                  <TimeSlot status={status} />
-                </div> */}
-              </>
+                {Object.keys(offerDetailMaster?.children_offers || {}).length === 0 &&
+                Object.keys(offerDetailMaster?.master_offer || {}).length === 0 ? (
+                  <div className="offerdetails_time_slots" style={{ width: '100%' }}>
+                    <SpinnerKit />
+                  </div>
+                ) : (
+                  <div className="offerdetails_time_slots_scroll">
+                    {Object.keys(offerDetailMaster.children_offers).length === 0 ? (
+                      ''
+                    ) : (
+                      <div style={{ width: 'fit-content' }} className="offerdetails_time_slots">
+                        {Object.keys(offerDetailMaster?.children_offers || {}).map((id) => (
+                          <TimeSlot
+                            handleCancelOffer={handleCancelOffer}
+                            key={id}
+                            data={offerDetailMaster.children_offers[id]}
+                            status={status}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
             <div className="offer-duration-container">
               <div className="offer-duration-block">
@@ -406,10 +476,10 @@ const OfferDetailComponent = () => {
                   </div>
                   <span className="offer-duration width-left-icon width-right-icon">
                     {discount_type && discount_type !== 'Menu discount'
-                      ? 'Offer on an item from the Menu'
-                      : 'Offer on the whole Menu'}
+                      ? 'Offer on an item from the menu'
+                      : 'Offer on the whole menu'}
                   </span>
-                  <ExpandIcon />
+                  {discount_type && discount_type !== 'Menu discount' ? <ExpandIcon /> : ''}
                 </div>
                 {discount_type && discount_type !== 'Menu discount' && (
                   <div
@@ -503,10 +573,13 @@ const OfferDetailComponent = () => {
             </div>
             {discount_type &&
               discount_type !== 'Menu discount' &&
-              (menu_items || []).map((menuItem) => (
+              [
+                { drn_id: 'e8cee7b9-f191-4392-8f53-8d019ee02c41' },
+                { drn_id: '5a9e1ab0-69a2-48b8-bed3-2858b5b9aa1d' },
+              ].map((menuItem) => (
                 <MenuItem
                   key={menuItem.drn_id}
-                  itemId={menuItem.id}
+                  drnId={menuItem.drn_id}
                   discountRate={discount_rate}
                   platform={platform}
                   vendorId={vendor_id}
@@ -518,104 +591,154 @@ const OfferDetailComponent = () => {
     </>
   );
 };
-
 export default OfferDetailComponent;
 
 // eslint-disable-next-line no-unused-vars
-const TimeSlot = ({ status }) => (
-  <div
-    style={{
-      display: 'flex',
-      flex: '1',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      minHeight: '40px',
-      borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
-    }}
-  >
+const TimeSlot = ({ data, handleCancelOffer, status }) => {
+  const [active, setActive] = useState(true);
+  return (
     <div
       style={{
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        height: '100%',
+        marginLeft: '30px',
+        width: '200px',
+        borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
       }}
     >
-      <span
+      <div
         style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '400',
-          fontSize: '12px',
-          lineHeight: '18px',
-          color: '#212B36',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        Start date
-      </span>
-      <span
-        style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '600',
-          fontSize: '14px',
-          lineHeight: '22px',
-          textAlign: 'center',
-          color: '#212B36',
-        }}
-      >
-        10 am
-      </span>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            height: 'fit-content',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '400',
+              fontSize: '12px',
+              lineHeight: '18px',
+              color: '#212B36',
+            }}
+          >
+            Date
+          </span>
+          <span
+            style={{
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              fontSize: '14px',
+              lineHeight: '22px',
+              textAlign: 'center',
+              color: '#212B36',
+            }}
+          >
+            {new Date(data.start_date).toLocaleDateString() ===
+            new Date(data.end_date).toLocaleDateString()
+              ? data.start_date
+              : `${data.start_date} - ${data.end_date}`}
+          </span>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            minHeight: '40px',
+            gridGap: '15px',
+            maxWidth: '100%',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '400',
+                fontSize: '12px',
+                lineHeight: '18px',
+                color: '#212B36',
+              }}
+            >
+              Start time
+            </span>
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '600',
+                fontSize: '14px',
+                lineHeight: '22px',
+                textAlign: 'center',
+                color: '#212B36',
+              }}
+            >
+              {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
+            </span>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              height: '100%',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '400',
+                fontSize: '12px',
+                lineHeight: '18px',
+                color: '#212B36',
+              }}
+            >
+              End time
+            </span>
+            <span
+              style={{
+                fontFamily: 'Public Sans',
+                fontStyle: 'normal',
+                fontWeight: '600',
+                fontSize: '14px',
+                lineHeight: '22px',
+                textAlign: 'center',
+                color: '#212B36',
+              }}
+            >
+              {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
+            </span>
+          </div>
+        </div>
+      </div>
+      {['Live', 'Active', 'Scheduled'].includes(data.offer_status) && active ? (
+        <span className="cancel_api">
+          <Trash onClick={() => handleCancelOffer(data.offer_id, setActive)} />
+        </span>
+      ) : (
+        ''
+      )}
     </div>
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: '100%',
-      }}
-    >
-      <span
-        style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '400',
-          fontSize: '12px',
-          lineHeight: '18px',
-          color: '#212B36',
-        }}
-      >
-        End date
-      </span>
-      <span
-        style={{
-          fontFamily: 'Public Sans',
-          fontStyle: 'normal',
-          fontWeight: '600',
-          fontSize: '14px',
-          lineHeight: '22px',
-          textAlign: 'center',
-          color: '#212B36',
-        }}
-      >
-        10 am
-      </span>
-    </div>
-    {['Active', 'Scheduled'].includes(status) && (
-      <button
-        type="button"
-        className="trash-btn"
-        style={{
-          border: 'solid 1px #FF4842',
-          background: 'rgba(255, 72, 66, 0.08)',
-          padding: '3px',
-          borderRadius: '50px',
-          cursor: 'pointer',
-        }}
-      >
-        <Trash />
-      </button>
-    )}
-  </div>
-);
+  );
+};

@@ -139,6 +139,94 @@ const MarketingOfferFilter = (props) => {
     );
   };
 
+  const renderDiscountType = () => {
+    if (!filtersHead.discount_type || filtersHead.discount_type.length < 1) return null;
+
+    return (
+      <>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            marginTop: '2rem',
+            flexDirection: 'column',
+          }}
+        >
+          <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
+            <Tag /> Discount Type
+          </span>
+          <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+            {filtersHead.discount_type.map((item) => (
+              <div
+                key={item.value}
+                style={{
+                  display: 'flex',
+                  alignSelf: 'center',
+                  fontWeight: 'bold',
+                  marginRight: '1rem',
+                  marginTop: '1rem',
+                  width: '80%',
+                }}
+              >
+                <CheckboxKit
+                  checked={filters.discount_type.includes(item.value)}
+                  onChange={() => handleChangeMultipleFilter('discount_type')(item.value)}
+                />
+                <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <hr />
+      </>
+    );
+  };
+
+  const renderDiscountAmount = () => {
+    if (!filtersHead.discount_rate || filtersHead.discount_rate.length < 1) return null;
+
+    return (
+      <>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            marginTop: '2rem',
+            flexDirection: 'column',
+          }}
+        >
+          <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
+            <Tag /> Discount Amount %
+          </span>
+          <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+            {filtersHead.discount_rate.map((item) => (
+              <div
+                key={item.value}
+                style={{
+                  display: 'flex',
+                  alignSelf: 'center',
+                  fontWeight: 'bold',
+                  marginRight: '1rem',
+                  marginTop: '1rem',
+                  width: '18%',
+                }}
+              >
+                <CheckboxKit
+                  checked={filters.discount_rate.includes(item.value)}
+                  onChange={() => handleChangeMultipleFilter('discount_rate')(item.value)}
+                />
+                <span style={{ display: 'flex', alignItems: 'center' }}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <hr />
+      </>
+    );
+  };
+
   return (
     <div
       role="presentation"
@@ -190,76 +278,8 @@ const MarketingOfferFilter = (props) => {
           </div>
         </div>
         <hr />
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            marginTop: '2rem',
-            flexDirection: 'column',
-          }}
-        >
-          <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
-            <Tag /> Discount Type
-          </span>
-          <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.discount_type.map((item) => (
-              <div
-                key={item.value}
-                style={{
-                  display: 'flex',
-                  alignSelf: 'center',
-                  fontWeight: 'bold',
-                  marginRight: '1rem',
-                  marginTop: '1rem',
-                  width: '80%',
-                }}
-              >
-                <CheckboxKit
-                  checked={filters.discount_type.includes(item.value)}
-                  onChange={() => handleChangeMultipleFilter('discount_type')(item.value)}
-                />
-                <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <hr />
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            marginTop: '2rem',
-            flexDirection: 'column',
-          }}
-        >
-          <span style={{ fontSize: '13px', fontWeight: 'bold' }}>
-            <Tag /> Discount Amount %
-          </span>
-          <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.discount_rate.map((item) => (
-              <div
-                key={item.value}
-                style={{
-                  display: 'flex',
-                  alignSelf: 'center',
-                  fontWeight: 'bold',
-                  marginRight: '1rem',
-                  marginTop: '1rem',
-                  width: '18%',
-                }}
-              >
-                <CheckboxKit
-                  checked={filters.discount_rate.includes(item.value)}
-                  onChange={() => handleChangeMultipleFilter('discount_rate')(item.value)}
-                />
-                <span style={{ display: 'flex', alignItems: 'center' }}>{item.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <hr />
+        {renderDiscountType()}
+        {renderDiscountAmount()}
         <div
           style={{
             display: 'flex',

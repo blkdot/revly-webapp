@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { HashLink } from 'react-router-hash-link';
 import { pascalCase } from 'change-case';
 import _ from 'lodash';
 
 import './Marketing.scss';
+import { endOfMonth, endOfWeek } from 'date-fns';
 
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -43,10 +43,19 @@ const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { date: dateContext } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const getOfferDate = () => {
+    if (dateContext.typeDate === 'month') {
+      return endOfMonth(new Date(dateContext.beforePeriod.endDate));
+    }
+    if (dateContext.typeDate === 'week') {
+      return endOfWeek(new Date(dateContext.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return dateContext.beforePeriod.endDate;
+  };
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: dateContext.beforePeriod.startDate,
-    endDate: dateContext.beforePeriod.endDate,
+    endDate: getOfferDate(),
   });
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
@@ -336,22 +345,23 @@ const MarketingOffer = () => {
   };
 
   const handleRowClick = (id) => {
-    const rowId = id.split('_');
-
-    navigate(`/offer/detail/${rowId[1]}`, {
+    navigate(`/offer/detail/${id}`, {
       state: {
         // eslint-disable-next-line eqeqeq
-        offerDetail: offers.find((o) => o.offer_id == rowId[1]),
+        offerDetail: offers.find((o) => o.master_offer_id == id),
         prevPath: location.pathname,
       },
     });
   };
-
+  const scrollToPos = (pos) => {
+    const cont = document.querySelector('#tableContainer');
+    cont?.scrollTo(pos, 0);
+  };
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}
@@ -384,21 +394,21 @@ const MarketingOffer = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
+              className={`right-part-header_link marketing ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#start_date_header">
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(0)}>
                 <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
-              </HashLink>
-              <HashLink to="#data.revenue_header">
+              </div>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1300)}>
                 <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
                 </BoxKit>
-              </HashLink>
+              </div>
             </TypographyKit>
           </div>
         </div>
@@ -432,15 +442,17 @@ const MarketingOffer = () => {
                 maxShowned={5}
               />
             </div>
-            <ButtonKit
-              className="more-filter"
-              variant="outlined"
-              onClick={() => setOpenedFilter(true)}
-              disabled={isEmptyList()}
-            >
-              <Vector />
-              More Filters
-            </ButtonKit>
+            <div>
+              <ButtonKit
+                className="more-filter"
+                variant="outlined"
+                onClick={() => setOpenedFilter(true)}
+                disabled={isEmptyList()}
+              >
+                <Vector />
+                More Filters
+              </ButtonKit>
+            </div>
           </div>
         </TypographyKit>
         <TableRevly

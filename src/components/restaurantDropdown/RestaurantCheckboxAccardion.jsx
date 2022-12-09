@@ -10,12 +10,12 @@ const RestaurantCheckboxAccordion = ({
   handleChange,
   handleChangeVendor,
   chainObj,
+  branch,
+  cost,
 }) => {
   const [active, setActive] = useState(false);
-  const getChecked = () => {
-    const arr = Object.keys(chainObj[chainName]).map((n) => chainObj[chainName][n].checked);
-    return arr.every((bool) => bool === true);
-  };
+  const getChecked = () =>
+    Object.values(chainObj[chainName] || {}).length === Object.values(info).length;
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       <div
@@ -33,12 +33,16 @@ const RestaurantCheckboxAccordion = ({
             src={selectIcon}
             alt="select icon"
           />
-          <CheckboxKit
-            checked={getChecked()}
-            onClick={(e) => e.stopPropagation()}
-            value={chainName}
-            onChange={(e) => handleChange(e)}
-          />
+          {!cost ? (
+            <CheckboxKit
+              checked={getChecked()}
+              onClick={(e) => e.stopPropagation()}
+              value={chainName}
+              onChange={(e) => handleChange(e.target.value, e.target.checked)}
+            />
+          ) : (
+            <span style={{ height: 40 }} />
+          )}
           {chainName}
         </div>
         <ExpandMoreIcon />
@@ -47,9 +51,8 @@ const RestaurantCheckboxAccordion = ({
         <InputLabelKit key={vendorName} className={`accordion-dropdown ${active ? 'active' : ''}`}>
           <div>
             <CheckboxKit
-              checked={
-                chainObj[chainName]?.checked ? true : chainObj[chainName][vendorName]?.checked
-              }
+              disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
+              checked={!!chainObj?.[chainName]?.[vendorName]}
               onChange={(e) => handleChangeVendor(e, chainName)}
               value={vendorName}
               onClick={(e) => e.stopPropagation()}

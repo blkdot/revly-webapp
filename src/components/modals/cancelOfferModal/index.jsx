@@ -22,22 +22,18 @@ const customStyles = {
     boxShadow: '-40px 40px 80px -8px rgba(0, 0, 0, 0.24)',
     borderRadius: '16px',
     border: 'none',
+    overflow: 'hidden',
   },
 };
 
-const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
+const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer, platform }) => {
   const closeModal = () => {
     setIsOpen(false);
   };
 
   return (
     <div>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Cancel Offer"
-      >
+      <Modal isOpen={modalIsOpen} style={customStyles} contentLabel="Cancel Offer">
         <div>
           <div
             style={{
@@ -87,8 +83,8 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer }) => {
                 color: '#637381',
               }}
             >
-              Amet, morbi egestas ultrices id non a. Est morbi consequat quis ac, duis elit,
-              eleifend. Tellus diam mi phasellus facilisi id iaculis egestas.
+              This offer will be cancelled on {platform} and metrics as well as KPIs will be saved
+              and made available through Revly.
             </p>
           </div>
           <div style={{ display: 'flex', marginTop: '36px', justifyContent: 'flex-end' }}>

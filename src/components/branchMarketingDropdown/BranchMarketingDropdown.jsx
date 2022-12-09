@@ -29,11 +29,8 @@ const BranchMarketingDropdown = ({
     },
   };
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setRow(value);
+  const handleChange = ({ target }) => {
+    setRow(target.value);
   };
 
   return (

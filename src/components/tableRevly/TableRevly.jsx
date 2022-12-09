@@ -23,7 +23,6 @@ const TableRevly = (props) => {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-
   const renderSkeleton = () =>
     [1, 2, 3, 4, 5].map((n) => (
       <TableRowKit key={n}>
@@ -58,11 +57,14 @@ const TableRevly = (props) => {
 
   const renderRowsContent = () =>
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit className="marketing-table-top" onClick={handleRowClick(r.id)} key={r.id}>
+      <TableRowKit
+        className="marketing-table-top"
+        onClick={handleRowClick(r.data.master_offer_id)}
+        key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
+      >
         {headers.map((h) => r[h.id])}
       </TableRowKit>
     ));
-
   return (
     <BoxKit className="competition-box" sx={{ width: '100%' }}>
       <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>

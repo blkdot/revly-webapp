@@ -54,7 +54,11 @@ const MarketingPlaceholderDropdown = ({
       if (type === 'sm-rule-arrow') {
         rowArr.splice(indexArr, 1, { ...rowArr[indexArr], arrow: value });
         setPersonName([...rowArr]);
-      } else if (type !== 'sm-rule-arrow' && type !== 'sm-rule-order') {
+      } else if (
+        type !== 'sm-rule-arrow' &&
+        type !== 'sm-rule-order' &&
+        type !== 'sm-rule-reletion'
+      ) {
         setPersonName(value);
       }
     }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { HashLink } from 'react-router-hash-link';
 import { pascalCase } from 'change-case';
-
+import { endOfMonth, endOfWeek } from 'date-fns';
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -26,7 +25,6 @@ import useVendors from '../../hooks/useVendors';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import Layers from '../../assets/icons/Layers';
-import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
@@ -34,10 +32,19 @@ const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
   const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display } = vendors;
+  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
+  };
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
+    endDate: getOfferDate(),
   });
   const [scrollPosition, setScrollPosition] = useState(0);
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
@@ -49,96 +56,52 @@ const MarketingAds = () => {
     renderStatus,
     renderTarget,
     renderSimpleRow,
+    renderSimpleRowNotCentered,
+    renderScheduleType,
+    renderCalculatedPercent,
   } = useTableContentFormatter();
 
   const headersAds = [
-    {
-      id: 'vendor_name',
-      numeric: false,
-      disablePadding: false,
-      label: 'Branche',
-    },
-    {
-      id: 'start_date',
-      numeric: false,
-      disablePadding: true,
-      label: 'Date',
-    },
-    {
-      id: 'platform',
-      numeric: true,
-      disablePadding: false,
-      label: 'Platfrom',
-    },
-    {
-      id: 'discount_type',
-      numeric: true,
-      disablePadding: false,
-      label: 'Discount Type',
-    },
-    {
-      id: 'discount_rate',
-      numeric: true,
-      disablePadding: false,
-      label: '%',
-    },
-    {
-      id: 'minimum_order_value',
-      numeric: true,
-      disablePadding: false,
-      label: 'Min Order',
-    },
-    {
-      id: 'target',
-      numeric: true,
-      disablePadding: false,
-      label: 'Target',
-    },
-    {
-      id: 'status',
-      numeric: true,
-      disablePadding: false,
-      label: 'Status',
-    },
-    {
-      id: 'data.n_orders',
-      numeric: true,
-      disablePadding: false,
-      label: '#Orders',
-    },
-    {
-      id: 'data.average_basket',
-      numeric: true,
-      disablePadding: false,
-      label: 'Avg Basket',
-    },
-    {
-      id: 'data.roi',
-      numeric: true,
-      disablePadding: false,
-      label: 'ROI',
-    },
-    {
-      id: 'data.revenue',
-      numeric: true,
-      disablePadding: false,
-      label: 'Revenue',
-    },
+    { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
+    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
+    { id: 'start_date', disablePadding: true, label: 'Start date' },
+    { id: 'end_date', disablePadding: true, label: 'End date' },
+    { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
+    { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
+    { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
+    { id: 'new_customers_count', disablePadding: true, label: 'New customers' },
+    { id: 'orders_count', disablePadding: true, label: 'Orders' },
+    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
+    { id: 'spend', disablePadding: true, label: 'Spend' },
+    { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
+    { id: 'total_budget', disablePadding: true, label: 'Total budget' },
+    { id: 'ad_status', disablePadding: true, label: 'Status' },
   ];
 
   const cellTemplatesObject = {
-    vendor_name: renderSimpleRow,
+    vendor_name: renderSimpleRowNotCentered,
     platform: renderPlatform,
     start_date: renderSimpleRow,
+    end_date: renderSimpleRow,
+    type_schedule: renderScheduleType,
+    slot_schedule: renderSimpleRow,
     discount_type: renderSimpleRow,
     discount_rate: renderPercent,
+    minimum_order_value: renderCurrency,
+    attributed_order_value: renderCurrency,
     target: renderTarget,
-    minimum_order_value: renderSimpleRow,
     status: renderStatus,
-    'data.n_orders': renderSimpleRow,
-    'data.average_basket': renderSimpleRow,
-    'data.roi': renderSimpleRow,
-    'data.revenue': renderCurrency,
+    ad_status: renderStatus,
+    ad_serving_count: renderSimpleRow,
+    clicks_count: renderSimpleRow,
+    conversion_rate: renderCalculatedPercent,
+    new_customers_count: renderSimpleRow,
+    orders_count: renderSimpleRow,
+    remaining_budget: renderCurrency,
+    return_on_ad_spent: renderCurrency,
+    spend: renderCurrency,
+    total_budget: renderCurrency,
   };
 
   const [selected, setSelected] = useState([]);
@@ -151,11 +114,22 @@ const MarketingAds = () => {
     const position = cont.scrollLeft;
     setScrollPosition(position);
   };
+
+  const scrollToPos = (pos) => {
+    const cont = document.querySelector('#tableContainer');
+    cont?.scrollTo(pos, 0);
+  };
   const [adsData, setAdsData] = useState(AdsTableData);
   const [adsFilteredData, setAdsFilteredData] = useState(AdsTableData);
 
-  const [filters, setFilters] = useState(defaultFilterStateFormat);
-  const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
+  const [filters, setFilters] = useState({
+    platform: [],
+    status: [],
+  });
+  const [filtersHead, setFiltersHead] = useState({
+    platform: [],
+    status: [],
+  });
 
   useEffect(() => {
     setAdsData(ads);
@@ -183,34 +157,19 @@ const MarketingAds = () => {
   useEffect(() => {
     const preHead = adsData.reduce(
       (acc, cur) => {
-        const {
-          platform,
-          discount_type: discountType,
-          discount_rate: procent,
-          status,
-          target,
-        } = acc;
+        const { platform, status } = acc;
 
         if (!platform.includes(cur.platform)) platform.push(cur.platform);
 
-        if (!discountType.includes(cur.discount_type)) discountType.push(cur.discount_type);
-
-        if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
-
-        if (!status.includes(cur.status)) status.push(cur.status);
-
-        if (!status.includes(cur.status)) status.push(cur.status);
+        if (!status.includes(cur.status)) status.push(cur.ad_status);
 
         return {
           ...acc,
           platform,
-          discount_type: discountType,
-          discount_rate: procent,
           status,
-          target,
         };
       },
-      { discount_type: [], platform: [], discount_rate: [], status: [], target: [] },
+      { platform: [], status: [] },
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
@@ -218,17 +177,11 @@ const MarketingAds = () => {
       text: renderPlatformInsideFilter(s),
     }));
 
-    const preHeadDiscountType = preHead.discount_type.map((s) => ({ value: s, text: s }));
-    const preHeadTarget = preHead.target.map((s) => ({ value: s, text: s }));
-    const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
-      discount_type: preHeadDiscountType,
-      discount_rate: preHeadProcent,
       status: preHeadStatus,
-      target: preHeadTarget,
     });
   }, [JSON.stringify(adsData)]);
 
@@ -239,22 +192,9 @@ const MarketingAds = () => {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
     }
 
-    if (filters.discount_type.length > 0) {
-      filteredData = filteredData.filter((f) => filters.discount_type.includes(f.discount_type));
-    }
-
-    if (filters.discount_rate.length > 0) {
-      filteredData = filteredData.filter((f) => filters.discount_rate.includes(f.discount_rate));
-    }
-
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredData = filteredData.filter((f) => filters.status.includes(f.ad_status));
     }
-
-    if (filters.target.length > 0) {
-      filteredData = filteredData.filter((f) => filters.target.includes(f.target));
-    }
-
     setAdsFilteredData(filteredData);
   }, [JSON.stringify(filters), adsData]);
 
@@ -276,7 +216,6 @@ const MarketingAds = () => {
     });
     setOpened(false);
   };
-
   const renderRowsByHeader = (r) =>
     headersAds.reduce(
       (acc, cur) => ({
@@ -287,7 +226,6 @@ const MarketingAds = () => {
       }),
       {},
     );
-
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
       setFilters(defaultFilterStateFormat);
@@ -322,14 +260,15 @@ const MarketingAds = () => {
       isLoading={isLoadingAds}
       headers={headersAds}
       rows={adsFilteredData.map(renderRowsByHeader)}
+      mainFieldOrdered="start_date"
     />
   );
 
   return (
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
-        {display ? (
-          <RestaurantDropdown />
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             restaurants={restaurants}
@@ -362,21 +301,21 @@ const MarketingAds = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 200 ? 'active' : ''}`}
+              className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
               variant="div"
             >
-              <HashLink to="#start_date_header">
-                <BoxKit className={scrollPosition < 200 ? 'active' : ''}>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(0)}>
+                <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Ads Management
                 </BoxKit>
-              </HashLink>
-              <HashLink to="#data.revenue_header">
-                <BoxKit className={scrollPosition > 200 ? 'active' : ''}>
+              </div>
+              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1500)}>
+                <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Ads Performance
                 </BoxKit>
-              </HashLink>
+              </div>
             </TypographyKit>
           </div>
         </div>
@@ -392,33 +331,18 @@ const MarketingAds = () => {
                 internalIconOnActive={platformObject}
                 maxShowned={1}
               />
-              <FilterDropdown
-                items={filtersHead.discount_type}
-                values={filters.discount_type}
-                onChange={handleChangeMultipleFilter('discount_type')}
-                label="Discount Type"
-                icon={<Tag />}
-                maxShowned={1}
-              />
-              <FilterDropdown
-                items={filtersHead.discount_rate}
-                values={filters.discount_rate}
-                onChange={handleChangeMultipleFilter('discount_rate')}
-                label="Discount Amount"
-                icon={<Tag />}
-                customTag="%"
-                maxShowned={5}
-              />
             </div>
-            <ButtonKit
-              className="more-filter"
-              variant="outlined"
-              onClick={() => setOpenedFilter(true)}
-              disabled={isEmptyList()}
-            >
-              <Vector />
-              More Filters
-            </ButtonKit>
+            <div>
+              <ButtonKit
+                className="more-filter"
+                variant="outlined"
+                onClick={() => setOpenedFilter(true)}
+                disabled={isEmptyList()}
+              >
+                <Vector />
+                More Filters
+              </ButtonKit>
+            </div>
           </div>
         </TypographyKit>
         {getAdsTable()}
