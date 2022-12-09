@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import useApi from './useApi';
 import useDate from './useDate';
-import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function useMetrics() {
@@ -12,7 +11,6 @@ function useMetrics() {
   const { getMetrics } = useApi();
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
-  const { environment } = config;
   const { user } = useUserAuth();
 
   const clonedVendor = { ...vendorsObj };
@@ -21,7 +19,7 @@ function useMetrics() {
   const handleRequest = (date, setMetrics) => {
     let isCancelled = false;
     getMetrics({
-      master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+      master_email: user.email,
       access_token: '',
       vendors: clonedVendor,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
