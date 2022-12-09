@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 
 import './Cost.scss';
 import DropdownSnackbar from './DropdownSnackbar';
@@ -9,7 +9,10 @@ import Invoice from './invoice/Invoice';
 import useCost from '../../../hooks/useCost';
 import useVendors from '../../../hooks/useVendors';
 
+import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+
 const Cost = () => {
+  const queryClient = useQueryClient();
   const [invoice, setInvoice] = useState([]);
   const { vendors } = useVendors();
   const { vendorsObj } = vendors;
@@ -18,18 +21,21 @@ const Cost = () => {
 
   const { data, isLoading, isError } = useQuery(['loadCost'], load);
 
-  const mutateInvoice = useMutation(save, {
-    refetchQueries: ['loadCost'],
+  const mutateInvoice = useMutation({
+    mutationFn: save,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['loadCost'] });
+    },
   });
 
-  if (isLoading) return <span>Loading</span>;
+  if (isLoading)
+    return <SpinnerKit style={{ display: 'flex', margin: 'auto', justifyContent: 'center' }} />;
 
-  if (isError) return <span>Error happened</span>;
+  if (isError)
+    return <div style={{ display: 'flex', justifyContent: 'center' }}>Error Occured</div>;
 
   const handleAdd = async (cost, v) => {
-    const res = await mutateInvoice.mutateAsync({ cost, vendors: v });
-
-    console.log(res);
+    await mutateInvoice.mutateAsync({ cost, vendors: v });
   };
 
   return (
