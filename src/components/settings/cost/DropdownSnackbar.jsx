@@ -7,7 +7,8 @@ import { usePlatform } from '../../../hooks/usePlatform';
 import useVendors from '../../../hooks/useVendors';
 import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
 
-const DropdownSnackbar = ({ setInvoice, invoice }) => {
+const DropdownSnackbar = (props) => {
+  const { onAdd } = props;
   const { vendors } = useVendors();
   const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
   const [procent, setProcent] = useState('');
@@ -55,18 +56,20 @@ const DropdownSnackbar = ({ setInvoice, invoice }) => {
     }
   }, [vendors]);
   const addCost = () => {
-    const clonedInvoice = [...invoice];
+    const clonedInvoice = [];
+    // TODO: check if it handle multiple selection of vendors
     if (procent) {
       if (Object.values(costVendors.chainObj).length > 0) {
         Object.keys(costVendors.chainObj).forEach((cName) => {
           Object.keys(costVendors.chainObj[cName]).forEach((vName) => {
-            clonedInvoice.push({ restaurant: vName, cost: procent, id: invoice.length + 1 });
+            clonedInvoice.push({ restaurant: vName, cost: procent, id: `${vName}_${procent}` });
           });
         });
       }
     }
+
     setProcent('');
-    setInvoice(clonedInvoice);
+    onAdd(procent, costVendors.vendorsObj);
   };
   return (
     <div className="invoice snackbar">

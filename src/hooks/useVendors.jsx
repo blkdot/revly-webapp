@@ -1,19 +1,19 @@
 import { useEffect, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import useApi from './useApi';
-import config from '../setup/config';
+
 import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
 import useDate from './useDate';
 
 const useVendors = () => {
   const { getVendors } = useApi();
-  const { environment } = config;
+
   const { vendors, setVendors } = useDate();
   const { user } = useUserAuth();
 
   const requestVendorsDefaultParam = {
-    master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+    master_email: user.email,
     access_token: user.accessToken,
   };
 
@@ -24,7 +24,7 @@ const useVendors = () => {
   useEffect(() => {
     if (isLoading || isError) return;
 
-    const newData = data.data;
+    const newData = data;
 
     delete newData?.master_email;
 

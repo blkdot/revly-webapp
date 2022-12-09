@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
@@ -390,8 +391,8 @@ const OnBoarding = () => {
   return (
     <div className="onboarding">
       <div className="top-inputs">
-        <RestaurantDropdownOld vendors={[]} restaurants={[]} vendorsPlatform={[]} />
-        <Dates />
+        {/* <RestaurantDropdownOld vendors={[]} restaurants={[]} vendorsPlatform={[]} />
+        <Dates /> */}
       </div>
       <FinanceEmpty />
       <MarketingEmpty />

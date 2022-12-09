@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Checkbox } from '@mui/material';
 import useApi from '../../../hooks/useApi';
 import defaultImage from '../../../assets/images/default.png';
-import config from '../../../setup/config';
+
 import { useUserAuth } from '../../../contexts/AuthContext';
 import useDate from '../../../hooks/useDate';
 
 const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const [data, setData] = useState(null);
   const { getOfferDetails } = useApi();
-  const { environment } = config;
+
   const { user } = useUserAuth();
   const { vendors } = useDate();
   const { vendorsObj } = vendors;
@@ -18,7 +18,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const getOfferDetailData = () => {
     getOfferDetails(
       {
-        master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+        master_email: user.email,
         access_token: '',
         vendor,
         drn_id: drnId,
