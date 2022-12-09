@@ -886,7 +886,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
   const getRecapBtn = () => {
     if (recap) {
-      return 'Lanch Offer';
+      return 'Launch Offer';
     }
     if (steps.length - 1 === selected) {
       return 'Confirm';
