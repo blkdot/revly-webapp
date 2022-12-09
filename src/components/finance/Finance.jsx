@@ -49,22 +49,17 @@ const Finance = ({
     return Object.keys(chainObjTemp);
   };
   const isDisplay = () => {
-    if (Object.keys(display > 0)) {
+    if (Object.keys(display) > 0) {
       return getChain().length === Object.keys(display).length ? (
         <p>All Points of sales</p>
       ) : (
         getChain().join(', ')
       );
     }
-    return restaurants.length === vendors.length || restaurants.length === 0 ? (
+    return restaurants.length === vendors.length ? (
       <p>All Points of sales</p>
     ) : (
-      <p>
-        {' '}
-        {vendors.map((obj) =>
-          restaurants.find((el) => obj.data.vendor_name === el) ? `${obj.data.vendor_name}, ` : '',
-        )}
-      </p>
+      <p> {restaurants.join(', ')}</p>
     );
   };
   return (

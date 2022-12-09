@@ -129,8 +129,7 @@ const Dates = (props) => {
   const afterPeriodContextEndLocal = new Date(afterPeriodContext.endDate).toLocaleDateString();
   const afterPeriodContextStartGetDate = new Date(afterPeriodContext.startDate).getDate();
   const afterPeriodContextEndGetDate = new Date(afterPeriodContext.endDate).getDate();
-
-  useEffect(() => {
+  const setLocalStorage = () => {
     localStorage.setItem(
       'date',
       JSON.stringify({
@@ -148,6 +147,9 @@ const Dates = (props) => {
         typeDate: typeDateContext,
       }),
     );
+  };
+  useEffect(() => {
+    setLocalStorage();
   }, [
     titleDate,
     titleafterPeriod,
@@ -159,45 +161,60 @@ const Dates = (props) => {
   const handleClickDashboard = () => {
     const startDate =
       typeDate === 'month'
-        ? new Date(beforePeriod[0].startDate).setFullYear(year)
+        ? new Date(new Date(beforePeriod[0].startDate).setFullYear(year))
         : new Date(beforePeriod[0].startDate);
     const endDate =
       typeDate === 'month'
-        ? new Date(beforePeriod[0].endDate).setFullYear(year)
+        ? new Date(new Date(beforePeriod[0].endDate).setFullYear(year))
         : new Date(beforePeriod[0].endDate);
     const date = new Date();
-
     const { startLocal, startGetDay, endGetDay, dateGetDay, dateLocal } = getAllDateSetup(
       startDate,
       endDate,
     );
 
-    if (typeDate === 'day') {
-      setAfterPeriodContext({
-        startDate: subDays(startDate, 1),
-        endDate: subDays(endDate, 1),
-      });
+    if (new Date(startDate).getFullYear() === new Date().getFullYear()) {
       setBeforePeriodContext({ startDate, endDate });
-      // It checks that what date is currently selected in beforePeriodContext date picker
-      if (startLocal === dateLocal) {
-        setTitleDate('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
-        setTitleafterPeriod('yesterday'); // Sending data to state which will be needed for the introduction in the afterPeriodContext input
-        setDateContext({
-          ...dateContext,
-          afterPeriod: {
-            startDate: subDays(startDate, 1),
-            endDate: subDays(endDate, 1),
-          },
-          beforePeriod: { startDate, endDate },
-          typeDate,
-          titleDate: 'today',
-          titleafterPeriod: 'yesterday',
+      if (typeDate === 'day') {
+        setAfterPeriodContext({
+          startDate: subDays(startDate, 1),
+          endDate: subDays(endDate, 1),
         });
-        return;
-      }
+        // It checks that what date is currently selected in beforePeriodContext date picker
+        if (startLocal === dateLocal) {
+          setTitleDate('today'); // Sending data to state which will be needed for the introduction in the beforePeriodContext input
+          setTitleafterPeriod('yesterday'); // Sending data to state which will be needed for the introduction in the afterPeriodContext input
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: subDays(startDate, 1),
+              endDate: subDays(endDate, 1),
+            },
+            beforePeriod: { startDate, endDate },
+            typeDate,
+            titleDate: 'today',
+            titleafterPeriod: 'yesterday',
+          });
+          return;
+        }
 
-      if (startLocal === subDays(date, 1).toLocaleDateString()) {
-        setTitleDate('yesterday');
+        if (startLocal === subDays(date, 1).toLocaleDateString()) {
+          setTitleDate('yesterday');
+          setTitleafterPeriod('day before');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: subDays(startDate, 1),
+              endDate: subDays(endDate, 1),
+            },
+            beforePeriod: { startDate, endDate },
+            typeDate,
+            titleDate: 'yesterday',
+            titleafterPeriod: 'day before',
+          });
+          return;
+        }
+        setTitleDate('custom');
         setTitleafterPeriod('day before');
         setDateContext({
           ...dateContext,
@@ -207,56 +224,57 @@ const Dates = (props) => {
           },
           beforePeriod: { startDate, endDate },
           typeDate,
-          titleDate: 'yesterday',
+          titleDate: 'custom',
           titleafterPeriod: 'day before',
         });
         return;
       }
-      setTitleDate('custom');
-      setTitleafterPeriod('day before');
-      setDateContext({
-        ...dateContext,
-        afterPeriod: {
-          startDate: subDays(startDate, 1),
-          endDate: subDays(endDate, 1),
-        },
-        beforePeriod: { startDate, endDate },
-        typeDate,
-        titleDate: 'custom',
-        titleafterPeriod: 'day before',
-      });
-      return;
-    }
 
-    if (typeDate === 'week') {
-      setAfterPeriodContext({
-        startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
-        endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
-      });
-      setBeforePeriodContext({ startDate, endDate });
-      if (endGetDay === dateGetDay && startGetDay === 1) {
-        setTitleDate('current week');
-        setTitleafterPeriod('last week');
-        setDateContext({
-          ...dateContext,
-          afterPeriod: {
-            startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
-            endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
-          },
-          beforePeriod: { startDate, endDate },
-          typeDate,
-          titleDate: 'current week',
-          titleafterPeriod: 'last week',
+      if (typeDate === 'week') {
+        setAfterPeriodContext({
+          startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+          endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
         });
-        return;
-      }
+        if (endGetDay === dateGetDay && startGetDay === 1) {
+          setTitleDate('current week');
+          setTitleafterPeriod('last week');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+              endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
+            },
+            beforePeriod: { startDate, endDate },
+            typeDate,
+            titleDate: 'current week',
+            titleafterPeriod: 'last week',
+          });
+          return;
+        }
 
-      if (
-        startGetDay === 1 &&
-        endGetDay === 0 &&
-        getWeek(startDate, { weekStartsOn: 1 }) === getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
-      ) {
-        setTitleDate('last week');
+        if (
+          startGetDay === 1 &&
+          endGetDay === 0 &&
+          getWeek(startDate, { weekStartsOn: 1 }) ===
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+        ) {
+          setTitleDate('last week');
+          setTitleafterPeriod('week before');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+              endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
+            },
+            beforePeriod: { startDate, endDate },
+            typeDate,
+            titleDate: 'last week',
+            titleafterPeriod: 'week before',
+          });
+          return;
+        }
+
+        setTitleDate('custom');
         setTitleafterPeriod('week before');
         setDateContext({
           ...dateContext,
@@ -266,66 +284,112 @@ const Dates = (props) => {
           },
           beforePeriod: { startDate, endDate },
           typeDate,
-          titleDate: 'last week',
+          titleDate: 'custom',
           titleafterPeriod: 'week before',
         });
         return;
       }
-
-      setTitleDate('custom');
-      setTitleafterPeriod('week before');
-      setDateContext({
-        ...dateContext,
-        afterPeriod: {
-          startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
-          endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
-        },
-        beforePeriod: { startDate, endDate },
-        typeDate,
-        titleDate: 'custom',
-        titleafterPeriod: 'week before',
-      });
-      return;
-    }
-    if (typeDate === 'month') {
-      setAfterPeriodContext({
-        startDate: subMonths(startDate, 1),
-        endDate: endOfMonth(subMonths(endDate, 1)),
-      });
+      if (typeDate === 'month') {
+        setAfterPeriodContext({
+          startDate: subMonths(startDate, 1),
+          endDate: endOfMonth(subMonths(endDate, 1)),
+        });
+        if (getMonth(startDate) === getMonth(date)) {
+          setTitleDate('current month');
+          setTitleafterPeriod('last month');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: subMonths(startDate, 1),
+              endDate: endOfMonth(subMonths(endDate, 1)),
+            },
+            beforePeriod: { startDate, endDate },
+            typeDate,
+            titleDate: 'current month',
+            titleafterPeriod: 'last month',
+          });
+          return;
+        }
+        if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
+          setTitleDate('last month');
+          setTitleafterPeriod('month before');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: subMonths(startDate, 1),
+              endDate: endOfMonth(subMonths(endDate, 1)),
+            },
+            beforePeriod: { startDate, endDate },
+            typeDate,
+            titleDate: 'last month',
+            titleafterPeriod: 'month before',
+          });
+        } else {
+          setTitleDate('custom');
+          setTitleafterPeriod('month before');
+          setDateContext({
+            ...dateContext,
+            afterPeriod: {
+              startDate: subMonths(startDate, 1),
+              endDate: endOfMonth(subMonths(endDate, 1)),
+            },
+            beforePeriod: { startDate, endDate },
+            typeDate,
+            titleDate: 'custom',
+            titleafterPeriod: 'month before',
+          });
+        }
+      }
+    } else {
       setBeforePeriodContext({ startDate, endDate });
-      if (getMonth(startDate) === getMonth(date)) {
-        setTitleDate('current month');
-        setTitleafterPeriod('last month');
+      if (typeDate === 'day') {
+        setTitleDate('custom');
+        setTitleafterPeriod('day before');
+        setAfterPeriodContext({
+          startDate: subDays(startDate, 1),
+          endDate: subDays(endDate, 1),
+        });
         setDateContext({
           ...dateContext,
           afterPeriod: {
-            startDate: subMonths(startDate, 1),
-            endDate: endOfMonth(subMonths(endDate, 1)),
+            startDate: subDays(startDate, 1),
+            endDate: subDays(endDate, 1),
           },
           beforePeriod: { startDate, endDate },
           typeDate,
-          titleDate: 'current month',
-          titleafterPeriod: 'last month',
+          titleDate: 'custom',
+          titleafterPeriod: 'day before',
         });
         return;
       }
-      if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
-        setTitleDate('last month');
-        setTitleafterPeriod('month before');
+      if (typeDate === 'week') {
+        setTitleDate('custom');
+        setTitleafterPeriod('week before');
+        setAfterPeriodContext({
+          startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+          endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
+        });
         setDateContext({
           ...dateContext,
           afterPeriod: {
-            startDate: subMonths(startDate, 1),
-            endDate: endOfMonth(subMonths(endDate, 1)),
+            startDate: startOfWeek(subWeeks(startDate, 1), { weekStartsOn: 1 }),
+            endDate: endOfWeek(subWeeks(endDate, 1), { weekStartsOn: 1 }),
           },
           beforePeriod: { startDate, endDate },
           typeDate,
-          titleDate: 'last month',
-          titleafterPeriod: 'month before',
+          titleDate: 'custom',
+          titleafterPeriod: 'week before',
         });
-      } else {
+
+        return;
+      }
+      if (typeDate === 'month') {
         setTitleDate('custom');
         setTitleafterPeriod('month before');
+        setAfterPeriodContext({
+          startDate: subMonths(startDate, 1),
+          endDate: endOfMonth(subMonths(endDate, 1)),
+        });
         setDateContext({
           ...dateContext,
           afterPeriod: {
@@ -348,8 +412,14 @@ const Dates = (props) => {
       return;
     }
 
-    const startDate = new Date(beforePeriod[0].startDate);
-    const endDate = new Date(beforePeriod[0].endDate);
+    const startDate =
+      typeDate === 'month'
+        ? new Date(new Date(beforePeriod[0].startDate).setFullYear(year))
+        : new Date(beforePeriod[0].startDate);
+    const endDate =
+      typeDate === 'month'
+        ? new Date(new Date(beforePeriod[0].endDate).setFullYear(year))
+        : new Date(beforePeriod[0].endDate);
     const date = new Date();
 
     const { startLocal, startGetDay, endGetDay, dateGetDay, dateLocal } = getAllDateSetup(
@@ -358,8 +428,8 @@ const Dates = (props) => {
     );
     if (typeDate === 'month') {
       setbeforePeriodBtn({
-        startDate: new Date(startDate).setFullYear(year),
-        endDate: new Date(endDate).setFullYear(year),
+        startDate: new Date(new Date(startDate).setFullYear(year)),
+        endDate: new Date(new Date(endDate).setFullYear(year)),
       });
     } else {
       setbeforePeriodBtn({ startDate, endDate });
@@ -633,12 +703,12 @@ const Dates = (props) => {
 
     if (typeDate === 'month') {
       if (
-        getYear(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod)) <=
-        getYear(new Date(beforePeriodContextStart).setFullYear(year))
+        getYear(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) <=
+        getYear(new Date(new Date(beforePeriodContextStart).setFullYear(year)))
       ) {
         return (
-          getMonth(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod)) <
-          getMonth(new Date(beforePeriodContextStart).setFullYear(year))
+          getMonth(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) <
+          getMonth(new Date(new Date(beforePeriodContextStart).setFullYear(year)))
         );
       }
       return false;
@@ -783,7 +853,7 @@ const Dates = (props) => {
         <DatePickerKit
           onRangeFocusChange={(e) => e}
           minDate={new Date(minDate)}
-          maxDate={maxDate}
+          maxDate={offer ? new Date(addYears(new Date(), 1)) : new Date()}
           onChange={handleOnChange}
           showSelectionPreview
           moveRangeOnFirstSelection={false}
@@ -817,11 +887,11 @@ const Dates = (props) => {
             onChange={(newDateMonth) =>
               setbeforePeriod([
                 {
-                  startDate: startOfMonth(new Date(newDateMonth).setFullYear(year)),
+                  startDate: startOfMonth(new Date(new Date(newDateMonth).setFullYear(year))),
                   endDate:
                     getMonth(new Date(newDateMonth)) === getMonth(new Date()) && !offer
                       ? new Date().setFullYear(year)
-                      : endOfMonth(new Date(newDateMonth).setFullYear(year)),
+                      : endOfMonth(new Date(new Date(newDateMonth).setFullYear(year))),
                   key: 'selection',
                 },
               ])

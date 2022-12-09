@@ -268,9 +268,24 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     });
     setMenu('Offer on the whole Menu');
   }, [platform, vendors]);
-  // TODO: Send request
+  const getPlatformToken = () => {
+    if (Object.keys(vendors.display).length > 0) {
+      return (
+        userPlatformData.platforms[platform[0]].access_token ??
+        userPlatformData.platforms[platform[0]].access_token_bis
+      );
+    }
+    console.log(userPlatformData.platforms[platformData].access_token);
+    return (
+      userPlatformData.platforms[platformData].access_token ??
+      userPlatformData.platforms[platformData].access_token_bis
+    );
+  };
   const handleSchedule = async () => {
-    const newBranchData = vendorsArr.find((v) => v.data.vendor_name === branchData);
+    const newBranchData =
+      Object.keys(vendors.display).length > 0
+        ? branch.vendorsObj[platform[0]][0]
+        : vendorsArr.find((v) => v.data.vendor_name === branchData);
     const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
     delete clonedVendor.platform;
     const menuType =
@@ -290,9 +305,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
       master_email: user.email,
       access_token: user.accessToken,
-      platform_token:
-        userPlatformData.platforms[platform[0]].access_token ??
-        userPlatformData.platforms[platform[0]].access_token_bis,
+      platform_token: getPlatformToken(),
       vendors: [clonedVendor],
       chain_id: clonedVendor.chain_id,
     };
