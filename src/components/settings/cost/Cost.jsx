@@ -1,11 +1,37 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { useQuery, useMutation } from 'react-query';
 
 import './Cost.scss';
 import DropdownSnackbar from './DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
+import useCost from '../../../hooks/useCost';
+import useVendors from '../../../hooks/useVendors';
+
 const Cost = () => {
-  const [invoice, setInvoice] = useState([{ restaurant: 'Kathryn Murphy', cost: '10%', id: 1 }]);
+  const [invoice, setInvoice] = useState([]);
+  const { vendors } = useVendors();
+  const { vendorsObj } = vendors;
+
+  const { load, save } = useCost(vendorsObj);
+
+  const { data, isLoading, isError } = useQuery(['loadCost'], load);
+
+  const mutateInvoice = useMutation(save, {
+    refetchQueries: ['loadCost'],
+  });
+
+  if (isLoading) return <span>Loading</span>;
+
+  if (isError) return <span>Error happened</span>;
+
+  const handleAdd = async (cost, v) => {
+    const res = await mutateInvoice.mutateAsync({ cost, vendors: v });
+
+    console.log(res);
+  };
+
   return (
     <div className="billing">
       <div className="billing__invoice __card">
@@ -18,12 +44,12 @@ const Cost = () => {
             </p>
           </div>
         </div>
-        <DropdownSnackbar setInvoice={setInvoice} invoice={invoice} />
-        {invoice.map((obj, index) => (
+        <DropdownSnackbar onAdd={handleAdd} />
+        {invoice?.map((obj, index) => (
           <Invoice
             key={obj.id}
             setInvoice={setInvoice}
-            invoice={invoice}
+            invoice={data}
             index={index}
             restaurant={obj.restaurant}
             cost={obj.cost}
