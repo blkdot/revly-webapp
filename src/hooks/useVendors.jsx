@@ -43,8 +43,8 @@ const useVendors = () => {
         }),
       );
     const { ...rest } = newData;
-    delete rest.display;
     const display = newData.display ? newData.display : {};
+    delete rest.display;
     const chainObj = JSON.parse(JSON.stringify(display));
     const dataV = {
       restaurants: restaurantTemp,
