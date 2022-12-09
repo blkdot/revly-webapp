@@ -49,10 +49,9 @@ const useVendors = () => {
       restaurants: restaurantTemp,
       vendorsArr: vendorsTemp,
       vendorsObj: rest,
-      display,
+      display: display || {},
       chainObj,
     };
-
     if (Object.keys(chainObj).length === 0) {
       if (vendorsTemp.length !== vendors.vendorsArr.length) {
         setVendors(dataV);
