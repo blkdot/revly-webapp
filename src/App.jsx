@@ -56,9 +56,9 @@ const App = () => (
     <div className="App">
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-          <GlobalFunctionalitiesContextProvider>
-            <PlatformProvider>
-              <AuthContextProvider>
+          <PlatformProvider>
+            <AuthContextProvider>
+              <GlobalFunctionalitiesContextProvider>
                 <Routes>
                   <Route element={<AuthLayout />}>
                     <Route path="/" element={<SignIn />} />
@@ -83,9 +83,9 @@ const App = () => (
                     <Route path="/check" element={<Check />} />
                   </Route>
                 </Routes>
-              </AuthContextProvider>
-            </PlatformProvider>
-          </GlobalFunctionalitiesContextProvider>
+              </GlobalFunctionalitiesContextProvider>
+            </AuthContextProvider>
+          </PlatformProvider>
         </ThemeProvider>
       </LocalizationProvider>
     </div>

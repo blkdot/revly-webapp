@@ -1,31 +1,13 @@
-import React, { createContext, useState, useMemo, useEffect } from 'react';
+import React, { createContext, useState, useMemo } from 'react';
 
 import { platformContexDefaultFormat } from '../data/platformList';
 
-import config from '../setup/config';
-
 export const PlatformContext = createContext();
 
-const { environment } = config;
-
-const defaultState = () => {
-  if (environment !== 'dev') return platformContexDefaultFormat;
-
-  const stringFakeOnboarding = localStorage.getItem('fakeOnboarding');
-
-  if (!stringFakeOnboarding) return platformContexDefaultFormat;
-
-  return JSON.parse(stringFakeOnboarding);
-};
+const defaultState = () => platformContexDefaultFormat;
 
 export const PlatformProvider = ({ children }) => {
   const [userPlatformData, setUserPlatformData] = useState(defaultState());
-
-  useEffect(() => {
-    if (environment !== 'dev') return;
-
-    localStorage.setItem('fakeOnboarding', JSON.stringify(userPlatformData));
-  }, [userPlatformData]);
 
   const cleanPlatformData = () => {
     if (JSON.stringify(userPlatformData) === JSON.stringify(platformContexDefaultFormat)) return;
