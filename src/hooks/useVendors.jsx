@@ -42,8 +42,9 @@ const useVendors = () => {
           restaurantTemp.push(v.data.vendor_name);
         }),
       );
-    const { display, ...rest } = newData;
-    const chainObj = JSON.parse(JSON.stringify(display || {}));
+    const { ...rest } = newData;
+    const display = newData.display ? newData.display : {};
+    const chainObj = JSON.parse(JSON.stringify(display));
     const dataV = {
       restaurants: restaurantTemp,
       vendorsArr: vendorsTemp,
@@ -51,7 +52,7 @@ const useVendors = () => {
       display: display || {},
       chainObj,
     };
-    if (Object.keys(newData?.display) === 0) {
+    if (Object.keys(chainObj).length === 0) {
       if (vendorsTemp.length !== vendors.vendorsArr.length) {
         setVendors(dataV);
         localStorage.setItem('vendors', JSON.stringify(dataV));

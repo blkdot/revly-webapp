@@ -50,12 +50,12 @@ const ProtectedOnboardRoutes = () => {
   }, []);
 
   useEffect(() => {
-    if (!userPlatformData.onboarded && preAllowed) {
+    if (!userPlatformData.onboarded) {
       reccurentLogin();
     }
 
     setAllowed(true);
-  }, [location, preAllowed]);
+  }, [location]);
 
   const reccurentLogin = async () => {
     const res = await settingsLogin({

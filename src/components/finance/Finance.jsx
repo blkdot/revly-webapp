@@ -39,42 +39,28 @@ const Finance = ({
 
     return `${titleDate}`;
   };
-  const getChecked = () => {
-    const checked = [];
-    Object.keys(chainObj).forEach((chainName) => {
-      checked.push(
-        Object.keys(chainObj[chainName]).every((n) => chainObj[chainName][n].checked === true),
-      );
-    });
-    return checked.every((bool) => bool === true);
-  };
   const getChain = () => {
-    const obj = {};
-    Object.keys(chainObj).forEach((chainName) => {
-      Object.keys(chainObj[chainName]).forEach((n) => {
-        if (chainObj[chainName][n].checked) {
-          obj[chainName] = {};
-        }
-      });
+    const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
+    Object.keys(chainObjTemp).forEach((chainName) => {
+      if (Object.keys(chainObjTemp[chainName]).length === 0) {
+        delete chainObjTemp[chainName];
+      }
     });
-    return Object.keys(obj);
+    return Object.keys(chainObjTemp);
   };
   const isDisplay = () => {
-    if (!display) {
-      return restaurants.length === vendors.length || restaurants.length === 0 ? (
+    if (Object.keys(display) > 0) {
+      return getChain().length === Object.keys(display).length ? (
         <p>All Points of sales</p>
       ) : (
-        <p>
-          {' '}
-          {vendors.map((obj) =>
-            restaurants.find((el) => obj.data.vendor_name === el)
-              ? `${obj.data.vendor_name}, `
-              : '',
-          )}
-        </p>
+        getChain().join(', ')
       );
     }
-    return getChecked() ? <p>All Points of sales</p> : getChain().join(', ');
+    return restaurants.length === vendors.length ? (
+      <p>All Points of sales</p>
+    ) : (
+      <p> {restaurants.join(', ')}</p>
+    );
   };
   return (
     <div className="block">
