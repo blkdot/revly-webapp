@@ -22,7 +22,6 @@ import FastFood from '../../../assets/icons/FastFood';
 import { platformObject } from '../../../data/platformList';
 import './OfferDetails.scss';
 import useApi from '../../../hooks/useApi';
-import config from '../../../setup/config';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
@@ -53,7 +52,7 @@ const OfferDetailComponent = () => {
     userPlatformData: { platforms },
   } = usePlatform();
   const { cancelOffer, cancelOfferMaster } = useApi();
-  const { environment } = config;
+
   const { user } = useUserAuth();
   const { date } = useDate();
   const { vendors } = useVendors();
@@ -133,7 +132,7 @@ const OfferDetailComponent = () => {
   const handleCancelOfferMaster = () => {
     cancelOfferMaster(
       {
-        master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+        master_email: user.email,
         access_token: user?.access_token || '',
         platform_token: platforms[platform].access_token,
         vendors: [vendor],
@@ -154,7 +153,7 @@ const OfferDetailComponent = () => {
   const handleCancelOffer = (offerId, setState) => {
     cancelOffer(
       {
-        master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+        master_email: user.email,
         access_token: user?.access_token || '',
         platform_token: platforms[platform].access_token,
         vendors: [vendor],
@@ -174,7 +173,7 @@ const OfferDetailComponent = () => {
 
   useEffect(() => {
     getPlanningOfferDetails({
-      master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+      master_email: user.email,
       access_token: user?.access_token || '',
       vendors: vendorsObj,
       platform,

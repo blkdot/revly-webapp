@@ -3,7 +3,6 @@ import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
 import useApi from './useApi';
 import useDate from './useDate';
-import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function usePlanningOffers({ dateRange }) {
@@ -11,13 +10,12 @@ function usePlanningOffers({ dateRange }) {
   const { vendorsObj } = vendors;
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
-  const { environment } = config;
   const { user } = useUserAuth();
 
   const { data, isLoading, isError } = useQuery(['getOffers', { dateRange, vendorsObj }], () =>
     getOffers(
       {
-        master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+        master_email: user.email,
         access_token: '',
         vendors: vendorsObj,
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),

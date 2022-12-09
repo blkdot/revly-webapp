@@ -18,6 +18,10 @@ const SignIn = () => {
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
 
+  localStorage.removeItem('vendors');
+  localStorage.removeItem('date');
+  localStorage.removeItem('leaveTime');
+
   const navigate = useNavigate();
 
   const { signIn, googleSignIn, user, logOut, verifyCodeEmail } = useUserAuth();

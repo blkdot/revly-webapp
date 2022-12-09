@@ -32,7 +32,7 @@ const ProtectedOnboardRoutes = () => {
         access_token: user.accessToken,
       });
 
-      if (res instanceof Error || !res.onboarded) throw new Error('');
+      if (res instanceof Error || !res.onboarded || !res.platforms) throw new Error('');
 
       setUserPlatformData({
         onboarded: true,
@@ -50,12 +50,12 @@ const ProtectedOnboardRoutes = () => {
   }, []);
 
   useEffect(() => {
-    if (!userPlatformData.onboarded && preAllowed) {
+    if (!userPlatformData.onboarded) {
       reccurentLogin();
     }
 
     setAllowed(true);
-  }, [location, preAllowed]);
+  }, [location]);
 
   const reccurentLogin = async () => {
     const res = await settingsLogin({
@@ -85,7 +85,9 @@ const ProtectedOnboardRoutes = () => {
     };
   });
 
-  if (!allowed) {
+  if (allowed instanceof Error) return <Navigate to="/onboarding" />;
+
+  if (!allowed || !preAllowed) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
@@ -93,7 +95,7 @@ const ProtectedOnboardRoutes = () => {
     );
   }
 
-  return allowed instanceof Error ? <Navigate to="/onboarding" /> : <Outlet />;
+  return <Outlet />;
 };
 
 export default ProtectedOnboardRoutes;

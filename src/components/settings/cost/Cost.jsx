@@ -1,11 +1,43 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 
 import './Cost.scss';
 import DropdownSnackbar from './DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
+import useCost from '../../../hooks/useCost';
+import useVendors from '../../../hooks/useVendors';
+
+import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+
 const Cost = () => {
-  const [invoice, setInvoice] = useState([{ restaurant: 'Kathryn Murphy', cost: '10%', id: 1 }]);
+  const queryClient = useQueryClient();
+  const [invoice, setInvoice] = useState([]);
+  const { vendors } = useVendors();
+  const { vendorsObj } = vendors;
+
+  const { load, save } = useCost(vendorsObj);
+
+  const { data, isLoading, isError } = useQuery(['loadCost'], load);
+
+  const mutateInvoice = useMutation({
+    mutationFn: save,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['loadCost'] });
+    },
+  });
+
+  if (isLoading)
+    return <SpinnerKit style={{ display: 'flex', margin: 'auto', justifyContent: 'center' }} />;
+
+  if (isError)
+    return <div style={{ display: 'flex', justifyContent: 'center' }}>Error Occured</div>;
+
+  const handleAdd = async (cost, v) => {
+    await mutateInvoice.mutateAsync({ cost, vendors: v });
+  };
+
   return (
     <div className="billing">
       <div className="billing__invoice __card">
@@ -18,12 +50,12 @@ const Cost = () => {
             </p>
           </div>
         </div>
-        <DropdownSnackbar setInvoice={setInvoice} invoice={invoice} />
-        {invoice.map((obj, index) => (
+        <DropdownSnackbar onAdd={handleAdd} />
+        {invoice?.map((obj, index) => (
           <Invoice
             key={obj.id}
             setInvoice={setInvoice}
-            invoice={invoice}
+            invoice={data}
             index={index}
             restaurant={obj.restaurant}
             cost={obj.cost}

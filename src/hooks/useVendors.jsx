@@ -1,19 +1,19 @@
 import { useEffect, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import useApi from './useApi';
-import config from '../setup/config';
+
 import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
 import useDate from './useDate';
 
 const useVendors = () => {
   const { getVendors } = useApi();
-  const { environment } = config;
+
   const { vendors, setVendors } = useDate();
   const { user } = useUserAuth();
 
   const requestVendorsDefaultParam = {
-    master_email: environment !== 'dev' ? user.email : 'chiekh.alloul@gmail.com',
+    master_email: user.email,
     access_token: user.accessToken,
   };
 
@@ -24,7 +24,7 @@ const useVendors = () => {
   useEffect(() => {
     if (isLoading || isError) return;
 
-    const newData = data.data;
+    const newData = data;
 
     delete newData?.master_email;
 
@@ -42,16 +42,17 @@ const useVendors = () => {
           restaurantTemp.push(v.data.vendor_name);
         }),
       );
-    const { display, ...rest } = newData;
+    const { ...rest } = newData;
+    const display = newData.display ? newData.display : {};
     const chainObj = JSON.parse(JSON.stringify(display));
     const dataV = {
       restaurants: restaurantTemp,
       vendorsArr: vendorsTemp,
       vendorsObj: rest,
-      display,
+      display: display || {},
       chainObj,
     };
-    if (Object.keys(newData.display) === 0) {
+    if (Object.keys(chainObj).length === 0) {
       if (vendorsTemp.length !== vendors.vendorsArr.length) {
         setVendors(dataV);
         localStorage.setItem('vendors', JSON.stringify(dataV));
