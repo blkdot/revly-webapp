@@ -6,17 +6,20 @@ import restaurantExample from '../../../../assets/images/restaurant-example.png'
 import ButtonKit from '../../../../kits/button/ButtonKit';
 
 const Invoice = (props) => {
-  const { restaurant, cost, setInvoice, invoice, index } = props;
-  const deleteCost = () => {
-    const clonedInvoice = [...invoice];
-    clonedInvoice.splice(index, 1);
-    setInvoice(clonedInvoice);
-  };
+  const { restaurant, cost, onDelete } = props;
+
   return (
     <div className="invoice cost">
       <div className="__flex">
         <img src={restaurantExample} alt="restaurant-example" />
-        <p>
+        <p
+          style={{
+            width: '20rem',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
           Restaurant Name: <span>{restaurant}</span>
         </p>
       </div>
@@ -29,7 +32,7 @@ const Invoice = (props) => {
             Cost: <span>{cost}</span>
           </p>
         </div>
-        <ButtonKit color="error" onClick={deleteCost} variant="outlined">
+        <ButtonKit color="error" onClick={onDelete} variant="outlined">
           Delete
         </ButtonKit>
       </div>

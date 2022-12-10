@@ -69,7 +69,13 @@ const DropdownSnackbar = (props) => {
     }
 
     setProcent('');
-    onAdd(procent, costVendors.vendorsObj);
+    const strCost = procent.replace('%', '');
+
+    const numCost = parseInt(strCost, 10);
+
+    const numDecimalCost = parseFloat(numCost / 100);
+
+    onAdd(numDecimalCost, costVendors.vendorsObj);
   };
   return (
     <div className="invoice snackbar">
