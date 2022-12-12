@@ -4,9 +4,8 @@ import BaseIcon from '../../../assets/icons/BaseIcon';
 
 const customStyles = {
   overlay: {
-    background: '#212B36',
-    opacity: '0.9',
-    backdropFilter: 'blur(6.5px)',
+    background: 'rgba(33, 43, 54, 0.9)',
+    backdropFilter: 'blur(1.5px)',
     zIndex: 10000,
   },
   content: {
