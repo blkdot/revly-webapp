@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
@@ -8,7 +7,6 @@ import { pascalCase } from 'change-case';
 import './OnBoarding.scss';
 
 import OnBoardingForm from '../../components/onboarding/OnBoarding';
-import Dates from '../../components/dates/Dates';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
@@ -26,7 +24,6 @@ import { usePlatform } from '../../hooks/usePlatform';
 import { useAlert } from '../../hooks/useAlert';
 
 import { platformList } from '../../data/platformList';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
 const START_KEY = 'start';
 const END_KEY = 'last';
@@ -369,7 +366,7 @@ const OnBoarding = () => {
   const nextTarget = async () => {
     let offset = 0;
 
-    if (errorPlatformConnect[currentPlatform.name]) {
+    if (errorPlatformConnect[currentPlatform?.name]) {
       offset = 1;
     }
 
