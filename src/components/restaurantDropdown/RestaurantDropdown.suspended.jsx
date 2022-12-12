@@ -27,7 +27,7 @@ const RestaurantDropdown = ({
     window.onunload = () => {
       const leaveTime = JSON.parse(localStorage.getItem('leaveTime')) || new Date();
       if (new Date(leaveTime).toLocaleDateString() === new Date().toLocaleDateString()) {
-        if (new Date(leaveTime).getHours() === new Date().getHours() - 3) {
+        if (new Date(leaveTime).getHours() === new Date().getHours() - 2) {
           localStorage.removeItem('vendors');
           localStorage.removeItem('date');
         }
@@ -84,12 +84,14 @@ const RestaurantDropdown = ({
           setVendors({
             ...vendorsContext,
             chainObj: chainObjTemp,
+            vendorsObj,
           });
           localStorage.setItem(
             'vendors',
             JSON.stringify({
               ...vendorsContext,
               chainObj: chainObjTemp,
+              vendorsObj,
             }),
           );
         }
@@ -213,14 +215,14 @@ const RestaurantDropdown = ({
     if (Object.keys(chainObjClear).length > 1) {
       if (!checked) {
         const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
-        delete chainObjTemp[chainName][value];
-        Object?.keys(chainObjTemp?.[chainName]?.[value] || {})?.forEach((platform) => {
+        Object?.keys(chainObjTemp?.[chainName]?.[value])?.forEach((platform) => {
           vendorsObj[platform]?.forEach((obj, index) => {
             if (+obj.chain_id === chainObjTemp[chainName][value][platform].chain_id) {
               vendorsObj[platform].splice(index, 1);
             }
           });
         });
+        delete chainObjTemp[chainName][value];
         setVendors({
           ...vendorsContext,
           vendorsObj,

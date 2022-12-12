@@ -40,10 +40,10 @@ const defaultRangeColorIndices = [0, 0, 0, 0];
 const MarketingSetup = ({ active, setActive, ads }) => {
   const { userPlatformData } = usePlatform();
   const [platform, setPlatform] = useState([
-    userPlatformData.platforms.talabat.active ? 'talabat' : 'deliveroo',
+    userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat',
   ]);
   const [platformData, setPlatformData] = useState(
-    userPlatformData.platforms.talabat.active ? 'talabat' : 'deliveroo',
+    userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat',
   );
   const [selected, setSelected] = useState(1);
   const [links, setLinks] = useState('revenue');
@@ -721,20 +721,30 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     branchData,
   ]);
   useEffect(() => {
-    setTimes([
-      {
-        startTime: new Date(
-          null,
-          null,
-          null,
-          format(new Date(), 'HH'),
-          format(new Date(addMinutes(new Date(), 2)), 'mm'),
-        ),
-        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-        pos: 1,
-      },
-    ]);
-  }, [customDay, duration]);
+    if (duration === 'Starting Now') {
+      setTimes([
+        {
+          startTime: new Date(
+            null,
+            null,
+            null,
+            format(new Date(), 'HH'),
+            format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          ),
+          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          pos: 1,
+        },
+      ]);
+    } else {
+      setTimes([
+        {
+          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          pos: 1,
+        },
+      ]);
+    }
+  }, [duration, customDay]);
 
   const renderGradientValue = (v, i) => {
     const indices = links === 'revenue' ? 'AED' : '';

@@ -322,12 +322,10 @@ const OfferDetailComponent = () => {
                       <span className="offer-visibility-title">Profits</span>
                     </div>
                     <div className="offer-visibility-sub-title">
-                      {offerData === null ||
-                      (offerData?.revenue === null && offerData?.accrued_discount === null)
+                      {Object.keys(offerDetailMaster).length === 0 ||
+                      offerDetailMaster?.master_offer?.data.profit === null
                         ? '-'
-                        : ((offerData?.revenue || 0) - (offerData?.accrued_discount || 0)).toFixed(
-                            2,
-                          )}
+                        : offerDetailMaster?.master_offer?.data.profit}
                     </div>
                   </div>
                 </div>
