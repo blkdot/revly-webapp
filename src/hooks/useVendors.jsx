@@ -50,7 +50,7 @@ const useVendors = () => {
       restaurants: restaurantTemp,
       vendorsArr: vendorsTemp,
       vendorsObj: rest,
-      display: display || {},
+      display: JSON.parse(JSON.stringify(chainObj)) || {},
       chainObj,
     };
     if (Object.keys(chainObj).length === 0) {
@@ -62,6 +62,9 @@ const useVendors = () => {
       setVendors(dataV);
       localStorage.setItem('vendors', JSON.stringify(dataV));
     }
+    Object.keys(display).forEach((key) => {
+      delete display[key];
+    });
   }, [data]);
 
   const values = useMemo(() => ({ vendors, setVendors }), [vendors]);
