@@ -231,43 +231,29 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   useEffect(() => {
     const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
-    const chainObjTemp = JSON.parse(JSON.stringify(vendors.chainObj));
     const newVendorsObj = { talabat: [], deliveroo: [] };
-    const newVendorsArr = [];
-    const newRestaurants = [];
-    if (Object.keys(vendors.chainObj).length > 0) {
+    if (Object.keys(vendors.display).length > 0) {
       Object.keys(newChainObj).forEach((chainName, index) => {
-        if (index !== 0) {
-          Object.keys(newChainObj[chainName]).forEach((vendorName) => {
+        Object.keys(newChainObj[chainName]).forEach((vendorName) => {
+          if (index !== 0) {
             delete newChainObj[chainName][vendorName];
-          });
-        }
-      });
-      Object.keys(newChainObj).forEach((cName) => {
-        Object.keys(newChainObj[cName]).forEach((vName) => {
-          platform.forEach((p) => {
-            newVendorsObj[p]?.push(newChainObj[cName][vName][p]);
-          });
+          } else {
+            platform.forEach((p) => {
+              newVendorsObj[p]?.push(newChainObj[chainName][vendorName][p]);
+            });
+          }
         });
       });
-      Object.keys(chainObjTemp).forEach((cName) => {
-        Object.keys(chainObjTemp[cName]).forEach((vName) => {
-          platform.forEach((p) => {
-            newVendorsArr?.push({ ...chainObjTemp[cName][vName][p], platform: p });
-            newRestaurants?.push(chainObjTemp[cName][vName][p].data.vendor_name);
-          });
-        });
+      setBranch({
+        ...branch,
+        vendorsObj: newVendorsObj,
+        chainObj: newChainObj,
       });
+    } else {
+      setBranchData(vendorsObj?.[platformData]?.[0]?.data?.vendor_name);
     }
-    setBranch({
-      ...vendors,
-      restaurants: newRestaurants,
-      vendorsArr: newVendorsArr,
-      vendorsObj: newVendorsObj,
-      chainObj: newChainObj,
-    });
     setMenu('Offer on the whole Menu');
-  }, [platform, vendors]);
+  }, [platform, vendors, platformData]);
   const getPlatformToken = () => {
     if (Object.keys(vendors.display).length > 0) {
       return (
@@ -275,7 +261,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         userPlatformData.platforms[platform[0]].access_token_bis
       );
     }
-    console.log(userPlatformData.platforms[platformData].access_token);
     return (
       userPlatformData.platforms[platformData].access_token ??
       userPlatformData.platforms[platformData].access_token_bis
@@ -329,7 +314,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     };
 
     if (platform.length < 2) {
-      const res = await triggerOffers(platform[0], dataReq);
+      const res = await triggerOffers(
+        Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
+        dataReq,
+      );
       if (res instanceof Error) {
         triggerAlertWithMessageError(res.message);
         return;
