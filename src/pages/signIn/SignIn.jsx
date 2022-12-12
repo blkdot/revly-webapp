@@ -18,11 +18,7 @@ const SignIn = () => {
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
 
-  useEffect(() => {
-    localStorage.removeItem('vendors');
-    localStorage.removeItem('date');
-    localStorage.removeItem('leaveTime');
-  }, []);
+  localStorage.clear();
 
   const navigate = useNavigate();
 
