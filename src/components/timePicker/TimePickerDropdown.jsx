@@ -3,6 +3,7 @@ import getHours from 'date-fns/getHours';
 import setHours from 'date-fns/setHours';
 import _ from 'lodash';
 
+import { setMinutes } from 'date-fns';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import SelectKit from '../../kits/select/SelectKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
@@ -42,8 +43,7 @@ const TimePickerDropdown = (props) => {
   }, [startLimit]);
 
   const setTimes = ({ target }) => {
-    const formatedValue = setHours(new Date(), target.value);
-
+    const formatedValue = setHours(new Date(setMinutes(new Date(), 0)), target.value);
     if (type) {
       times.splice(index, 1, { ...times[index], [type]: formatedValue });
       setValue([...times]);
