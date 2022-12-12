@@ -437,7 +437,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
     if (Object.keys(vendors.display).length === 0) {
-      if (branchData && vendor) {
+      if (branchData && vendor.platform === platformData) {
         getMenuData(vendor, platformData);
       }
     } else if (platform.length < 2 && branch && platform[0] !== 'talabat' && selected === 2) {

@@ -34,9 +34,6 @@ const Navbar = () => {
   const { setVendors } = useDate();
 
   const handleLogout = async () => {
-    localStorage.removeItem('vendors');
-    localStorage.removeItem('date');
-    localStorage.removeItem('leaveTime');
     setVendors({
       restaurants: [],
       vendorsObj: {},
