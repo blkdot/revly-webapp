@@ -22,7 +22,6 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import BoxKit from '../../kits/box/BoxKit';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
-import { OfferCrossPlatforms } from '../../api/marketingApi';
 import GetRecap from './GetRecap';
 
 const defaultHeatmapState = {
@@ -295,39 +294,30 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       chain_id: clonedVendor.chain_id,
     };
 
-    const dataReqOfferCross = {
-      start_date: format(startingDate, 'yyyy-MM-dd'),
-      start_hour: getHourArr('startTime'),
-      end_date: getFormatedEndDate(endingDate, 'yyyy-MM-dd', times),
-      end_hour: getHourArr('endTime'),
-      type_schedule: getTypeSchedule(),
-      menu_type: menuType,
-      goal: getTargetAudience(),
-      discount: Number(discountPercentage.replace('%', '')),
-      mov: Number(minOrder.toLowerCase().replace('aed', '')),
-      master_email: user.email,
-      access_token: user.accessToken,
-      platform_token:
-        userPlatformData.platforms[platform[0]].access_token ??
-        userPlatformData.platforms[platform[0]].access_token_bis,
-      vendors: branch.vendorsObj,
-    };
+    try {
+      if (platform.length < 2) {
+        const res = await triggerOffers(
+          Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
+          dataReq,
+        );
+        if (res instanceof Error) {
+          throw res.message;
+        }
+      } else {
+        platform.forEach(async (p) => {
+          const platformToken =
+            userPlatformData.platforms[p].access_token ??
+            userPlatformData.platforms[p].access_token_bis;
+          const res = await triggerOffers(p, { ...dataReq, platform_token: platformToken });
 
-    if (platform.length < 2) {
-      const res = await triggerOffers(
-        Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
-        dataReq,
-      );
-      if (res instanceof Error) {
-        triggerAlertWithMessageError(res.message);
-        return;
+          if (res instanceof Error) {
+            throw res.message;
+          }
+        });
       }
-    } else {
-      const res = await OfferCrossPlatforms(dataReqOfferCross);
-      if (res instanceof Error) {
-        triggerAlertWithMessageError(res.message);
-        return;
-      }
+    } catch (error) {
+      triggerAlertWithMessageError(error.message);
+      return;
     }
 
     setCreated(true);
