@@ -21,6 +21,7 @@ import settingsIcon from '../../assets/images/ic_settings.png';
 import lines from '../../assets/images/lines.png';
 
 import { simpleLink, accordionLink } from '../../data/navbarData';
+import useDate from '../../hooks/useDate';
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);
@@ -30,8 +31,19 @@ const Navbar = () => {
   const { logOut } = useUserAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { setVendors } = useDate();
 
   const handleLogout = async () => {
+    localStorage.removeItem('vendors');
+    localStorage.removeItem('date');
+    localStorage.removeItem('leaveTime');
+    setVendors({
+      restaurants: [],
+      vendorsObj: {},
+      vendorsArr: [],
+      display: {},
+      chainObj: {},
+    });
     try {
       await logOut();
       navigate('/');
