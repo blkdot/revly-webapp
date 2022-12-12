@@ -662,7 +662,7 @@ const GetProgress = ({ progressData }) => {
                       subtitle: 'Attract larger orders from groupes and famillies',
                     },
                     { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
-                    { title: 'Free item', subtitle: 'Allow customers to choose a free item' },
+                    { title: 'Free Items', subtitle: 'Allow customers to choose a free items' },
                   ].map((obj) => (
                     <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
                   ))}
