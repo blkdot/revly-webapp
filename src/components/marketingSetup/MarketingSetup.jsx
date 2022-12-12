@@ -125,7 +125,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (itemMenu === 'Restaurent Pick') {
         return ['20%', '25%', '30%', '35%', '40%', '45%', '50%'];
       }
-      if (itemMenu === 'Free Item') {
+      if (itemMenu === 'Free Items') {
         return ['100%'];
       }
       return ['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%'];
@@ -140,7 +140,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (itemMenu === 'Restaurent Pick') {
         return ['0 AED', '15 AED', '30 AED'];
       }
-      if (itemMenu === 'Free Item') {
+      if (itemMenu === 'Free Items') {
         return ['15 AED', '30 AED', '60 AED'];
       }
       return ['0 AED', '10 AED', '20 AED', '30 AED'];
@@ -789,7 +789,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }, [active]);
 
   useEffect(() => {
-    setItemMenu('');
+    setItemMenu('Flash Deal');
   }, [menu]);
 
   useEffect(() => {
