@@ -49,7 +49,7 @@ const Finance = ({
     return Object.keys(chainObjTemp);
   };
   const isDisplay = () => {
-    if (Object.keys(display) > 0) {
+    if (Object.keys(display).length > 0) {
       return getChain().length === Object.keys(display).length ? (
         <p>All Points of sales</p>
       ) : (
