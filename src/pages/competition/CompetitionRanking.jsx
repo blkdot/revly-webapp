@@ -107,12 +107,6 @@ const CompetitionRanking = () => {
       disablePadding: true,
       label: 'Ranking in offers and cuisine',
     },
-    {
-      id: 'ov',
-      numeric: false,
-      disablePadding: true,
-      label: 'Overall Ranking',
-    },
   ];
 
   const { renderPlatform, renderSimpleRow, renderOrdinalSuffix } = useTableContentFormatter();
@@ -123,7 +117,6 @@ const CompetitionRanking = () => {
     r_offers: renderOrdinalSuffix,
     r_cuis: renderOrdinalSuffix,
     r_all: renderOrdinalSuffix,
-    ov: renderOrdinalSuffix,
   };
 
   const renderRowsByHeader = (r) =>

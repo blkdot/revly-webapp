@@ -120,6 +120,7 @@ const useTableContentFormatter = () => {
   };
 
   const ordinalSuffixOf = (i) => {
+    if (!i) return '-';
     const r = Math.round(i);
     return r >= 100 ? '100' : `${r}`;
   };

@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
@@ -19,23 +20,66 @@ const Cost = () => {
 
   const { load, save } = useCost(vendorsObj);
 
-  const { data, isLoading, isError } = useQuery(['loadCost'], load);
+  const { isLoading, isError } = useQuery(['loadCost'], load, {
+    onSuccess: (data) => {
+      const newInvoice = [];
+      Object.keys(data).forEach((platform) => {
+        Object.keys(data[platform]).forEach((id) => {
+          if (data[platform][id]) {
+            const element = vendorsObj[platform].find((vobj) => vobj.vendor_id == id);
 
-  const mutateInvoice = useMutation({
+            if (element) {
+              const value = data[platform][id].cost;
+
+              const percent = parseFloat(value, 36) * 100;
+
+              const res = {
+                id,
+                restaurant: element.data.vendor_name,
+                cost: `${percent}%`,
+              };
+
+              newInvoice.push(res);
+            }
+          }
+        });
+      });
+      setInvoice(newInvoice);
+    },
+  });
+
+  const { isLoading: isLoadingMutation, mutateAsync } = useMutation({
     mutationFn: save,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['loadCost'] });
     },
   });
 
-  if (isLoading)
-    return <SpinnerKit style={{ display: 'flex', margin: 'auto', justifyContent: 'center' }} />;
-
   if (isError)
     return <div style={{ display: 'flex', justifyContent: 'center' }}>Error Occured</div>;
 
   const handleAdd = async (cost, v) => {
-    await mutateInvoice.mutateAsync({ cost, vendors: v });
+    await mutateAsync({ cost, vendors: v });
+  };
+
+  const deleteCost = (index) => () => {
+    const clonedInvoice = [...invoice];
+    clonedInvoice.splice(index, 1);
+    setInvoice(clonedInvoice);
+  };
+
+  const renderContent = () => {
+    if (isLoading || isLoadingMutation)
+      return <SpinnerKit style={{ display: 'flex', margin: 'auto', justifyContent: 'center' }} />;
+
+    return invoice?.map((obj, index) => (
+      <Invoice
+        key={obj.id}
+        onDelete={deleteCost(index)}
+        restaurant={obj.restaurant}
+        cost={obj.cost}
+      />
+    ));
   };
 
   return (
@@ -51,16 +95,7 @@ const Cost = () => {
           </div>
         </div>
         <DropdownSnackbar onAdd={handleAdd} />
-        {invoice?.map((obj, index) => (
-          <Invoice
-            key={obj.id}
-            setInvoice={setInvoice}
-            invoice={data}
-            index={index}
-            restaurant={obj.restaurant}
-            cost={obj.cost}
-          />
-        ))}
+        {renderContent()}
       </div>
     </div>
   );
