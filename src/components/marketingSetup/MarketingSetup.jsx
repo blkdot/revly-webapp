@@ -78,7 +78,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
-  const [customDay, setCustomDay] = useState('');
+  const [customDay, setCustomDay] = useState('Continues Offer');
   const [disabledDate, setDisabledDate] = useState(true);
   const [customisedDay, setCustomisedDay] = useState([]);
   const [times, setTimes] = useState([
@@ -113,40 +113,29 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const [checked, setChecked] = useState([]);
-
-  const getDiscountOrMov = (type) => {
-    if (type === 'discount') {
-      if (itemMenu === 'Flash Deal') {
-        return ['50%'];
-      }
-      if (itemMenu === 'Order more , save more') {
-        return ['30%', '50%'];
-      }
-      if (itemMenu === 'Restaurent Pick') {
-        return ['20%', '25%', '30%', '35%', '40%', '45%', '50%'];
-      }
-      if (itemMenu === 'Free Items') {
-        return ['100%'];
-      }
-      return ['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%'];
-    }
-    if (type === 'mov') {
-      if (itemMenu === 'Flash Deal') {
-        return ['0 AED', '10 AED'];
-      }
-      if (itemMenu === 'Order more , save more') {
-        return ['60 AED'];
-      }
-      if (itemMenu === 'Restaurent Pick') {
-        return ['0 AED', '15 AED', '30 AED'];
-      }
-      if (itemMenu === 'Free Items') {
-        return ['15 AED', '30 AED', '60 AED'];
-      }
-      return ['0 AED', '10 AED', '20 AED', '30 AED'];
-    }
-    return [];
+  const itemMenuObj = {
+    'Flash Deal': {
+      discount: ['50%'],
+      mov: ['0 AED', '10 AED'],
+      type: 'flash-deals',
+    },
+    'Order more , save more': {
+      discount: ['30%', '50%'],
+      mov: ['60 AED'],
+      type: 'groups',
+    },
+    'Restaurent Pick': {
+      discount: ['20%', '25%', '30%', '35%', '40%', '45%', '50%'],
+      mov: ['0 AED', '15 AED', '30 AED'],
+      type: 'restaurant-picks',
+    },
+    'Free Items': {
+      discount: ['100%'],
+      mov: ['15 AED', '30 AED', '60 AED'],
+      type: 'free-items',
+    },
   };
+  const getDiscountMovType = (type) => itemMenuObj[itemMenu][type];
 
   const getHourArr = (hour) => {
     const arr = [];
@@ -170,41 +159,50 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (duration === 'Starting Now') {
       setStartingDate(new Date());
       setCustomDay('now');
+      setTimes([
+        {
+          startTime: new Date(
+            null,
+            null,
+            null,
+            format(new Date(), 'HH'),
+            format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          ),
+          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          pos: 1,
+        },
+      ]);
+    } else {
+      setCustomDay('Continues Offer');
+      setTimes([
+        {
+          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          pos: 1,
+        },
+      ]);
     }
-
     if (customDay !== 'customised Days') {
       setCustomisedDay([]);
     }
   }, [duration, customDay]);
 
-  const getTypeSchedule = () => {
-    if (customDay === 'Continues Offer') {
-      return 'once';
-    }
-    if (customDay === 'Every Day') {
-      return 'everyday';
-    }
-    if (customDay === 'Work Week') {
-      return 'workweek';
-    }
-    if (customDay === 'Same day every week') {
-      return everyWeek.toLowerCase().replace('every', '').split(' ').join('');
-    }
-    if (customDay === 'Customised Days') {
-      return customisedDay.toString().toLowerCase().replace(/,/g, '.');
-    }
+  const typeScheduleObj = {
+    'Continues Offer': 'once',
+    'Every Day': 'everyday',
+    'Work Week': 'workweek',
+    'Same day every week': everyWeek.toLowerCase().replace('every', '').split(' ').join(''),
+    'Customised Days': customisedDay.toString().toLowerCase().replace(/,/g, '.'),
+  };
 
-    return 'now';
+  const getTypeSchedule = () => typeScheduleObj[customDay] || 'now';
+
+  const targetAudienceObj = {
+    'New customer': 'new_customers',
+    'Deliveroo plus': 'subscribers',
   };
-  const getTargetAudience = () => {
-    if (targetAudience === 'New customer') {
-      return 'new_customers';
-    }
-    if (targetAudience === 'Deliveroo plus') {
-      return 'subscribers';
-    }
-    return 'orders';
-  };
+
+  const getTargetAudience = () => targetAudienceObj[targetAudience] || 'orders';
   const getMenuItem = () => {
     const arr = [];
     category.forEach((obj) => {
@@ -215,18 +213,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       });
     });
     return arr;
-  };
-  const getTypeItemMenu = () => {
-    if (itemMenu === 'Flash Deal') {
-      return 'flash-deals';
-    }
-    if (itemMenu === 'Order more , save more') {
-      return 'groups';
-    }
-    if (itemMenu === 'Restaurent Pick') {
-      return 'restaurant-picks';
-    }
-    return 'free-items';
   };
 
   useEffect(() => {
@@ -276,7 +262,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     const menuType =
       menu === 'Offer on the whole Menu'
         ? null
-        : { menu_items: getMenuItem(), theme: getTypeItemMenu() };
+        : { menu_items: getMenuItem(), theme: getDiscountMovType('type') };
 
     const dataReq = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
@@ -410,7 +396,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setDiscountPercentage('');
     setMinOrder('');
   }, [itemMenu, menu]);
-
   const getMenuData = async (vendor, platforms) => {
     try {
       const res = await getMenu(
@@ -421,14 +406,17 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (!res.data) {
         throw new Error('');
       }
+      if (res.data.menu_items === null) {
+        setCategory(null);
+      } else {
+        const resp = Object.keys(res.data.menu_items)
+          .map((v) => res.data.menu_items[v])
+          .map((k) => Object.keys(k).map((el) => k[el]))
+          .flat();
 
-      const resp = Object.keys(res.data.menu_items)
-        .map((v) => res.data.menu_items[v])
-        .map((k) => Object.keys(k).map((el) => k[el]))
-        .flat();
-
-      setCategoryDataList(res.data.categories);
-      setCategory(resp);
+        setCategoryDataList(res.data.categories);
+        setCategory(resp);
+      }
     } catch (err) {
       setCategory([]);
       triggerAlertWithMessageError('Error while retrieving data');
@@ -437,7 +425,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
     if (Object.keys(vendors.display).length === 0) {
-      if (branchData && vendor.platform === platformData) {
+      if (branchData && vendor.platform === platformData && platformData !== 'talabat') {
         getMenuData(vendor, platformData);
       }
     } else if (platform.length < 2 && branch && platform[0] !== 'talabat' && selected === 2) {
@@ -498,196 +486,134 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
     setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
   };
+
+  const durationDisable = (n, stepsRange) => {
+    if (selected === n) {
+      clearTimeSelected();
+      timeSelected();
+      if (duration === 'Program the offer duration') {
+        setSteps([...stepsRange, stepsRange.length]);
+        setDisabled(!customDay);
+        return;
+      }
+      setSteps(stepsRange);
+      setDisabled(
+        !(
+          endingDate !== null &&
+          disabledDate &&
+          times.every(
+            (obj) =>
+              isValidDate(obj.endTime) &&
+              obj.startTime !== null &&
+              !Number.isNaN(new Date(obj.endTime).getTime()),
+          )
+        ),
+      );
+      return;
+    }
+    if (selected === n + 1) {
+      setDisabled(!targetAudience);
+    }
+    if (duration === 'Program the offer duration') {
+      if (selected === n + 1) {
+        timeSelected();
+        if (customDay === 'Same day every week') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              everyWeek &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime()),
+              )
+            ),
+          );
+          return;
+        }
+        if (customDay === 'Customised Days') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              customisedDay.length > 0 &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime()),
+              )
+            ),
+          );
+          return;
+        }
+        if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime()),
+              )
+            ),
+          );
+        }
+      }
+      if (selected === n + 2) {
+        setDisabled(!targetAudience);
+      }
+    }
+  };
+
   useEffect(() => {
     if (selected === 1) {
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         clearTimeSelected();
-      } else {
-        setDisabled(!branchData);
-        clearTimeSelected();
+        return;
       }
+      setDisabled(!branchData);
+      clearTimeSelected();
+      return;
     }
     if (selected === 2) {
       clearTimeSelected();
       if (menu === 'Offer on An Item from the Menu') {
         setSteps([0, 1, 2, 3, 4, 5]);
         setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
-      } else {
-        setSteps([0, 1, 2, 3, 4]);
-        setDisabled(!(menu && discountPercentage && minOrder));
+        return;
       }
+      setSteps([0, 1, 2, 3, 4]);
+      setDisabled(!(menu && discountPercentage && minOrder));
+      return;
     }
     if (menu === 'Offer on An Item from the Menu') {
       if (selected === 3) {
         setDisabled(checked.length === 0);
         clearTimeSelected();
+        return;
       }
-      if (selected === 4) {
-        clearTimeSelected();
-        timeSelected();
-        if (duration === 'Program the offer duration') {
-          setSteps([0, 1, 2, 3, 4, 5, 6]);
-          setDisabled(!customDay);
-        } else {
-          setSteps([0, 1, 2, 3, 4, 5]);
-          setDisabled(
-            !(
-              endingDate !== null &&
-              disabledDate &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()),
-              )
-            ),
-          );
-        }
-      }
-      if (duration === 'Program the offer duration') {
-        if (selected === 5) {
-          timeSelected();
-          if (customDay === 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                everyWeek &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-          if (customDay === 'Customised Days') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                customisedDay.length > 0 &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-        }
-      }
+      durationDisable(4, [0, 1, 2, 3, 4, 5]);
     }
     if (menu === 'Offer on the whole Menu') {
-      if (selected === 3) {
-        timeSelected();
-        if (duration === 'Program the offer duration') {
-          setSteps([0, 1, 2, 3, 4, 5]);
-          setDisabled(!customDay);
-        } else {
-          setSteps([0, 1, 2, 3, 4]);
-          setDisabled(
-            !(
-              endingDate !== null &&
-              disabledDate &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()),
-              )
-            ),
-          );
-        }
-      }
-      if (duration === 'Program the offer duration') {
-        if (selected === 4) {
-          timeSelected();
-          if (customDay === 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                everyWeek &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-          if (customDay === 'Customised Days') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                customisedDay.length > 0 &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-        }
-      }
+      durationDisable(3, [0, 1, 2, 3, 4]);
     }
   }, [
     menu,
@@ -707,32 +633,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     checked,
     vendors,
     branchData,
+    targetAudience,
   ]);
-  useEffect(() => {
-    if (duration === 'Starting Now') {
-      setTimes([
-        {
-          startTime: new Date(
-            null,
-            null,
-            null,
-            format(new Date(), 'HH'),
-            format(new Date(addMinutes(new Date(), 2)), 'mm'),
-          ),
-          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-          pos: 1,
-        },
-      ]);
-    } else {
-      setTimes([
-        {
-          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-          pos: 1,
-        },
-      ]);
-    }
-  }, [duration, customDay]);
 
   const renderGradientValue = (v, i) => {
     const indices = links === 'revenue' ? 'AED' : '';
@@ -826,7 +728,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     minOrder,
     itemMenu,
     setItemMenu,
-    getDiscountOrMov,
+    getDiscountMovType,
     categoryData,
     categoryDataList,
     filteredCategoryData,
@@ -957,6 +859,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                       setRecap(true);
                     } else {
                       setSelected(selected + 1);
+                      setDisabled(true);
                     }
                   }}
                   disabled={disabled}

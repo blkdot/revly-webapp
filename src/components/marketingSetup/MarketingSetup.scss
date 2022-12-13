@@ -18,6 +18,7 @@
     padding: 40px;
     overflow-y: scroll;
     overflow-x: hidden;
+
     >div {
       height: 100%;
       display: flex;
@@ -174,18 +175,20 @@
           width: 205px;
         }
       }
-      &.setup{
+
+      &.setup {
         &::before {
-            width: 110px;
+          width: 110px;
+        }
+
+        &.active {
+          &::before {
+            left: 115px;
+            width: 115px;
           }
-        
-          &.active {
-            &::before {
-              left: 115px;
-              width: 115px;
-            }
-          }
+        }
       }
+
       &.marketing {
         &::before {
           width: 195px !important;
@@ -469,17 +472,15 @@
     overflow: hidden;
 
     &.active {
-      background: linear-gradient(
-        45deg,
-        #2d99ff 1%,
-        #f6f3ff 1%,
-        #f6f3ff 49%,
-        #2d99ff 49%,
-        #2d99ff 51%,
-        #f6f3ff 51%,
-        #f6f3ff 99%,
-        #2d99ff 99%
-      );
+      background: linear-gradient(45deg,
+          #2d99ff 1%,
+          #f6f3ff 1%,
+          #f6f3ff 49%,
+          #2d99ff 49%,
+          #2d99ff 51%,
+          #f6f3ff 51%,
+          #f6f3ff 99%,
+          #2d99ff 99%);
       background-size: 6px 6px;
       background-position: 50px 50px;
     }
@@ -547,6 +548,11 @@
       height: 0;
       margin: 0;
       transition: 0.4s;
+      width: 100%;
+
+      >div {
+        width: 100%;
+      }
     }
 
     &.active {
@@ -816,11 +822,29 @@
 
 .search-filter {
   display: flex !important;
-  align-items: center !important;
+  align-items: flex-start !important;
   justify-content: space-between !important;
-  flex-direction: row !important;
+  flex-direction: column !important;
   width: 100%;
-
+  >div{
+    align-items: center !important;
+    flex-direction: row !important;
+  }
+  .max-amount{
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important;
+    width: 66% !important;
+    p{
+      color: gray;
+    }
+    div{
+      span{
+        font-weight: 600;
+      }
+    }
+  }
   >div:nth-of-type(1)>div {
     height: 50px;
 
@@ -945,6 +969,7 @@
 
 .category-list {
   margin-top: 20px !important;
+  margin-left: 15px !important;
   display: flex;
   flex-direction: column;
   align-items: flex-start !important;
@@ -987,17 +1012,47 @@
 
 .menu-item-wrapper {
   display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
   width: 100% !important;
 
   b {
     margin: 0 15px;
+    white-space: nowrap;
   }
-
+  >label{
+    >span:nth-of-type(2){
+      width: 87%;
+      >div{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        >div{
+          width: 70%;
+          >div{
+            display: flex;
+            align-items: center;
+          }
+        }
+        span{
+          width: 100%;
+          display: inline-block;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+    }
+  }
   >div {
     display: flex;
     align-items: center;
+    width: 70%;
+    >div>span{
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: inline-block;
+    }
   }
 }
 
