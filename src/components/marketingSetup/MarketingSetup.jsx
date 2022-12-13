@@ -408,6 +408,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }, [itemMenu, menu]);
   const getMenuData = async (vendor, platforms) => {
     try {
+      if (platforms === 'talabat') return;
+
       const res = await getMenu(
         { master_email: user.email, access_token: user.accessToken, vendor },
         platforms,
@@ -438,7 +440,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (branchData && vendor.platform === platformData) {
         getMenuData(vendor, platformData);
       }
-    } else if (platform.length < 2 && branch && platform[0] !== 'talabat' && selected === 2) {
+    } else if (platform.length < 2 && branch && selected === 2) {
       const vendorDisplay = vendors.vendorsObj[platform[0]][0];
       getMenuData(vendorDisplay, platform[0]);
     }

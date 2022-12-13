@@ -21,18 +21,27 @@ const SignIn = () => {
 
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
-  const defaultState = {
-    restaurants: [],
-    vendorsObj: {},
-    vendorsArr: [],
-    display: {},
-    chainObj: {},
-  };
+
+  // clear the localStorage
   useEffect(() => {
+    const defaultState = {
+      restaurants: [],
+      vendorsObj: {},
+      vendorsArr: [],
+      display: {},
+      chainObj: {},
+    };
     localStorage.clear();
     setVendorsReq(defaultState);
     setVendors(defaultState);
   }, []);
+
+  // clear the caches
+  caches.keys().then((names) => {
+    names.forEach((n) => {
+      caches.delete(n);
+    });
+  });
 
   const navigate = useNavigate();
 
