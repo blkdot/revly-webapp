@@ -18,7 +18,15 @@ const SignIn = () => {
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
 
+  // clear the localStorage
   localStorage.clear();
+
+  // clear the caches
+  caches.keys().then((names) => {
+    names.forEach((n) => {
+      caches.delete(n);
+    });
+  });
 
   const navigate = useNavigate();
 
