@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 import './RestaurantDropdown.scss';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import useDate from '../../hooks/useDate';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import BranchesIcon from '../../assets/images/ic_branch.png';
+import useVendors from '../../hooks/useVendors';
+import useDate from '../../hooks/useDate';
 
 const RestaurantDropdown = ({
   setState,
@@ -18,27 +19,28 @@ const RestaurantDropdown = ({
 }) => {
   const chainObj = chainObjProps;
 
+  const { setVendors, vendors: vendorsContext } = useDate();
+  const { vendors: vendorsReq, setVendors: setVendorsReq } = useVendors();
+
   useEffect(() => {
     window.onbeforeunload = (e) => {
+      const defaultState = {
+        restaurants: [],
+        vendorsObj: {},
+        vendorsArr: [],
+        display: {},
+        chainObj: {},
+      };
+      setVendorsReq(defaultState);
+      setVendors(defaultState);
       localStorage.setItem('leaveTime', JSON.stringify(new Date()));
       e.target.hidden = true;
       return '';
     };
-    window.onunload = () => {
-      const leaveTime = JSON.parse(localStorage.getItem('leaveTime')) || new Date();
-      if (new Date(leaveTime).toLocaleDateString() === new Date().toLocaleDateString()) {
-        if (new Date(leaveTime).getHours() === new Date().getHours() - 2) {
-          localStorage.removeItem('vendors');
-          localStorage.removeItem('date');
-        }
-      } else {
-        localStorage.removeItem('vendors');
-        localStorage.removeItem('date');
-      }
-      return '';
-    };
-  }, []);
-  const { setVendors, vendors: vendorsContext } = useDate();
+    if (vendorsReq.vendorsArr.length < 0) {
+      setVendors(vendorsReq);
+    }
+  }, [vendorsReq]);
   const { vendorsObj, display } = vendorsContext;
   const [active, setActive] = useState(false);
   const handleChange = (value, checked) => {

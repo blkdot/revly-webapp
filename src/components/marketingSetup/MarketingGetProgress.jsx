@@ -55,7 +55,7 @@ const GetProgress = ({ progressData }) => {
     minOrder,
     itemMenu,
     setItemMenu,
-    getDiscountOrMov,
+    getDiscountMovType,
     categoryData,
     categoryDataList,
     filteredCategoryData,
@@ -69,8 +69,8 @@ const GetProgress = ({ progressData }) => {
     setEndingDate,
     times,
     setTimes,
-    customDay,
-    setCustomDay,
+    typeSchedule,
+    setTypeSchedule,
     targetAudience,
     setTargetAudience,
     setEveryWeek,
@@ -92,7 +92,7 @@ const GetProgress = ({ progressData }) => {
   } = progressData;
 
   const getWorkWeek = () => {
-    if (customDay === 'Work Week') {
+    if (typeSchedule === 'Work Week') {
       if (new Date(endingDate).getDay() === 0) {
         return new Date(addDays(endingDate, 1));
       }
@@ -109,7 +109,7 @@ const GetProgress = ({ progressData }) => {
       return true;
     }
 
-    return customDay !== 'Continuous Offer';
+    return typeSchedule !== 'Continues Offer';
   };
   const durationSelected = () => (
     <div className="left-part-middle">
@@ -189,7 +189,7 @@ const GetProgress = ({ progressData }) => {
               <div>
                 <div>Program the offer duration</div>
                 <p>
-                  {customDay || 'Recurrence customized'}
+                  {typeSchedule || 'Recurrence customized'}
                   <img src={ArrowIcon} alt="arrow" />
                 </p>
               </div>
@@ -200,12 +200,12 @@ const GetProgress = ({ progressData }) => {
             <RadioGroupKit
               className="radio-group-day"
               aria-labelledby="demo-radio-buttons-group-label"
-              value={customDay}
-              onChange={(e) => setCustomDay(e.target.value)}
+              value={typeSchedule}
+              onChange={(e) => setTypeSchedule(e.target.value)}
               name="radio-buttons-group-days"
             >
               {[
-                'Continuous Offer',
+                'Continues Offer',
                 'Every Day',
                 'Work Week',
                 'Same day every week',
@@ -296,11 +296,11 @@ const GetProgress = ({ progressData }) => {
             </span>
             <div>
               <div>Recurrence Details</div>
-              <p>{customDay}</p>
+              <p>{typeSchedule}</p>
             </div>
           </div>
         </div>
-        {customDay === 'Same day every week' ? (
+        {typeSchedule === 'Same day every week' ? (
           <CompetitionDropdown
             rows={[
               'Every Monday',
@@ -311,7 +311,7 @@ const GetProgress = ({ progressData }) => {
               'Every Saturday',
               'Every Sunday',
             ]}
-            title={customDay}
+            title={typeSchedule}
             className="top-competition marketing-setup-dropdown"
             setRow={setEveryWeek}
             select={everyWeek}
@@ -319,7 +319,7 @@ const GetProgress = ({ progressData }) => {
         ) : (
           ''
         )}
-        {customDay === 'Customised Days' ? (
+        {typeSchedule === 'Customised Days' ? (
           <MarketingCheckmarksDropdown
             names={days}
             setName={setCustomisedDay}
@@ -333,7 +333,7 @@ const GetProgress = ({ progressData }) => {
             Starting Date
             <DatePickerDayKit
               className="date-error"
-              shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
+              shouldDisableDate={typeSchedule === 'Work Week' ? disableWeekends : null}
               value={startingDate}
               onChange={(newValue) => {
                 onChange(newValue, setStartingDate);
@@ -345,7 +345,7 @@ const GetProgress = ({ progressData }) => {
             Ending Date
             <DatePickerDayKit
               className="date-error"
-              shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
+              shouldDisableDate={typeSchedule === 'Work Week' ? disableWeekends : null}
               minDate={new Date(startingDate)}
               value={getWorkWeek()}
               onChange={(newValue) => {
@@ -438,7 +438,7 @@ const GetProgress = ({ progressData }) => {
             </div>
           ),
         )}
-        {customDay === 'Continuous Offer' || times.length === 3 ? (
+        {typeSchedule === 'Continues Offer' || times.length === 3 ? (
           ''
         ) : (
           <ButtonKit
@@ -478,6 +478,9 @@ const GetProgress = ({ progressData }) => {
   const { vendorsObj, display } = vendors;
 
   const getMenuActive = () => {
+    if (category === null) {
+      return true;
+    }
     if (Object.keys(display).length === 0) {
       return platformData === 'talabat' || category.length === 0;
     }
@@ -486,6 +489,18 @@ const GetProgress = ({ progressData }) => {
     }
     return false;
   };
+  const itemMenuArr = [
+    {
+      title: 'Flash Deal',
+      subtitle: 'Sell Off extra stock when you’re about to close',
+    },
+    {
+      title: 'Order more , save more',
+      subtitle: 'Attract larger orders from groupes and famillies',
+    },
+    { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
+    { title: 'Free Items', subtitle: 'Allow customers to choose a free items' },
+  ];
   if (selected === 1) {
     return (
       <div className="left-part-middle">
@@ -652,18 +667,7 @@ const GetProgress = ({ progressData }) => {
                   onChange={(e) => setItemMenu(e.target.value)}
                   name="radio-buttons-group-menu"
                 >
-                  {[
-                    {
-                      title: 'Flash Deal',
-                      subtitle: 'Sell Off extra stock when you’re about to close',
-                    },
-                    {
-                      title: 'Order more , save more',
-                      subtitle: 'Attract larger orders from groupes and famillies',
-                    },
-                    { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
-                    { title: 'Free Items', subtitle: 'Allow customers to choose a free items' },
-                  ].map((obj) => (
+                  {itemMenuArr.map((obj) => (
                     <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
                   ))}
                   <div className="dropdown-wrapper">
@@ -671,7 +675,7 @@ const GetProgress = ({ progressData }) => {
                       <TypographyKit variant="div">
                         Percentage Discount
                         <MarketingPlaceholderDropdown
-                          names={getDiscountOrMov('discount')}
+                          names={getDiscountMovType('discount')}
                           title="%"
                           setPersonName={setDiscountPercentage}
                           personName={discountPercentage}
@@ -682,7 +686,7 @@ const GetProgress = ({ progressData }) => {
                       <TypographyKit variant="div">
                         Min. Order Value
                         <MarketingPlaceholderDropdown
-                          names={getDiscountOrMov('mov')}
+                          names={getDiscountMovType('mov')}
                           title="0 AED"
                           setPersonName={setMinOrder}
                           personName={minOrder}
@@ -727,57 +731,73 @@ const GetProgress = ({ progressData }) => {
               </div>
             </div>
             <div className="picker-duration search-filter">
-              <TextfieldKit
-                style={{ width: '100%' }}
-                id="input-with-icon-textfield"
-                placeholder="Search"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <img src={searchIcon} alt="Searh Icon" />
-                    </InputAdornment>
-                  ),
-                }}
-                variant="outlined"
-              />
-              <div style={{ width: '90%' }}>
-                <div className="__select menu-item-select">
-                  <MenuDropdown
-                    onChange={handleCategoryDataChange}
-                    value={categoryData}
-                    multiple
-                    renderValue={(selectedMenu) => selectedMenu.join(', ')}
-                    items={categoryDataList}
-                    label="All Categories"
-                    renderOption={(v) => (
-                      <MenuItemKit key={v} value={v}>
-                        <CheckboxKit checked={categoryData.indexOf(v) > -1} />
-                        <ListItemTextKit primary={v} />
-                      </MenuItemKit>
-                    )}
-                  />
+              <div>
+                <TextfieldKit
+                  style={{ width: '100%' }}
+                  id="input-with-icon-textfield"
+                  placeholder="Search"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <img src={searchIcon} alt="Searh Icon" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant="outlined"
+                />
+                <div style={{ width: '90%' }}>
+                  <div className="__select menu-item-select">
+                    <MenuDropdown
+                      onChange={handleCategoryDataChange}
+                      value={categoryData}
+                      multiple
+                      renderValue={(selectedMenu) => selectedMenu.join(', ')}
+                      items={categoryDataList}
+                      label="All Categories"
+                      renderOption={(v) => (
+                        <MenuItemKit key={v} value={v}>
+                          <CheckboxKit checked={categoryData.indexOf(v) > -1} />
+                          <ListItemTextKit primary={v} />
+                        </MenuItemKit>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="max-amount">
+                <p>Maximum amount: 10</p>
+                <div>
+                  Selected: <span>{checked.length}</span>
                 </div>
               </div>
             </div>
             <FormcontrolKit className="category-list">
               {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map((obj) => (
-                <MenuItemKit className="menu-item-wrapper" key={obj.id} value={obj.name}>
-                  <div>
-                    <CheckboxKit
-                      onChange={({ target }) => {
-                        if (target.checked) {
-                          setChecked([...checked, obj.name]);
-                        } else {
-                          checked.splice(checked.indexOf(obj.name), 1);
-                          setChecked([...checked]);
-                        }
-                      }}
-                      checked={checked.indexOf(obj.name) > -1}
-                    />
-                    <ListItemTextKit primary={obj.name} />
-                  </div>
-                  <b>{obj.price} AED</b>
-                </MenuItemKit>
+                <div className="menu-item-wrapper" key={obj.id} value={obj.name}>
+                  <FormControlLabelKit
+                    control={
+                      <CheckboxKit
+                        onChange={({ target }) => {
+                          if (target.checked) {
+                            setChecked([...checked, target.value]);
+                          } else {
+                            checked.splice(checked.indexOf(target.value), 1);
+                            setChecked([...checked]);
+                          }
+                        }}
+                        value={obj.name}
+                      />
+                    }
+                    label={
+                      <div>
+                        <div>
+                          <ListItemTextKit primary={obj.name} />
+                        </div>
+                        <b>{obj.price} AED</b>
+                      </div>
+                    }
+                  />
+                </div>
               ))}
             </FormcontrolKit>
           </BoxKit>
@@ -794,7 +814,7 @@ const GetProgress = ({ progressData }) => {
     }
     if (duration === 'Program the offer duration') {
       if (selected === 5) {
-        if (customDay) {
+        if (typeSchedule) {
           return reccurenceSelected();
         }
       }
@@ -814,7 +834,7 @@ const GetProgress = ({ progressData }) => {
     }
     if (duration === 'Program the offer duration') {
       if (selected === 4) {
-        if (customDay) {
+        if (typeSchedule) {
           return reccurenceSelected();
         }
       }

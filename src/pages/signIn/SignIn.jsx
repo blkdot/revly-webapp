@@ -7,6 +7,8 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import SigninForm from '../../components/forms/signinForm/SigninForm';
 import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
+import useDate from '../../hooks/useDate';
+import useVendors from '../../hooks/useVendors';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '', remembered: true });
@@ -14,12 +16,25 @@ const SignIn = () => {
   const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert('error');
   const [errorData, setErrorData] = useState({ email: false, password: false });
   const [params] = useSearchParams();
+  const { setVendors } = useDate();
+  const { setVendors: setVendorsReq } = useVendors(true);
 
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
 
   // clear the localStorage
-  localStorage.clear();
+  useEffect(() => {
+    const defaultState = {
+      restaurants: [],
+      vendorsObj: {},
+      vendorsArr: [],
+      display: {},
+      chainObj: {},
+    };
+    localStorage.clear();
+    setVendorsReq(defaultState);
+    setVendors(defaultState);
+  }, []);
 
   // clear the caches
   caches.keys().then((names) => {

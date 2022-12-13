@@ -21,7 +21,6 @@ import usePlanningAds from '../../hooks/usePlanningAds';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { defaultFilterStateFormat } from './marketingOfferData';
-import useVendors from '../../hooks/useVendors';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import Layers from '../../assets/icons/Layers';
@@ -31,7 +30,7 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (date.typeDate === 'month') {

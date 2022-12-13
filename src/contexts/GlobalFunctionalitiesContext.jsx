@@ -15,16 +15,13 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('error');
 
-  const storageVendors = JSON.parse(localStorage.getItem('vendors')) || null;
-  const [vendors, setVendors] = useState(
-    storageVendors || {
-      restaurants: [],
-      vendorsObj: {},
-      vendorsArr: [],
-      display: {},
-      chainObj: {},
-    },
-  );
+  const [vendors, setVendors] = useState({
+    restaurants: [],
+    vendorsObj: {},
+    vendorsArr: [],
+    display: {},
+    chainObj: {},
+  });
 
   const storageDate = JSON.parse(localStorage.getItem('date')) || null;
   const [date, setDate] = useState(
