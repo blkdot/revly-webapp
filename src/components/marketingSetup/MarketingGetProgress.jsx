@@ -69,8 +69,8 @@ const GetProgress = ({ progressData }) => {
     setEndingDate,
     times,
     setTimes,
-    customDay,
-    setCustomDay,
+    typeSchedule,
+    setTypeSchedule,
     targetAudience,
     setTargetAudience,
     setEveryWeek,
@@ -92,7 +92,7 @@ const GetProgress = ({ progressData }) => {
   } = progressData;
 
   const getWorkWeek = () => {
-    if (customDay === 'Work Week') {
+    if (typeSchedule === 'Work Week') {
       if (new Date(endingDate).getDay() === 0) {
         return new Date(addDays(endingDate, 1));
       }
@@ -109,7 +109,7 @@ const GetProgress = ({ progressData }) => {
       return true;
     }
 
-    return customDay !== 'Continues Offer';
+    return typeSchedule !== 'Continues Offer';
   };
   const durationSelected = () => (
     <div className="left-part-middle">
@@ -189,7 +189,7 @@ const GetProgress = ({ progressData }) => {
               <div>
                 <div>Program the offer duration</div>
                 <p>
-                  {customDay || 'Recurrence customized'}
+                  {typeSchedule || 'Recurrence customized'}
                   <img src={ArrowIcon} alt="arrow" />
                 </p>
               </div>
@@ -200,8 +200,8 @@ const GetProgress = ({ progressData }) => {
             <RadioGroupKit
               className="radio-group-day"
               aria-labelledby="demo-radio-buttons-group-label"
-              value={customDay}
-              onChange={(e) => setCustomDay(e.target.value)}
+              value={typeSchedule}
+              onChange={(e) => setTypeSchedule(e.target.value)}
               name="radio-buttons-group-days"
             >
               {[
@@ -296,11 +296,11 @@ const GetProgress = ({ progressData }) => {
             </span>
             <div>
               <div>Recurrence Details</div>
-              <p>{customDay}</p>
+              <p>{typeSchedule}</p>
             </div>
           </div>
         </div>
-        {customDay === 'Same day every week' ? (
+        {typeSchedule === 'Same day every week' ? (
           <CompetitionDropdown
             rows={[
               'Every Monday',
@@ -311,7 +311,7 @@ const GetProgress = ({ progressData }) => {
               'Every Saturday',
               'Every Sunday',
             ]}
-            title={customDay}
+            title={typeSchedule}
             className="top-competition marketing-setup-dropdown"
             setRow={setEveryWeek}
             select={everyWeek}
@@ -319,7 +319,7 @@ const GetProgress = ({ progressData }) => {
         ) : (
           ''
         )}
-        {customDay === 'Customised Days' ? (
+        {typeSchedule === 'Customised Days' ? (
           <MarketingCheckmarksDropdown
             names={days}
             setName={setCustomisedDay}
@@ -333,7 +333,7 @@ const GetProgress = ({ progressData }) => {
             Starting Date
             <DatePickerDayKit
               className="date-error"
-              shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
+              shouldDisableDate={typeSchedule === 'Work Week' ? disableWeekends : null}
               value={startingDate}
               onChange={(newValue) => {
                 onChange(newValue, setStartingDate);
@@ -345,7 +345,7 @@ const GetProgress = ({ progressData }) => {
             Ending Date
             <DatePickerDayKit
               className="date-error"
-              shouldDisableDate={customDay === 'Work Week' ? disableWeekends : null}
+              shouldDisableDate={typeSchedule === 'Work Week' ? disableWeekends : null}
               minDate={new Date(startingDate)}
               value={getWorkWeek()}
               onChange={(newValue) => {
@@ -438,7 +438,7 @@ const GetProgress = ({ progressData }) => {
             </div>
           ),
         )}
-        {customDay === 'Continues Offer' || times.length === 3 ? (
+        {typeSchedule === 'Continues Offer' || times.length === 3 ? (
           ''
         ) : (
           <ButtonKit
@@ -814,7 +814,7 @@ const GetProgress = ({ progressData }) => {
     }
     if (duration === 'Program the offer duration') {
       if (selected === 5) {
-        if (customDay) {
+        if (typeSchedule) {
           return reccurenceSelected();
         }
       }
@@ -834,7 +834,7 @@ const GetProgress = ({ progressData }) => {
     }
     if (duration === 'Program the offer duration') {
       if (selected === 4) {
-        if (customDay) {
+        if (typeSchedule) {
           return reccurenceSelected();
         }
       }

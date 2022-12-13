@@ -4,12 +4,12 @@ import ButtonKit from '../../../kits/button/ButtonKit';
 import RestaurantDropdown from '../../restaurantDropdown/RestaurantDropdown.suspended';
 import CompetitionDropdown from '../../competitionDropdown/CompetitionDropdown';
 import { usePlatform } from '../../../hooks/usePlatform';
-import useVendors from '../../../hooks/useVendors';
 import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
+import useDate from '../../../hooks/useDate';
 
 const DropdownSnackbar = (props) => {
   const { onAdd } = props;
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
   const [procent, setProcent] = useState('');
   const { userPlatformData } = usePlatform();

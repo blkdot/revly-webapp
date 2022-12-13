@@ -8,11 +8,12 @@ import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import useDate from '../../hooks/useDate';
 import talabat from '../../assets/images/talabat-favicon.png';
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
+import useVendors from '../../hooks/useVendors';
+import useDate from '../../hooks/useDate';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,27 +36,27 @@ const RestaurantDropdownOld = ({
   setState,
   cost,
 }) => {
+  const { setVendors, vendors: vendorsContext } = useDate();
+  const { vendors: vendorsReq, setVendors: setVendorsReq } = useVendors();
   React.useEffect(() => {
     window.onbeforeunload = (e) => {
+      const defaultState = {
+        restaurants: [],
+        vendorsObj: {},
+        vendorsArr: [],
+        display: {},
+        chainObj: {},
+      };
+      setVendorsReq(defaultState);
+      setVendors(defaultState);
       localStorage.setItem('leaveTime', JSON.stringify(new Date()));
       e.target.hidden = true;
       return '';
     };
-    window.onunload = () => {
-      const leaveTime = JSON.parse(localStorage.getItem('leaveTime')) || new Date();
-      if (new Date(leaveTime).toLocaleDateString() === new Date().toLocaleDateString()) {
-        if (new Date(leaveTime).getHours() === new Date().getHours() - 2) {
-          localStorage.removeItem('vendors');
-          localStorage.removeItem('date');
-        }
-      } else {
-        localStorage.removeItem('vendors');
-        localStorage.removeItem('date');
-      }
-      return '';
-    };
-  }, []);
-  const { setVendors, vendors: vendorsContext } = useDate();
+    if (vendorsReq.vendorsArr.length > 0) {
+      setVendors(vendorsReq);
+    }
+  }, [vendorsReq]);
 
   const handleChange = (event) => {
     const {

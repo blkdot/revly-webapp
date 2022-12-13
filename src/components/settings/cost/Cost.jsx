@@ -8,14 +8,14 @@ import DropdownSnackbar from './DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
 import useCost from '../../../hooks/useCost';
-import useVendors from '../../../hooks/useVendors';
 
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+import useDate from '../../../hooks/useDate';
 
 const Cost = () => {
   const queryClient = useQueryClient();
   const [invoice, setInvoice] = useState([]);
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const { vendorsObj } = vendors;
 
   const { load, save } = useCost(vendorsObj);

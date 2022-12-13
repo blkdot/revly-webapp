@@ -8,6 +8,7 @@ import SigninForm from '../../components/forms/signinForm/SigninForm';
 import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import useDate from '../../hooks/useDate';
+import useVendors from '../../hooks/useVendors';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '', remembered: true });
@@ -16,19 +17,21 @@ const SignIn = () => {
   const [errorData, setErrorData] = useState({ email: false, password: false });
   const [params] = useSearchParams();
   const { setVendors } = useDate();
+  const { setVendors: setVendorsReq } = useVendors(true);
 
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
-
+  const defaultState = {
+    restaurants: [],
+    vendorsObj: {},
+    vendorsArr: [],
+    display: {},
+    chainObj: {},
+  };
   useEffect(() => {
     localStorage.clear();
-    setVendors({
-      restaurants: [],
-      vendorsObj: {},
-      vendorsArr: [],
-      display: {},
-      chainObj: {},
-    });
+    setVendorsReq(defaultState);
+    setVendors(defaultState);
   }, []);
 
   const navigate = useNavigate();

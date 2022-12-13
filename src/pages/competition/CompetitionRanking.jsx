@@ -18,7 +18,6 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
-import useVendors from '../../hooks/useVendors';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -26,7 +25,7 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 
 const CompetitionRanking = () => {
   const { setVendors } = useGlobal();
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);

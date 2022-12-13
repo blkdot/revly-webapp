@@ -13,7 +13,6 @@ import ContainerKit from '../../kits/container/ContainerKit';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
-import useVendors from '../../hooks/useVendors';
 import { usePlatform } from '../../hooks/usePlatform';
 import { useUserAuth } from '../../contexts/AuthContext';
 import useApi from '../../hooks/useApi';
@@ -23,6 +22,7 @@ import BoxKit from '../../kits/box/BoxKit';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
 import GetRecap from './GetRecap';
+import useDate from '../../hooks/useDate';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -65,7 +65,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   });
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert('error');
@@ -77,7 +77,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
-  const [customDay, setCustomDay] = useState('Continues Offer');
+  const [typeSchedule, setTypeSchedule] = useState('Continues Offer');
   const [disabledDate, setDisabledDate] = useState(true);
   const [customisedDay, setCustomisedDay] = useState([]);
   const [times, setTimes] = useState([
@@ -157,7 +157,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     if (duration === 'Starting Now') {
       setStartingDate(new Date());
-      setCustomDay('now');
+      setTypeSchedule('now');
       setTimes([
         {
           startTime: new Date(
@@ -172,7 +172,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         },
       ]);
     } else {
-      setCustomDay('Continues Offer');
+      setTypeSchedule('Continues Offer');
       setTimes([
         {
           startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
@@ -181,11 +181,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         },
       ]);
     }
-    if (customDay !== 'customised Days') {
+  }, [duration]);
+  useEffect(() => {
+    if (typeSchedule !== 'customised Days') {
       setCustomisedDay([]);
     }
-  }, [duration, customDay]);
-
+  }, [typeSchedule]);
   const typeScheduleObj = {
     'Continues Offer': 'once',
     'Every Day': 'everyday',
@@ -194,7 +195,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     'Customised Days': customisedDay.toString().toLowerCase().replace(/,/g, '.'),
   };
 
-  const getTypeSchedule = () => typeScheduleObj[customDay] || 'now';
+  const getTypeSchedule = () => typeScheduleObj[typeSchedule] || 'now';
 
   const targetAudienceObj = {
     'New customer': 'new_customers',
@@ -434,7 +435,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
     if (Object.keys(vendors.display).length === 0) {
-      if (branchData && vendor.platform === platformData && platformData !== 'talabat') {
+      if (branchData && vendor.platform === platformData) {
         getMenuData(vendor, platformData);
       }
     } else if (platform.length < 2 && branch && platform[0] !== 'talabat' && selected === 2) {
@@ -469,9 +470,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       times,
       heatmapData[links],
       getTypeSchedule() === 'workweek',
-      customDay === 'Customised Days',
+      typeSchedule === 'Customised Days',
       customisedDay,
-      customDay === 'Same day every week',
+      typeSchedule === 'Same day every week',
       everyWeek,
     );
 
@@ -502,7 +503,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       timeSelected();
       if (duration === 'Program the offer duration') {
         setSteps([...stepsRange, stepsRange.length]);
-        setDisabled(!customDay);
+        setDisabled(!typeSchedule);
         return;
       }
       setSteps(stepsRange);
@@ -526,7 +527,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (duration === 'Program the offer duration') {
       if (selected === n + 1) {
         timeSelected();
-        if (customDay === 'Same day every week') {
+        if (typeSchedule === 'Same day every week') {
           setDisabled(
             !(
               startingDate !== null &&
@@ -546,7 +547,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           );
           return;
         }
-        if (customDay === 'Customised Days') {
+        if (typeSchedule === 'Customised Days') {
           setDisabled(
             !(
               startingDate !== null &&
@@ -566,7 +567,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           );
           return;
         }
-        if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
+        if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
           setDisabled(
             !(
               startingDate !== null &&
@@ -633,7 +634,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     selected,
     duration,
     endingDate,
-    customDay,
+    typeSchedule,
     disabledDate,
     times,
     everyWeek,
@@ -708,7 +709,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (selected >= 3) {
       timeSelected();
     }
-  }, [times, startingDate, endingDate, selected, customDay]);
+  }, [times, startingDate, endingDate, selected, typeSchedule]);
 
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
@@ -751,8 +752,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setEndingDate,
     times,
     setTimes,
-    customDay,
-    setCustomDay,
+    typeSchedule,
+    setTypeSchedule,
     targetAudience,
     setTargetAudience,
     setSteps,
@@ -795,7 +796,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     branch,
     platform,
     duration,
-    customDay,
+    typeSchedule,
     customisedDay,
     everyWeek,
     startingDate,

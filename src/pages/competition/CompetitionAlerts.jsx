@@ -5,7 +5,6 @@ import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDr
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
-import useVendors from '../../hooks/useVendors';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import competitorIcon from '../../assets/images/ic_competitor.png';
@@ -23,10 +22,11 @@ import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import useDate from '../../hooks/useDate';
 
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
