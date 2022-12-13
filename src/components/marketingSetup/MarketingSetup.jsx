@@ -22,7 +22,6 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import BoxKit from '../../kits/box/BoxKit';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
-import { OfferCrossPlatforms } from '../../api/marketingApi';
 import GetRecap from './GetRecap';
 
 const defaultHeatmapState = {
@@ -253,12 +252,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     );
   };
   const handleSchedule = async () => {
-    const newBranchData =
-      Object.keys(vendors.display).length > 0
-        ? branch.vendorsObj[platform[0]][0]
-        : vendorsArr.find((v) => v.data.vendor_name === branchData);
-    const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
-    delete clonedVendor.platform;
     const menuType =
       menu === 'Offer on the whole Menu'
         ? null
@@ -277,47 +270,63 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       master_email: user.email,
       access_token: user.accessToken,
       platform_token: getPlatformToken(),
-      vendors: [clonedVendor],
-      chain_id: clonedVendor.chain_id,
+      vendors: [{}],
     };
 
-    const dataReqOfferCross = {
-      start_date: format(startingDate, 'yyyy-MM-dd'),
-      start_hour: getHourArr('startTime'),
-      end_date: getFormatedEndDate(endingDate, 'yyyy-MM-dd', times),
-      end_hour: getHourArr('endTime'),
-      type_schedule: getTypeSchedule(),
-      menu_type: menuType,
-      goal: getTargetAudience(),
-      discount: Number(discountPercentage.replace('%', '')),
-      mov: Number(minOrder.toLowerCase().replace('aed', '')),
-      master_email: user.email,
-      access_token: user.accessToken,
-      platform_token:
-        userPlatformData.platforms[platform[0]].access_token ??
-        userPlatformData.platforms[platform[0]].access_token_bis,
-      vendors: branch.vendorsObj,
-    };
+    try {
+      if (platform.length < 2) {
+        const newBranchData =
+          Object.keys(vendors.display).length > 0
+            ? branch.vendorsObj[platform[0]][0]
+            : vendorsArr.find((v) => v.data.vendor_name === branchData);
+        const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
+        delete clonedVendor.platform;
 
-    if (platform.length < 2) {
-      const res = await triggerOffers(
-        Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
-        dataReq,
-      );
-      if (res instanceof Error) {
-        triggerAlertWithMessageError(res.message);
-        return;
+        const res = await triggerOffers(
+          Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
+          { ...dataReq, vendors: [clonedVendor] },
+        );
+
+        if (res instanceof Error) {
+          throw res.message;
+        }
+
+        setCreated(true);
+        setRecap(false);
+      } else {
+        const crossPlatform = platform.map((p) => {
+          const newBranchData =
+            Object.keys(vendors.display).length > 0
+              ? branch.vendorsObj[p][0]
+              : vendorsArr.find((v) => v.data.vendor_name === branchData);
+          const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
+          delete clonedVendor.platform;
+          dataReq.vendors = [clonedVendor];
+          const platformToken =
+            userPlatformData.platforms[p].access_token ??
+            userPlatformData.platforms[p].access_token_bis;
+          return triggerOffers(p, {
+            ...dataReq,
+            platform_token: platformToken,
+            vendors: [clonedVendor],
+          });
+        });
+
+        Promise.all(crossPlatform).then(([platform1, platform2]) => {
+          if (platform1 instanceof Error) {
+            throw platform1.message;
+          }
+
+          if (platform2 instanceof Error) {
+            throw platform2.message;
+          }
+          setCreated(true);
+          setRecap(false);
+        });
       }
-    } else {
-      const res = await OfferCrossPlatforms(dataReqOfferCross);
-      if (res instanceof Error) {
-        triggerAlertWithMessageError(res.message);
-        return;
-      }
+    } catch (error) {
+      triggerAlertWithMessageError(error.message);
     }
-
-    setCreated(true);
-    setRecap(false);
   };
   const getHeatmapData = () => {
     delete vendorsObj.display;
