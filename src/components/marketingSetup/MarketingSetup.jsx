@@ -937,11 +937,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               </TypographyKit>
               <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>
                 <TypographyKit variant="div" className="right-part-main-hour">
-                  <TypographyKit>
+                  <TypographyKit style={{ paddingBottom: '15px' }}>
                     <img src={OpacityLogo} alt="Logo" />
                   </TypographyKit>
                   {_.range(minHour, maxHour + 1).map((num) => (
-                    <TypographyKit key={num}>{rangeHoursOpenedDay[num].label ?? num}</TypographyKit>
+                    <TypographyKit style={{ lineHeight: '0.1' }} key={num}>
+                      {rangeHoursOpenedDay[num].label ?? num}
+                    </TypographyKit>
                   ))}
                 </TypographyKit>
                 <TypographyKit sx={{ width: '100%' }} variant="div">
