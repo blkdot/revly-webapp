@@ -20,6 +20,7 @@ import useDate from '../../hooks/useDate';
 import talabat from '../../assets/images/talabat.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import { usePlatform } from '../../hooks/usePlatform';
+import SpinnerKit from '../../kits/spinner/SpinnerKit';
 
 const EnhancedTableHead = ({ headCells }) => (
   <TableHeadKit className="table-head">
@@ -33,7 +34,7 @@ const EnhancedTableHead = ({ headCells }) => (
   </TableHeadKit>
 );
 
-const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
+const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading }) => {
   const { date } = useDate();
   const { beforePeriod, afterPeriod, titleDate, titleafterPeriod, typeDate } = date;
   const { userPlatformData } = usePlatform();
@@ -204,16 +205,32 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
                       alt={title}
                     />
                   </TableCellKit>
-                  <TableCellKit>{getNum(metricsbeforePeriod.deliveroo)}</TableCellKit>
-                  <TableCellKit>{getNum(metricsafterPeriod.deliveroo)}</TableCellKit>
                   <TableCellKit>
-                    <div
-                      className={`table_evolution ${
-                        procentDeliveroo() > 0 ? 'table_increased' : ''
-                      } ${procentDeliveroo() < 0 ? 'table_decreased' : ''}`}
-                    >
-                      <span>{evolution(procentDeliveroo())}</span>
-                    </div>
+                    {loading ? (
+                      <SpinnerKit className="loading-table" />
+                    ) : (
+                      getNum(metricsbeforePeriod.deliveroo)
+                    )}
+                  </TableCellKit>
+                  <TableCellKit>
+                    {loading ? (
+                      <SpinnerKit className="loading-table" />
+                    ) : (
+                      getNum(metricsafterPeriod.deliveroo)
+                    )}
+                  </TableCellKit>
+                  <TableCellKit>
+                    {loading ? (
+                      <SpinnerKit className="loading-table" />
+                    ) : (
+                      <div
+                        className={`table_evolution ${
+                          procentDeliveroo() > 0 ? 'table_increased' : ''
+                        } ${procentDeliveroo() < 0 ? 'table_decreased' : ''}`}
+                      >
+                        <span>{evolution(procentDeliveroo())}</span>
+                      </div>
+                    )}
                   </TableCellKit>
                 </TableRowKit>
               )}
@@ -226,16 +243,32 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
                       alt={title}
                     />
                   </TableCellKit>
-                  <TableCellKit>{getNum(metricsbeforePeriod.talabat)}</TableCellKit>
-                  <TableCellKit>{getNum(metricsafterPeriod.talabat)}</TableCellKit>
                   <TableCellKit>
-                    <div
-                      className={`table_evolution ${
-                        procentTalabat() > 0 ? 'table_increased' : ''
-                      } ${procentTalabat() < 0 ? 'table_decreased' : ''}`}
-                    >
-                      <span>{evolution(procentTalabat())}</span>
-                    </div>
+                    {loading ? (
+                      <SpinnerKit className="loading-table" />
+                    ) : (
+                      getNum(metricsbeforePeriod.talabat)
+                    )}
+                  </TableCellKit>
+                  <TableCellKit>
+                    {loading ? (
+                      <SpinnerKit className="loading-table" />
+                    ) : (
+                      getNum(metricsafterPeriod.talabat)
+                    )}
+                  </TableCellKit>
+                  <TableCellKit>
+                    {loading ? (
+                      <SpinnerKit className="loading-table" />
+                    ) : (
+                      <div
+                        className={`table_evolution ${
+                          procentTalabat() > 0 ? 'table_increased' : ''
+                        } ${procentTalabat() < 0 ? 'table_decreased' : ''}`}
+                      >
+                        <span>{evolution(procentTalabat())}</span>
+                      </div>
+                    )}
                   </TableCellKit>
                 </TableRowKit>
               )}
@@ -245,18 +278,34 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod }) => {
                 <TableCellKit component="th" scope="row">
                   Total
                 </TableCellKit>
-                <TableCellKit>{getNum(metricsbeforePeriod.all)}</TableCellKit>
-                <TableCellKit>{getNum(metricsafterPeriod.all)}</TableCellKit>
                 <TableCellKit>
-                  <div
-                    className={`table_evolution ${procentTotal() > 0 ? 'table_increased' : ''} ${
-                      procentTotal() < 0 ? 'table_decreased' : ''
-                    }`}
-                  >
-                    <span>
-                      <span>{evolution(procentTotal())}</span>
-                    </span>
-                  </div>
+                  {loading ? (
+                    <SpinnerKit className="loading-table" />
+                  ) : (
+                    getNum(metricsbeforePeriod.all)
+                  )}
+                </TableCellKit>
+                <TableCellKit>
+                  {loading ? (
+                    <SpinnerKit className="loading-table" />
+                  ) : (
+                    getNum(metricsafterPeriod.all)
+                  )}
+                </TableCellKit>
+                <TableCellKit>
+                  {loading ? (
+                    <SpinnerKit className="loading-table" />
+                  ) : (
+                    <div
+                      className={`table_evolution ${procentTotal() > 0 ? 'table_increased' : ''} ${
+                        procentTotal() < 0 ? 'table_decreased' : ''
+                      }`}
+                    >
+                      <span>
+                        <span>{evolution(procentTotal())}</span>
+                      </span>
+                    </div>
+                  )}
                 </TableCellKit>
               </TableRowKit>
             </TableHeadKit>

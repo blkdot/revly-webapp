@@ -16,6 +16,7 @@ const Finance = ({
   restaurants,
   display,
   vendors,
+  loading,
 }) => {
   const { date } = useDate();
   const { beforePeriod, titleDate } = date;
@@ -78,6 +79,7 @@ const Finance = ({
             title={info}
             metricsbeforePeriod={metricsbeforePeriod}
             metricsafterPeriod={metricsafterPeriod}
+            loading={loading}
           />
         ))}
       </div>

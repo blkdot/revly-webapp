@@ -11,7 +11,11 @@
   color: gray;
   background: $color-light-grey;
 }
-
+.loading-table{
+  padding: 0 !important;
+  width: 25px !important;
+  height: 25px !important;
+}
 .table_evolution span {
   font-size: 12px;
 }
