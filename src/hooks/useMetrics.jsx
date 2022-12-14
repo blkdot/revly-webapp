@@ -15,8 +15,10 @@ function useMetrics() {
 
   const clonedVendor = { ...vendorsObj };
   delete clonedVendor.display;
+  const [loading, setLoading] = useState(true);
 
   const handleRequest = (date, setMetrics) => {
+    setLoading(true);
     let isCancelled = false;
     getMetrics({
       master_email: user.email,
@@ -26,22 +28,26 @@ function useMetrics() {
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
       if (isCancelled) return;
-
       setMetrics(data.data.metrics);
+      setLoading(false);
     });
     return () => {
       isCancelled = true;
     };
   };
   useMemo(() => {
-    handleRequest(afterPeriod, setMetricsafterPeriod);
+    if (Object.keys(vendorsObj).length > 0) {
+      handleRequest(afterPeriod, setMetricsafterPeriod);
+    }
   }, [afterPeriod, vendors]);
 
   useMemo(() => {
-    handleRequest(beforePeriod, setMetricsbeforePeriod);
+    if (Object.keys(vendorsObj).length > 0) {
+      handleRequest(beforePeriod, setMetricsbeforePeriod);
+    }
   }, [beforePeriod, vendors]);
 
-  return { metricsbeforePeriod, metricsafterPeriod };
+  return { metricsbeforePeriod, metricsafterPeriod, loading };
 }
 
 export default useMetrics;

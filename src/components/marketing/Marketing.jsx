@@ -2,7 +2,7 @@ import React from 'react';
 import './Marketing.scss';
 import Widget from '../widget/Widget';
 
-const Marketing = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table }) => (
+const Marketing = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table, loading }) => (
   <div className="block">
     <div className="cardsWrapper marketing">
       {['accrued_discounts', 'roi'].map((info) => (
@@ -13,6 +13,7 @@ const Marketing = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table })
           title={info}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
+          loading={loading}
         />
       ))}
     </div>

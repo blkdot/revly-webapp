@@ -20,7 +20,7 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 import useDate from '../../hooks/useDate';
 
 const Dashboard = () => {
-  const { metricsbeforePeriod, metricsafterPeriod } = useMetrics();
+  const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
   const { vendors } = useDate();
   const { chainObj, vendorsObj, display, restaurants, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
@@ -82,6 +82,7 @@ const Dashboard = () => {
           display={display}
           restaurants={restaurants}
           vendors={vendorsArr}
+          loading={loading}
         />
       ) : (
         <FinanceEmpty />
@@ -92,6 +93,7 @@ const Dashboard = () => {
           table={table}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
+          loading={loading}
         />
       ) : (
         <MarketingEmpty />
@@ -123,6 +125,7 @@ const Dashboard = () => {
                   title={info}
                   metricsafterPeriod={metricsafterPeriod}
                   metricsbeforePeriod={metricsbeforePeriod}
+                  loading={loading}
                 />
               ) : (
                 ''
