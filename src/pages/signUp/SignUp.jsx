@@ -54,7 +54,7 @@ const SignUp = () => {
           pointOfSale: value.pointOfSale,
         },
       });
-      await verifyEmail(credential.user);
+      await verifyEmail(value);
       await logOut();
       navigate('/');
       triggerAlertWithMessageSuccess(
