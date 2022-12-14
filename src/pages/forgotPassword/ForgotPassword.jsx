@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+// import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 import './ForgotPassword.scss';
 
@@ -13,6 +13,7 @@ import CardKit from '../../kits/card/CardKit';
 import { useAlert } from '../../hooks/useAlert';
 
 import { firebaseCodeError } from '../../data/firebaseCodeError';
+import { forgotPassword } from '../../api/userApi';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -28,9 +29,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     setIsLoading(true);
-
-    const auth = getAuth();
-    sendPasswordResetEmail(auth, email)
+    forgotPassword(email)
       .then(() => {
         setIsLoading(false);
         setAlertTheme('success');

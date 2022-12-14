@@ -16,14 +16,12 @@ import {
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
-  sendEmailVerification,
   updatePhoneNumber,
   confirmPasswordReset,
   verifyPasswordResetCode,
   applyActionCode,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
-import config from '../setup/config';
 
 import { usePlatform } from '../hooks/usePlatform';
 
@@ -56,15 +54,6 @@ export const AuthContextProvider = ({ children }) => {
   const logOut = () => {
     cleanPlatformData();
     return signOut(auth);
-  };
-
-  const verifyEmail = (users) => {
-    const actionCodeSettings = {
-      url: `${config.frontUrl}`,
-      handleCodeInApp: true,
-    };
-
-    return sendEmailVerification(users, actionCodeSettings);
   };
 
   const createRecaptcha = () => {
@@ -136,7 +125,6 @@ export const AuthContextProvider = ({ children }) => {
         updatePhone,
         isUpdatingPhone,
         setIsUpdatingPhone,
-        verifyEmail,
         verifyCodeEmail,
         reAuthGoogle,
       }}
