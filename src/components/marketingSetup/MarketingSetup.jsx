@@ -835,7 +835,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (!el.active) return { background: el.color };
 
     return {
-      background: `linear-gradient(45deg, #2D99FF 1%, ${el.color} 1%, ${el.color} 49%, #2D99FF 49%, #2D99FF 51%, ${el.color} 51%, ${el.color} 99%, #2D99FF 99%)`,
+      background: `linear-gradient(45deg, #2D99FF 9%, ${el.color} 1%, ${el.color} 42%, #2D99FF 44%, #2D99FF 62%, ${el.color} 1%, ${el.color} 93%, #2D99FF 1%)`,
       backgroundSize: '6px 6px',
       backgroundPosition: '50px 50px',
     };
