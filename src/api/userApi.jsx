@@ -4,7 +4,7 @@ import { handleResponse } from './baseApi';
 
 import config from '../setup/config';
 
-const { apiUrl } = config;
+const { apiUrl, firebaseApiUrl } = config;
 
 export const getMetrics = (body) =>
   axios
@@ -36,3 +36,17 @@ export const getPlanningOfferDetails = (body) =>
     .catch(handleResponse);
 
 export const _ = () => null;
+
+export const forgotPassword = (email) =>
+  axios
+    .post(`${firebaseApiUrl}/forgotPassword?email=${email}`)
+    .then((res) => res)
+    .catch(handleResponse);
+
+export const verifyEmail = (user) =>
+  axios
+    .post(
+      `${firebaseApiUrl}/verifyEmail?email=${user.email}&fname=${user.fname}&lname=${user.lname}`,
+    )
+    .then((res) => res)
+    .catch(handleResponse);
