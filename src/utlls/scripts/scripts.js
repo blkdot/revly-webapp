@@ -2,12 +2,16 @@ export const descendingComparator = (a, b, orderBy) => {
   let next = b[orderBy];
   let prev = a[orderBy];
 
-  const sp = prev?.split(' at ');
-  const sn = next?.split(' at ');
+  try {
+    const sp = prev?.split(' at ');
+    const sn = next?.split(' at ');
 
-  if (sp?.length > 1 && sn?.length > 1) {
-    prev = sp.join('').replace('/', '').replace(':', '');
-    next = sn.join('').replace('/', '').replace(':', '');
+    if (sp?.length > 1 && sn?.length > 1) {
+      prev = sp.join('').replace('/', '').replace(':', '');
+      next = sn.join('').replace('/', '').replace(':', '');
+    }
+  } catch (error) {
+    // do nothing
   }
 
   if (next < prev) {
