@@ -193,11 +193,13 @@ const Planning = () => {
       (acc, cur) => {
         const { platform, discount_type: discountType, discount_rate: procent, status } = acc;
 
-        if (!platform.includes(cur.platform)) platform.push(cur.platform);
+        if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!discountType.includes(cur.discount_type)) discountType.push(cur.discount_type);
+        if (!discountType.includes(cur.discount_type) && cur.discount_type)
+          discountType.push(cur.discount_type);
 
-        if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
+        if (!procent.includes(cur.discount_rate) && cur.discount_rate)
+          procent.push(cur.discount_rate);
 
         if (!status.includes(cur.status)) status.push(active ? cur.ad_status : cur.status);
 
