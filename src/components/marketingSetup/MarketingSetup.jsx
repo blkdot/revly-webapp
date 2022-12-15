@@ -186,6 +186,19 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (typeSchedule !== 'customised Days') {
       setCustomisedDay([]);
     }
+    setTimes([
+      {
+        startTime: new Date(
+          null,
+          null,
+          null,
+          format(new Date(), 'HH'),
+          format(new Date(addMinutes(new Date(), 2)), 'mm'),
+        ),
+        endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+        pos: 1,
+      },
+    ]);
   }, [typeSchedule]);
   const typeScheduleObj = {
     'Continues Offer': 'once',
