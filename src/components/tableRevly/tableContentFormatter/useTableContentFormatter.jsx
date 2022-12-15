@@ -110,6 +110,7 @@ const useTableContentFormatter = () => {
       new_customers: 'New customers only',
       subscribers: 'Deliveroo Plus',
     };
+    console.log(targetMapping[r[h.id]] || r[h.id] || '-', r[h.id]);
     return (
       <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
         <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>

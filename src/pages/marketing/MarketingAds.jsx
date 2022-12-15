@@ -158,9 +158,9 @@ const MarketingAds = () => {
       (acc, cur) => {
         const { platform, status } = acc;
 
-        if (!platform.includes(cur.platform)) platform.push(cur.platform);
+        if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!status.includes(cur.status)) status.push(cur.ad_status);
+        if (!status.includes(cur.status) && cur.status) status.push(cur.ad_status);
 
         return {
           ...acc,
