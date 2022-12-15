@@ -372,3 +372,12 @@
     visibility: visible;
   }
 }
+@media(max-width: 778px) {
+  .restaurant-dropdown_wrapper {
+    width: 100%;
+
+    >div {
+      width: 100% !important;
+    }
+  }
+}

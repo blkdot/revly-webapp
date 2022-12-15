@@ -343,10 +343,12 @@ const RestaurantDropdown = ({
         Select a Vendor
       </TypographyKit>
       <div tabIndex={-1} role="presentation" onClick={handleClick} style={{ width: 300 }}>
-        <img className="select_icon" src={selectIcon} alt="Select Icon" />
-        <TypographyKit className="restaurants-selected" variant="div">
-          <div>{getChain()}</div>
-        </TypographyKit>
+        <div style={{ display: 'flex', alignItems: 'center', gridGap: '10px' }}>
+          <img className="select_icon" src={selectIcon} alt="Select Icon" />
+          <TypographyKit className="restaurants-selected" variant="div">
+            <div>{getChain()}</div>
+          </TypographyKit>
+        </div>
         <ExpandMoreIcon />
       </div>
       <div
