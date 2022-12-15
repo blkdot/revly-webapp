@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 
 import './VerifyCode.scss';
 
+import { getAuth } from 'firebase/auth';
 import VerifyCodeForm from '../../components/forms/verifyCodeForm/VerifyCodeForm';
 import Timer from '../../components/timer/Timer';
 
@@ -11,9 +12,12 @@ import ModalKit from '../../kits/modal/ModalKit';
 
 import { useAlert } from '../../hooks/useAlert';
 import { useUserAuth } from '../../contexts/AuthContext';
+import { verifyEmail } from '../../api/userApi';
+import useApi from '../../hooks/useApi';
 
 const VerifyCode = () => {
-  const { updatePhone, verifyPhone, isUpdatingPhone, setIsUpdatingPhone } = useUserAuth();
+  const { updatePhone, verifyPhone, isUpdatingPhone, setIsUpdatingPhone, logOut } = useUserAuth();
+  const { settingsSave } = useApi();
   const [values, setValues] = useState({
     code1: '',
     code2: '',
@@ -33,14 +37,16 @@ const VerifyCode = () => {
   const [showModal] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isResend, setIsResend] = useState(false);
-  const [params] = useSearchParams();
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
-
+  const {
+    state: { data, prevPath, n, vId: vIdLocal },
+  } = useLocation();
+  const [vId, setVId] = useState(vIdLocal);
   const handleChangeWithNextField = (e) => {
     const { maxLength, value, name } = e.target;
 
@@ -61,15 +67,32 @@ const VerifyCode = () => {
     setError({ ...error, [name]: false });
     handleChange(e);
   };
-
   const onVerify = async () => {
     setLoading(true);
     try {
       const code = Object.keys(values)
         .map((v) => values[v])
         .join('');
-      await updatePhone(params.get('vId'), code);
-      navigate('/settings');
+      await updatePhone(vId, code);
+      if (prevPath === '/signup') {
+        await settingsSave({
+          master_email: data.email,
+          data: {
+            restoname: data.restoName.trim(),
+            pointOfSale: data.pointOfSale,
+            country: data.dial.country,
+            dial: data.dial.dialCode,
+          },
+        });
+        await verifyEmail(data);
+        await logOut();
+        navigate('/');
+        triggerAlertWithMessageSuccess(
+          'We sent an email verification to your email, please check it (include spam) before signin',
+        );
+        return;
+      }
+      navigate(prevPath);
       triggerAlertWithMessageSuccess('Phone number updated');
     } catch (err) {
       setLoading(false);
@@ -79,7 +102,7 @@ const VerifyCode = () => {
 
   useEffect(() => {
     if (!isUpdatingPhone) {
-      navigate('/settings');
+      navigate(prevPath);
     }
 
     return () => setIsUpdatingPhone(false);
@@ -88,8 +111,8 @@ const VerifyCode = () => {
   const handleResend = async () => {
     setIsResend(true);
     try {
-      const vId = await verifyPhone(`+${params.get('n')}`);
-      params.set('vId', vId);
+      const vIdTemp = await verifyPhone(`+${vId}`);
+      setVId(vIdTemp);
       triggerAlertWithMessageSuccess('Code resent');
     } catch (err) {
       triggerAlertWithMessageError(err.code);
@@ -101,17 +124,24 @@ const VerifyCode = () => {
   if (!isUpdatingPhone) {
     return null;
   }
-
+  const goBack = () => {
+    if (prevPath === '/signup') {
+      navigate(prevPath);
+      getAuth().currentUser.delete();
+    } else {
+      navigate(prevPath);
+    }
+  };
   return (
     <ModalKit open={showModal}>
       <div className="verify-code">
-        <Link to="/settings" className="__icon">
+        <p onClick={goBack} tabIndex={-1} role="presentation" onKeyDown={goBack} className="__icon">
           <ArrowBack fontSize="large" />
-        </Link>
+        </p>
         <p className="__title">Please check your phone message!</p>
         <p className="__subtitle">
-          We&apos;ve texted a 6-digit confirmation code to +{params.get('n')}, please enter the code
-          in below box to update your phone number.
+          We&apos;ve texted a 6-digit confirmation code to +{n}, please enter the code in below box
+          to update your phone number.
         </p>
         <div className="__form">
           <VerifyCodeForm

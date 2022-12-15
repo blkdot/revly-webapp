@@ -90,7 +90,7 @@ const SignUpForm = (props) => {
           <PhoneInputKit
             inputProps={{ readOnly: true }}
             country="ae"
-            onChange={(v, c) => onDialChange(c.dialCode)}
+            onChange={(v, c) => onDialChange({ dialCode: c.dialCode, country: c.name })}
             specialLabel=""
             containerClass="signup-form__input-phone"
           />

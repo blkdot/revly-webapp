@@ -30,18 +30,7 @@ const General = () => {
     return num;
   };
 
-  const getDial = () => {
-    if (!user.phoneNumber) return '';
-
-    const num = getNumber();
-
-    const curDial = user.phoneNumber.replace(num, '');
-
-    return curDial;
-  };
-
-  const [dial, setDial] = useState(getDial());
-
+  const [dial, setDial] = useState('+971');
   const [inputValue, setInputValue] = useState({
     name: user.displayName,
     phone: getNumber() || '',
@@ -106,7 +95,14 @@ const General = () => {
       ) {
         const vId = await verifyPhone(newPhoneNumber);
         setIsUpdatingPhone(true);
-        navigate(`/verify-code?n=${newPhoneNumber}&vId=${vId}`);
+        navigate(`/verify-code`, {
+          state: {
+            data: {},
+            prevPath: '/settings',
+            n: newPhoneNumber,
+            vId,
+          },
+        });
       }
 
       if (
@@ -165,7 +161,7 @@ const General = () => {
         role: data.role || '',
         country: country.find((v) => v.name === data.country) || { name: '', code: '' },
       };
-
+      setDial(data.dial);
       setInputValue({
         ...inputValue,
         ...obj,

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { updateProfile } from 'firebase/auth';
+import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
 
 import './SignUp.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
-import useApi from '../../hooks/useApi';
 
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
+import useApi from '../../hooks/useApi';
 import { verifyEmail } from '../../api/userApi';
 
 const SignUp = () => {
@@ -20,12 +20,13 @@ const SignUp = () => {
     fname: '',
     lname: '',
     restoName: '',
-    dial: '+971',
+    dial: { dialCode: '+971', country: 'United Arab Emirates' },
     isAgree: false,
     pointOfSale: '',
   });
+  const { settingsSave } = useApi();
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
+  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert('error');
   const [errorData, setErrorData] = useState({
     email: false,
     password: false,
@@ -34,11 +35,9 @@ const SignUp = () => {
     restoName: false,
     pointOfSale: false,
   });
-  const { settingsSave } = useApi();
 
-  const { signUp, logOut } = useUserAuth();
+  const { signUp, verifyPhone, setIsUpdatingPhone, logOut } = useUserAuth();
   const navigate = useNavigate();
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setProcessing(true);
@@ -47,28 +46,49 @@ const SignUp = () => {
       await updateProfile(credential.user, {
         displayName: `${value.fname} ${value.lname}`,
       });
-      await settingsSave({
-        master_email: credential.user.email,
-        data: {
-          restoname: value.restoName.trim(),
-          pointOfSale: value.pointOfSale,
-        },
-      });
-      await verifyEmail(value);
-      await logOut();
-      navigate('/');
-      triggerAlertWithMessageSuccess(
-        'We sent an email verification to your email, please check it (include spam) before signin',
-      );
+      if (value.phone) {
+        const newPhoneNumber = `${value.dial.dialCode}${value.phone}`;
+        const vId = await verifyPhone(`+${newPhoneNumber}`);
+        setIsUpdatingPhone(true);
+        navigate(`/verify-code-signup`, {
+          state: {
+            data: value,
+            prevPath: '/signup',
+            n: newPhoneNumber,
+            vId,
+          },
+        });
+      } else {
+        await settingsSave({
+          master_email: value.email,
+          data: {
+            restoname: value.restoName.trim(),
+            pointOfSale: value.pointOfSale,
+            country: value.dial.country,
+            dial: value.dial.dialCode,
+          },
+        });
+        await verifyEmail(value);
+        await logOut();
+        navigate('/');
+        triggerAlertWithMessageSuccess(
+          'We sent an email verification to your email, please check it (include spam) before signin',
+        );
+      }
     } catch (e) {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
-
+      const deleteUser = () => {
+        getAuth().currentUser.delete();
+        localStorage.removeItem('user');
+      };
       if (firebaseCodeError[e.code] && firebaseCodeError[e.code].field) {
         setErrorData({ [firebaseCodeError[e.code].field]: true });
       }
-
       triggerAlertWithMessageError(message);
       setProcessing(false);
+      await fetchSignInMethodsForEmail(getAuth(), value.email).then((res) =>
+        res.length > 0 ? deleteUser() : null,
+      );
     }
   };
 
