@@ -10,18 +10,18 @@ import Invoice from './invoice/Invoice';
 import useCost from '../../../hooks/useCost';
 
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
-import useDate from '../../../hooks/useDate';
+import useVendors from '../../../hooks/useVendors';
 
 const Cost = () => {
   const queryClient = useQueryClient();
   const [invoice, setInvoice] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
-  const { vendors } = useDate();
+  const { vendors } = useVendors();
   const { vendorsObj } = vendors;
 
   const { load, save } = useCost(vendorsObj);
 
-  const { isLoading, isError } = useQuery(['loadCost'], load, {
+  const { isLoading, isError } = useQuery(['loadCost', { vendors }], load, {
     onSuccess: (data) => {
       const newInvoice = [];
       Object.keys(data).forEach((platform) => {
