@@ -138,6 +138,7 @@ const CompetitionRanking = () => {
         access_token: user.accessToken,
         vendors: vend || [],
         start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       };
 
       const ranking = await getRanking(body, plat);
