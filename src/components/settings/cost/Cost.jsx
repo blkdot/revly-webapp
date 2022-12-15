@@ -89,10 +89,7 @@ const Cost = () => {
         <div className="__flex">
           <div className="__head">
             <p className="billing__card-title">Your Cost Information</p>
-            <p className="billing__card-subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-              vivamus risus.
-            </p>
+            {/* <p className="billing__card-subtitle">- -</p> */}
           </div>
         </div>
         <DropdownSnackbar

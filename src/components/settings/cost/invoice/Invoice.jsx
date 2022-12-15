@@ -1,7 +1,7 @@
 import React from 'react';
 import CostIcon from '../../../../assets/icons/CostIcon';
 
-import restaurantExample from '../../../../assets/images/restaurant-example.png';
+import logo from '../../../../assets/images/small-logo.png';
 
 import ButtonKit from '../../../../kits/button/ButtonKit';
 
@@ -11,7 +11,16 @@ const Invoice = (props) => {
   return (
     <div className="invoice cost">
       <div className="__flex">
-        <img src={restaurantExample} alt="restaurant-example" />
+        <img
+          src={logo}
+          alt="restaurant-example"
+          style={{
+            width: '3rem',
+            borderRadius: '50%',
+            border: '1px solid #DFE3E8',
+            padding: '0.5rem',
+          }}
+        />
         <p
           style={{
             width: '20rem',
@@ -20,7 +29,7 @@ const Invoice = (props) => {
             textOverflow: 'ellipsis',
           }}
         >
-          Restaurant Name: <span>{restaurant}</span>
+          <span>{restaurant}</span>
         </p>
       </div>
       <div className="__flex">
