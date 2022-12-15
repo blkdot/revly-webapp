@@ -12,7 +12,7 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
 import PaperKit from '../../kits/paper/PaperKit';
-import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 
 const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading }) => {
   const { date } = useDate();
@@ -105,7 +105,11 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
               {getTitle()}
             </TypographyKit>
             {loading ? (
-              <SpinnerKit sx={{ marginTop: '10px' }} />
+              <SkeletonKit
+                width={110}
+                height={34}
+                style={{ margin: '10px 0 0 0', transform: 'scale(1)' }}
+              />
             ) : (
               <TypographyKit variant="h3" className="card-typography">
                 {renderMetrics()}
@@ -116,12 +120,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
         </TypographyKit>
         <div className="card_bottom">
           {loading ? (
-            <div style={{ margin: 0 }} className="card_bottom">
-              <PaperKit className="icon-paper">
-                <ArrowRightAltIcon />
-              </PaperKit>
-              <SpinnerKit style={{ width: '20px', height: '20px' }} />
-            </div>
+            <SkeletonKit width={60} height={30} />
           ) : (
             <div style={{ margin: 0 }} className="card_bottom">
               <PaperKit

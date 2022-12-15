@@ -20,7 +20,7 @@ import useDate from '../../hooks/useDate';
 import talabat from '../../assets/images/talabat.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import { usePlatform } from '../../hooks/usePlatform';
-import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 
 const EnhancedTableHead = ({ headCells }) => (
   <TableHeadKit className="table-head">
@@ -207,21 +207,21 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
                   </TableCellKit>
                   <TableCellKit>
                     {loading ? (
-                      <SpinnerKit className="loading-table" />
+                      <SkeletonKit width={60} style={{ transform: 'scale(1)' }} />
                     ) : (
                       getNum(metricsbeforePeriod.deliveroo)
                     )}
                   </TableCellKit>
                   <TableCellKit>
                     {loading ? (
-                      <SpinnerKit className="loading-table" />
+                      <SkeletonKit width={60} style={{ transform: 'scale(1)' }} />
                     ) : (
                       getNum(metricsafterPeriod.deliveroo)
                     )}
                   </TableCellKit>
                   <TableCellKit>
                     {loading ? (
-                      <SpinnerKit className="loading-table" />
+                      <SkeletonKit width={80} style={{ transform: 'scale(1)' }} />
                     ) : (
                       <div
                         className={`table_evolution ${
@@ -245,21 +245,21 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
                   </TableCellKit>
                   <TableCellKit>
                     {loading ? (
-                      <SpinnerKit className="loading-table" />
+                      <SkeletonKit width={60} style={{ transform: 'scale(1)' }} />
                     ) : (
                       getNum(metricsbeforePeriod.talabat)
                     )}
                   </TableCellKit>
                   <TableCellKit>
                     {loading ? (
-                      <SpinnerKit className="loading-table" />
+                      <SkeletonKit width={60} style={{ transform: 'scale(1)' }} />
                     ) : (
                       getNum(metricsafterPeriod.talabat)
                     )}
                   </TableCellKit>
                   <TableCellKit>
                     {loading ? (
-                      <SpinnerKit className="loading-table" />
+                      <SkeletonKit width={80} style={{ transform: 'scale(1)' }} />
                     ) : (
                       <div
                         className={`table_evolution ${
@@ -280,21 +280,21 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
                 </TableCellKit>
                 <TableCellKit>
                   {loading ? (
-                    <SpinnerKit className="loading-table" />
+                    <SkeletonKit width={60} style={{ transform: 'scale(1)' }} />
                   ) : (
                     getNum(metricsbeforePeriod.all)
                   )}
                 </TableCellKit>
                 <TableCellKit>
                   {loading ? (
-                    <SpinnerKit className="loading-table" />
+                    <SkeletonKit width={60} style={{ transform: 'scale(1)' }} />
                   ) : (
                     getNum(metricsafterPeriod.all)
                   )}
                 </TableCellKit>
                 <TableCellKit>
                   {loading ? (
-                    <SpinnerKit className="loading-table" />
+                    <SkeletonKit width={80} style={{ transform: 'scale(1)' }} />
                   ) : (
                     <div
                       className={`table_evolution ${procentTotal() > 0 ? 'table_increased' : ''} ${

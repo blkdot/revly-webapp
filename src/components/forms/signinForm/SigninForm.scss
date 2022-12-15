@@ -95,6 +95,9 @@
   }
 
   @include tabletBreakpoint {
+    .__get-started__link.__get-started__link {
+        color: #fff;
+      }
     .signin-form__block {
       width: 70%;
     }
