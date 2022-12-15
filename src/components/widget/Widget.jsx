@@ -12,8 +12,9 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
 import PaperKit from '../../kits/paper/PaperKit';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 
-const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod }) => {
+const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading }) => {
   const { date } = useDate();
   const { afterPeriod, titleafterPeriod } = date;
   const startDate = parseISO(afterPeriod.startDate);
@@ -22,6 +23,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
+
   const procent = () => {
     if (metricsbeforePeriod && metricsafterPeriod) {
       if (Number(metricsafterPeriod.all[title]) === 0) {
@@ -102,32 +104,47 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
             >
               {getTitle()}
             </TypographyKit>
-            <TypographyKit variant="h3" className="card-typography">
-              {renderMetrics()}
-              {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
-            </TypographyKit>
+            {loading ? (
+              <SkeletonKit
+                width={110}
+                height={34}
+                style={{ margin: '10px 0 0 0', transform: 'scale(1)' }}
+              />
+            ) : (
+              <TypographyKit variant="h3" className="card-typography">
+                {renderMetrics()}
+                {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
+              </TypographyKit>
+            )}
           </div>
         </TypographyKit>
         <div className="card_bottom">
-          <PaperKit
-            className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
-              procent() < 0 ? 'decreased' : ''
-            }`}
-          >
-            {procent() === 0 ? (
-              <ArrowRightAltIcon />
-            ) : (
-              <MovingIcon className={procent() > 0 ? 'increased' : 'decreased'} />
-            )}
-          </PaperKit>
-          <TypographyKit
-            className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
-              procent() < 0 ? 'decreased' : ''
-            }`}
-            variant="body2"
-          >
-            {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
-          </TypographyKit>
+          {loading ? (
+            <SkeletonKit width={60} height={30} />
+          ) : (
+            <div style={{ margin: 0 }} className="card_bottom">
+              <PaperKit
+                className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
+                  procent() < 0 ? 'decreased' : ''
+                }`}
+              >
+                {procent() === 0 ? (
+                  <ArrowRightAltIcon />
+                ) : (
+                  <MovingIcon className={procent() > 0 ? 'increased' : 'decreased'} />
+                )}
+              </PaperKit>
+              <TypographyKit
+                sx={{ lineHeight: 0 }}
+                className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
+                  procent() < 0 ? 'decreased' : ''
+                }`}
+                variant="body2"
+              >
+                {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
+              </TypographyKit>
+            </div>
+          )}
           <TypographyKit className="card-week" variant="body3">
             than {getafterPeriod()}
           </TypographyKit>

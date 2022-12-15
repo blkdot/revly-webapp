@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -18,7 +19,6 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
-import useVendors from '../../hooks/useVendors';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -26,7 +26,7 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 
 const CompetitionRanking = () => {
   const { setVendors } = useGlobal();
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
@@ -137,6 +137,8 @@ const CompetitionRanking = () => {
         master_email: user.email,
         access_token: user.accessToken,
         vendors: vend || [],
+        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       };
 
       const ranking = await getRanking(body, plat);

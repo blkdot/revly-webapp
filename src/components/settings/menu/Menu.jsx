@@ -19,7 +19,7 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
 import { usePlatform } from '../../../hooks/usePlatform';
-import useVendors from '../../../hooks/useVendors';
+import useDate from '../../../hooks/useDate';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -33,7 +33,7 @@ const Menu = () => {
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState('');
   const { user } = useUserAuth();

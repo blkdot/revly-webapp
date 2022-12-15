@@ -4,7 +4,7 @@ import { handleResponse } from './baseApi';
 
 import config from '../setup/config';
 
-const { apiUrl } = config;
+const { apiUrl, firebaseApiUrl } = config;
 
 export const getAlerts = (body, platform) =>
   axios
@@ -27,7 +27,7 @@ export const getRanking = (body, platform) =>
 export const sendMail = (data) =>
   axios
     .post(
-      `https://us-central1-test-909d1.cloudfunctions.net/sendMail?emailTo=${data.emailTo}&userRestaurant=${data.userRestaurant}&name=${data.name}&platform=${data.platform}&country=${data.country}&city=${data.city}&areaName=${data.areaName}&cuisine=${data.cuisine}`,
+      `${firebaseApiUrl}/sendMail?emailTo=${data.emailTo}&userRestaurant=${data.userRestaurant}&name=${data.name}&platform=${data.platform}&country=${data.country}&city=${data.city}&areaName=${data.areaName}&cuisine=${data.cuisine}`,
     )
     .then((res) => res)
     .catch(handleResponse);

@@ -30,12 +30,7 @@ const Settings = () => {
         </div>
       ),
       component: <General />,
-      subtitle: (
-        <p className="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-          vivamus risus.
-        </p>
-      ),
+      subtitle: <p className="subtitle" />,
     },
     {
       value: 'billing',
@@ -54,12 +49,7 @@ const Settings = () => {
         </div>
       ),
       component: <NewSettingsOnboarding />,
-      subtitle: (
-        <p className="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-          vivamus risus.
-        </p>
-      ),
+      subtitle: <p className="subtitle" />,
     },
     {
       value: 'change password',
@@ -69,12 +59,7 @@ const Settings = () => {
         </div>
       ),
       component: <ChangePassword />,
-      subtitle: (
-        <p className="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-          vivamus risus.
-        </p>
-      ),
+      subtitle: <p className="subtitle" />,
     },
     {
       value: 'menu',
@@ -84,12 +69,7 @@ const Settings = () => {
         </div>
       ),
       component: <Menu />,
-      subtitle: (
-        <p className="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-          vivamus risus.
-        </p>
-      ),
+      subtitle: <p className="subtitle" />,
     },
     {
       value: 'cost',
@@ -99,12 +79,7 @@ const Settings = () => {
         </div>
       ),
       component: <Cost />,
-      subtitle: (
-        <p className="subtitle">
-          Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-          vivamus risus.
-        </p>
-      ),
+      subtitle: <p className="subtitle" />,
     },
   ];
 

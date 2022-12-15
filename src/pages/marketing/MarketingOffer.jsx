@@ -33,7 +33,6 @@ import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
 
 import { defaultFilterStateFormat } from './marketingOfferData';
-import useVendors from '../../hooks/useVendors';
 import useDate from '../../hooks/useDate';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
@@ -41,8 +40,7 @@ const MarketingOffer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [active, setActive] = useState(false);
-  const { date: dateContext } = useDate();
-  const { vendors } = useVendors();
+  const { date: dateContext, vendors } = useDate();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (dateContext.typeDate === 'month') {

@@ -4,12 +4,13 @@ import ButtonKit from '../../../kits/button/ButtonKit';
 import RestaurantDropdown from '../../restaurantDropdown/RestaurantDropdown.suspended';
 import CompetitionDropdown from '../../competitionDropdown/CompetitionDropdown';
 import { usePlatform } from '../../../hooks/usePlatform';
-import useVendors from '../../../hooks/useVendors';
 import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
+import useDate from '../../../hooks/useDate';
 
 const DropdownSnackbar = (props) => {
-  const { onAdd } = props;
-  const { vendors } = useVendors();
+  // eslint-disable-next-line no-unused-vars
+  const { onAdd, isUpdate, setIsUpdate, invoice } = props;
+  const { vendors } = useDate();
   const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
   const [procent, setProcent] = useState('');
   const { userPlatformData } = usePlatform();
@@ -55,19 +56,27 @@ const DropdownSnackbar = (props) => {
       }
     }
   }, [vendors]);
-  const addCost = () => {
-    const clonedInvoice = [];
-    // TODO: check if it handle multiple selection of vendors
-    if (procent) {
-      if (Object.values(costVendors.chainObj).length > 0) {
-        Object.keys(costVendors.chainObj).forEach((cName) => {
-          Object.keys(costVendors.chainObj[cName]).forEach((vName) => {
-            clonedInvoice.push({ restaurant: vName, cost: procent, id: `${vName}_${procent}` });
-          });
-        });
-      }
-    }
 
+  useEffect(() => {
+    const { vendorsObj } = costVendors;
+
+    Object.keys(vendorsObj).forEach((p) => {
+      const selected = vendorsObj[p].some((obj) => {
+        // eslint-disable-next-line eqeqeq
+        const index = invoice.findIndex((inv) => inv.id == obj.vendor_id);
+        return index > -1;
+      });
+
+      if (selected) {
+        setIsUpdate(selected);
+        return;
+      }
+
+      setIsUpdate(false);
+    });
+  }, [costVendors]);
+
+  const addCost = () => {
     setProcent('');
     const strCost = procent.replace('%', '');
 
@@ -77,6 +86,7 @@ const DropdownSnackbar = (props) => {
 
     onAdd(numDecimalCost, costVendors.vendorsObj);
   };
+
   return (
     <div className="invoice snackbar">
       <div className="snackbar-wrapper">
@@ -107,7 +117,7 @@ const DropdownSnackbar = (props) => {
         />
       </div>
       <ButtonKit disabled={!procent} onClick={addCost} className="snackbar-btn" variant="contained">
-        Add
+        {isUpdate ? 'Update' : 'Add'}
       </ButtonKit>
     </div>
   );

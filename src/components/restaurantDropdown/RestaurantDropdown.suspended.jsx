@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 import './RestaurantDropdown.scss';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import useDate from '../../hooks/useDate';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import BranchesIcon from '../../assets/images/ic_branch.png';
+import useVendors from '../../hooks/useVendors';
+import useDate from '../../hooks/useDate';
 
 const RestaurantDropdown = ({
   setState,
@@ -18,27 +19,19 @@ const RestaurantDropdown = ({
 }) => {
   const chainObj = chainObjProps;
 
+  const { setVendors, vendors: vendorsContext } = useDate();
+  const { vendors: vendorsReq } = useVendors();
+
   useEffect(() => {
     window.onbeforeunload = (e) => {
       localStorage.setItem('leaveTime', JSON.stringify(new Date()));
       e.target.hidden = true;
       return '';
     };
-    window.onunload = () => {
-      const leaveTime = JSON.parse(localStorage.getItem('leaveTime')) || new Date();
-      if (new Date(leaveTime).toLocaleDateString() === new Date().toLocaleDateString()) {
-        if (new Date(leaveTime).getHours() === new Date().getHours() - 2) {
-          localStorage.removeItem('vendors');
-          localStorage.removeItem('date');
-        }
-      } else {
-        localStorage.removeItem('vendors');
-        localStorage.removeItem('date');
-      }
-      return '';
-    };
-  }, []);
-  const { setVendors, vendors: vendorsContext } = useDate();
+    if (vendorsReq.vendorsArr.length < 0) {
+      setVendors(vendorsReq);
+    }
+  }, [vendorsReq]);
   const { vendorsObj, display } = vendorsContext;
   const [active, setActive] = useState(false);
   const handleChange = (value, checked) => {
@@ -350,10 +343,12 @@ const RestaurantDropdown = ({
         Select a Vendor
       </TypographyKit>
       <div tabIndex={-1} role="presentation" onClick={handleClick} style={{ width: 300 }}>
-        <img className="select_icon" src={selectIcon} alt="Select Icon" />
-        <TypographyKit className="restaurants-selected" variant="div">
-          <div>{getChain()}</div>
-        </TypographyKit>
+        <div style={{ display: 'flex', alignItems: 'center', gridGap: '10px' }}>
+          <img className="select_icon" src={selectIcon} alt="Select Icon" />
+          <TypographyKit className="restaurants-selected" variant="div">
+            <div>{getChain()}</div>
+          </TypographyKit>
+        </div>
         <ExpandMoreIcon />
       </div>
       <div

@@ -13,7 +13,6 @@ import ContainerKit from '../../kits/container/ContainerKit';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
-import useVendors from '../../hooks/useVendors';
 import { usePlatform } from '../../hooks/usePlatform';
 import { useUserAuth } from '../../contexts/AuthContext';
 import useApi from '../../hooks/useApi';
@@ -22,8 +21,8 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import BoxKit from '../../kits/box/BoxKit';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
-import { OfferCrossPlatforms } from '../../api/marketingApi';
 import GetRecap from './GetRecap';
+import useDate from '../../hooks/useDate';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -66,7 +65,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   });
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
-  const { vendors } = useVendors();
+  const { vendors } = useDate();
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert('error');
@@ -78,7 +77,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
-  const [customDay, setCustomDay] = useState('');
+  const [typeSchedule, setTypeSchedule] = useState('Continues Offer');
   const [disabledDate, setDisabledDate] = useState(true);
   const [customisedDay, setCustomisedDay] = useState([]);
   const [times, setTimes] = useState([
@@ -113,40 +112,29 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const [checked, setChecked] = useState([]);
-
-  const getDiscountOrMov = (type) => {
-    if (type === 'discount') {
-      if (itemMenu === 'Flash Deal') {
-        return ['50%'];
-      }
-      if (itemMenu === 'Order more , save more') {
-        return ['30%', '50%'];
-      }
-      if (itemMenu === 'Restaurent Pick') {
-        return ['20%', '25%', '30%', '35%', '40%', '45%', '50%'];
-      }
-      if (itemMenu === 'Free Item') {
-        return ['100%'];
-      }
-      return ['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%'];
-    }
-    if (type === 'mov') {
-      if (itemMenu === 'Flash Deal') {
-        return ['0 AED', '10 AED'];
-      }
-      if (itemMenu === 'Order more , save more') {
-        return ['60 AED'];
-      }
-      if (itemMenu === 'Restaurent Pick') {
-        return ['0 AED', '15 AED', '30 AED'];
-      }
-      if (itemMenu === 'Free Item') {
-        return ['15 AED', '30 AED', '60 AED'];
-      }
-      return ['0 AED', '10 AED', '20 AED', '30 AED'];
-    }
-    return [];
+  const itemMenuObj = {
+    'Flash Deal': {
+      discount: ['50%'],
+      mov: ['0 AED', '10 AED'],
+      type: 'flash-deals',
+    },
+    'Order more , save more': {
+      discount: ['30%', '50%'],
+      mov: ['60 AED'],
+      type: 'groups',
+    },
+    'Restaurent Pick': {
+      discount: ['20%', '25%', '30%', '35%', '40%', '45%', '50%'],
+      mov: ['0 AED', '15 AED', '30 AED'],
+      type: 'restaurant-picks',
+    },
+    'Free Items': {
+      discount: ['100%'],
+      mov: ['15 AED', '30 AED', '60 AED'],
+      type: 'free-items',
+    },
   };
+  const getDiscountMovType = (type) => itemMenuObj[itemMenu][type];
 
   const getHourArr = (hour) => {
     const arr = [];
@@ -169,42 +157,52 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     if (duration === 'Starting Now') {
       setStartingDate(new Date());
-      setCustomDay('now');
+      setTypeSchedule('now');
+      setTimes([
+        {
+          startTime: new Date(
+            null,
+            null,
+            null,
+            format(new Date(), 'HH'),
+            format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          ),
+          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          pos: 1,
+        },
+      ]);
+    } else {
+      setTypeSchedule('Continues Offer');
+      setTimes([
+        {
+          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          pos: 1,
+        },
+      ]);
     }
-
-    if (customDay !== 'customised Days') {
+  }, [duration]);
+  useEffect(() => {
+    if (typeSchedule !== 'customised Days') {
       setCustomisedDay([]);
     }
-  }, [duration, customDay]);
-
-  const getTypeSchedule = () => {
-    if (customDay === 'Continues Offer') {
-      return 'once';
-    }
-    if (customDay === 'Every Day') {
-      return 'everyday';
-    }
-    if (customDay === 'Work Week') {
-      return 'workweek';
-    }
-    if (customDay === 'Same day every week') {
-      return everyWeek.toLowerCase().replace('every', '').split(' ').join('');
-    }
-    if (customDay === 'Customised Days') {
-      return customisedDay.toString().toLowerCase().replace(/,/g, '.');
-    }
-
-    return 'now';
+  }, [typeSchedule]);
+  const typeScheduleObj = {
+    'Continues Offer': 'once',
+    'Every Day': 'everyday',
+    'Work Week': 'workweek',
+    'Same day every week': everyWeek.toLowerCase().replace('every', '').split(' ').join(''),
+    'Customised Days': customisedDay.toString().toLowerCase().replace(/,/g, '.'),
   };
-  const getTargetAudience = () => {
-    if (targetAudience === 'New customer') {
-      return 'new_customers';
-    }
-    if (targetAudience === 'Deliveroo plus') {
-      return 'subscribers';
-    }
-    return 'orders';
+
+  const getTypeSchedule = () => typeScheduleObj[typeSchedule] || 'now';
+
+  const targetAudienceObj = {
+    'New customer': 'new_customers',
+    'Deliveroo plus': 'subscribers',
   };
+
+  const getTargetAudience = () => targetAudienceObj[targetAudience] || 'orders';
   const getMenuItem = () => {
     const arr = [];
     category.forEach((obj) => {
@@ -215,18 +213,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       });
     });
     return arr;
-  };
-  const getTypeItemMenu = () => {
-    if (itemMenu === 'Flash Deal') {
-      return 'flash-deals';
-    }
-    if (itemMenu === 'Order more , save more') {
-      return 'groups';
-    }
-    if (itemMenu === 'Restaurent Pick') {
-      return 'restaurant-picks';
-    }
-    return 'free-items';
   };
 
   useEffect(() => {
@@ -267,16 +253,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     );
   };
   const handleSchedule = async () => {
-    const newBranchData =
-      Object.keys(vendors.display).length > 0
-        ? branch.vendorsObj[platform[0]][0]
-        : vendorsArr.find((v) => v.data.vendor_name === branchData);
-    const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
-    delete clonedVendor.platform;
     const menuType =
       menu === 'Offer on the whole Menu'
         ? null
-        : { menu_items: getMenuItem(), theme: getTypeItemMenu() };
+        : { menu_items: getMenuItem(), theme: getDiscountMovType('type') };
 
     const dataReq = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
@@ -291,47 +271,63 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       master_email: user.email,
       access_token: user.accessToken,
       platform_token: getPlatformToken(),
-      vendors: [clonedVendor],
-      chain_id: clonedVendor.chain_id,
+      vendors: [{}],
     };
 
-    const dataReqOfferCross = {
-      start_date: format(startingDate, 'yyyy-MM-dd'),
-      start_hour: getHourArr('startTime'),
-      end_date: getFormatedEndDate(endingDate, 'yyyy-MM-dd', times),
-      end_hour: getHourArr('endTime'),
-      type_schedule: getTypeSchedule(),
-      menu_type: menuType,
-      goal: getTargetAudience(),
-      discount: Number(discountPercentage.replace('%', '')),
-      mov: Number(minOrder.toLowerCase().replace('aed', '')),
-      master_email: user.email,
-      access_token: user.accessToken,
-      platform_token:
-        userPlatformData.platforms[platform[0]].access_token ??
-        userPlatformData.platforms[platform[0]].access_token_bis,
-      vendors: branch.vendorsObj,
-    };
+    try {
+      if (platform.length < 2) {
+        const newBranchData =
+          Object.keys(vendors.display).length > 0
+            ? branch.vendorsObj[platform[0]][0]
+            : vendorsArr.find((v) => v.data.vendor_name === branchData);
+        const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
+        delete clonedVendor.platform;
 
-    if (platform.length < 2) {
-      const res = await triggerOffers(
-        Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
-        dataReq,
-      );
-      if (res instanceof Error) {
-        triggerAlertWithMessageError(res.message);
-        return;
+        const res = await triggerOffers(
+          Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
+          { ...dataReq, vendors: [clonedVendor] },
+        );
+
+        if (res instanceof Error) {
+          throw res.message;
+        }
+
+        setCreated(true);
+        setRecap(false);
+      } else {
+        const crossPlatform = platform.map((p) => {
+          const newBranchData =
+            Object.keys(vendors.display).length > 0
+              ? branch.vendorsObj[p][0]
+              : vendorsArr.find((v) => v.data.vendor_name === branchData);
+          const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
+          delete clonedVendor.platform;
+          dataReq.vendors = [clonedVendor];
+          const platformToken =
+            userPlatformData.platforms[p].access_token ??
+            userPlatformData.platforms[p].access_token_bis;
+          return triggerOffers(p, {
+            ...dataReq,
+            platform_token: platformToken,
+            vendors: [clonedVendor],
+          });
+        });
+
+        Promise.all(crossPlatform).then(([platform1, platform2]) => {
+          if (platform1 instanceof Error) {
+            throw platform1.message;
+          }
+
+          if (platform2 instanceof Error) {
+            throw platform2.message;
+          }
+          setCreated(true);
+          setRecap(false);
+        });
       }
-    } else {
-      const res = await OfferCrossPlatforms(dataReqOfferCross);
-      if (res instanceof Error) {
-        triggerAlertWithMessageError(res.message);
-        return;
-      }
+    } catch (error) {
+      triggerAlertWithMessageError(error.message);
     }
-
-    setCreated(true);
-    setRecap(false);
   };
   const getHeatmapData = () => {
     delete vendorsObj.display;
@@ -410,9 +406,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setDiscountPercentage('');
     setMinOrder('');
   }, [itemMenu, menu]);
-
   const getMenuData = async (vendor, platforms) => {
     try {
+      if (platforms === 'talabat') return;
+
       const res = await getMenu(
         { master_email: user.email, access_token: user.accessToken, vendor },
         platforms,
@@ -421,14 +418,17 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (!res.data) {
         throw new Error('');
       }
+      if (res.data.menu_items === null) {
+        setCategory(null);
+      } else {
+        const resp = Object.keys(res.data.menu_items)
+          .map((v) => res.data.menu_items[v])
+          .map((k) => Object.keys(k).map((el) => k[el]))
+          .flat();
 
-      const resp = Object.keys(res.data.menu_items)
-        .map((v) => res.data.menu_items[v])
-        .map((k) => Object.keys(k).map((el) => k[el]))
-        .flat();
-
-      setCategoryDataList(res.data.categories);
-      setCategory(resp);
+        setCategoryDataList(res.data.categories);
+        setCategory(resp);
+      }
     } catch (err) {
       setCategory([]);
       triggerAlertWithMessageError('Error while retrieving data');
@@ -440,7 +440,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       if (branchData && vendor.platform === platformData) {
         getMenuData(vendor, platformData);
       }
-    } else if (platform.length < 2 && branch && platform[0] !== 'talabat' && selected === 2) {
+    } else if (platform.length < 2 && branch && selected === 2) {
       const vendorDisplay = vendors.vendorsObj[platform[0]][0];
       getMenuData(vendorDisplay, platform[0]);
     }
@@ -472,9 +472,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       times,
       heatmapData[links],
       getTypeSchedule() === 'workweek',
-      customDay === 'Customised Days',
+      typeSchedule === 'Customised Days',
       customisedDay,
-      customDay === 'Same day every week',
+      typeSchedule === 'Same day every week',
       everyWeek,
     );
 
@@ -498,196 +498,134 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
     setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
   };
+
+  const durationDisable = (n, stepsRange) => {
+    if (selected === n) {
+      clearTimeSelected();
+      timeSelected();
+      if (duration === 'Program the offer duration') {
+        setSteps([...stepsRange, stepsRange.length]);
+        setDisabled(!typeSchedule);
+        return;
+      }
+      setSteps(stepsRange);
+      setDisabled(
+        !(
+          endingDate !== null &&
+          disabledDate &&
+          times.every(
+            (obj) =>
+              isValidDate(obj.endTime) &&
+              obj.startTime !== null &&
+              !Number.isNaN(new Date(obj.endTime).getTime()),
+          )
+        ),
+      );
+      return;
+    }
+    if (selected === n + 1) {
+      setDisabled(!targetAudience);
+    }
+    if (duration === 'Program the offer duration') {
+      if (selected === n + 1) {
+        timeSelected();
+        if (typeSchedule === 'Same day every week') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              everyWeek &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime()),
+              )
+            ),
+          );
+          return;
+        }
+        if (typeSchedule === 'Customised Days') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              customisedDay.length > 0 &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime()),
+              )
+            ),
+          );
+          return;
+        }
+        if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime()),
+              )
+            ),
+          );
+        }
+      }
+      if (selected === n + 2) {
+        setDisabled(!targetAudience);
+      }
+    }
+  };
+
   useEffect(() => {
     if (selected === 1) {
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         clearTimeSelected();
-      } else {
-        setDisabled(!branchData);
-        clearTimeSelected();
+        return;
       }
+      setDisabled(!branchData);
+      clearTimeSelected();
+      return;
     }
     if (selected === 2) {
       clearTimeSelected();
       if (menu === 'Offer on An Item from the Menu') {
         setSteps([0, 1, 2, 3, 4, 5]);
         setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
-      } else {
-        setSteps([0, 1, 2, 3, 4]);
-        setDisabled(!(menu && discountPercentage && minOrder));
+        return;
       }
+      setSteps([0, 1, 2, 3, 4]);
+      setDisabled(!(menu && discountPercentage && minOrder));
+      return;
     }
     if (menu === 'Offer on An Item from the Menu') {
       if (selected === 3) {
         setDisabled(checked.length === 0);
         clearTimeSelected();
+        return;
       }
-      if (selected === 4) {
-        clearTimeSelected();
-        timeSelected();
-        if (duration === 'Program the offer duration') {
-          setSteps([0, 1, 2, 3, 4, 5, 6]);
-          setDisabled(!customDay);
-        } else {
-          setSteps([0, 1, 2, 3, 4, 5]);
-          setDisabled(
-            !(
-              endingDate !== null &&
-              disabledDate &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()),
-              )
-            ),
-          );
-        }
-      }
-      if (duration === 'Program the offer duration') {
-        if (selected === 5) {
-          timeSelected();
-          if (customDay === 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                everyWeek &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-          if (customDay === 'Customised Days') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                customisedDay.length > 0 &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-        }
-      }
+      durationDisable(4, [0, 1, 2, 3, 4, 5]);
     }
     if (menu === 'Offer on the whole Menu') {
-      if (selected === 3) {
-        timeSelected();
-        if (duration === 'Program the offer duration') {
-          setSteps([0, 1, 2, 3, 4, 5]);
-          setDisabled(!customDay);
-        } else {
-          setSteps([0, 1, 2, 3, 4]);
-          setDisabled(
-            !(
-              endingDate !== null &&
-              disabledDate &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()),
-              )
-            ),
-          );
-        }
-      }
-      if (duration === 'Program the offer duration') {
-        if (selected === 4) {
-          timeSelected();
-          if (customDay === 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                everyWeek &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-          if (customDay === 'Customised Days') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                customisedDay.length > 0 &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          } else if (customDay !== 'Customised Day' && customDay !== 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime()),
-                )
-              ),
-            );
-          }
-        }
-      }
+      durationDisable(3, [0, 1, 2, 3, 4]);
     }
   }, [
     menu,
@@ -698,7 +636,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     selected,
     duration,
     endingDate,
-    customDay,
+    typeSchedule,
     disabledDate,
     times,
     everyWeek,
@@ -707,32 +645,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     checked,
     vendors,
     branchData,
+    targetAudience,
   ]);
-  useEffect(() => {
-    if (duration === 'Starting Now') {
-      setTimes([
-        {
-          startTime: new Date(
-            null,
-            null,
-            null,
-            format(new Date(), 'HH'),
-            format(new Date(addMinutes(new Date(), 2)), 'mm'),
-          ),
-          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-          pos: 1,
-        },
-      ]);
-    } else {
-      setTimes([
-        {
-          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-          pos: 1,
-        },
-      ]);
-    }
-  }, [duration, customDay]);
 
   const renderGradientValue = (v, i) => {
     const indices = links === 'revenue' ? 'AED' : '';
@@ -789,7 +703,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }, [active]);
 
   useEffect(() => {
-    setItemMenu('');
+    setItemMenu('Flash Deal');
   }, [menu]);
 
   useEffect(() => {
@@ -797,7 +711,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (selected >= 3) {
       timeSelected();
     }
-  }, [times, startingDate, endingDate, selected, customDay]);
+  }, [times, startingDate, endingDate, selected, typeSchedule]);
 
   const [recap, setRecap] = useState(false);
   const getItemMenuNamePrice = () => {
@@ -826,7 +740,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     minOrder,
     itemMenu,
     setItemMenu,
-    getDiscountOrMov,
+    getDiscountMovType,
     categoryData,
     categoryDataList,
     filteredCategoryData,
@@ -840,8 +754,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setEndingDate,
     times,
     setTimes,
-    customDay,
-    setCustomDay,
+    typeSchedule,
+    setTypeSchedule,
     targetAudience,
     setTargetAudience,
     setSteps,
@@ -884,7 +798,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     branch,
     platform,
     duration,
-    customDay,
+    typeSchedule,
     customisedDay,
     everyWeek,
     startingDate,
@@ -921,7 +835,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (!el.active) return { background: el.color };
 
     return {
-      background: `linear-gradient(45deg, #2D99FF 1%, ${el.color} 1%, ${el.color} 49%, #2D99FF 49%, #2D99FF 51%, ${el.color} 51%, ${el.color} 99%, #2D99FF 99%)`,
+      background: `linear-gradient(45deg, #2D99FF 9%, ${el.color} 1%, ${el.color} 42%, #2D99FF 44%, #2D99FF 62%, ${el.color} 1%, ${el.color} 93%, #2D99FF 1%)`,
       backgroundSize: '6px 6px',
       backgroundPosition: '50px 50px',
     };
@@ -957,6 +871,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                       setRecap(true);
                     } else {
                       setSelected(selected + 1);
+                      setDisabled(true);
                     }
                   }}
                   disabled={disabled}
@@ -1022,11 +937,13 @@ const MarketingSetup = ({ active, setActive, ads }) => {
               </TypographyKit>
               <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>
                 <TypographyKit variant="div" className="right-part-main-hour">
-                  <TypographyKit>
+                  <TypographyKit style={{ paddingBottom: '15px' }}>
                     <img src={OpacityLogo} alt="Logo" />
                   </TypographyKit>
                   {_.range(minHour, maxHour + 1).map((num) => (
-                    <TypographyKit key={num}>{rangeHoursOpenedDay[num].label ?? num}</TypographyKit>
+                    <TypographyKit style={{ lineHeight: '0.1' }} key={num}>
+                      {rangeHoursOpenedDay[num].label ?? num}
+                    </TypographyKit>
                   ))}
                 </TypographyKit>
                 <TypographyKit sx={{ width: '100%' }} variant="div">

@@ -10,6 +10,7 @@ import { firebaseCodeError } from '../../data/firebaseCodeError';
 import useApi from '../../hooks/useApi';
 
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
+import { verifyEmail } from '../../api/userApi';
 
 const SignUp = () => {
   const [value, setValue] = useState({
@@ -35,7 +36,7 @@ const SignUp = () => {
   });
   const { settingsSave } = useApi();
 
-  const { signUp, verifyEmail, logOut } = useUserAuth();
+  const { signUp, logOut } = useUserAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -53,7 +54,7 @@ const SignUp = () => {
           pointOfSale: value.pointOfSale,
         },
       });
-      await verifyEmail(credential.user);
+      await verifyEmail(value);
       await logOut();
       navigate('/');
       triggerAlertWithMessageSuccess(

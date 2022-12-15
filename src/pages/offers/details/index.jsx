@@ -25,7 +25,6 @@ import useApi from '../../../hooks/useApi';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
-import useVendors from '../../../hooks/useVendors';
 import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
 import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
 import { getPlanningOfferDetails } from '../../../api/userApi';
@@ -54,8 +53,7 @@ const OfferDetailComponent = () => {
   const { cancelOffer, cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { date } = useDate();
-  const { vendors } = useVendors();
+  const { date, vendors } = useDate();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: date.beforePeriod.startDate,
@@ -124,7 +122,7 @@ const OfferDetailComponent = () => {
     offer_id,
     type_schedule,
   } = offerDetail;
-  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === `${offerDetail.vendor_id}`);
+  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === vendor_id);
   const chain_id = vendor ? vendor.chain_id : '';
 
   const openCancelModal = () => setIsOpen(true);
@@ -322,10 +320,10 @@ const OfferDetailComponent = () => {
                       <span className="offer-visibility-title">Profits</span>
                     </div>
                     <div className="offer-visibility-sub-title">
-                      {Object.keys(offerDetailMaster).length === 0 ||
-                      offerDetailMaster?.master_offer?.data.profit === null
-                        ? '-'
-                        : offerDetailMaster?.master_offer?.data.profit}
+                      {offerDetailMaster?.master_offer?.data?.profit === 0 ||
+                      offerDetailMaster?.master_offer?.data?.profit
+                        ? offerDetailMaster?.master_offer?.data?.profit
+                        : '-'}
                     </div>
                   </div>
                 </div>

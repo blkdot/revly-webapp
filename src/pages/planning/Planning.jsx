@@ -18,7 +18,6 @@ import adsIcon from '../../assets/images/ic_ads.png';
 import ButtonKit from '../../kits/button/ButtonKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import BoxKit from '../../kits/box/BoxKit';
-import useVendors from '../../hooks/useVendors';
 import { platformObject } from '../../data/platformList';
 import Tag from '../../assets/icons/Tag';
 import Layers from '../../assets/icons/Layers';
@@ -36,8 +35,7 @@ const defaultFilterStateFormat = {
 
 const Planning = () => {
   const [active, setActive] = useState(0);
-  const { date } = useDate();
-  const { vendors } = useVendors();
+  const { date, vendors } = useDate();
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));
