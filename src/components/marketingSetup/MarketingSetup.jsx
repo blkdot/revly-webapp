@@ -307,6 +307,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
         setCreated(true);
         setRecap(false);
+        setChecked([]);
       } else {
         const crossPlatform = platform.map((p) => {
           const newBranchData =
@@ -336,6 +337,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           }
           setCreated(true);
           setRecap(false);
+          setChecked([]);
         });
       }
     } catch (error) {
@@ -707,6 +709,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setActive(false);
     setSelected(1);
     setCreated(false);
+    setChecked([]);
     body.style.overflowY = 'visible';
   };
 
