@@ -3,7 +3,6 @@ import { pascalCase } from 'change-case';
 import shortid from 'shortid';
 
 import './Planning.scss';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -25,6 +24,7 @@ import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdow
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import Vector from '../../assets/icons/Vector';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import OfferDetailComponent from '../offers/details';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -52,13 +52,11 @@ const Planning = () => {
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
-  const [filters, setFilters] = useState(defaultFilterStateFormat);
+  const [filtersSaved, setFiltersSaved] = useState(defaultFilterStateFormat);
+  const [filters, setFilters] = useState(filtersSaved);
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const {
     renderPlatform,
@@ -89,18 +87,9 @@ const Planning = () => {
   const headersAds = [
     { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
-    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
-    { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
-    { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
-    { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
-    { id: 'new_customer_count', disablePadding: true, label: 'New customer' },
-    { id: 'orders_count', disablePadding: true, label: 'Orders' },
-    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
-    { id: 'spend', disablePadding: true, label: 'Spend' },
-    { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
-    { id: 'total_budget', disablePadding: true, label: 'Total budget' },
+    { id: 'total_budget', disablePadding: true, label: 'Budget' },
     { id: 'ad_status', disablePadding: true, label: 'Status' },
   ];
 
@@ -150,15 +139,11 @@ const Planning = () => {
       }),
       {},
     );
-
+  const [opened, setOpened] = useState(false);
+  const [clickedId, setClickedId] = useState('');
   const handleRowClick = (id) => {
-    navigate(`/offer/detail/${id}`, {
-      state: {
-        // eslint-disable-next-line eqeqeq
-        offerDetail: offers.find((o) => o.master_offer_id == id),
-        prevPath: location.pathname,
-      },
-    });
+    setOpened(true);
+    setClickedId(id);
   };
 
   const renderTable = () => (
@@ -173,9 +158,10 @@ const Planning = () => {
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
-      setFilters(defaultFilterStateFormat);
+      setFilters(filtersSaved);
+    } else {
+      setFiltersSaved(filters);
     }
-
     const body = document.querySelector('body');
     body.style.overflow = 'visible';
     setOpenedFilter(false);
@@ -193,11 +179,13 @@ const Planning = () => {
       (acc, cur) => {
         const { platform, discount_type: discountType, discount_rate: procent, status } = acc;
 
-        if (!platform.includes(cur.platform)) platform.push(cur.platform);
+        if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!discountType.includes(cur.discount_type)) discountType.push(cur.discount_type);
+        if (!discountType.includes(cur.discount_type) && cur.discount_type)
+          discountType.push(cur.discount_type);
 
-        if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
+        if (!procent.includes(cur.discount_rate) && cur.discount_rate)
+          procent.push(cur.discount_rate);
 
         if (!status.includes(cur.status)) status.push(active ? cur.ad_status : cur.status);
 
@@ -221,6 +209,7 @@ const Planning = () => {
       discount_rate: active ? [] : preHeadProcent,
       status: preHeadStatus,
     });
+    setFiltersSaved(defaultFilterStateFormat);
   }, [ads, offers, active]);
 
   const renderStatusFilter = (s) => {
@@ -281,75 +270,86 @@ const Planning = () => {
     setDataFiltered(filteredData);
   }, [JSON.stringify(filters), ads, offers, active]);
 
-  const renderLayout = () => (
-    <PaperKit className="marketing-paper offer-paper">
-      <div className="right-part">
-        <div className="right-part-header planning-links">
-          <TypographyKit
-            className={`right-part-header_link planning ${active ? 'active' : ''}`}
-            variant="div"
-          >
-            <BoxKit className={!active ? 'active' : ''} onClick={() => setActive(0)}>
-              <img src={offerIcon} alt="Offers managment icon" />
-              Planning Offers
-            </BoxKit>
-            <BoxKit className={active ? 'active' : ''} onClick={() => setActive(1)}>
-              <img src={adsIcon} alt="Offer Performence icon" />
-              Planning Ads
-            </BoxKit>
-          </TypographyKit>
+  const renderLayout = () => {
+    if (opened) {
+      return (
+        <OfferDetailComponent
+          // eslint-disable-next-line eqeqeq
+          data={offers.find((o) => o.master_offer_id == clickedId)}
+          setOpened={setOpened}
+        />
+      );
+    }
+    return (
+      <PaperKit className="marketing-paper offer-paper">
+        <div className="right-part">
+          <div className="right-part-header planning-links">
+            <TypographyKit
+              className={`right-part-header_link planning ${active ? 'active' : ''}`}
+              variant="div"
+            >
+              <BoxKit className={!active ? 'active' : ''} onClick={() => setActive(0)}>
+                <img src={offerIcon} alt="Offers managment icon" />
+                Planning Offers
+              </BoxKit>
+              <BoxKit className={active ? 'active' : ''} onClick={() => setActive(1)}>
+                <img src={adsIcon} alt="Offer Performence icon" />
+                Planning Ads
+              </BoxKit>
+            </TypographyKit>
+          </div>
         </div>
-      </div>
-      <TypographyKit variant="div" className="marketing-paper-top-btns">
-        <div className="marketing-filters">
-          <div>
-            <FilterDropdown
-              items={filtersHead.platform}
-              values={filters.platform}
-              onChange={handleChangeMultipleFilter('platform')}
-              label="Platform"
-              icon={<Layers />}
-              internalIconOnActive={platformObject}
-              maxShowned={1}
-            />
-            {active ? null : (
+        <TypographyKit variant="div" className="marketing-paper-top-btns">
+          <div className="marketing-filters">
+            <div>
               <FilterDropdown
-                items={filtersHead.discount_type}
-                values={filters.discount_type}
-                onChange={handleChangeMultipleFilter('discount_type')}
-                label="Discount Type"
-                icon={<Tag />}
+                items={filtersHead.platform}
+                values={filters.platform}
+                onChange={handleChangeMultipleFilter('platform')}
+                label="Platform"
+                icon={<Layers />}
+                internalIconOnActive={platformObject}
                 maxShowned={1}
               />
-            )}
-            {active ? null : (
-              <FilterDropdown
-                items={filtersHead.discount_rate}
-                values={filters.discount_rate}
-                onChange={handleChangeMultipleFilter('discount_rate')}
-                label="Discount Amount"
-                icon={<Tag />}
-                customTag="%"
-                maxShowned={5}
-              />
-            )}
+              {active ? null : (
+                <FilterDropdown
+                  items={filtersHead.discount_type}
+                  values={filters.discount_type}
+                  onChange={handleChangeMultipleFilter('discount_type')}
+                  label="Discount Type"
+                  icon={<Tag />}
+                  maxShowned={1}
+                />
+              )}
+              {active ? null : (
+                <FilterDropdown
+                  items={filtersHead.discount_rate}
+                  values={filters.discount_rate}
+                  onChange={handleChangeMultipleFilter('discount_rate')}
+                  label="Discount Amount"
+                  icon={<Tag />}
+                  customTag="%"
+                  maxShowned={5}
+                />
+              )}
+            </div>
+            <div>
+              <ButtonKit
+                className="more-filter"
+                variant="outlined"
+                onClick={() => setOpenedFilter(true)}
+                disabled={isEmptyList()}
+              >
+                <Vector />
+                More Filters
+              </ButtonKit>
+            </div>
           </div>
-          <div>
-            <ButtonKit
-              className="more-filter"
-              variant="outlined"
-              onClick={() => setOpenedFilter(true)}
-              disabled={isEmptyList()}
-            >
-              <Vector />
-              More Filters
-            </ButtonKit>
-          </div>
-        </div>
-      </TypographyKit>
-      {renderTable()}
-    </PaperKit>
-  );
+        </TypographyKit>
+        {renderTable()}
+      </PaperKit>
+    );
+  };
 
   return (
     <div className="wrapper">

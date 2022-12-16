@@ -55,7 +55,7 @@ const AccountSettingForm = (props) => {
               value={valueDial}
               country="ae"
               specialLabel=""
-              inputProps={{ readOnly: true }}
+              inputProps={{ readOnly: false }}
               onChange={onDialChange}
               containerClass="account-form__input-phone"
             />

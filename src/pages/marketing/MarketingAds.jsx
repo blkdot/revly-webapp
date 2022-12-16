@@ -63,7 +63,7 @@ const MarketingAds = () => {
   const headersAds = [
     { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
-    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
+    { id: 'ad_serving_count', disablePadding: true, label: 'Impressions' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
     { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
@@ -158,9 +158,9 @@ const MarketingAds = () => {
       (acc, cur) => {
         const { platform, status } = acc;
 
-        if (!platform.includes(cur.platform)) platform.push(cur.platform);
+        if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!status.includes(cur.status)) status.push(cur.ad_status);
+        if (!status.includes(cur.status) && cur.status) status.push(cur.ad_status);
 
         return {
           ...acc,

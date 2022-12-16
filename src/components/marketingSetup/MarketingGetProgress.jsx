@@ -37,6 +37,7 @@ import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingD
 import useDate from '../../hooks/useDate';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import TimePickerDropdown from '../timePicker/TimePickerDropdown';
+import TooltipKit from '../../kits/toolTip/TooltipKit';
 
 const GetProgress = ({ progressData }) => {
   const {
@@ -745,7 +746,7 @@ const GetProgress = ({ progressData }) => {
                   }}
                   variant="outlined"
                 />
-                <div style={{ width: '90%' }}>
+                <div style={{ width: '55%' }}>
                   <div className="__select menu-item-select">
                     <MenuDropdown
                       onChange={handleCategoryDataChange}
@@ -778,20 +779,23 @@ const GetProgress = ({ progressData }) => {
                     control={
                       <CheckboxKit
                         onChange={({ target }) => {
-                          if (target.checked) {
+                          if (target.checked && checked.length < 10) {
                             setChecked([...checked, target.value]);
-                          } else {
+                          } else if (!target.checked) {
                             checked.splice(checked.indexOf(target.value), 1);
                             setChecked([...checked]);
                           }
                         }}
+                        checked={checked.indexOf(obj.name) > -1}
                         value={obj.name}
                       />
                     }
                     label={
                       <div>
                         <div>
-                          <ListItemTextKit primary={obj.name} />
+                          <TooltipKit title="Add" placement="top">
+                            <ListItemTextKit primary={obj.name} />
+                          </TooltipKit>
                         </div>
                         <b>{obj.price} AED</b>
                       </div>

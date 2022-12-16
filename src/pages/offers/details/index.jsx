@@ -1,20 +1,12 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import MenuItem from './MenuItem';
-import Dates from '../../../components/dates/Dates';
-import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown.suspended';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import TypographyKit from '../../../kits/typography/TypographyKit';
-import SmartRuleBtnIcon from '../../../assets/images/ic_sm-rule.png';
-import SettingFuture from '../../../assets/images/ic_setting-future.png';
 import useDate from '../../../hooks/useDate';
 import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
 import Warning from '../../../assets/icons/Warning';
 import Calendar from '../../../assets/icons/Calendar';
-import Trash from '../../../assets/icons/Trash';
 import Timer from '../../../assets/icons/Timer';
 import ExpandIcon from '../../../assets/icons/ExpandIcon';
 import FastFood from '../../../assets/icons/FastFood';
@@ -25,8 +17,6 @@ import useApi from '../../../hooks/useApi';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
-import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
-import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
 import { getPlanningOfferDetails } from '../../../api/userApi';
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
 import SkeletonKit from '../../../kits/skeleton/SkeletonKit';
@@ -38,28 +28,19 @@ const scheduleTypeMapping = {
   everyday: 'Everyday',
 };
 
-const OfferDetailComponent = () => {
+const OfferDetailComponent = ({ data, setOpened }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const {
-    state: { offerDetail: data, prevPath },
-  } = useLocation();
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
   const [offerDetailMaster, setofferDetailMaster] = useState({});
-  const navigate = useNavigate();
   const {
     userPlatformData: { platforms },
   } = usePlatform();
-  const { cancelOffer, cancelOfferMaster } = useApi();
+  const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { date, vendors } = useDate();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
-  });
-  const [active, setActive] = useState(false);
+  const { vendors } = useDate();
+  const { vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
       cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
@@ -106,23 +87,22 @@ const OfferDetailComponent = () => {
     </div>
   );
 
+  const { master_offer_id, platform } = offerDetail;
+  const { profit, revenue, accured_discount, roi, average_basket, n_orders } =
+    offerDetailMaster?.master_offer?.data || {};
   const {
-    data: offerData,
-    discount_rate,
-    discount_type,
-    end_date,
-    master_offer_id,
-    // offerDetailMaster_items,
     minimum_order_value,
-    platform,
     start_date,
     status,
     vendor_name,
     vendor_id,
     offer_id,
     type_schedule,
-  } = offerDetail;
-  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === vendor_id);
+    discount_rate,
+    discount_type,
+    end_date,
+  } = offerDetailMaster?.master_offer || {};
+  const vendor = vendorsObj[platform]?.find((v) => +v.vendor_id === +vendor_id);
   const chain_id = vendor ? vendor.chain_id : '';
 
   const openCancelModal = () => setIsOpen(true);
@@ -148,26 +128,6 @@ const OfferDetailComponent = () => {
       setIsOpen(false);
     });
   };
-  const handleCancelOffer = (offerId, setState) => {
-    cancelOffer(
-      {
-        master_email: user.email,
-        access_token: user?.access_token || '',
-        platform_token: platforms[platform].access_token,
-        vendors: [vendor],
-        offer_id: offerId,
-        chain_id,
-        master_offer_id,
-      },
-      platform,
-    );
-    setState(false);
-  };
-  const OpenSetup = () => {
-    const body = document.querySelector('body');
-    setActive(true);
-    body.style.overflowY = 'hidden';
-  };
 
   useEffect(() => {
     getPlanningOfferDetails({
@@ -180,7 +140,7 @@ const OfferDetailComponent = () => {
       .then((res) => setofferDetailMaster(res.data))
       // eslint-disable-next-line no-console
       .catch((err) => console.log({ err }));
-  }, [vendors]);
+  }, [offerDetail]);
 
   return (
     <>
@@ -190,45 +150,11 @@ const OfferDetailComponent = () => {
         cancelOffer={handleCancelOfferMaster}
         platform={platform}
       />
-      <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
-        <div className="top-inputs">
-          {Object.keys(display).length > 0 ? (
-            <RestaurantDropdown chainObj={chainObj} />
-          ) : (
-            <RestaurantDropdownOld
-              restaurants={restaurants}
-              vendors={vendorsArr}
-              vendorsPlatform={Object.keys(vendorsObj)}
-            />
-          )}
-          <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-        </div>
-        {prevPath === '/marketing/offer' ? (
-          <div className="marketing-top">
-            <div className="marketing-top-text">
-              <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
-              <TypographyKit color="#637381" variant="subtitle">
-                Create and manage all your offers. Set personalised rules to automatically trigger
-                your offers.
-              </TypographyKit>
-            </div>
-            <div className="markting-top-btns">
-              <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
-                <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
-                Create a smart rule
-              </ButtonKit>
-              <ButtonKit onClick={() => OpenSetup()} variant="contained">
-                <img src={SettingFuture} alt="Setting future icon" />
-                Set up an offer
-              </ButtonKit>
-            </div>
-          </div>
-        ) : null}
         <PaperKit className="marketing-paper offer-paper">
           <div>
             <div className="offer-details-actions">
-              <button onClick={() => navigate(prevPath)} type="button" className="back-icon">
+              <button onClick={() => setOpened(false)} type="button" className="back-icon">
                 <Arrow />
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
@@ -247,14 +173,18 @@ const OfferDetailComponent = () => {
               <div className="restau">
                 <Calendar />
                 <div className="restau-infos">
-                  <div className="restau-name">{vendor_name}</div>
+                  <div className="restau-name">
+                    {vendor_name || <SkeletonKit width={70} height={30} />}
+                  </div>
                 </div>
               </div>
               <div className="offer">
                 {renderOfferStatus(offerDetailMaster?.master_offer?.offer_status)}
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span className="offer-title">Offer Date :</span>
-                  <span className="offer-sub-title">{start_date}</span>
+                  <span className="offer-sub-title">
+                    {start_date || <SkeletonKit width={60} height={30} />}
+                  </span>
                 </div>
                 {renderPlatform(platform)}
               </div>
@@ -274,9 +204,7 @@ const OfferDetailComponent = () => {
                       <span className="offer-visibility-title">Visibility Rank</span>
                     </div>
                     <div className="offer-visibility-sub-title">
-                      {offerData?.accrued_discount === null || offerData === null
-                        ? '-'
-                        : offerData.accrued_discount}
+                      {accured_discount === 0 || accured_discount ? accured_discount : '-'}
                     </div>
                   </div>
                   <div className="offer-visibility-block">
@@ -284,9 +212,7 @@ const OfferDetailComponent = () => {
                       <span className="offer-visibility-title">#Orders</span>
                     </div>
                     <div className="offer-visibility-sub-title">
-                      {offerData?.n_orders === null || offerData === null
-                        ? '-'
-                        : offerData.n_orders}
+                      {n_orders === 0 || n_orders ? n_orders : '-'}
                     </div>
                   </div>
                   <div className="offer-visibility-block">
@@ -294,25 +220,21 @@ const OfferDetailComponent = () => {
                       <span className="offer-visibility-title">Avg Basket</span>
                     </div>
                     <div className="offer-visibility-sub-title">
-                      {offerData?.average_basket === null || offerData === null
-                        ? '-'
-                        : offerData.average_basket}
+                      {average_basket === 0 || average_basket ? average_basket : '-'}
                     </div>
                   </div>
                   <div className="offer-visibility-block">
                     <div>
                       <span className="offer-visibility-title">Roi</span>
                     </div>
-                    <div className="offer-visibility-sub-title">
-                      {offerData?.roi === null || offerData === null ? '-' : offerData.roi}
-                    </div>
+                    <div className="offer-visibility-sub-title">{roi === 0 || roi ? roi : '-'}</div>
                   </div>
                   <div className="offer-visibility-block">
                     <div>
                       <span className="offer-visibility-title">Revenue</span>
                     </div>
                     <div className="offer-visibility-sub-title">
-                      {offerData?.revenue === null || offerData === null ? '-' : offerData.revenue}
+                      {revenue === 0 || revenue ? revenue : '-'}
                     </div>
                   </div>
                   <div className="offer-visibility-block">
@@ -320,10 +242,7 @@ const OfferDetailComponent = () => {
                       <span className="offer-visibility-title">Profits</span>
                     </div>
                     <div className="offer-visibility-sub-title">
-                      {offerDetailMaster?.master_offer?.data?.profit === 0 ||
-                      offerDetailMaster?.master_offer?.data?.profit
-                        ? offerDetailMaster?.master_offer?.data?.profit
-                        : '-'}
+                      {profit === 0 || profit ? profit : '-'}
                     </div>
                   </div>
                 </div>
@@ -392,7 +311,7 @@ const OfferDetailComponent = () => {
                           color: '#212B36',
                         }}
                       >
-                        {start_date}
+                        {start_date || <SkeletonKit />}
                       </div>
                     </div>
                     <div
@@ -425,7 +344,7 @@ const OfferDetailComponent = () => {
                           color: '#212B36',
                         }}
                       >
-                        {end_date}
+                        {end_date || <SkeletonKit />}
                       </div>
                     </div>
                   </div>
@@ -443,12 +362,7 @@ const OfferDetailComponent = () => {
                     ) : (
                       <div style={{ width: 'fit-content' }} className="offerdetails_time_slots">
                         {Object.keys(offerDetailMaster?.children_offers || {}).map((id) => (
-                          <TimeSlot
-                            handleCancelOffer={handleCancelOffer}
-                            key={id}
-                            data={offerDetailMaster.children_offers[id]}
-                            status={status}
-                          />
+                          <TimeSlot key={id} data={offerDetailMaster.children_offers[id]} />
                         ))}
                       </div>
                     )}
@@ -535,7 +449,7 @@ const OfferDetailComponent = () => {
                       color: '#212B36',
                     }}
                   >
-                    {`${discount_rate}%`}
+                    {discount_rate || discount_rate === 0 ? `${discount_rate}%` : <SkeletonKit />}
                   </div>
                 </div>
                 <div>
@@ -561,7 +475,11 @@ const OfferDetailComponent = () => {
                       color: '#212B36',
                     }}
                   >
-                    {minimum_order_value} AED
+                    {minimum_order_value || minimum_order_value === 0 ? (
+                      `${minimum_order_value} AED`
+                    ) : (
+                      <SkeletonKit />
+                    )}
                   </div>
                 </div>
               </div>
@@ -589,21 +507,69 @@ const OfferDetailComponent = () => {
 export default OfferDetailComponent;
 
 // eslint-disable-next-line no-unused-vars
-const TimeSlot = ({ data, handleCancelOffer, status }) => {
-  const [active, setActive] = useState(true);
-  return (
+const TimeSlot = ({ data }) => (
+  <div
+    style={{
+      display: 'flex',
+      marginLeft: '30px',
+      width: '150px',
+      borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
+    }}
+  >
     <div
       style={{
         display: 'flex',
-        marginLeft: '30px',
-        width: '200px',
-        borderRight: 'solid 1px rgba(145, 158, 171, 0.24)',
+        flexDirection: 'column',
       }}
     >
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          height: 'fit-content',
+        }}
+      >
+        <span
+          style={{
+            fontFamily: 'Public Sans',
+            fontStyle: 'normal',
+            fontWeight: '400',
+            fontSize: '12px',
+            lineHeight: '18px',
+            color: '#212B36',
+          }}
+        >
+          Date
+        </span>
+        <span
+          style={{
+            fontFamily: 'Public Sans',
+            fontStyle: 'normal',
+            fontWeight: '600',
+            fontSize: '14px',
+            lineHeight: '22px',
+            textAlign: 'center',
+            color: '#212B36',
+          }}
+        >
+          {new Date(data.start_date).toLocaleDateString() ===
+          new Date(data.end_date).toLocaleDateString()
+            ? data.start_date
+            : `${data.start_date} - ${data.end_date}`}
+        </span>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          minHeight: '40px',
+          gridGap: '15px',
+          maxWidth: '100%',
         }}
       >
         <div
@@ -611,8 +577,8 @@ const TimeSlot = ({ data, handleCancelOffer, status }) => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            height: 'fit-content',
+            alignItems: 'center',
+            height: '100%',
           }}
         >
           <span
@@ -625,7 +591,7 @@ const TimeSlot = ({ data, handleCancelOffer, status }) => {
               color: '#212B36',
             }}
           >
-            Date
+            Start time
           </span>
           <span
             style={{
@@ -638,102 +604,44 @@ const TimeSlot = ({ data, handleCancelOffer, status }) => {
               color: '#212B36',
             }}
           >
-            {new Date(data.start_date).toLocaleDateString() ===
-            new Date(data.end_date).toLocaleDateString()
-              ? data.start_date
-              : `${data.start_date} - ${data.end_date}`}
+            {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
           </span>
         </div>
-
         <div
           style={{
             display: 'flex',
-            width: '100%',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            minHeight: '40px',
-            gridGap: '15px',
-            maxWidth: '100%',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            height: '100%',
           }}
         >
-          <div
+          <span
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              height: '100%',
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '400',
+              fontSize: '12px',
+              lineHeight: '18px',
+              color: '#212B36',
             }}
           >
-            <span
-              style={{
-                fontFamily: 'Public Sans',
-                fontStyle: 'normal',
-                fontWeight: '400',
-                fontSize: '12px',
-                lineHeight: '18px',
-                color: '#212B36',
-              }}
-            >
-              Start time
-            </span>
-            <span
-              style={{
-                fontFamily: 'Public Sans',
-                fontStyle: 'normal',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '22px',
-                textAlign: 'center',
-                color: '#212B36',
-              }}
-            >
-              {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
-            </span>
-          </div>
-          <div
+            End time
+          </span>
+          <span
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: '100%',
+              fontFamily: 'Public Sans',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              fontSize: '14px',
+              lineHeight: '22px',
+              textAlign: 'center',
+              color: '#212B36',
             }}
           >
-            <span
-              style={{
-                fontFamily: 'Public Sans',
-                fontStyle: 'normal',
-                fontWeight: '400',
-                fontSize: '12px',
-                lineHeight: '18px',
-                color: '#212B36',
-              }}
-            >
-              End time
-            </span>
-            <span
-              style={{
-                fontFamily: 'Public Sans',
-                fontStyle: 'normal',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '22px',
-                textAlign: 'center',
-                color: '#212B36',
-              }}
-            >
-              {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
-            </span>
-          </div>
+            {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
+          </span>
         </div>
       </div>
-      {['Live', 'Active', 'Scheduled'].includes(data.offer_status) && active ? (
-        <span className="cancel_api">
-          <Trash onClick={() => handleCancelOffer(data.offer_id, setActive)} />
-        </span>
-      ) : (
-        ''
-      )}
     </div>
-  );
-};
+  </div>
+);
