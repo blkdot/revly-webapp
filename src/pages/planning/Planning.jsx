@@ -89,18 +89,9 @@ const Planning = () => {
   const headersAds = [
     { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
-    { id: 'ad_serving_count', disablePadding: true, label: 'Serving' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
-    { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
-    { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
-    { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
-    { id: 'new_customer_count', disablePadding: true, label: 'New customer' },
-    { id: 'orders_count', disablePadding: true, label: 'Orders' },
-    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
-    { id: 'spend', disablePadding: true, label: 'Spend' },
-    { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
-    { id: 'total_budget', disablePadding: true, label: 'Total budget' },
+    { id: 'total_budget', disablePadding: true, label: 'Budget' },
     { id: 'ad_status', disablePadding: true, label: 'Status' },
   ];
 

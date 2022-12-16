@@ -745,7 +745,7 @@ const GetProgress = ({ progressData }) => {
                   }}
                   variant="outlined"
                 />
-                <div style={{ width: '90%' }}>
+                <div style={{ width: '55%' }}>
                   <div className="__select menu-item-select">
                     <MenuDropdown
                       onChange={handleCategoryDataChange}
@@ -778,13 +778,14 @@ const GetProgress = ({ progressData }) => {
                     control={
                       <CheckboxKit
                         onChange={({ target }) => {
-                          if (target.checked) {
+                          if (target.checked && checked.length < 10) {
                             setChecked([...checked, target.value]);
-                          } else {
+                          } else if (!target.checked) {
                             checked.splice(checked.indexOf(target.value), 1);
                             setChecked([...checked]);
                           }
                         }}
+                        checked={checked.indexOf(obj.name) > -1}
                         value={obj.name}
                       />
                     }
