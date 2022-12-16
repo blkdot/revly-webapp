@@ -244,7 +244,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         });
       });
       setBranch({
-        ...branch,
+        ...vendors,
         vendorsObj: newVendorsObj,
         chainObj: newChainObj,
       });

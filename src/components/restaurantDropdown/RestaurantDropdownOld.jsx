@@ -37,18 +37,9 @@ const RestaurantDropdownOld = ({
   cost,
 }) => {
   const { setVendors, vendors: vendorsContext } = useDate();
-  const { vendors: vendorsReq, setVendors: setVendorsReq } = useVendors();
+  const { vendors: vendorsReq } = useVendors();
   React.useEffect(() => {
     window.onbeforeunload = (e) => {
-      const defaultState = {
-        restaurants: [],
-        vendorsObj: {},
-        vendorsArr: [],
-        display: {},
-        chainObj: {},
-      };
-      setVendorsReq(defaultState);
-      setVendors(defaultState);
       localStorage.setItem('leaveTime', JSON.stringify(new Date()));
       e.target.hidden = true;
       return '';

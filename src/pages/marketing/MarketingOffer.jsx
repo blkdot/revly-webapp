@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { pascalCase } from 'change-case';
 import _ from 'lodash';
 
@@ -35,10 +34,9 @@ import Vector from '../../assets/icons/Vector';
 import { defaultFilterStateFormat } from './marketingOfferData';
 import useDate from '../../hooks/useDate';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import OfferDetailComponent from '../offers/details';
 
 const MarketingOffer = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [active, setActive] = useState(false);
   const { date: dateContext, vendors } = useDate();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
@@ -72,7 +70,8 @@ const MarketingOffer = () => {
   const [offersData, setOffersData] = useState(offers);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
-  const [filters, setFilters] = useState(defaultFilterStateFormat);
+  const [filtersSaved, setFiltersSaved] = useState(defaultFilterStateFormat);
+  const [filters, setFilters] = useState(filtersSaved);
 
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
 
@@ -274,6 +273,7 @@ const MarketingOffer = () => {
       status: preHeadStatus,
       target: preHeadTarget,
     });
+    setFiltersSaved(defaultFilterStateFormat);
   }, [JSON.stringify(offersData)]);
 
   const renderPlatformInsideFilter = (s) => (
@@ -297,7 +297,9 @@ const MarketingOffer = () => {
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
-      setFilters(defaultFilterStateFormat);
+      setFilters(filtersSaved);
+    } else {
+      setFiltersSaved(filters);
     }
     const body = document.querySelector('body');
     body.style.overflow = 'visible';
@@ -355,52 +357,27 @@ const MarketingOffer = () => {
     body.style.overflowY = 'hidden';
   };
 
+  const [openedOffer, setOpenedOffer] = useState(false);
+  const [clickedId, setClickedId] = useState('');
   const handleRowClick = (id) => {
-    navigate(`/offer/detail/${id}`, {
-      state: {
-        // eslint-disable-next-line eqeqeq
-        offerDetail: offers.find((o) => o.master_offer_id == id),
-        prevPath: location.pathname,
-      },
-    });
+    setOpenedOffer(true);
+    setClickedId(id);
   };
   const scrollToPos = (pos) => {
     const cont = document.querySelector('#tableContainer');
     cont?.scrollTo(pos, 0);
   };
-  return (
-    <div className="wrapper marketing-wrapper">
-      <div className="top-inputs">
-        {Object.keys(display).length > 0 ? (
-          <RestaurantDropdown chainObj={chainObj} />
-        ) : (
-          <RestaurantDropdownOld
-            restaurants={restaurants}
-            vendors={vendorsArr}
-            vendorsPlatform={Object.keys(vendorsObj)}
-          />
-        )}
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-      </div>
-      <div className="marketing-top">
-        <div className="marketing-top-text">
-          <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
-          <TypographyKit color="#637381" variant="subtitle">
-            Create and manage all your offers. Set personalised rules to automatically trigger your
-            offers.
-          </TypographyKit>
-        </div>
-        <div className="markting-top-btns">
-          <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
-            <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
-            Create a smart rule
-          </ButtonKit>
-          <ButtonKit onClick={() => OpenSetup()} variant="contained">
-            <img src={SettingFuture} alt="Setting future icon" />
-            Set up an offer
-          </ButtonKit>
-        </div>
-      </div>
+  const renderLayout = () => {
+    if (openedOffer) {
+      return (
+        <OfferDetailComponent
+          // eslint-disable-next-line eqeqeq
+          data={offers.find((o) => o.master_offer_id == clickedId)}
+          setOpened={setOpenedOffer}
+        />
+      );
+    }
+    return (
       <PaperKit className="marketing-paper offer-paper">
         <div className="right-part">
           <div className="right-part-header marketing-links">
@@ -474,6 +451,42 @@ const MarketingOffer = () => {
           mainFieldOrdered="start_date"
         />
       </PaperKit>
+    );
+  };
+  return (
+    <div className="wrapper marketing-wrapper">
+      <div className="top-inputs">
+        {Object.keys(display).length > 0 ? (
+          <RestaurantDropdown chainObj={chainObj} />
+        ) : (
+          <RestaurantDropdownOld
+            restaurants={restaurants}
+            vendors={vendorsArr}
+            vendorsPlatform={Object.keys(vendorsObj)}
+          />
+        )}
+        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+      </div>
+      <div className="marketing-top">
+        <div className="marketing-top-text">
+          <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
+          <TypographyKit color="#637381" variant="subtitle">
+            Create and manage all your offers. Set personalised rules to automatically trigger your
+            offers.
+          </TypographyKit>
+        </div>
+        <div className="markting-top-btns">
+          <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
+            <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
+            Create a smart rule
+          </ButtonKit>
+          <ButtonKit onClick={() => OpenSetup()} variant="contained">
+            <img src={SettingFuture} alt="Setting future icon" />
+            Set up an offer
+          </ButtonKit>
+        </div>
+      </div>
+      {renderLayout()}
       <MarketingSetup active={active} setActive={setActive} />
       <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
       <MarketingOfferFilter
