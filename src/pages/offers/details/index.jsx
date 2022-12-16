@@ -1,14 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import MenuItem from './MenuItem';
-import Dates from '../../../components/dates/Dates';
-import RestaurantDropdown from '../../../components/restaurantDropdown/RestaurantDropdown.suspended';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import TypographyKit from '../../../kits/typography/TypographyKit';
-import SmartRuleBtnIcon from '../../../assets/images/ic_sm-rule.png';
-import SettingFuture from '../../../assets/images/ic_setting-future.png';
 import useDate from '../../../hooks/useDate';
 import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
@@ -24,8 +17,6 @@ import useApi from '../../../hooks/useApi';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { usePlatform } from '../../../hooks/usePlatform';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
-import MarketingSetup from '../../../components/marketingSetup/MarketingSetup';
-import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
 import { getPlanningOfferDetails } from '../../../api/userApi';
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
 import SkeletonKit from '../../../kits/skeleton/SkeletonKit';
@@ -37,28 +28,19 @@ const scheduleTypeMapping = {
   everyday: 'Everyday',
 };
 
-const OfferDetailComponent = () => {
+const OfferDetailComponent = ({ data, setOpened }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const {
-    state: { offerDetail: data, prevPath },
-  } = useLocation();
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
   const [offerDetailMaster, setofferDetailMaster] = useState({});
-  const navigate = useNavigate();
   const {
     userPlatformData: { platforms },
   } = usePlatform();
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { date, vendors } = useDate();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
-  });
-  const [active, setActive] = useState(false);
+  const { vendors } = useDate();
+  const { vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
       cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
@@ -120,7 +102,7 @@ const OfferDetailComponent = () => {
     discount_type,
     end_date,
   } = offerDetailMaster?.master_offer || {};
-  const vendor = vendorsObj[platform]?.find((v) => v.vendor_id === vendor_id);
+  const vendor = vendorsObj[platform]?.find((v) => +v.vendor_id === +vendor_id);
   const chain_id = vendor ? vendor.chain_id : '';
 
   const openCancelModal = () => setIsOpen(true);
@@ -146,11 +128,6 @@ const OfferDetailComponent = () => {
       setIsOpen(false);
     });
   };
-  const OpenSetup = () => {
-    const body = document.querySelector('body');
-    setActive(true);
-    body.style.overflowY = 'hidden';
-  };
 
   useEffect(() => {
     getPlanningOfferDetails({
@@ -163,7 +140,7 @@ const OfferDetailComponent = () => {
       .then((res) => setofferDetailMaster(res.data))
       // eslint-disable-next-line no-console
       .catch((err) => console.log({ err }));
-  }, [vendors]);
+  }, [offerDetail]);
 
   return (
     <>
@@ -173,45 +150,11 @@ const OfferDetailComponent = () => {
         cancelOffer={handleCancelOfferMaster}
         platform={platform}
       />
-      <MarketingSetup active={active} setActive={setActive} />
       <div className="wrapper marketing-wrapper">
-        <div className="top-inputs">
-          {Object.keys(display).length > 0 ? (
-            <RestaurantDropdown chainObj={chainObj} />
-          ) : (
-            <RestaurantDropdownOld
-              restaurants={restaurants}
-              vendors={vendorsArr}
-              vendorsPlatform={Object.keys(vendorsObj)}
-            />
-          )}
-          <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-        </div>
-        {prevPath === '/marketing/offer' ? (
-          <div className="marketing-top">
-            <div className="marketing-top-text">
-              <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
-              <TypographyKit color="#637381" variant="subtitle">
-                Create and manage all your offers. Set personalised rules to automatically trigger
-                your offers.
-              </TypographyKit>
-            </div>
-            <div className="markting-top-btns">
-              <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
-                <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
-                Create a smart rule
-              </ButtonKit>
-              <ButtonKit onClick={() => OpenSetup()} variant="contained">
-                <img src={SettingFuture} alt="Setting future icon" />
-                Set up an offer
-              </ButtonKit>
-            </div>
-          </div>
-        ) : null}
         <PaperKit className="marketing-paper offer-paper">
           <div>
             <div className="offer-details-actions">
-              <button onClick={() => navigate(prevPath)} type="button" className="back-icon">
+              <button onClick={() => setOpened(false)} type="button" className="back-icon">
                 <Arrow />
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
@@ -506,7 +449,7 @@ const OfferDetailComponent = () => {
                       color: '#212B36',
                     }}
                   >
-                    {`${discount_rate}%`}
+                    {discount_rate || discount_rate === 0 ? `${discount_rate}%` : <SkeletonKit />}
                   </div>
                 </div>
                 <div>
@@ -532,7 +475,11 @@ const OfferDetailComponent = () => {
                       color: '#212B36',
                     }}
                   >
-                    {minimum_order_value} AED
+                    {minimum_order_value || minimum_order_value === 0 ? (
+                      `${minimum_order_value} AED`
+                    ) : (
+                      <SkeletonKit />
+                    )}
                   </div>
                 </div>
               </div>

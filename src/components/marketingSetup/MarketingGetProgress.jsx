@@ -37,6 +37,7 @@ import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingD
 import useDate from '../../hooks/useDate';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import TimePickerDropdown from '../timePicker/TimePickerDropdown';
+import TooltipKit from '../../kits/toolTip/TooltipKit';
 
 const GetProgress = ({ progressData }) => {
   const {
@@ -792,7 +793,9 @@ const GetProgress = ({ progressData }) => {
                     label={
                       <div>
                         <div>
-                          <ListItemTextKit primary={obj.name} />
+                          <TooltipKit title="Add" placement="top">
+                            <ListItemTextKit primary={obj.name} />
+                          </TooltipKit>
                         </div>
                         <b>{obj.price} AED</b>
                       </div>
