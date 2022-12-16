@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
@@ -136,6 +137,8 @@ const CompetitionRanking = () => {
         master_email: user.email,
         access_token: user.accessToken,
         vendors: vend || [],
+        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       };
 
       const ranking = await getRanking(body, plat);

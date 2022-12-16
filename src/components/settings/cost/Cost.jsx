@@ -10,17 +10,18 @@ import Invoice from './invoice/Invoice';
 import useCost from '../../../hooks/useCost';
 
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
-import useDate from '../../../hooks/useDate';
+import useVendors from '../../../hooks/useVendors';
 
 const Cost = () => {
   const queryClient = useQueryClient();
   const [invoice, setInvoice] = useState([]);
-  const { vendors } = useDate();
+  const [isUpdate, setIsUpdate] = useState(false);
+  const { vendors } = useVendors();
   const { vendorsObj } = vendors;
 
   const { load, save } = useCost(vendorsObj);
 
-  const { isLoading, isError } = useQuery(['loadCost'], load, {
+  const { isLoading, isError } = useQuery(['loadCost', { vendors }], load, {
     onSuccess: (data) => {
       const newInvoice = [];
       Object.keys(data).forEach((platform) => {
@@ -59,7 +60,7 @@ const Cost = () => {
     return <div style={{ display: 'flex', justifyContent: 'center' }}>Error Occured</div>;
 
   const handleAdd = async (cost, v) => {
-    await mutateAsync({ cost, vendors: v });
+    await mutateAsync({ cost: parseFloat(cost), vendors: v });
   };
 
   const deleteCost = (index) => () => {
@@ -88,13 +89,15 @@ const Cost = () => {
         <div className="__flex">
           <div className="__head">
             <p className="billing__card-title">Your Cost Information</p>
-            <p className="billing__card-subtitle">
-              Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
-              vivamus risus.
-            </p>
+            {/* <p className="billing__card-subtitle">- -</p> */}
           </div>
         </div>
-        <DropdownSnackbar onAdd={handleAdd} />
+        <DropdownSnackbar
+          onAdd={handleAdd}
+          isUpdate={isUpdate}
+          setIsUpdate={setIsUpdate}
+          invoice={invoice}
+        />
         {renderContent()}
       </div>
     </div>

@@ -211,6 +211,12 @@ const MarketingOffer = () => {
     };
   }, []);
 
+  const targetMapping = {
+    orders: 'Everyone',
+    new_customers: 'New customers only',
+    subscribers: 'Deliveroo Plus',
+  };
+
   useEffect(() => {
     const preHead = offersData.reduce(
       (acc, cur) => {
@@ -222,15 +228,22 @@ const MarketingOffer = () => {
           target,
         } = acc;
 
-        if (!platform.includes(cur.platform)) platform.push(cur.platform);
+        if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!discountType.includes(cur.discount_type)) discountType.push(cur.discount_type);
+        if (!discountType.includes(cur.discount_type) && cur.discount_type)
+          discountType.push(cur.discount_type);
 
-        if (!procent.includes(cur.discount_rate)) procent.push(cur.discount_rate);
+        if (!procent.includes(cur.discount_rate) && cur.discount_rate)
+          procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status)) status.push(cur.status);
+        if (!status.includes(cur.status) && cur.status) status.push(cur.status);
 
-        if (!target.includes(cur.target)) target.push(cur.target);
+        if (
+          !target.includes(cur.target) &&
+          !target.includes(targetMapping[cur.target]) &&
+          cur.target
+        )
+          target.push(targetMapping[cur.target] || cur.target);
 
         return {
           ...acc,

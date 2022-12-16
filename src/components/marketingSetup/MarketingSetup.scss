@@ -19,7 +19,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
 
-    >div {
+    > div {
       height: 100%;
       display: flex;
       justify-content: space-between;
@@ -42,7 +42,7 @@
         display: flex;
         flex-direction: column;
 
-        >div:nth-of-type(1) {
+        > div:nth-of-type(1) {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -62,19 +62,19 @@
         position: relative;
         width: 100%;
 
-        >div:nth-of-type(1) {
+        > div:nth-of-type(1) {
           height: 18px;
           border-radius: 10px;
           overflow: hidden;
           width: 100%;
 
-          >span {
+          > span {
             height: 100%;
             background: rgba(144, 107, 255, 0.08);
           }
         }
 
-        >div:nth-of-type(2) {
+        > div:nth-of-type(2) {
           position: absolute;
           right: 0;
         }
@@ -87,13 +87,13 @@
           margin-top: 10px;
         }
 
-        >h6 {
+        > h6 {
           font-weight: 700;
           font-size: 18px;
           line-height: 28px;
         }
 
-        >span {
+        > span {
           margin-top: 10px;
           margin-bottom: 20px;
           display: inline-block;
@@ -108,7 +108,7 @@
             margin: 0;
           }
 
-          >div {
+          > div {
             width: 100%;
             border-radius: 30px;
             overflow: visible;
@@ -148,7 +148,7 @@
     margin-bottom: 20px;
 
     .date-picker_wrapper {
-      >span {
+      > span {
         display: none;
       }
     }
@@ -202,11 +202,11 @@
         }
       }
 
-      >div {
+      > div {
         text-decoration: none;
         color: #637381;
 
-        >div {
+        > div {
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -219,7 +219,8 @@
             color: #906bff;
 
             img {
-              filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%) contrast(102%);
+              filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
+                contrast(102%);
             }
           }
 
@@ -230,7 +231,7 @@
         }
       }
 
-      >div {
+      > div {
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -243,7 +244,8 @@
           color: #906bff;
 
           img {
-            filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%) contrast(102%);
+            filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
+              contrast(102%);
           }
         }
 
@@ -258,8 +260,8 @@
   .right-part-main-title {
     margin-bottom: 30px;
 
-    >h5 {
-      >span {
+    > h5 {
+      > span {
         margin-left: 10px;
         padding: 5px;
         display: inline-block;
@@ -269,7 +271,7 @@
       }
     }
 
-    >h5:nth-of-type(2) {
+    > h5:nth-of-type(2) {
       span {
         color: #b78103;
         background: rgba(255, 193, 7, 0.08);
@@ -281,7 +283,7 @@
     width: 80px;
     display: inline-block;
 
-    >p:nth-of-type(1) {
+    > p:nth-of-type(1) {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -291,11 +293,11 @@
       }
     }
 
-    >p {
+    > p {
       width: 14%;
       padding: 0 10px;
       height: 30px;
-      margin-bottom: 4px;
+      margin-bottom: 3.9px;
       display: flex;
       justify-content: space-evenly;
       color: #212b36;
@@ -312,7 +314,7 @@
     height: 30px;
     grid-gap: 5px;
 
-    >p {
+    > p {
       display: inline-block;
       width: 100%;
       height: 30px;
@@ -329,12 +331,12 @@
     position: relative;
     grid-gap: 5px;
 
-    >div {
+    > div {
       display: flex;
       flex-direction: column;
     }
 
-    >span {
+    > span {
       width: 14%;
     }
 
@@ -357,7 +359,7 @@
   border-radius: 30px;
   margin-bottom: 15px;
 
-  >div {
+  > div {
     &:hover {
       fieldset {
         border-color: #919eab65 !important;
@@ -385,7 +387,7 @@
   align-items: center;
   width: 100%;
 
-  >span {
+  > span {
     width: 100%;
   }
 
@@ -418,7 +420,7 @@
   display: flex;
   justify-content: space-between;
 
-  >p {
+  > p {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -429,19 +431,19 @@
     line-height: 22px;
   }
 
-  >p:nth-of-type(1) {
+  > p:nth-of-type(1) {
     background-color: #f6f3ff;
   }
 
-  >p:nth-of-type(2) {
+  > p:nth-of-type(2) {
     background-color: #ede7ff;
   }
 
-  >p:nth-of-type(3) {
+  > p:nth-of-type(3) {
     background-color: #cab8ff;
   }
 
-  >p:nth-of-type(4) {
+  > p:nth-of-type(4) {
     background-color: #906bff;
   }
 }
@@ -461,7 +463,7 @@
   flex-direction: row !important;
   grid-gap: 5px;
 
-  >span {
+  > span {
     width: 13.6%;
   }
 
@@ -472,15 +474,17 @@
     overflow: hidden;
 
     &.active {
-      background: linear-gradient(45deg,
-          #2d99ff 1%,
-          #f6f3ff 1%,
-          #f6f3ff 49%,
-          #2d99ff 49%,
-          #2d99ff 51%,
-          #f6f3ff 51%,
-          #f6f3ff 99%,
-          #2d99ff 99%);
+      background: linear-gradient(
+        45deg,
+        #2d99ff 9%,
+        #f6f3ff 1%,
+        #f6f3ff 42%,
+        #2d99ff 44%,
+        #2d99ff 62%,
+        #f6f3ff 1%,
+        #f6f3ff 93%,
+        #2d99ff 1%
+      );
       background-size: 6px 6px;
       background-position: 50px 50px;
     }
@@ -513,7 +517,7 @@
     flex-direction: column;
     grid-gap: 15px;
 
-    >span {
+    > span {
       height: 160px;
       transition: 0.3s;
 
@@ -542,7 +546,7 @@
       max-width: 479px;
     }
 
-    >div:nth-of-type(2) {
+    > div:nth-of-type(2) {
       opacity: 0;
       visibility: hidden;
       height: 0;
@@ -550,13 +554,13 @@
       transition: 0.4s;
       width: 100%;
 
-      >div {
+      > div {
         width: 100%;
       }
     }
 
     &.active {
-      >div:nth-of-type(2) {
+      > div:nth-of-type(2) {
         opacity: 1;
         visibility: visible;
         margin-top: 20px;
@@ -566,7 +570,8 @@
       .radio {
         span {
           img {
-            filter: invert(38%) sepia(95%) saturate(820%) hue-rotate(224deg) brightness(103%) contrast(101%);
+            filter: invert(38%) sepia(95%) saturate(820%) hue-rotate(224deg) brightness(103%)
+              contrast(101%);
           }
         }
       }
@@ -590,14 +595,14 @@
       justify-content: space-between;
       width: 100%;
 
-      >div {
+      > div {
         width: 100%;
         display: flex;
         align-items: center;
         grid-gap: 15px;
         flex-direction: row;
 
-        >span {
+        > span {
           display: inline-block;
           border-radius: 50%;
           width: 40px;
@@ -618,10 +623,10 @@
   }
 
   &.disabled {
-    >div {
+    > div {
       color: #919eab !important;
 
-      >span {
+      > span {
         background: none;
       }
 
@@ -635,7 +640,7 @@
     margin-right: 0 !important;
   }
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
     grid-gap: 15px;
@@ -643,7 +648,7 @@
     font-size: 14px;
     line-height: 22px;
 
-    >span {
+    > span {
       display: inline-block;
       border-radius: 50%;
       width: 40px;
@@ -656,7 +661,7 @@
       &.talabat {
         background-color: #ffc10714;
 
-        ~div {
+        ~ div {
           text-transform: capitalize;
         }
 
@@ -669,7 +674,7 @@
       &.deliveroo {
         background-color: #54d62c14;
 
-        ~div {
+        ~ div {
           text-transform: capitalize;
         }
 
@@ -686,7 +691,7 @@
       }
     }
 
-    >div {
+    > div {
       display: flex;
       flex-direction: column;
 
@@ -716,7 +721,7 @@
   border-radius: 8px !important;
   box-shadow: 0px 8px 16px rgba(145, 158, 171, 0.16);
 
-  >div {
+  > div {
     border: none !important;
     border-radius: 8px !important;
   }
@@ -738,15 +743,15 @@
     align-items: flex-end;
     justify-content: space-between;
 
-    >div {
+    > div {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-end;
       grid-gap: 5px;
 
-      >div {
-        >div {
+      > div {
+        > div {
           height: 50px;
           display: flex;
           flex-direction: row-reverse;
@@ -825,29 +830,29 @@
   justify-content: space-between !important;
   flex-direction: column !important;
   width: 100%;
-  >div{
+  > div {
     align-items: center !important;
     flex-direction: row !important;
   }
-  .max-amount{
+  .max-amount {
     margin-left: 15px;
     display: flex;
     align-items: center;
     justify-content: space-between !important;
     width: 66% !important;
-    p{
+    p {
       color: gray;
     }
-    div{
-      span{
+    div {
+      span {
         font-weight: 600;
       }
     }
   }
-  >div:nth-of-type(1)>div {
+  > div:nth-of-type(1) > div {
     height: 50px;
 
-    >div {
+    > div {
       height: 50px !important;
     }
   }
@@ -859,11 +864,11 @@
     margin: 0 !important;
   }
 
-  >div {
+  > div {
     height: 53px !important;
     border: none !important;
 
-    >div {
+    > div {
       border-radius: 30px;
     }
 
@@ -901,12 +906,12 @@
     }
   }
 
-  >div {
+  > div {
     width: 100%;
     margin: 0;
     margin-top: 3px;
 
-    >div>div {
+    > div > div {
       padding-left: 20px;
     }
   }
@@ -920,7 +925,7 @@
   grid-gap: 10px;
   margin-top: 15px;
 
-  >span {
+  > span {
     width: 46% !important;
   }
 }
@@ -996,7 +1001,7 @@
 .menu-item-select {
   width: 100%;
 
-  >div {
+  > div {
     height: fit-content !important;
 
     label {
@@ -1017,22 +1022,22 @@
     margin: 0 15px;
     white-space: nowrap;
   }
-  >label{
-    >span:nth-of-type(2){
+  > label {
+    > span:nth-of-type(2) {
       width: 87%;
-      >div{
+      > div {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        >div{
+        > div {
           width: 70%;
-          >div{
+          > div {
             display: flex;
             align-items: center;
           }
         }
-        span{
+        span {
           width: 100%;
           display: inline-block;
           text-overflow: ellipsis;
@@ -1042,11 +1047,11 @@
       }
     }
   }
-  >div {
+  > div {
     display: flex;
     align-items: center;
     width: 70%;
-    >div>span{
+    > div > span {
       width: 100%;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -1068,7 +1073,7 @@
   justify-content: space-between;
   flex-direction: row !important;
 
-  >div {
+  > div {
     width: fit-content;
     display: flex;
     align-items: center !important;
@@ -1107,22 +1112,22 @@
   align-items: center !important;
   flex-direction: row !important;
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
 
-    >span {
+    > span {
       display: flex;
       align-items: center;
     }
 
-    >div {
+    > div {
       margin-left: 10px;
       display: flex;
       align-items: center;
       position: relative;
 
-      >div {
+      > div {
         margin-left: 10px;
         padding-right: 5px;
       }
@@ -1135,7 +1140,7 @@
   width: 100%;
   flex-wrap: wrap;
 
-  >div {
+  > div {
     flex-direction: row !important;
     grid-gap: 15px;
   }
@@ -1159,7 +1164,7 @@
     margin: 0 !important;
     flex-wrap: wrap;
 
-    >div {
+    > div {
       &.item-menu-recap.item-menu-recap {
         width: 100%;
         flex-direction: row !important;
@@ -1205,7 +1210,7 @@
     flex-direction: column !important;
     justify-content: center !important;
 
-    >div {
+    > div {
       flex-direction: row !important;
       justify-content: space-between !important;
       width: 100%;
@@ -1222,7 +1227,7 @@
     object-fit: contain;
   }
 
-  >div {
+  > div {
     width: 45%;
     display: flex;
     justify-content: flex-start;
@@ -1233,7 +1238,7 @@
       justify-content: flex-end;
     }
 
-    >div {
+    > div {
       display: flex;
       align-items: flex-start;
       flex-direction: column;
@@ -1246,7 +1251,7 @@
   flex-direction: column !important;
   width: 50%;
 
-  >div {
+  > div {
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -1287,39 +1292,39 @@
   width: 100%;
   height: 45px;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: 45%;
 
-    >div {
+    > div {
       width: 100%;
     }
   }
 
-  >div:nth-of-type(2) {
+  > div:nth-of-type(2) {
     width: 15%;
 
     label {
       font-weight: 900;
     }
 
-    >div {
+    > div {
       width: 100%;
 
-      >div {
-        >div {
+      > div {
+        > div {
           text-overflow: clip;
         }
       }
     }
   }
 
-  >div>div {
+  > div > div {
     height: 45px !important;
 
-    >div {
+    > div {
       height: 45px !important;
 
-      >div {
+      > div {
         padding-left: 15px !important;
       }
     }
@@ -1330,7 +1335,7 @@
   width: 35%;
   border-radius: 30px;
 
-  >div {
+  > div {
     width: 100%;
     border-radius: 30px;
   }
@@ -1345,10 +1350,10 @@
   margin-top: 10px;
   height: 45px;
 
-  >div>div {
+  > div > div {
     height: 45px;
 
-    >div {
+    > div {
       height: 45px;
     }
   }
@@ -1365,7 +1370,7 @@
       left: 5%;
     }
 
-    >div {
+    > div {
       width: 100%;
       justify-content: flex-start !important;
     }
@@ -1381,7 +1386,7 @@
     width: 100% !important;
   }
 
-  .marketing-paper>div {
+  .marketing-paper > div {
     flex-direction: column;
     grid-gap: 30px;
   }
@@ -1396,7 +1401,7 @@
       left: 50%;
     }
 
-    >div {
+    > div {
       width: 45%;
       justify-content: flex-start !important;
 
