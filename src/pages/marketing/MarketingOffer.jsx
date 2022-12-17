@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { pascalCase } from 'change-case';
 import _ from 'lodash';
@@ -33,6 +34,7 @@ import Vector from '../../assets/icons/Vector';
 
 import { defaultFilterStateFormat } from './marketingOfferData';
 import useDate from '../../hooks/useDate';
+import useQueryState from '../../hooks/useQueryState';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import OfferDetailComponent from '../offers/details';
 
@@ -49,9 +51,11 @@ const MarketingOffer = () => {
     }
     return dateContext.beforePeriod.endDate;
   };
+  const [dateSaved, setDateSaved] = useQueryState('date');
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: dateContext.beforePeriod.startDate,
     endDate: getOfferDate(),
+    ...JSON.parse(dateSaved || '{}'),
   });
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
@@ -70,10 +74,21 @@ const MarketingOffer = () => {
   const [offersData, setOffersData] = useState(offers);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
-  const [filtersSaved, setFiltersSaved] = useState(defaultFilterStateFormat);
-  const [filters, setFilters] = useState(filtersSaved);
+  const [filtersSaved, setFiltersSaved] = useQueryState('filters');
+  const [filters, setFilters] = useState({
+    ...defaultFilterStateFormat,
+    ...JSON.parse(filtersSaved || '{}'),
+  });
 
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
+
+  useEffect(() => {
+    setDateSaved(beforePeriodBtn);
+  }, [JSON.stringify(beforePeriodBtn)]);
+
+  useEffect(() => {
+    setFiltersSaved(filters);
+  }, [JSON.stringify(filters)]);
 
   useEffect(() => {
     setOffersData(offers);
@@ -256,6 +271,30 @@ const MarketingOffer = () => {
       { discount_type: [], platform: [], discount_rate: [], status: [], target: [] },
     );
 
+    const clonedFilters = { ...filters };
+
+    clonedFilters.platform.forEach((fp, i) => {
+      if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
+    });
+
+    clonedFilters.discount_type.forEach((fp, i) => {
+      if (!preHead.discount_type.includes(fp)) clonedFilters.discount_type.splice(i, 1);
+    });
+
+    clonedFilters.discount_rate.forEach((fp, i) => {
+      if (!preHead.discount_rate.includes(fp)) clonedFilters.discount_rate.splice(i, 1);
+    });
+
+    clonedFilters.status.forEach((fp, i) => {
+      if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
+    });
+
+    clonedFilters.target.forEach((fp, i) => {
+      if (!preHead.target.includes(fp)) clonedFilters.target.splice(i, 1);
+    });
+
+    setFilters(clonedFilters);
+
     const preHeadPlatform = preHead.platform.map((s) => ({
       value: s,
       text: renderPlatformInsideFilter(s),
@@ -273,7 +312,6 @@ const MarketingOffer = () => {
       status: preHeadStatus,
       target: preHeadTarget,
     });
-    setFiltersSaved(defaultFilterStateFormat);
   }, [JSON.stringify(offersData)]);
 
   const renderPlatformInsideFilter = (s) => (
@@ -297,10 +335,9 @@ const MarketingOffer = () => {
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
-      setFilters(filtersSaved);
-    } else {
-      setFiltersSaved(filters);
+      setFilters(defaultFilterStateFormat);
     }
+
     const body = document.querySelector('body');
     body.style.overflow = 'visible';
     setOpenedFilter(false);

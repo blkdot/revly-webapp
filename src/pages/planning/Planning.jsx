@@ -25,6 +25,7 @@ import MarketingOfferFilter from '../../components/marketingOfferFilter/Marketin
 import Vector from '../../assets/icons/Vector';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import OfferDetailComponent from '../offers/details';
+import useQueryState from '../../hooks/useQueryState';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -34,6 +35,8 @@ const defaultFilterStateFormat = {
 };
 
 const Planning = () => {
+  const [dateSaved, setDateSaved] = useQueryState('date');
+  const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const [active, setActive] = useState(0);
   const { date, vendors } = useDate();
   const getOfferDate = () => {
@@ -48,15 +51,23 @@ const Planning = () => {
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: getOfferDate(),
+    ...JSON.parse(dateSaved || '{}'),
   });
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
-  const [filtersSaved, setFiltersSaved] = useState(defaultFilterStateFormat);
-  const [filters, setFilters] = useState(filtersSaved);
+  const [filters, setFilters] = useState({
+    ...defaultFilterStateFormat,
+    ...JSON.parse(filtersSaved || '{}'),
+  });
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
+
+  useEffect(() => {
+    setDateSaved(dateRange);
+    setFiltersSaved(filters);
+  }, [JSON.stringify(filters), JSON.stringify(dateRange)]);
 
   const {
     renderPlatform,
@@ -159,9 +170,8 @@ const Planning = () => {
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
       setFilters(filtersSaved);
-    } else {
-      setFiltersSaved(filters);
     }
+
     const body = document.querySelector('body');
     body.style.overflow = 'visible';
     setOpenedFilter(false);
@@ -194,6 +204,26 @@ const Planning = () => {
       { discount_type: [], platform: [], discount_rate: [], status: [] },
     );
 
+    const clonedFilters = { ...filters };
+
+    clonedFilters.platform.forEach((fp, i) => {
+      if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
+    });
+
+    clonedFilters.discount_type.forEach((fp, i) => {
+      if (!preHead.discount_type.includes(fp)) clonedFilters.discount_type.splice(i, 1);
+    });
+
+    clonedFilters.discount_rate.forEach((fp, i) => {
+      if (!preHead.discount_rate.includes(fp)) clonedFilters.discount_rate.splice(i, 1);
+    });
+
+    clonedFilters.status.forEach((fp, i) => {
+      if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
+    });
+
+    setFilters(clonedFilters);
+
     const preHeadPlatform = preHead.platform.map((s) => ({
       value: s,
       text: renderPlatformInsideFilter(s),
@@ -209,8 +239,7 @@ const Planning = () => {
       discount_rate: active ? [] : preHeadProcent,
       status: preHeadStatus,
     });
-    setFiltersSaved(defaultFilterStateFormat);
-  }, [ads, offers, active]);
+  }, [ads, offers, active, JSON.stringify(dateRange)]);
 
   const renderStatusFilter = (s) => {
     if (!s) return null;
@@ -268,7 +297,7 @@ const Planning = () => {
     }
 
     setDataFiltered(filteredData);
-  }, [JSON.stringify(filters), ads, offers, active]);
+  }, [JSON.stringify(filters), ads, offers, active, JSON.stringify(dateRange)]);
 
   const renderLayout = () => {
     if (opened) {

@@ -47,7 +47,7 @@ const RestaurantDropdownOld = ({
     if (vendorsReq.vendorsArr.length > 0) {
       setVendors(vendorsReq);
     }
-  }, [vendorsReq]);
+  }, [JSON.stringify(vendorsReq)]);
 
   const handleChange = (event) => {
     const {

@@ -158,6 +158,10 @@ const Dates = (props) => {
     afterPeriodContext,
     typeDateContext,
   ]);
+
+  useEffect(() => {
+    getTitle();
+  }, [JSON.stringify(beforePeriodBtn)]);
   const handleClickDashboard = () => {
     const startDate =
       typeDate === 'month'
@@ -405,13 +409,7 @@ const Dates = (props) => {
     }
   };
 
-  const handleClick = () => {
-    setOpened(false); // Closing beforePeriodContext date picker
-    if (isDashboard) {
-      handleClickDashboard();
-      return;
-    }
-
+  const getTitle = () => {
     const startDate =
       typeDate === 'month'
         ? new Date(new Date(beforePeriod[0].startDate).setFullYear(year))
@@ -503,6 +501,16 @@ const Dates = (props) => {
     }
 
     setTitle('custom');
+  };
+
+  const handleClick = () => {
+    setOpened(false); // Closing beforePeriodContext date picker
+    if (isDashboard) {
+      handleClickDashboard();
+      return;
+    }
+
+    getTitle();
   };
   const handleClickAfterPeriod = () => {
     // handleClickAfterPeriod happens when you click on button "OK" on AfterPeriod date picker
