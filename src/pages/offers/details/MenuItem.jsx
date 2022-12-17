@@ -29,7 +29,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
       // eslint-disable-next-line no-console
       .catch((err) => console.log({ err }));
   };
-  // triggerAlertWithMessageError('Error while retrieving data'+ )
+
   useEffect(() => getOfferDetailData(), [drnId]);
 
   if (!data || !data.item) return null;

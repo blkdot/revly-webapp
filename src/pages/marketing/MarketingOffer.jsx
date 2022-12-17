@@ -271,6 +271,30 @@ const MarketingOffer = () => {
       { discount_type: [], platform: [], discount_rate: [], status: [], target: [] },
     );
 
+    const clonedFilters = { ...filters };
+
+    clonedFilters.platform.forEach((fp, i) => {
+      if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
+    });
+
+    clonedFilters.discount_type.forEach((fp, i) => {
+      if (!preHead.discount_type.includes(fp)) clonedFilters.discount_type.splice(i, 1);
+    });
+
+    clonedFilters.discount_rate.forEach((fp, i) => {
+      if (!preHead.discount_rate.includes(fp)) clonedFilters.discount_rate.splice(i, 1);
+    });
+
+    clonedFilters.status.forEach((fp, i) => {
+      if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
+    });
+
+    clonedFilters.target.forEach((fp, i) => {
+      if (!preHead.target.includes(fp)) clonedFilters.target.splice(i, 1);
+    });
+
+    setFilters(clonedFilters);
+
     const preHeadPlatform = preHead.platform.map((s) => ({
       value: s,
       text: renderPlatformInsideFilter(s),
