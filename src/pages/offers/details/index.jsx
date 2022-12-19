@@ -265,11 +265,17 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className="offer-duration width-left-icon width-right-icon">
                         Program the offer duration
                       </span>
-                      {scheduleTypeMapping[type_schedule] ? <ExpandIcon /> : ''}
+                      {scheduleTypeMapping[(type_schedule || '').toLowerCase()] || type_schedule ? (
+                        <ExpandIcon />
+                      ) : (
+                        ''
+                      )}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span className="offer-duration  width-right-icon">
-                        {scheduleTypeMapping[type_schedule] || ''}
+                        {scheduleTypeMapping[(type_schedule || '').toLowerCase()] ||
+                          type_schedule ||
+                          ''}
                       </span>
                     </div>
                   </div>

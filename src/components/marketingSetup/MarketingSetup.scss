@@ -929,7 +929,10 @@
     width: 46% !important;
   }
 }
-
+#category-tooltip .MuiTooltip-tooltip{
+  background-color: #646464;
+  width: fit-content;
+}
 .MuiTooltip-popper {
   .MuiTooltip-tooltip {
     background-color: white;
