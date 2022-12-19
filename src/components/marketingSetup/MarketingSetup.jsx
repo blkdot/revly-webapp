@@ -418,10 +418,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
     setDisabledDate(arr.every((bool) => bool === false));
   };
-  useEffect(() => {
-    setDiscountPercentage('');
-    setMinOrder('');
-  }, [itemMenu, menu]);
   const getMenuData = async (vendor, platforms) => {
     try {
       if (platforms === 'talabat') return;
@@ -780,6 +776,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     categoryData,
     categoryDataList,
     filteredCategoryData,
+    setFilteredCategoryData,
     category,
     setChecked,
     checked,
