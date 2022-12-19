@@ -159,9 +159,9 @@ const Dates = (props) => {
     typeDateContext,
   ]);
 
-  useEffect(() => {
-    getTitle();
-  }, [JSON.stringify(beforePeriodBtn)]);
+  // useEffect(() => {
+  //   getTitle();
+  // }, [JSON.stringify(beforePeriodBtn)]);
   const handleClickDashboard = () => {
     const startDate =
       typeDate === 'month'
