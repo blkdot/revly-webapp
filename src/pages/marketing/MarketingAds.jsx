@@ -12,6 +12,7 @@ import SettingFuture from '../../assets/images/ic_setting-future.png';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import BoxKit from '../../kits/box/BoxKit';
 import useDate from '../../hooks/useDate';
+import useVendors from '../../hooks/useVendors';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
@@ -30,7 +31,7 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
-  const { vendors } = useDate();
+  const { vendors } = useVendors();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (date.typeDate === 'month') {

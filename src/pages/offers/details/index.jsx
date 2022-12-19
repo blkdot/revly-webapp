@@ -1,8 +1,9 @@
 /* eslint-disable camelcase */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { useQuery } from 'react-query';
 import MenuItem from './MenuItem';
-import useDate from '../../../hooks/useDate';
+import useVendors from '../../../hooks/useVendors';
 import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
 import Warning from '../../../assets/icons/Warning';
@@ -39,7 +40,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { vendors } = useDate();
+  const { vendors } = useVendors();
   const { vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
@@ -102,6 +103,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     discount_type,
     end_date,
   } = offerDetailMaster?.master_offer || {};
+
   const vendor = vendorsObj[platform]?.find((v) => +v.vendor_id === +vendor_id);
   const chain_id = vendor ? vendor.chain_id : '';
 
@@ -129,18 +131,26 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     });
   };
 
-  useEffect(() => {
-    getPlanningOfferDetails({
-      master_email: user.email,
-      access_token: user?.access_token || '',
-      vendors: vendorsObj,
-      platform,
-      master_offer_id,
-    })
-      .then((res) => setofferDetailMaster(res.data))
-      // eslint-disable-next-line no-console
-      .catch((err) => console.log({ err }));
-  }, [offerDetail]);
+  useQuery(
+    ['getPlanningOfferDetails', { master_offer_id, ...offerDetail, ...vendorsObj }],
+    () => {
+      if (JSON.stringify(vendorsObj) === JSON.stringify({})) return null;
+
+      return (
+        getPlanningOfferDetails({
+          master_email: user.email,
+          access_token: user?.access_token || '',
+          vendors: vendorsObj,
+          platform,
+          master_offer_id,
+        })
+          .then((res) => setofferDetailMaster(res.data))
+          //     // eslint-disable-next-line no-console
+          .catch((err) => console.log({ err }))
+      );
+    },
+    { enabled: !!vendorsObj },
+  );
 
   return (
     <>

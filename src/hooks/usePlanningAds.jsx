@@ -2,11 +2,11 @@ import { useMemo, useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
 import useApi from './useApi';
-import useDate from './useDate';
+import useVendors from './useVendors';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function usePlanningAds({ dateRange }) {
-  const { vendors } = useDate();
+  const { vendors } = useVendors();
   const { vendorsObj } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);

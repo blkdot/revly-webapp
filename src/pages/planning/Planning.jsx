@@ -7,6 +7,7 @@ import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useDate from '../../hooks/useDate';
+import useVendors from '../../hooks/useVendors';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import TypographyKit from '../../kits/typography/TypographyKit';
@@ -38,7 +39,8 @@ const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const [active, setActive] = useState(0);
-  const { date, vendors } = useDate();
+  const { date } = useDate();
+  const { vendors } = useVendors();
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));

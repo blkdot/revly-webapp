@@ -17,11 +17,11 @@ import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useDate from '../../hooks/useDate';
+import useVendors from '../../hooks/useVendors';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
-  const { vendors } = useDate();
+  const { vendors } = useVendors();
   const { chainObj, vendorsObj, display, restaurants, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
   const getTitle = (title) => {

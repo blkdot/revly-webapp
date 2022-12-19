@@ -22,11 +22,11 @@ import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useDate from '../../hooks/useDate';
+import useVendors from '../../hooks/useVendors';
 
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
-  const { vendors } = useDate();
+  const { vendors } = useVendors();
   const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();

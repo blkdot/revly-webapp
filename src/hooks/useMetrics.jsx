@@ -2,10 +2,12 @@ import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import useApi from './useApi';
 import useDate from './useDate';
+import useVendors from './useVendors';
 import { useUserAuth } from '../contexts/AuthContext';
 
 function useMetrics() {
-  const { date: dateContext, vendors } = useDate();
+  const { date: dateContext } = useDate();
+  const { vendors } = useVendors();
   const { vendorsObj } = vendors;
   const { beforePeriod, afterPeriod } = dateContext;
   const { getMetrics } = useApi();
