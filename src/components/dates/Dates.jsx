@@ -159,9 +159,9 @@ const Dates = (props) => {
     typeDateContext,
   ]);
 
-  // useEffect(() => {
-  //   getTitle();
-  // }, [JSON.stringify(beforePeriodBtn)]);
+  useEffect(() => {
+    getTitle();
+  }, [JSON.stringify(beforePeriodBtn)]);
   const handleClickDashboard = () => {
     const startDate =
       typeDate === 'month'
@@ -410,6 +410,8 @@ const Dates = (props) => {
   };
 
   const getTitle = () => {
+    if (!setbeforePeriodBtn) return;
+
     const startDate =
       typeDate === 'month'
         ? new Date(new Date(beforePeriod[0].startDate).setFullYear(year))
