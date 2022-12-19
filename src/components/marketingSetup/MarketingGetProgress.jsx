@@ -62,7 +62,7 @@ const TooltipCategory = ({ obj, index }) => {
   return (
     <div>
       <TooltipKit
-        interactive
+        interactive={1}
         disableHoverListener={!hoverStatus}
         id="category-tooltip"
         title={obj.name}
@@ -96,6 +96,7 @@ const GetProgress = ({ progressData }) => {
     categoryData,
     categoryDataList,
     filteredCategoryData,
+    setFilteredCategoryData,
     category,
     setChecked,
     checked,
@@ -550,6 +551,24 @@ const GetProgress = ({ progressData }) => {
     { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
     { title: 'Free Items', subtitle: 'Allow customers to choose a free items' },
   ];
+
+  const catergorySearch = (e) => {
+    const { value } = e.target;
+    if (value === '') {
+      setFilteredCategoryData([]);
+      return;
+    }
+    const filtered = (filteredCategoryData.length > 0 ? filteredCategoryData : category).filter(
+      (obj) => obj.name.toLowerCase().includes(value.toLowerCase()),
+    );
+    setFilteredCategoryData(filtered);
+  };
+  const [menuChanged, setMenuChanged] = useState('');
+  useEffect(() => {
+    setDiscountPercentage('');
+    setMinOrder('');
+    setMenuChanged(menu);
+  }, [menu, itemMenu]);
   if (selected === 1) {
     return (
       <div className="left-part-middle">
@@ -656,30 +675,34 @@ const GetProgress = ({ progressData }) => {
             </div>
             <div style={{ width: '100%', marginTop: '0px' }}>
               <div style={{ width: '100%' }}>
-                <div className="dropdown-wrapper">
-                  <TypographyKit className="min-max-textfields" variant="div">
-                    <TypographyKit variant="div">
-                      Percentage Discount
-                      <MarketingPlaceholderDropdown
-                        names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
-                        title="%"
-                        setPersonName={setDiscountPercentage}
-                        personName={discountPercentage}
-                      />
+                {menuChanged === 'Offer on the whole Menu' ? (
+                  <div className="dropdown-wrapper">
+                    <TypographyKit className="min-max-textfields" variant="div">
+                      <TypographyKit variant="div">
+                        Percentage Discount
+                        <MarketingPlaceholderDropdown
+                          names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                          title="%"
+                          setPersonName={setDiscountPercentage}
+                          personName={discountPercentage}
+                        />
+                      </TypographyKit>
                     </TypographyKit>
-                  </TypographyKit>
-                  <TypographyKit className="min-max-textfields" variant="div">
-                    <TypographyKit variant="div">
-                      Min. Order Value
-                      <MarketingPlaceholderDropdown
-                        names={['0 AED', '10 AED', '20 AED', '30 AED']}
-                        title="0 AED"
-                        setPersonName={setMinOrder}
-                        personName={minOrder}
-                      />
+                    <TypographyKit className="min-max-textfields" variant="div">
+                      <TypographyKit variant="div">
+                        Min. Order Value
+                        <MarketingPlaceholderDropdown
+                          names={['0 AED', '10 AED', '20 AED', '30 AED']}
+                          title="0 AED"
+                          setPersonName={setMinOrder}
+                          personName={minOrder}
+                        />
+                      </TypographyKit>
                     </TypographyKit>
-                  </TypographyKit>
-                </div>
+                  </div>
+                ) : (
+                  ''
+                )}
               </div>
             </div>
           </BoxKit>
@@ -687,7 +710,7 @@ const GetProgress = ({ progressData }) => {
             <BoxKit
               className={`left-part-radio under-textfields radio-dates ${
                 getMenuActive() ? 'disabled' : ''
-              } ${menu === 'Offer on An Item from the Menu' ? 'active' : ''}
+              } ${menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}
             >
               <div className="radio">
@@ -719,30 +742,34 @@ const GetProgress = ({ progressData }) => {
                   {itemMenuArr.map((obj) => (
                     <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
                   ))}
-                  <div className="dropdown-wrapper">
-                    <TypographyKit className="min-max-textfields" variant="div">
-                      <TypographyKit variant="div">
-                        Percentage Discount
-                        <MarketingPlaceholderDropdown
-                          names={getDiscountMovType('discount')}
-                          title="%"
-                          setPersonName={setDiscountPercentage}
-                          personName={discountPercentage}
-                        />
+                  {menuChanged === 'Offer on An Item from the Menu' ? (
+                    <div className="dropdown-wrapper">
+                      <TypographyKit className="min-max-textfields" variant="div">
+                        <TypographyKit variant="div">
+                          Percentage Discount
+                          <MarketingPlaceholderDropdown
+                            names={getDiscountMovType('discount')}
+                            title="%"
+                            setPersonName={setDiscountPercentage}
+                            personName={discountPercentage}
+                          />
+                        </TypographyKit>
                       </TypographyKit>
-                    </TypographyKit>
-                    <TypographyKit className="min-max-textfields" variant="div">
-                      <TypographyKit variant="div">
-                        Min. Order Value
-                        <MarketingPlaceholderDropdown
-                          names={getDiscountMovType('mov')}
-                          title="0 AED"
-                          setPersonName={setMinOrder}
-                          personName={minOrder}
-                        />
+                      <TypographyKit className="min-max-textfields" variant="div">
+                        <TypographyKit variant="div">
+                          Min. Order Value
+                          <MarketingPlaceholderDropdown
+                            names={getDiscountMovType('mov')}
+                            title="0 AED"
+                            setPersonName={setMinOrder}
+                            personName={minOrder}
+                          />
+                        </TypographyKit>
                       </TypographyKit>
-                    </TypographyKit>
-                  </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </RadioGroupKit>
               </div>
             </BoxKit>
@@ -764,7 +791,7 @@ const GetProgress = ({ progressData }) => {
           </TypographyKit>
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
-              menu === 'Offer on An Item from the Menu' ? 'active' : ''
+              menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''
             }
                   `}
           >
@@ -785,6 +812,7 @@ const GetProgress = ({ progressData }) => {
                   style={{ width: '45%' }}
                   id="input-with-icon-textfield"
                   placeholder="Search"
+                  onChange={catergorySearch}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

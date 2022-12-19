@@ -219,8 +219,7 @@
             color: #906bff;
 
             img {
-              filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
-                contrast(102%);
+            filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
             }
           }
 
@@ -244,8 +243,7 @@
           color: #906bff;
 
           img {
-            filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
-              contrast(102%);
+            filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
           }
         }
 
@@ -568,7 +566,8 @@
       }
 
       .radio {
-        span {
+        >div>span {
+          background-color: #906bff14;
           img {
             filter: invert(38%) sepia(95%) saturate(820%) hue-rotate(224deg) brightness(103%)
               contrast(101%);
@@ -610,7 +609,8 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #906bff14;
+          
+          background-color: #919EAB14;
 
           img {
             width: 23px;
