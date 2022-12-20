@@ -15,7 +15,6 @@ import useDate from '../../hooks/useDate';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
-import { AdsTableData } from '../../data/fakeDataMarketing';
 import { platformObject } from '../../data/platformList';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
@@ -105,7 +104,7 @@ const MarketingAds = () => {
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(AdsTableData);
+  const [row, setRow] = useState([]);
 
   const [scrollActive, setScrollActive] = useState('less');
   const handleScroll = () => {
@@ -125,8 +124,8 @@ const MarketingAds = () => {
       cont.scrollLeft = 0;
     }
   };
-  const [adsData, setAdsData] = useState(AdsTableData);
-  const [adsFilteredData, setAdsFilteredData] = useState(AdsTableData);
+  const [adsData, setAdsData] = useState([]);
+  const [adsFilteredData, setAdsFilteredData] = useState([]);
 
   const [filters, setFilters] = useState({
     platform: [],
@@ -222,12 +221,13 @@ const MarketingAds = () => {
     });
     setOpened(false);
   };
+
   const renderRowsByHeader = (r) =>
     headersAds.reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id](r, cur),
-        id: `${cur.id}_${r.offer_id}`,
+        id: r.ad_id,
         data: r,
       }),
       {},

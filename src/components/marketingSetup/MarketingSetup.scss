@@ -932,6 +932,7 @@
 #category-tooltip .MuiTooltip-tooltip{
   background-color: #646464;
   width: fit-content;
+  pointer-events: none;
 }
 .MuiTooltip-popper {
   .MuiTooltip-tooltip {
