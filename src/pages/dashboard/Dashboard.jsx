@@ -24,6 +24,7 @@ const Dashboard = () => {
   const { vendors } = useDate();
   const { chainObj, vendorsObj, display, restaurants, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
+
   const getTitle = (title) => {
     if (title === 'n_orders') {
       return 'orders';

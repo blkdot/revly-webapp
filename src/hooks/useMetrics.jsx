@@ -4,8 +4,7 @@ import useApi from './useApi';
 import useDate from './useDate';
 import { useUserAuth } from '../contexts/AuthContext';
 
-let fnDelaysAfter = null;
-let fnDelaysBefore = null;
+let fnDelays = null;
 
 function useMetrics() {
   const { date: dateContext, vendors } = useDate();
@@ -18,11 +17,13 @@ function useMetrics() {
 
   const clonedVendor = { ...vendorsObj };
   delete clonedVendor.display;
-  const [loading, setLoading] = useState(true);
 
-  const handleRequest = (date, setMetrics) => {
+  const [loading, setLoading] = useState(false);
+  const [queue, setQueue] = useState(0);
+
+  const handleRequest = (date, setMetrics, stack) => {
     setLoading(true);
-    let isCancelled = false;
+
     getMetrics({
       master_email: user.email,
       access_token: '',
@@ -30,28 +31,26 @@ function useMetrics() {
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
-      if (isCancelled) return;
-      setMetrics(data.data.metrics);
       setLoading(false);
+      if (stack === queue) setQueue(0);
+      setMetrics(data.data.metrics);
     });
-    return () => {
-      isCancelled = true;
-    };
   };
 
   useMemo(() => {
-    clearTimeout(fnDelaysAfter);
+    clearTimeout(fnDelays);
     if (Object.keys(vendorsObj).length > 0) {
-      fnDelaysAfter = setTimeout(() => handleRequest(afterPeriod, setMetricsafterPeriod), 500);
-    }
-  }, [afterPeriod, vendors]);
+      fnDelays = setTimeout(() => {
+        if (loading) {
+          setQueue((prev) => prev + 1);
+          return;
+        }
 
-  useMemo(() => {
-    clearTimeout(fnDelaysBefore);
-    if (Object.keys(vendorsObj).length > 0) {
-      fnDelaysBefore = setTimeout(() => handleRequest(beforePeriod, setMetricsbeforePeriod), 500);
+        handleRequest(afterPeriod, setMetricsafterPeriod, queue);
+        handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
+      }, 750 + queue);
     }
-  }, [beforePeriod, vendors]);
+  }, [afterPeriod, beforePeriod, vendors, queue]);
 
   return { metricsbeforePeriod, metricsafterPeriod, loading };
 }
