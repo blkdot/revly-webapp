@@ -177,7 +177,7 @@ const CompetitionAlerts = () => {
         setLoading(false);
         triggerAlertWithMessageError('Error while retrieving data');
       }
-    }, 500);
+    }, 750);
   };
 
   useEffect(() => {
