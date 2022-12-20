@@ -4,6 +4,9 @@ import useApi from './useApi';
 import useDate from './useDate';
 import { useUserAuth } from '../contexts/AuthContext';
 
+let fnDelaysAfter = null;
+let fnDelaysBefore = null;
+
 function useMetrics() {
   const { date: dateContext, vendors } = useDate();
   const { vendorsObj } = vendors;
@@ -35,15 +38,18 @@ function useMetrics() {
       isCancelled = true;
     };
   };
+
   useMemo(() => {
+    clearTimeout(fnDelaysAfter);
     if (Object.keys(vendorsObj).length > 0) {
-      handleRequest(afterPeriod, setMetricsafterPeriod);
+      fnDelaysAfter = setTimeout(() => handleRequest(afterPeriod, setMetricsafterPeriod), 500);
     }
   }, [afterPeriod, vendors]);
 
   useMemo(() => {
+    clearTimeout(fnDelaysBefore);
     if (Object.keys(vendorsObj).length > 0) {
-      handleRequest(beforePeriod, setMetricsbeforePeriod);
+      fnDelaysBefore = setTimeout(() => handleRequest(beforePeriod, setMetricsbeforePeriod), 500);
     }
   }, [beforePeriod, vendors]);
 

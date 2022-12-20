@@ -24,6 +24,8 @@ import TableRevly from '../../components/tableRevly/TableRevly';
 import ButtonKit from '../../kits/button/ButtonKit';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 
+let fnDelays = null;
+
 const CompetitionRanking = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useDate();
@@ -130,40 +132,44 @@ const CompetitionRanking = () => {
       {},
     );
 
-  const getData = async (plat, vend) => {
-    setLoading(true);
-    try {
-      const body = {
-        master_email: user.email,
-        access_token: user.accessToken,
-        vendors: vend || [],
-        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
-      };
+  const getData = (plat, vend) => {
+    clearTimeout(fnDelays);
 
-      const ranking = await getRanking(body, plat);
+    fnDelays = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const body = {
+          master_email: user.email,
+          access_token: user.accessToken,
+          vendors: vend || [],
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+        };
 
-      if (!ranking) {
-        throw new Error('');
+        const ranking = await getRanking(body, plat);
+
+        if (!ranking) {
+          throw new Error('');
+        }
+
+        const filt = ranking.data.data.map((v) => ({
+          name: v.name,
+          r_offers: v.basket_discount_only,
+          r_cuis: v.italian_only,
+          r_all: v.italian_basket_discount,
+          ov: v.no_filter,
+          platform,
+          id: v.id,
+        }));
+
+        setCompetitionRankingData(filt);
+        setLoading(false);
+      } catch (err) {
+        setCompetitionRankingData([]);
+        setLoading(false);
+        triggerAlertWithMessageError('Error while retrieving data');
       }
-
-      const filt = ranking.data.data.map((v) => ({
-        name: v.name,
-        r_offers: v.basket_discount_only,
-        r_cuis: v.italian_only,
-        r_all: v.italian_basket_discount,
-        ov: v.no_filter,
-        platform,
-        id: v.id,
-      }));
-
-      setCompetitionRankingData(filt);
-      setLoading(false);
-    } catch (err) {
-      setCompetitionRankingData([]);
-      setLoading(false);
-      triggerAlertWithMessageError('Error while retrieving data');
-    }
+    }, 500);
   };
 
   useEffect(() => {

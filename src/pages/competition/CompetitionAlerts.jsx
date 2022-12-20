@@ -24,6 +24,8 @@ import useTableContentFormatter from '../../components/tableRevly/tableContentFo
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useDate from '../../hooks/useDate';
 
+let fnDelays = null;
+
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useDate();
@@ -134,44 +136,48 @@ const CompetitionAlerts = () => {
     }
   }, [userPlatformData]);
 
-  const getData = async (plat, vend) => {
-    setLoading(true);
-    try {
-      const body = {
-        master_email: user.email,
-        access_token: user.accessToken,
-        vendors: vend || {},
-        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
-      };
-      const alerts = await getAlerts(body, plat);
+  const getData = (plat, vend) => {
+    clearTimeout(fnDelays);
 
-      const comp = await getCompetitors(body, plat);
+    fnDelays = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const body = {
+          master_email: user.email,
+          access_token: user.accessToken,
+          vendors: vend || {},
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+        };
+        const alerts = await getAlerts(body, plat);
 
-      const filt = alerts.data?.data
-        .map((v) => ({
-          name: v.vendor_name,
-          type: v.discount_type,
-          alert: v.discount,
-          start_date: v.start_date,
-          end_date: v.end_date,
-          start_hour: v.start_hour,
-          end_hour: v.end_hour,
-          status: v.status,
-          id: v.vendor_id,
-        }))
-        .sort((a, b) => a.status - b.status);
-      setCompetitionAlertsData(filt || []);
+        const comp = await getCompetitors(body, plat);
 
-      setCompetitorList(comp.data ? comp.data.data : []);
+        const filt = alerts.data?.data
+          .map((v) => ({
+            name: v.vendor_name,
+            type: v.discount_type,
+            alert: v.discount,
+            start_date: v.start_date,
+            end_date: v.end_date,
+            start_hour: v.start_hour,
+            end_hour: v.end_hour,
+            status: v.status,
+            id: v.vendor_id,
+          }))
+          .sort((a, b) => a.status - b.status);
+        setCompetitionAlertsData(filt || []);
 
-      setLoading(false);
-    } catch (err) {
-      setCompetitionAlertsData([]);
-      setCompetitorList([]);
-      setLoading(false);
-      triggerAlertWithMessageError('Error while retrieving data');
-    }
+        setCompetitorList(comp.data ? comp.data.data : []);
+
+        setLoading(false);
+      } catch (err) {
+        setCompetitionAlertsData([]);
+        setCompetitorList([]);
+        setLoading(false);
+        triggerAlertWithMessageError('Error while retrieving data');
+      }
+    }, 500);
   };
 
   useEffect(() => {
