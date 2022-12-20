@@ -213,6 +213,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const targetAudienceObj = {
     'New customer': 'new_customers',
     'Deliveroo plus': 'subscribers',
+    'Inactive customers': 'lapsed_customers',
   };
 
   const getTargetAudience = () => targetAudienceObj[targetAudience] || 'orders';
@@ -417,10 +418,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
     setDisabledDate(arr.every((bool) => bool === false));
   };
-  useEffect(() => {
-    setDiscountPercentage('');
-    setMinOrder('');
-  }, [itemMenu, menu]);
   const getMenuData = async (vendor, platforms) => {
     try {
       if (platforms === 'talabat') return;
@@ -513,17 +510,35 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
     setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
   };
-
+  const getSteps = (stepsArr) => {
+    if (Object.keys(vendors.display).length > 0) {
+      if (platform.length < 2) {
+        if (platform[0] === 'talabat') {
+          setSteps(stepsArr);
+        } else {
+          setSteps([...stepsArr, stepsArr.length]);
+        }
+      } else {
+        setSteps([...stepsArr, stepsArr.length]);
+      }
+    } else if (platformData === 'talabat') {
+      setSteps(stepsArr);
+    } else {
+      setSteps([...stepsArr, stepsArr.length]);
+    }
+  };
   const durationDisable = (n, stepsRange) => {
     if (selected === n) {
       clearTimeSelected();
       timeSelected();
       if (duration === 'Program the offer duration') {
-        setSteps([...stepsRange, stepsRange.length]);
+        // setSteps([...stepsRange, stepsRange.length]);
+        getSteps([...stepsRange, stepsRange.length]);
         setDisabled(!typeSchedule);
         return;
       }
-      setSteps(stepsRange);
+      // setSteps(stepsRange);
+      getSteps(stepsRange);
       setDisabled(
         !(
           endingDate !== null &&
@@ -611,6 +626,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   useEffect(() => {
     if (selected === 1) {
+      getSteps([0, 1, 2, 3]);
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         clearTimeSelected();
@@ -623,11 +639,11 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     if (selected === 2) {
       clearTimeSelected();
       if (menu === 'Offer on An Item from the Menu') {
-        setSteps([0, 1, 2, 3, 4, 5]);
+        getSteps([0, 1, 2, 3, 4]);
         setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
         return;
       }
-      setSteps([0, 1, 2, 3, 4]);
+      getSteps([0, 1, 2, 3]);
       setDisabled(!(menu && discountPercentage && minOrder));
       return;
     }
@@ -637,10 +653,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         clearTimeSelected();
         return;
       }
-      durationDisable(4, [0, 1, 2, 3, 4, 5]);
+      durationDisable(4, [0, 1, 2, 3, 4]);
     }
     if (menu === 'Offer on the whole Menu') {
-      durationDisable(3, [0, 1, 2, 3, 4]);
+      durationDisable(3, [0, 1, 2, 3]);
     }
   }, [
     menu,
@@ -760,6 +776,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     categoryData,
     categoryDataList,
     filteredCategoryData,
+    setFilteredCategoryData,
     category,
     setChecked,
     checked,
