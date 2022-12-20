@@ -102,7 +102,6 @@ const DropdownSnackbar = (props) => {
           <RestaurantDropdownOld
             restaurants={costVendors.restaurants}
             vendors={costVendors.vendorsArr.filter((v) => platform.find((p) => v.platform === p))}
-            vendorsPlatform={Object.keys(costVendors.vendorsObj)}
             setState={setCostVendors}
             state={costVendors}
             cost

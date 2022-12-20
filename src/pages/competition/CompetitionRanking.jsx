@@ -173,17 +173,37 @@ const CompetitionRanking = () => {
   };
 
   useEffect(() => {
-    if (platform && vendorsArr.length) {
+    if (Object.keys(display).length > 0) {
+      if (platform) {
+        getData(platform, vendorsObj[platform]);
+      }
+    } else if (platform && vendorsArr.length > 0) {
       getData(platform, vendorsObj[platform]);
     }
   }, [platform, vendors, beforePeriodBtn]);
 
   useEffect(() => {
-    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.chain_id);
-    setVendors({ ...vendors, restaurants: arr });
-    localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
-  }, [platform]);
-
+    if (Object.keys(display).length > 0) {
+      const chainObjTemp = JSON.parse(JSON.stringify(display));
+      const vendorsObjTemp = { [platform]: [] };
+      Object.keys(display).forEach((c) => {
+        Object.keys(display[c]).forEach((v) => {
+          Object.keys(display[c][v]).forEach((p) => {
+            if (p === platform) {
+              vendorsObjTemp[p] = [...vendorsObjTemp[p], chainObjTemp[c][v][p]];
+            } else {
+              delete chainObjTemp[c][v][p];
+            }
+          });
+        });
+      });
+      setVendors({ ...vendors, chainObj: chainObjTemp, vendorsObj: vendorsObjTemp });
+    } else {
+      const arr = vendorsArr.filter((v) => v.platform === platform);
+      const obj = { [platform]: arr.map((k) => k) };
+      setVendors({ ...vendors, restaurants: arr.map((k) => k.data.vendor_name), vendorsObj: obj });
+    }
+  }, [platform, display]);
   return (
     <div className="wrapper">
       <div className="top-inputs">
@@ -243,12 +263,6 @@ const CompetitionRanking = () => {
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
-        {/* <CompetitionTable
-          loading={loading}
-          type="ranking"
-          open={Open}
-          rows={competitionRankingData}
-        /> */}
         <TableRevly
           isLoading={loading}
           headers={headersAlert}

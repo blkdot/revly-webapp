@@ -51,17 +51,21 @@ const Finance = ({
   };
   const isDisplay = () => {
     if (Object.keys(display).length > 0) {
-      return getChain().length === Object.keys(display).length ? (
-        <p>All Points of sales</p>
-      ) : (
-        getChain().join(', ')
-      );
+      if (getChain().length === Object.keys(display).length) {
+        return <p>All Points of sales</p>;
+      }
+      if (getChain().length > 2) {
+        return `${getChain().length} selected vendors`;
+      }
+      return getChain().join(', ');
     }
-    return restaurants.length === vendors.length ? (
-      <p>All Points of sales</p>
-    ) : (
-      <p> {restaurants.join(', ')}</p>
-    );
+    if (restaurants.length === vendors.length) {
+      return <p>All Points of sales</p>;
+    }
+    if (restaurants.length > 2) {
+      return `${restaurants.length} selected vendors`;
+    }
+    return <p> {restaurants.join(', ')}</p>;
   };
   return (
     <div className="block">
