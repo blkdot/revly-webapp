@@ -59,17 +59,27 @@ const MarketingOffer = () => {
   });
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
   const [row, setRow] = useState(offers);
-
+  const [scrollActive, setScrollActive] = useState('less');
   const handleScroll = () => {
     const cont = document.querySelector('#tableContainer');
-    const position = cont.scrollLeft;
-
-    setScrollPosition(position);
+    const position = +cont.scrollLeft.toFixed(0);
+    if (position < cont.clientWidth / 2) {
+      setScrollActive('less');
+    } else if (position > cont.clientWidth / 2) {
+      setScrollActive('more');
+    }
+  };
+  const handleScrollActive = (type) => {
+    const cont = document.querySelector('#tableContainer');
+    if (type === 'more') {
+      cont.scrollLeft = cont.scrollWidth;
+    } else {
+      cont.scrollLeft = 0;
+    }
   };
   const [offersData, setOffersData] = useState(offers);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
@@ -219,9 +229,9 @@ const MarketingOffer = () => {
 
   useEffect(() => {
     const cont = document.querySelector('#tableContainer');
-    cont.addEventListener('scroll', handleScroll);
+    cont?.addEventListener('scroll', handleScroll);
     return () => {
-      cont.removeEventListener('scroll', handleScroll);
+      cont?.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -400,10 +410,6 @@ const MarketingOffer = () => {
     setOpenedOffer(true);
     setClickedId(id);
   };
-  const scrollToPos = (pos) => {
-    const cont = document.querySelector('#tableContainer');
-    cont?.scrollTo(pos, 0);
-  };
   const renderLayout = () => {
     if (openedOffer) {
       return (
@@ -419,17 +425,19 @@ const MarketingOffer = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link marketing ${scrollPosition > 310 ? 'active' : ''}`}
+              className={`right-part-header_link marketing ${
+                scrollActive === 'more' ? 'active' : ''
+              }`}
               variant="div"
             >
-              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(0)}>
-                <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
+              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('less')}>
+                <BoxKit className={scrollActive === 'less' ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Offers Management
                 </BoxKit>
               </div>
-              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1300)}>
-                <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
+              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('more')}>
+                <BoxKit className={scrollActive === 'more' ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Offers Performance
                 </BoxKit>
