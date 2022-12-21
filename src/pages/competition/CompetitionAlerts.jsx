@@ -29,7 +29,7 @@ let fnDelays = null;
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
   const { vendors } = useDate();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -192,8 +192,8 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.chain_id);
-    setVendors({ ...vendors, restaurants: arr });
-    localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
+    setVendors({ ...vendors, vendorsSelected: arr });
+    localStorage.setItem('vendors', JSON.stringify({ ...vendors, vendorsSelected: arr }));
   }, [platform]);
 
   const handleCompetitorChange = (e) => {
@@ -227,7 +227,7 @@ const CompetitionAlerts = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr}
             vendorsPlatform={Object.keys(vendorsObj)}
           />
@@ -292,7 +292,7 @@ const CompetitionAlerts = () => {
                 </MenuItemKit>
               )}
               title="Competitor"
-              className="top-competition"
+              className="top-competition competitor"
               select={competitor}
             />
           </div>

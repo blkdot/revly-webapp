@@ -1,6 +1,8 @@
-.competition-dropdown {
+.competition-dropdown.competition-dropdown {
   &[data-shrink=true] {
     background: rgb(252, 252, 252);
+    padding: 0 5px;
+    top: 0 !important;
   }
 
   &.Mui-focused.Mui-focused {

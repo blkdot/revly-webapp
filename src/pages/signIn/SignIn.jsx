@@ -25,7 +25,7 @@ const SignIn = () => {
   // clear the localStorage
   useEffect(() => {
     const defaultState = {
-      restaurants: [],
+      vendorsSelected: [],
       vendorsObj: {},
       vendorsArr: [],
       display: {},

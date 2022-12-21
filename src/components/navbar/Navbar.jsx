@@ -35,7 +35,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     setVendors({
-      restaurants: [],
+      vendorsSelected: [],
       vendorsObj: {},
       vendorsArr: [],
       display: {},

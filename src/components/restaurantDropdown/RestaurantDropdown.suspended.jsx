@@ -99,14 +99,6 @@ const RestaurantDropdown = ({
             chainObj: chainObjTemp,
             vendorsObj,
           });
-          localStorage.setItem(
-            'vendors',
-            JSON.stringify({
-              ...vendorsContext,
-              chainObj: chainObjTemp,
-              vendorsObj,
-            }),
-          );
         }
         if (checked) {
           Object.keys(display).forEach((cName) => {
@@ -125,14 +117,6 @@ const RestaurantDropdown = ({
             vendorsObj,
             chainObj: chainObjTemp,
           });
-          localStorage.setItem(
-            'vendors',
-            JSON.stringify({
-              ...vendorsContext,
-              vendorsObj,
-              chainObj: chainObjTemp,
-            }),
-          );
         }
       }
       if (checked) {
@@ -152,14 +136,6 @@ const RestaurantDropdown = ({
           vendorsObj,
           chainObj: chainObjTemp,
         });
-        localStorage.setItem(
-          'vendors',
-          JSON.stringify({
-            ...vendorsContext,
-            vendorsObj,
-            chainObj: chainObjTemp,
-          }),
-        );
       }
     }
   };
@@ -225,56 +201,48 @@ const RestaurantDropdown = ({
         delete chainObjClear[cName];
       }
     });
-    if (Object.keys(chainObjClear).length > 1) {
+    if (Object.keys(chainObjClear[chainName]).length > 1) {
       if (!checked) {
         const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
+        const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj));
         Object?.keys(chainObjTemp?.[chainName]?.[value])?.forEach((platform) => {
-          vendorsObj[platform]?.forEach((obj, index) => {
+          vendorsObjTemp[platform]?.forEach((obj, index) => {
             if (+obj.chain_id === chainObjTemp[chainName][value][platform].chain_id) {
-              vendorsObj[platform].splice(index, 1);
+              vendorsObjTemp[platform].splice(index, 1);
             }
           });
         });
         delete chainObjTemp[chainName][value];
+        Object.keys(vendorsObjTemp).forEach((p) => {
+          if (vendorsObjTemp[p].length === 0) {
+            delete vendorsObjTemp[p];
+          }
+        });
         setVendors({
           ...vendorsContext,
-          vendorsObj,
+          vendorsObj: vendorsObjTemp,
           chainObj: chainObjTemp,
         });
-        localStorage.setItem(
-          'vendors',
-          JSON.stringify({
-            ...vendorsContext,
-            vendorsObj,
-            chainObj: chainObjTemp,
-          }),
-        );
       }
     }
     if (checked) {
-      const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
-
-      Object.keys(display[chainName][value]).forEach((platform) => {
-        vendorsObj[platform]?.splice(0, 0, display[chainName][value][platform]);
-      });
-      Object.keys(display[chainName]).forEach((vName) => {
-        if (vName === value) {
-          chainObjTemp[chainName][value] = display[chainName][value];
+      const chainObjTemp = {
+        ...chainObj,
+        [chainName]: { ...chainObj[chainName], [value]: { ...display[chainName][value] } },
+      };
+      const vendorsObjTemp = { ...vendorsObj };
+      Object.keys(display[chainName][value]).forEach((p) => {
+        if (vendorsObjTemp[p]) {
+          vendorsObjTemp[p] = [...vendorsObjTemp[p], display[chainName][value][p]];
+        } else {
+          vendorsObjTemp[p] = [display[chainName][value][p]];
         }
       });
       setVendors({
         ...vendorsContext,
-        vendorsObj,
+        vendorsObj: vendorsObjTemp,
         chainObj: chainObjTemp,
       });
-      localStorage.setItem(
-        'vendors',
-        JSON.stringify({
-          ...vendorsContext,
-          vendorsObj,
-          chainObj: chainObjTemp,
-        }),
-      );
     }
   };
   const getChain = () => {
