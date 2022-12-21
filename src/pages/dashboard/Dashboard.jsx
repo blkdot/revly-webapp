@@ -21,9 +21,10 @@ import useVendors from '../../hooks/useVendors';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
-  const { vendors } = useVendors();
-  const { chainObj, vendorsObj, display, restaurants, vendorsArr } = vendors;
+  const { vendors } = useDate();
+  const { chainObj, vendorsObj, display, vendorsSelected, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
+
   const getTitle = (title) => {
     if (title === 'n_orders') {
       return 'orders';
@@ -65,7 +66,7 @@ const Dashboard = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr}
             vendorsPlatform={Object.keys(vendorsObj)}
           />
@@ -80,7 +81,7 @@ const Dashboard = () => {
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
           display={display}
-          restaurants={restaurants}
+          vendorsSelected={vendorsSelected}
           vendors={vendorsArr}
           loading={loading}
         />

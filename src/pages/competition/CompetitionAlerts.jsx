@@ -22,12 +22,14 @@ import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useVendors from '../../hooks/useVendors';
+import useDate from '../../hooks/useDate';
+
+let fnDelays = null;
 
 const CompetitionAlerts = () => {
   const { setVendors } = useGlobal();
-  const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const { vendors } = useDate();
+  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -134,44 +136,48 @@ const CompetitionAlerts = () => {
     }
   }, [userPlatformData]);
 
-  const getData = async (plat, vend) => {
-    setLoading(true);
-    try {
-      const body = {
-        master_email: user.email,
-        access_token: user.accessToken,
-        vendors: vend || {},
-        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
-      };
-      const alerts = await getAlerts(body, plat);
+  const getData = (plat, vend) => {
+    clearTimeout(fnDelays);
 
-      const comp = await getCompetitors(body, plat);
+    fnDelays = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const body = {
+          master_email: user.email,
+          access_token: user.accessToken,
+          vendors: vend || {},
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+        };
+        const alerts = await getAlerts(body, plat);
 
-      const filt = alerts.data?.data
-        .map((v) => ({
-          name: v.vendor_name,
-          type: v.discount_type,
-          alert: v.discount,
-          start_date: v.start_date,
-          end_date: v.end_date,
-          start_hour: v.start_hour,
-          end_hour: v.end_hour,
-          status: v.status,
-          id: v.vendor_id,
-        }))
-        .sort((a, b) => a.status - b.status);
-      setCompetitionAlertsData(filt || []);
+        const comp = await getCompetitors(body, plat);
 
-      setCompetitorList(comp.data ? comp.data.data : []);
+        const filt = alerts.data?.data
+          .map((v) => ({
+            name: v.vendor_name,
+            type: v.discount_type,
+            alert: v.discount,
+            start_date: v.start_date,
+            end_date: v.end_date,
+            start_hour: v.start_hour,
+            end_hour: v.end_hour,
+            status: v.status,
+            id: v.vendor_id,
+          }))
+          .sort((a, b) => a.status - b.status);
+        setCompetitionAlertsData(filt || []);
 
-      setLoading(false);
-    } catch (err) {
-      setCompetitionAlertsData([]);
-      setCompetitorList([]);
-      setLoading(false);
-      triggerAlertWithMessageError('Error while retrieving data');
-    }
+        setCompetitorList(comp.data ? comp.data.data : []);
+
+        setLoading(false);
+      } catch (err) {
+        setCompetitionAlertsData([]);
+        setCompetitorList([]);
+        setLoading(false);
+        triggerAlertWithMessageError('Error while retrieving data');
+      }
+    }, 750);
   };
 
   useEffect(() => {
@@ -186,8 +192,8 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.chain_id);
-    setVendors({ ...vendors, restaurants: arr });
-    localStorage.setItem('vendors', JSON.stringify({ ...vendors, restaurants: arr }));
+    setVendors({ ...vendors, vendorsSelected: arr });
+    localStorage.setItem('vendors', JSON.stringify({ ...vendors, vendorsSelected: arr }));
   }, [platform]);
 
   const handleCompetitorChange = (e) => {
@@ -221,7 +227,7 @@ const CompetitionAlerts = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr}
             vendorsPlatform={Object.keys(vendorsObj)}
           />
@@ -286,7 +292,7 @@ const CompetitionAlerts = () => {
                 </MenuItemKit>
               )}
               title="Competitor"
-              className="top-competition"
+              className="top-competition competitor"
               select={competitor}
             />
           </div>

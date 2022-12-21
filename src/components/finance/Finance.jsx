@@ -13,7 +13,7 @@ const Finance = ({
   chainObj,
   setTable,
   table,
-  restaurants,
+  vendorsSelected,
   display,
   vendors,
   loading,
@@ -51,17 +51,21 @@ const Finance = ({
   };
   const isDisplay = () => {
     if (Object.keys(display).length > 0) {
-      return getChain().length === Object.keys(display).length ? (
-        <p>All Points of sales</p>
-      ) : (
-        getChain().join(', ')
-      );
+      if (getChain().length === Object.keys(display).length) {
+        return <p>All Points of sales</p>;
+      }
+      if (getChain().length > 2) {
+        return `${getChain().length} selected vendors`;
+      }
+      return getChain().join(', ');
     }
-    return restaurants.length === vendors.length ? (
-      <p>All Points of sales</p>
-    ) : (
-      <p> {restaurants.join(', ')}</p>
-    );
+    if (vendorsSelected.length === vendors.length) {
+      return <p>All Points of sales</p>;
+    }
+    if (vendorsSelected.length > 2) {
+      return `${vendorsSelected.length} selected vendors`;
+    }
+    return <p> {vendorsSelected.join(', ')}</p>;
   };
   return (
     <div className="block">

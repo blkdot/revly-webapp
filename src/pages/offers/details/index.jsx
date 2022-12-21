@@ -100,7 +100,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     offer_id,
     type_schedule,
     discount_rate,
-    discount_type,
+    type_offer,
     end_date,
   } = offerDetailMaster?.master_offer || {};
 
@@ -152,6 +152,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     { enabled: !!vendorsObj },
   );
 
+  const getMenuTypeOffer = () => {
+    if (type_offer !== 'Menu discount') {
+      return 'Offer on an item from the menu';
+    }
+    return 'Offer on the whole menu';
+  };
   return (
     <>
       <CancelOfferModal
@@ -400,13 +406,11 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                     <FastFood />
                   </div>
                   <span className="offer-duration width-left-icon width-right-icon">
-                    {discount_type && discount_type !== 'Menu discount'
-                      ? 'Offer on an item from the menu'
-                      : 'Offer on the whole menu'}
+                    {type_offer ? getMenuTypeOffer() : <SkeletonKit width={130} height={30} />}
                   </span>
-                  {discount_type && discount_type !== 'Menu discount' ? <ExpandIcon /> : ''}
+                  {type_offer && type_offer !== 'Menu discount' ? <ExpandIcon /> : ''}
                 </div>
-                {discount_type && discount_type !== 'Menu discount' && (
+                {type_offer && type_offer !== 'Menu discount' && (
                   <div
                     style={{
                       display: 'flex',
@@ -424,7 +428,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                         color: '#212B36',
                       }}
                     >
-                      {discount_type}
+                      {type_offer}
                     </span>
                     <span
                       style={{
@@ -500,8 +504,8 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                 </div>
               </div>
             </div>
-            {discount_type &&
-              discount_type !== 'Menu discount' &&
+            {type_offer &&
+              type_offer !== 'Menu discount' &&
               [
                 { drn_id: 'e8cee7b9-f191-4392-8f53-8d019ee02c41' },
                 { drn_id: '5a9e1ab0-69a2-48b8-bed3-2858b5b9aa1d' },

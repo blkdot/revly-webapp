@@ -16,7 +16,6 @@ import useVendors from '../../hooks/useVendors';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import PaperKit from '../../kits/paper/PaperKit';
-import { AdsTableData } from '../../data/fakeDataMarketing';
 import { platformObject } from '../../data/platformList';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
@@ -31,8 +30,8 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
-  const { vendors } = useVendors();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const { vendors } = useDate();
+  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));
@@ -46,7 +45,6 @@ const MarketingAds = () => {
     startDate: date.beforePeriod.startDate,
     endDate: getOfferDate(),
   });
-  const [scrollPosition, setScrollPosition] = useState(0);
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
 
   const {
@@ -107,20 +105,28 @@ const MarketingAds = () => {
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(AdsTableData);
+  const [row, setRow] = useState([]);
 
+  const [scrollActive, setScrollActive] = useState('less');
   const handleScroll = () => {
     const cont = document.querySelector('#tableContainer');
-    const position = cont.scrollLeft;
-    setScrollPosition(position);
+    const position = +cont.scrollLeft.toFixed(0);
+    if (position < cont.clientWidth / 2) {
+      setScrollActive('less');
+    } else if (position > cont.clientWidth / 2) {
+      setScrollActive('more');
+    }
   };
-
-  const scrollToPos = (pos) => {
+  const handleScrollActive = (type) => {
     const cont = document.querySelector('#tableContainer');
-    cont?.scrollTo(pos, 0);
+    if (type === 'more') {
+      cont.scrollLeft = cont.scrollWidth;
+    } else {
+      cont.scrollLeft = 0;
+    }
   };
-  const [adsData, setAdsData] = useState(AdsTableData);
-  const [adsFilteredData, setAdsFilteredData] = useState(AdsTableData);
+  const [adsData, setAdsData] = useState([]);
+  const [adsFilteredData, setAdsFilteredData] = useState([]);
 
   const [filters, setFilters] = useState({
     platform: [],
@@ -138,9 +144,9 @@ const MarketingAds = () => {
 
   useEffect(() => {
     const cont = document.querySelector('#tableContainer');
-    cont.addEventListener('scroll', handleScroll);
+    cont?.addEventListener('scroll', handleScroll);
     return () => {
-      cont.removeEventListener('scroll', handleScroll);
+      cont?.removeEventListener('scroll', handleScroll);
     };
   }, [ads]);
 
@@ -216,12 +222,13 @@ const MarketingAds = () => {
     });
     setOpened(false);
   };
+
   const renderRowsByHeader = (r) =>
     headersAds.reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id](r, cur),
-        id: `${cur.id}_${r.offer_id}`,
+        id: r.ad_id,
         data: r,
       }),
       {},
@@ -271,7 +278,7 @@ const MarketingAds = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr}
             vendorsPlatform={Object.keys(vendorsObj)}
           />
@@ -301,17 +308,17 @@ const MarketingAds = () => {
         <div className="right-part">
           <div className="right-part-header marketing-links">
             <TypographyKit
-              className={`right-part-header_link ${scrollPosition > 310 ? 'active' : ''}`}
+              className={`right-part-header_link ${scrollActive === 'more' ? 'active' : ''}`}
               variant="div"
             >
-              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(0)}>
-                <BoxKit className={scrollPosition < 310 ? 'active' : ''}>
+              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('less')}>
+                <BoxKit className={scrollActive === 'less' ? 'active' : ''}>
                   <img src={OffersManagmentIcon} alt="Offers managment icon" />
                   Ads Management
                 </BoxKit>
               </div>
-              <div tabIndex={-1} role="presentation" onClick={() => scrollToPos(1500)}>
-                <BoxKit className={scrollPosition > 310 ? 'active' : ''}>
+              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('more')}>
+                <BoxKit className={scrollActive === 'more' ? 'active' : ''}>
                   <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
                   Ads Performance
                 </BoxKit>

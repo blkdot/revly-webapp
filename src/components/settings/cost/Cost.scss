@@ -125,10 +125,12 @@
   display: flex;
   align-items: flex-end;
   grid-gap: 15px;
-  .restaurant-dropdown_wrapper>div:nth-of-type(1){
+  .restaurant-dropdown_wrapper{
+    width: 50% !important;
+    >div:nth-of-type(1){
     border-radius: 5px;
     background-color: #fff;
-  }
+  }}
   .snackbar-procent{
     label{
       top: -6px;

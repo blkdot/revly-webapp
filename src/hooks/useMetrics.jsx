@@ -5,6 +5,8 @@ import useDate from './useDate';
 import useVendors from './useVendors';
 import { useUserAuth } from '../contexts/AuthContext';
 
+let fnDelays = null;
+
 function useMetrics() {
   const { date: dateContext } = useDate();
   const { vendors } = useVendors();
@@ -17,11 +19,13 @@ function useMetrics() {
 
   const clonedVendor = { ...vendorsObj };
   delete clonedVendor.display;
-  const [loading, setLoading] = useState(true);
 
-  const handleRequest = (date, setMetrics) => {
+  const [loading, setLoading] = useState(false);
+  const [queue, setQueue] = useState(0);
+
+  const handleRequest = (date, setMetrics, stack) => {
     setLoading(true);
-    let isCancelled = false;
+
     getMetrics({
       master_email: user.email,
       access_token: '',
@@ -29,25 +33,26 @@ function useMetrics() {
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
-      if (isCancelled) return;
-      setMetrics(data.data.metrics);
       setLoading(false);
+      if (stack === queue) setQueue(0);
+      setMetrics(data.data.metrics);
     });
-    return () => {
-      isCancelled = true;
-    };
   };
-  useMemo(() => {
-    if (Object.keys(vendorsObj).length > 0) {
-      handleRequest(afterPeriod, setMetricsafterPeriod);
-    }
-  }, [afterPeriod, vendors]);
 
   useMemo(() => {
+    clearTimeout(fnDelays);
     if (Object.keys(vendorsObj).length > 0) {
-      handleRequest(beforePeriod, setMetricsbeforePeriod);
+      fnDelays = setTimeout(() => {
+        if (loading) {
+          setQueue((prev) => prev + 1);
+          return;
+        }
+
+        handleRequest(afterPeriod, setMetricsafterPeriod, queue);
+        handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
+      }, 750 + queue);
     }
-  }, [beforePeriod, vendors]);
+  }, [afterPeriod, beforePeriod, vendors, queue]);
 
   return { metricsbeforePeriod, metricsafterPeriod, loading };
 }

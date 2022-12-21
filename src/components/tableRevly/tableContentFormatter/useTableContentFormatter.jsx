@@ -7,7 +7,7 @@ const useTableContentFormatter = () => {
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
-      key={`${h.id}_${r.id}`}
+      key={`${h.id}}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>

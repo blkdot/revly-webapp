@@ -26,7 +26,7 @@ import MarketingOffer from './pages/marketing/MarketingOffer';
 import AuthLayout from './components/layout/authLayout/AuthLayout';
 import VerifyCode from './pages/verifyCode/VerifyCode';
 import ResetPassword from './pages/resetPassword/ResetPassword';
-import CompetitionRanking from './pages/competition/CompetitionRanking';
+import CompetitionListing from './pages/competition/CompetitionListing';
 import CompetitionAlerts from './pages/competition/CompetitionAlerts';
 
 const theme = createTheme({
@@ -71,7 +71,7 @@ const App = () => (
                       {/* <Route path='/account' element={<Account />} /> */}
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/planning" element={<Planning />} />
-                      <Route path="/competition/ranking" element={<CompetitionRanking />} />
+                      <Route path="/competition/listing" element={<CompetitionListing />} />
                       <Route path="/competition/alerts" element={<CompetitionAlerts />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/marketing/offer" element={<MarketingOffer />} />

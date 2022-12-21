@@ -9,7 +9,7 @@ const useVendors = (isSign) => {
   const { getVendors } = useApi();
 
   const [vendors, setVendors] = useState({
-    restaurants: [],
+    vendorsSelected: [],
     vendorsObj: {},
     vendorsArr: [],
     display: {},
@@ -41,7 +41,7 @@ const useVendors = (isSign) => {
 
     delete newData?.master_email;
 
-    let restaurantTemp = [];
+    let vendorsSelectedTemp = [];
     let vendorsTemp = [];
 
     platformList
@@ -52,18 +52,27 @@ const useVendors = (isSign) => {
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
           vendorsTemp.push({ ...v, platform: p.name });
-          restaurantTemp.push(v.data.vendor_name);
+          vendorsSelectedTemp.push(v.data.vendor_name);
         }),
       );
     const { ...rest } = newData;
     const display = newData.display ? newData.display : {};
     delete rest.display;
     const chainObj = JSON.parse(JSON.stringify(display));
+    Object.keys(chainObj).forEach((c) => {
+      Object.keys(chainObj[c]).forEach((v) => {
+        Object.keys(chainObj[c][v]).forEach((p) => {
+          if (chainObj[c][v][p] === null) {
+            delete chainObj[c][v][p];
+          }
+        });
+      });
+    });
     const dataV = {
-      restaurants: restaurantTemp,
+      vendorsSelected: vendorsSelectedTemp,
       vendorsArr: vendorsTemp,
       vendorsObj: rest,
-      display: JSON.parse(JSON.stringify(chainObj)) || {},
+      display: chainObj,
       chainObj,
     };
     setVendors(dataV);
@@ -71,7 +80,7 @@ const useVendors = (isSign) => {
       delete display[key];
     });
     vendorsTemp = [];
-    restaurantTemp = [];
+    vendorsSelectedTemp = [];
   }, [data]);
 
   return { vendors, setVendors };

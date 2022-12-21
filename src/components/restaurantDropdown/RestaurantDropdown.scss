@@ -28,6 +28,22 @@
   }
 }
 
+.selected-dropdown {
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+  margin-right: 10px;
+  width: 95%;
+
+  >p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    width: 320px;
+  }
+}
+
 .restaurant-dropdown_wrapper {
   display: flex;
   align-items: flex-start;
@@ -35,6 +51,7 @@
   flex-direction: column;
   grid-gap: 5px;
   position: relative;
+  width: 30%;
 
   .MuiSvgIcon-root {
     right: 0px;
@@ -43,7 +60,6 @@
   >.restaurant-dropdown {
     overflow: hidden;
   }
-
 
 
   >div {
@@ -58,6 +74,7 @@
     flex-direction: row;
     padding: 0 15px 0 5px;
     cursor: pointer;
+    width: 100%;
 
     fieldset {
       border: none;
@@ -70,14 +87,20 @@
       height: 40px;
 
       >div {
-
+        padding: 16.5px 14px 16.5px 0 !important;
         color: #212B36;
+        width: 100% !important;
       }
     }
 
-    &.old {
+
+  }
+
+  &.old {
+    >div {
+
       >div {
-        padding: 0 5px 0 5px;
+        padding: 0 !important;
       }
     }
   }
@@ -92,7 +115,17 @@
   }
 
   &.branch {
+    width: 100% !important;
+
+    .checkbox-accordion {
+      >div {
+        width: 100% !important;
+      }
+    }
+
     >div:nth-of-type(1) {
+      width: 100%;
+
       >div {
         padding-left: 10px;
         display: flex;
@@ -108,9 +141,9 @@
   display: flex;
   align-items: center;
   grid-gap: 10px;
-
   &.Mui-focused.Mui-focused {
-    color: $color-border
+    color: $color-border;
+    border-color: $color-border;
   }
 
   &.Mui-focused.Mui-focused svg {
@@ -175,7 +208,7 @@
   }
 }
 
-.restaurants-selected {
+.vendorsSelected-selected {
   width: 70%;
   overflow: hidden;
 
@@ -187,10 +220,8 @@
 }
 
 .dropdown-paper.dropdown-paper {
-  opacity: 0;
-  visibility: hidden;
-  position: absolute;
-  top: 70px;
+  position: relative;
+  top: 0;
   width: 100%;
   background-color: #fff !important;
   z-index: 1001;
@@ -200,9 +231,69 @@
   border-radius: 12px !important;
   transition: .3s;
   overflow-y: auto;
-  max-height: 160px;
-  height: fit-content;
+  max-height: 500px;
   scroll-behavior: smooth;
+  padding-left: 15px;
+  &.branch {
+    padding-right: 15px;
+    max-height: 300px;
+  }
+  &.cost {
+    padding-right: 15px;
+    max-height: 300px;
+  }
+  .vendors-only {
+    .restaurant-vendors{
+      text-transform: capitalize;
+      width: 70%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    >li{
+      padding: 0;
+      .only-button {
+        margin-left: 25px;
+        background-color: #fff;
+        height: 45px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          button{
+            box-shadow: none;
+          }
+        }
+      &:hover {
+          .only-button {
+            opacity: 1 !important;
+            visibility: visible !important;
+          }
+        }
+    }
+  }
+
+  .selected-chains {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 15px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 100;
+    padding-bottom: 10px;
+
+    >p {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    button {
+      font-size: 11px;
+      padding: 6px 10px;
+    }
+  }
 
   &::-webkit-scrollbar {
     height: 1px;
@@ -219,18 +310,48 @@
     border-radius: 31px;
   }
 
+  .only-button {
+    width: 18% !important;
+    justify-content: center;
+    padding: 0 15px !important;
+    margin-left: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s;
+  
+    button {
+      font-size: 10px;
+    }
+  }
+
   .checkbox-accordion {
     color: black;
     width: 100%;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
+    &:hover {
+      .only-button {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    .chain-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 70%;
+      cursor: pointer;
+    }
+
+
+
     &::before {
       content: none;
       position: absolute;
-      height: calc(40px * var(--l));
+      height: calc(39px * var(--l));
       top: 20px;
       background-color: #F4F6F8;
       width: 3px;
@@ -251,10 +372,12 @@
       grid-gap: 5px;
       padding: 0;
       font-weight: bold;
+      width: 74%;
     }
 
     >svg:last-child {
       transition: .4s;
+      cursor: pointer;
     }
 
     &.active {
@@ -279,21 +402,38 @@
     visibility: hidden;
     transition: .3s;
     height: 0;
-    cursor: pointer;
     display: none;
 
+    .vendor-name {
+      max-width: 65%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      vertical-align: middle;
+      width: 65%;
+      cursor: pointer;
+    }
+    .only-button{
+      &.vendor{
+        margin-left: auto;
+        margin-right: 10px;
+      }
+    }
+    &:hover{
+      .only-button{
+        opacity: 1;
+        visibility: visible;
+      }
+    }
     >div {
-      width: 100%;
-      cursor: pointer !important;
+      width: 95%;
       margin-left: 29px;
       position: relative;
       overflow: visible;
       z-index: 50;
       color: black;
-
-      >span {
-        margin-right: 5px;
-      }
+      display: flex;
+      align-items: center;
 
       &::before {
         content: '';
@@ -372,6 +512,19 @@
     visibility: visible;
   }
 }
+
+@media(max-width: 1200px) {
+  .restaurant-dropdown_wrapper {
+    width: 40%;
+  }
+}
+
+@media(max-width: 1000px) {
+  .restaurant-dropdown_wrapper {
+    width: 55%;
+  }
+}
+
 @media(max-width: 778px) {
   .restaurant-dropdown_wrapper {
     width: 100%;

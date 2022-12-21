@@ -1,35 +1,37 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
 import useApi from './useApi';
 import useVendors from './useVendors';
 import { useUserAuth } from '../contexts/AuthContext';
 
+let fnDelays = null;
 function usePlanningAds({ dateRange }) {
   const { vendors } = useVendors();
   const { vendorsObj } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
   const { user } = useUserAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { data, isLoading, isError } = useQuery(['getAds', { dateRange, vendorsObj }], () =>
-    getAds(
-      {
+  useEffect(() => {
+    if (Object.keys(vendorsObj).length < 1) return;
+
+    clearTimeout(fnDelays);
+
+    fnDelays = setTimeout(() => {
+      setIsLoading(true);
+      getAds({
         master_email: user.email,
         access_token: '',
         vendors: vendorsObj,
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
-      },
-      { enabled: Object.keys(vendorsObj).length > 0 },
-    ),
-  );
-
-  useEffect(() => {
-    if (isLoading || isError) return;
-
-    setAds(data.data.ads);
-  }, [isLoading, data, dateRange, JSON.stringify(vendorsObj)]);
+      }).then((res) => {
+        setIsLoading(false);
+        setAds(res.data.ads);
+      });
+    }, 750);
+  }, [dateRange, JSON.stringify(vendorsObj)]);
 
   const values = useMemo(() => ({ ads, dateRange, isLoading }), [isLoading, ads, dateRange]);
 

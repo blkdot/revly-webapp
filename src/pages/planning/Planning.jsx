@@ -55,7 +55,7 @@ const Planning = () => {
     endDate: getOfferDate(),
     ...JSON.parse(dateSaved || '{}'),
   });
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
@@ -389,7 +389,7 @@ const Planning = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr}
             vendorsPlatform={Object.keys(vendorsObj)}
           />

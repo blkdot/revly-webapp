@@ -1,37 +1,40 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useQuery } from 'react-query';
+
 import dayjs from 'dayjs';
 import useApi from './useApi';
 import useDate from './useDate';
 import { useUserAuth } from '../contexts/AuthContext';
 
+let fnDelays = null;
 function usePlanningOffers({ dateRange }) {
   const { vendors } = useDate();
   const { vendorsObj } = vendors;
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useUserAuth();
 
-  const { data, isLoading, isError } = useQuery(['getOffers', { dateRange, vendorsObj }], () =>
-    getOffers(
-      {
+  useEffect(() => {
+    if (Object.keys(vendorsObj).length < 1) return;
+
+    clearTimeout(fnDelays);
+
+    fnDelays = setTimeout(() => {
+      setIsLoading(true);
+      getOffers({
         master_email: user.email,
         access_token: '',
         vendors: vendorsObj,
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
-      },
-      { enabled: Object.keys(vendorsObj).length > 0 },
-    ),
-  );
+      }).then((res) => {
+        setIsLoading(false);
+        setOffers(res.data.offers);
+      });
+    }, 750);
+  }, [dateRange, JSON.stringify(vendorsObj)]);
 
-  useEffect(() => {
-    if (isLoading || isError || Object.keys(vendorsObj).length < 1) return;
-
-    setOffers(data.data.offers);
-  }, [isLoading, data, dateRange, JSON.stringify(vendorsObj)]);
-
-  const values = useMemo(() => ({ offers, dateRange, isLoading }), [isLoading, offers, dateRange]);
+  const values = useMemo(() => ({ offers, dateRange, isLoading }), [offers, dateRange, isLoading]);
 
   return values;
 }
