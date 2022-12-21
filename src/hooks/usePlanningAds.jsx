@@ -30,7 +30,7 @@ function usePlanningAds({ dateRange }) {
         setIsLoading(false);
         setAds(res.data.ads);
       });
-    }, 500);
+    }, 750);
   }, [dateRange, JSON.stringify(vendorsObj)]);
 
   const values = useMemo(() => ({ ads, dateRange, isLoading }), [isLoading, ads, dateRange]);

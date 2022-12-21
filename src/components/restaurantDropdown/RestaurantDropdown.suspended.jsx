@@ -1,13 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import './RestaurantDropdown.scss';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import useVendors from '../../hooks/useVendors';
 import useDate from '../../hooks/useDate';
+import SelectKit from '../../kits/select/SelectKit';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import ButtonKit from '../../kits/button/ButtonKit';
+
+const ITEM_HEIGHT = 200;
+const ITEM_PADDING_TOP = 10;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 500,
+    },
+  },
+};
+const MenuPropsBranch = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 450,
+    },
+  },
+};
 
 const RestaurantDropdown = ({
   setState,
@@ -33,7 +54,6 @@ const RestaurantDropdown = ({
     }
   }, [vendorsReq]);
   const { vendorsObj, display } = vendorsContext;
-  const [active, setActive] = useState(false);
   const handleChange = (value, checked) => {
     const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
     if (branch || cost) {
@@ -257,37 +277,6 @@ const RestaurantDropdown = ({
       );
     }
   };
-  const handleClick = () => {
-    const body = document.querySelector('body');
-    const marketingSetup = document.querySelector('#marketing-setup');
-    if (branch) {
-      if (active) {
-        marketingSetup.style.overflowY = 'visible';
-        setActive(false);
-        return;
-      }
-      marketingSetup.style.overflowY = 'hidden';
-      setActive(true);
-      return;
-    }
-    if (cost) {
-      if (active) {
-        body.style.overflowY = 'visible';
-        setActive(false);
-        return;
-      }
-      body.style.overflowY = 'hidden';
-      setActive(true);
-      return;
-    }
-    if (active) {
-      body.style.overflowY = 'visible';
-      setActive(false);
-      return;
-    }
-    body.style.overflowY = 'hidden';
-    setActive(true);
-  };
   const getChain = () => {
     const arr = [];
     Object.keys(chainObj).forEach((chainName) => {
@@ -295,87 +284,112 @@ const RestaurantDropdown = ({
         arr.push(chainName);
       }
     });
-    return arr.join(', ');
+    return arr;
+  };
+  const selectAll = () => {
+    const vendorsObjTemp = { talabat: [], deliveroo: [] };
+    vendorsContext.vendorsArr.forEach((obj) => {
+      vendorsObjTemp[obj.platform] = [...vendorsObjTemp[obj.platform], obj];
+    });
+    Object.keys(vendorsObjTemp).forEach((p) => {
+      if (vendorsObjTemp[p].length < 0) {
+        delete vendorsObjTemp[p];
+      }
+    });
+    setVendors({ ...vendorsContext, chainObj: display, vendorsObj: vendorsObjTemp });
   };
   if (branch) {
     return (
       <div className="restaurant-dropdown_wrapper branch">
-        <div tabIndex={-1} role="presentation" onClick={handleClick} style={{ width: '100%' }}>
-          <div>
-            <img src={BranchesIcon} alt="branches icon" />
-            <TypographyKit className="restaurants-selected" variant="div">
-              <div>{getChain()}</div>
-            </TypographyKit>
-          </div>
-          <ExpandMoreIcon />
-        </div>
-        <div
-          tabIndex={-1}
-          role="presentation"
-          onClick={(e) => e.stopPropagation()}
-          className={`dropdown-paper ${active ? 'active' : ''}`}
-        >
-          {Object.keys(display).map((el) => (
-            <RestaurantCheckboxAccordion
-              key={el}
-              handleChange={handleChange}
-              info={display[el]}
-              chainName={el}
-              chainArr={Object.keys(chainObj)}
-              handleChangeVendor={handleChangeVendor}
-              chainObj={chainObj}
-              branch
-            />
-          ))}
-        </div>
-        <div
-          tabIndex={-1}
-          role="presentation"
-          onClick={handleClick}
-          className={`dropdown-overlay ${active ? 'active' : ''}`}
-        />
+        <FormcontrolKit fullWidth>
+          <SelectKit
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            multiple
+            value={getChain()}
+            MenuProps={MenuPropsBranch}
+            renderValue={() => (
+              <div className="selected-dropdown branch">
+                <img src={BranchesIcon} alt="branches icon" />
+                <p>{getChain().join(', ')}</p>
+              </div>
+            )}
+          >
+            <div className="dropdown-paper branch">
+              {Object.keys(display).map((el, index) => (
+                <RestaurantCheckboxAccordion
+                  key={el}
+                  handleChange={handleChange}
+                  info={display[el]}
+                  chainName={el}
+                  handleChangeVendor={handleChangeVendor}
+                  chainObj={chainObj}
+                  cost={cost}
+                  index={index}
+                  setVendors={setState}
+                  vendors={state}
+                  display={state.display}
+                  branch
+                />
+              ))}
+            </div>
+          </SelectKit>
+        </FormcontrolKit>
       </div>
     );
   }
   return (
-    <div className="restaurant-dropdown_wrapper">
+    <div className={`restaurant-dropdown_wrapper ${cost ? 'cost' : ''}`}>
       <TypographyKit className="top-text-inputs" variant="subtitle">
         Select a Vendor
       </TypographyKit>
-      <div tabIndex={-1} role="presentation" onClick={handleClick} style={{ width: 300 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gridGap: '10px' }}>
-          <img className="select_icon" src={selectIcon} alt="Select Icon" />
-          <TypographyKit className="restaurants-selected" variant="div">
-            <div>{getChain()}</div>
-          </TypographyKit>
-        </div>
-        <ExpandMoreIcon />
-      </div>
-      <div
-        tabIndex={-1}
-        role="presentation"
-        onClick={(e) => e.stopPropagation()}
-        className={`dropdown-paper ${active ? 'active' : ''}`}
-      >
-        {Object.keys(display).map((el) => (
-          <RestaurantCheckboxAccordion
-            key={el}
-            handleChange={handleChange}
-            info={display[el]}
-            chainName={el}
-            chainArr={Object.keys(chainObj)}
-            handleChangeVendor={handleChangeVendor}
-            chainObj={chainObj}
-            cost={cost}
-          />
-        ))}
-      </div>
-      <div
-        tabIndex={-1}
-        role="presentation"
-        onClick={handleClick}
-        className={`dropdown-overlay ${active ? 'active' : ''}`}
-      />
+      <FormcontrolKit fullWidth>
+        <SelectKit
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          multiple
+          value={getChain()}
+          MenuProps={cost ? MenuPropsBranch : MenuProps}
+          renderValue={() => (
+            <div className="selected-dropdown">
+              <img className="select_icon" src={selectIcon} alt="Select Icon" />
+              <p>{getChain().join(', ')}</p>
+            </div>
+          )}
+        >
+          <div className={`dropdown-paper ${cost ? 'cost' : ''}`}>
+            {!cost ? (
+              <div className="selected-chains">
+                <p>Selected: {getChain().length}</p>
+                <ButtonKit
+                  disabled={Object.keys(display).length === getChain().length}
+                  onClick={selectAll}
+                  variant="contained"
+                >
+                  Select All
+                </ButtonKit>
+              </div>
+            ) : (
+              ''
+            )}
+            {Object.keys(display).map((el, index) => (
+              <RestaurantCheckboxAccordion
+                key={el}
+                handleChange={handleChange}
+                info={display[el]}
+                chainName={el}
+                handleChangeVendor={handleChangeVendor}
+                chainObj={chainObj}
+                cost={cost}
+                index={index}
+                setVendors={setVendors}
+                vendors={vendorsContext}
+                display={display}
+              />
+            ))}
+          </div>
+        </SelectKit>
+      </FormcontrolKit>
     </div>
   );
 };

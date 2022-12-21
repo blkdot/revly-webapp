@@ -31,7 +31,7 @@ function usePlanningOffers({ dateRange }) {
         setIsLoading(false);
         setOffers(res.data.offers);
       });
-    }, 500);
+    }, 750);
   }, [dateRange, JSON.stringify(vendorsObj)]);
 
   const values = useMemo(() => ({ offers, dateRange, isLoading }), [offers, dateRange, isLoading]);

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import selectIcon from '../../assets/images/ic_select.png';
+import TooltipKit from '../../kits/toolTip/TooltipKit';
+import ButtonKit from '../../kits/button/ButtonKit';
 
 const RestaurantCheckboxAccordion = ({
   info,
@@ -12,10 +14,57 @@ const RestaurantCheckboxAccordion = ({
   chainObj,
   branch,
   cost,
+  index,
+  setVendors,
+  vendors,
+  display,
 }) => {
   const [active, setActive] = useState(false);
   const getChecked = () =>
     Object.values(chainObj[chainName] || {}).length === Object.values(info).length;
+  const compareSize = () => {
+    const textElementChain = document.querySelectorAll('.chain-name')[index];
+    const textElement = document.querySelectorAll('.vendor-name');
+    const compare = textElementChain?.scrollWidth > textElementChain?.clientWidth;
+    const compareArr = [];
+    textElement.forEach((el) => {
+      if (el?.scrollWidth > el.clientWidth) {
+        compareArr.push(el.textContent);
+      }
+    });
+    setHoverChain(compare);
+    setHoverVendor(compareArr);
+  };
+  const root = document.querySelector('#root');
+  useEffect(() => {
+    compareSize();
+    window.addEventListener('resize', compareSize);
+  }, [root.ariaHidden]);
+
+  useEffect(
+    () => () => {
+      window.removeEventListener('resize', compareSize);
+    },
+    [root.ariaHidden],
+  );
+
+  const [hoverStatusChain, setHoverChain] = useState(false);
+  const [hoverStatusVendor, setHoverVendor] = useState([]);
+  const getHoverStatusVendor = (vName) => hoverStatusVendor.find((v) => v === vName);
+  const handleClick = (e) => {
+    e.stopPropagation();
+    let vendorsObjTemp = {};
+    Object.keys(display[chainName]).forEach((vName) => {
+      Object.keys(display[chainName][vName]).forEach((p) => {
+        vendorsObjTemp = { ...vendorsObjTemp, [p]: [display[chainName][vName][p]] };
+      });
+    });
+    setVendors({
+      ...vendors,
+      chainObj: { [chainName]: display[chainName] },
+      vendorsObj: vendorsObjTemp,
+    });
+  };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       <div
@@ -43,9 +92,25 @@ const RestaurantCheckboxAccordion = ({
           ) : (
             <span style={{ height: 40 }} />
           )}
-          {chainName}
+          <TooltipKit
+            id="category-tooltip"
+            interactive={1}
+            disableHoverListener={!hoverStatusChain}
+            title={chainName}
+          >
+            <p className="chain-name">{chainName}</p>
+          </TooltipKit>
         </div>
         <ExpandMoreIcon />
+        {!(branch || cost) ? (
+          <div className="only-button">
+            <ButtonKit onClick={handleClick} variant="contained">
+              Only
+            </ButtonKit>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
       {Object.keys(info).map((vendorName) => (
         <InputLabelKit key={vendorName} className={`accordion-dropdown ${active ? 'active' : ''}`}>
@@ -57,7 +122,14 @@ const RestaurantCheckboxAccordion = ({
               value={vendorName}
               onClick={(e) => e.stopPropagation()}
             />
-            {vendorName}
+            <TooltipKit
+              id="category-tooltip"
+              interactive={1}
+              disableHoverListener={!getHoverStatusVendor(vendorName)}
+              title={vendorName}
+            >
+              <p className="vendor-name">{vendorName}</p>
+            </TooltipKit>
           </div>
         </InputLabelKit>
       ))}
