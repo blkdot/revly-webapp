@@ -30,7 +30,7 @@ const MenuProps = {
   },
 };
 
-const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) => {
+const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost }) => {
   const { setVendors, vendors: vendorsContext } = useDate();
   const { vendors: vendorsReq } = useVendors();
   React.useEffect(() => {
@@ -45,17 +45,17 @@ const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) 
   }, [JSON.stringify(vendorsReq)]);
 
   const handleChange = (value) => {
-    const restaurantsTemp = JSON.parse(JSON.stringify(restaurants));
-    if (restaurants.some((vName) => vName === value) && restaurants.length > 1) {
-      restaurantsTemp.splice(
-        restaurants.findIndex((vName) => vName === value),
+    const vendorsSelectedTemp = JSON.parse(JSON.stringify(vendorsSelected));
+    if (vendorsSelected.some((vName) => vName === value) && vendorsSelected.length > 1) {
+      vendorsSelectedTemp.splice(
+        vendorsSelected.findIndex((vName) => vName === value),
         1,
       );
-    } else if (!restaurants.some((vName) => vName === value)) {
-      restaurantsTemp.push(value);
+    } else if (!vendorsSelected.some((vName) => vName === value)) {
+      vendorsSelectedTemp.push(value);
     }
     const vendorsObjTemp = { talabat: [], deliveroo: [] };
-    restaurantsTemp.forEach((vName) => {
+    vendorsSelectedTemp.forEach((vName) => {
       platformList.forEach((p) => {
         vendors.forEach((obj) => {
           if (obj.data.vendor_name === vName && obj.platform === p.name) {
@@ -69,12 +69,12 @@ const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) 
         delete vendorsObjTemp[p];
       }
     });
-    if (restaurants.length > 1 || restaurantsTemp.length > 1) {
+    if (vendorsSelected.length > 1 || vendorsSelectedTemp.length > 1) {
       if (cost) {
         const newValue = {
           ...state,
           vendorsObj: vendorsObjTemp,
-          restaurants: restaurantsTemp,
+          vendorsSelected: vendorsSelectedTemp,
         };
 
         setState(newValue);
@@ -82,7 +82,7 @@ const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) 
         const newValue = {
           ...vendorsContext,
           vendorsObj: vendorsObjTemp,
-          restaurants: restaurantsTemp,
+          vendorsSelected: vendorsSelectedTemp,
         };
 
         setVendors(newValue);
@@ -92,31 +92,35 @@ const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) 
   const handleClick = (e, index) => {
     e.stopPropagation();
     const vendorsObjTemp = { [vendors[index].platform]: [vendors[index]] };
-    const restaurantsTemp = [vendors[index].data.vendor_name];
+    const vendorsSelectedTemp = [vendors[index].data.vendor_name];
     if (cost) {
       setState({
         ...state,
         vendorsObj: vendorsObjTemp,
-        restaurants: restaurantsTemp,
+        vendorsSelected: vendorsSelectedTemp,
       });
     } else {
       setVendors({
         ...vendorsContext,
         vendorsObj: vendorsObjTemp,
-        restaurants: restaurantsTemp,
+        vendorsSelected: vendorsSelectedTemp,
       });
     }
   };
   const selectAll = () => {
-    const restaurantsTemp = vendors.map((obj) => obj.data.vendor_name);
+    const vendorsSelectedTemp = vendors.map((obj) => obj.data.vendor_name);
     const vendorsObjTemp = { talabat: [], deliveroo: [] };
     vendors.forEach((obj) => {
       vendorsObjTemp[obj.platform] = [...vendorsObjTemp[obj.platform], obj];
     });
     if (cost) {
-      setState({ ...state, restaurants: restaurantsTemp, vendorsObj: vendorsObjTemp });
+      setState({ ...state, vendorsSelected: vendorsSelectedTemp, vendorsObj: vendorsObjTemp });
     } else {
-      setVendors({ ...vendorsContext, restaurants: restaurantsTemp, vendorsObj: vendorsObjTemp });
+      setVendors({
+        ...vendorsContext,
+        vendorsSelected: vendorsSelectedTemp,
+        vendorsObj: vendorsObjTemp,
+      });
     }
   };
   const compareSize = () => {
@@ -147,7 +151,7 @@ const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) 
   const renderLayout = (info, index) => (
     <div className="vendors-only" key={info.vendor_id}>
       <MenuItemKit onClick={() => handleChange(info.data.vendor_name)}>
-        <CheckboxKit checked={restaurants.indexOf(info.data.vendor_name) > -1} />
+        <CheckboxKit checked={vendorsSelected.indexOf(info.data.vendor_name) > -1} />
         <img
           className="restaurant-img"
           src={info.platform === 'talabat' ? talabat : deliveroo}
@@ -186,7 +190,7 @@ const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) 
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={restaurants}
+          value={vendorsSelected}
           input={<OutlindeInputKit />}
           renderValue={(selected) => (
             <div style={{ display: 'flex', alignItems: 'center', width: '90%', gridGap: '10px' }}>
@@ -208,9 +212,11 @@ const RestaurantDropdownOld = ({ vendors, restaurants, state, setState, cost }) 
         >
           <div className="dropdown-paper">
             <div className="selected-chains">
-              <p>Selected: {(cost ? state.restaurants : restaurants).length}</p>
+              <p>Selected: {(cost ? state.vendorsSelected : vendorsSelected).length}</p>
               <ButtonKit
-                disabled={vendors.length === (cost ? state.restaurants : restaurants).length}
+                disabled={
+                  vendors.length === (cost ? state.vendorsSelected : vendorsSelected).length
+                }
                 onClick={selectAll}
                 variant="contained"
               >

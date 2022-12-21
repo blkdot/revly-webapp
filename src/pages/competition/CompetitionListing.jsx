@@ -23,18 +23,21 @@ import useTableContentFormatter from '../../components/tableRevly/tableContentFo
 import TableRevly from '../../components/tableRevly/TableRevly';
 import ButtonKit from '../../kits/button/ButtonKit';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
+import AreaIcon from '../../assets/images/ic_area.png';
 
-let fnDelays = null;
-
-const CompetitionRanking = () => {
+const CompetitionListing = () => {
+  let fnDelays = null;
   const { setVendors } = useGlobal();
   const { vendors } = useDate();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
+  const [area, setArea] = useState('Everywhere');
+  const [timeSlot, setTimeSlot] = useState('Throughout day');
   const [loading, setLoading] = useState(true);
-  const [competitionRankingData, setCompetitionRankingData] = useState([]);
+  const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
   const { date } = useDate();
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
@@ -57,7 +60,7 @@ const CompetitionRanking = () => {
 
   const getNumArr = () => {
     const numArr = [];
-    for (let i = 0; i < 5 - competitionRankingData.length; i++) {
+    for (let i = 0; i < 5 - competitionListingData.length; i++) {
       numArr.push(i);
     }
     return numArr;
@@ -95,19 +98,19 @@ const CompetitionRanking = () => {
       id: 'r_offers',
       numeric: false,
       disablePadding: true,
-      label: 'Ranking in offers',
+      label: 'Listing in offers',
     },
     {
       id: 'r_cuis',
       numeric: false,
       disablePadding: true,
-      label: 'Ranking in cuisine',
+      label: 'Listing in cuisine',
     },
     {
       id: 'r_all',
       numeric: false,
       disablePadding: true,
-      label: 'Ranking in offers and cuisine',
+      label: 'Listing in offers and cuisine',
     },
   ];
 
@@ -162,10 +165,10 @@ const CompetitionRanking = () => {
           id: v.id,
         }));
 
-        setCompetitionRankingData(filt);
+        setCompetitionListingData(filt);
         setLoading(false);
       } catch (err) {
-        setCompetitionRankingData([]);
+        setCompetitionListingData([]);
         setLoading(false);
         triggerAlertWithMessageError('Error while retrieving data');
       }
@@ -201,7 +204,11 @@ const CompetitionRanking = () => {
     } else {
       const arr = vendorsArr.filter((v) => v.platform === platform);
       const obj = { [platform]: arr.map((k) => k) };
-      setVendors({ ...vendors, restaurants: arr.map((k) => k.data.vendor_name), vendorsObj: obj });
+      setVendors({
+        ...vendors,
+        vendorsSelected: arr.map((k) => k.data.vendor_name),
+        vendorsObj: obj,
+      });
     }
   }, [platform, display]);
   return (
@@ -211,7 +218,7 @@ const CompetitionRanking = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr.filter((v) => v.platform === platform)}
             vendorsPlatform={Object.keys(vendorsObj)}
           />
@@ -219,44 +226,98 @@ const CompetitionRanking = () => {
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
-        Competition - Ranking
+        Competition - Listing
       </TypographyKit>
       <TypographyKit variant="subtitle">
         Be informed on how you rank compared to your competitors
       </TypographyKit>
       <PaperKit className="competition-paper">
         <div className="competition-top-input">
-          <CompetitionDropdown
-            rows={platformList}
-            renderOptions={(v) => (
-              <MenuItemKit key={v.name} value={v.name}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    textTransform: 'capitalize',
-                  }}
-                >
-                  <img
-                    src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                    width={24}
-                    height={24}
-                    style={{ objectFit: 'contain' }}
-                    alt="icon"
-                  />
-                  <ListItemTextKit primary={v.name} />
-                </div>
-              </MenuItemKit>
-            )}
-            icon={PlatformIcon}
-            title="Select a Platform"
-            id="platform_dropdown_menu"
-            type="platform"
-            className="top-competition"
-            setRow={setPlatform}
-            select={platform}
-          />
+          <div className="dropdowns">
+            <CompetitionDropdown
+              rows={platformList}
+              renderOptions={(v) => (
+                <MenuItemKit key={v.name} value={v.name}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    <img
+                      src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                      width={24}
+                      height={24}
+                      style={{ objectFit: 'contain' }}
+                      alt="icon"
+                    />
+                    <ListItemTextKit primary={v.name} />
+                  </div>
+                </MenuItemKit>
+              )}
+              icon={PlatformIcon}
+              title="Select a Platform"
+              type="platform"
+              className="top-competition"
+              setRow={setPlatform}
+              select={platform}
+            />
+            <CompetitionDropdown
+              rows={[
+                'Throughout day',
+                'Breakfast (04:00 - 11:00)',
+                'Lunch (11:00 - 14:00)',
+                'Interpeak (14:00 - 17:00)',
+                'Dinner (17:00 - 00:00)',
+                'Late night (00:00 - 04:00)',
+              ]}
+              renderOptions={(v) => (
+                <MenuItemKit key={v} value={v}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    <ListItemTextKit primary={v} />
+                  </div>
+                </MenuItemKit>
+              )}
+              icon={TimeSlotIcon}
+              title="Select a TimeSlot"
+              type="timeslot"
+              className="top-competition not-platform"
+              setRow={setTimeSlot}
+              select={timeSlot}
+            />
+            <CompetitionDropdown
+              rows={['Everywhere', 'JLT', 'JVC', 'Marina', 'Business Marina']}
+              renderOptions={(v) => (
+                <MenuItemKit key={v} value={v}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    <ListItemTextKit primary={v} />
+                  </div>
+                </MenuItemKit>
+              )}
+              icon={AreaIcon}
+              title="Select a Area"
+              type="area"
+              className="top-competition not-platform"
+              setRow={setArea}
+              select={area}
+            />
+          </div>
           <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>
         <TypographyKit variant="subtitle">
@@ -266,7 +327,7 @@ const CompetitionRanking = () => {
         <TableRevly
           isLoading={loading}
           headers={headersAlert}
-          rows={competitionRankingData.map(renderRowsByHeader)}
+          rows={competitionListingData.map(renderRowsByHeader)}
         />
         {loading
           ? null
@@ -286,4 +347,4 @@ const CompetitionRanking = () => {
   );
 };
 
-export default CompetitionRanking;
+export default CompetitionListing;

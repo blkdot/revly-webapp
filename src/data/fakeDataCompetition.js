@@ -1,4 +1,4 @@
-export const competitionRankingData = [
+export const competitionListingData = [
   {
     name: 'Big Nouna',
     platform: 'deliveroo',

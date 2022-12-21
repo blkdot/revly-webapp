@@ -41,7 +41,7 @@ import OfferDetailComponent from '../offers/details';
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { date: dateContext, vendors } = useDate();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (dateContext.typeDate === 'month') {
       return endOfMonth(new Date(dateContext.beforePeriod.endDate));
@@ -505,7 +505,7 @@ const MarketingOffer = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr}
             vendorsPlatform={Object.keys(vendorsObj)}
           />

@@ -16,7 +16,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [severity, setSeverity] = useState('error');
 
   const [vendors, setVendors] = useState({
-    restaurants: [],
+    vendorsSelected: [],
     vendorsObj: {},
     vendorsArr: [],
     display: {},

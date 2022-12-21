@@ -39,13 +39,13 @@ const RestaurantCheckboxAccordion = ({
   useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
-  }, [root.ariaHidden]);
+  }, [root.ariaHidden, active]);
 
   useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [root.ariaHidden],
+    [root.ariaHidden, active],
   );
 
   const [hoverStatusChain, setHoverChain] = useState(false);
@@ -62,6 +62,19 @@ const RestaurantCheckboxAccordion = ({
     setVendors({
       ...vendors,
       chainObj: { [chainName]: display[chainName] },
+      vendorsObj: vendorsObjTemp,
+    });
+  };
+  const handleClickVendor = (e, vendorName) => {
+    e.stopPropagation();
+    const chainObjTemp = { [chainName]: { [vendorName]: { ...display[chainName][vendorName] } } };
+    const vendorsObjTemp = {};
+    Object.keys(display[chainName][vendorName]).forEach((p) => {
+      vendorsObjTemp[p] = [display[chainName][vendorName][p]];
+    });
+    setVendors({
+      ...vendors,
+      chainObj: chainObjTemp,
       vendorsObj: vendorsObjTemp,
     });
   };
@@ -82,26 +95,28 @@ const RestaurantCheckboxAccordion = ({
             src={selectIcon}
             alt="select icon"
           />
-          {!cost ? (
-            <CheckboxKit
-              checked={getChecked()}
-              onClick={(e) => e.stopPropagation()}
-              value={chainName}
-              onChange={(e) => handleChange(e.target.value, e.target.checked)}
-            />
-          ) : (
-            <span style={{ height: 40 }} />
-          )}
-          <TooltipKit
-            id="category-tooltip"
-            interactive={1}
-            disableHoverListener={!hoverStatusChain}
-            title={chainName}
-          >
-            <p className="chain-name">{chainName}</p>
-          </TooltipKit>
+          <div style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center' }}>
+            {!cost ? (
+              <CheckboxKit
+                checked={getChecked()}
+                onClick={(e) => e.stopPropagation()}
+                value={chainName}
+                onChange={(e) => handleChange(e.target.value, e.target.checked)}
+              />
+            ) : (
+              <span style={{ height: 40 }} />
+            )}
+            <TooltipKit
+              id="category-tooltip"
+              interactive={1}
+              disableHoverListener={!hoverStatusChain}
+              title={chainName}
+            >
+              <p className="chain-name">{chainName}</p>
+            </TooltipKit>
+          </div>
         </div>
-        <ExpandMoreIcon />
+        <ExpandMoreIcon style={{ cursor: 'pointer' }} />
         {!(branch || cost) ? (
           <div className="only-button">
             <ButtonKit onClick={handleClick} variant="contained">
@@ -130,6 +145,15 @@ const RestaurantCheckboxAccordion = ({
             >
               <p className="vendor-name">{vendorName}</p>
             </TooltipKit>
+            {!(branch || cost) ? (
+              <div className="only-button vendor">
+                <ButtonKit onClick={(e) => handleClickVendor(e, vendorName)} variant="contained">
+                  Only
+                </ButtonKit>
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         </InputLabelKit>
       ))}
