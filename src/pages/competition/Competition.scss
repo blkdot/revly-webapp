@@ -26,13 +26,27 @@
 }
 
 .top-competition {
-  height: 60px;
-  border-radius: 8px;
-
+  height: 50px;
+  border-radius: 30px;
+  width: 100%;
+  &.competitor{
+    .competition-dropdown{
+      top: -5px;
+    }
+  }
+  &.not-platform{
+    .country-wrapper {
+        width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+      }
+  }
   >div {
-    height: 60px;
-    border-radius: 8px;
-    padding: 0;
+    height: 50px;
+    border-radius: 30px;
+    padding: 0 15px;
 
     >div {
       height: 60px;
@@ -93,13 +107,21 @@
   padding: 25px 0px;
   border-bottom: 1px solid rgba(145, 158, 171, 0.24);
   margin-bottom: 25px;
-
+  .dropdowns{
+    width: 65%;
+    display: flex;
+    grid-gap: 10px;
+  }
   .competition-dropdowns {
     display: flex;
     align-items: center;
     grid-gap: 20px;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    width: 60%;
+    .top-competition{
+      width: 45% !important;
+    }
   }
 }
 

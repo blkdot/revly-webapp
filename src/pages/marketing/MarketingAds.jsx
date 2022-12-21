@@ -30,7 +30,7 @@ const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
   const { vendors } = useDate();
-  const { vendorsArr, restaurants, vendorsObj, display, chainObj } = vendors;
+  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));
@@ -277,7 +277,7 @@ const MarketingAds = () => {
           <RestaurantDropdown chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
-            restaurants={restaurants}
+            vendorsSelected={vendorsSelected}
             vendors={vendorsArr}
             vendorsPlatform={Object.keys(vendorsObj)}
           />

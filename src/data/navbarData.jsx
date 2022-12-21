@@ -28,7 +28,7 @@ export const accordionLink = [
     title: ' Competition',
     src: competitionIcon,
     subs: [
-      { title: 'Ranking', path: '/competition/ranking', src: rankingIcon },
+      { title: 'Listing', path: '/competition/listing', src: rankingIcon },
       { title: 'Alerts', path: '/competition/alerts', src: alertsIcon },
     ],
   },

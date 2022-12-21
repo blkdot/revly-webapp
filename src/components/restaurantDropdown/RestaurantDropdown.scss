@@ -141,9 +141,9 @@
   display: flex;
   align-items: center;
   grid-gap: 10px;
-
   &.Mui-focused.Mui-focused {
-    color: $color-border
+    color: $color-border;
+    border-color: $color-border;
   }
 
   &.Mui-focused.Mui-focused svg {
@@ -208,7 +208,7 @@
   }
 }
 
-.restaurants-selected {
+.vendorsSelected-selected {
   width: 70%;
   overflow: hidden;
 
@@ -318,7 +318,7 @@
     opacity: 0;
     visibility: hidden;
     transition: .3s;
-
+  
     button {
       font-size: 10px;
     }
@@ -405,26 +405,35 @@
     display: none;
 
     .vendor-name {
-      max-width: 60%;
+      max-width: 65%;
       overflow: hidden;
       text-overflow: ellipsis;
       display: inline-block;
       vertical-align: middle;
-      width: 100%;
+      width: 65%;
+      cursor: pointer;
     }
-
+    .only-button{
+      &.vendor{
+        margin-left: auto;
+        margin-right: 10px;
+      }
+    }
+    &:hover{
+      .only-button{
+        opacity: 1;
+        visibility: visible;
+      }
+    }
     >div {
-      width: 100%;
-      cursor: pointer !important;
+      width: 95%;
       margin-left: 29px;
       position: relative;
       overflow: visible;
       z-index: 50;
       color: black;
-
-      >span {
-        margin-right: 5px;
-      }
+      display: flex;
+      align-items: center;
 
       &::before {
         content: '';

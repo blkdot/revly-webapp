@@ -13,7 +13,7 @@ const Finance = ({
   chainObj,
   setTable,
   table,
-  restaurants,
+  vendorsSelected,
   display,
   vendors,
   loading,
@@ -59,13 +59,13 @@ const Finance = ({
       }
       return getChain().join(', ');
     }
-    if (restaurants.length === vendors.length) {
+    if (vendorsSelected.length === vendors.length) {
       return <p>All Points of sales</p>;
     }
-    if (restaurants.length > 2) {
-      return `${restaurants.length} selected vendors`;
+    if (vendorsSelected.length > 2) {
+      return `${vendorsSelected.length} selected vendors`;
     }
-    return <p> {restaurants.join(', ')}</p>;
+    return <p> {vendorsSelected.join(', ')}</p>;
   };
   return (
     <div className="block">

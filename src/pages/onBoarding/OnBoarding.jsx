@@ -388,7 +388,7 @@ const OnBoarding = () => {
   return (
     <div className="onboarding">
       <div className="top-inputs">
-        {/* <RestaurantDropdownOld vendors={[]} restaurants={[]} vendorsPlatform={[]} />
+        {/* <RestaurantDropdownOld vendors={[]} vendorsSelected={[]} vendorsPlatform={[]} />
         <Dates /> */}
       </div>
       <FinanceEmpty />
