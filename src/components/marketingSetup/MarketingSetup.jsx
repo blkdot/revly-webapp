@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
 import _ from 'lodash';
+import { useAtom } from 'jotai';
 
 import Dates from '../dates/Dates';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -22,7 +23,7 @@ import BoxKit from '../../kits/box/BoxKit';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
 import GetRecap from './GetRecap';
-import useDate from '../../hooks/useDate';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -65,7 +66,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   });
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert('error');

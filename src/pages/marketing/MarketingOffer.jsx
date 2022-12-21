@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { pascalCase } from 'change-case';
 import _ from 'lodash';
+import { useAtom } from 'jotai';
 
 import './Marketing.scss';
 import { endOfMonth, endOfWeek } from 'date-fns';
@@ -37,10 +38,12 @@ import useDate from '../../hooks/useDate';
 import useQueryState from '../../hooks/useQueryState';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import OfferDetailComponent from '../offers/details';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
-  const { date: dateContext, vendors } = useDate();
+  const { date: dateContext } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (dateContext.typeDate === 'month') {

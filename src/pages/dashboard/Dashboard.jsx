@@ -1,4 +1,5 @@
 import './Dashboard.scss';
+import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import Finance from '../../components/finance/Finance';
@@ -17,11 +18,11 @@ import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useVendors from '../../hooks/useVendors';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { chainObj, vendorsObj, display, vendorsSelected, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
 

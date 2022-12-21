@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useAtom } from 'jotai';
 
 import './RestaurantDropdown.scss';
 
@@ -12,10 +13,10 @@ import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useVendors from '../../hooks/useVendors';
-import useDate from '../../hooks/useDate';
 import ButtonKit from '../../kits/button/ButtonKit';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
 import { platformList } from '../../data/platformList';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const ITEM_HEIGHT = 110;
 const ITEM_PADDING_TOP = 8;
@@ -31,7 +32,7 @@ const MenuProps = {
 };
 
 const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost }) => {
-  const { setVendors, vendors: vendorsContext } = useDate();
+  const [vendorsContext, setVendors] = useAtom(vendorsAtom);
   const { vendors: vendorsReq } = useVendors();
   React.useEffect(() => {
     window.onbeforeunload = (e) => {

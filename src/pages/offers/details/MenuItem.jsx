@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
 import { Checkbox } from '@mui/material';
 import useApi from '../../../hooks/useApi';
 import defaultImage from '../../../assets/images/default.png';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
-import useDate from '../../../hooks/useDate';
+import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const [data, setData] = useState(null);
   const { getOfferDetails } = useApi();
 
   const { user } = useUserAuth();
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
   const vendor = vendorsObj[platform]?.find((v) => +v.vendor_id === +vendorId);
 

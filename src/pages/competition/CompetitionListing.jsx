@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import Dates from '../../components/dates/Dates';
@@ -17,7 +18,6 @@ import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
-import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
@@ -25,11 +25,11 @@ import ButtonKit from '../../kits/button/ButtonKit';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
 import AreaIcon from '../../assets/images/ic_area.png';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const CompetitionListing = () => {
   let fnDelays = null;
-  const { setVendors } = useGlobal();
-  const { vendors } = useDate();
+  const [vendors, setVendors] = useAtom(vendorsAtom);
   const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
