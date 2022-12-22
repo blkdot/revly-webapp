@@ -309,9 +309,8 @@ const GetProgress = ({ progressData }) => {
         onClick={() => {
           setSmRule(true);
         }}
-        className="another-slot remove grey"
+        className="another-slot remove"
         variant="contained"
-        disabled
       >
         <img src={SmRuleIcon} alt="Sm Rule" />
         Combine with a smart rule
