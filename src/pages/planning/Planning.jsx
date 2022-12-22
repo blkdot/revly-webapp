@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { pascalCase } from 'change-case';
 import shortid from 'shortid';
+import { useAtom } from 'jotai';
 
 import './Planning.scss';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import useDate from '../../hooks/useDate';
-import useVendors from '../../hooks/useVendors';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import TypographyKit from '../../kits/typography/TypographyKit';
@@ -27,6 +27,7 @@ import Vector from '../../assets/icons/Vector';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import OfferDetailComponent from '../offers/details';
 import useQueryState from '../../hooks/useQueryState';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -40,7 +41,7 @@ const Planning = () => {
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const [active, setActive] = useState(0);
   const { date } = useDate();
-  const { vendors } = useVendors();
+  const [vendors] = useAtom(vendorsAtom);
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));

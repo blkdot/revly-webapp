@@ -19,7 +19,7 @@ function usePlanningOffers({ dateRange }) {
     if (Object.keys(vendorsObj).length < 1) return;
 
     clearTimeout(fnDelays);
-
+    setIsLoading(true);
     fnDelays = setTimeout(() => {
       getOffers({
         master_email: user.email,
