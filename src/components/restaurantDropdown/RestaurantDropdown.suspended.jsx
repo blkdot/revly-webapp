@@ -105,7 +105,7 @@ const RestaurantDropdown = ({
           Object.keys(display).forEach((cName) => {
             if (cName === value) {
               Object.keys(display[value]).forEach((n) => {
-                Object.keys(display[value][n]).forEach((platform) => {
+                platforms.forEach((platform) => {
                   vendorsObj[platform]?.splice(0, 0, display[value][n][platform]);
                 });
               });

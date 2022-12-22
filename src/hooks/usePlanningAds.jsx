@@ -11,7 +11,7 @@ function usePlanningAds({ dateRange }) {
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
   const { user } = useUserAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (Object.keys(vendorsObj).length < 1) return;
@@ -19,7 +19,6 @@ function usePlanningAds({ dateRange }) {
     clearTimeout(fnDelays);
 
     fnDelays = setTimeout(() => {
-      setIsLoading(true);
       getAds({
         master_email: user.email,
         access_token: '',
@@ -27,8 +26,8 @@ function usePlanningAds({ dateRange }) {
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
       }).then((res) => {
-        setIsLoading(false);
         setAds(res.data.ads);
+        setIsLoading(false);
       });
     }, 750);
   }, [dateRange, JSON.stringify(vendorsObj)]);

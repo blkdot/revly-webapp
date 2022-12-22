@@ -99,18 +99,26 @@
 }
 
 .competition-top-input {
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   grid-gap: 20px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding: 25px 0px;
   border-bottom: 1px solid rgba(145, 158, 171, 0.24);
   margin-bottom: 25px;
   .dropdowns{
-    width: 65%;
     display: flex;
     grid-gap: 10px;
+    flex-wrap: wrap;
+    .top-competition{
+      width: 250px !important;
+    }
+  }
+  .competitor-wrapper{
+    button{
+      width: 200px;
+    }
   }
   .competition-dropdowns {
     display: flex;
@@ -126,6 +134,14 @@
 }
 
 @media(max-width: 1120px) {
+  .competition-top-input{
+    justify-content: flex-start;
+    .dropdowns{
+      .top-competition{
+        width: 350px !important;
+      }
+    }
+  }
   .alerts-top-inputs {
     justify-content: flex-end;
 
@@ -159,7 +175,25 @@
   }
 
 }
-
+@media(max-width: 950px) {
+    .competition-top-input {
+        justify-content: flex-start;
+        flex-direction: column;
+        .dropdowns {
+          flex-direction: column;
+          width: 100%;
+          .top-competition {
+            width: 100% !important;
+          }
+        }
+        .competitor-wrapper{
+          width: 100%;
+          button{
+            width: 100%;
+          }
+        }
+      }
+}
 @media(max-width: 900px) {
   .alerts-top-inputs {
     .competition-dropdowns {
