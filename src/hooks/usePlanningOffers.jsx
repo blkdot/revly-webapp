@@ -11,7 +11,7 @@ function usePlanningOffers({ dateRange }) {
   const { vendorsObj } = vendors;
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useUserAuth();
 
   useEffect(() => {
@@ -20,7 +20,6 @@ function usePlanningOffers({ dateRange }) {
     clearTimeout(fnDelays);
 
     fnDelays = setTimeout(() => {
-      setIsLoading(true);
       getOffers({
         master_email: user.email,
         access_token: '',
@@ -28,8 +27,8 @@ function usePlanningOffers({ dateRange }) {
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
       }).then((res) => {
-        setIsLoading(false);
         setOffers(res.data.offers);
+        setIsLoading(false);
       });
     }, 750);
   }, [dateRange, JSON.stringify(vendorsObj)]);
