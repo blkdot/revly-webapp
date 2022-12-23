@@ -5,13 +5,16 @@ import RestaurantDropdown from '../../restaurantDropdown/RestaurantDropdown.susp
 import CompetitionDropdown from '../../competitionDropdown/CompetitionDropdown';
 import { usePlatform } from '../../../hooks/usePlatform';
 import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
-import useDate from '../../../hooks/useDate';
+import useVendors from '../../../hooks/useVendors';
 
 const DropdownSnackbar = (props) => {
   // eslint-disable-next-line no-unused-vars
   const { onAdd, isUpdate, setIsUpdate, invoice } = props;
-  const { vendors } = useDate();
+  const { vendors } = useVendors();
   const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
+  useEffect(() => {
+    setCostVendors(JSON.parse(JSON.stringify(vendors)));
+  }, [vendors]);
   const [procent, setProcent] = useState('');
   const { userPlatformData } = usePlatform();
   const getPlatformActive = () => {
