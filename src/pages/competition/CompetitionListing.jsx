@@ -165,7 +165,7 @@ const CompetitionListing = () => {
           id: v.id,
         }));
 
-        setCompetitionListingData(filt);
+        setCompetitionListingData([filt[0]]);
         setLoading(false);
       } catch (err) {
         setCompetitionListingData([]);
