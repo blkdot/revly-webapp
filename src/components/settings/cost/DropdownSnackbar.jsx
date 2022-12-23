@@ -12,6 +12,9 @@ const DropdownSnackbar = (props) => {
   const { onAdd, isUpdate, setIsUpdate, invoice } = props;
   const { vendors } = useVendors();
   const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
+  useEffect(() => {
+    setCostVendors(JSON.parse(JSON.stringify(vendors)));
+  }, [vendors]);
   const [procent, setProcent] = useState('');
   const { userPlatformData } = usePlatform();
   const getPlatformActive = () => {
