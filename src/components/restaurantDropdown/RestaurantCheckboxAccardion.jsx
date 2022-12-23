@@ -53,11 +53,16 @@ const RestaurantCheckboxAccordion = ({
   const getHoverStatusVendor = (vName) => hoverStatusVendor.find((v) => v === vName);
   const handleClick = (e) => {
     e.stopPropagation();
-    let vendorsObjTemp = {};
+    const vendorsObjTemp = { talabat: [], deliveroo: [] };
     Object.keys(display[chainName]).forEach((vName) => {
       Object.keys(display[chainName][vName]).forEach((p) => {
-        vendorsObjTemp = { ...vendorsObjTemp, [p]: [display[chainName][vName][p]] };
+        vendorsObjTemp[p].push(display[chainName][vName][p]);
       });
+    });
+    Object.keys(vendorsObjTemp).forEach((p) => {
+      if (vendorsObjTemp[p].length === 0) {
+        delete vendorsObjTemp[p];
+      }
     });
     setVendors({
       ...vendors,
@@ -77,6 +82,15 @@ const RestaurantCheckboxAccordion = ({
       chainObj: chainObjTemp,
       vendorsObj: vendorsObjTemp,
     });
+  };
+  const getVendorDisabled = (vendorName) => {
+    if (Object.keys(chainObj).length === 1) {
+      return (
+        Object.keys(chainObj[chainName] || {})[0] === vendorName &&
+        Object.keys(chainObj[chainName] || {}).length === 1
+      );
+    }
+    return false;
   };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
@@ -119,7 +133,15 @@ const RestaurantCheckboxAccordion = ({
         <ExpandMoreIcon style={{ cursor: 'pointer' }} />
         {!(branch || cost) ? (
           <div className="only-button">
-            <ButtonKit onClick={handleClick} variant="contained">
+            <ButtonKit
+              disabled={
+                Object.keys(chainObj)[0] === chainName &&
+                Object.keys(chainObj).length === 1 &&
+                Object.keys(chainObj[chainName]).length === Object.keys(display[chainName]).length
+              }
+              onClick={handleClick}
+              variant="contained"
+            >
               Only
             </ButtonKit>
           </div>
@@ -147,7 +169,11 @@ const RestaurantCheckboxAccordion = ({
             </TooltipKit>
             {!(branch || cost) ? (
               <div className="only-button vendor">
-                <ButtonKit onClick={(e) => handleClickVendor(e, vendorName)} variant="contained">
+                <ButtonKit
+                  disabled={getVendorDisabled(vendorName)}
+                  onClick={(e) => handleClickVendor(e, vendorName)}
+                  variant="contained"
+                >
                   Only
                 </ButtonKit>
               </div>
