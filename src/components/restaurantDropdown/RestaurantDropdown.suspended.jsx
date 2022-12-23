@@ -201,7 +201,7 @@ const RestaurantDropdown = ({
         delete chainObjClear[cName];
       }
     });
-    if (Object.keys(chainObjClear[chainName]).length > 1) {
+    if (Object.keys(chainObjClear).length > 1) {
       if (!checked) {
         const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
         const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj));
