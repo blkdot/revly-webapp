@@ -1,15 +1,16 @@
 import { useMemo, useState } from 'react';
+import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
 import useApi from './useApi';
 import useDate from './useDate';
-import useVendors from './useVendors';
+import { vendorsAtom } from '../store/vendorsAtom';
 import { useUserAuth } from '../contexts/AuthContext';
 
 let fnDelays = null;
 
 function useMetrics() {
   const { date: dateContext } = useDate();
-  const { vendors } = useVendors();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
   const { beforePeriod, afterPeriod } = dateContext;
   const { getMetrics } = useApi();

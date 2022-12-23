@@ -74,7 +74,7 @@ const Dashboard = () => {
         )}
         <Dates isDashboard />
       </div>
-      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
+      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading ? (
         <Finance
           chainObj={chainObj}
           setTable={setTable}
@@ -89,7 +89,7 @@ const Dashboard = () => {
       ) : (
         <FinanceEmpty />
       )}
-      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
+      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading ? (
         <Marketing
           setTable={setTable}
           table={table}
@@ -100,7 +100,7 @@ const Dashboard = () => {
       ) : (
         <MarketingEmpty />
       )}
-      {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 ? (
+      {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 && !loading ? (
         <PaperKit className="dashboard-paper-wrapper">
           <div className="dashboard-links">
             {['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'].map(
