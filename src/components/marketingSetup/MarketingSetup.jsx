@@ -697,22 +697,29 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     );
   };
   // eslint-disable-next-line
-  const renderTooltipContent = (data) => (
+  const renderTooltipContent = (data, num) => (
     <div className="heatmap-tooltip">
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">total daily {links} till slot</span>
+        <span className="__item-text">
+          Daily {links} up to {rangeHoursOpenedDay[num].label}
+        </span>
         <span className="__item-value">
           {data.x_accrued_intra_day}&nbsp;{links === 'revenue' ? 'AED' : ''}
         </span>
       </div>
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">Weekly total {links} of slot</span>
+        <span className="__item-text">
+          <span style={{ textTransform: 'capitalize', fontSize: 12 }}>{links}</span> generated at{' '}
+          {rangeHoursOpenedDay[num].label}
+        </span>
         <span className="__item-value">
-          {data.x_slot_across_week}&nbsp;{links === 'revenue' ? 'AED' : ''}
+          {data.x_timeslot}&nbsp;{links === 'revenue' ? 'AED' : ''}
         </span>
       </div>
       <div className="heatmap-tooltip__item">
-        <span className="__item-text">% of daily {links} </span>
+        <span className="__item-text">
+          Daily {links} in % at {rangeHoursOpenedDay[num].label}{' '}
+        </span>
         <span className="__item-value">
           {(data.x_percentage_intra_day * 100).toFixed(2)}&nbsp;%
         </span>
@@ -974,9 +981,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                     <img src={OpacityLogo} alt="Logo" />
                   </TypographyKit>
                   {_.range(minHour, maxHour + 1).map((num) => (
-                    <TypographyKit style={{ lineHeight: '0.1' }} key={num}>
-                      {rangeHoursOpenedDay[num].label ?? num}
-                    </TypographyKit>
+                    <TypographyKit key={num}>{rangeHoursOpenedDay[num].label ?? num}</TypographyKit>
                   ))}
                 </TypographyKit>
                 <TypographyKit sx={{ width: '100%' }} variant="div">
@@ -1028,8 +1033,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                             return (
                               <Tooltip
                                 className="absolute"
+                                placement="top-start"
                                 style={{ '--i': num - 5 }}
-                                title={renderTooltipContent(heatmapData[links][obj][num].data)}
+                                title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
                                 key={num}
                                 arrow
                               >
