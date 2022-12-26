@@ -51,6 +51,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [minOrder, setMinOrder] = useState('');
   const [duration, setDuration] = useState('Starting Now');
   const [disabled, setDisabled] = useState(false);
+  const [heatmapLoading, setHeatmapLoading] = useState(false);
   const [beforePeriodBtn, setBeforePeriodBtn] = useState({
     startDate: startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
     endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
@@ -346,6 +347,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
   };
   const getHeatmapData = () => {
+    setHeatmapLoading(true);
     delete vendorsObj.display;
 
     const body = {
@@ -359,6 +361,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
       ([resRevenue, resOrders]) => {
+        setHeatmapLoading(false);
         if (resRevenue instanceof Error || resOrders instanceof Error) return;
 
         if (!resRevenue.data || !resOrders.data) return;
@@ -881,6 +884,63 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     };
   };
 
+  const renderSkeleton = (num) => (
+    <TypographyKit style={{ '--i': num - 5 }} className="absolute loading" key={num}>
+      <span />
+    </TypographyKit>
+  );
+
+  const renderCells = () =>
+    days.map((obj, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <TypographyKit key={`${obj}_${index}`} variant="div">
+        {_.range(minHour, maxHour + 1).map((num) => {
+          if (heatmapLoading) return renderSkeleton(num);
+
+          if (
+            !heatmapData[links][obj] ||
+            !heatmapData[links][obj][num] ||
+            !heatmapData[links][obj][num].color
+          ) {
+            return (
+              <TypographyKit
+                style={{ '--i': num - 5 }}
+                className={`absolute ${
+                  heatmapData[links][obj] &&
+                  heatmapData[links][obj][num] &&
+                  heatmapData[links][obj][num]?.active
+                    ? 'active'
+                    : ''
+                }`}
+                key={num}
+              >
+                <span />
+              </TypographyKit>
+            );
+          }
+          return (
+            <Tooltip
+              className="absolute"
+              placement="top-start"
+              style={{ '--i': num - 5 }}
+              title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
+              key={num}
+              arrow
+            >
+              <ItemHeatmap>
+                <TypographyKit
+                  className="heatmap-btn "
+                  sx={getStyleHashureActive(heatmapData[links][obj][num])}
+                >
+                  <span />
+                </TypographyKit>
+              </ItemHeatmap>
+            </Tooltip>
+          );
+        })}
+      </TypographyKit>
+    ));
+
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit id="marketing-setup" className="marketing-paper">
@@ -990,6 +1050,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                       <TypographyKit key={day}>{day.slice(0, 3)}</TypographyKit>
                     ))}
                   </TypographyKit>
+
                   <TypographyKit className="right-part-main-heatmap" variant="div">
                     {days.map((day) => (
                       <TypographyKit key={day} variant="div">
@@ -1004,55 +1065,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                         ))}
                       </TypographyKit>
                     ))}
-                    <div className="heatmap-btn_wrapper">
-                      {days.map((obj, index) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <TypographyKit key={`${obj}_${index}`} variant="div">
-                          {_.range(minHour, maxHour + 1).map((num) => {
-                            if (
-                              !heatmapData[links][obj] ||
-                              !heatmapData[links][obj][num] ||
-                              !heatmapData[links][obj][num].color
-                            ) {
-                              return (
-                                <TypographyKit
-                                  style={{ '--i': num - 5 }}
-                                  className={`absolute ${
-                                    heatmapData[links][obj] &&
-                                    heatmapData[links][obj][num] &&
-                                    heatmapData[links][obj][num]?.active
-                                      ? 'active'
-                                      : ''
-                                  }`}
-                                  key={num}
-                                >
-                                  <span />
-                                </TypographyKit>
-                              );
-                            }
-                            return (
-                              <Tooltip
-                                className="absolute"
-                                placement="top-start"
-                                style={{ '--i': num - 5 }}
-                                title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
-                                key={num}
-                                arrow
-                              >
-                                <ItemHeatmap>
-                                  <TypographyKit
-                                    className="heatmap-btn "
-                                    sx={getStyleHashureActive(heatmapData[links][obj][num])}
-                                  >
-                                    <span />
-                                  </TypographyKit>
-                                </ItemHeatmap>
-                              </Tooltip>
-                            );
-                          })}
-                        </TypographyKit>
-                      ))}
-                    </div>
+                    <div className="heatmap-btn_wrapper">{renderCells()}</div>
                   </TypographyKit>
                 </TypographyKit>
               </TypographyKit>
