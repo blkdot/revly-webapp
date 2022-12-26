@@ -35,7 +35,7 @@ const CompetitionListing = () => {
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
   const [area, setArea] = useState('Everywhere');
-  const [timeSlot, setTimeSlot] = useState('Throughout day');
+  const [timeSlot, setTimeSlot] = useState('Throughout Day');
   const [loading, setLoading] = useState(true);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
@@ -174,12 +174,12 @@ const CompetitionListing = () => {
       {},
     );
   const timeSlotObj = {
-    'Throughout day': 'Throughout day',
+    'Throughout Day': 'Throughout Day',
     'Breakfast (04:00 - 11:00)': 'Breakfast',
     'Lunch (11:00 - 14:00)': 'Lunch',
     'Interpeak (14:00 - 17:00)': 'Interpeak',
     'Dinner (17:00 - 00:00)': 'Dinner',
-    'Late night (00:00 - 04:00)': 'Late night',
+    'Late night (00:00 - 04:00)': 'Late Night',
   };
   const getData = (plat, vend) => {
     clearTimeout(fnDelays);
@@ -331,7 +331,7 @@ const CompetitionListing = () => {
               />
             </div>
             <CompetitionDropdown
-              rows={Object.keys(timeSlotObj)}
+              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
@@ -347,7 +347,7 @@ const CompetitionListing = () => {
                 </MenuItemKit>
               )}
               icon={TimeSlotIcon}
-              title="Select TimeSlot"
+              title="Select Timeslot"
               type="timeslot"
               className="top-competition not-platform"
               setRow={setTimeSlot}
