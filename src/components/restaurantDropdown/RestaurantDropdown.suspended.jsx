@@ -30,14 +30,7 @@ const MenuPropsBranch = {
   },
 };
 
-const RestaurantDropdown = ({
-  setState,
-  state,
-  branch,
-  cost,
-  chainObj: chainObjProps,
-  platforms,
-}) => {
+const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjProps }) => {
   const chainObj = chainObjProps;
 
   const { setVendors, vendors: vendorsContext } = useDate();
@@ -67,7 +60,7 @@ const RestaurantDropdown = ({
             vendorsObjTemp.talabat = [];
             vendorsObjTemp.deliveroo = [];
             Object.keys(chainObjTemp[value]).forEach((vName) => {
-              platforms.forEach((platform) => {
+              Object.keys(chainObjTemp[value][vName]).forEach((platform) => {
                 vendorsObjTemp[platform]?.splice(0, 0, display[value][vName][platform]);
               });
             });
@@ -100,31 +93,35 @@ const RestaurantDropdown = ({
             vendorsObj,
           });
         }
-        if (checked) {
-          Object.keys(display).forEach((cName) => {
-            if (cName === value) {
-              Object.keys(display[value]).forEach((n) => {
-                platforms.forEach((platform) => {
-                  vendorsObj[platform]?.splice(0, 0, display[value][n][platform]);
-                });
-              });
-              chainObjTemp[value] = display[value];
-            }
-          });
+        // if (checked) {
+        //   Object.keys(display).forEach((cName) => {
+        //     if (cName === value) {
+        //       Object.keys(display[value]).forEach((n) => {
+        //         Object.keys(display[value][n]).forEach((platform) => {
+        //           vendorsObj[platform]?.splice(0, 0, display[value][n][platform]);
+        //         });
+        //       });
+        //       chainObjTemp[value] = display[value];
+        //     }
+        //   });
 
-          setVendors({
-            ...vendorsContext,
-            vendorsObj,
-            chainObj: chainObjTemp,
-          });
-        }
+        //   setVendors({
+        //     ...vendorsContext,
+        //     vendorsObj,
+        //     chainObj: chainObjTemp,
+        //   });
+        // }
       }
       if (checked) {
         Object.keys(display).forEach((cName) => {
           if (cName === value) {
             Object.keys(display[value]).forEach((n) => {
               Object.keys(display[value][n]).forEach((platform) => {
-                vendorsObj[platform]?.splice(0, 0, display[value][n][platform]);
+                if (!vendorsObj[platform]) {
+                  vendorsObj[platform] = [display[value][n][platform]];
+                } else {
+                  vendorsObj[platform]?.push(display[value][n][platform]);
+                }
               });
             });
             chainObjTemp[value] = display[value];
@@ -152,7 +149,7 @@ const RestaurantDropdown = ({
           vendorsObjTemp.talabat = [];
           vendorsObjTemp.deliveroo = [];
           Object.keys(chainObjTemp[chainName]).forEach((vName) => {
-            platforms.forEach((platform) => {
+            Object.keys(chainObjTemp[chainName][vName]).forEach((platform) => {
               vendorsObjTemp[platform]?.splice(0, 0, display[chainName][vName][platform]);
             });
           });
@@ -183,7 +180,7 @@ const RestaurantDropdown = ({
         vendorsObjTemp.talabat = [];
         vendorsObjTemp.deliveroo = [];
         Object.keys(chainObjTemp[chainName]).forEach((vName) => {
-          platforms.forEach((platform) => {
+          Object.keys(chainObjTemp[chainName][vName]).forEach((platform) => {
             vendorsObjTemp[platform]?.splice(0, 0, display[chainName][vName][platform]);
           });
         });
@@ -201,7 +198,10 @@ const RestaurantDropdown = ({
         delete chainObjClear[cName];
       }
     });
-    if (Object.keys(chainObjClear[chainName]).length > 1) {
+    if (
+      Object.keys(chainObjClear).length > 1 ||
+      Object.keys(chainObjClear[chainName] || {}).length > 1
+    ) {
       if (!checked) {
         const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
         const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj));
