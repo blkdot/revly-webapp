@@ -11,7 +11,7 @@ import { getMetrics, getVendors, getHeatmap, getMenu, getOfferDetails } from '..
 
 import { getOffers, getAds } from '../api/planningApi';
 
-import { getCompetitors, getAlerts, getRanking } from '../api/competitionApi';
+import { getCompetitors, getAlerts, getRanking, getAreas } from '../api/competitionApi';
 
 import {
   triggerOffers,
@@ -41,6 +41,7 @@ const useApi = () => ({
   triggerOffers,
   OfferCrossPlatforms,
   cancelOfferMaster,
+  getAreas,
 });
 
 export default useApi;

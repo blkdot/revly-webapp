@@ -18,6 +18,7 @@ const RestaurantCheckboxAccordion = ({
   setVendors,
   vendors,
   display,
+  listing,
 }) => {
   const [active, setActive] = useState(false);
   const getChecked = () =>
@@ -131,7 +132,7 @@ const RestaurantCheckboxAccordion = ({
           </div>
         </div>
         <ExpandMoreIcon style={{ cursor: 'pointer' }} />
-        {!(branch || cost) ? (
+        {!(branch || cost || listing) ? (
           <div className="only-button">
             <ButtonKit
               disabled={
@@ -167,7 +168,7 @@ const RestaurantCheckboxAccordion = ({
             >
               <p className="vendor-name">{vendorName}</p>
             </TooltipKit>
-            {!(branch || cost) ? (
+            {!(branch || cost || listing) ? (
               <div className="only-button vendor">
                 <ButtonKit
                   disabled={getVendorDisabled(vendorName)}
