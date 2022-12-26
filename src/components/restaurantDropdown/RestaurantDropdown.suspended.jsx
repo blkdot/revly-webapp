@@ -30,7 +30,14 @@ const MenuPropsBranch = {
   },
 };
 
-const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjProps }) => {
+const RestaurantDropdown = ({
+  setState,
+  state,
+  branch,
+  cost,
+  chainObj: chainObjProps,
+  listing,
+}) => {
   const chainObj = chainObjProps;
 
   const { setVendors, vendors: vendorsContext } = useDate();
@@ -87,30 +94,20 @@ const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjP
             });
             delete chainObjTemp[value][vName];
           });
-          setVendors({
-            ...vendorsContext,
-            chainObj: chainObjTemp,
-            vendorsObj,
-          });
+          if (listing) {
+            setState({
+              ...state,
+              chainObj: chainObjTemp,
+              vendorsObj,
+            });
+          } else {
+            setVendors({
+              ...vendorsContext,
+              chainObj: chainObjTemp,
+              vendorsObj,
+            });
+          }
         }
-        // if (checked) {
-        //   Object.keys(display).forEach((cName) => {
-        //     if (cName === value) {
-        //       Object.keys(display[value]).forEach((n) => {
-        //         Object.keys(display[value][n]).forEach((platform) => {
-        //           vendorsObj[platform]?.splice(0, 0, display[value][n][platform]);
-        //         });
-        //       });
-        //       chainObjTemp[value] = display[value];
-        //     }
-        //   });
-
-        //   setVendors({
-        //     ...vendorsContext,
-        //     vendorsObj,
-        //     chainObj: chainObjTemp,
-        //   });
-        // }
       }
       if (checked) {
         Object.keys(display).forEach((cName) => {
@@ -128,11 +125,19 @@ const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjP
           }
         });
 
-        setVendors({
-          ...vendorsContext,
-          vendorsObj,
-          chainObj: chainObjTemp,
-        });
+        if (listing) {
+          setState({
+            ...state,
+            chainObj: chainObjTemp,
+            vendorsObj,
+          });
+        } else {
+          setVendors({
+            ...vendorsContext,
+            chainObj: chainObjTemp,
+            vendorsObj,
+          });
+        }
       }
     }
   };
@@ -218,11 +223,19 @@ const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjP
             delete vendorsObjTemp[p];
           }
         });
-        setVendors({
-          ...vendorsContext,
-          vendorsObj: vendorsObjTemp,
-          chainObj: chainObjTemp,
-        });
+        if (listing) {
+          setState({
+            ...state,
+            vendorsObj: vendorsObjTemp,
+            chainObj: chainObjTemp,
+          });
+        } else {
+          setVendors({
+            ...vendorsContext,
+            vendorsObj: vendorsObjTemp,
+            chainObj: chainObjTemp,
+          });
+        }
       }
     }
     if (checked) {
@@ -238,11 +251,19 @@ const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjP
           vendorsObjTemp[p] = [display[chainName][value][p]];
         }
       });
-      setVendors({
-        ...vendorsContext,
-        vendorsObj: vendorsObjTemp,
-        chainObj: chainObjTemp,
-      });
+      if (listing) {
+        setState({
+          ...state,
+          vendorsObj: vendorsObjTemp,
+          chainObj: chainObjTemp,
+        });
+      } else {
+        setVendors({
+          ...vendorsContext,
+          vendorsObj: vendorsObjTemp,
+          chainObj: chainObjTemp,
+        });
+      }
     }
   };
   const getChain = () => {
@@ -307,10 +328,14 @@ const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjP
     );
   }
   return (
-    <div className={`restaurant-dropdown_wrapper ${cost ? 'cost' : ''}`}>
-      <TypographyKit className="top-text-inputs" variant="subtitle">
-        Select a Vendor
-      </TypographyKit>
+    <div className={`restaurant-dropdown_wrapper ${cost || listing ? 'cost' : ''}`}>
+      {!listing ? (
+        <TypographyKit className="top-text-inputs" variant="subtitle">
+          Select a Vendor
+        </TypographyKit>
+      ) : (
+        ''
+      )}
       <FormcontrolKit fullWidth>
         <SelectKit
           labelId="demo-simple-select-label"
@@ -326,7 +351,7 @@ const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjP
           )}
         >
           <div className={`dropdown-paper ${cost ? 'cost' : ''}`}>
-            {!cost ? (
+            {!(listing || cost) ? (
               <div className="selected-chains">
                 <p>Selected: {getChain().length}</p>
                 <ButtonKit
@@ -353,6 +378,7 @@ const RestaurantDropdown = ({ setState, state, branch, cost, chainObj: chainObjP
                 setVendors={setVendors}
                 vendors={vendorsContext}
                 display={display}
+                listing={listing}
               />
             ))}
           </div>

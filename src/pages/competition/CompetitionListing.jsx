@@ -17,7 +17,6 @@ import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
-import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
@@ -25,17 +24,18 @@ import ButtonKit from '../../kits/button/ButtonKit';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
 import AreaIcon from '../../assets/images/ic_area.png';
+import selectIcon from '../../assets/images/ic_select.png';
+import MarketingCheckmarksDropdown from '../../components/marketingSetup/MarketingChecmarksDropdown';
 
 const CompetitionListing = () => {
   let fnDelays = null;
-  const { setVendors } = useGlobal();
   const { vendors } = useDate();
-  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
+  const { vendorsArr, vendorsSelected, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
   const [area, setArea] = useState('Everywhere');
-  const [timeSlot, setTimeSlot] = useState('Throughout day');
+  const [timeSlot, setTimeSlot] = useState('Throughout Day');
   const [loading, setLoading] = useState(true);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
@@ -44,10 +44,49 @@ const CompetitionListing = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
-  const { getRanking } = useApi();
+  const { getRanking, getAreas } = useApi();
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();
+  const [areasData, setAreasData] = useState([]);
+  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendors)));
 
+  useEffect(() => {
+    const displayTemp = JSON.parse(JSON.stringify(display));
+    if (Object.keys(displayTemp).length > 0) {
+      const chainRandom =
+        Object.keys(displayTemp)[
+          Math.floor(Math.random() * Object.keys(displayTemp).length - 1) + 1
+        ];
+      let vendorRandom = '';
+      Object.keys(displayTemp).forEach((c) => {
+        vendorRandom = Object.keys(displayTemp[c])[
+          Math.floor(Math.random() * Object.keys(displayTemp[c]).length - 1) + 1
+        ];
+      });
+      setVendorsData({
+        ...vendors,
+        chainObj: {
+          [chainRandom]: { [vendorRandom]: { ...displayTemp[chainRandom][vendorRandom] } },
+        },
+        vendorsObj: { [platform]: [displayTemp[chainRandom][vendorRandom][platform]] },
+      });
+    } else {
+      const vendorsSelectedTemp = [
+        vendorsArr.filter((v) => v.platform === platform)[
+          Math.floor(
+            Math.random() * vendorsArr.filter((obj) => obj.platform === platform).length - 1,
+          ) + 1
+        ]?.data?.vendor_name,
+      ];
+      setVendorsData({
+        ...vendors,
+        vendorsSelected: vendorsSelectedTemp,
+        vendorsObj: {
+          [platform]: [vendorsArr.find((obj) => obj.data.vendor_name === vendorsSelectedTemp[0])],
+        },
+      });
+    }
+  }, [vendors, platform]);
   const Open = () => {
     setOpened(!opened);
     const body = document.querySelector('body');
@@ -134,7 +173,14 @@ const CompetitionListing = () => {
       }),
       {},
     );
-
+  const timeSlotObj = {
+    'Throughout Day': 'Throughout Day',
+    'Breakfast (04:00 - 11:00)': 'Breakfast',
+    'Lunch (11:00 - 14:00)': 'Lunch',
+    'Interpeak (14:00 - 17:00)': 'Interpeak',
+    'Dinner (17:00 - 00:00)': 'Dinner',
+    'Late night (00:00 - 04:00)': 'Late Night',
+  };
   const getData = (plat, vend) => {
     clearTimeout(fnDelays);
 
@@ -145,6 +191,8 @@ const CompetitionListing = () => {
           master_email: user.email,
           access_token: user.accessToken,
           vendors: vend || [],
+          timeslot: timeSlotObj[timeSlot],
+          location: area === 'Everywhere' ? 'ALL' : area,
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
@@ -165,7 +213,7 @@ const CompetitionListing = () => {
           id: v.id,
         }));
 
-        setCompetitionListingData([filt[0]]);
+        setCompetitionListingData(filt);
         setLoading(false);
       } catch (err) {
         setCompetitionListingData([]);
@@ -175,42 +223,47 @@ const CompetitionListing = () => {
     }, 750);
   };
 
+  const getAreasData = async (plat, vend) => {
+    try {
+      const body = {
+        master_email: user.email,
+        access_token: user.accessToken,
+        vendors: vend || [],
+        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+      };
+
+      const areas = await getAreas(body, plat);
+
+      if (!areas) {
+        throw new Error('');
+      }
+      setAreasData(areas.data.locations);
+    } catch (err) {
+      setAreasData([]);
+      triggerAlertWithMessageError('Error while retrieving data');
+    }
+  };
   useEffect(() => {
     if (Object.keys(display).length > 0) {
       if (platform) {
-        getData(platform, vendorsObj[platform]);
+        getData(platform, vendorsData.vendorsObj[platform]);
       }
-    } else if (platform && vendorsArr.length > 0) {
-      getData(platform, vendorsObj[platform]);
+    } else if (platform && vendorsData?.vendorsArr?.length > 0) {
+      getData(platform, vendorsData.vendorsObj[platform]);
     }
-  }, [platform, vendors, beforePeriodBtn]);
+  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area]);
 
   useEffect(() => {
     if (Object.keys(display).length > 0) {
-      const chainObjTemp = JSON.parse(JSON.stringify(display));
-      const vendorsObjTemp = { [platform]: [] };
-      Object.keys(display).forEach((c) => {
-        Object.keys(display[c]).forEach((v) => {
-          Object.keys(display[c][v]).forEach((p) => {
-            if (p === platform) {
-              vendorsObjTemp[p] = [...vendorsObjTemp[p], chainObjTemp[c][v][p]];
-            } else {
-              delete chainObjTemp[c][v][p];
-            }
-          });
-        });
-      });
-      setVendors({ ...vendors, chainObj: chainObjTemp, vendorsObj: vendorsObjTemp });
-    } else {
-      const arr = vendorsArr.filter((v) => v.platform === platform);
-      const obj = { [platform]: arr.map((k) => k) };
-      setVendors({
-        ...vendors,
-        vendorsSelected: arr.map((k) => k.data.vendor_name),
-        vendorsObj: obj,
-      });
+      if (platform) {
+        getAreasData(platform, vendorsData.vendorsObj[platform]);
+      }
+    } else if (platform && vendorsData.vendorsArr.length > 0) {
+      getAreasData(platform, vendorsData.vendorsObj[platform]);
     }
-  }, [platform, display]);
+  }, [platform, vendorsData, beforePeriodBtn]);
+
   return (
     <div className="wrapper">
       <div className="top-inputs">
@@ -220,7 +273,6 @@ const CompetitionListing = () => {
           <RestaurantDropdownOld
             vendorsSelected={vendorsSelected}
             vendors={vendorsArr.filter((v) => v.platform === platform)}
-            vendorsPlatform={Object.keys(vendorsObj)}
           />
         )}
         <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
@@ -264,15 +316,22 @@ const CompetitionListing = () => {
               setRow={setPlatform}
               select={platform}
             />
+            <div className="listing-vendors">
+              <MarketingCheckmarksDropdown
+                names={vendorsArr
+                  .filter((obj) => obj.platform === platform)
+                  .map((obj) => obj.data.vendor_name)}
+                icon={selectIcon}
+                title="Select Vendors"
+                setName={setVendorsData}
+                personName={vendorsData}
+                width={400}
+                height={100}
+                type="vendor"
+              />
+            </div>
             <CompetitionDropdown
-              rows={[
-                'Throughout day',
-                'Breakfast (04:00 - 11:00)',
-                'Lunch (11:00 - 14:00)',
-                'Interpeak (14:00 - 17:00)',
-                'Dinner (17:00 - 00:00)',
-                'Late night (00:00 - 04:00)',
-              ]}
+              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
@@ -288,14 +347,14 @@ const CompetitionListing = () => {
                 </MenuItemKit>
               )}
               icon={TimeSlotIcon}
-              title="Select a TimeSlot"
+              title="Select Timeslot"
               type="timeslot"
               className="top-competition not-platform"
               setRow={setTimeSlot}
               select={timeSlot}
             />
             <CompetitionDropdown
-              rows={['Everywhere', 'JLT', 'JVC', 'Marina', 'Business Marina']}
+              rows={areasData}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
@@ -311,7 +370,7 @@ const CompetitionListing = () => {
                 </MenuItemKit>
               )}
               icon={AreaIcon}
-              title="Select a Area"
+              title="Select Area"
               type="area"
               className="top-competition not-platform"
               setRow={setArea}
