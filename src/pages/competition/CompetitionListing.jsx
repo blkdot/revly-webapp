@@ -27,8 +27,9 @@ import AreaIcon from '../../assets/images/ic_area.png';
 import selectIcon from '../../assets/images/ic_select.png';
 import MarketingCheckmarksDropdown from '../../components/marketingSetup/MarketingChecmarksDropdown';
 
+let fnDelays = null;
+let fnDelaysAreas = null;
 const CompetitionListing = () => {
-  let fnDelays = null;
   const { vendors } = useDate();
   const { vendorsArr, vendorsSelected, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
@@ -36,7 +37,8 @@ const CompetitionListing = () => {
   const [platform, setPlatform] = useState('deliveroo');
   const [area, setArea] = useState('Everywhere');
   const [timeSlot, setTimeSlot] = useState('Throughout Day');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loadingAreas, setLoadingAreas] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
   const { date } = useDate();
@@ -44,6 +46,8 @@ const CompetitionListing = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
+  const [queue, setQueue] = useState(0);
+  const [queueAreas, setQueueAreas] = useState(0);
   const { getRanking, getAreas } = useApi();
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();
@@ -183,8 +187,14 @@ const CompetitionListing = () => {
   useEffect(() => {
     setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
   }, [area]);
-  const getData = (plat, vend) => {
+
+  const getData = (plat, vend, stack) => {
     clearTimeout(fnDelays);
+
+    if (loading) {
+      setQueue((prev) => prev + 1);
+      return;
+    }
 
     fnDelays = setTimeout(async () => {
       setLoading(true);
@@ -217,39 +227,54 @@ const CompetitionListing = () => {
 
         setCompetitionListingData(filt);
         setLoading(false);
+        if (stack === queue) setQueue(0);
       } catch (err) {
         setCompetitionListingData([]);
         setLoading(false);
+        setQueue(0);
         triggerAlertWithMessageError('Error while retrieving data');
       }
     }, 750);
   };
 
-  const getAreasData = async (plat, vend) => {
-    try {
-      const body = {
-        master_email: user.email,
-        access_token: user.accessToken,
-        vendors: vend || [],
-        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
-      };
-
-      const areas = await getAreas(body, plat);
-
-      if (!areas) {
-        throw new Error('');
-      }
-      setAreasData(areas.data.locations);
-    } catch (err) {
-      setAreasData([]);
-      triggerAlertWithMessageError('Error while retrieving data');
+  const getAreasData = async (plat, vend, stack) => {
+    clearTimeout(fnDelaysAreas);
+    if (loadingAreas) {
+      setQueueAreas((prev) => prev + 1);
+      return;
     }
+
+    fnDelaysAreas = setTimeout(async () => {
+      setLoadingAreas(true);
+      try {
+        const body = {
+          master_email: user.email,
+          access_token: user.accessToken,
+          vendors: vend || [],
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+        };
+
+        const areas = await getAreas(body, plat);
+
+        if (!areas) {
+          throw new Error('');
+        }
+        setAreasData(areas.data.locations);
+        setLoadingAreas(false);
+        if (stack === queueAreas) setQueueAreas(0);
+      } catch (err) {
+        setAreasData([]);
+        setQueueAreas(0);
+        setLoadingAreas(false);
+        triggerAlertWithMessageError('Error while retrieving data');
+      }
+    }, 750);
   };
   useEffect(() => {
     if (Object.keys(display).length > 0) {
       if (platform && area && timeSlot && vendorsData.vendorsObj[platform] !== null) {
-        getData(platform, vendorsData.vendorsObj[platform]);
+        getData(platform, vendorsData.vendorsObj[platform], queue);
       }
     } else if (
       platform &&
@@ -258,23 +283,23 @@ const CompetitionListing = () => {
       timeSlot &&
       vendorsData.vendorsObj[platform] !== null
     ) {
-      getData(platform, vendorsData.vendorsObj[platform]);
+      getData(platform, vendorsData.vendorsObj[platform], queue);
     }
-  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area]);
+  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue]);
 
   useEffect(() => {
     if (Object.keys(display).length > 0) {
       if (platform && vendorsData.vendorsObj[platform] !== null) {
-        getAreasData(platform, vendorsData.vendorsObj[platform]);
+        getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
       }
     } else if (
       platform &&
       vendorsData.vendorsArr.length > 0 &&
       vendorsData.vendorsObj[platform] !== null
     ) {
-      getAreasData(platform, vendorsData.vendorsObj[platform]);
+      getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
     }
-  }, [platform, vendorsData, beforePeriodBtn]);
+  }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
 
   return (
     <div className="wrapper">
