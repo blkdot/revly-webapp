@@ -79,6 +79,7 @@ const Planning = () => {
     renderScheduleType,
     renderSimpleRow,
     renderCalculatedPercent,
+    renderRowTooltip,
   } = useTableContentFormatter();
 
   const headersOffers = [
@@ -96,7 +97,7 @@ const Planning = () => {
   ];
 
   const headersAds = [
-    { id: 'vendor_name', disablePadding: true, label: 'Vendor name' },
+    { id: 'vendor_names', disablePadding: true, label: 'Vendor names' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
@@ -107,6 +108,7 @@ const Planning = () => {
   const cellTemplatesObject = {
     vendor_name: renderSimpleRowNotCentered,
     platform: renderPlatform,
+    vendor_names: renderRowTooltip,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
     type_schedule: renderScheduleType,
@@ -157,15 +159,27 @@ const Planning = () => {
     setClickedId(id);
   };
 
-  const renderTable = () => (
-    <TableRevly
-      isLoading={isLoadingAds || isLoadingOffers}
-      headers={active ? headersAds : headersOffers}
-      rows={dataFiltered.map(active ? renderRowsByHeaderAds : renderRowsByHeaderOffer)}
-      mainFieldOrdered="start_date"
-      onClickRow={!active ? handleRowClick : false}
-    />
-  );
+  const renderTable = () => {
+    if (active) {
+      return (
+        <TableRevly
+          isLoading={isLoadingAds}
+          headers={headersAds}
+          rows={dataFiltered.map(renderRowsByHeaderAds)}
+          mainFieldOrdered="start_date"
+        />
+      );
+    }
+    return (
+      <TableRevly
+        isLoading={isLoadingOffers}
+        headers={headersOffers}
+        rows={dataFiltered.map(renderRowsByHeaderOffer)}
+        mainFieldOrdered="start_date"
+        onClickRow={handleRowClick}
+      />
+    );
+  };
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
