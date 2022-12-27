@@ -61,12 +61,9 @@ const CompetitionListing = () => {
         Object.keys(displayTemp)[
           Math.floor(Math.random() * Object.keys(displayTemp).length - 1) + 1
         ];
-      let vendorRandom = '';
-      Object.keys(displayTemp).forEach((c) => {
-        vendorRandom = Object.keys(displayTemp[c])[
-          Math.floor(Math.random() * Object.keys(displayTemp[c]).length - 1) + 1
-        ];
-      });
+      const vendorRandom = Object.keys(displayTemp[chainRandom])[
+        Math.floor(Math.random() * Object.keys(displayTemp[chainRandom]).length - 1) + 1
+      ];
       setVendorsData({
         ...vendors,
         chainObj: {
