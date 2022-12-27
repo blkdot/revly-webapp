@@ -354,7 +354,7 @@ const GetProgress = ({ progressData }) => {
             rows={[
               'Every Monday',
               'Every Tuesday',
-              'Every Wendnesday',
+              'Every Wednesday',
               'Every Thursday',
               'Every Friday',
               'Every Saturday',
@@ -564,8 +564,10 @@ const GetProgress = ({ progressData }) => {
   };
   const [menuChanged, setMenuChanged] = useState('');
   useEffect(() => {
-    setDiscountPercentage('');
-    setMinOrder('');
+    if (selected === 2) {
+      setDiscountPercentage('');
+      setMinOrder('');
+    }
     setMenuChanged(menu);
   }, [menu, itemMenu]);
   if (selected === 1) {

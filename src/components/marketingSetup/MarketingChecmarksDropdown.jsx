@@ -155,7 +155,7 @@ const MarketingCheckmarksDropdown = ({
     }
   };
   const renderLoayaut = () => {
-    if (Object.keys(personName.display).length > 0 && type === 'vendor') {
+    if (Object.keys(personName?.display || {}).length > 0 && type === 'vendor') {
       return (
         <div className="dropdown-paper cost">
           {Object.keys(personName.display).map((el, index) => (
@@ -189,6 +189,33 @@ const MarketingCheckmarksDropdown = ({
       </MenuItemKit>
     ));
   };
+  const getChain = () => {
+    const arr = [];
+    Object.keys(chainObj).forEach((chainName) => {
+      if (Object.keys(chainObj[chainName]).length > 0) {
+        arr.push(chainName);
+      }
+    });
+    return arr;
+  };
+  const getValue = () => {
+    if (type === 'vendor') {
+      if (Object.keys(display).length > 0) {
+        return getChain();
+      }
+      return personName.vendorsSelected;
+    }
+    return personName;
+  };
+  const getRenderValue = (selected) => {
+    if (type === 'vendor') {
+      if (Object.keys(display).length > 0) {
+        return getChain().join(', ');
+      }
+      return personName.vendorsSelected.join(', ');
+    }
+    return selected.join(', ');
+  };
   return (
     <div style={{ width: '100%' }}>
       <FormcontrolKit
@@ -206,10 +233,10 @@ const MarketingCheckmarksDropdown = ({
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={type === 'vendor' ? personName.vendorsSelected : personName}
-          onChange={handleChange}
-          input={<OutlindeInputKit uncontrolled label={title || 'Customised Days'} />}
-          renderValue={(selected) => selected.join(', ')}
+          value={getValue()}
+          onChange={type !== 'vendor' ? handleChange : null}
+          input={<OutlindeInputKit label={title || 'Customised Days'} />}
+          renderValue={(selected) => getRenderValue(selected)}
           MenuProps={MenuProps}
         >
           {renderLoayaut()}

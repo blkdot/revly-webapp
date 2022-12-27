@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import TableCellKit from '../../../kits/tablecell/TableCellKit';
 import { platformObject } from '../../../data/platformList';
+import TooltipKit from '../../../kits/toolTip/TooltipKit';
 
 const useTableContentFormatter = () => {
   const renderSimpleRow = (r, h, i = 0) => (
@@ -25,6 +26,48 @@ const useTableContentFormatter = () => {
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
       </span>
+    </TableCellKit>
+  );
+  const compareSize = () => {
+    const textElement = document.querySelectorAll('.render-row-tooltip');
+    const compareArr = [];
+    textElement.forEach((el) => {
+      if (el?.scrollWidth > el.clientWidth) {
+        compareArr.push(el.textContent);
+      }
+    });
+    setHoverStatus(compareArr);
+  };
+  const root = document.querySelector('#root');
+  useEffect(() => {
+    compareSize();
+    window.addEventListener('resize', compareSize);
+  }, [root.ariaHidden]);
+
+  useEffect(
+    () => () => {
+      window.removeEventListener('resize', compareSize);
+    },
+    [root.ariaHidden],
+  );
+
+  const [hoverStatus, setHoverStatus] = useState([]);
+  const getHoverStatus = (name) => hoverStatus.find((n) => n === name);
+  const renderRowTooltip = (r, h) => (
+    <TableCellKit
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}
+    >
+      <TooltipKit
+        id="category-tooltip"
+        interactive={1}
+        disableHoverListener={!getHoverStatus(r[h.id] === null ? '-' : r[h.id])}
+        title={r[h.id] === null ? '-' : r[h.id] || ''}
+      >
+        <span onMouseEnter={compareSize} className="render-row-tooltip" key={h.id}>
+          {r[h.id] === null ? '-' : r[h.id] || ''}
+        </span>
+      </TooltipKit>
     </TableCellKit>
   );
 
@@ -144,6 +187,7 @@ const useTableContentFormatter = () => {
     renderSimpleRowNotCentered,
     renderSimpleRow,
     renderOrdinalSuffix,
+    renderRowTooltip,
   };
 };
 

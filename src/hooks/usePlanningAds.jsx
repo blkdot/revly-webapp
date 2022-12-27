@@ -7,7 +7,7 @@ import { useUserAuth } from '../contexts/AuthContext';
 let fnDelays = null;
 function usePlanningAds({ dateRange }) {
   const { vendors } = useDate();
-  const { vendorsObj } = vendors;
+  const { vendorsObj, display, vendorsArr } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
   const { user } = useUserAuth();
@@ -26,7 +26,40 @@ function usePlanningAds({ dateRange }) {
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
       }).then((res) => {
-        setAds(res.data.ads);
+        const arr = JSON.parse(JSON.stringify(res?.data?.ads || []));
+        if (Object.keys(display).length > 0) {
+          res?.data?.ads.forEach((obj, index) => {
+            Object.keys(display).forEach((c) => {
+              Object.keys(display[c]).forEach((v) => {
+                obj.vendor_ids.forEach((id) => {
+                  if (id === display[c][v][obj.platform].vendor_id) {
+                    if ((arr[index].vendor_names || []).length === 0) {
+                      arr[index].vendor_names = [v];
+                    } else {
+                      arr[index].vendor_names = [...arr[index].vendor_names, v];
+                    }
+                  }
+                });
+              });
+            });
+          });
+        } else {
+          res?.data?.ads.forEach((obj, index) => {
+            vendorsArr.forEach((objV) => {
+              obj.vendor_ids.forEach((id) => {
+                if (id === objV.vendor_id) {
+                  if ((arr[index].vendor_names || []).length === 0) {
+                    arr[index].vendor_names = [objV.data.vendor_name];
+                  } else {
+                    arr[index].vendor_names = [...arr[index].vendor_names, objV.data.vendor_name];
+                  }
+                }
+              });
+            });
+          });
+        }
+        const newArr = arr.map((obj) => ({ ...obj, vendor_names: obj.vendor_names.join(', ') }));
+        setAds(newArr || []);
         setIsLoading(false);
       });
     }, 750);

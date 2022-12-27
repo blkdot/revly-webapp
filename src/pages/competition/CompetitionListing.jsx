@@ -27,8 +27,9 @@ import AreaIcon from '../../assets/images/ic_area.png';
 import selectIcon from '../../assets/images/ic_select.png';
 import MarketingCheckmarksDropdown from '../../components/marketingSetup/MarketingChecmarksDropdown';
 
+let fnDelays = null;
+let fnDelaysAreas = null;
 const CompetitionListing = () => {
-  let fnDelays = null;
   const { vendors } = useDate();
   const { vendorsArr, vendorsSelected, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
@@ -36,7 +37,8 @@ const CompetitionListing = () => {
   const [platform, setPlatform] = useState('deliveroo');
   const [area, setArea] = useState('Everywhere');
   const [timeSlot, setTimeSlot] = useState('Throughout Day');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loadingAreas, setLoadingAreas] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
   const { date } = useDate();
@@ -44,6 +46,8 @@ const CompetitionListing = () => {
     startDate: date.beforePeriod.startDate,
     endDate: date.beforePeriod.endDate,
   });
+  const [queue, setQueue] = useState(0);
+  const [queueAreas, setQueueAreas] = useState(0);
   const { getRanking, getAreas } = useApi();
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();
@@ -57,18 +61,15 @@ const CompetitionListing = () => {
         Object.keys(displayTemp)[
           Math.floor(Math.random() * Object.keys(displayTemp).length - 1) + 1
         ];
-      let vendorRandom = '';
-      Object.keys(displayTemp).forEach((c) => {
-        vendorRandom = Object.keys(displayTemp[c])[
-          Math.floor(Math.random() * Object.keys(displayTemp[c]).length - 1) + 1
-        ];
-      });
+      const vendorRandom = Object.keys(displayTemp[chainRandom])[
+        Math.floor(Math.random() * Object.keys(displayTemp[chainRandom]).length - 1) + 1
+      ];
       setVendorsData({
         ...vendors,
         chainObj: {
           [chainRandom]: { [vendorRandom]: { ...displayTemp[chainRandom][vendorRandom] } },
         },
-        vendorsObj: { [platform]: [displayTemp[chainRandom][vendorRandom][platform]] },
+        vendorsObj: { [platform]: [displayTemp?.[chainRandom]?.[vendorRandom]?.[platform]] },
       });
     } else {
       const vendorsSelectedTemp = [
@@ -174,15 +175,23 @@ const CompetitionListing = () => {
       {},
     );
   const timeSlotObj = {
-    'Throughout Day': 'Throughout Day',
     'Breakfast (04:00 - 11:00)': 'Breakfast',
     'Lunch (11:00 - 14:00)': 'Lunch',
     'Interpeak (14:00 - 17:00)': 'Interpeak',
     'Dinner (17:00 - 00:00)': 'Dinner',
     'Late night (00:00 - 04:00)': 'Late Night',
   };
-  const getData = (plat, vend) => {
+  useEffect(() => {
+    setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
+  }, [area]);
+
+  const getData = (plat, vend, stack) => {
     clearTimeout(fnDelays);
+
+    if (loading) {
+      setQueue((prev) => prev + 1);
+      return;
+    }
 
     fnDelays = setTimeout(async () => {
       setLoading(true);
@@ -191,7 +200,7 @@ const CompetitionListing = () => {
           master_email: user.email,
           access_token: user.accessToken,
           vendors: vend || [],
-          timeslot: timeSlotObj[timeSlot],
+          timeslot: timeSlotObj[timeSlot] || timeSlot,
           location: area === 'Everywhere' ? 'ALL' : area,
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
@@ -215,54 +224,79 @@ const CompetitionListing = () => {
 
         setCompetitionListingData(filt);
         setLoading(false);
+        if (stack === queue) setQueue(0);
       } catch (err) {
         setCompetitionListingData([]);
         setLoading(false);
+        setQueue(0);
         triggerAlertWithMessageError('Error while retrieving data');
       }
     }, 750);
   };
 
-  const getAreasData = async (plat, vend) => {
-    try {
-      const body = {
-        master_email: user.email,
-        access_token: user.accessToken,
-        vendors: vend || [],
-        start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-        end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
-      };
-
-      const areas = await getAreas(body, plat);
-
-      if (!areas) {
-        throw new Error('');
-      }
-      setAreasData(areas.data.locations);
-    } catch (err) {
-      setAreasData([]);
-      triggerAlertWithMessageError('Error while retrieving data');
+  const getAreasData = async (plat, vend, stack) => {
+    clearTimeout(fnDelaysAreas);
+    if (loadingAreas) {
+      setQueueAreas((prev) => prev + 1);
+      return;
     }
+
+    fnDelaysAreas = setTimeout(async () => {
+      setLoadingAreas(true);
+      try {
+        const body = {
+          master_email: user.email,
+          access_token: user.accessToken,
+          vendors: vend || [],
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+        };
+
+        const areas = await getAreas(body, plat);
+
+        if (!areas) {
+          throw new Error('');
+        }
+        setAreasData(areas.data.locations);
+        setLoadingAreas(false);
+        if (stack === queueAreas) setQueueAreas(0);
+      } catch (err) {
+        setAreasData([]);
+        setQueueAreas(0);
+        setLoadingAreas(false);
+        triggerAlertWithMessageError('Error while retrieving data');
+      }
+    }, 750);
   };
   useEffect(() => {
     if (Object.keys(display).length > 0) {
-      if (platform) {
-        getData(platform, vendorsData.vendorsObj[platform]);
+      if (platform && area && timeSlot && vendorsData.vendorsObj[platform] !== null) {
+        getData(platform, vendorsData.vendorsObj[platform], queue);
       }
-    } else if (platform && vendorsData?.vendorsArr?.length > 0) {
-      getData(platform, vendorsData.vendorsObj[platform]);
+    } else if (
+      platform &&
+      vendorsData?.vendorsArr?.length > 0 &&
+      area &&
+      timeSlot &&
+      vendorsData.vendorsObj[platform] !== null
+    ) {
+      getData(platform, vendorsData.vendorsObj[platform], queue);
     }
-  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area]);
+  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue]);
 
   useEffect(() => {
     if (Object.keys(display).length > 0) {
-      if (platform) {
-        getAreasData(platform, vendorsData.vendorsObj[platform]);
+      if (platform && vendorsData.vendorsObj[platform] !== null) {
+        getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
       }
-    } else if (platform && vendorsData.vendorsArr.length > 0) {
-      getAreasData(platform, vendorsData.vendorsObj[platform]);
+    } else if (
+      platform &&
+      vendorsData.vendorsArr.length > 0 &&
+      vendorsData.vendorsObj[platform] !== null
+    ) {
+      getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
     }
-  }, [platform, vendorsData, beforePeriodBtn]);
+  }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
 
   return (
     <div className="wrapper">
@@ -286,36 +320,41 @@ const CompetitionListing = () => {
       <PaperKit className="competition-paper">
         <div className="competition-top-input">
           <div className="dropdowns">
-            <CompetitionDropdown
-              rows={platformList}
-              renderOptions={(v) => (
-                <MenuItemKit key={v.name} value={v.name}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <img
-                      src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                      width={24}
-                      height={24}
-                      style={{ objectFit: 'contain' }}
-                      alt="icon"
-                    />
-                    <ListItemTextKit primary={v.name} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={PlatformIcon}
-              title="Select a Platform"
-              type="platform"
-              className="top-competition"
-              setRow={setPlatform}
-              select={platform}
-            />
+            {Array.isArray(platformList) && platformList.length > 0 ? (
+              <CompetitionDropdown
+                rows={platformList}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v.name} value={v.name}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      <img
+                        src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                        width={24}
+                        height={24}
+                        style={{ objectFit: 'contain' }}
+                        alt="icon"
+                      />
+                      <ListItemTextKit primary={v.name} />
+                    </div>
+                  </MenuItemKit>
+                )}
+                icon={PlatformIcon}
+                title="Select a Platform"
+                type="platform"
+                className="top-competition"
+                setRow={setPlatform}
+                select={platform}
+              />
+            ) : (
+              ''
+            )}
+
             <div className="listing-vendors">
               <MarketingCheckmarksDropdown
                 names={vendorsArr
@@ -353,29 +392,34 @@ const CompetitionListing = () => {
               setRow={setTimeSlot}
               select={timeSlot}
             />
-            <CompetitionDropdown
-              rows={areasData}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={AreaIcon}
-              title="Select Area"
-              type="area"
-              className="top-competition not-platform"
-              setRow={setArea}
-              select={area}
-            />
+            {Array.isArray(areasData || ['Everywhere']) &&
+            (areasData || ['Everywhere']).length > 0 ? (
+              <CompetitionDropdown
+                rows={areasData || ['Everywhere']}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v} value={v}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      <ListItemTextKit primary={v} />
+                    </div>
+                  </MenuItemKit>
+                )}
+                icon={AreaIcon}
+                title="Select Area"
+                type="area"
+                className="top-competition not-platform"
+                setRow={setArea}
+                select={area}
+              />
+            ) : (
+              ''
+            )}
           </div>
           <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>
