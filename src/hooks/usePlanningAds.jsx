@@ -27,38 +27,50 @@ function usePlanningAds({ dateRange }) {
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
       }).then((res) => {
         const arr = JSON.parse(JSON.stringify(res?.data?.ads || []));
-        if (Object.keys(display).length > 0) {
-          res?.data?.ads.forEach((obj, index) => {
-            Object.keys(display).forEach((c) => {
-              Object.keys(display[c]).forEach((v) => {
+        if (res?.data?.ads.length > 0) {
+          if (Object.keys(display).length > 0) {
+            res?.data?.ads.forEach((obj, index) => {
+              Object.keys(display).forEach((c) => {
+                Object.keys(display[c]).forEach((v) => {
+                  obj.vendor_ids.forEach((id) => {
+                    arr[index].chain_name = c;
+                    if (id === display[c][v][obj.platform].vendor_id) {
+                      if ((arr[index].vendor_names || []).length === 0) {
+                        arr[index] = {
+                          ...arr[index],
+                          vendor_names: [v],
+                        };
+                      } else {
+                        arr[index].vendor_names = [...arr[index].vendor_names, v];
+                      }
+                    }
+                  });
+                });
+              });
+            });
+          } else {
+            res?.data?.ads.forEach((obj, index) => {
+              vendorsArr.forEach((objV) => {
                 obj.vendor_ids.forEach((id) => {
-                  if (id === display[c][v][obj.platform].vendor_id) {
+                  arr[index].chain_name = objV.data.chain_name;
+                  if (id === objV.vendor_id) {
                     if ((arr[index].vendor_names || []).length === 0) {
-                      arr[index].vendor_names = [v];
+                      arr[index].vendor_names = [objV.data.vendor_name];
                     } else {
-                      arr[index].vendor_names = [...arr[index].vendor_names, v];
+                      arr[index].vendor_names = [...arr[index].vendor_names, objV.data.vendor_name];
                     }
                   }
                 });
               });
             });
-          });
-        } else {
-          res?.data?.ads.forEach((obj, index) => {
-            vendorsArr.forEach((objV) => {
-              obj.vendor_ids.forEach((id) => {
-                if (id === objV.vendor_id) {
-                  if ((arr[index].vendor_names || []).length === 0) {
-                    arr[index].vendor_names = [objV.data.vendor_name];
-                  } else {
-                    arr[index].vendor_names = [...arr[index].vendor_names, objV.data.vendor_name];
-                  }
-                }
-              });
-            });
-          });
+          }
         }
-        const newArr = arr.map((obj) => ({ ...obj, vendor_names: obj.vendor_names.join(', ') }));
+        const newArr = arr
+          .map((obj) => ({
+            ...obj,
+            vendor_names: (obj?.vendor_names || []).join(', '),
+          }))
+          .filter((obj) => obj?.vendor_names);
         setAds(newArr || []);
         setIsLoading(false);
       });

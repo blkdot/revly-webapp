@@ -137,13 +137,13 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
   React.useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
-  }, [root.ariaHidden]);
+  }, [root.ariaHidden, vendors]);
 
   React.useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [root.ariaHidden],
+    [root.ariaHidden, vendors],
   );
   const [hoverStatus, setHover] = React.useState([]);
   const getHoverStatusVendor = (vName) => hoverStatus.find((v) => v === vName);

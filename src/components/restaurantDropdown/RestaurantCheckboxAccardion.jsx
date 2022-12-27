@@ -40,13 +40,13 @@ const RestaurantCheckboxAccordion = ({
   useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
-  }, [root.ariaHidden, active]);
+  }, [root.ariaHidden, active, display]);
 
   useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [root.ariaHidden, active],
+    [root.ariaHidden, active, display],
   );
 
   const [hoverStatusChain, setHoverChain] = useState(false);
