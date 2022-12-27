@@ -328,6 +328,7 @@
     align-items: center;
     position: relative;
     grid-gap: 5px;
+    margin-top: 13px;
 
     > div {
       display: flex;
@@ -343,6 +344,19 @@
       height: 30px;
       border-radius: 4px;
       margin-bottom: 4px;
+    }
+
+    .loading {
+      animation: skeleton-loading 1s linear infinite alternate;
+    }
+    
+    @keyframes skeleton-loading {
+      0% {
+        background-color: hsl(200, 20%, 80%);
+      }
+      100% {
+        background-color: hsl(200, 20%, 95%);
+      }
     }
   }
 }
