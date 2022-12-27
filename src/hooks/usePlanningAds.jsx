@@ -7,7 +7,7 @@ import { useUserAuth } from '../contexts/AuthContext';
 let fnDelays = null;
 function usePlanningAds({ dateRange }) {
   const { vendors } = useDate();
-  const { vendorsObj, display } = vendors;
+  const { vendorsObj, display, vendorsArr } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
   const { user } = useUserAuth();
@@ -40,6 +40,20 @@ function usePlanningAds({ dateRange }) {
                     }
                   }
                 });
+              });
+            });
+          });
+        } else {
+          res?.data?.ads.forEach((obj, index) => {
+            vendorsArr.forEach((objV) => {
+              obj.vendor_ids.forEach((id) => {
+                if (id === objV.vendor_id) {
+                  if ((arr[index].vendor_names || []).length === 0) {
+                    arr[index].vendor_names = [objV.data.vendor_name];
+                  } else {
+                    arr[index].vendor_names = [...arr[index].vendor_names, objV.data.vendor_name];
+                  }
+                }
               });
             });
           });
