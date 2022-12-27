@@ -23,6 +23,7 @@ import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmap
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
 import GetRecap from './GetRecap';
 import useDate from '../../hooks/useDate';
+import SpinnerKit from '../../kits/spinner/SpinnerKit';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -52,6 +53,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [duration, setDuration] = useState('Starting Now');
   const [disabled, setDisabled] = useState(false);
   const [heatmapLoading, setHeatmapLoading] = useState(false);
+  const [triggerLoading, setTriggerLoading] = useState(false);
   const [beforePeriodBtn, setBeforePeriodBtn] = useState({
     startDate: startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
     endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
@@ -290,6 +292,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     };
 
     try {
+      setTriggerLoading(true);
       if (platform.length < 2) {
         const newBranchData =
           Object.keys(vendors.display).length > 0
@@ -310,6 +313,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         setCreated(true);
         setRecap(false);
         setChecked([]);
+        setTriggerLoading(false);
       } else {
         const crossPlatform = platform.map((p) => {
           const newBranchData =
@@ -340,10 +344,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           setCreated(true);
           setRecap(false);
           setChecked([]);
+          setTriggerLoading(false);
         });
       }
     } catch (error) {
       triggerAlertWithMessageError(error.message);
+      setTriggerLoading(false);
     }
   };
   const getHeatmapData = () => {
@@ -941,12 +947,69 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       </TypographyKit>
     ));
 
+  const renderLeftSideNotCreated = () => {
+    if (triggerLoading)
+      return (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '10rem',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <SpinnerKit />
+            <p
+              style={{
+                fontSize: '14px',
+                textAlign: 'center',
+                fontWeight: '600',
+                marginTop: '1rem',
+              }}
+            >
+              Getting everything ready...
+            </p>
+          </div>
+        </div>
+      );
+
+    return (
+      <div className="left-part-bottom">
+        <ButtonKit onClick={() => handleBack()} variant="outlined" disabled={selected < 2}>
+          Previous Step
+        </ButtonKit>
+        <ButtonKit
+          onClick={() => {
+            if (smRule) {
+              setSmRule(false);
+              setRecap(true);
+            }
+            if (recap) {
+              handleSchedule();
+            }
+            if (steps.length - 1 === selected) {
+              setRecap(true);
+            } else {
+              setSelected(selected + 1);
+              setDisabled(true);
+            }
+          }}
+          disabled={disabled}
+          variant="contained"
+        >
+          {getRecapBtn()}
+        </ButtonKit>
+      </div>
+    );
+  };
+
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit id="marketing-setup" className="marketing-paper">
         <ContainerKit className="setup-container">
           <div className="left-part">
-            <GetRecap recapData={recapData} />
+            {triggerLoading ? null : <GetRecap recapData={recapData} />}
             {created ? (
               <div className="left-part-bottom">
                 <ButtonKit onClick={() => closeSetup()} variant="outlined">
@@ -954,32 +1017,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                 </ButtonKit>
               </div>
             ) : (
-              <div className="left-part-bottom">
-                <ButtonKit onClick={() => handleBack()} variant="outlined" disabled={selected < 2}>
-                  Previous Step
-                </ButtonKit>
-                <ButtonKit
-                  onClick={() => {
-                    if (smRule) {
-                      setSmRule(false);
-                      setRecap(true);
-                    }
-                    if (recap) {
-                      handleSchedule();
-                    }
-                    if (steps.length - 1 === selected) {
-                      setRecap(true);
-                    } else {
-                      setSelected(selected + 1);
-                      setDisabled(true);
-                    }
-                  }}
-                  disabled={disabled}
-                  variant="contained"
-                >
-                  {getRecapBtn()}
-                </ButtonKit>
-              </div>
+              renderLeftSideNotCreated()
             )}
           </div>
           <div className="right-part">
