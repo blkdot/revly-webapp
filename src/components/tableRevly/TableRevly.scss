@@ -89,3 +89,11 @@
     text-align: center;
   }
 }
+.render-row-tooltip{
+  text-align: justify;
+  width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
