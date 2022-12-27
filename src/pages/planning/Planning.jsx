@@ -79,7 +79,7 @@ const Planning = () => {
     renderScheduleType,
     renderSimpleRow,
     renderCalculatedPercent,
-    renderRowTooltip,
+    renderRowDots,
   } = useTableContentFormatter();
 
   const headersOffers = [
@@ -97,6 +97,7 @@ const Planning = () => {
   ];
 
   const headersAds = [
+    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
     { id: 'vendor_names', disablePadding: true, label: 'Vendor names' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
@@ -106,9 +107,10 @@ const Planning = () => {
   ];
 
   const cellTemplatesObject = {
+    chain_name: renderSimpleRowNotCentered,
     vendor_name: renderSimpleRowNotCentered,
     platform: renderPlatform,
-    vendor_names: renderRowTooltip,
+    vendor_names: renderRowDots,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
     type_schedule: renderScheduleType,
@@ -183,7 +185,7 @@ const Planning = () => {
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
-      setFilters(filtersSaved);
+      setFilters(JSON.parse(filtersSaved));
     }
 
     const body = document.querySelector('body');
