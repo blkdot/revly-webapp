@@ -68,7 +68,7 @@ const CompetitionListing = () => {
         chainObj: {
           [chainRandom]: { [vendorRandom]: { ...displayTemp[chainRandom][vendorRandom] } },
         },
-        vendorsObj: { [platform]: [displayTemp[chainRandom][vendorRandom][platform]] },
+        vendorsObj: { [platform]: [displayTemp?.[chainRandom]?.[vendorRandom]?.[platform]] },
       });
     } else {
       const vendorsSelectedTemp = [
@@ -174,13 +174,15 @@ const CompetitionListing = () => {
       {},
     );
   const timeSlotObj = {
-    'Throughout Day': 'Throughout Day',
     'Breakfast (04:00 - 11:00)': 'Breakfast',
     'Lunch (11:00 - 14:00)': 'Lunch',
     'Interpeak (14:00 - 17:00)': 'Interpeak',
     'Dinner (17:00 - 00:00)': 'Dinner',
     'Late night (00:00 - 04:00)': 'Late Night',
   };
+  useEffect(() => {
+    setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
+  }, [area]);
   const getData = (plat, vend) => {
     clearTimeout(fnDelays);
 
@@ -191,7 +193,7 @@ const CompetitionListing = () => {
           master_email: user.email,
           access_token: user.accessToken,
           vendors: vend || [],
-          timeslot: timeSlotObj[timeSlot],
+          timeslot: timeSlotObj[timeSlot] || timeSlot,
           location: area === 'Everywhere' ? 'ALL' : area,
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
@@ -246,20 +248,30 @@ const CompetitionListing = () => {
   };
   useEffect(() => {
     if (Object.keys(display).length > 0) {
-      if (platform) {
+      if (platform && area && timeSlot && vendorsData.vendorsObj[platform] !== null) {
         getData(platform, vendorsData.vendorsObj[platform]);
       }
-    } else if (platform && vendorsData?.vendorsArr?.length > 0) {
+    } else if (
+      platform &&
+      vendorsData?.vendorsArr?.length > 0 &&
+      area &&
+      timeSlot &&
+      vendorsData.vendorsObj[platform] !== null
+    ) {
       getData(platform, vendorsData.vendorsObj[platform]);
     }
   }, [platform, vendorsData, beforePeriodBtn, timeSlot, area]);
 
   useEffect(() => {
     if (Object.keys(display).length > 0) {
-      if (platform) {
+      if (platform && vendorsData.vendorsObj[platform] !== null) {
         getAreasData(platform, vendorsData.vendorsObj[platform]);
       }
-    } else if (platform && vendorsData.vendorsArr.length > 0) {
+    } else if (
+      platform &&
+      vendorsData.vendorsArr.length > 0 &&
+      vendorsData.vendorsObj[platform] !== null
+    ) {
       getAreasData(platform, vendorsData.vendorsObj[platform]);
     }
   }, [platform, vendorsData, beforePeriodBtn]);
@@ -286,36 +298,41 @@ const CompetitionListing = () => {
       <PaperKit className="competition-paper">
         <div className="competition-top-input">
           <div className="dropdowns">
-            <CompetitionDropdown
-              rows={platformList}
-              renderOptions={(v) => (
-                <MenuItemKit key={v.name} value={v.name}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <img
-                      src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                      width={24}
-                      height={24}
-                      style={{ objectFit: 'contain' }}
-                      alt="icon"
-                    />
-                    <ListItemTextKit primary={v.name} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={PlatformIcon}
-              title="Select a Platform"
-              type="platform"
-              className="top-competition"
-              setRow={setPlatform}
-              select={platform}
-            />
+            {Array.isArray(platformList) && platformList.length > 0 ? (
+              <CompetitionDropdown
+                rows={platformList}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v.name} value={v.name}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      <img
+                        src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                        width={24}
+                        height={24}
+                        style={{ objectFit: 'contain' }}
+                        alt="icon"
+                      />
+                      <ListItemTextKit primary={v.name} />
+                    </div>
+                  </MenuItemKit>
+                )}
+                icon={PlatformIcon}
+                title="Select a Platform"
+                type="platform"
+                className="top-competition"
+                setRow={setPlatform}
+                select={platform}
+              />
+            ) : (
+              ''
+            )}
+
             <div className="listing-vendors">
               <MarketingCheckmarksDropdown
                 names={vendorsArr
@@ -353,29 +370,34 @@ const CompetitionListing = () => {
               setRow={setTimeSlot}
               select={timeSlot}
             />
-            <CompetitionDropdown
-              rows={areasData}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={AreaIcon}
-              title="Select Area"
-              type="area"
-              className="top-competition not-platform"
-              setRow={setArea}
-              select={area}
-            />
+            {Array.isArray(areasData || ['Everywhere']) &&
+            (areasData || ['Everywhere']).length > 0 ? (
+              <CompetitionDropdown
+                rows={areasData || ['Everywhere']}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v} value={v}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      <ListItemTextKit primary={v} />
+                    </div>
+                  </MenuItemKit>
+                )}
+                icon={AreaIcon}
+                title="Select Area"
+                type="area"
+                className="top-competition not-platform"
+                setRow={setArea}
+                select={area}
+              />
+            ) : (
+              ''
+            )}
           </div>
           <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>

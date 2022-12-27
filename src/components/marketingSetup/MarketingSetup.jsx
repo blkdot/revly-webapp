@@ -873,7 +873,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       backgroundPosition: '50px 50px',
     };
   };
-
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
       <PaperKit id="marketing-setup" className="marketing-paper">
