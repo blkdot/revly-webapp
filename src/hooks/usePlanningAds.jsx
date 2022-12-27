@@ -65,10 +65,12 @@ function usePlanningAds({ dateRange }) {
             });
           }
         }
-        const newArr = arr.map((obj) => ({
-          ...obj,
-          vendor_names: (obj?.vendor_names || []).join(', '),
-        }));
+        const newArr = arr
+          .map((obj) => ({
+            ...obj,
+            vendor_names: (obj?.vendor_names || []).join(', '),
+          }))
+          .filter((obj) => obj?.vendor_names);
         setAds(newArr || []);
         setIsLoading(false);
       });

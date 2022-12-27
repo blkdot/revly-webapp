@@ -213,7 +213,8 @@ const Planning = () => {
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status)) status.push(active ? cur.ad_status : cur.status);
+        if (!status.includes(active ? cur.ad_status : cur.status))
+          status.push(active ? cur.ad_status : cur.status);
 
         return { ...acc, platform, discount_type: discountType, discount_rate: procent, status };
       },
