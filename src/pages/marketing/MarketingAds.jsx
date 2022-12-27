@@ -53,12 +53,14 @@ const MarketingAds = () => {
     renderStatus,
     renderTarget,
     renderSimpleRow,
-    renderRowTooltip,
+    renderRowDots,
     renderScheduleType,
     renderCalculatedPercent,
+    renderSimpleRowNotCentered,
   } = useTableContentFormatter();
 
   const headersAds = [
+    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
     { id: 'vendor_names', disablePadding: true, label: 'Vendor names' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'ad_serving_count', disablePadding: true, label: 'Impressions' },
@@ -77,7 +79,8 @@ const MarketingAds = () => {
   ];
 
   const cellTemplatesObject = {
-    vendor_names: renderRowTooltip,
+    chain_name: renderSimpleRowNotCentered,
+    vendor_names: renderRowDots,
     platform: renderPlatform,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
