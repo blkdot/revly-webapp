@@ -47,7 +47,7 @@ const GetRecap = ({ recapData }) => {
     branch,
     platform,
     duration,
-    customDay,
+    typeSchedule,
     customisedDay,
     everyWeek,
     startingDate,
@@ -385,16 +385,16 @@ const GetRecap = ({ recapData }) => {
                   <div>
                     <div>{duration}</div>
                     {duration === 'Program the offer duration' ? (
-                      <img className="arrow-icon" src={ArrowIcon} alt="arrow" />
+                      <img className="arrow-icon" style={{ left: 0 }} src={ArrowIcon} alt="arrow" />
                     ) : (
                       ''
                     )}
                   </div>
                   {duration === 'Program the offer duration' ? (
                     <div className="customised-column">
-                      <div>{customDay}</div>
+                      <div>{typeSchedule}</div>
                       <p>
-                        {customDay === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
+                        {typeSchedule === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
                       </p>
                     </div>
                   ) : (
@@ -570,9 +570,11 @@ const GetRecap = ({ recapData }) => {
                   )}
                 </div>
                 {duration === 'Program the offer duration' ? (
-                  <div className="customised-column">
-                    <div>{customDay}</div>
-                    <p>{customDay === 'Customised Days' ? customisedDay.join(', ') : everyWeek}</p>
+                  <div style={{ margin: 0 }} className="customised-column">
+                    <div>{typeSchedule}</div>
+                    <p>
+                      {typeSchedule === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
+                    </p>
                   </div>
                 ) : (
                   ''
@@ -691,7 +693,7 @@ const GetRecap = ({ recapData }) => {
             {menu === 'Offer on An Item from the Menu' ? (
               <div className="recap-between no-border">
                 {getItemMenuNamePrice().map((obj) => (
-                  <div>
+                  <div key={obj.name}>
                     <div>{obj.name}</div>
                     <div>{obj.price} AED</div>
                   </div>
