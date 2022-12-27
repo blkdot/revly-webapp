@@ -354,7 +354,7 @@ const GetProgress = ({ progressData }) => {
             rows={[
               'Every Monday',
               'Every Tuesday',
-              'Every Wendnesday',
+              'Every Wednesday',
               'Every Thursday',
               'Every Friday',
               'Every Saturday',
