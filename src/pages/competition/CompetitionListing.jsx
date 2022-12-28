@@ -180,6 +180,7 @@ const CompetitionListing = () => {
     'Interpeak (14:00 - 17:00)': 'Interpeak',
     'Dinner (17:00 - 00:00)': 'Dinner',
     'Late night (00:00 - 04:00)': 'Late Night',
+    'Throughout Day': 'Throughout Day',
   };
   useEffect(() => {
     setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
@@ -370,7 +371,7 @@ const CompetitionListing = () => {
               />
             </div>
             <CompetitionDropdown
-              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
+              rows={Object.keys(timeSlotObj)}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
