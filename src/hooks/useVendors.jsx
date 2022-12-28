@@ -53,12 +53,23 @@ const useVendors = (isSign) => {
     const { ...rest } = newData;
     const display = newData.display ? newData.display : {};
     delete rest.display;
+    const vendorsObj = {};
     const chainObj = JSON.parse(JSON.stringify(display));
-    Object.keys(chainObj).forEach((c) => {
-      Object.keys(chainObj[c]).forEach((v) => {
-        Object.keys(chainObj[c][v]).forEach((p) => {
-          if (chainObj[c][v][p] === null) {
-            delete chainObj[c][v][p];
+    Object.keys(chainObj).forEach((chainName) => {
+      Object.keys(chainObj[chainName]).forEach((vendorName) => {
+        Object.keys(chainObj[chainName][vendorName]).forEach((platform) => {
+          if (chainObj[chainName][vendorName][platform] !== null) {
+            if ((vendorsObj[platform] || []).length === 0) {
+              vendorsObj[platform] = [chainObj[chainName][vendorName][platform]];
+            } else {
+              vendorsObj[platform] = [
+                ...vendorsObj[platform],
+                chainObj[chainName][vendorName][platform],
+              ];
+            }
+          }
+          if (chainObj[chainName][vendorName][platform] === null) {
+            delete chainObj[chainName][vendorName][platform];
           }
         });
       });
@@ -66,7 +77,7 @@ const useVendors = (isSign) => {
     const dataV = {
       vendorsSelected: vendorsSelectedTemp,
       vendorsArr: vendorsTemp,
-      vendorsObj: rest,
+      vendorsObj: Object.keys(display).length > 0 ? vendorsObj : rest,
       display: chainObj,
       chainObj,
     };

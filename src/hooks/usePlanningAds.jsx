@@ -26,22 +26,30 @@ function usePlanningAds({ dateRange }) {
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
       }).then((res) => {
-        const arr = JSON.parse(JSON.stringify(res?.data?.ads || []));
-        if (res?.data?.ads.length > 0) {
+        // its copy of ads to add and change the values
+        const newAdsArray = JSON.parse(JSON.stringify(res?.data?.ads || []));
+        // here we checking is it newAdsArray is not empty
+        if (newAdsArray.length > 0) {
+          // here we checking is it display is not empty
           if (Object.keys(display).length > 0) {
-            res?.data?.ads.forEach((obj, index) => {
-              Object.keys(display).forEach((c) => {
-                Object.keys(display[c]).forEach((v) => {
-                  obj.vendor_ids.forEach((id) => {
-                    arr[index].chain_name = c;
-                    if (id === display[c][v][obj.platform].vendor_id) {
-                      if ((arr[index].vendor_names || []).length === 0) {
-                        arr[index] = {
-                          ...arr[index],
-                          vendor_names: [v],
-                        };
+            newAdsArray.forEach((obj, index) => {
+              Object.keys(display).forEach((chainName) => {
+                Object.keys(display[chainName]).forEach((vendorName) => {
+                  obj?.vendor_ids?.forEach((id) => {
+                    // here we put chainName to key chain_name (chain_name: chainName)
+                    newAdsArray[index].chain_name = chainName;
+                    // check is it id equal display id
+                    if (id === display[chainName][vendorName][obj.platform].vendor_id) {
+                      // check is it vendor_names is not empty empty
+                      if ((newAdsArray[index].vendor_names || []).length > 0) {
+                        // we take the curennt value and push new value
+                        newAdsArray[index].vendor_names = [
+                          ...newAdsArray[index].vendor_names,
+                          vendorName,
+                        ];
                       } else {
-                        arr[index].vendor_names = [...arr[index].vendor_names, v];
+                        // we just put the new value
+                        newAdsArray[index].vendor_names = [vendorName];
                       }
                     }
                   });
@@ -49,15 +57,23 @@ function usePlanningAds({ dateRange }) {
               });
             });
           } else {
-            res?.data?.ads.forEach((obj, index) => {
-              vendorsArr.forEach((objV) => {
-                obj.vendor_ids.forEach((id) => {
-                  arr[index].chain_name = objV.data.chain_name;
-                  if (id === objV.vendor_id) {
-                    if ((arr[index].vendor_names || []).length === 0) {
-                      arr[index].vendor_names = [objV.data.vendor_name];
+            newAdsArray.forEach((obj, index) => {
+              vendorsArr.forEach((objVendor) => {
+                obj?.vendor_ids?.forEach((id) => {
+                  // here we put chainName to key chain_name (chain_name: chainName)
+                  newAdsArray[index].chain_name = objVendor.data.chain_name;
+                  if (id === objVendor.vendor_id) {
+                    // check is it id equal venodorArr id
+                    // check is it vendor_names is not empty empty
+                    if ((obj?.vendor_names || []).length > 0) {
+                      // we take the curennt value and push new value
+                      newAdsArray[index].vendor_names = [
+                        ...newAdsArray[index].vendor_names,
+                        objVendor.data.vendor_name,
+                      ];
                     } else {
-                      arr[index].vendor_names = [...arr[index].vendor_names, objV.data.vendor_name];
+                      // we just put the new value
+                      newAdsArray[index].vendor_names = [objVendor.data.vendor_name];
                     }
                   }
                 });
@@ -65,13 +81,12 @@ function usePlanningAds({ dateRange }) {
             });
           }
         }
-        const newArr = arr
-          .map((obj) => ({
-            ...obj,
-            vendor_names: (obj?.vendor_names || []).join(', '),
-          }))
-          .filter((obj) => obj?.vendor_names);
-        setAds(newArr || []);
+        // we join vendor_names and save on same key because its more better than create new renderRowTable hook
+        const newAds = newAdsArray.map((obj) => ({
+          ...obj,
+          vendor_names: (obj?.vendor_names || []).join(', '),
+        }));
+        setAds(newAds || []);
         setIsLoading(false);
       });
     }, 750);
