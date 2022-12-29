@@ -4,9 +4,9 @@ import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import SelectKit from '../../kits/select/SelectKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 import RestaurantCheckboxAccordion from '../restaurantDropdown/RestaurantCheckboxAccardion';
+import RadioKit from '../../kits/radio/RadioKit';
 
 const MarketingCheckmarksDropdown = ({
   personName,
@@ -86,7 +86,7 @@ const MarketingCheckmarksDropdown = ({
         key={name}
         value={name}
       >
-        <CheckboxKit
+        <RadioKit
           checked={(type === 'vendor' ? personName.vendorsSelected : personName).indexOf(name) > -1}
         />
         <ListItemTextKit primary={name} />

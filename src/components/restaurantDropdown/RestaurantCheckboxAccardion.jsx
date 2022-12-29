@@ -5,6 +5,7 @@ import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import selectIcon from '../../assets/images/ic_select.png';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
 import ButtonKit from '../../kits/button/ButtonKit';
+import RadioKit from '../../kits/radio/RadioKit';
 
 const RestaurantCheckboxAccordion = ({
   info,
@@ -159,13 +160,23 @@ const RestaurantCheckboxAccordion = ({
       {Object.keys(info).map((vendorName) => (
         <InputLabelKit key={vendorName} className="accordion-dropdown active listing">
           <div>
-            <CheckboxKit
-              disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
-              checked={!!chainObj?.[chainName]?.[vendorName]}
-              onChange={(e) => handleChangeVendor(e, chainName)}
-              value={vendorName}
-              onClick={(e) => e.stopPropagation()}
-            />
+            {listing ? (
+              <RadioKit
+                disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
+                checked={!!chainObj?.[chainName]?.[vendorName]}
+                onChange={(e) => handleChangeVendor(e, chainName)}
+                value={vendorName}
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <CheckboxKit
+                disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
+                checked={!!chainObj?.[chainName]?.[vendorName]}
+                onChange={(e) => handleChangeVendor(e, chainName)}
+                value={vendorName}
+                onClick={(e) => e.stopPropagation()}
+              />
+            )}
             <TooltipKit
               id="category-tooltip"
               interactive={1}
