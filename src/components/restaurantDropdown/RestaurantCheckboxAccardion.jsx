@@ -5,6 +5,7 @@ import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import selectIcon from '../../assets/images/ic_select.png';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
 import ButtonKit from '../../kits/button/ButtonKit';
+import RadioKit from '../../kits/radio/RadioKit';
 
 const RestaurantCheckboxAccordion = ({
   info,
@@ -95,71 +96,87 @@ const RestaurantCheckboxAccordion = ({
   };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
-      <div
-        tabIndex={-1}
-        role="presentation"
-        className={`checkbox-accordion ${active ? 'active' : ''}`}
-        onClick={() => setActive(!active)}
-        style={{ '--l': Object.keys(info).length }}
-      >
-        <div>
-          <img
-            tabIndex={-1}
-            role="presentation"
-            onClick={(e) => e.stopPropagation()}
-            src={selectIcon}
-            alt="select icon"
-          />
-          <div style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center' }}>
-            {!cost ? (
-              <CheckboxKit
-                checked={getChecked()}
+      {!listing ? (
+        <div
+          tabIndex={-1}
+          role="presentation"
+          className={`checkbox-accordion ${active ? 'active' : ''}`}
+          onClick={() => setActive(!active)}
+          style={{ '--l': Object.keys(info).length }}
+        >
+          <div>
+            <img
+              tabIndex={-1}
+              role="presentation"
+              onClick={(e) => e.stopPropagation()}
+              src={selectIcon}
+              alt="select icon"
+            />
+            <div
+              style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center' }}
+            >
+              {!cost ? (
+                <CheckboxKit
+                  checked={getChecked()}
+                  onClick={(e) => e.stopPropagation()}
+                  value={chainName}
+                  onChange={(e) => handleChange(e.target.value, e.target.checked)}
+                />
+              ) : (
+                <span style={{ height: 40 }} />
+              )}
+              <TooltipKit
+                id="category-tooltip"
+                interactive={1}
+                disableHoverListener={!hoverStatusChain}
+                title={chainName}
+              >
+                <p className="chain-name">{chainName}</p>
+              </TooltipKit>
+            </div>
+          </div>
+          <ExpandMoreIcon style={{ cursor: 'pointer' }} />
+          {!(branch || cost || listing) ? (
+            <div className="only-button">
+              <ButtonKit
+                disabled={
+                  Object.keys(chainObj)[0] === chainName &&
+                  Object.keys(chainObj).length === 1 &&
+                  Object.keys(chainObj[chainName]).length === Object.keys(display[chainName]).length
+                }
+                onClick={handleClick}
+                variant="contained"
+              >
+                Only
+              </ButtonKit>
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
+      ) : (
+        ''
+      )}
+      {Object.keys(info).map((vendorName) => (
+        <InputLabelKit key={vendorName} className="accordion-dropdown active listing">
+          <div>
+            {listing ? (
+              <RadioKit
+                disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
+                checked={!!chainObj?.[chainName]?.[vendorName]}
+                onChange={(e) => handleChangeVendor(e, chainName)}
+                value={vendorName}
                 onClick={(e) => e.stopPropagation()}
-                value={chainName}
-                onChange={(e) => handleChange(e.target.value, e.target.checked)}
               />
             ) : (
-              <span style={{ height: 40 }} />
+              <CheckboxKit
+                disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
+                checked={!!chainObj?.[chainName]?.[vendorName]}
+                onChange={(e) => handleChangeVendor(e, chainName)}
+                value={vendorName}
+                onClick={(e) => e.stopPropagation()}
+              />
             )}
-            <TooltipKit
-              id="category-tooltip"
-              interactive={1}
-              disableHoverListener={!hoverStatusChain}
-              title={chainName}
-            >
-              <p className="chain-name">{chainName}</p>
-            </TooltipKit>
-          </div>
-        </div>
-        <ExpandMoreIcon style={{ cursor: 'pointer' }} />
-        {!(branch || cost || listing) ? (
-          <div className="only-button">
-            <ButtonKit
-              disabled={
-                Object.keys(chainObj)[0] === chainName &&
-                Object.keys(chainObj).length === 1 &&
-                Object.keys(chainObj[chainName]).length === Object.keys(display[chainName]).length
-              }
-              onClick={handleClick}
-              variant="contained"
-            >
-              Only
-            </ButtonKit>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
-      {Object.keys(info).map((vendorName) => (
-        <InputLabelKit key={vendorName} className={`accordion-dropdown ${active ? 'active' : ''}`}>
-          <div>
-            <CheckboxKit
-              disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
-              checked={!!chainObj?.[chainName]?.[vendorName]}
-              onChange={(e) => handleChangeVendor(e, chainName)}
-              value={vendorName}
-              onClick={(e) => e.stopPropagation()}
-            />
             <TooltipKit
               id="category-tooltip"
               interactive={1}

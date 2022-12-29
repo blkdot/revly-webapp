@@ -897,6 +897,14 @@
     }
   }
 
+  .country-wrapper{
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    gap: 10px;
+    margin-left: 20px;
+  }
+
   .Mui-focused.Mui-focused {
     fieldset {
       border-color: #906bff !important;
@@ -944,9 +952,16 @@
   }
 }
 #category-tooltip .MuiTooltip-tooltip{
-  background-color: #646464;
+  background-color: #212b36;
   width: fit-content;
   pointer-events: none;
+  padding: 1rem;
+  font-size: 10px;
+  >span{
+    &::before{
+      background-color: #212b36 !important;
+    }
+  }
 }
 .MuiTooltip-popper {
   .MuiTooltip-tooltip {

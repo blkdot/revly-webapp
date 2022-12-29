@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
+import { subDays } from 'date-fns';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
 import PaperKit from '../../kits/paper/PaperKit';
@@ -40,11 +41,11 @@ const CompetitionListing = () => {
   const [loading, setLoading] = useState(false);
   const [loadingAreas, setLoadingAreas] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
+  const [cuisine, setCuisine] = useState('');
   const { triggerAlertWithMessageError } = useAlert();
-  const { date } = useDate();
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: date.beforePeriod.startDate,
-    endDate: date.beforePeriod.endDate,
+    startDate: subDays(new Date(), 1),
+    endDate: subDays(new Date(), 1),
   });
   const [queue, setQueue] = useState(0);
   const [queueAreas, setQueueAreas] = useState(0);
@@ -144,7 +145,7 @@ const CompetitionListing = () => {
       id: 'r_cuis',
       numeric: false,
       disablePadding: true,
-      label: 'Listing in cuisine',
+      label: `Listing in ${cuisine} cuisine`,
     },
     {
       id: 'r_all',
@@ -175,6 +176,7 @@ const CompetitionListing = () => {
       {},
     );
   const timeSlotObj = {
+    'Throughout Day': 'Throughout Day',
     'Breakfast (04:00 - 11:00)': 'Breakfast',
     'Lunch (11:00 - 14:00)': 'Lunch',
     'Interpeak (14:00 - 17:00)': 'Interpeak',
@@ -223,10 +225,12 @@ const CompetitionListing = () => {
         }));
 
         setCompetitionListingData(filt);
+        setCuisine(ranking.data.cuisine);
         setLoading(false);
         if (stack === queue) setQueue(0);
       } catch (err) {
         setCompetitionListingData([]);
+        setCuisine('');
         setLoading(false);
         setQueue(0);
         triggerAlertWithMessageError('Error while retrieving data');
@@ -309,7 +313,13 @@ const CompetitionListing = () => {
             vendors={vendorsArr.filter((v) => v.platform === platform)}
           />
         )}
-        <Dates beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+        <Dates
+          isListing
+          beforePeriodBtn={beforePeriodBtn}
+          setbeforePeriodBtn={setbeforePeriodBtn}
+          defaultTitle="Yesterday"
+          defaultTypeDate="day"
+        />
       </div>
       <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
         Competition - Listing
@@ -367,6 +377,7 @@ const CompetitionListing = () => {
                 width={400}
                 height={100}
                 type="vendor"
+                platform={platform}
               />
             </div>
             <CompetitionDropdown
@@ -392,34 +403,30 @@ const CompetitionListing = () => {
               setRow={setTimeSlot}
               select={timeSlot}
             />
-            {Array.isArray(areasData || ['Everywhere']) &&
-            (areasData || ['Everywhere']).length > 0 ? (
-              <CompetitionDropdown
-                rows={areasData || ['Everywhere']}
-                renderOptions={(v) => (
-                  <MenuItemKit key={v} value={v}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        textTransform: 'capitalize',
-                      }}
-                    >
-                      <ListItemTextKit primary={v} />
-                    </div>
-                  </MenuItemKit>
-                )}
-                icon={AreaIcon}
-                title="Select Area"
-                type="area"
-                className="top-competition not-platform"
-                setRow={setArea}
-                select={area}
-              />
-            ) : (
-              ''
-            )}
+
+            <CompetitionDropdown
+              rows={areasData || ['Everywhere']}
+              renderOptions={(v) => (
+                <MenuItemKit key={v} value={v}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    <ListItemTextKit primary={v} />
+                  </div>
+                </MenuItemKit>
+              )}
+              icon={AreaIcon}
+              title="Select Area"
+              type="area"
+              className="top-competition not-platform"
+              setRow={setArea}
+              select={area}
+            />
           </div>
           <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>

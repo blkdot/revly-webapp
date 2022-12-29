@@ -39,7 +39,7 @@ const TableRevly = (props) => {
 
     if (!rows || rows.length < 1)
       return (
-        <TableRowKit>
+        <TableRowKit className="no-data">
           <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
             <span>No data retrieved</span>
           </TableCellKit>
