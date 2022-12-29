@@ -1,4 +1,4 @@
-import { addDays, addHours, addMinutes, format, getHours, isSameDay } from 'date-fns';
+import { addDays, addHours, addMinutes, format, getHours, isSameDay, isAfter } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import MarketingRadio from './MarketingRadio';
@@ -128,6 +128,12 @@ const GetProgress = ({ progressData }) => {
     setBranchData,
     branchData,
   } = progressData;
+
+  useEffect(() => {
+    if (!isAfter(endingDate, startingDate) && !isSameDay(endingDate, startingDate)) {
+      setEndingDate(new Date(addDays(startingDate, 1)));
+    }
+  }, [startingDate, endingDate]);
 
   const getWorkWeek = () => {
     if (typeSchedule === 'Work Week') {
@@ -387,6 +393,7 @@ const GetProgress = ({ progressData }) => {
               onChange={(newValue) => {
                 onChange(newValue, setStartingDate);
               }}
+              minDate={new Date()}
               renderInput={(params) => <TextfieldKit {...params} />}
             />
           </div>
@@ -562,7 +569,9 @@ const GetProgress = ({ progressData }) => {
     );
     setFilteredCategoryData(filtered);
   };
+
   const [menuChanged, setMenuChanged] = useState('');
+
   useEffect(() => {
     if (selected === 2) {
       setDiscountPercentage('');
@@ -570,6 +579,7 @@ const GetProgress = ({ progressData }) => {
     }
     setMenuChanged(menu);
   }, [menu, itemMenu]);
+
   if (selected === 1) {
     return (
       <div className="left-part-middle">

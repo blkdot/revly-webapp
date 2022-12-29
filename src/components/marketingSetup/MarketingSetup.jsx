@@ -159,21 +159,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   useEffect(() => {
     if (duration === 'Starting Now') {
-      setStartingDate(new Date());
-      setTypeSchedule('now');
-      setTimes([
-        {
-          startTime: new Date(
-            null,
-            null,
-            null,
-            format(new Date(), 'HH'),
-            format(new Date(addMinutes(new Date(), 2)), 'mm'),
-          ),
-          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-          pos: 1,
-        },
-      ]);
+      setFreshStartingDate();
     } else {
       setTypeSchedule('Continues Offer');
       setTimes([
@@ -185,6 +171,27 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       ]);
     }
   }, [duration]);
+
+  const setFreshStartingDate = () => {
+    if (duration !== 'Starting Now') return;
+
+    setStartingDate(new Date());
+    setTypeSchedule('now');
+    setTimes([
+      {
+        startTime: new Date(
+          null,
+          null,
+          null,
+          format(new Date(), 'HH'),
+          format(new Date(addMinutes(new Date(), 2)), 'mm'),
+        ),
+        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+        pos: 1,
+      },
+    ]);
+  };
+
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
       setCustomisedDay([]);
@@ -220,6 +227,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
 
   const getTargetAudience = () => targetAudienceObj[targetAudience] || 'orders';
+
   const getMenuItem = () => {
     const arr = [];
     category.forEach((obj) => {
@@ -257,6 +265,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
     setMenu('Offer on the whole Menu');
   }, [platform, vendors, platformData]);
+
   const getPlatformToken = () => {
     if (Object.keys(vendors.display).length > 0) {
       return (
@@ -269,7 +278,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       userPlatformData.platforms[platformData].access_token_bis
     );
   };
+
   const handleSchedule = async () => {
+    setFreshStartingDate();
+
     const menuType =
       menu === 'Offer on the whole Menu'
         ? null
@@ -352,6 +364,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       setTriggerLoading(false);
     }
   };
+
   const getHeatmapData = () => {
     setHeatmapLoading(true);
     delete vendorsObj.display;
@@ -415,11 +428,14 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
     setPlatform([...platform]);
   };
+
   const getPlatformData = (e) => {
     const { value } = e.target;
     setPlatformData(value);
   };
+
   const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
+
   const onChange = async (newValue, setDate) => {
     setDate(newValue);
     const date = await document.querySelectorAll('.date-error');
@@ -427,6 +443,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
     setDisabledDate(arr.every((bool) => bool === false));
   };
+
   const getMenuData = async (vendor, platforms) => {
     try {
       if (platforms === 'talabat') return;
@@ -455,6 +472,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       triggerAlertWithMessageError('Error while retrieving data');
     }
   };
+
   useEffect(() => {
     const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
     if (Object.keys(vendors.display).length === 0) {
@@ -477,6 +495,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     }
     setCategoryData(value);
   };
+
   function isValidDate(d) {
     return d instanceof Date && !Number.isNaN(d);
   }
@@ -762,6 +781,11 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }, [times, startingDate, endingDate, selected, typeSchedule]);
 
   const [recap, setRecap] = useState(false);
+
+  useEffect(() => {
+    setFreshStartingDate();
+  }, [recap]);
+
   const getItemMenuNamePrice = () => {
     const arr = [];
     checked.forEach((c) => {
@@ -771,6 +795,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     });
     return arr;
   };
+
   const progressData = {
     selected,
     getPlatform,
@@ -826,6 +851,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     setBranchData,
     branchData,
   };
+
   const recapData = {
     progressData,
     smRule,
@@ -858,6 +884,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     platformData,
     vendors,
   };
+
   const getRecapBtn = () => {
     if (recap) {
       return 'Launch Offer';
