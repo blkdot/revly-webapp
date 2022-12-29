@@ -95,63 +95,69 @@ const RestaurantCheckboxAccordion = ({
   };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
-      <div
-        tabIndex={-1}
-        role="presentation"
-        className={`checkbox-accordion ${active ? 'active' : ''}`}
-        onClick={() => setActive(!active)}
-        style={{ '--l': Object.keys(info).length }}
-      >
-        <div>
-          <img
-            tabIndex={-1}
-            role="presentation"
-            onClick={(e) => e.stopPropagation()}
-            src={selectIcon}
-            alt="select icon"
-          />
-          <div style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center' }}>
-            {!cost ? (
-              <CheckboxKit
-                checked={getChecked()}
-                onClick={(e) => e.stopPropagation()}
-                value={chainName}
-                onChange={(e) => handleChange(e.target.value, e.target.checked)}
-              />
-            ) : (
-              <span style={{ height: 40 }} />
-            )}
-            <TooltipKit
-              id="category-tooltip"
-              interactive={1}
-              disableHoverListener={!hoverStatusChain}
-              title={chainName}
+      {!listing ? (
+        <div
+          tabIndex={-1}
+          role="presentation"
+          className={`checkbox-accordion ${active ? 'active' : ''}`}
+          onClick={() => setActive(!active)}
+          style={{ '--l': Object.keys(info).length }}
+        >
+          <div>
+            <img
+              tabIndex={-1}
+              role="presentation"
+              onClick={(e) => e.stopPropagation()}
+              src={selectIcon}
+              alt="select icon"
+            />
+            <div
+              style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center' }}
             >
-              <p className="chain-name">{chainName}</p>
-            </TooltipKit>
+              {!cost ? (
+                <CheckboxKit
+                  checked={getChecked()}
+                  onClick={(e) => e.stopPropagation()}
+                  value={chainName}
+                  onChange={(e) => handleChange(e.target.value, e.target.checked)}
+                />
+              ) : (
+                <span style={{ height: 40 }} />
+              )}
+              <TooltipKit
+                id="category-tooltip"
+                interactive={1}
+                disableHoverListener={!hoverStatusChain}
+                title={chainName}
+              >
+                <p className="chain-name">{chainName}</p>
+              </TooltipKit>
+            </div>
           </div>
+          <ExpandMoreIcon style={{ cursor: 'pointer' }} />
+          {!(branch || cost || listing) ? (
+            <div className="only-button">
+              <ButtonKit
+                disabled={
+                  Object.keys(chainObj)[0] === chainName &&
+                  Object.keys(chainObj).length === 1 &&
+                  Object.keys(chainObj[chainName]).length === Object.keys(display[chainName]).length
+                }
+                onClick={handleClick}
+                variant="contained"
+              >
+                Only
+              </ButtonKit>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
-        <ExpandMoreIcon style={{ cursor: 'pointer' }} />
-        {!(branch || cost || listing) ? (
-          <div className="only-button">
-            <ButtonKit
-              disabled={
-                Object.keys(chainObj)[0] === chainName &&
-                Object.keys(chainObj).length === 1 &&
-                Object.keys(chainObj[chainName]).length === Object.keys(display[chainName]).length
-              }
-              onClick={handleClick}
-              variant="contained"
-            >
-              Only
-            </ButtonKit>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
+      ) : (
+        ''
+      )}
       {Object.keys(info).map((vendorName) => (
-        <InputLabelKit key={vendorName} className={`accordion-dropdown ${active ? 'active' : ''}`}>
+        <InputLabelKit key={vendorName} className="accordion-dropdown active listing">
           <div>
             <CheckboxKit
               disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}

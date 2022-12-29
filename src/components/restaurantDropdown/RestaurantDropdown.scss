@@ -141,6 +141,7 @@
   display: flex;
   align-items: center;
   grid-gap: 10px;
+
   &.Mui-focused.Mui-focused {
     color: $color-border;
     border-color: $color-border;
@@ -234,41 +235,48 @@
   max-height: 500px;
   scroll-behavior: smooth;
   padding-left: 15px;
+
   &.branch {
     padding-right: 15px;
     max-height: 300px;
   }
+
   &.cost {
     padding-right: 15px;
     max-height: 300px;
   }
+
   .vendors-only {
-    .restaurant-vendors{
+    .restaurant-vendors {
       text-transform: capitalize;
       width: 70%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    >li{
+
+    >li {
       padding: 0;
+
       .only-button {
         margin-left: 25px;
         background-color: #fff;
         height: 45px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          button{
-            box-shadow: none;
-          }
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        button {
+          box-shadow: none;
         }
+      }
+
       &:hover {
-          .only-button {
-            opacity: 1 !important;
-            visibility: visible !important;
-          }
+        .only-button {
+          opacity: 1 !important;
+          visibility: visible !important;
         }
+      }
     }
   }
 
@@ -318,7 +326,7 @@
     opacity: 0;
     visibility: hidden;
     transition: .3s;
-  
+
     button {
       font-size: 10px;
     }
@@ -404,6 +412,17 @@
     height: 0;
     display: none;
 
+    &.listing {
+      >div {
+        margin: 0;
+
+        &::before,
+        &::after {
+          content: none;
+        }
+      }
+    }
+
     .vendor-name {
       max-width: 65%;
       overflow: hidden;
@@ -413,18 +432,21 @@
       width: 65%;
       cursor: pointer;
     }
-    .only-button{
-      &.vendor{
+
+    .only-button {
+      &.vendor {
         margin-left: auto;
         margin-right: 10px;
       }
     }
-    &:hover{
-      .only-button{
+
+    &:hover {
+      .only-button {
         opacity: 1;
         visibility: visible;
       }
     }
+
     >div {
       width: 95%;
       margin-left: 29px;

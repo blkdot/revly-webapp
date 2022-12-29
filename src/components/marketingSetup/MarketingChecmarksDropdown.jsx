@@ -17,6 +17,7 @@ const MarketingCheckmarksDropdown = ({
   width,
   type,
   height,
+  platform,
 }) => {
   const ITEM_HEIGHT = height || 48;
   const ITEM_PADDING_TOP = 8;
@@ -28,17 +29,17 @@ const MarketingCheckmarksDropdown = ({
       },
     },
   };
+  const { chainObj, display, vendorsArr } = type === 'vendor' ? personName : {};
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
     if (type === 'vendor') {
-      if (value.length > 0) {
-        setName({
-          ...personName,
-          vendorsSelected: typeof value === 'string' ? value.split(',') : value,
-        });
-      }
+      setName({
+        ...personName,
+        vendorsSelected: [value],
+        chainObj: { [platform]: [vendorsArr.find((obj) => obj.data.vendor_name === value)] },
+      });
     } else {
       setName(
         // On autofill we get a stringified value.
@@ -46,111 +47,15 @@ const MarketingCheckmarksDropdown = ({
       );
     }
   };
-  const { chainObj, display, vendorsObj } = type === 'vendor' ? personName : {};
-  const handleChangeChain = (value, checked) => {
-    const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
-    const chainObjClear = JSON.parse(JSON.stringify(chainObj));
-    Object.keys(chainObjClear).forEach((cName) => {
-      if (Object.keys(chainObjClear[cName]).length === 0) {
-        delete chainObjClear[cName];
-      }
-    });
-    if (Object.keys(chainObjClear).length > 1) {
-      if (!checked) {
-        Object.keys(chainObj[value]).forEach((vName) => {
-          Object.keys(chainObjTemp[value][vName]).forEach((platform) => {
-            vendorsObj[platform]?.forEach((obj, index) => {
-              if (+obj.chain_id === chainObjTemp[value][vName][platform].chain_id) {
-                vendorsObj[platform].splice(index, 1);
-              }
-            });
-          });
-          delete chainObjTemp[value][vName];
-        });
-        setName({
-          ...personName,
-          chainObj: chainObjTemp,
-          vendorsObj,
-        });
-      }
-    }
-    if (checked) {
-      Object.keys(display).forEach((cName) => {
-        if (cName === value) {
-          Object.keys(display[value]).forEach((n) => {
-            Object.keys(display[value][n]).forEach((platform) => {
-              if (!vendorsObj[platform]) {
-                vendorsObj[platform] = [display[value][n][platform]];
-              } else {
-                vendorsObj[platform]?.push(display[value][n][platform]);
-              }
-            });
-          });
-          chainObjTemp[value] = display[value];
-        }
-      });
-
-      setName({
-        ...personName,
-        chainObj: chainObjTemp,
-        vendorsObj,
-      });
-    }
-  };
   const handleChangeVendor = (event, chainName) => {
     const {
       target: { value, checked },
     } = event;
-    const chainObjClear = JSON.parse(JSON.stringify(chainObj));
-    Object.keys(chainObjClear).forEach((cName) => {
-      if (Object.keys(chainObjClear[cName]).length === 0) {
-        delete chainObjClear[cName];
-      }
-    });
-    if (
-      Object.keys(chainObjClear).length > 1 ||
-      Object.keys(chainObjClear[chainName] || {}).length > 1
-    ) {
-      if (!checked) {
-        const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
-        const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj));
-        Object?.keys(chainObjTemp?.[chainName]?.[value])?.forEach((platform) => {
-          vendorsObjTemp[platform]?.forEach((obj, index) => {
-            if (+obj.chain_id === chainObjTemp[chainName][value][platform].chain_id) {
-              vendorsObjTemp[platform].splice(index, 1);
-            }
-          });
-        });
-        delete chainObjTemp[chainName][value];
-        Object.keys(vendorsObjTemp).forEach((p) => {
-          if (vendorsObjTemp[p].length === 0) {
-            delete vendorsObjTemp[p];
-          }
-        });
-        setName({
-          ...personName,
-          chainObj: chainObjTemp,
-          vendorsObj: vendorsObjTemp,
-        });
-      }
-    }
     if (checked) {
-      const chainObjTemp = {
-        ...chainObj,
-        [chainName]: { ...chainObj[chainName], [value]: { ...display[chainName][value] } },
-      };
-      const vendorsObjTemp = { ...vendorsObj };
-      Object.keys(display[chainName][value]).forEach((p) => {
-        if (vendorsObjTemp[p]) {
-          vendorsObjTemp[p] = [...vendorsObjTemp[p], display[chainName][value][p]];
-        } else {
-          vendorsObjTemp[p] = [display[chainName][value][p]];
-        }
-      });
       setName({
         ...personName,
-        chainObj: chainObjTemp,
-        vendorsObj: vendorsObjTemp,
+        chainObj: { [chainName]: { [value]: { ...display[chainName][value] } } },
+        vendorsObj: { [platform]: [display[chainName][value][platform]] },
       });
     }
   };
@@ -158,18 +63,17 @@ const MarketingCheckmarksDropdown = ({
     if (Object.keys(personName?.display || {}).length > 0 && type === 'vendor') {
       return (
         <div className="dropdown-paper cost">
-          {Object.keys(personName.display).map((el, index) => (
+          {Object.keys(display).map((el, index) => (
             <RestaurantCheckboxAccordion
               key={el}
-              handleChange={handleChangeChain}
-              info={personName.display[el]}
+              info={display[el]}
               chainName={el}
               handleChangeVendor={handleChangeVendor}
-              chainObj={personName.chainObj}
+              chainObj={chainObj}
               index={index}
               setVendors={setName}
               vendors={personName}
-              display={personName.display}
+              display={display}
               listing
             />
           ))}
@@ -189,19 +93,21 @@ const MarketingCheckmarksDropdown = ({
       </MenuItemKit>
     ));
   };
-  const getChain = () => {
+  const getVendor = () => {
     const arr = [];
     Object.keys(chainObj).forEach((chainName) => {
-      if (Object.keys(chainObj[chainName]).length > 0) {
-        arr.push(chainName);
-      }
+      Object.keys(chainObj[chainName]).forEach((vendorName) => {
+        if (Object.keys(chainObj[chainName][vendorName]).length > 0) {
+          arr.push(vendorName);
+        }
+      });
     });
     return arr;
   };
   const getValue = () => {
     if (type === 'vendor') {
       if (Object.keys(display).length > 0) {
-        return getChain();
+        return getVendor();
       }
       return personName.vendorsSelected;
     }
@@ -210,7 +116,7 @@ const MarketingCheckmarksDropdown = ({
   const getRenderValue = (selected) => {
     if (type === 'vendor') {
       if (Object.keys(display).length > 0) {
-        return getChain().join(', ');
+        return getVendor().join(', ');
       }
       return personName.vendorsSelected.join(', ');
     }
@@ -232,9 +138,9 @@ const MarketingCheckmarksDropdown = ({
         <SelectKit
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
-          multiple
+          multiple={type !== 'vendor'}
           value={getValue()}
-          onChange={type !== 'vendor' ? handleChange : null}
+          onChange={handleChange}
           input={<OutlindeInputKit label={title || 'Customised Days'} />}
           renderValue={(selected) => getRenderValue(selected)}
           MenuProps={MenuProps}

@@ -15,6 +15,7 @@ function usePlanningAds({ dateRange }) {
 
   useEffect(() => {
     if (Object.keys(vendorsObj).length < 1) return;
+    setIsLoading(true);
 
     clearTimeout(fnDelays);
 
@@ -81,12 +82,7 @@ function usePlanningAds({ dateRange }) {
             });
           }
         }
-        // we join vendor_names and save on same key because its more better than create new renderRowTable hook
-        const newAds = newAdsArray.map((obj) => ({
-          ...obj,
-          vendor_names: (obj?.vendor_names || []).join(', '),
-        }));
-        setAds(newAds || []);
+        setAds(newAdsArray || []);
         setIsLoading(false);
       });
     }, 750);
