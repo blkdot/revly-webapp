@@ -61,10 +61,10 @@ function usePlanningAds({ dateRange }) {
             newAdsArray.forEach((obj, index) => {
               vendorsArr.forEach((objVendor) => {
                 obj?.vendor_ids?.forEach((id) => {
-                  // here we put chainName to key chain_name (chain_name: chainName)
-                  newAdsArray[index].chain_name = objVendor.data.chain_name;
+                  // check is it id equal venodorArr id
                   if (id === objVendor.vendor_id) {
-                    // check is it id equal venodorArr id
+                    // here we put chainName to key chain_name (chain_name: chainName)
+                    newAdsArray[index].chain_name = objVendor.data.chain_name;
                     // check is it vendor_names is not empty empty
                     if ((obj?.vendor_names || []).length > 0) {
                       // we take the curennt value and push new value
