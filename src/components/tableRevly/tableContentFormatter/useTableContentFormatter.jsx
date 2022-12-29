@@ -32,7 +32,7 @@ const useTableContentFormatter = () => {
   const renderRowTooltip = (r, h) => (
     <TableCellKit
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}
+      style={{ marginTop: '0.5rem', minWidth: '10rem', textAlign: 'center' }}
     >
       <TooltipKit
         title={
