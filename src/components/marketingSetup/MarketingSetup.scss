@@ -944,9 +944,16 @@
   }
 }
 #category-tooltip .MuiTooltip-tooltip{
-  background-color: #646464;
+  background-color: #212b36;
   width: fit-content;
   pointer-events: none;
+  padding: 1rem;
+  font-size: 10px;
+  >span{
+    &::before{
+      background-color: #212b36 !important;
+    }
+  }
 }
 .MuiTooltip-popper {
   .MuiTooltip-tooltip {

@@ -47,6 +47,7 @@ const Dates = (props) => {
     defaultTypeDate,
     defaultTitle,
     setupOffer,
+    isListing,
   } = props;
   const { date: dateContext, setDate: setDateContext } = useDate();
   const {
@@ -925,6 +926,59 @@ const Dates = (props) => {
       />
     );
   };
+  const getDateSelect = () => {
+    if (isListing) {
+      return (
+        <div>
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index="1"
+            type="day"
+            setSelections={setbeforePeriod}
+            setTypeDate={setTypeDate}
+            beforePeriod={beforePeriod}
+            setupOffer={setupOffer}
+          />
+        </div>
+      );
+    }
+    if (isMarketingHeatMap) {
+      return (
+        <div>
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index="2"
+            type="week"
+            setSelections={setbeforePeriod}
+            setTypeDate={setTypeDate}
+            beforePeriod={beforePeriod}
+            setupOffer={setupOffer}
+          />
+        </div>
+      );
+    }
+    return (
+      <div>
+        {['day', 'week', 'month'].map((n, index) => (
+          <DateSelect
+            expanded={expanded}
+            setExpanded={setExpanded}
+            index={index + 1}
+            key={n}
+            type={n}
+            setSelections={setbeforePeriod}
+            setTypeDate={setTypeDate}
+            beforePeriod={beforePeriod}
+            setupOffer={n === 'week' ? setupOffer : false}
+            setYear={setYear}
+            offer={offer}
+          />
+        ))}
+      </div>
+    );
+  };
   return (
     <div className="dates">
       <div className="date-picker_wrapper">
@@ -952,38 +1006,7 @@ const Dates = (props) => {
         onKeyDown={(e) => e.stopPropagation()}
       >
         <PaperKit style={{ background: '#fff' }} className="date-picker">
-          {isMarketingHeatMap ? (
-            <div>
-              <DateSelect
-                expanded={expanded}
-                setExpanded={setExpanded}
-                index="2"
-                type="week"
-                setSelections={setbeforePeriod}
-                setTypeDate={setTypeDate}
-                beforePeriod={beforePeriod}
-                setupOffer={setupOffer}
-              />
-            </div>
-          ) : (
-            <div>
-              {['day', 'week', 'month'].map((n, index) => (
-                <DateSelect
-                  expanded={expanded}
-                  setExpanded={setExpanded}
-                  index={index + 1}
-                  key={n}
-                  type={n}
-                  setSelections={setbeforePeriod}
-                  setTypeDate={setTypeDate}
-                  beforePeriod={beforePeriod}
-                  setupOffer={n === 'week' ? setupOffer : false}
-                  setYear={setYear}
-                  offer={offer}
-                />
-              ))}
-            </div>
-          )}
+          {getDateSelect()}
           <div className="date-btn-wrapper">
             <ButtonKit onClick={handleClick} className="date-save-btn " variant="contained">
               Ok

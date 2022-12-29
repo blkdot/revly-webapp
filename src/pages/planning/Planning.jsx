@@ -79,7 +79,7 @@ const Planning = () => {
     renderScheduleType,
     renderSimpleRow,
     renderCalculatedPercent,
-    renderRowDots,
+    renderRowTooltip,
   } = useTableContentFormatter();
 
   const headersOffers = [
@@ -98,7 +98,7 @@ const Planning = () => {
 
   const headersAds = [
     { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_names', disablePadding: true, label: 'Vendor names' },
+    { id: 'vendor_names', disablePadding: true, label: 'Vendors' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
@@ -110,7 +110,7 @@ const Planning = () => {
     chain_name: renderSimpleRowNotCentered,
     vendor_name: renderSimpleRowNotCentered,
     platform: renderPlatform,
-    vendor_names: renderRowDots,
+    vendor_names: renderRowTooltip,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
     type_schedule: renderScheduleType,
