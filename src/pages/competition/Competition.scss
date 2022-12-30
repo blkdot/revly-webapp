@@ -32,6 +32,10 @@
   width: 100%;
 
   &.competitor {
+    >div>div>div {
+      width: 90% !important;
+    }
+
     .competition-dropdown {
       top: -5px;
     }
@@ -51,9 +55,11 @@
     height: 50px;
     border-radius: 30px;
     padding: 0 15px;
+    cursor: pointer;
 
     >div {
       height: 60px;
+      cursor: pointer;
 
       >div {
         padding-left: 20px;
@@ -406,6 +412,7 @@
     text-transform: capitalize;
   }
 }
+
 .listing-vendors-child {
   >div {
     >span {
@@ -416,6 +423,7 @@
     }
   }
 }
+
 .listing-vendors {
   .competition-dropdown.competition-dropdown.Mui-focused.Mui-focused img {
     filter: none !important;
@@ -425,13 +433,22 @@
     border-color: rgba(145, 158, 171, 0.32) !important;
   }
 
-  
+
 
   >div {
 
     >div {
       margin: 0 !important;
     }
+  }
+}
+
+.competitor-dropdown-list-item {
+  >span {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

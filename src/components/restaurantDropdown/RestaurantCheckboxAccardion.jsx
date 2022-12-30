@@ -158,7 +158,12 @@ const RestaurantCheckboxAccordion = ({
         ''
       )}
       {Object.keys(info).map((vendorName) => (
-        <InputLabelKit key={vendorName} className="accordion-dropdown active listing">
+        <InputLabelKit
+          key={vendorName}
+          className={`accordion-dropdown ${active ? 'active' : ''} ${
+            listing ? 'active listing' : ''
+          } `}
+        >
           <div>
             {listing ? (
               <RadioKit
