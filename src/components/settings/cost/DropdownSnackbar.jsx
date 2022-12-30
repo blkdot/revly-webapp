@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
 import RestaurantDropdown from '../../restaurantDropdown/RestaurantDropdown.suspended';
-import CompetitionDropdown from '../../competitionDropdown/CompetitionDropdown';
 import { usePlatform } from '../../../hooks/usePlatform';
 import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
 import useVendors from '../../../hooks/useVendors';
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
 const DropdownSnackbar = (props) => {
   // eslint-disable-next-line no-unused-vars
@@ -15,7 +15,7 @@ const DropdownSnackbar = (props) => {
   useEffect(() => {
     setCostVendors(JSON.parse(JSON.stringify(vendors)));
   }, [vendors]);
-  const [procent, setProcent] = useState('');
+  const [procent, setProcent] = useState(0);
   const { userPlatformData } = usePlatform();
   const getPlatformActive = () => {
     if (userPlatformData.platforms.talabat.active && userPlatformData.platforms.deliveroo.active) {
@@ -90,6 +90,22 @@ const DropdownSnackbar = (props) => {
     onAdd(numDecimalCost, costVendors.vendorsObj);
   };
 
+  const handleChangeCost = ({ target }) => {
+    const { value } = target;
+
+    setProcent((prev) => {
+      if (Number.isNaN(value)) return prev;
+
+      if (value < 0) return prev;
+
+      if (value > 100) return prev;
+
+      if (value % 1 !== 0) return prev;
+
+      return value;
+    });
+  };
+
   return (
     <div className="invoice snackbar">
       <div className="snackbar-wrapper">
@@ -110,12 +126,13 @@ const DropdownSnackbar = (props) => {
             cost
           />
         )}
-        <CompetitionDropdown
-          rows={['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
-          setRow={setProcent}
-          select={procent}
-          title="Select your Cost %"
-          className="snackbar-procent"
+        <TextfieldKit
+          size="small"
+          label="Type your Cost %"
+          className="snackbar-input-cost"
+          type="number"
+          value={procent}
+          onChange={handleChangeCost}
         />
       </div>
       <ButtonKit disabled={!procent} onClick={addCost} className="snackbar-btn" variant="contained">
