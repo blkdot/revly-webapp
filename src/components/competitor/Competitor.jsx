@@ -64,9 +64,8 @@ const Competitor = ({ open, opened, platformList }) => {
     };
     // TODO: fix this code
     // eslint-disable-next-line no-console
-    // await sendMail({ ...data, emailTo: 'amine@revly.ae' });
-    // await sendMail({ ...data, emailTo: 'chiekh@revly.ae' });
-    await sendMail({ ...data, emailTo: 'amanbekasylbekov2@gmail.com' });
+    await sendMail({ ...data, emailTo: 'amine@revly.ae' });
+    await sendMail({ ...data, emailTo: 'chiekh@revly.ae' });
     setLoading(true);
     setLoadingReq(false);
     setRestaurant('');
