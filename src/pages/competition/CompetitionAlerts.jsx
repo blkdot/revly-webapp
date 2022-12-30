@@ -169,11 +169,18 @@ const CompetitionAlerts = () => {
         setCompetitionAlertsData(filt || []);
 
         setCompetitorList(comp.data ? comp.data.data : []);
-
+        setCompetitor(comp.data ? comp.data.data : []);
+        setFilteredData(
+          (comp.data ? comp.data.data : [])
+            .map((v) => filt.filter((k) => k.name === v.vendor_name))
+            .flat(),
+        );
         setLoading(false);
       } catch (err) {
         setCompetitionAlertsData([]);
         setCompetitorList([]);
+        setCompetitor([]);
+        setFilteredData([]);
         setLoading(false);
         triggerAlertWithMessageError('Error while retrieving data');
       }
@@ -198,7 +205,7 @@ const CompetitionAlerts = () => {
 
   const handleCompetitorChange = (e) => {
     const { value } = e.target;
-    if (value.length > 0) {
+    if (value.length > 1) {
       const arr = value
         .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
         .flat();
@@ -280,6 +287,8 @@ const CompetitionAlerts = () => {
               select={platform}
             />
             <CompetitionDropdown
+              widthPaper={400}
+              heightPaper={80}
               rows={competitorList}
               multiple
               icon={competitorIcon}
@@ -288,7 +297,10 @@ const CompetitionAlerts = () => {
               renderOptions={(v) => (
                 <MenuItemKit key={v.vendor_name} value={v}>
                   <CheckboxKit checked={competitor.indexOf(v) > -1} />
-                  <ListItemTextKit primary={v.vendor_name} />
+                  <ListItemTextKit
+                    className="competitor-dropdown-list-item"
+                    primary={v.vendor_name}
+                  />
                 </MenuItemKit>
               )}
               title="Competitor"
@@ -296,7 +308,7 @@ const CompetitionAlerts = () => {
               select={competitor}
             />
           </div>
-          <Competitor open={Open} opened={opened} />
+          <Competitor open={Open} opened={opened} platformList={platformList} />
         </div>
         <TypographyKit variant="subtitle">
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
