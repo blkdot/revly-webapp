@@ -2,6 +2,7 @@ import React from 'react';
 
 import TableCellKit from '../../../kits/tablecell/TableCellKit';
 import { platformObject } from '../../../data/platformList';
+import TooltipKit from '../../../kits/toolTip/TooltipKit';
 
 const useTableContentFormatter = () => {
   const renderSimpleRow = (r, h, i = 0) => (
@@ -25,6 +26,29 @@ const useTableContentFormatter = () => {
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
       </span>
+    </TableCellKit>
+  );
+
+  const renderRowTooltip = (r, h) => (
+    <TableCellKit
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '10rem', textAlign: 'center' }}
+    >
+      <TooltipKit
+        title={
+          r[h.id] === null || !r[h.id]
+            ? '-'
+            : r[h.id].map((vendor) => <span className="render-row-tooltip column">{vendor}</span>)
+        }
+        disableHoverListener={r[h.id]?.length === 0}
+        id="category-tooltip"
+        placement="right"
+        arrow
+      >
+        <span className="render-row-tooltip" key={h.id}>
+          {r[h.id] === null || !r[h.id] ? '-' : r[h.id]?.length}
+        </span>
+      </TooltipKit>
     </TableCellKit>
   );
 
@@ -144,6 +168,7 @@ const useTableContentFormatter = () => {
     renderSimpleRowNotCentered,
     renderSimpleRow,
     renderOrdinalSuffix,
+    renderRowTooltip,
   };
 };
 

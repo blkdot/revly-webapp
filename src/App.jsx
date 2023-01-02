@@ -68,7 +68,6 @@ const App = () => (
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route element={<ProtectedRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
-                      {/* <Route path='/account' element={<Account />} /> */}
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/planning" element={<Planning />} />
                       <Route path="/competition/listing" element={<CompetitionListing />} />
@@ -77,7 +76,6 @@ const App = () => (
                       <Route path="/marketing/offer" element={<MarketingOffer />} />
                       <Route path="/marketing/ads" element={<MarketingAds />} />
                       <Route path="/verify-code" element={<VerifyCode />} />
-                      {/* <Route path="/offer/detail/:masterId" element={<OfferDetails />} /> */}
                     </Route>
                     <Route path="/onboarding" element={<OnBoarding />} />
                     <Route path="/check" element={<Check />} />

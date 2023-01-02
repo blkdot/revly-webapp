@@ -13,6 +13,7 @@ import {
   subDays,
   subMonths,
   subWeeks,
+  subYears,
 } from 'date-fns';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TypographyKit from '../../kits/typography/TypographyKit';
@@ -81,19 +82,30 @@ const DateSelect = React.memo((props) => {
         } else {
           setActive('custom');
         }
-      } else if (getYear(startDate) === getYear(date) && type === 'month') {
+      } else if (type === 'month') {
         if (
           startGetDate === 1 &&
           endGetDate >= dateGetDate &&
-          getMonth(startDate) === getMonth(date)
+          getMonth(startDate) === getMonth(date) &&
+          getYear(startDate) === getYear(date)
         ) {
           setActive('current');
-        } else if (getMonth(startDate) === getMonth(date) && offer) {
+        } else if (
+          getMonth(startDate) === getMonth(date) &&
+          offer &&
+          getYear(startDate) === getYear(date)
+        ) {
           if (getMonth(startDate) === getMonth(date)) {
             setActive('current');
           }
         } else if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
-          setActive('last');
+          if (getMonth(date) === 0 && getYear(startDate) === getYear(subYears(date, 1))) {
+            setActive('last');
+          } else if (getYear(startDate) === getYear(date)) {
+            setActive('last');
+          } else {
+            setActive('custom');
+          }
         } else {
           setActive('custom');
         }
@@ -167,7 +179,7 @@ const DateSelect = React.memo((props) => {
           },
         ]);
         setActive('last');
-        setYear(new Date().getFullYear());
+        setYear(new Date(subMonths(today, 1)).getFullYear());
         break;
       default:
     }
@@ -180,6 +192,7 @@ const DateSelect = React.memo((props) => {
     setTypeDate(type);
     if (type === 'day') {
       setSelections([{ startDate: new Date(), endDate: new Date(), key: 'selection' }]);
+      setYear(new Date().getFullYear());
     } else if (type === 'week') {
       setSelections([
         {
@@ -188,10 +201,12 @@ const DateSelect = React.memo((props) => {
           key: 'selection',
         },
       ]);
+      setYear(new Date().getFullYear());
     } else {
       setSelections([
         { startDate: startOfMonth(new Date()), endDate: new Date(), key: 'selection' },
       ]);
+      setYear(new Date().getFullYear());
     }
   };
 

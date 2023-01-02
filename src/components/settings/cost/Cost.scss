@@ -137,6 +137,21 @@
       top: -6px;
     }
   }
+
+  .snackbar-input-cost {
+    .MuiInputBase-root {
+      .MuiInputBase-input {
+        height: 40px;
+        box-sizing: border-box;
+      }
+
+      fieldset {
+        border-radius: 5px;
+        border-color: #919eab65;
+      }
+    }
+  }
+
 }
 
 .snackbar-btn.snackbar-btn {

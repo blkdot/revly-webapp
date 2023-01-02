@@ -12,9 +12,6 @@ import Qatar from '../../assets/images/Qatar.png';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
 const CompetitionDropdown = (props) => {
   const {
     className,
@@ -29,14 +26,17 @@ const CompetitionDropdown = (props) => {
     id,
     renderValue,
     type,
+    widthPaper,
+    heightPaper,
   } = props;
-
+  const ITEM_HEIGHT = heightPaper || 48;
+  const ITEM_PADDING_TOP = 8;
   const MenuProps = {
     PaperProps: {
       id,
       style: {
         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
+        width: widthPaper || 250,
       },
     },
   };

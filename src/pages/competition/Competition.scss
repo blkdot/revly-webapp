@@ -30,27 +30,36 @@
   height: 50px;
   border-radius: 30px;
   width: 100%;
-  &.competitor{
-    .competition-dropdown{
+
+  &.competitor {
+    >div>div>div {
+      padding-right: 20px !important;
+    }
+
+    .competition-dropdown {
       top: -5px;
     }
   }
-  &.not-platform{
+
+  &.not-platform {
     .country-wrapper {
-        width: 80%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-      }
+      width: 80%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+    }
   }
+
   >div {
     height: 50px;
     border-radius: 30px;
     padding: 0 15px;
+    cursor: pointer;
 
     >div {
       height: 60px;
+      cursor: pointer;
 
       >div {
         padding-left: 20px;
@@ -108,19 +117,23 @@
   padding: 25px 0px;
   border-bottom: 1px solid rgba(145, 158, 171, 0.24);
   margin-bottom: 25px;
-  .dropdowns{
+
+  .dropdowns {
     display: flex;
     grid-gap: 10px;
     flex-wrap: wrap;
-    .top-competition{
-      width: 250px !important;
+
+    .top-competition {
+      width: 200px !important;
     }
   }
-  .competitor-wrapper{
-    button{
+
+  .competitor-wrapper {
+    button {
       width: 200px;
     }
   }
+
   .competition-dropdowns {
     display: flex;
     align-items: center;
@@ -128,21 +141,24 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     width: 60%;
-    .top-competition{
+
+    .top-competition {
       width: 45% !important;
     }
   }
 }
 
 @media(max-width: 1120px) {
-  .competition-top-input{
+  .competition-top-input {
     justify-content: flex-start;
-    .dropdowns{
-      .top-competition{
+
+    .dropdowns {
+      .top-competition {
         width: 350px !important;
       }
     }
   }
+
   .alerts-top-inputs {
     justify-content: flex-end;
 
@@ -176,25 +192,31 @@
   }
 
 }
+
 @media(max-width: 950px) {
-    .competition-top-input {
-        justify-content: flex-start;
-        flex-direction: column;
-        .dropdowns {
-          flex-direction: column;
-          width: 100%;
-          .top-competition {
-            width: 100% !important;
-          }
-        }
-        .competitor-wrapper{
-          width: 100%;
-          button{
-            width: 100%;
-          }
-        }
+  .competition-top-input {
+    justify-content: flex-start;
+    flex-direction: column;
+
+    .dropdowns {
+      flex-direction: column;
+      width: 100%;
+
+      .top-competition {
+        width: 100% !important;
       }
+    }
+
+    .competitor-wrapper {
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
 }
+
 @media(max-width: 900px) {
   .alerts-top-inputs {
     .competition-dropdowns {
@@ -249,13 +271,16 @@
 
   >div {
     scroll-behavior: smooth;
-    &::-webkit-scrollbar{
+
+    &::-webkit-scrollbar {
       height: 6px;
     }
-    &::-webkit-scrollbar-track{
+
+    &::-webkit-scrollbar-track {
       background-color: #F3F3F3;
       border-radius: 31px;
     }
+
     &::-webkit-scrollbar-thumb {
       background: #637381;
       border-radius: 31px;
@@ -276,13 +301,15 @@
   }
 
   tbody {
-    >tr{
+    >tr {
       cursor: pointer;
       transition: .3s;
-      &:hover{
+
+      &:hover {
         background: rgba(144, 107, 255, 0.08);
       }
     }
+
     >tr:nth-of-type(1) {
       padding-right: 5px;
 
@@ -346,33 +373,82 @@
 
 .competition-status {
   padding: 5px 7px;
-    text-transform: capitalize;
-      border-radius: 6px;
-  &.canceled, &.Canceled{
+  text-transform: capitalize;
+  border-radius: 6px;
+
+  &.canceled,
+  &.Canceled {
     background: #FFF7CD;
     color: #B78103;
   }
-  &.active, &.Live, &.live {
-    background: rgba(84,214,44,.16);
+
+  &.active,
+  &.Live,
+  &.live {
+    background: rgba(84, 214, 44, .16);
     color: #229A16;
   }
 
-  &.Ended, &.ended {
+  &.Ended,
+  &.ended {
     background: #86868629;
     color: #000000;
     text-transform: capitalize;
   }
 
-  &.Cancelled, &.cancelled {
+  &.Cancelled,
+  &.cancelled {
     background: #ffc10729;
     color: #B78103;
     text-transform: capitalize;
   }
 
-  &.Scheduled, &.scheduled, &.Upcoming, &.upcoming {
+  &.Scheduled,
+  &.scheduled,
+  &.Upcoming,
+  &.upcoming {
     background: #1890ff29;
     color: #1890FF;
     text-transform: capitalize;
+  }
+}
+
+.listing-vendors-child {
+  >div {
+    >span {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.listing-vendors {
+  .competition-dropdown.competition-dropdown.Mui-focused.Mui-focused img {
+    filter: none !important;
+  }
+
+  .marketing-setup-dropdown .Mui-focused.Mui-focused fieldset {
+    border-color: rgba(145, 158, 171, 0.32) !important;
+  }
+
+
+
+  >div {
+
+    >div {
+      margin: 0 !important;
+    }
+  }
+}
+
+.competitor-dropdown-list-item {
+  >span {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -416,9 +492,10 @@
     width: 250%;
   }
 }
-.competition-thead{
-  >tr{
-    >th:last-of-type{
+
+.competition-thead {
+  >tr {
+    >th:last-of-type {
       text-align: center;
     }
   }

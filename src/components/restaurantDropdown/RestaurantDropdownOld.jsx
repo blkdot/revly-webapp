@@ -43,7 +43,7 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
     if (vendorsReq.vendorsArr.length > 0) {
       setVendors(vendorsReq);
     }
-  }, [JSON.stringify(vendorsReq)]);
+  }, [vendorsReq]);
 
   const handleChange = (value) => {
     const vendorsSelectedTemp = JSON.parse(JSON.stringify(vendorsSelected));
@@ -71,7 +71,7 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
       }
     });
     if (vendorsSelected.length > 1 || vendorsSelectedTemp.length > 1) {
-      if (cost) {
+      if (cost || listing) {
         const newValue = {
           ...state,
           vendorsObj: vendorsObjTemp,
@@ -138,15 +138,14 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
   React.useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
-  }, [root.ariaHidden]);
+  }, [root.ariaHidden, vendors]);
 
   React.useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [root.ariaHidden],
+    [root.ariaHidden, vendors],
   );
-
   const [hoverStatus, setHover] = React.useState([]);
   const getHoverStatusVendor = (vName) => hoverStatus.find((v) => v === vName);
   const renderLayout = (info, index) => (
@@ -212,19 +211,23 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
           sx={{ textTransform: 'capitalize', paddingLeft: '25px', paddingRight: '0px' }}
         >
           <div className="dropdown-paper">
-            <div className="selected-chains">
-              <p>Selected: {(cost ? state.vendorsSelected : vendorsSelected).length}</p>
-              <ButtonKit
-                disabled={
-                  vendors.length === (cost ? state.vendorsSelected : vendorsSelected).length
-                }
-                onClick={selectAll}
-                variant="contained"
-              >
-                Select All
-              </ButtonKit>
-            </div>
-            {vendors?.map((info, index) => renderLayout(info, index))}
+            {!listing ? (
+              <div className="selected-chains">
+                <p>Selected: {(cost ? state.vendorsSelected : vendorsSelected).length}</p>
+                <ButtonKit
+                  disabled={
+                    vendors.length === (cost ? state.vendorsSelected : vendorsSelected).length
+                  }
+                  onClick={selectAll}
+                  variant="contained"
+                >
+                  Select All
+                </ButtonKit>
+              </div>
+            ) : (
+              ''
+            )}
+            {!listing ? vendors?.map((info, index) => renderLayout(info, index)) : ''}
           </div>
         </SelectKit>
       </FormcontrolKit>

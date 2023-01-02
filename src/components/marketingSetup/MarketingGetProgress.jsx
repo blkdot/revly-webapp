@@ -1,3 +1,4 @@
+import { addDays, addHours, addMinutes, format, getHours, isSameDay, isAfter } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { addDays, addHours, addMinutes, format, getHours, isSameDay } from 'date-fns';
 import { useAtom } from 'jotai';
@@ -129,6 +130,12 @@ const GetProgress = ({ progressData }) => {
     setBranchData,
     branchData,
   } = progressData;
+
+  useEffect(() => {
+    if (!isAfter(endingDate, startingDate) && !isSameDay(endingDate, startingDate)) {
+      setEndingDate(new Date(addDays(startingDate, 1)));
+    }
+  }, [startingDate, endingDate]);
 
   const getWorkWeek = () => {
     if (typeSchedule === 'Work Week') {
@@ -355,7 +362,7 @@ const GetProgress = ({ progressData }) => {
             rows={[
               'Every Monday',
               'Every Tuesday',
-              'Every Wendnesday',
+              'Every Wednesday',
               'Every Thursday',
               'Every Friday',
               'Every Saturday',
@@ -388,6 +395,7 @@ const GetProgress = ({ progressData }) => {
               onChange={(newValue) => {
                 onChange(newValue, setStartingDate);
               }}
+              minDate={new Date()}
               renderInput={(params) => <TextfieldKit {...params} />}
             />
           </div>
@@ -563,12 +571,17 @@ const GetProgress = ({ progressData }) => {
     );
     setFilteredCategoryData(filtered);
   };
+
   const [menuChanged, setMenuChanged] = useState('');
+
   useEffect(() => {
-    setDiscountPercentage('');
-    setMinOrder('');
+    if (selected === 2) {
+      setDiscountPercentage('');
+      setMinOrder('');
+    }
     setMenuChanged(menu);
   }, [menu, itemMenu]);
+
   if (selected === 1) {
     return (
       <div className="left-part-middle">

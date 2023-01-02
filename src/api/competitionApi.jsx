@@ -20,7 +20,13 @@ export const getCompetitors = (body, platform) =>
 
 export const getRanking = (body, platform) =>
   axios
-    .post(`${apiUrl}/competition/ranking/${platform}`, body)
+    .post(`${apiUrl}/competition/rankingv2/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+
+export const getAreas = (body, platform) =>
+  axios
+    .post(`${apiUrl}/competition/areas/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 

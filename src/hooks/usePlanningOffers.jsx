@@ -17,7 +17,7 @@ function usePlanningOffers({ dateRange }) {
 
   useEffect(() => {
     if (Object.keys(vendorsObj).length < 1) return;
-
+    setIsLoading(true);
     clearTimeout(fnDelays);
     setIsLoading(true);
     fnDelays = setTimeout(() => {
