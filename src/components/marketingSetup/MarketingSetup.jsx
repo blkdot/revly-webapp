@@ -304,8 +304,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     };
 
     try {
-      setTriggerLoading(true);
       if (platform.length < 2) {
+        setTriggerLoading(true);
         const newBranchData =
           Object.keys(vendors.display).length > 0
             ? branch.vendorsObj[platform[0]][0]
@@ -327,14 +327,15 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         setChecked([]);
         setTriggerLoading(false);
       } else {
-        const crossPlatform = platform.map((p) => {
+        const crossPlatform = platform.map(async (p) => {
+          setTriggerLoading(true);
           const newBranchData =
             Object.keys(vendors.display).length > 0
               ? branch.vendorsObj[p][0]
               : vendorsArr.find((v) => v.data.vendor_name === branchData);
           const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
           delete clonedVendor.platform;
-          dataReq.vendors = [clonedVendor];
+
           const platformToken =
             userPlatformData.platforms[p].access_token ??
             userPlatformData.platforms[p].access_token_bis;
@@ -345,19 +346,24 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           });
         });
 
-        Promise.all(crossPlatform).then(([platform1, platform2]) => {
-          if (platform1 instanceof Error) {
-            throw platform1.message;
-          }
+        Promise.all(crossPlatform)
+          .then(([platform1, platform2]) => {
+            if (platform1 instanceof Error) {
+              throw platform1.message;
+            }
 
-          if (platform2 instanceof Error) {
-            throw platform2.message;
-          }
-          setCreated(true);
-          setRecap(false);
-          setChecked([]);
-          setTriggerLoading(false);
-        });
+            if (platform2 instanceof Error) {
+              throw platform2.message;
+            }
+            setCreated(true);
+            setRecap(false);
+            setChecked([]);
+            setTriggerLoading(false);
+          })
+          .catch((err) => {
+            triggerAlertWithMessageError(err.message);
+            setTriggerLoading(false);
+          });
       }
     } catch (error) {
       triggerAlertWithMessageError(error.message);
