@@ -405,7 +405,7 @@ const CompetitionListing = () => {
             />
 
             <CompetitionDropdown
-              rows={areasData || ['Everywhere']}
+              rows={areasData.length > 0 ? areasData : ['Everywhere']}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
