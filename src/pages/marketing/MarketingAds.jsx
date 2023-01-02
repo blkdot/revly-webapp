@@ -53,7 +53,7 @@ const MarketingAds = () => {
     renderStatus,
     renderTarget,
     renderSimpleRow,
-    renderRowDots,
+    renderRowTooltip,
     renderScheduleType,
     renderCalculatedPercent,
     renderSimpleRowNotCentered,
@@ -61,7 +61,7 @@ const MarketingAds = () => {
 
   const headersAds = [
     { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_names', disablePadding: true, label: 'Vendor names' },
+    { id: 'vendor_names', disablePadding: true, label: 'Vendor' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'ad_serving_count', disablePadding: true, label: 'Impressions' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
@@ -80,7 +80,7 @@ const MarketingAds = () => {
 
   const cellTemplatesObject = {
     chain_name: renderSimpleRowNotCentered,
-    vendor_names: renderRowDots,
+    vendor_names: renderRowTooltip,
     platform: renderPlatform,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
