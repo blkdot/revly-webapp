@@ -153,7 +153,7 @@ const GetProgress = ({ progressData }) => {
       return true;
     }
 
-    return typeSchedule !== 'Continues Offer';
+    return typeSchedule !== 'Continues Offer' && duration === 'Program the offer duration';
   };
   const durationSelected = () => (
     <div className="left-part-middle">
@@ -196,7 +196,7 @@ const GetProgress = ({ progressData }) => {
               Ending Date
               <DatePickerDayKit
                 className="date-error"
-                minDate={new Date(addDays(new Date(), 1))}
+                minDate={new Date()}
                 value={endingDate}
                 onChange={(newValue) => {
                   onChange(newValue, setEndingDate);
@@ -211,6 +211,7 @@ const GetProgress = ({ progressData }) => {
                   <TimePickerDropdown
                     value={obj.endTime}
                     setValue={setTimes}
+                    startLimit={isEndingLimited() ? obj.startTime : null}
                     times={times}
                     index={index}
                     type="endTime"

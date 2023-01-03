@@ -158,8 +158,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
 
   useEffect(() => {
-    setStartingDate(new Date());
-    setEndingDate(new Date(addDays(new Date(startingDate), 1)));
     if (duration === 'Starting Now') {
       setFreshStartingDate();
     } else {

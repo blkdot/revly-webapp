@@ -38,7 +38,11 @@ const useTableContentFormatter = () => {
         title={
           r[h.id] === null || !r[h.id]
             ? '-'
-            : r[h.id].map((vendor) => <span className="render-row-tooltip column">{vendor}</span>)
+            : r[h.id].map((vendor) => (
+                <span key={vendor} className="render-row-tooltip column">
+                  {vendor}
+                </span>
+              ))
         }
         disableHoverListener={r[h.id]?.length === 0}
         id="category-tooltip"
