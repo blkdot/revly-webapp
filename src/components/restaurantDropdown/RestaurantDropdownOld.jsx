@@ -31,7 +31,7 @@ const MenuProps = {
   },
 };
 
-const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost }) => {
+const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost, listing }) => {
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
   const { vendors: vendorsReq } = useVendors();
   React.useEffect(() => {

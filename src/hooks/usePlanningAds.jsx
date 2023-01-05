@@ -7,7 +7,7 @@ import { useUserAuth } from '../contexts/AuthContext';
 let fnDelays = null;
 function usePlanningAds({ dateRange }) {
   const { vendors } = useVendors();
-  const { vendorsObj, display } = vendors;
+  const { vendorsObj, display, vendorsArr } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
   const { user } = useUserAuth();
