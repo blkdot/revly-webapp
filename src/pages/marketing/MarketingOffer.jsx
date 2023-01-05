@@ -128,7 +128,13 @@ const MarketingOffer = () => {
       id: 'start_date',
       numeric: false,
       disablePadding: true,
-      label: 'Date',
+      label: 'Start date',
+    },
+    {
+      id: 'end_date',
+      numeric: false,
+      disablePadding: true,
+      label: 'End date',
     },
     {
       id: 'platform',
@@ -196,6 +202,7 @@ const MarketingOffer = () => {
     vendor_name: renderSimpleRow,
     platform: renderPlatform,
     start_date: renderSimpleRow,
+    end_date: renderSimpleRow,
     discount_type: renderSimpleRow,
     discount_rate: renderPercent,
     target: renderTarget,
