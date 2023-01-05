@@ -94,13 +94,42 @@ const RestaurantCheckboxAccordion = ({
     }
     return false;
   };
+  const getDisabledChain = () => {
+    const arrBool = [];
+    Object.keys(info).forEach((vName) => {
+      Object.keys(info[vName]).forEach((platform) => {
+        if (info[vName][platform].active) {
+          arrBool.push(true);
+        } else {
+          arrBool.push(false);
+        }
+      });
+    });
+    return arrBool.some((bool) => bool);
+  };
+  const getDisabledVendor = () => {
+    const arrBool = [];
+    Object.keys(info).forEach((vName) => {
+      Object.keys(info[vName]).forEach((platform) => {
+        if (info[vName][platform].active) {
+          arrBool.push(true);
+        } else {
+          arrBool.push(false);
+        }
+      });
+      return arrBool.some((bool) => bool);
+    });
+    return arrBool.some((bool) => bool);
+  };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       {!listing ? (
         <div
           tabIndex={-1}
           role="presentation"
-          className={`checkbox-accordion ${active ? 'active' : ''}`}
+          className={`checkbox-accordion ${!getDisabledChain() ? 'disabled' : ''} ${
+            active ? 'active' : ''
+          }`}
           onClick={() => setActive(!active)}
           style={{ '--l': Object.keys(info).length }}
         >
@@ -113,10 +142,16 @@ const RestaurantCheckboxAccordion = ({
               alt="select icon"
             />
             <div
-              style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center' }}
+              style={{
+                cursor: 'pointer',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+              }}
             >
               {!cost ? (
                 <CheckboxKit
+                  disabled={!getDisabledChain()}
                   checked={getChecked()}
                   onClick={(e) => e.stopPropagation()}
                   value={chainName}
@@ -140,9 +175,11 @@ const RestaurantCheckboxAccordion = ({
             <div className="only-button">
               <ButtonKit
                 disabled={
-                  Object.keys(chainObj)[0] === chainName &&
-                  Object.keys(chainObj).length === 1 &&
-                  Object.keys(chainObj[chainName]).length === Object.keys(display[chainName]).length
+                  (Object.keys(chainObj)[0] === chainName &&
+                    Object.keys(chainObj).length === 1 &&
+                    Object.keys(chainObj[chainName]).length ===
+                      Object.keys(display[chainName]).length) ||
+                  !getDisabledChain()
                 }
                 onClick={handleClick}
                 variant="contained"
@@ -159,6 +196,7 @@ const RestaurantCheckboxAccordion = ({
       )}
       {Object.keys(info).map((vendorName) => (
         <InputLabelKit
+          disabled={!getDisabledVendor()}
           key={vendorName}
           className={`accordion-dropdown ${active ? 'active' : ''} ${
             listing ? 'active listing' : ''
@@ -167,7 +205,14 @@ const RestaurantCheckboxAccordion = ({
           <div>
             {listing ? (
               <RadioKit
-                disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
+                disabled={
+                  branch
+                    ? !(
+                        Object.keys(chainObj?.[chainName] || {}).length > 0 ||
+                        info[vendorName].active
+                      )
+                    : !getDisabledVendor()
+                }
                 checked={!!chainObj?.[chainName]?.[vendorName]}
                 onChange={(e) => handleChangeVendor(e, chainName)}
                 value={vendorName}
@@ -175,7 +220,14 @@ const RestaurantCheckboxAccordion = ({
               />
             ) : (
               <CheckboxKit
-                disabled={branch ? !(Object.keys(chainObj?.[chainName] || {}).length > 0) : false}
+                disabled={
+                  branch
+                    ? !(
+                        Object.keys(chainObj?.[chainName] || {}).length > 0 ||
+                        info[vendorName].active
+                      )
+                    : !getDisabledVendor()
+                }
                 checked={!!chainObj?.[chainName]?.[vendorName]}
                 onChange={(e) => handleChangeVendor(e, chainName)}
                 value={vendorName}
@@ -190,7 +242,7 @@ const RestaurantCheckboxAccordion = ({
             >
               <p className="vendor-name">{vendorName}</p>
             </TooltipKit>
-            {!(branch || cost || listing) ? (
+            {!(branch || cost || listing || !getDisabledVendor()) ? (
               <div className="only-button vendor">
                 <ButtonKit
                   disabled={getVendorDisabled(vendorName)}

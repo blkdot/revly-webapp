@@ -58,6 +58,27 @@ const GetRecap = ({ recapData }) => {
     platformData,
     vendors,
   } = recapData;
+  const handleChange = (e, type, index, order) => {
+    if (order === 'launch') {
+      if (type === 'order') {
+        launchOrder[index + 1] = {
+          ...launchOrder[index + 1],
+          [type]: launchOrder[index].order,
+        };
+      }
+      launchOrder[index] = { ...launchOrder[index], [type]: e.target.value };
+      setLaunchOrder([...launchOrder]);
+    } else {
+      if (type === 'order') {
+        stopOrder[index + 1] = {
+          ...stopOrder[index + 1],
+          [type]: stopOrder[index].order,
+        };
+      }
+      stopOrder[index] = { ...stopOrder[index], [type]: e.target.value };
+      setStopOrder([...stopOrder]);
+    }
+  };
   if (smRule) {
     return (
       <div>
@@ -93,28 +114,23 @@ const GetRecap = ({ recapData }) => {
                       className="sm-rule-and"
                       names={['And', 'Or']}
                       title="And"
-                      type="sm-rule-reletion"
-                      setPersonName={setLaunchOrder}
                       personName={obj.reletion}
-                      rowArr={launchOrder}
-                      indexArr={index}
+                      handleChange={(e) => handleChange(e, 'reletion', index, 'launch')}
                     />
                     <div className="smart-rule_drowdown">
                       <MarketingPlaceholderDropdown
                         readOnly
                         names={['# of orders', 'Daily Revenue']}
                         title="Order"
-                        type="sm-rule-order"
                         personName={obj.order}
                       />
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
                         title="<"
-                        type="sm-rule-arrow"
                         setPersonName={setLaunchOrder}
                         personName={obj.arrow}
                         rowArr={launchOrder}
-                        indexArr={index}
+                        handleChange={(e) => handleChange(e, 'arrow', index, 'launch')}
                       />
                       <TextfieldKit
                         required
@@ -134,21 +150,15 @@ const GetRecap = ({ recapData }) => {
                     <MarketingPlaceholderDropdown
                       names={['# of orders', 'Daily Revenue']}
                       title="Order"
-                      type="sm-rule-order"
-                      setPersonName={setLaunchOrder}
                       personName={obj.order}
-                      rowArr={launchOrder}
-                      indexArr={index}
+                      handleChange={(e) => handleChange(e, 'order', index, 'launch')}
                     />
                     <MarketingPlaceholderDropdown
                       readOnly={!(launchOrder.length === 2)}
                       names={['>', '<']}
                       title="<"
-                      type="sm-rule-arrow"
-                      setPersonName={setLaunchOrder}
                       personName={obj.arrow}
-                      rowArr={launchOrder}
-                      indexArr={index}
+                      handleChange={(e) => handleChange(e, 'arrow', index, 'launch')}
                     />
                     <TextfieldKit
                       required
@@ -208,24 +218,19 @@ const GetRecap = ({ recapData }) => {
                       className="sm-rule-and"
                       names={['And', 'Or']}
                       title="And"
-                      type="sm-rule-reletion"
-                      setPersonName={setLaunchOrder}
                       personName={obj.reletion}
-                      rowArr={launchOrder}
-                      indexArr={index}
+                      handleChange={(e) => handleChange(e, 'reletion', index)}
                     />
                     <div className="smart-rule_drowdown">
                       <MarketingPlaceholderDropdown
                         names={['# of orders', 'Daily Revenue']}
                         title="Order"
-                        type="sm-rule-order"
                         personName={obj.order}
                       />
                       <MarketingPlaceholderDropdown
                         readOnly
                         names={['>', '<']}
                         title=">"
-                        type="sm-rule-arrow"
                         personName={obj.arrow}
                       />
                       <TextfieldKit
@@ -245,17 +250,13 @@ const GetRecap = ({ recapData }) => {
                     <MarketingPlaceholderDropdown
                       names={['# of orders', 'Daily Revenue']}
                       title="Order"
-                      type="sm-rule-order"
-                      setPersonName={setStopOrder}
                       personName={obj.order}
-                      rowArr={stopOrder}
-                      indexArr={index}
+                      handleChange={(e) => handleChange(e, 'order', index)}
                     />
                     <MarketingPlaceholderDropdown
                       readOnly
                       names={['>', '<']}
                       title=">"
-                      type="sm-rule-arrow"
                       personName={obj.arrow}
                     />
                     <TextfieldKit

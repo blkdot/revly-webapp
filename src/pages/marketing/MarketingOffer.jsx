@@ -7,7 +7,7 @@ import './Marketing.scss';
 import { endOfMonth, endOfWeek } from 'date-fns';
 
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
+import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
@@ -502,7 +502,7 @@ const MarketingOffer = () => {
     <div className="wrapper marketing-wrapper">
       <div className="top-inputs">
         {Object.keys(display).length > 0 ? (
-          <RestaurantDropdown chainObj={chainObj} />
+          <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             vendorsSelected={vendorsSelected}

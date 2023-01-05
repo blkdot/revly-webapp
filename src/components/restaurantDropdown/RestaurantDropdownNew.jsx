@@ -30,7 +30,7 @@ const MenuPropsBranch = {
   },
 };
 
-const RestaurantDropdown = ({
+const RestaurantDropdownNew = ({
   setState,
   state,
   branch,
@@ -44,11 +44,6 @@ const RestaurantDropdown = ({
   const { vendors: vendorsReq } = useVendors();
 
   useEffect(() => {
-    window.onbeforeunload = (e) => {
-      localStorage.setItem('leaveTime', JSON.stringify(new Date()));
-      e.target.hidden = true;
-      return '';
-    };
     if (vendorsReq.vendorsArr.length < 0) {
       setVendors(vendorsReq);
     }
@@ -388,4 +383,4 @@ const RestaurantDropdown = ({
   );
 };
 
-export default RestaurantDropdown;
+export default RestaurantDropdownNew;

@@ -4,6 +4,7 @@ import useApi from './useApi';
 
 import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
+import { usePlatform } from './usePlatform';
 
 const useVendors = (isSign) => {
   const { getVendors } = useApi();
@@ -16,7 +17,7 @@ const useVendors = (isSign) => {
     chainObj: {},
   });
   const { user } = useUserAuth();
-
+  const { userPlatformData } = usePlatform();
   const requestVendorsDefaultParam = {
     master_email: user?.email || '',
     access_token: user?.accessToken || '',
@@ -47,7 +48,9 @@ const useVendors = (isSign) => {
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
           vendorsTemp.push({ ...v, platform: p.name });
-          vendorsSelectedTemp.push(v.data.vendor_name);
+          if (userPlatformData.platforms[p.name].active) {
+            vendorsSelectedTemp.push(v.data.vendor_name);
+          }
         }),
       );
     const { ...rest } = newData;
@@ -60,8 +63,10 @@ const useVendors = (isSign) => {
         Object.keys(chainObj[chainName][vendorName]).forEach((platform) => {
           if (chainObj[chainName][vendorName][platform] !== null) {
             if ((vendorsObj[platform] || []).length === 0) {
-              vendorsObj[platform] = [chainObj[chainName][vendorName][platform]];
-            } else {
+              if (userPlatformData.platforms[platform].active) {
+                vendorsObj[platform] = [chainObj[chainName][vendorName][platform]];
+              }
+            } else if (userPlatformData.platforms[platform].active) {
               vendorsObj[platform] = [
                 ...vendorsObj[platform],
                 chainObj[chainName][vendorName][platform],
@@ -71,8 +76,17 @@ const useVendors = (isSign) => {
           if (chainObj[chainName][vendorName][platform] === null) {
             delete chainObj[chainName][vendorName][platform];
           }
+          chainObj[chainName][vendorName][platform] = {
+            ...chainObj[chainName][vendorName][platform],
+            active: userPlatformData.platforms[platform].active,
+          };
         });
       });
+    });
+    Object.keys(rest).forEach((platform) => {
+      if (!userPlatformData.platforms[platform].active) {
+        delete rest[platform];
+      }
     });
     const dataV = {
       vendorsSelected: vendorsSelectedTemp,
