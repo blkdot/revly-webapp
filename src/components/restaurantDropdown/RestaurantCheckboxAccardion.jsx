@@ -107,17 +107,14 @@ const RestaurantCheckboxAccordion = ({
     });
     return arrBool.some((bool) => bool);
   };
-  const getDisabledVendor = () => {
+  const getInActiveVendor = (vendorName) => {
     const arrBool = [];
-    Object.keys(info).forEach((vName) => {
-      Object.keys(info[vName]).forEach((platform) => {
-        if (info[vName][platform].active) {
-          arrBool.push(true);
-        } else {
-          arrBool.push(false);
-        }
-      });
-      return arrBool.some((bool) => bool);
+    Object.keys(info[vendorName]).forEach((platform) => {
+      if (info[vendorName][platform].active) {
+        arrBool.push(true);
+      } else {
+        arrBool.push(false);
+      }
     });
     return arrBool.some((bool) => bool);
   };
@@ -196,7 +193,7 @@ const RestaurantCheckboxAccordion = ({
       )}
       {Object.keys(info).map((vendorName) => (
         <InputLabelKit
-          disabled={!getDisabledVendor()}
+          disabled={!getInActiveVendor(vendorName)}
           key={vendorName}
           className={`accordion-dropdown ${active ? 'active' : ''} ${
             listing ? 'active listing' : ''
@@ -211,7 +208,7 @@ const RestaurantCheckboxAccordion = ({
                         Object.keys(chainObj?.[chainName] || {}).length > 0 ||
                         info[vendorName].active
                       )
-                    : !getDisabledVendor()
+                    : !getInActiveVendor(vendorName)
                 }
                 checked={!!chainObj?.[chainName]?.[vendorName]}
                 onChange={(e) => handleChangeVendor(e, chainName)}
@@ -226,7 +223,7 @@ const RestaurantCheckboxAccordion = ({
                         Object.keys(chainObj?.[chainName] || {}).length > 0 ||
                         info[vendorName].active
                       )
-                    : !getDisabledVendor()
+                    : !getInActiveVendor(vendorName)
                 }
                 checked={!!chainObj?.[chainName]?.[vendorName]}
                 onChange={(e) => handleChangeVendor(e, chainName)}
@@ -242,7 +239,7 @@ const RestaurantCheckboxAccordion = ({
             >
               <p className="vendor-name">{vendorName}</p>
             </TooltipKit>
-            {!(branch || cost || listing || !getDisabledVendor()) ? (
+            {!(branch || cost || listing || !getInActiveVendor(vendorName)) ? (
               <div className="only-button vendor">
                 <ButtonKit
                   disabled={getVendorDisabled(vendorName)}

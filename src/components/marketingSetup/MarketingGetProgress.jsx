@@ -557,7 +557,7 @@ const GetProgress = ({ progressData }) => {
       title: 'Order more , save more',
       subtitle: 'Attract larger orders from groupes and famillies',
     },
-    { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
+    { title: 'Restaurant Pick', subtitle: 'Promote new items or special dishes' },
     { title: 'Free Items', subtitle: 'Allow customers to choose a free items' },
   ];
 

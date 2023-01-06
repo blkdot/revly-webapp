@@ -126,7 +126,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       mov: ['60 AED'],
       type: 'groups',
     },
-    'Restaurent Pick': {
+    'Restaurant Pick': {
       discount: ['20%', '25%', '30%', '35%', '40%', '45%', '50%'],
       mov: ['0 AED', '15 AED', '30 AED'],
       type: 'restaurant-picks',

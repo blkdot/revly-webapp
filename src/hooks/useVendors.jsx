@@ -61,6 +61,16 @@ const useVendors = (isSign) => {
     Object.keys(chainObj).forEach((chainName) => {
       Object.keys(chainObj[chainName]).forEach((vendorName) => {
         Object.keys(chainObj[chainName][vendorName]).forEach((platform) => {
+          chainObj[chainName][vendorName][platform] = {
+            ...chainObj[chainName][vendorName][platform],
+            active: userPlatformData.platforms[platform].active,
+          };
+          if (
+            chainObj[chainName][vendorName][platform] === null ||
+            !chainObj[chainName][vendorName][platform].vendor_id
+          ) {
+            delete chainObj[chainName][vendorName][platform];
+          }
           if (chainObj[chainName][vendorName][platform] !== null) {
             if ((vendorsObj[platform] || []).length === 0) {
               if (userPlatformData.platforms[platform].active) {
@@ -73,13 +83,6 @@ const useVendors = (isSign) => {
               ];
             }
           }
-          if (chainObj[chainName][vendorName][platform] === null) {
-            delete chainObj[chainName][vendorName][platform];
-          }
-          chainObj[chainName][vendorName][platform] = {
-            ...chainObj[chainName][vendorName][platform],
-            active: userPlatformData.platforms[platform].active,
-          };
         });
       });
     });
