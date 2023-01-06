@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import './RestaurantDropdown.scss';
-
+import { usePlatform } from '../../hooks/usePlatform';
 import SelectKit from '../../kits/select/SelectKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
@@ -33,12 +33,8 @@ const MenuProps = {
 const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost, listing }) => {
   const { setVendors, vendors: vendorsContext } = useDate();
   const { vendors: vendorsReq } = useVendors();
+  const { userPlatformData } = usePlatform();
   React.useEffect(() => {
-    window.onbeforeunload = (e) => {
-      localStorage.setItem('leaveTime', JSON.stringify(new Date()));
-      e.target.hidden = true;
-      return '';
-    };
     if (vendorsReq.vendorsArr.length > 0) {
       setVendors(vendorsReq);
     }
@@ -133,23 +129,25 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
     });
     setHover(compareArr);
   };
-  const root = document.querySelector('#root');
   React.useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
-  }, [root.ariaHidden, vendors]);
+  }, [vendors]);
 
   React.useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [root.ariaHidden, vendors],
+    [vendors],
   );
   const [hoverStatus, setHover] = React.useState([]);
   const getHoverStatusVendor = (vName) => hoverStatus.find((v) => v === vName);
   const renderLayout = (info, index) => (
     <div className="vendors-only" key={info.vendor_id}>
-      <MenuItemKit onClick={() => handleChange(info.data.vendor_name)}>
+      <MenuItemKit
+        disabled={!userPlatformData.platforms[info.platform].active}
+        onClick={() => handleChange(info.data.vendor_name)}
+      >
         <CheckboxKit checked={vendorsSelected.indexOf(info.data.vendor_name) > -1} />
         <img
           className="restaurant-img"
@@ -163,7 +161,14 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
           id="category-tooltip"
           title={info.data.vendor_name}
         >
-          <div className="restaurant-vendors">{info.data.vendor_name}</div>
+          <div
+            role="presentation"
+            tabIndex={-1}
+            onClick={() => handleChange(info.data.vendor_name)}
+            className="restaurant-vendors"
+          >
+            {info.data.vendor_name}
+          </div>
         </TooltipKit>
         <div
           role="presentation"

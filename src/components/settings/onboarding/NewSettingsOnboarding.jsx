@@ -74,7 +74,6 @@ const NewSettingsOnboarding = () => {
       ...userPlatformData,
       platforms: { ...userPlatformData.platforms, [k]: res },
     });
-
     triggerAlertWithMessageSuccess(`State changed to ${v ? 'active' : 'inactive'}`);
   };
 
