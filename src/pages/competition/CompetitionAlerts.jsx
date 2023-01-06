@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
+import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import './Competition.scss';
@@ -231,7 +231,7 @@ const CompetitionAlerts = () => {
     <div className="wrapper">
       <div className="top-inputs">
         {Object.keys(display).length > 0 ? (
-          <RestaurantDropdown chainObj={chainObj} />
+          <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             vendorsSelected={vendorsSelected}

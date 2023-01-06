@@ -24,6 +24,7 @@ import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatm
 import GetRecap from './GetRecap';
 import useDate from '../../hooks/useDate';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -126,7 +127,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       mov: ['60 AED'],
       type: 'groups',
     },
-    'Restaurent Pick': {
+    'Restaurant Pick': {
       discount: ['20%', '25%', '30%', '35%', '40%', '45%', '50%'],
       mov: ['0 AED', '15 AED', '30 AED'],
       type: 'restaurant-picks',
@@ -387,9 +388,31 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
       ([resRevenue, resOrders]) => {
         setHeatmapLoading(false);
-        if (resRevenue instanceof Error || resOrders instanceof Error) return;
+        if (resRevenue instanceof Error || resOrders instanceof Error) {
+          setHeatmapData({
+            revenue: defaultHeatmapState,
+            orders: defaultHeatmapState,
+          });
+          setRangeColorIndices({
+            revenue: defaultRangeColorIndices,
+            orders: defaultRangeColorIndices,
+          });
 
-        if (!resRevenue.data || !resOrders.data) return;
+          return;
+        }
+
+        if (!resRevenue.data || !resOrders.data) {
+          setHeatmapData({
+            revenue: defaultHeatmapState,
+            orders: defaultHeatmapState,
+          });
+          setRangeColorIndices({
+            revenue: defaultRangeColorIndices,
+            orders: defaultRangeColorIndices,
+          });
+
+          return;
+        }
 
         const initialisationStateRevenue = resRevenue.data.all
           ? resRevenue.data.all.heatmap
@@ -417,8 +440,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     if (!vendorsObj) return;
 
+    if (!active) return;
+
     getHeatmapData();
-  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj)]);
+  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj), active]);
 
   const getPlatform = (e) => {
     const { value } = e.target;
@@ -1101,9 +1126,16 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   </TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant="div" className="color-btns">
-                  {rangeColorIndices[links]?.map((r, i) => (
-                    <TypographyKit key={nanoid()}>{renderGradientValue(r, i)}</TypographyKit>
-                  ))}
+                  {rangeColorIndices[links]?.map((r, i) => {
+                    if (heatmapLoading) {
+                      return (
+                        <SkeletonKit key={nanoid()} variant="rectangular" width={170} height={25} />
+                      );
+                    }
+                    return (
+                      <TypographyKit key={nanoid()}>{renderGradientValue(r, i)}</TypographyKit>
+                    );
+                  })}
                 </TypographyKit>
               </TypographyKit>
               <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>

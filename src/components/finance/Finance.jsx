@@ -67,6 +67,7 @@ const Finance = ({
     }
     return <p> {vendorsSelected.join(', ')}</p>;
   };
+  const financeLinks = ['revenue', 'n_orders', 'average_basket', 'profit'];
   return (
     <div className="block">
       <TypographyKit variant="h4">
@@ -75,7 +76,7 @@ const Finance = ({
         {isDisplay()}
       </TypographyKit>
       <div className="cardsWrapper finance-wrapper">
-        {['revenue', 'n_orders', 'average_basket', 'profit'].map((info) => (
+        {financeLinks.map((info) => (
           <Widget
             table={table}
             setTable={setTable}

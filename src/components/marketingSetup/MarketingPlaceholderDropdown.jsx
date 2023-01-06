@@ -30,37 +30,18 @@ const MarketingPlaceholderDropdown = ({
   personName,
   title,
   names,
-  type,
-  rowArr,
-  indexArr,
   className,
   readOnly,
+  handleChange,
 }) => {
   const theme = useTheme();
 
-  const handleChange = (event) => {
+  const handleChangeValue = (event) => {
     const {
       target: { value },
     } = event;
     if (setPersonName) {
-      if (type === 'sm-rule-reletion') {
-        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], reletion: value });
-        setPersonName([...rowArr]);
-      }
-      if (type === 'sm-rule-order') {
-        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], order: value });
-        setPersonName([...rowArr]);
-      }
-      if (type === 'sm-rule-arrow') {
-        rowArr.splice(indexArr, 1, { ...rowArr[indexArr], arrow: value });
-        setPersonName([...rowArr]);
-      } else if (
-        type !== 'sm-rule-arrow' &&
-        type !== 'sm-rule-order' &&
-        type !== 'sm-rule-reletion'
-      ) {
-        setPersonName(value);
-      }
+      setPersonName(value);
     }
   };
 
@@ -71,7 +52,7 @@ const MarketingPlaceholderDropdown = ({
           readOnly={readOnly}
           displayEmpty
           value={personName || ''}
-          onChange={handleChange}
+          onChange={handleChange || handleChangeValue}
           input={<OutlindeInputKit />}
           renderValue={(selected) => <em>{selected || title}</em>}
           MenuProps={MenuProps}

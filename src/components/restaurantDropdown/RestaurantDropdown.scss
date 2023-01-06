@@ -338,7 +338,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
+    &.disabled{
+      pointer-events: none;
+    }
     &:hover {
       .only-button {
         opacity: 1;
@@ -411,7 +413,9 @@
     transition: .3s;
     height: 0;
     display: none;
-
+    &.Mui-disabled.Mui-disabled{
+      pointer-events: none;
+    }
     &.listing {
       >div {
         margin: 0;
