@@ -230,24 +230,29 @@ const RestaurantDropdownNew = ({
         if (cost) {
           Object.keys(chainObjTemp).forEach((chain) => {
             if (chain !== chainName) {
+              // checking if chain of chainObjTemp not equal chainName of checked vendor
               Object.keys(chainObjTemp[chain]).forEach((vendorName) => {
-                delete chainObjTemp[chain][vendorName];
+                delete chainObjTemp[chain][vendorName]; // delete vendor from chainObjTemp
               });
             }
           });
         }
         Object.keys(display[chainName]).forEach((vendorName) => {
           if (vendorName === value) {
-            chainObjTemp[chainName][value] = display[chainName][value];
+            // checking if value equal vendorName
+            chainObjTemp[chainName][value] = display[chainName][value]; // put the new value to vendor
           }
         });
-        const vendorsObjTemp = JSON.parse(JSON.stringify(state?.vendorsObj));
+        const vendorsObjTemp = JSON.parse(JSON.stringify(state?.vendorsObj)); // copy vendorsObj to change in later on
+        // clear inside of vendorsObjTemp
         vendorsObjTemp.talabat = [];
         vendorsObjTemp.deliveroo = [];
+
         Object.keys(chainObjTemp[chainName]).forEach((vendorName) => {
           Object.keys(chainObjTemp[chainName][vendorName]).forEach((platform) => {
             if (userPlatformData.platforms[platform].active) {
-              vendorsObjTemp[platform]?.splice(0, 0, display[chainName][vendorName][platform]);
+              // checking if platform is active
+              vendorsObjTemp[platform]?.push(display[chainName][vendorName][platform]); // pushing new value to vendorsObjTemp
             }
           });
         });
@@ -259,33 +264,36 @@ const RestaurantDropdownNew = ({
       }
       return;
     }
-    const chainObjClear = JSON.parse(JSON.stringify(chainObj));
+    const chainObjClear = JSON.parse(JSON.stringify(chainObj)); // copy chainObj to clear him and use for check
     Object.keys(chainObjClear).forEach((chain) => {
       if (Object.keys(chainObjClear[chain]).length === 0) {
+        // if chainObjClear dont have vendors we just delete him
         delete chainObjClear[chain];
       }
     });
+    // if chainObjClear or chainObjClear[chainName] (vendor) have at least 1 chain or vendor because we cant unchecked all of them
     if (
       Object.keys(chainObjClear).length > 1 ||
       Object.keys(chainObjClear[chainName] || {}).length > 1
     ) {
       if (!checked) {
-        const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
-        const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj));
+        const chainObjTemp = JSON.parse(JSON.stringify(chainObj)); // copy chainObj to change in later on
+        const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj)); // copy vendorsObj to change in later on
         Object?.keys(chainObjTemp?.[chainName]?.[value])?.forEach((platform) => {
           vendorsObjTemp[platform]?.forEach((obj, index) => {
             if (+obj.chain_id === chainObjTemp[chainName][value][platform].chain_id) {
-              vendorsObjTemp[platform].splice(index, 1);
+              vendorsObjTemp[platform].splice(index, 1); // we deleting the object inside of vendorObj which equal
             }
           });
         });
-        delete chainObjTemp[chainName][value];
+        delete chainObjTemp[chainName][value]; // we deleting the vendorName inside of chainObjTemp
         Object.keys(vendorsObjTemp).forEach((p) => {
           if (vendorsObjTemp[p].length === 0) {
-            delete vendorsObjTemp[p];
+            delete vendorsObjTemp[p]; // deleting empty array
           }
         });
         if (listing) {
+          // its for vendors where we change own states not global
           setState({
             ...state,
             vendorsObj: vendorsObjTemp,
@@ -301,17 +309,20 @@ const RestaurantDropdownNew = ({
       }
     }
     if (checked) {
+      // copy chainObj and add to chainName the new value
       const chainObjTemp = {
         ...chainObj,
         [chainName]: { ...chainObj[chainName], [value]: { ...display[chainName][value] } },
       };
-      const vendorsObjTemp = { ...vendorsObj };
+      const vendorsObjTemp = { ...vendorsObj }; // copy vendorObj
       Object.keys(display[chainName][value]).forEach((p) => {
         if (userPlatformData.platforms[p].active) {
+          // check if platform is active
           if (vendorsObjTemp[p]) {
-            vendorsObjTemp[p] = [...vendorsObjTemp[p], display[chainName][value][p]];
+            // checking vendorsObjTemp[p (talabat or deliveroo)] is true
+            vendorsObjTemp[p] = [...vendorsObjTemp[p], display[chainName][value][p]]; // copy the old value and add the new value
           } else {
-            vendorsObjTemp[p] = [display[chainName][value][p]];
+            vendorsObjTemp[p] = [display[chainName][value][p]]; // add to array the new value
           }
         }
       });
