@@ -59,7 +59,7 @@ const RestaurantCheckboxAccordion = ({
   const [hoverStatusChain, setHoverChain] = useState(false);
   const [hoverStatusVendor, setHoverVendor] = useState([]);
   const getHoverStatusVendor = (vName) => hoverStatusVendor.find((v) => v === vName);
-  // function for chain button "Only" 
+  // function for chain button "Only"
   const handleClick = (e) => {
     e.stopPropagation();
     const vendorsObjTemp = { talabat: [], deliveroo: [] };
@@ -79,7 +79,7 @@ const RestaurantCheckboxAccordion = ({
       vendorsObj: vendorsObjTemp,
     });
   };
-  // function for vendor button "Only" 
+  // function for vendor button "Only"
   const handleClickVendor = (e, vendorName) => {
     e.stopPropagation();
     const chainObjTemp = { [chainName]: { [vendorName]: { ...display[chainName][vendorName] } } };
