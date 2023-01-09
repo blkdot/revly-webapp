@@ -140,21 +140,18 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
   const getDiscountMovType = (type) => itemMenuObj[itemMenu][type];
 
-  const getHourArr = (hour) => {
+  const getHourArr = (hour, fromZero = true) => {
     const arr = [];
-    times.forEach((obj) =>
-      Object.keys(obj).forEach((keys) => {
-        if (keys === hour) {
-          if (
-            isValidDate(obj[hour]) &&
-            obj[hour] !== null &&
-            !Number.isNaN(new Date(obj[hour]).getTime())
-          ) {
-            arr.push(format(obj[keys], 'HH:00'));
-          }
-        }
-      }),
-    );
+    times.forEach((obj) => {
+      if (
+        isValidDate(obj[hour]) &&
+        obj[hour] !== null &&
+        !Number.isNaN(new Date(obj[hour]).getTime())
+      ) {
+        arr.push(format(obj[hour], fromZero ? 'HH:00' : 'HH:mm'));
+      }
+    });
+
     return arr;
   };
 
@@ -166,10 +163,11 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       setTimes([
         {
           startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          endTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
           pos: 1,
         },
       ]);
+      clearTimeSelected();
     }
   }, [duration]);
 
@@ -281,7 +279,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
 
   const handleSchedule = async () => {
-    setFreshStartingDate();
+    let isStartingFromZero = true;
+    console.log(duration);
+    if (duration === 'Starting Now') {
+      setFreshStartingDate();
+      isStartingFromZero = false;
+    }
 
     const menuType =
       menu === 'Offer on the whole Menu'
@@ -290,7 +293,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
     const dataReq = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
-      start_hour: getHourArr('startTime'),
+      start_hour: getHourArr('startTime', isStartingFromZero),
       end_date: getFormatedEndDate(endingDate, 'yyyy-MM-dd', times),
       end_hour: getHourArr('endTime'),
       type_schedule: getTypeSchedule(),
@@ -532,6 +535,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }
 
   const timeSelected = () => {
+    if (duration !== 'Starting Now' && selected === 3) return;
+
     const typeObject = {
       once: 'mono',
       now: 'mono',
@@ -591,12 +596,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       clearTimeSelected();
       timeSelected();
       if (duration === 'Program the offer duration') {
-        // setSteps([...stepsRange, stepsRange.length]);
         getSteps([...stepsRange, stepsRange.length]);
         setDisabled(!typeSchedule);
         return;
       }
-      // setSteps(stepsRange);
       getSteps(stepsRange);
       setDisabled(
         !(

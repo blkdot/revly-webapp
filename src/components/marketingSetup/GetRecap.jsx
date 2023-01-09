@@ -429,7 +429,12 @@ const GetRecap = ({ recapData }) => {
                     <img src={TimerCheckGrayIcon} alt="timer check icon" />
                     <div>
                       <div>Start Time {index + 1}</div>
-                      <div>{format(obj.startTime, 'HH:mm aaa')}</div>
+                      <div>
+                        {format(
+                          obj.startTime,
+                          duration === 'Starting Now' ? 'HH:mm aaa' : 'HH:00 aaa',
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="right">
@@ -608,7 +613,12 @@ const GetRecap = ({ recapData }) => {
                   <img src={TimerCheckGrayIcon} alt="timer check icon" />
                   <div>
                     <div>Start Time {index + 1}</div>
-                    <div>{format(obj.startTime, 'HH:mm aaa')}</div>
+                    <div>
+                      {format(
+                        obj.startTime,
+                        duration === 'Starting Now' ? 'HH:mm aaa' : 'HH:00 aaa',
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="right">
