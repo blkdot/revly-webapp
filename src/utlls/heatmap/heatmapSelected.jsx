@@ -316,6 +316,10 @@ const heatmapSelected = (
   isEveryWeek = false,
   everyWeek = '',
 ) => {
+  if (!times) {
+    return [];
+  }
+
   if (type === 'mono') return typeMono(dateRange, times[0], data);
 
   return typeMulti(
