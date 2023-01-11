@@ -18,6 +18,8 @@ import {
   isSameYear,
   startOfYear,
   isSameWeek,
+  isSameDay,
+  isSameMonth,
 } from 'date-fns';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -573,7 +575,30 @@ const Dates = (props) => {
         });
         return;
       }
-
+      if (
+        getMonth(startDate) === getMonth(subMonths(startDateBeforePeriod, 1)) &&
+        isSameYear(startDate, startDateBeforePeriod)
+      ) {
+        setTitleafterPeriod('month before');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: { startDate, endDate },
+          titleafterPeriod: 'month before',
+        });
+        return;
+      }
+      if (
+        getMonth(startDate) === getMonth(subMonths(startDateBeforePeriod, 1)) &&
+        getMonth(date) === 0
+      ) {
+        setTitleafterPeriod('month before');
+        setDateContext({
+          ...dateContext,
+          afterPeriod: { startDate, endDate },
+          titleafterPeriod: 'month before',
+        });
+        return;
+      }
       setTitleafterPeriod('custom');
       setDateContext({
         ...dateContext,
@@ -671,26 +696,22 @@ const Dates = (props) => {
   };
   const getafterPeriod = () => {
     const startDateAfterPeriod = new Date(afterPeriod[0].startDate);
-    // const startLocalAfterPeriod = startDateAfterPeriod.toLocaleDateString();
 
     if (typeDate === 'day') {
-      return startDateAfterPeriod < new Date(beforePeriodContextStart);
+      return isSameDay(startDateAfterPeriod, new Date(beforePeriodContextStart));
     }
 
     if (typeDate === 'week') {
-      return (
-        getWeek(startDateAfterPeriod, { weekStartsOn: 1 }) <
-        getWeek(beforePeriodContextStart, { weekStartsOn: 1 })
-      );
+      return isSameWeek(startDateAfterPeriod, new Date(beforePeriodContextStart));
     }
 
     if (typeDate === 'month') {
       if (
-        getYear(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) <=
+        getYear(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) >=
         getYear(new Date(new Date(beforePeriodContextStart).setFullYear(year)))
       ) {
         return (
-          getMonth(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) <
+          getMonth(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) >
           getMonth(new Date(new Date(beforePeriodContextStart).setFullYear(year)))
         );
       }
@@ -708,16 +729,14 @@ const Dates = (props) => {
       return;
     }
 
-    if (getMonth(selection.startDate) === getMonth(new Date())) {
+    if (isSameMonth(selection.startDate, new Date())) {
       if (typeDate === 'week') {
         setafterPeriod([
           {
             startDate: startOfWeek(selection.startDate, { weekStartsOn: 1 }),
-            endDate:
-              getWeek(new Date(), { weekStartsOn: 1 }) ===
-              getWeek(selection.startDate, { weekStartsOn: 1 })
-                ? new Date()
-                : endOfWeek(selection.startDate, { weekStartsOn: 1 }),
+            endDate: isSameWeek(selection.startDate, new Date())
+              ? new Date()
+              : endOfWeek(selection.startDate, { weekStartsOn: 1 }),
             key: 'selection',
           },
         ]);
@@ -1005,6 +1024,8 @@ const Dates = (props) => {
                 setSelected={setSelected}
                 setDateContext={setDateContext}
                 dateContext={dateContext}
+                year={year}
+                setYear={setYearAfterPeriod}
               />
             </TypographyKit>
           </div>
@@ -1032,9 +1053,9 @@ const Dates = (props) => {
               ))}
               <div className="date-btn-wrapper">
                 <ButtonKit
-                  disabled={!getafterPeriod()}
+                  disabled={getafterPeriod()}
                   onClick={handleClickAfterPeriod}
-                  className={`date-save-btn ${getafterPeriod() ? '' : 'date-disabled-btn'}`}
+                  className={`date-save-btn ${getafterPeriod() ? 'date-disabled-btn' : ''}`}
                   variant="contained"
                 >
                   Ok

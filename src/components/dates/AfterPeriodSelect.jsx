@@ -10,6 +10,7 @@ import {
   endOfWeek,
   startOfWeek,
   startOfMonth,
+  getMonth,
 } from 'date-fns';
 import PaperKit from '../../kits/paper/PaperKit';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -163,7 +164,9 @@ const Month = ({
   titlebeforePeriodContext,
   setDateContext,
   dateContext,
-  startDate,
+  startDateLeft,
+  year,
+  setYear,
 }) => (
   <div>
     {titlebeforePeriodContext === 'last month' || titlebeforePeriodContext === 'custom' ? (
@@ -194,18 +197,27 @@ const Month = ({
       className="navbar-button-kit"
       onClick={() => {
         setafterPeriodBtn({
-          startDate: startOfMonth(subMonths(startDate, 1)),
-          endDate: endOfMonth(subMonths(startDate, 1)),
+          startDate: startOfMonth(subMonths(startDateLeft, 1)).setFullYear(
+            getMonth(date) === 0 ? year - 1 : year,
+          ),
+          endDate: endOfMonth(subMonths(startDateLeft, 1)).setFullYear(
+            getMonth(date) === 0 ? year - 1 : year,
+          ),
         });
         setTitleAfterPeriod('month before');
         setDateContext({
           ...dateContext,
           afterPeriod: {
-            startDate: startOfMonth(subMonths(date, 1)),
-            endDate: endOfMonth(subMonths(date, 1)),
+            startDate: startOfMonth(subMonths(startDateLeft, 1)).setFullYear(
+              getMonth(date) === 0 ? year - 1 : year,
+            ),
+            endDate: endOfMonth(subMonths(startDateLeft, 1)).setFullYear(
+              getMonth(date) === 0 ? year - 1 : year,
+            ),
           },
           titleafterPeriod: 'month before',
         });
+        setYear(getMonth(date) === 0 ? year - 1 : year);
       }}
     >
       Month before
@@ -229,6 +241,8 @@ const AfterPeriodSelect = ({
   setSelected,
   setDateContext,
   dateContext,
+  year,
+  setYear,
 }) => {
   const startDate = new Date(afterPeriod.startDate);
   const endDate = new Date(afterPeriod.endDate);
@@ -279,7 +293,9 @@ const AfterPeriodSelect = ({
           setTitleAfterPeriod={setTitleAfterPeriod}
           setDateContext={setDateContext}
           dateContext={dateContext}
-          startDate={startDate}
+          startDateLeft={startDateLeft}
+          year={year}
+          setYear={setYear}
         />
       );
     }
