@@ -52,12 +52,7 @@ const DateSelect = React.memo((props) => {
       if (type === 'day') {
         if (startLocal === dateLocal && isSameYear(date, startDate)) {
           setActive('current');
-        } else if (startGetDay === 1 && getYear(startDate) === getYear(date) - 1) {
-          setActive('last');
-        } else if (
-          startLocal === subDays(new Date(), 1).toLocaleDateString() &&
-          isSameYear(date, startDate)
-        ) {
+        } else if (startLocal === subDays(new Date(), 1).toLocaleDateString()) {
           setActive('last');
         } else {
           setActive('custom');
