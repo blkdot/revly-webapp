@@ -202,7 +202,7 @@ const RestaurantDropdownNew = ({
     } = event;
     if (branch || cost) {
       // its for vendors where we change own states not global
-      if (Object.keys(chainObj[chainName]).length > 1) {
+      if (Object.keys(chainObj[chainName] || {}).length > 1) {
         // if chain have at least 1 vendor because we cant unchecked all of them
         if (!checked) {
           const chainObjTemp = JSON.parse(JSON.stringify(chainObj)); // copy chainObj to change in later on
@@ -240,7 +240,10 @@ const RestaurantDropdownNew = ({
         Object.keys(display[chainName]).forEach((vendorName) => {
           if (vendorName === value) {
             // checking if value equal vendorName
-            chainObjTemp[chainName][value] = display[chainName][value]; // put the new value to vendor
+            chainObjTemp[chainName] = {
+              ...chainObjTemp[chainName],
+              [value]: { ...display[chainName][value] },
+            }; // put the new value to vendor
           }
         });
         const vendorsObjTemp = JSON.parse(JSON.stringify(state?.vendorsObj)); // copy vendorsObj to change in later on
@@ -407,6 +410,7 @@ const RestaurantDropdownNew = ({
       </div>
     );
   }
+
   return (
     <div className={`restaurant-dropdown_wrapper ${cost || listing ? 'cost' : ''}`}>
       {!listing ? (

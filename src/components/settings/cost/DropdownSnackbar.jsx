@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import { useAtom } from 'jotai';
+import { vendorsAtom } from '../../../store/vendorsAtom';
 import ButtonKit from '../../../kits/button/ButtonKit';
 import RestaurantDropdownNew from '../../restaurantDropdown/RestaurantDropdownNew';
 import { usePlatform } from '../../../hooks/usePlatform';
@@ -10,11 +12,14 @@ import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 const DropdownSnackbar = (props) => {
   // eslint-disable-next-line no-unused-vars
   const { onAdd, isUpdate, setIsUpdate, invoice } = props;
-  const { vendors } = useVendors();
-  const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
+  const [vendors, setVendors] = useAtom(vendorsAtom);
+  const { vendors: vendorsReq } = useVendors();
   useEffect(() => {
-    setCostVendors(JSON.parse(JSON.stringify(vendors)));
-  }, [vendors]);
+    if (vendorsReq.vendorsArr.length < 0) {
+      setVendors(vendorsReq);
+    }
+  }, [vendorsReq]);
+  const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
   const [procent, setProcent] = useState(0);
   const { userPlatformData } = usePlatform();
   const getPlatformActive = () => {
@@ -29,34 +34,34 @@ const DropdownSnackbar = (props) => {
   };
   const platform = getPlatformActive();
   useEffect(() => {
-    const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
+    const newChainObj = {};
     const newVendorsObj = { talabat: [], deliveroo: [] };
-    if (Object.keys(vendors.chainObj).length > 0) {
-      if (Object.keys(vendors.display).length > 0) {
-        Object.keys(newChainObj).forEach((chainName, index) => {
-          Object.keys(newChainObj[chainName]).forEach((vendorName) => {
-            if (index !== 0) {
-              delete newChainObj[chainName][vendorName];
-            } else {
-              platform.forEach((p) => {
-                newVendorsObj[p]?.push(newChainObj[chainName][vendorName][p]);
-              });
-            }
-          });
+    if (Object.keys(vendors.display).length > 0) {
+      Object.keys(vendors.display).forEach((chainName, index) => {
+        Object.keys(vendors.display[chainName]).forEach((vendorName) => {
+          if (index === 0) {
+            newChainObj[chainName] = {
+              ...newChainObj[chainName],
+              [vendorName]: { ...vendors.display[chainName][vendorName] },
+            };
+            platform.forEach((p) => {
+              newVendorsObj[p]?.push(vendors.display[chainName][vendorName][p]);
+            });
+          }
         });
-        setCostVendors({
-          ...costVendors,
-          vendorsObj: newVendorsObj,
-          chainObj: newChainObj,
-        });
-      } else {
-        newVendorsObj[platform[0]] = [vendors.vendorsObj[platform[0]][0]];
-        setCostVendors({
-          ...costVendors,
-          vendorsSelected: [vendors.vendorsSelected[0]],
-          vendorsObj: newVendorsObj,
-        });
-      }
+      });
+      setCostVendors({
+        ...vendors,
+        vendorsObj: newVendorsObj,
+        chainObj: newChainObj,
+      });
+    } else {
+      newVendorsObj[platform[0]] = [(vendors.vendorsObj[platform[0]] || [])[0]];
+      setCostVendors({
+        ...vendors,
+        vendorsSelected: [vendors.vendorsSelected[0]],
+        vendorsObj: newVendorsObj,
+      });
     }
   }, [vendors]);
 
@@ -105,7 +110,6 @@ const DropdownSnackbar = (props) => {
       return value;
     });
   };
-
   return (
     <div className="invoice snackbar">
       <div className="snackbar-wrapper">
