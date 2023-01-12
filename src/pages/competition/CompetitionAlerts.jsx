@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
@@ -18,17 +19,15 @@ import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import { useGlobal } from '../../hooks/useGlobal';
 import { usePlatform } from '../../hooks/usePlatform';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useDate from '../../hooks/useDate';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 let fnDelays = null;
 
 const CompetitionAlerts = () => {
-  const { setVendors } = useGlobal();
-  const { vendors } = useDate();
+  const [vendors, setVendors] = useAtom(vendorsAtom);
   const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();

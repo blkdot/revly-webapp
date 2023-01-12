@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
 import { pascalCase } from 'change-case';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import logo from '../../assets/images/small-logo.png';
@@ -25,11 +26,12 @@ import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdow
 import Layers from '../../assets/icons/Layers';
 import Vector from '../../assets/icons/Vector';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (date.typeDate === 'month') {

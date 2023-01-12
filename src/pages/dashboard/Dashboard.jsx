@@ -1,4 +1,5 @@
 import './Dashboard.scss';
+import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import Finance from '../../components/finance/Finance';
@@ -17,11 +18,11 @@ import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useDate from '../../hooks/useDate';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { chainObj, vendorsObj, display, vendorsSelected, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
 
@@ -74,7 +75,7 @@ const Dashboard = () => {
         )}
         <Dates isDashboard />
       </div>
-      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
+      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading ? (
         <Finance
           chainObj={chainObj}
           setTable={setTable}
@@ -89,7 +90,7 @@ const Dashboard = () => {
       ) : (
         <FinanceEmpty />
       )}
-      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 ? (
+      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading ? (
         <Marketing
           setTable={setTable}
           table={table}
@@ -100,7 +101,7 @@ const Dashboard = () => {
       ) : (
         <MarketingEmpty />
       )}
-      {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 ? (
+      {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 && !loading ? (
         <PaperKit className="dashboard-paper-wrapper">
           <div className="dashboard-links">
             {links.map((title) => (

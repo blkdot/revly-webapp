@@ -1,13 +1,14 @@
 import { useMemo, useState, useEffect } from 'react';
+import { useAtom } from 'jotai';
 
 import dayjs from 'dayjs';
 import useApi from './useApi';
-import useDate from './useDate';
+import { vendorsAtom } from '../store/vendorsAtom';
 import { useUserAuth } from '../contexts/AuthContext';
 
 let fnDelays = null;
 function usePlanningOffers({ dateRange }) {
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
@@ -18,7 +19,7 @@ function usePlanningOffers({ dateRange }) {
     if (Object.keys(vendorsObj).length < 1) return;
     setIsLoading(true);
     clearTimeout(fnDelays);
-
+    setIsLoading(true);
     fnDelays = setTimeout(() => {
       getOffers({
         master_email: user.email,

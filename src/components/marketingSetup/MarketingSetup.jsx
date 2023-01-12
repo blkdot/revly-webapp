@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { addDays, addHours, format, startOfWeek, subWeeks, endOfWeek, addMinutes } from 'date-fns';
+import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
@@ -22,7 +23,7 @@ import BoxKit from '../../kits/box/BoxKit';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
 import GetRecap from './GetRecap';
-import useDate from '../../hooks/useDate';
+import { vendorsAtom } from '../../store/vendorsAtom';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 
@@ -69,7 +70,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   });
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert('error');

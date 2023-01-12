@@ -16,6 +16,7 @@ const useVendors = (isSign) => {
     display: {},
     chainObj: {},
   });
+
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();
   const requestVendorsDefaultParam = {
@@ -23,15 +24,19 @@ const useVendors = (isSign) => {
     access_token: user?.accessToken || '',
   };
 
-  const { data, isLoading, isError } = useQuery(['getVendors'], () => {
-    if (!isSign) {
-      return getVendors(requestVendorsDefaultParam);
-    }
-    return {};
-  });
+  const { data, isLoading, isError } = useQuery(
+    ['getVendors', requestVendorsDefaultParam],
+    () => {
+      if (!isSign) {
+        return getVendors(requestVendorsDefaultParam);
+      }
+      return {};
+    },
+    { enabled: !isSign },
+  );
 
   useEffect(() => {
-    if (isLoading || isError) return;
+    if (isLoading || isError || isSign) return;
 
     const newData = data;
 

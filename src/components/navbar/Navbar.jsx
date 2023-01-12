@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import { useAtom } from 'jotai';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import './Navbar.scss';
@@ -21,7 +21,7 @@ import settingsIcon from '../../assets/images/ic_settings.png';
 import lines from '../../assets/images/lines.png';
 
 import { simpleLink, accordionLink } from '../../data/navbarData';
-import useDate from '../../hooks/useDate';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);
@@ -31,7 +31,7 @@ const Navbar = () => {
   const { logOut } = useUserAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { setVendors } = useDate();
+  const [, setVendors] = useAtom(vendorsAtom);
 
   const handleLogout = async () => {
     setVendors({
