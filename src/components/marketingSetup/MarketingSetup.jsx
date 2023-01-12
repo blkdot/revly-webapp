@@ -25,6 +25,7 @@ import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatm
 import GetRecap from './GetRecap';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -127,7 +128,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       mov: ['60 AED'],
       type: 'groups',
     },
-    'Restaurent Pick': {
+    'Restaurant Pick': {
       discount: ['20%', '25%', '30%', '35%', '40%', '45%', '50%'],
       mov: ['0 AED', '15 AED', '30 AED'],
       type: 'restaurant-picks',
@@ -140,21 +141,18 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
   const getDiscountMovType = (type) => itemMenuObj[itemMenu][type];
 
-  const getHourArr = (hour) => {
+  const getHourArr = (hour, fromZero = true) => {
     const arr = [];
-    times.forEach((obj) =>
-      Object.keys(obj).forEach((keys) => {
-        if (keys === hour) {
-          if (
-            isValidDate(obj[hour]) &&
-            obj[hour] !== null &&
-            !Number.isNaN(new Date(obj[hour]).getTime())
-          ) {
-            arr.push(format(obj[keys], 'HH:00'));
-          }
-        }
-      }),
-    );
+    times.forEach((obj) => {
+      if (
+        isValidDate(obj[hour]) &&
+        obj[hour] !== null &&
+        !Number.isNaN(new Date(obj[hour]).getTime())
+      ) {
+        arr.push(format(obj[hour], fromZero ? 'HH:00' : 'HH:mm'));
+      }
+    });
+
     return arr;
   };
 
@@ -166,10 +164,11 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       setTimes([
         {
           startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-          endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+          endTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
           pos: 1,
         },
       ]);
+      clearTimeSelected();
     }
   }, [duration]);
 
@@ -281,7 +280,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   };
 
   const handleSchedule = async () => {
-    setFreshStartingDate();
+    let isStartingFromZero = true;
+    console.log(duration);
+    if (duration === 'Starting Now') {
+      setFreshStartingDate();
+      isStartingFromZero = false;
+    }
 
     const menuType =
       menu === 'Offer on the whole Menu'
@@ -290,7 +294,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
     const dataReq = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
-      start_hour: getHourArr('startTime'),
+      start_hour: getHourArr('startTime', isStartingFromZero),
       end_date: getFormatedEndDate(endingDate, 'yyyy-MM-dd', times),
       end_hour: getHourArr('endTime'),
       type_schedule: getTypeSchedule(),
@@ -388,9 +392,31 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
       ([resRevenue, resOrders]) => {
         setHeatmapLoading(false);
-        if (resRevenue instanceof Error || resOrders instanceof Error) return;
+        if (resRevenue instanceof Error || resOrders instanceof Error) {
+          setHeatmapData({
+            revenue: defaultHeatmapState,
+            orders: defaultHeatmapState,
+          });
+          setRangeColorIndices({
+            revenue: defaultRangeColorIndices,
+            orders: defaultRangeColorIndices,
+          });
 
-        if (!resRevenue.data || !resOrders.data) return;
+          return;
+        }
+
+        if (!resRevenue.data || !resOrders.data) {
+          setHeatmapData({
+            revenue: defaultHeatmapState,
+            orders: defaultHeatmapState,
+          });
+          setRangeColorIndices({
+            revenue: defaultRangeColorIndices,
+            orders: defaultRangeColorIndices,
+          });
+
+          return;
+        }
 
         const initialisationStateRevenue = resRevenue.data.all
           ? resRevenue.data.all.heatmap
@@ -418,8 +444,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   useEffect(() => {
     if (!vendorsObj) return;
 
+    if (!active) return;
+
     getHeatmapData();
-  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj)]);
+  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj), active]);
 
   const getPlatform = (e) => {
     const { value } = e.target;
@@ -508,6 +536,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   }
 
   const timeSelected = () => {
+    if (duration !== 'Starting Now' && selected === 3) return;
+
     const typeObject = {
       once: 'mono',
       now: 'mono',
@@ -567,12 +597,10 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       clearTimeSelected();
       timeSelected();
       if (duration === 'Program the offer duration') {
-        // setSteps([...stepsRange, stepsRange.length]);
         getSteps([...stepsRange, stepsRange.length]);
         setDisabled(!typeSchedule);
         return;
       }
-      // setSteps(stepsRange);
       getSteps(stepsRange);
       setDisabled(
         !(
@@ -1102,9 +1130,16 @@ const MarketingSetup = ({ active, setActive, ads }) => {
                   </TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant="div" className="color-btns">
-                  {rangeColorIndices[links]?.map((r, i) => (
-                    <TypographyKit key={nanoid()}>{renderGradientValue(r, i)}</TypographyKit>
-                  ))}
+                  {rangeColorIndices[links]?.map((r, i) => {
+                    if (heatmapLoading) {
+                      return (
+                        <SkeletonKit key={nanoid()} variant="rectangular" width={170} height={25} />
+                      );
+                    }
+                    return (
+                      <TypographyKit key={nanoid()}>{renderGradientValue(r, i)}</TypographyKit>
+                    );
+                  })}
                 </TypographyKit>
               </TypographyKit>
               <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>

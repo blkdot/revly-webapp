@@ -6,7 +6,7 @@ import { useAtom } from 'jotai';
 import './Planning.scss';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
+import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
 import useDate from '../../hooks/useDate';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
 import usePlanningAds from '../../hooks/usePlanningAds';
@@ -404,7 +404,7 @@ const Planning = () => {
     <div className="wrapper">
       <div className="top-inputs">
         {Object.keys(display).length > 0 ? (
-          <RestaurantDropdown chainObj={chainObj} />
+          <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             vendorsSelected={vendorsSelected}

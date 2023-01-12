@@ -33,7 +33,7 @@ import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import RestaurantDropdown from '../restaurantDropdown/RestaurantDropdown.suspended';
+import RestaurantDropdownNew from '../restaurantDropdown/RestaurantDropdownNew';
 import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import BranchesIcon from '../../assets/images/ic_branch.png';
@@ -41,9 +41,12 @@ import TimePickerDropdown from '../timePicker/TimePickerDropdown';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
 
 const TooltipCategory = ({ obj, index }) => {
+  // we getting the textElement
   const textElement = document.querySelectorAll('.list-item-category')[index];
   const compareSize = () => {
+    // we checking if element have 3 dots
     const compare = textElement?.children[0]?.scrollWidth > textElement?.children[0]?.clientWidth;
+    // if element text dont have 3 dots we just disableHover
     setHover(compare);
   };
 
@@ -138,9 +141,11 @@ const GetProgress = ({ progressData }) => {
 
   const getWorkWeek = () => {
     if (typeSchedule === 'Work Week') {
+      // checking if endingDate eqaul sunday we put monday
       if (new Date(endingDate).getDay() === 0) {
         return new Date(addDays(endingDate, 1));
       }
+      // checking if endingDate eqaul saturday we put monday
       if (new Date(endingDate).getDay() === 6) {
         return new Date(addDays(endingDate, 2));
       }
@@ -156,13 +161,16 @@ const GetProgress = ({ progressData }) => {
 
     return typeSchedule !== 'Continues Offer' && duration === 'Program the offer duration';
   };
+  const subtitle = () => (
+    <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+      Create and manage all your offers. Set personalised rules to automatically trigger your
+      offers.
+    </TypographyKit>
+  );
   const durationSelected = () => (
     <div className="left-part-middle">
       <TypographyKit variant="h6">{selected}. Select the Duration</TypographyKit>
-      <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-        Create and manage all your offers. Set personalised rules to automatically trigger your
-        offers.
-      </TypographyKit>
+      {subtitle()}
       <RadioGroupKit
         className="duration-wrapper"
         aria-labelledby="demo-radio-buttons-group-label"
@@ -275,10 +283,7 @@ const GetProgress = ({ progressData }) => {
       ) : (
         ''
       )}
-      <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-        Create and manage all your offers. Set personalised rules to automatically trigger your
-        offers.
-      </TypographyKit>
+      {subtitle()}
       {plat === 'deliveroo' ? (
         <BoxKit className="left-part-radio under-textfields active">
           <div className="radio">
@@ -341,10 +346,7 @@ const GetProgress = ({ progressData }) => {
   const reccurenceSelected = () => (
     <div className="left-part-middle">
       <TypographyKit variant="h6">{selected}. Select the Recurrence detail</TypographyKit>
-      <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-        Create and manage all your offers. Set personalised rules to automatically trigger your
-        offers.
-      </TypographyKit>
+      {subtitle()}
       <BoxKit className="left-part-radio under-textfields radio-dates active">
         <div className="radio">
           <div>
@@ -556,7 +558,7 @@ const GetProgress = ({ progressData }) => {
       title: 'Order more , save more',
       subtitle: 'Attract larger orders from groupes and famillies',
     },
-    { title: 'Restaurent Pick', subtitle: 'Promote new items or special dishes' },
+    { title: 'Restaurant Pick', subtitle: 'Promote new items or special dishes' },
     { title: 'Free Items', subtitle: 'Allow customers to choose a free items' },
   ];
 
@@ -586,10 +588,7 @@ const GetProgress = ({ progressData }) => {
     return (
       <div className="left-part-middle">
         <TypographyKit variant="h6">{selected}. Select platform and branches</TypographyKit>
-        <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-          Create and manage all your offers. Set personalised rules to automatically trigger your
-          offers.
-        </TypographyKit>
+        {subtitle()}
         <div className="left-part-radio-wrapper">
           {Object.keys(branch.display).length > 0 ? (
             <RadioGroupKit
@@ -633,7 +632,7 @@ const GetProgress = ({ progressData }) => {
           )}
         </div>
         {Object.keys(branch.display).length > 0 ? (
-          <RestaurantDropdown
+          <RestaurantDropdownNew
             platforms={platform}
             chainObj={branch.chainObj}
             branch
@@ -658,10 +657,7 @@ const GetProgress = ({ progressData }) => {
     return (
       <div className="left-part-middle">
         <TypographyKit variant="h6">{selected}. Select the Type of the offer</TypographyKit>
-        <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-          Create and manage all your offers. Set personalised rules to automatically trigger your
-          offers.
-        </TypographyKit>
+        {subtitle()}
         <RadioGroupKit
           aria-labelledby="demo-radio-buttons-group-label"
           value={menu}
@@ -798,10 +794,7 @@ const GetProgress = ({ progressData }) => {
       return (
         <div className="left-part-middle">
           <TypographyKit variant="h6">{selected}. Select the discounted items</TypographyKit>
-          <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
-            Create and manage all your offers. Set personalised rules to automatically trigger your
-            offers.
-          </TypographyKit>
+          {subtitle()}
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
               menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''

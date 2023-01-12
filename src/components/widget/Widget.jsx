@@ -79,7 +79,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
     if (metricsbeforePeriod.all[title]) {
       return getTitle() === 'roi'
         ? Math.round(metricsbeforePeriod.all[title] * 100)
-        : metricsbeforePeriod.all[title];
+        : parseFloat(metricsbeforePeriod.all[title].toFixed(1)).toLocaleString('en-US');
     }
 
     return '-';

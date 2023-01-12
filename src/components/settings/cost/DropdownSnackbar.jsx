@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
-import RestaurantDropdown from '../../restaurantDropdown/RestaurantDropdown.suspended';
+import RestaurantDropdownNew from '../../restaurantDropdown/RestaurantDropdownNew';
 import { usePlatform } from '../../../hooks/usePlatform';
 import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
 import useVendors from '../../../hooks/useVendors';
@@ -110,7 +110,7 @@ const DropdownSnackbar = (props) => {
     <div className="invoice snackbar">
       <div className="snackbar-wrapper">
         {Object.keys(vendors.display).length > 0 ? (
-          <RestaurantDropdown
+          <RestaurantDropdownNew
             setState={setCostVendors}
             state={costVendors}
             cost

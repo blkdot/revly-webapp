@@ -8,12 +8,12 @@ import {
   getMonth,
   getWeek,
   getYear,
+  isSameYear,
   startOfMonth,
   startOfWeek,
   subDays,
   subMonths,
   subWeeks,
-  subYears,
 } from 'date-fns';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TypographyKit from '../../kits/typography/TypographyKit';
@@ -50,33 +50,46 @@ const DateSelect = React.memo((props) => {
     const dateLocal = date.toLocaleDateString();
     const getActive = () => {
       if (type === 'day') {
-        if (startLocal === dateLocal) {
+        if (startLocal === dateLocal && isSameYear(date, startDate)) {
           setActive('current');
-        } else if (startLocal === subDays(date, 1).toLocaleDateString()) {
+        } else if (startLocal === subDays(new Date(), 1).toLocaleDateString()) {
           setActive('last');
         } else {
           setActive('custom');
         }
       } else if (type === 'week') {
-        if (endGetDay === dateGetDay && startGetDay === 1) {
+        if (endGetDay === dateGetDay && startGetDay === 1 && isSameYear(date, startDate)) {
           setActive('current');
         } else if (
           getWeek(startDate, { weekStartsOn: 1 }) === getWeek(date, { weekStartsOn: 1 }) &&
-          offer
+          offer &&
+          isSameYear(date, startDate)
         ) {
           setActive('current');
         } else if (
           startGetDay === 1 &&
           endGetDay === 0 &&
           getWeek(startDate, { weekStartsOn: 1 }) ===
-            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 }) &&
+          getYear(startDate) === getYear(date) - 1
         ) {
           setActive('last');
         } else if (
           startGetDay === 1 &&
           endGetDay === 0 &&
           getWeek(startDate, { weekStartsOn: 1 }) ===
-            getWeek(subWeeks(date, 4), { weekStartsOn: 1 })
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 }) &&
+          isSameYear(date, startDate)
+        ) {
+          setActive('last');
+        } else if (
+          startGetDay === 1 &&
+          endGetDay === 0 &&
+          getWeek(startDate, { weekStartsOn: 1 }) ===
+            getWeek(subWeeks(date, 4), { weekStartsOn: 1 }) &&
+          getWeek(endDate, { weekStartsOn: 1 }) ===
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 }) &&
+          setupOffer
         ) {
           setActive('last 4');
         } else {
@@ -99,9 +112,13 @@ const DateSelect = React.memo((props) => {
             setActive('current');
           }
         } else if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
-          if (getMonth(date) === 0 && getYear(startDate) === getYear(subYears(date, 1))) {
+          if (getMonth(date) === 0 && getYear(startDate) === getYear(date) - 1) {
             setActive('last');
-          } else if (getYear(startDate) === getYear(date)) {
+          } else if (
+            new Date(startDate).toLocaleDateString() ===
+              new Date(startOfMonth(subMonths(new Date(), 1))).toLocaleDateString() &&
+            isSameYear(date, startDate)
+          ) {
             setActive('last');
           } else {
             setActive('custom');
@@ -197,7 +214,7 @@ const DateSelect = React.memo((props) => {
       setSelections([
         {
           startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-          endDate: new Date(),
+          endDate: offer ? endOfWeek(new Date(), { weekStartsOn: 1 }) : new Date(),
           key: 'selection',
         },
       ]);

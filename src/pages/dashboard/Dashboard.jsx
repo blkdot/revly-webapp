@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Dates from '../../components/dates/Dates';
 import Finance from '../../components/finance/Finance';
 import Marketing from '../../components/marketing/Marketing';
-import RestaurantDropdown from '../../components/restaurantDropdown/RestaurantDropdown.suspended';
+import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
 import useMetrics from '../../hooks/useMetrics';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
@@ -59,12 +59,13 @@ const Dashboard = () => {
     }
     return RoiIcon;
   };
+  const links = ['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'];
 
   return (
     <div className="wrapper">
       <div className="top-inputs">
         {Object.keys(display).length > 0 ? (
-          <RestaurantDropdown chainObj={chainObj} />
+          <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
           <RestaurantDropdownOld
             vendorsSelected={vendorsSelected}
@@ -103,35 +104,32 @@ const Dashboard = () => {
       {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 && !loading ? (
         <PaperKit className="dashboard-paper-wrapper">
           <div className="dashboard-links">
-            {['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'].map(
-              (title) => (
-                <div
-                  role="presentation"
-                  tabIndex={-1}
-                  onClick={() => setTable(title)}
-                  className={title === table ? 'active' : ''}
-                  key={title}
-                >
-                  <img src={getIcon(title)} alt={title} />
-                  {getTitle(title)}
-                </div>
-              ),
-            )}
+            {links.map((title) => (
+              <div
+                role="presentation"
+                tabIndex={-1}
+                onClick={() => setTable(title)}
+                className={title === table ? 'active' : ''}
+                key={title}
+              >
+                <img src={getIcon(title)} alt={title} />
+                {getTitle(title)}
+              </div>
+            ))}
             <div className="indicator" />
           </div>
-          {['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'].map(
-            (info) =>
-              info === table ? (
-                <Table
-                  key={info}
-                  title={info}
-                  metricsafterPeriod={metricsafterPeriod}
-                  metricsbeforePeriod={metricsbeforePeriod}
-                  loading={loading}
-                />
-              ) : (
-                ''
-              ),
+          {links.map((info) =>
+            info === table ? (
+              <Table
+                key={info}
+                title={info}
+                metricsafterPeriod={metricsafterPeriod}
+                metricsbeforePeriod={metricsbeforePeriod}
+                loading={loading}
+              />
+            ) : (
+              ''
+            ),
           )}
         </PaperKit>
       ) : (

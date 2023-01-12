@@ -12,7 +12,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
-        {r[h.id] === null ? '-' : r[h.id]}
+        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
       </span>
     </TableCellKit>
   );
@@ -24,7 +24,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
-        {r[h.id] === null ? '-' : r[h.id]}
+        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
       </span>
     </TableCellKit>
   );
@@ -50,7 +50,7 @@ const useTableContentFormatter = () => {
         arrow
       >
         <span className="render-row-tooltip" key={h.id}>
-          {r[h.id] === null || !r[h.id] ? '-' : r[h.id]?.length}
+          {r[h.id] === null || !r[h.id] ? '-' : (r[h.id]?.length || 0)?.toLocaleString('en-US')}
         </span>
       </TooltipKit>
     </TableCellKit>
@@ -92,7 +92,9 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span style={{ whiteSpace: 'nowrap' }}>{!r[h.id] ? '0' : r[h.id]}&nbsp;AED</span>
+      <span style={{ whiteSpace: 'nowrap' }}>
+        {!r[h.id] ? '0' : r[h.id].toLocaleString('en-US')}&nbsp;AED
+      </span>
     </TableCellKit>
   );
 

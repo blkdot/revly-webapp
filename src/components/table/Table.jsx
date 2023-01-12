@@ -185,7 +185,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
       if (getTitle() === 'roi') {
         return `${Math.round(metrics[title] * 100)} %`;
       }
-      return parseFloat(Number(metrics[title]).toFixed(1));
+      return parseFloat(Number(metrics[title]).toFixed(1)).toLocaleString('en-US');
     }
     return '-';
   };
