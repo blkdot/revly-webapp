@@ -61,7 +61,7 @@ const OnBoarding = () => {
   const [isRedirecting, setIsredirecting] = useState(false);
 
   const { userPlatformData, setUserPlatformData } = usePlatform();
-  const { settingsOnboardPlatform } = useApi();
+  const { settingsOnboardPlatform, settingsLogin } = useApi();
   const { user, logOut } = useUserAuth();
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
   const navigate = useNavigate();
@@ -127,9 +127,40 @@ const OnBoarding = () => {
     setCurrentPlatform(null);
   };
 
+  const isOnboarded = async () => {
+    if (!user) {
+      navigate('/');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const res = await settingsLogin({
+        master_email: user.email,
+        access_token: user.accessToken,
+      });
+      setIsLoading(false);
+      if (res instanceof Error || !res.onboarded || !res.platforms) throw new Error('');
+
+      setUserPlatformData({
+        onboarded: true,
+        platforms: { ...userPlatformData.platforms, ...res.platforms },
+      });
+
+      navigate('/dashboard');
+    } catch (error) {
+      // Do nothing
+    }
+  };
+
+  useEffect(() => {
+    isOnboarded();
+  }, []);
+
   useEffect(() => {
     setErrorPlatformConnect(defaultSelected);
   }, [step]);
+
   useEffect(() => {
     setFormValues({ email: '', password: '' });
 
