@@ -1,5 +1,6 @@
-import { addDays, addHours, addMinutes, format, getHours, isSameDay, isAfter } from 'date-fns';
 import React, { useEffect, useState } from 'react';
+import { addDays, addHours, addMinutes, format, getHours, isSameDay, isAfter } from 'date-fns';
+import { useAtom } from 'jotai';
 import InputAdornment from '@mui/material/InputAdornment';
 import MarketingRadio from './MarketingRadio';
 import plus from '../../assets/images/plus.png';
@@ -34,7 +35,7 @@ import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import RestaurantDropdownNew from '../restaurantDropdown/RestaurantDropdownNew';
 import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
-import useDate from '../../hooks/useDate';
+import { vendorsAtom } from '../../store/vendorsAtom';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import TimePickerDropdown from '../timePicker/TimePickerDropdown';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
@@ -533,7 +534,7 @@ const GetProgress = ({ progressData }) => {
       </BoxKit>
     </div>
   );
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj, display } = vendors;
 
   const getMenuActive = () => {

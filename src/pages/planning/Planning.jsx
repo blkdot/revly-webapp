@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { pascalCase } from 'change-case';
 import shortid from 'shortid';
+import { useAtom } from 'jotai';
 
 import './Planning.scss';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
@@ -26,6 +27,7 @@ import Vector from '../../assets/icons/Vector';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import OfferDetailComponent from '../offers/details';
 import useQueryState from '../../hooks/useQueryState';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -38,7 +40,8 @@ const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const [active, setActive] = useState(0);
-  const { date, vendors } = useDate();
+  const { date } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));

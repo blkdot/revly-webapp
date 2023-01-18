@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
 
 import './Menu.scss';
 
@@ -19,7 +20,7 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
 import { usePlatform } from '../../../hooks/usePlatform';
-import useDate from '../../../hooks/useDate';
+import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -33,7 +34,7 @@ const Menu = () => {
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert('error');
   const { getMenu } = useApi();
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState('');
   const { user } = useUserAuth();

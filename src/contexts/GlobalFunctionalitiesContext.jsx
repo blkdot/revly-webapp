@@ -15,14 +15,6 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('error');
 
-  const [vendors, setVendors] = useState({
-    vendorsSelected: [],
-    vendorsObj: {},
-    vendorsArr: [],
-    display: {},
-    chainObj: {},
-  });
-
   const storageDate = JSON.parse(localStorage.getItem('date')) || null;
   const [date, setDate] = useState(
     storageDate || {
@@ -88,8 +80,6 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
         triggerAlertWithMessageSuccess,
         date,
         setDate,
-        vendors,
-        setVendors,
       }}
     >
       {renderAlert()}

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useAtom } from 'jotai';
 
 import './RestaurantDropdown.scss';
 import selectIcon from '../../assets/images/ic_select.png';
@@ -6,7 +7,7 @@ import TypographyKit from '../../kits/typography/TypographyKit';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import useVendors from '../../hooks/useVendors';
-import useDate from '../../hooks/useDate';
+import { vendorsAtom } from '../../store/vendorsAtom';
 import SelectKit from '../../kits/select/SelectKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import ButtonKit from '../../kits/button/ButtonKit';
@@ -41,7 +42,7 @@ const RestaurantDropdownNew = ({
 }) => {
   const chainObj = chainObjProps;
 
-  const { setVendors, vendors: vendorsContext } = useDate();
+  const [vendorsContext, setVendors] = useAtom(vendorsAtom);
   const { vendors: vendorsReq } = useVendors();
   const { userPlatformData } = usePlatform();
   useEffect(() => {
@@ -86,8 +87,8 @@ const RestaurantDropdownNew = ({
     setVendors({ ...vendorsContext, chainObj, vendorsObj: vendorsObjTemp });
   }, [userPlatformData.platforms]);
   const { vendorsObj, display } = vendorsContext;
+  // function for chain
   const handleChange = (value, checked) => {
-    // function for chain
     const chainObjTemp = JSON.parse(JSON.stringify(chainObj)); // copy chainObj to change in later on
     if (branch || cost) {
       // its for vendors where we change own states not global
@@ -157,7 +158,6 @@ const RestaurantDropdownNew = ({
         }
       }
       if (checked) {
-        // we checking the chain
         Object.keys(display).forEach((chainName) => {
           if (chainName === value) {
             // we checking which chainName from display equal value
@@ -195,14 +195,14 @@ const RestaurantDropdownNew = ({
       }
     }
   };
+  // function for vendor
   const handleChangeVendor = (event, chainName) => {
-    // function for vendor
     const {
       target: { value, checked },
     } = event;
     if (branch || cost) {
       // its for vendors where we change own states not global
-      if (Object.keys(chainObj[chainName]).length > 1) {
+      if (Object.keys(chainObj[chainName] || {}).length > 1) {
         // if chain have at least 1 vendor because we cant unchecked all of them
         if (!checked) {
           const chainObjTemp = JSON.parse(JSON.stringify(chainObj)); // copy chainObj to change in later on
@@ -240,7 +240,10 @@ const RestaurantDropdownNew = ({
         Object.keys(display[chainName]).forEach((vendorName) => {
           if (vendorName === value) {
             // checking if value equal vendorName
-            chainObjTemp[chainName][value] = display[chainName][value]; // put the new value to vendor
+            chainObjTemp[chainName] = {
+              ...chainObjTemp[chainName],
+              [value]: { ...display[chainName][value] },
+            }; // put the new value to vendor
           }
         });
         const vendorsObjTemp = JSON.parse(JSON.stringify(state?.vendorsObj)); // copy vendorsObj to change in later on
@@ -292,8 +295,8 @@ const RestaurantDropdownNew = ({
             delete vendorsObjTemp[p]; // deleting empty array
           }
         });
+        // its for vendors where we change own states not global
         if (listing) {
-          // its for vendors where we change own states not global
           setState({
             ...state,
             vendorsObj: vendorsObjTemp,
@@ -326,6 +329,7 @@ const RestaurantDropdownNew = ({
           }
         }
       });
+      // its for vendors where we change own states not global
       if (listing) {
         setState({
           ...state,
@@ -344,20 +348,24 @@ const RestaurantDropdownNew = ({
   const getChain = () => {
     const arr = [];
     Object.keys(chainObj).forEach((chainName) => {
+      // checking chain is not empty
       if (Object.keys(chainObj[chainName]).length > 0) {
+        // if chain is not empty we puhs chainName to arr
         arr.push(chainName);
       }
     });
     return arr;
   };
   const selectAll = () => {
-    const vendorsObjTemp = { talabat: [], deliveroo: [] };
+    const vendorsObjTemp = { talabat: [], deliveroo: [] }; // clear array
     vendorsContext.vendorsArr.forEach((obj) => {
+      // put the object to platforms array
       vendorsObjTemp[obj.platform] = [...vendorsObjTemp[obj.platform], obj];
     });
     Object.keys(vendorsObjTemp).forEach((p) => {
+      // check if array of platform is empty
       if (vendorsObjTemp[p].length < 0) {
-        delete vendorsObjTemp[p];
+        delete vendorsObjTemp[p]; // if array of platform is empty we delete him
       }
     });
     setVendors({ ...vendorsContext, chainObj: display, vendorsObj: vendorsObjTemp });
@@ -402,6 +410,7 @@ const RestaurantDropdownNew = ({
       </div>
     );
   }
+
   return (
     <div className={`restaurant-dropdown_wrapper ${cost || listing ? 'cost' : ''}`}>
       {!listing ? (
@@ -414,7 +423,7 @@ const RestaurantDropdownNew = ({
       <FormcontrolKit fullWidth>
         <SelectKit
           labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          id="demo-multiple-checkbox-vendors-new"
           multiple
           value={getChain()}
           MenuProps={cost ? MenuPropsBranch : MenuProps}

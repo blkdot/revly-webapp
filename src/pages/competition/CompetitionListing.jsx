@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import { subDays } from 'date-fns';
@@ -10,7 +11,6 @@ import './Competition.scss';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import Competitor from '../../components/competitor/Competitor';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
-import useDate from '../../hooks/useDate';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import ictalabat from '../../assets/images/talabat-favicon.png';
@@ -27,11 +27,12 @@ import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
 import AreaIcon from '../../assets/images/ic_area.png';
 import selectIcon from '../../assets/images/ic_select.png';
 import MarketingCheckmarksDropdown from '../../components/marketingSetup/MarketingChecmarksDropdown';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 let fnDelays = null;
 let fnDelaysAreas = null;
 const CompetitionListing = () => {
-  const { vendors } = useDate();
+  const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr, vendorsSelected, display, chainObj } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);

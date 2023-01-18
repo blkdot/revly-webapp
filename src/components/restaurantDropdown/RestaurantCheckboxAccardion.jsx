@@ -22,37 +22,44 @@ const RestaurantCheckboxAccordion = ({
   listing,
 }) => {
   const [active, setActive] = useState(false);
+  // we checking if all vendor in this chain are checked
   const getChecked = () =>
     Object.values(chainObj[chainName] || {}).length === Object.values(info).length;
   const compareSize = () => {
+    // get 1 element of .chain-name
     const textElementChain = document.querySelectorAll('.chain-name')[index];
+    // get all elements of .vendor-name
     const textElement = document.querySelectorAll('.vendor-name');
+    // checking if scrollWidth more than clientWidth (or have 3 dots on the end of the text)
     const compare = textElementChain?.scrollWidth > textElementChain?.clientWidth;
     const compareArr = [];
     textElement.forEach((el) => {
+      // checking if scrollWidth more than clientWidth (or have 3 dots on the end of the text)
       if (el?.scrollWidth > el.clientWidth) {
+        // push the textContent of element
         compareArr.push(el.textContent);
       }
     });
     setHoverChain(compare);
     setHoverVendor(compareArr);
   };
-  const root = document.querySelector('#root');
+  const vendorsNew = document.querySelector('#demo-multiple-checkbox-vendors-new');
   useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
-  }, [root.ariaHidden, active, display]);
+  }, [vendorsNew?.ariaExpanded, active, display]);
 
   useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [root.ariaHidden, active, display],
+    [vendorsNew?.ariaExpanded, active, display],
   );
 
   const [hoverStatusChain, setHoverChain] = useState(false);
   const [hoverStatusVendor, setHoverVendor] = useState([]);
   const getHoverStatusVendor = (vName) => hoverStatusVendor.find((v) => v === vName);
+  // function for chain button "Only"
   const handleClick = (e) => {
     e.stopPropagation();
     const vendorsObjTemp = { talabat: [], deliveroo: [] };
@@ -72,6 +79,7 @@ const RestaurantCheckboxAccordion = ({
       vendorsObj: vendorsObjTemp,
     });
   };
+  // function for vendor button "Only"
   const handleClickVendor = (e, vendorName) => {
     e.stopPropagation();
     const chainObjTemp = { [chainName]: { [vendorName]: { ...display[chainName][vendorName] } } };

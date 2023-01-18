@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useAtom } from 'jotai';
 
 import './RestaurantDropdown.scss';
 import { usePlatform } from '../../hooks/usePlatform';
@@ -12,10 +13,10 @@ import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import useVendors from '../../hooks/useVendors';
-import useDate from '../../hooks/useDate';
 import ButtonKit from '../../kits/button/ButtonKit';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
 import { platformList } from '../../data/platformList';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const ITEM_HEIGHT = 110;
 const ITEM_PADDING_TOP = 8;
@@ -31,7 +32,7 @@ const MenuProps = {
 };
 
 const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost, listing }) => {
-  const { setVendors, vendors: vendorsContext } = useDate();
+  const [vendorsContext, setVendors] = useAtom(vendorsAtom);
   const { vendors: vendorsReq } = useVendors();
   const { userPlatformData } = usePlatform();
   React.useEffect(() => {
@@ -41,31 +42,40 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
   }, [vendorsReq]);
 
   const handleChange = (value) => {
-    const vendorsSelectedTemp = JSON.parse(JSON.stringify(vendorsSelected));
-    if (vendorsSelected.some((vName) => vName === value) && vendorsSelected.length > 1) {
+    const vendorsSelectedTemp = JSON.parse(JSON.stringify(vendorsSelected)); // copy vendorsSelected
+    // check if some vendorName equal value and vendorsSelected have at least 1 vendor
+    if (vendorsSelected.some((vendorName) => vendorName === value) && vendorsSelected.length > 1) {
+      // deleting vendor from vendorsSelectedTemp
       vendorsSelectedTemp.splice(
-        vendorsSelected.findIndex((vName) => vName === value),
+        vendorsSelected.findIndex((vendorName) => vendorName === value),
         1,
       );
-    } else if (!vendorsSelected.some((vName) => vName === value)) {
+    } else if (!vendorsSelected.some((vendorName) => vendorName === value)) {
+      // pushing vendor to vendorsSelectedTemp
       vendorsSelectedTemp.push(value);
     }
     const vendorsObjTemp = { talabat: [], deliveroo: [] };
-    vendorsSelectedTemp.forEach((vName) => {
+    vendorsSelectedTemp.forEach((vendorName) => {
       platformList.forEach((p) => {
         vendors.forEach((obj) => {
-          if (obj.data.vendor_name === vName && obj.platform === p.name) {
-            vendorsObjTemp[p.name] = [...vendorsObjTemp[p.name], obj];
+          // checking if vendor_name and platform from vendorsArr equal vendorName from vendorsSelectedTemp and platform
+          if (obj.data.vendor_name === vendorName && obj.platform === p.name) {
+            // pushing the obj to vendorsObjTemp[p.name (talabat or deliveroo)]
+            vendorsObjTemp[p.name].push(obj);
           }
         });
       });
     });
     Object.keys(vendorsObjTemp).forEach((p) => {
+      // checing if platform array is empty
       if (vendorsObjTemp[p].length === 0) {
+        // if platform array is empty we delete him
         delete vendorsObjTemp[p];
       }
     });
+    // checking if vendorsSelected or vendorsSelectedTemp have at least 1 vendor
     if (vendorsSelected.length > 1 || vendorsSelectedTemp.length > 1) {
+      // for own state not for global context
       if (cost || listing) {
         const newValue = {
           ...state,
@@ -75,6 +85,7 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
 
         setState(newValue);
       } else {
+        // for global context
         const newValue = {
           ...vendorsContext,
           vendorsObj: vendorsObjTemp,
@@ -85,10 +96,13 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
       }
     }
   };
+
+  // function for button "Only"
   const handleClick = (e, index) => {
     e.stopPropagation();
-    const vendorsObjTemp = { [vendors[index].platform]: [vendors[index]] };
-    const vendorsSelectedTemp = [vendors[index].data.vendor_name];
+    const vendorsObjTemp = { [vendors[index].platform]: [vendors[index]] }; // putting only the clicked vendor to vendorsObjTemp
+    const vendorsSelectedTemp = [vendors[index].data.vendor_name]; // putting obly the vendor_name vendorsSelectedTemp
+    // for own state not for globalcontext
     if (cost) {
       setState({
         ...state,
@@ -96,6 +110,7 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
         vendorsSelected: vendorsSelectedTemp,
       });
     } else {
+      // for global context
       setVendors({
         ...vendorsContext,
         vendorsObj: vendorsObjTemp,
@@ -103,15 +118,20 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
       });
     }
   };
+  // function when click we select all vendors
   const selectAll = () => {
-    const vendorsSelectedTemp = vendors.map((obj) => obj.data.vendor_name);
+    const vendorsSelectedTemp = vendors.map((obj) => obj.data.vendor_name); // putting all vendor_name to vendorsSelectedTemp
     const vendorsObjTemp = { talabat: [], deliveroo: [] };
+    // putting all vendor to vendorsObjTemp
     vendors.forEach((obj) => {
-      vendorsObjTemp[obj.platform] = [...vendorsObjTemp[obj.platform], obj];
+      // push the obj of vendorsArr
+      vendorsObjTemp[obj.platform].push(obj);
     });
+    // for own state not for globalcontext
     if (cost) {
       setState({ ...state, vendorsSelected: vendorsSelectedTemp, vendorsObj: vendorsObjTemp });
     } else {
+      // for global context
       setVendors({
         ...vendorsContext,
         vendorsSelected: vendorsSelectedTemp,
@@ -119,29 +139,34 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
       });
     }
   };
+  // function for tooltip
   const compareSize = () => {
-    const textElement = document.querySelectorAll('.restaurant-vendors');
+    // taking all .tooltip-vendor
+    const textElement = document.querySelectorAll('.tooltip-vendor');
     const compareArr = [];
     textElement.forEach((el) => {
+      // checking if scrollWidth more than clientWidth (or have 3 dots on the end)
       if (el?.scrollWidth > el?.clientWidth) {
+        // if scrollWidth more than clientWidth we push the textContent of this element to compareArr
         compareArr.push(el?.textContent);
       }
     });
     setHover(compareArr);
   };
+  const vendorsOld = document.querySelector('#demo-multiple-checkbox-vendors-old');
   React.useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
-  }, [vendors]);
+  }, [vendors, vendorsOld?.ariaExpanded]);
 
   React.useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [vendors],
+    [vendors, vendorsOld?.ariaExpanded],
   );
   const [hoverStatus, setHover] = React.useState([]);
-  const getHoverStatusVendor = (vName) => hoverStatus.find((v) => v === vName);
+  const getHoverStatusVendor = (vendorName) => hoverStatus.find((v) => v === vendorName);
   const renderLayout = (info, index) => (
     <div className="vendors-only" key={info.vendor_id}>
       <MenuItemKit
@@ -165,7 +190,7 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
             role="presentation"
             tabIndex={-1}
             onClick={() => handleChange(info.data.vendor_name)}
-            className="restaurant-vendors"
+            className="tooltip-vendor"
           >
             {info.data.vendor_name}
           </div>
@@ -192,7 +217,7 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
         <SelectKit
           labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
+          id="demo-multiple-checkbox-vendors-old"
           multiple
           value={vendorsSelected}
           input={<OutlindeInputKit />}
