@@ -4,8 +4,6 @@ import { Outlet, Navigate } from 'react-router-dom';
 
 import { useUserAuth } from '../contexts/AuthContext';
 import SpinnerKit from '../kits/spinner/SpinnerKit';
-import ContainerKit from '../kits/container/ContainerKit';
-import Navbar from '../components/navbar/Navbar';
 import useDate from '../hooks/useDate';
 
 const ProtectedRoutes = () => {
@@ -53,16 +51,7 @@ const ProtectedRoutes = () => {
     );
   }
 
-  const renderLayout = () => (
-    <div className="user-page">
-      <Navbar />
-      <ContainerKit>
-        <Outlet />
-      </ContainerKit>
-    </div>
-  );
-
-  return user ? renderLayout() : <Navigate to="/" />;
+  return user ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default ProtectedRoutes;

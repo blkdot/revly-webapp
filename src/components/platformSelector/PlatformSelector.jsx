@@ -30,9 +30,14 @@ const PlatformSelector = (props) => {
     if (noText) return null;
 
     return (
-      <p style={{ color: '#212B36', fontWeight: 700, fontSize: '18px' }}>
-        Select the delivery platforms that you are using so that we can show you the power of Revly
-      </p>
+      <div className="onboarding-platform__title">
+        <div className="title__main">
+          Connect to your Delevery platform Account to unleash the the Power of Revly
+        </div>
+        <div className="title__sub">
+          Select the platform you are using and enter your data to get access
+        </div>
+      </div>
     );
   };
 

@@ -10,6 +10,9 @@ import { usePlatform } from '../hooks/usePlatform';
 
 import config from '../setup/config';
 
+import ContainerKit from '../kits/container/ContainerKit';
+import Navbar from '../components/navbar/Navbar';
+
 const ProtectedOnboardRoutes = () => {
   const [allowed, setAllowed] = useState(false);
   const [preAllowed, setPreAllowed] = useState(false);
@@ -95,7 +98,14 @@ const ProtectedOnboardRoutes = () => {
     );
   }
 
-  return <Outlet />;
+  return (
+    <div className="user-page">
+      <Navbar />
+      <ContainerKit>
+        <Outlet />
+      </ContainerKit>
+    </div>
+  );
 };
 
 export default ProtectedOnboardRoutes;

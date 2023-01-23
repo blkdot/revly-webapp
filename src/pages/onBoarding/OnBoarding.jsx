@@ -1,7 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdLogout } from 'react-icons/md';
-import { IoMdHelp } from 'react-icons/io';
 import { pascalCase } from 'change-case';
 
 import './OnBoarding.scss';
@@ -13,10 +12,10 @@ import PlatformSelector from '../../components/platformSelector/PlatformSelector
 
 import ModalKit from '../../kits/modal/ModalKit';
 import Stepper from '../../components/stepper/Stepper';
-import ButtonKit from '../../kits/button/ButtonKit';
+import RButton from '../../kits/revly/button/RButton';
 import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
-import HighOrderBlock from '../../components/highOrderBlock/HighOrderBlock';
+import NavbarOnboarding from '../../components/navbar/NavbarOnboarding';
 
 import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
@@ -38,14 +37,18 @@ const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]:
 
 const style = {
   position: 'absolute',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
+  width: 878,
   backgroundColor: '#ffffff',
-  borderRadius: '0.4rem',
+  borderRadius: '16px',
   boxShadow: 24,
-  padding: '1rem',
+  padding: '40px 40px 50px',
   border: '0',
 };
 
@@ -62,7 +65,7 @@ const OnBoarding = () => {
 
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform, settingsLogin } = useApi();
-  const { user, logOut } = useUserAuth();
+  const { user } = useUserAuth();
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
   const navigate = useNavigate();
 
@@ -328,10 +331,10 @@ const OnBoarding = () => {
     if (step === END_KEY) return null;
 
     return (
-      <div>
-        <ButtonKit variant="contained" disabled={isNextDisabled()} onClick={nextTarget}>
-          Next
-        </ButtonKit>
+      <div style={{ width: '486px' }}>
+        <RButton onClick={nextTarget} disabled={isNextDisabled()}>
+          Start your Revly
+        </RButton>
       </div>
     );
   };
@@ -406,22 +409,8 @@ const OnBoarding = () => {
     setStep(nexttargetR[0]);
   };
 
-  const handleLogout = async () => {
-    try {
-      await logOut();
-      navigate('/');
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e.message);
-    }
-  };
-
   return (
     <div className="onboarding">
-      <div className="top-inputs">
-        {/* <RestaurantDropdownOld vendors={[]} vendorsSelected={[]} vendorsPlatform={[]} />
-        <Dates /> */}
-      </div>
       <FinanceEmpty />
       <MarketingEmpty />
       <ModalKit open aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -430,32 +419,12 @@ const OnBoarding = () => {
           {renderStepScreens()}
           <div style={{ width: '100%', padding: '0.5rem 2rem 0rem' }}>{renderSendButton()}</div>
           <div className="onboarding-actions">
-            <div>
-              <ButtonKit variant="contained" disabled={isBackDisabled()} onClick={backTarget}>
-                Back
-              </ButtonKit>
-            </div>
             {renderSpinner()}
             {renderNext()}
           </div>
         </div>
       </ModalKit>
-      <div style={{ cursor: 'pointer' }}>
-        <HighOrderBlock color="warning" higher>
-          <IoMdHelp style={{ fontSize: '20px' }} />
-        </HighOrderBlock>
-      </div>
-      <div
-        style={{ cursor: 'pointer' }}
-        onClick={handleLogout}
-        tabIndex={0}
-        onKeyDown={handleLogout}
-        role="button"
-      >
-        <HighOrderBlock style={{ cursor: 'pointer' }}>
-          <MdLogout style={{ fontSize: '20px' }} />
-        </HighOrderBlock>
-      </div>
+      <NavbarOnboarding />
     </div>
   );
 };
