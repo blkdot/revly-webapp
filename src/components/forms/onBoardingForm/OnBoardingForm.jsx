@@ -5,7 +5,7 @@ import './OnBoardingForm.scss';
 
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
-import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
+import RButton from '../../../kits/revly/button/RButton';
 
 const OnBoardingForm = (props) => {
   const {
@@ -13,30 +13,21 @@ const OnBoardingForm = (props) => {
     onChangePassword,
     title,
     onSubmit,
-    disabled,
-    isLoading,
     isError,
     valueMail,
     valuePassword,
+    isLoading,
   } = props;
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const renderButton = () => {
-    if (!onSubmit) return null;
-
-    return (
-      <ButtonLoadingKit
-        className="onboarding-form__input"
-        onClick={onSubmit}
-        variant="contained"
-        disabled={disabled}
-        loading={isLoading}
-      >
-        Onboard
-      </ButtonLoadingKit>
-    );
-  };
+  const renderButton = () => (
+    <div style={{ marginTop: '20px' }}>
+      <RButton onClick={onSubmit} disabled={isLoading || !valueMail || !valuePassword}>
+        Login
+      </RButton>
+    </div>
+  );
 
   return (
     <div className="onboarding-form">

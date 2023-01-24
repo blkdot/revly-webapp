@@ -13,6 +13,30 @@
   }
 }
 
+.onboarding-platform__title {
+  .title__main {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 28px;
+
+    text-align: center;
+
+    color: #212b36;
+  }
+
+  .title__sub {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+
+    text-align: center;
+
+    color: #637381;
+  }
+}
+
 .onboarding-actions {
   display: flex;
   justify-content: space-between;
