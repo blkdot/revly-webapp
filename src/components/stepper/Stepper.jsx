@@ -6,8 +6,6 @@ import StepperKit from '../../kits/stepper/StepperKit';
 import StepKit from '../../kits/step/StepKit';
 import StepLabelKit from '../../kits/stepLabel/StepLabel';
 
-import icrevly from '../../assets/images/small-logo-white.png';
-
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
@@ -49,12 +47,13 @@ const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   }),
 }));
 
-const ColorlibStepIcon = (props) => {
+const ColorlibStepIcon = (icon) => (props) => {
   const { active, completed, className } = props;
 
   return (
     <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
-      <img width={16} height={20} src={icrevly} alt="revly" />
+      {/* <img width={16} height={20} src={icrevly} alt="revly" /> */}
+      {icon()}
     </ColorlibStepIconRoot>
   );
 };
@@ -67,10 +66,11 @@ const Stepper = (props) => {
       activeStep={steps.findIndex((s) => s.key === step)}
       alternativeLabel
       connector={<ColorlibConnector />}
+      style={{ width: '798px' }}
     >
       {steps.map((s) => (
         <StepKit key={s.key}>
-          <StepLabelKit StepIconComponent={ColorlibStepIcon}>
+          <StepLabelKit StepIconComponent={ColorlibStepIcon(s.icon)}>
             <span style={{ color: '#212B36', fontSize: '12px', fontWeight: 400 }}>{s.label}</span>
           </StepLabelKit>
         </StepKit>

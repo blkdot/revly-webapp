@@ -1,21 +1,56 @@
 import React from 'react';
-import { pascalCase } from 'change-case';
-import OnBoardingForm from '../forms/onBoardingForm/OnBoardingForm';
 
-const OnBoarding = ({ platform, formValue, setFormValue }) => {
+import OnBoardingForm from '../forms/onBoardingForm/OnBoardingForm';
+import OnboardingPlatformDetails from '../onboardingPlatformDetails/OnboardingPlatformDetails';
+
+const ArrowBack = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M21 12L3 12"
+      stroke="#14181F"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M8 17L3 12L8 7"
+      stroke="#14181F"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const OnBoarding = ({ platform, formValue, setFormValue, onBack, onLogin, isLoading }) => {
   const handleChange = (k) => (v) => {
     setFormValue({ ...formValue, [k]: v });
   };
 
+  const handleBack = () => {
+    setFormValue({ email: '', password: '' });
+    onBack();
+  };
+
   const renderTitle = () => (
-    <span
-      className="__form-card__text"
-      style={{ fontSize: '16px', fontWeight: 600, color: '#212B36' }}
-    >
-      Link your{' '}
-      <span style={{ color: platform.color, fontSize: '16px' }}>{pascalCase(platform.name)}</span>{' '}
-      account to your <span style={{ color: '#4D2681', fontSize: '16px' }}>Revly</span> account.
-    </span>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          cursor: 'pointer',
+        }}
+        onClick={handleBack}
+        tabIndex={0}
+        onKeyDown={handleBack}
+        role="button"
+      >
+        <ArrowBack />
+        <span>Back</span>
+      </div>
+      <OnboardingPlatformDetails src={platform.src} name={platform.name} />
+    </div>
   );
 
   const renderForm = () => (
@@ -26,6 +61,8 @@ const OnBoarding = ({ platform, formValue, setFormValue }) => {
         valueMail={formValue.email}
         valuePassword={formValue.password}
         title={renderTitle()}
+        onSubmit={onLogin}
+        isLoading={isLoading}
       />
     </div>
   );
