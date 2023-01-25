@@ -3,7 +3,7 @@ import { pascalCase } from 'change-case';
 
 import './SettingOnboarding.scss';
 
-import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
+import PlatformSettingsBox from '../../../components/platformSettingsBox/PlatformSettingsBox';
 
 import ModalKit from '../../../kits/modal/ModalKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
@@ -30,7 +30,7 @@ const style = {
   border: '0',
 };
 
-const NewSettingsOnboarding = () => {
+const SettingsOnboarding = () => {
   const [platformActiveModal, SetPlatformActiveModal] = useState('');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -221,4 +221,4 @@ const NewSettingsOnboarding = () => {
   );
 };
 
-export default NewSettingsOnboarding;
+export default SettingsOnboarding;

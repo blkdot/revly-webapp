@@ -1,7 +1,7 @@
 import React from 'react';
-
+import arrow from '../../../assets/images/arrow.png';
 import TableCellKit from '../../../kits/tablecell/TableCellKit';
-import { platformObject } from '../../../data/platformList';
+import { platformList, platformObject } from '../../../data/platformList';
 import TooltipKit from '../../../kits/toolTip/TooltipKit';
 
 const useTableContentFormatter = () => {
@@ -163,6 +163,80 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
+  const renderBranchRow = (r, h, i = 0) => (
+    <TableCellKit
+      style={{ paddingLeft: 0, cursor: 'pointer' }}
+      id={`${h.id}_${i}`}
+      key={`${h.id}_${r.id}`}
+    >
+      {r[h.id].status === 'in process' ? (
+        <span className="render-branch-row_skeleton" />
+      ) : (
+        <div
+          className={`render-branch-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
+        >
+          <p className="__title">{r[h.id].title}</p>
+          <span className="__subtitle">{r[h.id].address}</span>
+        </div>
+      )}
+    </TableCellKit>
+  );
+  const renderLinkedPlatformsRow = (r, h, i = 0) => {
+    const getPlatform = (plat) => platformList.find((obj) => obj.name === plat);
+    return (
+      <TableCellKit
+        style={{ paddingLeft: 0, cursor: 'pointer' }}
+        id={`${h.id}_${i}`}
+        key={`${h.id}_${r.id}`}
+      >
+        {r[h.id].platforms.map((obj) => (
+          <span
+            key={obj.platform}
+            style={{ '--color': getPlatform(obj.platform).color }}
+            className={`render-linked-platforms-row ${
+              obj.status === 'in process' ? 'process' : ''
+            } ${obj.status === 'active' ? 'active' : ''} ${
+              r[h.id].branchStatus === 'suspended' ? 'row-suspended' : ''
+            }`}
+          >
+            <img
+              src={
+                getPlatform(obj.platform).srcFaviconWhite || getPlatform(obj.platform).srcFavicon
+              }
+              alt={obj.platform}
+            />
+          </span>
+        ))}
+      </TableCellKit>
+    );
+  };
+  const renderAccountsRow = (r, h, i = 0) => (
+    <TableCellKit
+      style={{ paddingLeft: 0, textAlign: 'left', cursor: 'pointer' }}
+      id={`${h.id}_${i}`}
+      key={`${h.id}_${r.id}`}
+    >
+      <div
+        className={`render-accounts-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
+      >
+        {r[h.id].emails.length > 1
+          ? `${r[h.id].emails[0]} + ${r[h.id].emails.length - 1} more`
+          : r[h.id].emails[0]}
+      </div>
+    </TableCellKit>
+  );
+  const renderBranchStatusRow = (r, h, i = 0) => (
+    <TableCellKit
+      style={{ paddingLeft: 0, textAlign: 'left', cursor: 'pointer' }}
+      id={`${h.id}_${i}`}
+      key={`${h.id}_${r.id}`}
+    >
+      <div className="render-branch_status-row_wrapper">
+        <div className={`render-branch_status-row ${r[h.id].replace(/\s/g, '')}`}>{r[h.id]}</div>
+        {r[h.id] !== 'in process' ? <img className="arrow" src={arrow} alt="arrow" /> : ''}
+      </div>
+    </TableCellKit>
+  );
   return {
     renderTarget,
     renderScheduleType,
@@ -175,6 +249,10 @@ const useTableContentFormatter = () => {
     renderSimpleRow,
     renderOrdinalSuffix,
     renderRowTooltip,
+    renderBranchRow,
+    renderLinkedPlatformsRow,
+    renderAccountsRow,
+    renderBranchStatusRow,
   };
 };
 

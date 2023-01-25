@@ -7,6 +7,7 @@ import adsIcon from '../assets/images/ic_ads.png';
 import competitionIcon from '../assets/images/ic_competiton.png';
 import alertsIcon from '../assets/images/ic_alerts.png';
 import rankingIcon from '../assets/images/ic_ranking.png';
+import settingsIcon from '../assets/images/ic_settings.png';
 
 export const simpleLink = [
   { title: 'Dashboard', path: '/dashboard', src: dashboardIcon },
@@ -30,6 +31,22 @@ export const accordionLink = [
     subs: [
       { title: 'Listing', path: '/competition/listing', src: rankingIcon },
       { title: 'Alerts', path: '/competition/alerts', src: alertsIcon },
+    ],
+  },
+];
+
+export const settingsLink = [
+  {
+    id: 'settings',
+    title: ' Settings',
+    src: settingsIcon,
+    subs: [
+      { title: 'General', path: '/settings/general' },
+      { title: 'Billing', path: '/settings/billing' },
+      { title: 'Onboarding', path: '/settings/onboarding' },
+      { title: 'Change Password', path: '/settings/change-password' },
+      { title: 'Menu Settings', path: '/settings/menu' },
+      { title: 'Cost Settings', path: '/settings/cost' },
     ],
   },
 ];

@@ -7,11 +7,11 @@ import smallLogo from '../../../assets/images/small-logo.png';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
 
-import AddPaymentForm from '../../forms/addPaymentForm/AddPaymentForm';
+import AddPaymentForm from '../../../components/forms/addPaymentForm/AddPaymentForm';
 import Invoice from './invoice/Invoice';
 import PaymentMethod from './paymentMethod/PaymentMethod';
 import Info from './info/Info';
-import AddAddressForm from '../../forms/addAddressForm/AddAddressForm';
+import AddAddressForm from '../../../components/forms/addAddressForm/AddAddressForm';
 
 const Billing = () => {
   const [inputValue, setInputValue] = useState({

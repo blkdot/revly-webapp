@@ -17,10 +17,9 @@ import logo from '../../assets/images/logo.png';
 import smallLogo from '../../assets/images/small-logo.png';
 import arrow from '../../assets/images/navbar-arrow.png';
 import logoutIcon from '../../assets/images/ic_logout.png';
-import settingsIcon from '../../assets/images/ic_settings.png';
 import lines from '../../assets/images/lines.png';
 
-import { simpleLink, accordionLink } from '../../data/navbarData';
+import { simpleLink, accordionLink, settingsLink } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
 
 const Navbar = () => {
@@ -95,9 +94,45 @@ const Navbar = () => {
       </AccordionKit>
     ));
 
+  const renderSettingsAccordionLink = () =>
+    settingsLink.map((a) => (
+      <AccordionKit
+        expanded={!!((expanded === a.id && opened) || (expanded === a.id && open))}
+        onChange={handleChange(a.id)}
+        className="navbar-accordion"
+        key={a.id}
+      >
+        <ButtonKit
+          className={`navbar-button-kit ${
+            a.subs.some((sub) => sub.path === pathname) ? 'active' : ''
+          }`}
+        >
+          <AccordionSummaryKit
+            className="accordion-sum"
+            expandIcon={opened || open ? <ExpandMoreIcon /> : ''}
+          >
+            <TypographyKit
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gridGap: '16px',
+                fontSize: '14px',
+              }}
+            >
+              <img className="nav-icon" src={a.src} alt={a.title} />
+              <span>{a.title}</span>
+            </TypographyKit>
+          </AccordionSummaryKit>
+        </ButtonKit>
+        <AccordionDetailsKit className="navbar-accordion-details">
+          {a.subs.map(renderAccordionLinkSub)}
+        </AccordionDetailsKit>
+      </AccordionKit>
+    ));
+
   const renderAccordionLinkSub = (s) => (
     <Navlink title={s.title} path={s.path} key={s.title}>
-      <img className="nav-icon" src={s.src} alt={s.title} />
+      {s.src ? <img className="nav-icon" src={s.src} alt={s.title} /> : ''}
     </Navlink>
   );
 
@@ -126,9 +161,7 @@ const Navbar = () => {
         </ul>
         <img className="nav-lines" src={lines} alt="Gradient lines" />
         <ul className="Navbar-footer">
-          <Navlink title="Settings" path="/settings">
-            <img className="nav-icon" src={settingsIcon} alt="Settings" />
-          </Navlink>
+          {renderSettingsAccordionLink()}
           <li>
             <ButtonKit onClick={handleLogout} className="navbar-button-kit">
               <img className="nav-icon" src={logoutIcon} alt="Logout" />

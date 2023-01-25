@@ -28,6 +28,13 @@ import VerifyCode from './pages/verifyCode/VerifyCode';
 import ResetPassword from './pages/resetPassword/ResetPassword';
 import CompetitionListing from './pages/competition/CompetitionListing';
 import CompetitionAlerts from './pages/competition/CompetitionAlerts';
+import General from './pages/settings/general/General';
+import Billing from './pages/settings/billing/Billing';
+import NewSettingsOnboarding from './pages/settings/onboarding/NewSettingsOnboarding';
+import ChangePassword from './pages/settings/changePassword/ChangePassword';
+import Menu from './pages/settings/menu/Menu';
+import Cost from './pages/settings/cost/Cost';
+import ProtectedSettingsRoutes from './routes/ProtectedSettingsRoutes';
 
 const theme = createTheme({
   palette: {
@@ -72,13 +79,23 @@ const App = () => (
                       <Route path="/planning" element={<Planning />} />
                       <Route path="/competition/listing" element={<CompetitionListing />} />
                       <Route path="/competition/alerts" element={<CompetitionAlerts />} />
-                      <Route path="/settings" element={<Settings />} />
                       <Route path="/marketing/offer" element={<MarketingOffer />} />
                       <Route path="/marketing/ads" element={<MarketingAds />} />
                       <Route path="/verify-code" element={<VerifyCode />} />
                     </Route>
                     <Route path="/onboarding" element={<OnBoarding />} />
                     <Route path="/check" element={<Check />} />
+                  </Route>
+                  <Route element={<ProtectedSettingsRoutes />}>
+                    <Route element={<ProtectedOnboardRoutes />}>
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/settings/general" element={<General />} />
+                      <Route path="/settings/billing" element={<Billing />} />
+                      <Route path="/settings/onboarding" element={<NewSettingsOnboarding />} />
+                      <Route path="/settings/change-password" element={<ChangePassword />} />
+                      <Route path="/settings/menu" element={<Menu />} />
+                      <Route path="/settings/cost" element={<Cost />} />
+                    </Route>
                   </Route>
                 </Routes>
               </GlobalFunctionalitiesContextProvider>

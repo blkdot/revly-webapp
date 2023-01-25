@@ -10,7 +10,7 @@ import './MarketingSetup.scss';
 import BoxKit from '../../kits/box/BoxKit';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import MenuDropdown from '../settings/menu/menuDropdown/MenuDropdown';
+import MenuDropdown from '../../pages/settings/menu/menuDropdown/MenuDropdown';
 import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
 import menuIcon from '../../assets/images/ic_menu.png';
 import ItemMenuIcon from '../../assets/images/ic_item-menu.png';

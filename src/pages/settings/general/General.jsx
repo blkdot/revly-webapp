@@ -9,7 +9,7 @@ import country from '../../../data/country.json';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
 
-import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
+import AccountSettingForm from '../../../components/forms/accountSettingForm/AccountSettingForm';
 
 import { useAlert } from '../../../hooks/useAlert';
 import validator from '../../../utlls/input/validator';

@@ -17,7 +17,7 @@
       margin-bottom: 2em;
     }
   }
-  
+
   @include tabletBreakpoint {
     margin-top: 11.5rem;
   }
@@ -34,7 +34,7 @@
     height: 56px;
     gap: 20px;
     display: flex;
-    
+
     .setting-account__tabs-tab {
       display: flex;
       text-transform: capitalize;
@@ -68,7 +68,7 @@
           }
         }
       }
-  
+
       &.__active {
         color: #906BFF;
 

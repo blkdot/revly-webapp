@@ -115,3 +115,132 @@
   width: 100%;
   pointer-events: none;
 }
+
+.render-linked-platforms-row {
+  background-color: var(--color);
+  border-radius: 50%;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  display: block;
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #DFE3E8;
+    border-radius: 50%;
+    top: 0;
+    right: 0;
+    position: absolute;
+  }
+
+  &.active {
+    &::before {
+      background-color: #2EC966;
+    }
+  }
+
+  &.process {
+    &::before {
+      background-color: #F48B29;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.render-branch-row_skeleton {
+  background-color: #F3F4F6;
+  height: 12px;
+  width: 80px;
+  border-radius: 2px;
+  display: block;
+  position: relative;
+  top: -10px;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 170px;
+    background-color: #F3F4F6;
+    height: 12px;
+    border-radius: 2px;
+    position: absolute;
+    bottom: -20px;
+  }
+}
+
+.render-branch-row.render-branch-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .__title.__title {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .__subtitle.__subtitle {
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+.render-branch_status-row_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    filter: invert(46%) sepia(5%) saturate(1309%) hue-rotate(166deg) brightness(92%) contrast(90%);
+    margin-right: 20px;
+  }
+
+  transform: scale(1) !important;
+  width: 100% !important;
+  padding: 0 !important;
+
+}
+
+.render-branch_status-row {
+  text-transform: capitalize;
+  font-weight: 400;
+  border-radius: 6px;
+  padding: 5px;
+  
+  &.InProcess,
+  &.inprocess {
+    background-color: #FEEFE1;
+    color: #F48B29;
+  }
+
+  &.Active,
+  &.active {
+    background-color: #D5C8FA4D;
+    color: #9A6FFF;
+  }
+
+  &.Suspended,
+  &.suspended {
+    background-color: #FF48421A;
+    color: #FF4842;
+  }
+}
+
+.row-suspended {
+  opacity: 0.5;
+
+  .__title {
+    color: #1E1E1E;
+  }
+
+  .__subtitle {
+    color: #1E1E1E;
+  }
+}

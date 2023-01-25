@@ -3,11 +3,11 @@ import { Description, Password, Person, Send } from '@mui/icons-material';
 
 import './Settings.scss';
 
-import NewSettingsOnboarding from '../../components/settings/onboarding/NewSettingsOnboarding';
-import General from '../../components/settings/general/General';
-import Billing from '../../components/settings/billing/Billing';
-import ChangePassword from '../../components/settings/changePassword/ChangePassword';
-import Menu from '../../components/settings/menu/Menu';
+import SettingsOnboarding from './onboarding/SettingsOnboarding';
+import General from './general/General';
+import Billing from './billing/Billing';
+import ChangePassword from './changePassword/ChangePassword';
+import Menu from './menu/Menu';
 
 import TypographyKit from '../../kits/typography/TypographyKit';
 import TabKit from '../../kits/tab/TabKit';
@@ -16,7 +16,7 @@ import BoxKit from '../../kits/box/BoxKit';
 
 import MenuIcon from '../../assets/icons/MenuIcon';
 import CostIcon from '../../assets/icons/CostIcon';
-import Cost from '../../components/settings/cost/Cost';
+import Cost from './cost/Cost';
 
 const Settings = () => {
   const [currentTab, setCurrentTab] = useState('general');
@@ -48,7 +48,7 @@ const Settings = () => {
           <Send className="__icon" />
         </div>
       ),
-      component: <NewSettingsOnboarding />,
+      component: <SettingsOnboarding />,
       subtitle: <p className="subtitle" />,
     },
     {

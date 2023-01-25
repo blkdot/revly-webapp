@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 import ButtonKit from '../../../kits/button/ButtonKit';
-import RestaurantDropdownNew from '../../restaurantDropdown/RestaurantDropdownNew';
+import RestaurantDropdownNew from '../../../components/restaurantDropdown/RestaurantDropdownNew';
 import { usePlatform } from '../../../hooks/usePlatform';
-import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
+import RestaurantDropdownOld from '../../../components/restaurantDropdown/RestaurantDropdownOld';
 import useVendors from '../../../hooks/useVendors';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
