@@ -6,7 +6,7 @@ import CloseIcon from '../../../../assets/images/ic_close.png';
 import { platformList } from '../../../../data/platformList';
 
 const ConnectAccount = ({ propsVariables }) => {
-  const { openCloseModal, accounts, setConnect } = propsVariables;
+  const { openCloseModal, accounts, setConnect, setConnectAccount } = propsVariables;
   return (
     <div tabIndex={-1} role="presentation" onClick={(e) => e.stopPropagation()}>
       <img
@@ -25,7 +25,10 @@ const ConnectAccount = ({ propsVariables }) => {
       <div className={`onboarding-platform-buttons ${accounts.length <= 0 ? 'active' : ''}`}>
         {platformList.map((obj) => (
           <ButtonKit
-            onClick={() => setConnect(obj.name)}
+            onClick={() => {
+              setConnect(obj.name);
+              setConnectAccount('platform');
+            }}
             variant="contained"
             key={obj.name}
             style={{ '--color': obj.color }}

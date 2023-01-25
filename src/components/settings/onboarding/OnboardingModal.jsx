@@ -6,21 +6,13 @@ import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
 const OnboardingModal = ({ propsVariables }) => {
-  const { openCloseModal, openedModal, uploading, connect, manageBranch } = propsVariables;
-  const connectAccountModal = () => {
-    if (manageBranch) {
-      return <ManageBranch propsVariables={propsVariables} />;
-    }
-    if (uploading.completed) {
-      return <UploadingCompleted propsVariables={propsVariables} />;
-    }
-    if (uploading.active && connect) {
-      return <UploadingActive propsVariables={propsVariables} />;
-    }
-    if (connect) {
-      return <ConnectPlatform propsVariables={propsVariables} />;
-    }
-    return <ConnectAccount propsVariables={propsVariables} />;
+  const { openCloseModal, openedModal, connectAccount } = propsVariables;
+  const connectAccountModalObject = {
+    manageBranch: <ManageBranch propsVariables={propsVariables} />,
+    completed: <UploadingCompleted propsVariables={propsVariables} />,
+    active: <UploadingActive propsVariables={propsVariables} />,
+    platform: <ConnectPlatform propsVariables={propsVariables} />,
+    account: <ConnectAccount propsVariables={propsVariables} />,
   };
   return (
     <div
@@ -29,7 +21,7 @@ const OnboardingModal = ({ propsVariables }) => {
       className={`onboarding-modal_overlay ${openedModal ? 'active' : ''}`}
       onClick={openCloseModal}
     >
-      {connectAccountModal()}
+      {connectAccountModalObject[connectAccount]}
     </div>
   );
 };

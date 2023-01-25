@@ -4,7 +4,8 @@ import CloseIcon from '../../../../assets/images/ic_close.png';
 import Congrats from '../../../../assets/images/congrats.png';
 
 const UploadingCompleted = ({ propsVariables }) => {
-  const { openCloseModal, setConnect, setUploading, platform } = propsVariables;
+  const { openCloseModal, setConnectAccount, connect } = propsVariables;
+  const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   return (
     <div
       className="onboarding-connect-account"
@@ -20,7 +21,7 @@ const UploadingCompleted = ({ propsVariables }) => {
         alt="close icon"
         onClick={() => {
           openCloseModal();
-          setUploading({ active: false, progress: 0, completed: false });
+          setConnectAccount('account');
         }}
       />
       <div className="onboarding-congrats">
@@ -35,8 +36,7 @@ const UploadingCompleted = ({ propsVariables }) => {
         <ButtonKit
           onClick={() => {
             openCloseModal();
-            setUploading({ active: false, progress: 0, completed: false });
-            setConnect('');
+            setConnectAccount('account');
           }}
           variant="contained"
           style={{ '--color': '#F9FAFB', color: 'black' }}

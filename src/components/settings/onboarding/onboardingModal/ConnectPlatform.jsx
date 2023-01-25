@@ -4,6 +4,7 @@ import CloseIcon from '../../../../assets/images/ic_close.png';
 import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 import Arrow from '../../../../assets/icons/Arrow';
 import LodaingButtonKit from '../../../../kits/loadingButton/LoadingButtonKit';
+import { platformList } from '../../../../data/platformList';
 
 const ConnectPlatform = ({ propsVariables }) => {
   const {
@@ -14,13 +15,12 @@ const ConnectPlatform = ({ propsVariables }) => {
     email,
     password,
     setConnect,
-    setUploading,
+    setConnectAccount,
     setBranchDataUploading,
-    uploading,
-    isLoading,
-    platform,
-    platformObj,
+    branchData,
   } = propsVariables;
+  const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
+  const platformObj = platformList.find((obj) => obj.name === connect);
   return (
     <div
       className="onboarding-connect-account"
@@ -58,6 +58,7 @@ const ConnectPlatform = ({ propsVariables }) => {
         <ButtonKit
           onClick={() => {
             setConnect('');
+            setConnectAccount('account');
             setEmail('');
             setPassword('');
           }}
@@ -69,20 +70,16 @@ const ConnectPlatform = ({ propsVariables }) => {
         </ButtonKit>
         <LodaingButtonKit
           onClick={() => {
-            setUploading({ ...uploading, active: true });
+            setConnectAccount('active');
             const arr = [];
-            for (let i = 0; i < 10; i++) {
+            for (let i = branchData.length; i < branchData.length + 10; i++) {
               arr.push({
                 branch_name: {
                   title: `THE KITCHEN - Allentown ${i}`,
                   address: '4140 Parker Rd. Allentown, New Mexico 31134',
-                  status: 'in process',
                 },
-                accounts: { status: 'in process', emails: [email] },
-                linked_platforms: {
-                  branchStatus: 'in process',
-                  platforms: [{ platform: connect, status: 'in process' }],
-                },
+                accounts: [email],
+                linked_platforms: [{ platform: connect, status: 'in process' }],
                 branch_status: 'in process',
                 id: i,
               });
@@ -91,7 +88,6 @@ const ConnectPlatform = ({ propsVariables }) => {
           }}
           variant="contained"
           style={{ '--color': platformObj.color }}
-          loading={isLoading}
           disabled={!(email && password)}
         >
           <img src={platformObj.srcFaviconWhite || platformObj.srcFavicon} alt={platform} />

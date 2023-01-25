@@ -6,8 +6,6 @@ import Arrow from '../../../../assets/icons/Arrow';
 const UploadingActive = ({ propsVariables }) => {
   const {
     branchDataUploading,
-    setUploading,
-    uploading,
     setBranchDataUploading,
     setEmail,
     setPassword,
@@ -19,10 +17,11 @@ const UploadingActive = ({ propsVariables }) => {
     branchData,
     connect,
     email,
-    platform,
+    setConnectAccount,
   } = propsVariables;
+  const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const confirm = () => {
-    setUploading({ ...uploading, completed: true });
+    setConnectAccount('completed');
     setAccounts([...accounts, { platform: connect, connected: true, email }]);
     setEmail('');
     setPassword('');
@@ -37,11 +36,7 @@ const UploadingActive = ({ propsVariables }) => {
         const newBranchData = branchDataUploading.map((obj) => ({
           ...obj,
           branch_status: 'active',
-          branch_name: { ...obj.branch_name, status: 'active' },
-          linked_platforms: {
-            branch_status: 'active',
-            platforms: [{ ...obj.linked_platforms.platforms[0], status: 'active' }],
-          },
+          linked_platforms: [{ ...obj.linked_platforms[0], status: 'active' }],
         }));
         setBranchData([...branchDataTemp, ...newBranchData]);
       }
@@ -85,7 +80,7 @@ const UploadingActive = ({ propsVariables }) => {
         <ButtonKit
           style={{ '--color': '#F9FAFB', color: 'black' }}
           onClick={() => {
-            setUploading({ ...uploading, progress: 0, active: false });
+            setConnectAccount('platform');
             setBranchDataUploading([]);
           }}
           variant="contained"

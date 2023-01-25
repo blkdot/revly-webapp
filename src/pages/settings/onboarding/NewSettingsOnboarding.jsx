@@ -12,24 +12,25 @@ import OnboardingTable from '../../../components/settings/onboarding/OnboardingT
 
 const NewSettingsOnboarding = () => {
   const [openedModal, setOpenedModal] = useState(false);
-  const [manageBranch, setManageBranch] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [branchDataUploading, setBranchDataUploading] = useState([]);
   const [branchData, setBranchData] = useState([]);
   const [accounts, setAccounts] = useState([]);
+  const [connectAccount, setConnectAccount] = useState('account');
   const [connect, setConnect] = useState('');
-  const [uploading, setUploading] = useState({ active: false, progress: 0, completed: false });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform } = useApi();
-  const [isLoading, setIsLoading] = useState(false);
   const [clickedBranch, setClickedBranch] = useState({});
   const { user } = useUserAuth();
   const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
 
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
+    if (connectAccount === 'manageBranch') {
+      setConnectAccount('account');
+    }
     const body = document.querySelector('body');
     if (!openedModal) {
       body.style.overflowY = 'hidden';
@@ -38,7 +39,7 @@ const NewSettingsOnboarding = () => {
     body.style.overflowY = 'visible';
   };
   const handleSubmitLogin = async (currentPlatform) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
@@ -51,7 +52,7 @@ const NewSettingsOnboarding = () => {
       currentPlatform.name,
     );
 
-    setIsLoading(false);
+    // setIsLoading(false);
     if (res instanceof Error) {
       triggerAlertWithMessageError(
         `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`,
@@ -68,9 +69,6 @@ const NewSettingsOnboarding = () => {
     triggerAlertWithMessageSuccess(`You ${currentPlatform} account has been
     linked successfully`);
   };
-
-  const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
-  const platformObj = platformList.find((obj) => obj.name === connect);
   const propsVariables = {
     openCloseModal,
     setConnect,
@@ -79,23 +77,18 @@ const NewSettingsOnboarding = () => {
     email,
     setPassword,
     password,
-    setUploading,
-    uploading,
     setAccounts,
     accounts,
-    setIsLoading,
-    isLoading,
     setBranchData,
     branchData,
     setBranchDataUploading,
     branchDataUploading,
     setActiveStep,
     activeStep,
-    platform,
-    platformObj,
     openedModal,
-    manageBranch,
     clickedBranch,
+    connectAccount,
+    setConnectAccount,
   };
   return (
     <div>
@@ -113,8 +106,8 @@ const NewSettingsOnboarding = () => {
       <OnboardingTable
         branchData={branchData}
         openCloseModal={openCloseModal}
-        setManageBranch={setManageBranch}
         setClickedBranch={setClickedBranch}
+        setConnectAccount={setConnectAccount}
       />
     </div>
   );

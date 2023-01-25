@@ -4,7 +4,7 @@ import useTableContentFormatter from '../../tableRevly/tableContentFormatter/use
 import TableRowKit from '../../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../../kits/tablecell/TableCellKit';
 
-const OnboardingTable = ({ branchData, openCloseModal, setManageBranch, setClickedBranch }) => {
+const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch }) => {
   const { renderAccountsRow, renderBranchStatusRow, renderBranchRow, renderLinkedPlatformsRow } =
     useTableContentFormatter();
   const headersOnBoarding = [
@@ -71,9 +71,12 @@ const OnboardingTable = ({ branchData, openCloseModal, setManageBranch, setClick
     </TableRowKit>
   );
   const onClickRow = (id) => {
-    openCloseModal();
-    setManageBranch(true);
-    setClickedBranch(branchData.map(renderRowsByHeader).find((obj) => obj.id === id).data);
+    const { data } = branchData.map(renderRowsByHeader).find((obj) => obj.id === id);
+    if (data.branch_status !== 'in process') {
+      setConnectAccount('manageBranch');
+      openCloseModal();
+      setClickedBranch(data); 
+    }
   };
   return (
     <div className="settings-onboarding bg onboarding-table">

@@ -38,7 +38,7 @@ const ManageBranch = ({ propsVariables }) => {
           <div className="render-branch_status-row active">{clickedBranch.branch_status}</div>
         </div>
         <div className="manage-branch-accounts_wrapper">
-          {clickedBranch.linked_platforms.platforms.map((obj, index) => (
+          {clickedBranch.linked_platforms.map((obj, index) => (
             <div className="manage-branch-accounts" key={obj.platform}>
               <div>
                 <span
@@ -53,7 +53,7 @@ const ManageBranch = ({ propsVariables }) => {
                     alt={obj.platform}
                   />
                 </span>
-                <div className="render-accounts-row">{clickedBranch.accounts.emails[index]}</div>
+                <div className="render-accounts-row">{clickedBranch.accounts[index]}</div>
               </div>
               <div>
                 {obj.status === 'active' ? 'Connected' : ''}

@@ -169,12 +169,10 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      {r[h.id].status === 'in process' ? (
+      {r.branch_status === 'in process' ? (
         <span className="render-branch-row_skeleton" />
       ) : (
-        <div
-          className={`render-branch-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
-        >
+        <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
           <p className="__title">{r[h.id].title}</p>
           <span className="__subtitle">{r[h.id].address}</span>
         </div>
@@ -189,15 +187,14 @@ const useTableContentFormatter = () => {
         id={`${h.id}_${i}`}
         key={`${h.id}_${r.id}`}
       >
-        {r[h.id].platforms.map((obj) => (
+        {r[h.id].map((obj) => (
           <span
             key={obj.platform}
             style={{ '--color': getPlatform(obj.platform).color }}
-            className={`render-linked-platforms-row ${
-              obj.status === 'in process' ? 'process' : ''
-            } ${obj.status === 'active' ? 'active' : ''} ${
-              r[h.id].branchStatus === 'suspended' ? 'row-suspended' : ''
-            }`}
+            className={`render-linked-platforms-row ${obj.status.replace(
+              /\s/g,
+              '',
+            )} ${r.branch_status.replace(/\s/g, '')}`}
           >
             <img
               src={
@@ -216,12 +213,8 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      <div
-        className={`render-accounts-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
-      >
-        {r[h.id].emails.length > 1
-          ? `${r[h.id].emails[0]} + ${r[h.id].emails.length - 1} more`
-          : r[h.id].emails[0]}
+      <div className={`render-accounts-row ${r.branch_status.replace(/\s/g, '')}`}>
+        {r[h.id].length > 1 ? `${r[h.id][0]} + ${r[h.id].length - 1} more` : r[h.id][0]}
       </div>
     </TableCellKit>
   );

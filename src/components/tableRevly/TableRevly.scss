@@ -142,7 +142,7 @@
     }
   }
 
-  &.process {
+  &.inprocess {
     &::before {
       background-color: #F48B29;
     }
@@ -207,7 +207,9 @@
   padding: 0 !important;
 
 }
-
+.suspended {
+  opacity: 0.5;
+}
 .render-branch_status-row {
   text-transform: capitalize;
   font-weight: 400;
@@ -230,17 +232,6 @@
   &.suspended {
     background-color: #FF48421A;
     color: #FF4842;
-  }
-}
-
-.row-suspended {
-  opacity: 0.5;
-
-  .__title {
-    color: #1E1E1E;
-  }
-
-  .__subtitle {
-    color: #1E1E1E;
+    opacity: 1;
   }
 }
