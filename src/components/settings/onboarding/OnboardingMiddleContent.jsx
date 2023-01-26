@@ -4,7 +4,7 @@ import SettingsIcon from '../../../assets/images/ic_settings.png';
 import OnboardingDropdown from './OnboardingDropdown';
 import ButtonKit from '../../../kits/button/ButtonKit';
 
-const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts }) => {
+const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
   const [kitchen, setKitchen] = useState('');
 
   return (
@@ -28,7 +28,14 @@ const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts }) => {
           ''
         )}
         {accounts.length > 0 ? (
-          <ButtonKit className="settings-onboarding-btn white" variant="contained">
+          <ButtonKit
+            onClick={() => {
+              openCloseModal();
+              setConnectAccount('manageAccount');
+            }}
+            className="settings-onboarding-btn white"
+            variant="contained"
+          >
             <img src={SettingsIcon} alt="settings-icon" />
             Manage my Accounts
           </ButtonKit>

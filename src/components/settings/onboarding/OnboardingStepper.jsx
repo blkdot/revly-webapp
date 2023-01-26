@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
 import StepKit from '../../../kits/step/StepKit';
 import StepLabelKit from '../../../kits/stepLabel/StepLabel';
@@ -89,6 +89,14 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
     }
     return '';
   };
+  useEffect(() => {
+    if (activeStep >= 200 && accounts.length === 1) {
+      setTimeout(() => {
+        setActive(false);
+        console.log('ss');
+      }, 2000);
+    }
+  }, [activeStep]);
   return (
     <div className={`settings-onboarding bg ${!active ? 'close' : ''}`}>
       <StepperKit

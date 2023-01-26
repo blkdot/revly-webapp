@@ -1,12 +1,11 @@
 import React from 'react';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import SwitchKit from '../../../../kits/switch/SwitchKit';
-import ButtonKit from '../../../../kits/button/ButtonKit';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import { platformList } from '../../../../data/platformList';
 
-const ConnectAccount = ({ propsVariables }) => {
-  const { openCloseModal, accounts, setConnect, setConnectAccount } = propsVariables;
+const ManageAccount = ({ propsVariables }) => {
+  const { openCloseModal, accounts } = propsVariables;
   return (
     <div tabIndex={-1} role="presentation" onClick={(e) => e.stopPropagation()}>
       <img
@@ -17,27 +16,6 @@ const ConnectAccount = ({ propsVariables }) => {
         alt="close icon"
         onClick={openCloseModal}
       />
-      <p className="__title">Connect your Accounts</p>
-      <span className="__subtitle">
-        This allows for easy access to important information and ensures that all necessary data are
-        uploaded and stored securely.
-      </span>
-      <div className={`onboarding-platform-buttons ${accounts.length <= 0 ? 'active' : ''}`}>
-        {platformList.map((obj) => (
-          <ButtonKit
-            onClick={() => {
-              setConnect(obj.name);
-              setConnectAccount('platform');
-            }}
-            variant="contained"
-            key={obj.name}
-            style={{ '--color': obj.color }}
-          >
-            <img src={obj.srcFaviconWhite || obj.srcFavicon} alt={obj.name} />
-            Connect with {obj.name.charAt(0).toUpperCase() + obj.name.slice(1)}
-          </ButtonKit>
-        ))}
-      </div>
       {accounts.length > 0 ? (
         <div>
           <p className="__title">Manage your connected accounts</p>
@@ -85,4 +63,4 @@ const ConnectAccount = ({ propsVariables }) => {
   );
 };
 
-export default ConnectAccount;
+export default ManageAccount;

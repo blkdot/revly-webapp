@@ -75,7 +75,7 @@ const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setCli
     if (data.branch_status !== 'in process') {
       setConnectAccount('manageBranch');
       openCloseModal();
-      setClickedBranch(data); 
+      setClickedBranch(data);
     }
   };
   return (

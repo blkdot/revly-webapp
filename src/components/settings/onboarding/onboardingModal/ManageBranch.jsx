@@ -1,14 +1,33 @@
 import React from 'react';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
+import ResumeIcon from '../../../../assets/images/ic_resume.png';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import { platformList } from '../../../../data/platformList';
 import ButtonKit from '../../../../kits/button/ButtonKit';
 import Arrow from '../../../../assets/images/arrow.png';
 
 const ManageBranch = ({ propsVariables }) => {
-  const { openCloseModal, clickedBranch } = propsVariables;
+  const { openCloseModal, clickedBranch, setBranchData, branchData } = propsVariables;
   const getPlatform = (plat) => platformList.find((obj) => obj.name === plat);
+  const changeStatus = () => {
+    if (clickedBranch.branch_status === 'active') {
+      branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
+        'suspended';
+    } else {
+      branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
+        'active';
+    }
+    setBranchData([...branchData]);
+  };
+  const deleteBranch = () => {
+    branchData.splice(
+      branchData.findIndex((obj) => obj.id === clickedBranch.id),
+      1,
+    );
+    openCloseModal();
+    setBranchData([...branchData]);
+  };
   return (
     <div
       className="onboarding-connect-account"
@@ -35,7 +54,9 @@ const ManageBranch = ({ propsVariables }) => {
             <p className="__title">{clickedBranch.branch_name.title}</p>
             <span className="__subtitle">{clickedBranch.branch_name.address}</span>
           </div>
-          <div className="render-branch_status-row active">{clickedBranch.branch_status}</div>
+          <div className={`render-branch_status-row ${clickedBranch.branch_status}`}>
+            {clickedBranch.branch_status}
+          </div>
         </div>
         <div className="manage-branch-accounts_wrapper">
           {clickedBranch.linked_platforms.map((obj, index) => (
@@ -64,10 +85,16 @@ const ManageBranch = ({ propsVariables }) => {
         </div>
       </div>
       <div className="manage-branch-buttons">
-        <ButtonKit className="pause" variant="contained">
-          <img src={PauseIcon} alt="pause" /> Suspend activity from this branch
-        </ButtonKit>
-        <ButtonKit className="delete" variant="outlined">
+        {clickedBranch.branch_status === 'active' ? (
+          <ButtonKit onClick={changeStatus} className="pause" variant="contained">
+            <img src={PauseIcon} alt="pause" /> Suspend activity from this branch
+          </ButtonKit>
+        ) : (
+          <ButtonKit onClick={changeStatus} className="resume" variant="contained">
+            <img src={ResumeIcon} alt="resume" /> Resume activity from this branch
+          </ButtonKit>
+        )}
+        <ButtonKit onClick={deleteBranch} className="delete" variant="outlined">
           <img src={TrashIcon} alt="trash" /> Delete this branch from Revly
         </ButtonKit>
       </div>

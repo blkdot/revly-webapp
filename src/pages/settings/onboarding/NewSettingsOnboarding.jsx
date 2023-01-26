@@ -1,12 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { usePlatform } from '../../../hooks/usePlatform';
-import useApi from '../../../hooks/useApi';
-import { useUserAuth } from '../../../contexts/AuthContext';
-import { useAlert } from '../../../hooks/useAlert';
+import React, { useState } from 'react';
 import OnboardingStepper from '../../../components/settings/onboarding/OnboardingStepper';
 import OnboardingMiddleContent from '../../../components/settings/onboarding/OnboardingMiddleContent';
-import { platformList } from '../../../data/platformList';
 import OnboardingModal from '../../../components/settings/onboarding/OnboardingModal';
 import OnboardingTable from '../../../components/settings/onboarding/OnboardingTable';
 
@@ -18,17 +13,11 @@ const NewSettingsOnboarding = () => {
   const [accounts, setAccounts] = useState([]);
   const [connectAccount, setConnectAccount] = useState('account');
   const [connect, setConnect] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { userPlatformData, setUserPlatformData } = usePlatform();
-  const { settingsOnboardPlatform } = useApi();
   const [clickedBranch, setClickedBranch] = useState({});
-  const { user } = useUserAuth();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
 
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
-    if (connectAccount === 'manageBranch') {
+    if (connectAccount === 'manageBranch' || connectAccount === 'completed') {
       setConnectAccount('account');
     }
     const body = document.querySelector('body');
@@ -38,45 +27,10 @@ const NewSettingsOnboarding = () => {
     }
     body.style.overflowY = 'visible';
   };
-  const handleSubmitLogin = async (currentPlatform) => {
-    // setIsLoading(true);
-    const res = await settingsOnboardPlatform(
-      {
-        master_email: user.email,
-        access_token: user.accessToken,
-        credentials: {
-          email,
-          password,
-        },
-      },
-      currentPlatform.name,
-    );
-
-    // setIsLoading(false);
-    if (res instanceof Error) {
-      triggerAlertWithMessageError(
-        `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`,
-      );
-      return;
-    }
-
-    setUserPlatformData({
-      ...userPlatformData,
-      platforms: { ...userPlatformData.platforms, [currentPlatform]: res },
-    });
-    setEmail('');
-    setPassword('');
-    triggerAlertWithMessageSuccess(`You ${currentPlatform} account has been
-    linked successfully`);
-  };
   const propsVariables = {
     openCloseModal,
     setConnect,
     connect,
-    setEmail,
-    email,
-    setPassword,
-    password,
     setAccounts,
     accounts,
     setBranchData,
@@ -102,6 +56,7 @@ const NewSettingsOnboarding = () => {
         branchData={branchData}
         openCloseModal={openCloseModal}
         accounts={accounts}
+        setConnectAccount={setConnectAccount}
       />
       <OnboardingTable
         branchData={branchData}
