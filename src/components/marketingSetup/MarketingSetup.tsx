@@ -344,7 +344,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         );
 
         if (res instanceof Error) {
-          throw res.message;
+          throw new Error(res.message);
         }
 
         setCreated(true);
@@ -374,11 +374,11 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         Promise.all(crossPlatform)
           .then(([platform1, platform2]) => {
             if (platform1 instanceof Error) {
-              throw platform1.message;
+              throw new Error(platform1.message);
             }
 
             if (platform2 instanceof Error) {
-              throw platform2.message;
+              throw new Error(platform2.message);
             }
             setCreated(true);
             setRecap(false);
