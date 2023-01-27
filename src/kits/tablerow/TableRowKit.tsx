@@ -1,6 +1,5 @@
-import React from 'react';
 import { TableRow } from '@mui/material';
 
-const TableRowKit = (props) => <TableRow {...props} />;
+const TableRowKit = (props: any) => <TableRow {...props} />;
 
 export default TableRowKit;

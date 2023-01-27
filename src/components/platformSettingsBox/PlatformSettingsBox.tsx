@@ -1,14 +1,13 @@
-import React from 'react';
 import { pascalCase } from 'change-case';
 
 import { AiFillEdit } from 'react-icons/ai';
 
 import './PlatformSettingsBox.scss';
 
-import SwitchKit from '../../kits/switch/SwitchKit';
 import ButtonKit from '../../kits/button/ButtonKit';
+import SwitchKit from '../../kits/switch/SwitchKit';
 
-const PlatformSettingsBox = (props) => {
+const PlatformSettingsBox = (props: any) => {
   const { active, src, type, registered, onChangeSwitch, onClick } = props;
 
   const renderFooter = () => {

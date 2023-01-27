@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 
-import { FaChevronRight, FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 
 import './FilterDropdown.scss';
 
@@ -9,7 +9,7 @@ import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 
 import useClickAwayListner from '../../../hooks/useClickAwayListner';
 
-const FilterDropdown = (props) => {
+const FilterDropdown = (props: any) => {
   const { items, values, onChange, label, icon, customTag, maxShowned, internalIconOnActive } =
     props;
 

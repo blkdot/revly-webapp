@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import './ResetPassword.scss';
@@ -20,7 +20,7 @@ const ResetPassword = () => {
 
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
+  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
 
   const verifyActionCode = () => {
     verifyResetCode(params.get('oobCode'))

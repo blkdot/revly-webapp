@@ -1,46 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { addDays, addHours, addMinutes, format, getHours, isSameDay, isAfter } from 'date-fns';
-import { useAtom } from 'jotai';
 import InputAdornment from '@mui/material/InputAdornment';
-import MarketingRadio from './MarketingRadio';
-import plus from '../../assets/images/plus.png';
-import ButtonKit from '../../kits/button/ButtonKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import './MarketingSetup.scss';
-import BoxKit from '../../kits/box/BoxKit';
-import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import MenuDropdown from '../settings/menu/menuDropdown/MenuDropdown';
-import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
-import menuIcon from '../../assets/images/ic_menu.png';
-import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
-import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
-import RadioKit from '../../kits/radio/RadioKit';
+import { addDays, addMinutes, format, getHours, isAfter, isSameDay } from 'date-fns';
+import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
+import ArrowIcon from '../../assets/images/arrow.png';
+import AudienceIcon from '../../assets/images/ic_audience.png';
+import BranchesIcon from '../../assets/images/ic_branch.png';
 import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
 import CalendarEventIcon from '../../assets/images/ic_calendar-event.png';
-import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
-import ArrowIcon from '../../assets/images/arrow.png';
-import TimerIcon from '../../assets/images/ic_timer.png';
-import AudienceIcon from '../../assets/images/ic_audience.png';
-import { platformList, platformObject } from '../../data/platformList';
-import trash from '../../assets/images/ic_trash.png';
-import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
-import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
+import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
+import menuIcon from '../../assets/images/ic_menu.png';
 import searchIcon from '../../assets/images/ic_search.png';
 import SmRuleIcon from '../../assets/images/ic_sm-rule.png';
 import SpeakerIcon from '../../assets/images/ic_speaker.png';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import TimerIcon from '../../assets/images/ic_timer.png';
+import trash from '../../assets/images/ic_trash.png';
+import plus from '../../assets/images/plus.png';
+import { platformList, platformObject } from '../../data/platformList';
+import BoxKit from '../../kits/box/BoxKit';
+import ButtonKit from '../../kits/button/ButtonKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import RestaurantDropdownNew from '../restaurantDropdown/RestaurantDropdownNew';
-import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
-import { vendorsAtom } from '../../store/vendorsAtom';
-import BranchesIcon from '../../assets/images/ic_branch.png';
-import TimePickerDropdown from '../timePicker/TimePickerDropdown';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import RadioKit from '../../kits/radio/RadioKit';
+import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
+import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import { vendorsAtom } from '../../store/vendorsAtom';
+import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
+import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
+import RestaurantDropdownNew from '../restaurantDropdown/RestaurantDropdownNew';
+import MenuDropdown from '../settings/menu/menuDropdown/MenuDropdown';
+import TimePickerDropdown from '../timePicker/TimePickerDropdown';
+import MarketingCheckmarksDropdown from './MarketingChecmarksDropdown';
+import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
+import MarketingRadio from './MarketingRadio';
+import './MarketingSetup.scss';
 
 const TooltipCategory = ({ obj, index }) => {
+  const [hoverStatus, setHover] = useState<any>(false);
   // we getting the textElement
   const textElement = document.querySelectorAll('.list-item-category')[index];
   const compareSize = () => {
@@ -62,7 +63,6 @@ const TooltipCategory = ({ obj, index }) => {
     [],
   );
 
-  const [hoverStatus, setHover] = useState(false);
   return (
     <div>
       <TooltipKit
@@ -452,7 +452,7 @@ const GetProgress = ({ progressData }) => {
                     times.splice(index, 1);
                     setTimes([...times]);
                     Object.values(heatmapData[links]).forEach((objHeat) => {
-                      Object.keys(objHeat).forEach((num) => {
+                      Object.keys(objHeat).forEach((num: any) => {
                         if (num === getHours(obj.startTime)) {
                           if (objHeat[num].active) {
                             delete heatmapData[links][new Date(startingDate).getDay() - 1][num];
@@ -510,14 +510,18 @@ const GetProgress = ({ progressData }) => {
                     null,
                     null,
                     null,
-                    format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                    // TODO: FIX IT
+                    // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                    null,
                     0,
                   ),
                   endTime: new Date(
                     null,
                     null,
                     null,
-                    format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                    // TODO: FIX IT
+                    // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                    null,
                     0,
                   ),
                   pos: times[times.length - 1].pos + 1,
@@ -857,7 +861,9 @@ const GetProgress = ({ progressData }) => {
             <FormcontrolKit className="category-list">
               {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
                 (obj, index) => (
-                  <div className="menu-item-wrapper" key={obj.id} value={obj.name}>
+                  // TODO: FIX IT
+                  // <div className="menu-item-wrapper" key={obj.id} value={obj.name}>
+                  <div className="menu-item-wrapper" key={obj.id}>
                     <FormControlLabelKit
                       control={
                         <CheckboxKit
@@ -922,7 +928,8 @@ const GetProgress = ({ progressData }) => {
       }
     }
   }
-  return '';
+
+  return null;
 };
 
 export default GetProgress;

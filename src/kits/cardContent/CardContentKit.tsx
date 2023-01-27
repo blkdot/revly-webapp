@@ -1,6 +1,5 @@
-import React from 'react';
 import CardContent from '@mui/material/CardContent';
 
-const CardContentKit = (props) => <CardContent {...props} />;
+const CardContentKit = (props: any) => <CardContent {...props} />;
 
 export default CardContentKit;

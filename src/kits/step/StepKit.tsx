@@ -1,6 +1,5 @@
-import React from 'react';
 import Step from '@mui/material/Step';
 
-const StepKit = (props) => <Step {...props} />;
+const StepKit = (props: any) => <Step {...props} />;
 
 export default StepKit;

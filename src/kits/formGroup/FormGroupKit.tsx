@@ -1,6 +1,5 @@
-import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 
-const FormGroupKit = (props) => <FormGroup {...props} />;
+const FormGroupKit = (props: any) => <FormGroup {...props} />;
 
 export default FormGroupKit;

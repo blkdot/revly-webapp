@@ -1,15 +1,13 @@
-import React from 'react';
-
 import './FilterMore.scss';
 
-import filterOffersData from '../../../data/filterOffersData';
-import FilterDropdown from '../filterDropdown/FilterDropdown';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import TypographyKit from '../../../kits/typography/TypographyKit';
-import PaperKit from '../../../kits/paper/PaperKit';
 import CloseIcon from '../../../assets/images/ic_close.png';
+import filterOffersData from '../../../data/filterOffersData';
+import ButtonKit from '../../../kits/button/ButtonKit';
+import PaperKit from '../../../kits/paper/PaperKit';
+import TypographyKit from '../../../kits/typography/TypographyKit';
+import FilterDropdown from '../filterDropdown/FilterDropdown';
 
-const FilterMore = (props) => {
+const FilterMore = (props: any) => {
   const { onClose, onChangeMultipleSelect, filters } = props;
 
   return (

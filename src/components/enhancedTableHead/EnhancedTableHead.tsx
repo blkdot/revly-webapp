@@ -1,12 +1,10 @@
-import React from 'react';
-
-import TableHeadKit from '../../kits/tablehead/TableHeadKit';
-import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
 import BoxKit from '../../kits/box/BoxKit';
-import TableRowKit from '../../kits/tablerow/TableRowKit';
 import TableCellKit from '../../kits/tablecell/TableCellKit';
+import TableHeadKit from '../../kits/tablehead/TableHeadKit';
+import TableRowKit from '../../kits/tablerow/TableRowKit';
+import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
 
-const EnhancedTableHead = (props) => {
+const EnhancedTableHead = (props: any) => {
   const { order, orderBy, onRequestSort, header } = props;
 
   const createSortHandler = (property) => () => {

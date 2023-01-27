@@ -1,10 +1,8 @@
-import React from 'react';
-
 import './HighOrderBlock.scss';
 
 import FabKit from '../../kits/fab/FabKit';
 
-const HighOrderBlock = (props) => {
+const HighOrderBlock = (props: any) => {
   const { children, color, higher } = props;
 
   return (

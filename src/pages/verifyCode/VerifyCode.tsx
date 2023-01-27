@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './VerifyCode.scss';
 
@@ -10,9 +10,9 @@ import Timer from '../../components/timer/Timer';
 
 import ModalKit from '../../kits/modal/ModalKit';
 
-import { useAlert } from '../../hooks/useAlert';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { verifyEmail } from '../../api/userApi';
+import { useUserAuth } from '../../contexts/AuthContext';
+import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 
 const VerifyCode = () => {
@@ -37,7 +37,7 @@ const VerifyCode = () => {
   const [showModal] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isResend, setIsResend] = useState(false);
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
+  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -59,7 +59,7 @@ const VerifyCode = () => {
         const nextfield = document.querySelector(`input[name=code${fieldIntIndex + 1}]`);
 
         if (nextfield !== null) {
-          nextfield.focus();
+          (nextfield as any).focus();
         }
       }
     }

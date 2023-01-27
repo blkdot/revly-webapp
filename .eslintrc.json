@@ -22,7 +22,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "react-hooks", "import", "@typescript-eslint", "prettier"],
+  "plugins": ["react", "react-hooks", "import", "@typescript-eslint"],
   "rules": {
     "react/prop-types": 0,
     "react/jsx-props-no-spreading": 0,
@@ -38,6 +38,10 @@
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "camelcase": "warn",
     "react/jsx-filename-extension": "warn",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/naming-convention": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-use-before-define": "warn"
   }
 }

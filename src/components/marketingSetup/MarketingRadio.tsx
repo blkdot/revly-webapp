@@ -1,4 +1,3 @@
-import React from 'react';
 import BoxKit from '../../kits/box/BoxKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
@@ -13,7 +12,7 @@ const MarketingRadio = ({
   checkbox,
   setState,
   state,
-}) => {
+}: any) => {
   const getButton = () => {
     if (checkbox) {
       return (

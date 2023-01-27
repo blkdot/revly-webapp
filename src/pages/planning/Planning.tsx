@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from 'react';
 import { pascalCase } from 'change-case';
-import shortid from 'shortid';
 import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
+import shortid from 'shortid';
 
-import './Planning.scss';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
-import Dates from '../../components/dates/Dates';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import useDate from '../../hooks/useDate';
-import usePlanningOffers from '../../hooks/usePlanningOffers';
-import usePlanningAds from '../../hooks/usePlanningAds';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import TableRevly from '../../components/tableRevly/TableRevly';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import offerIcon from '../../assets/images/ic_offers.png';
-import adsIcon from '../../assets/images/ic_ads.png';
-import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import BoxKit from '../../kits/box/BoxKit';
-import { platformObject } from '../../data/platformList';
-import Tag from '../../assets/icons/Tag';
 import Layers from '../../assets/icons/Layers';
+import Tag from '../../assets/icons/Tag';
+import Vector from '../../assets/icons/Vector';
+import adsIcon from '../../assets/images/ic_ads.png';
+import offerIcon from '../../assets/images/ic_offers.png';
+import Dates from '../../components/dates/Dates';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
-import Vector from '../../assets/icons/Vector';
+import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import OfferDetailComponent from '../offers/details';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from '../../components/tableRevly/TableRevly';
+import { platformObject } from '../../data/platformList';
+import useDate from '../../hooks/useDate';
+import usePlanningAds from '../../hooks/usePlanningAds';
+import usePlanningOffers from '../../hooks/usePlanningOffers';
 import useQueryState from '../../hooks/useQueryState';
+import BoxKit from '../../kits/box/BoxKit';
+import ButtonKit from '../../kits/button/ButtonKit';
+import PaperKit from '../../kits/paper/PaperKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
+import OfferDetailComponent from '../offers/details';
+import './Planning.scss';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -37,8 +37,8 @@ const defaultFilterStateFormat = {
 };
 
 const Planning = () => {
-  const [dateSaved, setDateSaved] = useQueryState('date');
-  const [filtersSaved, setFiltersSaved] = useQueryState('filters');
+  const [dateSaved, setDateSaved] = useQueryState('date') as any;
+  const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
   const [active, setActive] = useState(0);
   const { date } = useDate();
   const [vendors] = useAtom(vendorsAtom);
@@ -54,14 +54,14 @@ const Planning = () => {
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: getOfferDate(),
-    ...JSON.parse(dateSaved || '{}'),
+    ...JSON.parse((dateSaved || '{}') as any),
   });
   const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
     ...defaultFilterStateFormat,
-    ...JSON.parse(filtersSaved || '{}'),
+    ...JSON.parse((filtersSaved || '{}') as any),
   });
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
@@ -188,7 +188,7 @@ const Planning = () => {
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
-      setFilters(JSON.parse(filtersSaved));
+      setFilters(JSON.parse(filtersSaved as string));
     }
 
     const body = document.querySelector('body');

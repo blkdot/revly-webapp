@@ -1,11 +1,10 @@
-import React from 'react';
-import './Finance.scss';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import Widget from '../widget/Widget';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import useDate from '../../hooks/useDate';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import Widget from '../widget/Widget';
+import './Finance.scss';
 
 const Finance = ({
   metricsbeforePeriod,
@@ -31,7 +30,7 @@ const Finance = ({
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
       }
-      if (startGetDate === 1 && endGetDate === endOfMonth(startDate, 1).getDate()) {
+      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
         return `${format(startDate, 'LLL', { locale: enUS })}  -  ${getYear(startDate)}`;
       }
 

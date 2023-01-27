@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useState } from 'react';
 
 import './OnBoardingForm.scss';
 
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
+import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
-const OnBoardingForm = (props) => {
+const OnBoardingForm = (props: any) => {
   const {
     onChangeEmail,
     onChangePassword,

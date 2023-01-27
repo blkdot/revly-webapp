@@ -1,6 +1,5 @@
-import React from 'react';
 import { TableContainer } from '@mui/material';
 
-const TableContainerKit = (props) => <TableContainer {...props} />;
+const TableContainerKit = (props: any) => <TableContainer {...props} />;
 
 export default TableContainerKit;

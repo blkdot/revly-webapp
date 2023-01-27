@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import './MenuTable.scss';
 
-import TableHeadKit from '../../../../kits/tablehead/TableHeadKit';
-import TableRowKit from '../../../../kits/tablerow/TableRowKit';
-import TableCellKit from '../../../../kits/tablecell/TableCellKit';
-import TableSortLabelKit from '../../../../kits/tablesortlabel/TableSortLableKit';
-import TableContainerKit from '../../../../kits/tablecontainer/TableContainerKit';
+import SpinnerKit from '../../../../kits/spinner/SpinnerKit';
 import TableKit from '../../../../kits/table/TableKit';
 import TableBodyKit from '../../../../kits/tablebody/TableBodyKit';
-import SpinnerKit from '../../../../kits/spinner/SpinnerKit';
+import TableCellKit from '../../../../kits/tablecell/TableCellKit';
+import TableContainerKit from '../../../../kits/tablecontainer/TableContainerKit';
+import TableHeadKit from '../../../../kits/tablehead/TableHeadKit';
+import TableRowKit from '../../../../kits/tablerow/TableRowKit';
+import TableSortLabelKit from '../../../../kits/tablesortlabel/TableSortLableKit';
 
 const headRows = [
   {
@@ -72,7 +72,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-const MenuTable = (props) => {
+const MenuTable = (props: any) => {
   const { data, loading } = props;
 
   const [order, setOrder] = useState('asc');

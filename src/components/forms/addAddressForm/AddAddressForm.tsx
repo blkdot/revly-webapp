@@ -1,13 +1,11 @@
-import React from 'react';
-
 import './AddAddressForm.scss';
 
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import ButtonKit from '../../../kits/button/ButtonKit';
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
 import onlyNumber from '../../../utlls/input/onlyNumber';
 
-const AddAddressForm = (props) => {
+const AddAddressForm = (props: any) => {
   const {
     visible,
     handleInputChange,

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { updateProfile } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { updateProfile } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import './General.scss';
 
@@ -31,7 +31,7 @@ const General = () => {
   };
 
   const [dial, setDial] = useState('+971');
-  const [inputValue, setInputValue] = useState({
+  const [inputValue, setInputValue] = useState<any>({
     name: user.displayName,
     phone: getNumber() || '',
     country: { name: '', code: '' },
@@ -39,9 +39,9 @@ const General = () => {
     city: '',
     restoName: '',
   });
-  const [oldValue, setOldValue] = useState({});
+  const [oldValue, setOldValue] = useState<any>({});
   const [inputCountryValue, setInputCountryValue] = React.useState('');
-  const [inputError, setInputError] = useState({
+  const [inputError, setInputError] = useState<any>({
     name: false,
     restoName: false,
     role: false,

@@ -3,12 +3,12 @@
 // This file will handle any global functionnalities related to a context that do not belong to a specific context
 // To prevent creating so many other context
 
-import { startOfWeek, endOfWeek, subWeeks } from 'date-fns';
-import React, { createContext, useEffect, useState } from 'react';
+import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
+import { createContext, useEffect, useState } from 'react';
 
 import Alert from '../components/alert/Alert';
 
-export const GlobalFunctionalitiesContext = createContext();
+export const GlobalFunctionalitiesContext = createContext(undefined);
 
 export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [isShowing, setIsShowing] = useState(false);

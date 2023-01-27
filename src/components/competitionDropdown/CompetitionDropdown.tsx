@@ -1,18 +1,17 @@
-import * as React from 'react';
-import './CompetitionDropdown.scss';
-import SelectKit from '../../kits/select/SelectKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import UAE from '../../assets/images/UAE.png';
+import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import Kuwait from '../../assets/images/Kuwait.png';
 import Qatar from '../../assets/images/Qatar.png';
-import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import ictalabat from '../../assets/images/talabat-favicon.png';
+import UAE from '../../assets/images/UAE.png';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
+import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import SelectKit from '../../kits/select/SelectKit';
+import './CompetitionDropdown.scss';
 
-const CompetitionDropdown = (props) => {
+const CompetitionDropdown = (props: any) => {
   const {
     className,
     title,

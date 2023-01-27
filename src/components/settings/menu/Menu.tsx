@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 
 import './Menu.scss';
 
-import iccategory from '../../../assets/images/ic_menu-category.png';
-import icbranch from '../../../assets/images/ic_menu-branch.png';
-import icplatform from '../../../assets/images/ic_select_platform.png';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
+import icbranch from '../../../assets/images/ic_menu-branch.png';
+import iccategory from '../../../assets/images/ic_menu-category.png';
+import icplatform from '../../../assets/images/ic_select_platform.png';
 import ictalabat from '../../../assets/images/talabat-favicon.png';
 
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';
 
-import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
 import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
+import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
-import useApi from '../../../hooks/useApi';
 import { useAlert } from '../../../hooks/useAlert';
+import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 
@@ -32,7 +32,7 @@ const Menu = () => {
   const [loading, setLoading] = useState(true);
 
   const { userPlatformData } = usePlatform();
-  const { triggerAlertWithMessageError } = useAlert('error');
+  const { triggerAlertWithMessageError } = useAlert();
   const { getMenu } = useApi();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr: vendorList } = vendors;

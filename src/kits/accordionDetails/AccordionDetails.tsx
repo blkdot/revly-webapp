@@ -1,6 +1,5 @@
-import React from 'react';
 import AccordionDetails from '@mui/material/AccordionDetails';
 
-const AccordionDetailsKit = (props) => <AccordionDetails {...props} />;
+const AccordionDetailsKit = (props: any) => <AccordionDetails {...props} />;
 
 export default AccordionDetailsKit;

@@ -1,11 +1,9 @@
-import React from 'react';
-
 import './AddPaymentForm.scss';
 
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import ButtonKit from '../../../kits/button/ButtonKit';
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
-const AddPaymentForm = (props) => {
+const AddPaymentForm = (props: any) => {
   const { visible, handleInputChange, onCancel, onSaveChange } = props;
 
   return (

@@ -1,6 +1,5 @@
-import React from 'react';
 import { AccordionSummary } from '@mui/material';
 
-const AccordionSummaryKit = (props) => <AccordionSummary {...props} />;
+const AccordionSummaryKit = (props: any) => <AccordionSummary {...props} />;
 
 export default AccordionSummaryKit;

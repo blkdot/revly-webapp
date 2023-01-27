@@ -1,7 +1,6 @@
-import React from 'react';
 import { Button } from '@mui/material';
 
-const ButtonKit = (props) => (
+const ButtonKit = (props: any) => (
   <Button
     sx={{
       borderRadius: '8px',

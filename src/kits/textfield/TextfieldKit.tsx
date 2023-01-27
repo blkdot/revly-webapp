@@ -1,7 +1,6 @@
-import React from 'react';
 import { TextField } from '@mui/material';
 
-const TextfieldKit = (props) => (
+const TextfieldKit = (props: any) => (
   <TextField
     sx={{
       '& fieldset': { borderColor: '#919eab65', borderRadius: '8px' },

@@ -1,7 +1,5 @@
-import React from 'react';
-
-import TableCellKit from '../../../kits/tablecell/TableCellKit';
 import { platformObject } from '../../../data/platformList';
+import TableCellKit from '../../../kits/tablecell/TableCellKit';
 import TooltipKit from '../../../kits/toolTip/TooltipKit';
 
 const useTableContentFormatter = () => {
@@ -150,7 +148,7 @@ const useTableContentFormatter = () => {
     );
   };
 
-  const ordinalSuffixOf = (i) => {
+  const ordinalSuffixOf = (i): any => {
     if (!i) return '-';
     const r = Math.round(i);
     return r >= 100 ? '100' : `${r}`;

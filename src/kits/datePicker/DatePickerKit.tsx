@@ -1,6 +1,5 @@
-import React from 'react';
 import { DateRangePicker } from 'react-date-range';
 
-const DatePickerKit = (props) => <DateRangePicker {...props} />;
+const DatePickerKit = (props: any) => <DateRangePicker {...props} />;
 
 export default DatePickerKit;

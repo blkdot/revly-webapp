@@ -1,6 +1,5 @@
-import React from 'react';
 import { Container } from '@mui/system';
 
-const ContainerKit = (props) => <Container {...props} />;
+const ContainerKit = (props: any) => <Container {...props} />;
 
 export default ContainerKit;

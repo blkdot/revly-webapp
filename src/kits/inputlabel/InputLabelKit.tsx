@@ -1,6 +1,5 @@
-import React from 'react';
 import { InputLabel } from '@mui/material';
 
-const InputLabelKit = (props) => <InputLabel {...props} />;
+const InputLabelKit = (props: any) => <InputLabel {...props} />;
 
 export default InputLabelKit;

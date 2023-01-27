@@ -1,7 +1,5 @@
-import React from 'react';
-
 import { Autocomplete } from '@mui/material';
 
-const AutoCompleteKit = (props) => <Autocomplete {...props} />;
+const AutoCompleteKit = (props: any) => <Autocomplete {...props} />;
 
 export default AutoCompleteKit;

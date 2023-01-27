@@ -1,6 +1,5 @@
-import React from 'react';
 import { Radio } from '@mui/material';
 
-const RadioKit = (props) => <Radio {...props} />;
+const RadioKit = (props: any) => <Radio {...props} />;
 
 export default RadioKit;

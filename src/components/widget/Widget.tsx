@@ -1,18 +1,17 @@
-import React from 'react';
 import MovingIcon from '@mui/icons-material/Moving';
 
 import './Widget.scss';
 
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import dayjs from 'dayjs';
 import useDate from '../../hooks/useDate';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
+import CardContentKit from '../../kits/cardContent/CardContentKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 
 const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading }) => {
   const { date } = useDate();
@@ -31,28 +30,12 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
       }
 
       return parseFloat(
-        Number(
-          (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0),
-        ),
+        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0),
       );
     }
     return 0;
   };
-  const getTitle = () => {
-    if (title === 'n_orders') {
-      return 'orders';
-    }
-    if (title === 'average_basket') {
-      return 'Avg.basket';
-    }
-    if (title === 'accrued_discounts') {
-      return 'discount offered';
-    }
-    if (title === 'profit') {
-      return 'net revenue';
-    }
-    return title;
-  };
+  const getTitle = (): any => {};
   const getafterPeriod = () => {
     if (titleafterPeriod === 'custom') {
       if (startLocal === endLocal) {
@@ -60,7 +43,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
       }
       if (
         startGetDate === 1 &&
-        endGetDate === endOfMonth(parseISO(afterPeriod.startDate), 1).getDate()
+        endGetDate === endOfMonth(parseISO(afterPeriod.startDate)).getDate()
       ) {
         return `${format(parseISO(afterPeriod.startDate), 'LLL', {
           locale: enUS,

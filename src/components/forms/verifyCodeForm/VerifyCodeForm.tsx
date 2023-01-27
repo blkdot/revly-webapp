@@ -1,13 +1,11 @@
-import React from 'react';
-
 import './VerifyCodeForm.scss';
 
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import ButtonKit from '../../../kits/button/ButtonKit';
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
 import onlyNumber from '../../../utlls/input/onlyNumber';
 
-const VerifyCodeForm = (props) => {
+const VerifyCodeForm = (props: any) => {
   const { values, handleChangeWithNextField, onVerify, disableVerify, onBlur, inputError } = props;
 
   const renderInput = () =>

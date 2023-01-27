@@ -1,6 +1,5 @@
-import React from 'react';
 import { TableBody } from '@mui/material';
 
-const TableBodyKit = (props) => <TableBody {...props} />;
+const TableBodyKit = (props: any) => <TableBody {...props} />;
 
 export default TableBodyKit;

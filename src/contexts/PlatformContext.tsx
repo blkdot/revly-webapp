@@ -1,8 +1,8 @@
-import React, { createContext, useState, useMemo } from 'react';
+import { createContext, useMemo, useState } from 'react';
 
 import { platformContexDefaultFormat } from '../data/platformList';
 
-export const PlatformContext = createContext();
+export const PlatformContext = createContext(undefined);
 
 const defaultState = () => platformContexDefaultFormat;
 

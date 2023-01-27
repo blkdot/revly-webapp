@@ -1,10 +1,8 @@
-import React from 'react';
-
 import './Alert.scss';
 
 import AlertKit from '../../kits/alert/AlertKit';
 
-const Alert = (props) => {
+const Alert = (props: any) => {
   const { severity, visible, children } = props;
 
   if (!visible) return null;

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useAtom } from 'jotai';
 import { Checkbox } from '@mui/material';
-import useApi from '../../../hooks/useApi';
+import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 import defaultImage from '../../../assets/images/default.png';
+import useApi from '../../../hooks/useApi';
 
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { vendorsAtom } from '../../../store/vendorsAtom';
@@ -54,7 +54,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
         <img
           style={{ borderRadius: '10px' }}
           width={40}
-          hieght={40}
+          height={40}
           src={url || defaultImage}
           alt="item"
         />

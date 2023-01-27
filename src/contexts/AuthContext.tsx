@@ -1,34 +1,34 @@
 // TODO: fix linter problem
 /* eslint-disable react/jsx-no-constructed-context-values */
-import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  GoogleAuthProvider,
-  signInWithPopup,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-  RecaptchaVerifier,
-  PhoneAuthProvider,
-  reauthenticateWithPopup,
-  setPersistence,
+  applyActionCode,
   browserLocalPersistence,
   browserSessionPersistence,
-  updatePhoneNumber,
   confirmPasswordReset,
+  createUserWithEmailAndPassword,
+  EmailAuthProvider,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  PhoneAuthProvider,
+  reauthenticateWithCredential,
+  reauthenticateWithPopup,
+  RecaptchaVerifier,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updatePhoneNumber,
   verifyPasswordResetCode,
-  applyActionCode,
 } from 'firebase/auth';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase-config';
 
 import { usePlatform } from '../hooks/usePlatform';
 
-const UserAuthContext = createContext();
+const UserAuthContext = createContext(undefined);
 
 export const AuthContextProvider = ({ children }) => {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState<any>(true);
   const [isUpdatingPhone, setIsUpdatingPhone] = useState(false);
   const { cleanPlatformData } = usePlatform();
 
@@ -68,7 +68,7 @@ export const AuthContextProvider = ({ children }) => {
     div.style.display = 'none';
     document.body.appendChild(div);
 
-    window.applicationVerifier = new RecaptchaVerifier(
+    (window as any).applicationVerifier = new RecaptchaVerifier(
       'recaptcha',
       {
         size: 'invisible',
@@ -86,7 +86,7 @@ export const AuthContextProvider = ({ children }) => {
   const verifyPhone = async (phone) => {
     createRecaptcha();
     const provider = new PhoneAuthProvider(auth);
-    return provider.verifyPhoneNumber(phone, window.applicationVerifier);
+    return provider.verifyPhoneNumber(phone, (window as any).applicationVerifier);
   };
 
   const updatePhone = (vId, code) => {
@@ -134,4 +134,4 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-export const useUserAuth = () => useContext(UserAuthContext);
+export const useUserAuth = () => useContext(UserAuthContext) as any;

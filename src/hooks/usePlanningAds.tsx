@@ -1,12 +1,12 @@
-import { useMemo, useState, useEffect } from 'react';
 import dayjs from 'dayjs';
+import { useEffect, useMemo, useState } from 'react';
+import { useUserAuth } from '../contexts/AuthContext';
 import useApi from './useApi';
 import useVendors from './useVendors';
-import { useUserAuth } from '../contexts/AuthContext';
 
 let fnDelays = null;
 function usePlanningAds({ dateRange }) {
-  const { vendors } = useVendors();
+  const { vendors } = useVendors(undefined);
   const { vendorsObj, display, vendorsArr } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);

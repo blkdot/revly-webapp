@@ -1,19 +1,17 @@
-import React from 'react';
-
 import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import PaperKit from '../../kits/paper/PaperKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 
-import Layers from '../../assets/icons/Layers';
-import Tag from '../../assets/icons/Tag';
-import CloseIcon from '../../assets/images/ic_close.png';
-import Switch from '../../assets/icons/Switch';
 import Basket from '../../assets/icons/Basket';
+import Layers from '../../assets/icons/Layers';
+import Switch from '../../assets/icons/Switch';
+import Tag from '../../assets/icons/Tag';
 import UserGroup from '../../assets/icons/UserGroup';
+import CloseIcon from '../../assets/images/ic_close.png';
 
-const MarketingOfferFilter = (props) => {
+const MarketingOfferFilter = (props: any) => {
   const {
     CloseFilterPopup,
     openedFilter,

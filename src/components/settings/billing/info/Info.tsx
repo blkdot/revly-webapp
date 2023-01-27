@@ -1,11 +1,10 @@
-import React from 'react';
 import { Zoom } from '@mui/material';
 
 import './Info.scss';
 
 import ButtonKit from '../../../../kits/button/ButtonKit';
 
-const Info = (props) => {
+const Info = (props: any) => {
   const { name, address, phone, onDelete, onEdit } = props;
 
   return (

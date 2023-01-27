@@ -1,16 +1,14 @@
-import React from 'react';
-
 import './AccountSettingForm.scss';
 
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import AutoCompleteKit from '../../../kits/autoComplete/AutoCompleteKit';
 import PhoneInputKit from '../../../kits/phoneInput/PhoneInputKit';
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
 import onlyNumber from '../../../utlls/input/onlyNumber';
 
 import country from '../../../data/country.json';
 
-const AccountSettingForm = (props) => {
+const AccountSettingForm = (props: any) => {
   const {
     valueName,
     valueRestoName,

@@ -1,12 +1,10 @@
-import React from 'react';
-
 import './MenuDropdown.scss';
 
 import FormcontrolKit from '../../../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../../../kits/inputlabel/InputLabelKit';
 import SelectKit from '../../../../kits/select/SelectKit';
 
-const MenuDropdown = (props) => {
+const MenuDropdown = (props: any) => {
   const {
     label,
     items,

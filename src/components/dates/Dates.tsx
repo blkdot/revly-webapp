@@ -1,47 +1,47 @@
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
-import './Dates.scss';
-import React, { useEffect, useState } from 'react';
-import {
-  endOfMonth,
-  endOfWeek,
-  getWeek,
-  getMonth,
-  startOfWeek,
-  startOfMonth,
-  subDays,
-  subWeeks,
-  subMonths,
-  format,
-  getYear,
-  addYears,
-  isSameYear,
-  startOfYear,
-  isSameWeek,
-  isSameDay,
-  isSameMonth,
-} from 'date-fns';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {
+  addYears,
+  endOfMonth,
+  endOfWeek,
+  format,
+  getMonth,
+  getWeek,
+  getYear,
+  isSameDay,
+  isSameMonth,
+  isSameWeek,
+  isSameYear,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+  subDays,
+  subMonths,
+  subWeeks,
+} from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import DatePickerKit from '../../kits/datePicker/DatePickerKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import useDate from '../../hooks/useDate';
-import DateSelect from './DateSelect';
-import AfterPeriodSelect from './AfterPeriodSelect';
-import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderkit';
-import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import switchIcon from '../../assets/images/Switch.png';
-import { getAllDateSetup } from '../../utlls/date/getAllDateSetup';
+import useDate from '../../hooks/useDate';
+import ButtonKit from '../../kits/button/ButtonKit';
+import DatePickerKit from '../../kits/datePicker/DatePickerKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import SelectKit from '../../kits/select/SelectKit';
+import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderkit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
+import PaperKit from '../../kits/paper/PaperKit';
+import SelectKit from '../../kits/select/SelectKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import { getAllDateSetup } from '../../utlls/date/getAllDateSetup';
+import AfterPeriodSelect from './AfterPeriodSelect';
+import './Dates.scss';
+import DateSelect from './DateSelect';
 
-const Dates = (props) => {
+const Dates = (props: any) => {
   const {
     isDashboard,
     beforePeriodBtn,
@@ -87,7 +87,7 @@ const Dates = (props) => {
   };
   const [expanded, setExpanded] = useState(getExpanded());
   const [title, setTitle] = useState(defaultTitle || titleDateContext);
-  const [beforePeriod, setbeforePeriod] = useState([
+  const [beforePeriod, setbeforePeriod] = useState<any>([
     {
       startDate: new Date(
         beforePeriodBtn ? beforePeriodBtn.startDate : beforePeriodContext.startDate,
@@ -96,7 +96,7 @@ const Dates = (props) => {
       key: 'selection',
     },
   ]);
-  const [afterPeriod, setafterPeriod] = useState([
+  const [afterPeriod, setafterPeriod] = useState<any>([
     {
       startDate: new Date(afterPeriodContext.startDate),
       endDate: new Date(afterPeriodContext.endDate),
@@ -607,7 +607,7 @@ const Dates = (props) => {
       });
     }
 
-    if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
+    if (getMonth(startDate) === getMonth(subMonths(date, 1))) {
       setTitleafterPeriod('last month');
       setDateContext({
         ...dateContext,
@@ -763,7 +763,7 @@ const Dates = (props) => {
         beforePeriodContextEndGetDate ===
           (new Date(beforePeriodContextEnd).getFullYear() === new Date().getFullYear() + 1
             ? new Date().getDate()
-            : endOfMonth(beforePeriodContextEnd, 1).getDate())
+            : endOfMonth(beforePeriodContextEnd).getDate())
       ) {
         return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
           beforePeriodContextStart,
@@ -788,7 +788,7 @@ const Dates = (props) => {
         beforePeriodContextBtnEndGetDate ===
           (new Date(beforePeriodContextStartBtn).getFullYear() === new Date().getFullYear() + 1
             ? new Date().getDate()
-            : endOfMonth(beforePeriodContextStartBtn, 1).getDate())
+            : endOfMonth(beforePeriodContextStartBtn).getDate())
       ) {
         return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
           beforePeriodContextStartBtn,
@@ -810,7 +810,7 @@ const Dates = (props) => {
 
     if (
       afterPeriodContextStartGetDate === 1 &&
-      afterPeriodContextEndGetDate === endOfMonth(afterPeriodContextEnd, 1).getDate()
+      afterPeriodContextEndGetDate === endOfMonth(afterPeriodContextEnd).getDate()
     ) {
       return `${format(afterPeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
         afterPeriodContextStart,
@@ -862,7 +862,7 @@ const Dates = (props) => {
       return (
         <DatePickerKit
           onRangeFocusChange={(e) => e}
-          minDate={new Date(minDate)}
+          minDate={new Date(minDate.unix())}
           maxDate={offer ? new Date(addYears(new Date(), 1)) : new Date()}
           onChange={handleOnChange}
           showSelectionPreview
@@ -913,7 +913,7 @@ const Dates = (props) => {
     ) : (
       <DatePickerKit
         onRangeFocusChange={(e) => e}
-        minDate={new Date(minDate)}
+        minDate={new Date(minDate.unix())}
         maxDate={offer ? new Date(addYears(new Date(), 1)) : new Date()}
         onChange={handleOnChange}
         showSelectionPreview
@@ -1105,7 +1105,7 @@ const Dates = (props) => {
             ) : (
               <DatePickerKit
                 onRangeFocusChange={(e) => e}
-                minDate={new Date(minDate)}
+                minDate={new Date(minDate.unix())}
                 maxDate={new Date()}
                 onChange={handleOnChangeAfterPeriod}
                 showSelectionPreview

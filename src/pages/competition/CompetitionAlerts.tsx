@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
+import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
+import competitorIcon from '../../assets/images/ic_competitor.png';
+import PlatformIcon from '../../assets/images/ic_select_platform.png';
+import ictalabat from '../../assets/images/talabat-favicon.png';
+import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
+import Competitor from '../../components/competitor/Competitor';
 import Dates from '../../components/dates/Dates';
 import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import './Competition.scss';
-import Competitor from '../../components/competitor/Competitor';
-import PlatformIcon from '../../assets/images/ic_select_platform.png';
-import competitorIcon from '../../assets/images/ic_competitor.png';
-import useApi from '../../hooks/useApi';
+import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from '../../components/tableRevly/TableRevly';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
-import ictalabat from '../../assets/images/talabat-favicon.png';
-import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
-import TableRevly from '../../components/tableRevly/TableRevly';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import PaperKit from '../../kits/paper/PaperKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
+import './Competition.scss';
 
 let fnDelays = null;
 
@@ -188,7 +188,7 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     if (platform && vendorsArr.length) {
-      const arr = Object.keys(vendorsObj).filter((v) => v === platform);
+      const arr: any = Object.keys(vendorsObj).filter((v) => v === platform);
 
       const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsObj[arr] }), {});
 

@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react';
-import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
+import { useMemo, useState } from 'react';
+import { useUserAuth } from '../contexts/AuthContext';
+import { vendorsAtom } from '../store/vendorsAtom';
 import useApi from './useApi';
 import useDate from './useDate';
-import { vendorsAtom } from '../store/vendorsAtom';
-import { useUserAuth } from '../contexts/AuthContext';
 
 let fnDelays = null;
 
@@ -18,7 +18,7 @@ function useMetrics() {
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
 
-  const clonedVendor = { ...vendorsObj };
+  const clonedVendor: any = { ...vendorsObj };
   delete clonedVendor.display;
 
   const [loading, setLoading] = useState(false);

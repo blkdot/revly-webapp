@@ -1,12 +1,11 @@
-import * as React from 'react';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import SelectKit from '../../kits/select/SelectKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import RestaurantCheckboxAccordion from '../restaurantDropdown/RestaurantCheckboxAccardion';
 import RadioKit from '../../kits/radio/RadioKit';
+import SelectKit from '../../kits/select/SelectKit';
+import RestaurantCheckboxAccordion from '../restaurantDropdown/RestaurantCheckboxAccardion';
 
 const MarketingCheckmarksDropdown = ({
   personName,
@@ -18,7 +17,7 @@ const MarketingCheckmarksDropdown = ({
   type,
   height,
   platform,
-}) => {
+}: any) => {
   const ITEM_HEIGHT = height || 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -29,7 +28,7 @@ const MarketingCheckmarksDropdown = ({
       },
     },
   };
-  const { chainObj, display, vendorsArr } = type === 'vendor' ? personName : {};
+  const { chainObj, display, vendorsArr } = type === 'vendor' ? personName : ({} as any);
   const handleChange = (event) => {
     const {
       target: { value },

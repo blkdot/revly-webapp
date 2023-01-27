@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useState } from 'react';
 
 import './ResetPasswordForm.scss';
 
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
-const ResetPasswordForm = (props) => {
+const ResetPasswordForm = (props: any) => {
   const {
     onChangeNewPassword,
     errorNewPassword,

@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import './SignUpForm.scss';
 
-import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 import ButtonKit from '../../../../kits/button/ButtonKit';
-import PhoneInputKit from '../../../../kits/phoneInput/PhoneInputKit';
-import TypographyKit from '../../../../kits/typography/TypographyKit';
-import FormGroupKit from '../../../../kits/formGroup/FormGroupKit';
-import FormControlLabelKit from '../../../../kits/formControlLabel/FormControlLabel';
 import CheckboxKit from '../../../../kits/checkbox/CheckboxKit';
+import FormControlLabelKit from '../../../../kits/formControlLabel/FormControlLabel';
+import FormGroupKit from '../../../../kits/formGroup/FormGroupKit';
+import PhoneInputKit from '../../../../kits/phoneInput/PhoneInputKit';
+import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
+import TypographyKit from '../../../../kits/typography/TypographyKit';
 
 import onlyNumber from '../../../../utlls/input/onlyNumber';
 
-const SignUpForm = (props) => {
+const SignUpForm = (props: any) => {
   const {
     onChangeEmail,
     onChangePassword,

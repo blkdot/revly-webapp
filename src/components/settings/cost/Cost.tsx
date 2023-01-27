@@ -1,7 +1,7 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import './Cost.scss';
 import DropdownSnackbar from './DropdownSnackbar';
@@ -9,14 +9,14 @@ import Invoice from './invoice/Invoice';
 
 import useCost from '../../../hooks/useCost';
 
-import SpinnerKit from '../../../kits/spinner/SpinnerKit';
 import useVendors from '../../../hooks/useVendors';
+import SpinnerKit from '../../../kits/spinner/SpinnerKit';
 
 const Cost = () => {
   const queryClient = useQueryClient();
   const [invoice, setInvoice] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
-  const { vendors } = useVendors();
+  const { vendors } = useVendors(undefined);
   const { vendorsObj } = vendors;
 
   const { load, save } = useCost(vendorsObj);
@@ -32,7 +32,7 @@ const Cost = () => {
             if (element) {
               const value = data[platform][id].cost;
 
-              const percent = parseFloat(value, 36) * 100;
+              const percent = parseFloat(value) * 100;
 
               const res = {
                 id,

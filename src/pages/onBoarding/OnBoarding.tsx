@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MdLogout } from 'react-icons/md';
-import { IoMdHelp } from 'react-icons/io';
 import { pascalCase } from 'change-case';
+import { CSSProperties, useEffect, useState } from 'react';
+import { IoMdHelp } from 'react-icons/io';
+import { MdLogout } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 import './OnBoarding.scss';
 
-import OnBoardingForm from '../../components/onboarding/OnBoarding';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
+import OnBoardingForm from '../../components/onboarding/OnBoarding';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
 
-import ModalKit from '../../kits/modal/ModalKit';
+import HighOrderBlock from '../../components/highOrderBlock/HighOrderBlock';
 import Stepper from '../../components/stepper/Stepper';
 import ButtonKit from '../../kits/button/ButtonKit';
 import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
+import ModalKit from '../../kits/modal/ModalKit';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
-import HighOrderBlock from '../../components/highOrderBlock/HighOrderBlock';
 
-import useApi from '../../hooks/useApi';
 import { useUserAuth } from '../../contexts/AuthContext';
-import { usePlatform } from '../../hooks/usePlatform';
 import { useAlert } from '../../hooks/useAlert';
+import useApi from '../../hooks/useApi';
+import { usePlatform } from '../../hooks/usePlatform';
 
 import { platformList } from '../../data/platformList';
 
@@ -36,7 +36,7 @@ const defaultSteps = [
 
 const defaultSelected = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: false }), {});
 
-const style = {
+const style: CSSProperties = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -44,7 +44,7 @@ const style = {
   width: 600,
   backgroundColor: '#ffffff',
   borderRadius: '0.4rem',
-  boxShadow: 24,
+  boxShadow: '24',
   padding: '1rem',
   border: '0',
 };
@@ -63,7 +63,7 @@ const OnBoarding = () => {
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform, settingsLogin } = useApi();
   const { user, logOut } = useUserAuth();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
+  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
   const navigate = useNavigate();
 
   const isAllNotSelected = () => Object.values(selectedPlatform).every((v) => !v);
@@ -213,7 +213,7 @@ const OnBoarding = () => {
     triggerAlertWithMessageSuccess(`You ${currentPlatform.name} account has been
     linked successfully`);
 
-    const nextStep = await getNextKeySteps(1);
+    const nextStep: any = await getNextKeySteps(1);
     setStep(nextStep[0]);
   };
 
@@ -389,7 +389,7 @@ const OnBoarding = () => {
   };
 
   const backTarget = async () => {
-    const prevtarget = await getPrevKeySteps();
+    const prevtarget: any = await getPrevKeySteps();
 
     setStep(prevtarget[0]);
   };
@@ -401,7 +401,7 @@ const OnBoarding = () => {
       offset = 1;
     }
 
-    const nexttargetR = await getNextKeySteps(offset);
+    const nexttargetR: any = await getNextKeySteps(offset);
 
     setStep(nexttargetR[0]);
   };

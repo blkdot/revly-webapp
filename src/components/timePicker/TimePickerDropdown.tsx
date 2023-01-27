@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
 import getHours from 'date-fns/getHours';
 import setHours from 'date-fns/setHours';
 import _ from 'lodash';
+import { useEffect, useState } from 'react';
 
 import { setMinutes } from 'date-fns';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import SelectKit from '../../kits/select/SelectKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import { rangeHoursOpenedDay, minHour } from '../../utlls/heatmap/heatmapSelectedData';
+import SelectKit from '../../kits/select/SelectKit';
+import { minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
 
-const TimePickerDropdown = (props) => {
+const TimePickerDropdown = (props: any) => {
   const { value, setValue, times, type, index, startLimit } = props;
 
   const [disabledTimes, setDisabledTimes] = useState([]);

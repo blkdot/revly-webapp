@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import SpinnerKit from '../kits/spinner/SpinnerKit';
 
@@ -11,7 +11,7 @@ import { usePlatform } from '../hooks/usePlatform';
 import config from '../setup/config';
 
 const ProtectedOnboardRoutes = () => {
-  const [allowed, setAllowed] = useState(false);
+  const [allowed, setAllowed] = useState<any>(false);
   const [preAllowed, setPreAllowed] = useState(false);
   const { user } = useUserAuth();
   const { settingsLogin, settingsOnboarded } = useApi();
@@ -85,7 +85,7 @@ const ProtectedOnboardRoutes = () => {
     };
   });
 
-  if (allowed instanceof Error) return <Navigate to="/onboarding" />;
+  if ((allowed as any) instanceof Error) return <Navigate to="/onboarding" />;
 
   if (!allowed || !preAllowed) {
     return (

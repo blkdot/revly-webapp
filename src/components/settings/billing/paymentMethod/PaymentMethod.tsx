@@ -1,11 +1,9 @@
-import React from 'react';
-
 import './PaymentMethod.scss';
 
 import mastercard from '../../../../assets/images/mastercard.svg';
 import visa from '../../../../assets/images/visa.svg';
 
-const PaymentMethod = (props) => {
+const PaymentMethod = (props: any) => {
   const { cvv, type } = props;
 
   return (

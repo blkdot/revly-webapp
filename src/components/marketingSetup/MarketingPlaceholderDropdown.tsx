@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import SelectKit from '../../kits/select/SelectKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import SelectKit from '../../kits/select/SelectKit';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,7 +32,7 @@ const MarketingPlaceholderDropdown = ({
   className,
   readOnly,
   handleChange,
-}) => {
+}: any) => {
   const theme = useTheme();
 
   const handleChangeValue = (event) => {

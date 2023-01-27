@@ -1,11 +1,10 @@
-import React from 'react';
 import CostIcon from '../../../../assets/icons/CostIcon';
 
 import logo from '../../../../assets/images/small-logo.png';
 
 import ButtonKit from '../../../../kits/button/ButtonKit';
 
-const Invoice = (props) => {
+const Invoice = (props: any) => {
   const { restaurant, cost, onDelete } = props;
 
   return (

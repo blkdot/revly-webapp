@@ -1,10 +1,8 @@
-import React from 'react';
-
 import './PlatformSelector.scss';
 
 import PlatformBoxSelector from '../platformBoxSelector/PlatformBoxSelector';
 
-const PlatformSelector = (props) => {
+const PlatformSelector = (props: any) => {
   const { items, onClickItem, state, platforms, noText, errors, success } = props;
 
   const getState = (n) => state[n] === true;

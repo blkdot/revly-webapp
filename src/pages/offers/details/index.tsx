@@ -1,26 +1,26 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
-import MenuItem from './MenuItem';
-import useVendors from '../../../hooks/useVendors';
-import PaperKit from '../../../kits/paper/PaperKit';
 import Arrow from '../../../assets/icons/Arrow';
-import Warning from '../../../assets/icons/Warning';
 import Calendar from '../../../assets/icons/Calendar';
-import Timer from '../../../assets/icons/Timer';
 import ExpandIcon from '../../../assets/icons/ExpandIcon';
 import FastFood from '../../../assets/icons/FastFood';
+import Timer from '../../../assets/icons/Timer';
+import Warning from '../../../assets/icons/Warning';
+import useVendors from '../../../hooks/useVendors';
+import PaperKit from '../../../kits/paper/PaperKit';
+import MenuItem from './MenuItem';
 
-import { platformObject } from '../../../data/platformList';
-import './OfferDetails.scss';
-import useApi from '../../../hooks/useApi';
-import { useUserAuth } from '../../../contexts/AuthContext';
-import { usePlatform } from '../../../hooks/usePlatform';
-import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import { getPlanningOfferDetails } from '../../../api/userApi';
-import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+import CancelOfferModal from '../../../components/modals/cancelOfferModal';
+import { useUserAuth } from '../../../contexts/AuthContext';
+import { platformObject } from '../../../data/platformList';
+import useApi from '../../../hooks/useApi';
+import { usePlatform } from '../../../hooks/usePlatform';
 import SkeletonKit from '../../../kits/skeleton/SkeletonKit';
+import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+import './OfferDetails.scss';
 
 const scheduleTypeMapping = {
   once: 'Once',
@@ -33,14 +33,14 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
-  const [offerDetailMaster, setofferDetailMaster] = useState({});
+  const [offerDetailMaster, setofferDetailMaster] = useState<any>({});
   const {
     userPlatformData: { platforms },
   } = usePlatform();
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { vendors } = useVendors();
+  const { vendors } = useVendors(undefined);
   const { vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {

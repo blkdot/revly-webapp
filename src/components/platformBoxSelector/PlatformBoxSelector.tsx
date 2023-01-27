@@ -1,10 +1,8 @@
-import React from 'react';
-
 import { FcCheckmark } from 'react-icons/fc';
 
 import './PlatformBoxSelector.scss';
 
-const PlatformBoxSelector = (props) => {
+const PlatformBoxSelector = (props: any) => {
   const { item, onClickItem, classActive, platforms, classError, classSuccess } = props;
   const { name, src } = item;
 
@@ -31,7 +29,7 @@ const PlatformBoxSelector = (props) => {
       onClick={() => onClickItem(name)}
       onKeyDown={() => onClickItem(name)}
       role="button"
-      tabIndex="0"
+      tabIndex={0}
     >
       {renderIcon()}
       <img src={src} alt={name} width="100" />

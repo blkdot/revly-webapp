@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import './SignIn.scss';
 
-import { useUserAuth } from '../../contexts/AuthContext';
 import SigninForm from '../../components/forms/signinForm/SigninForm';
-import { useAlert } from '../../hooks/useAlert';
+import { useUserAuth } from '../../contexts/AuthContext';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
+import { useAlert } from '../../hooks/useAlert';
 import useVendors from '../../hooks/useVendors';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '', remembered: true });
   const [processing, setProcessing] = useState(false);
-  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert('error');
-  const [errorData, setErrorData] = useState({ email: false, password: false });
+  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
+  const [errorData, setErrorData] = useState<any>({ email: false, password: false });
   const [params] = useSearchParams();
   const { setVendors } = useVendors(true);
   const { setVendors: setVendorsReq } = useVendors(true);

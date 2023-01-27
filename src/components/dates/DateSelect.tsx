@@ -1,7 +1,4 @@
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
-import './Dates.scss';
-import React, { useState, useEffect } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   endOfMonth,
   endOfWeek,
@@ -15,14 +12,17 @@ import {
   subMonths,
   subWeeks,
 } from 'date-fns';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
+import React, { useEffect, useState } from 'react';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import AccordionKit from '../../kits/accordion/AccordionKit';
 import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
+import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
+import ButtonKit from '../../kits/button/ButtonKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import './Dates.scss';
 
-const DateSelect = React.memo((props) => {
+const DateSelect = React.memo((props: any) => {
   const [active, setActive] = useState('current');
   const {
     type,

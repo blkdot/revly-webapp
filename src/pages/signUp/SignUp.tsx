@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import './SignUp.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
-import { useAlert } from '../../hooks/useAlert';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
+import { useAlert } from '../../hooks/useAlert';
 
+import { verifyEmail } from '../../api/userApi';
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 import useApi from '../../hooks/useApi';
-import { verifyEmail } from '../../api/userApi';
 
 const SignUp = () => {
   const [value, setValue] = useState({
@@ -26,8 +26,8 @@ const SignUp = () => {
   });
   const { settingsSave } = useApi();
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
-  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert('error');
-  const [errorData, setErrorData] = useState({
+  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
+  const [errorData, setErrorData] = useState<any>({
     email: false,
     password: false,
     fname: false,

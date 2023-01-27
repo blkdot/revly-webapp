@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAtom } from 'jotai';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useAtom } from 'jotai';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './Navbar.scss';
 
 import { useUserAuth } from '../../contexts/AuthContext';
-import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
 import AccordionKit from '../../kits/accordion/AccordionKit';
 import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
 import ButtonKit from '../../kits/button/ButtonKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 import Navlink from '../navlink/Navlink';
 
-import logo from '../../assets/images/logo.png';
-import smallLogo from '../../assets/images/small-logo.png';
-import arrow from '../../assets/images/navbar-arrow.png';
 import logoutIcon from '../../assets/images/ic_logout.png';
 import settingsIcon from '../../assets/images/ic_settings.png';
 import lines from '../../assets/images/lines.png';
+import logo from '../../assets/images/logo.png';
+import arrow from '../../assets/images/navbar-arrow.png';
+import smallLogo from '../../assets/images/small-logo.png';
 
-import { simpleLink, accordionLink } from '../../data/navbarData';
+import { accordionLink, simpleLink } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState<any>(false);
 
   const { logOut } = useUserAuth();
   const navigate = useNavigate();

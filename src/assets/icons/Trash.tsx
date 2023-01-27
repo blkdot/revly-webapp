@@ -1,6 +1,4 @@
-import React from 'react';
-
-const Trash = (props) => (
+const Trash = (props: any) => (
   <svg
     width="23"
     height="22"

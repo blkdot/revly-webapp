@@ -1,29 +1,28 @@
-import React from 'react';
-import { format } from 'date-fns';
 import RemoveIcon from '@mui/icons-material/Remove';
-import CloseIcon from '../../assets/images/ic_close.png';
-import ButtonKit from '../../kits/button/ButtonKit';
-import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
-import GetProgress from './MarketingGetProgress';
-import talabat from '../../assets/images/talabat.png';
-import deliveroo from '../../assets/images/deliveroo.png';
+import { format } from 'date-fns';
 import ArrowIcon from '../../assets/images/arrow.png';
+import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
-import TimerIcon from '../../assets/images/ic_timer.png';
-import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
-import selectIcon from '../../assets/images/ic_select.png';
 import CalendarCheckGrayIcon from '../../assets/images/ic_calendar-check-gray.png';
 import CalendarCloseGrayIcon from '../../assets/images/ic_calendar-close-gray.png';
+import CloseIcon from '../../assets/images/ic_close.png';
+import CreatedIcon from '../../assets/images/ic_created.png';
+import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
+import menuIcon from '../../assets/images/ic_menu.png';
+import selectIcon from '../../assets/images/ic_select.png';
 import TimerCheckGrayIcon from '../../assets/images/ic_timer-check-gray.png';
 import TimerCloseGrayIcon from '../../assets/images/ic_timer-close-gray.png';
-import CreatedIcon from '../../assets/images/ic_created.png';
+import TimerIcon from '../../assets/images/ic_timer.png';
 import plus from '../../assets/images/plus.png';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import talabat from '../../assets/images/talabat.png';
 import BoxKit from '../../kits/box/BoxKit';
+import ButtonKit from '../../kits/button/ButtonKit';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import menuIcon from '../../assets/images/ic_menu.png';
-import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
+import TypographyKit from '../../kits/typography/TypographyKit';
 import { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
+import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
+import GetProgress from './MarketingGetProgress';
+import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 
 const GetRecap = ({ recapData }) => {
   const {
@@ -58,7 +57,7 @@ const GetRecap = ({ recapData }) => {
     platformData,
     vendors,
   } = recapData;
-  const handleChange = (e, type, index, order) => {
+  const handleChange = (e, type, index, order?) => {
     if (order === 'launch') {
       if (type === 'order') {
         launchOrder[index + 1] = {

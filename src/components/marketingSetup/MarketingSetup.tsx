@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { addDays, addHours, format, startOfWeek, subWeeks, endOfWeek, addMinutes } from 'date-fns';
-import { useAtom } from 'jotai';
-import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 import { Tooltip } from '@mui/material';
+import { addDays, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
+import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
 import _ from 'lodash';
+import { nanoid } from 'nanoid';
+import React, { useEffect, useState } from 'react';
 
-import Dates from '../dates/Dates';
-import ButtonKit from '../../kits/button/ButtonKit';
-import './MarketingSetup.scss';
-import PaperKit from '../../kits/paper/PaperKit';
-import ContainerKit from '../../kits/container/ContainerKit';
+import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
-import { usePlatform } from '../../hooks/usePlatform';
 import { useUserAuth } from '../../contexts/AuthContext';
-import useApi from '../../hooks/useApi';
 import { useAlert } from '../../hooks/useAlert';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import useApi from '../../hooks/useApi';
+import { usePlatform } from '../../hooks/usePlatform';
 import BoxKit from '../../kits/box/BoxKit';
-import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
-import { rangeHoursOpenedDay, minHour, maxHour } from '../../utlls/heatmap/heatmapSelectedData';
-import GetRecap from './GetRecap';
-import { vendorsAtom } from '../../store/vendorsAtom';
-import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import ButtonKit from '../../kits/button/ButtonKit';
+import ContainerKit from '../../kits/container/ContainerKit';
+import PaperKit from '../../kits/paper/PaperKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
+import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import { vendorsAtom } from '../../store/vendorsAtom';
+import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
+import { maxHour, minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
+import Dates from '../dates/Dates';
+import GetRecap from './GetRecap';
+import './MarketingSetup.scss';
 
 const defaultHeatmapState = {
   Monday: {},
@@ -39,7 +39,7 @@ const defaultHeatmapState = {
 
 const defaultRangeColorIndices = [0, 0, 0, 0];
 
-const MarketingSetup = ({ active, setActive, ads }) => {
+const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { userPlatformData } = usePlatform();
   const [platform, setPlatform] = useState([
     userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat',
@@ -73,9 +73,9 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   const [vendors] = useAtom(vendorsAtom);
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
-  const { triggerAlertWithMessageError } = useAlert('error');
+  const { triggerAlertWithMessageError } = useAlert();
   const { getMenu } = useApi();
-  const { vendorsObj, vendorsArr } = vendors;
+  const { vendorsObj, vendorsArr } = vendors as any;
   const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
   const [branchData, setBranchData] = useState(
     vendorsObj?.[platformData]?.[0]?.data?.vendor_name || '',
@@ -91,10 +91,15 @@ const MarketingSetup = ({ active, setActive, ads }) => {
         null,
         null,
         null,
-        format(new Date(), 'HH'),
-        format(new Date(addMinutes(new Date(), 2)), 'mm'),
+        // TODO: FIX IT
+        // format(new Date(), 'HH'),
+        // format(new Date(addMinutes(new Date(), 2)), 'mm'),
+        null,
+        null,
       ),
-      endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+      // TODO: FIX IT
+      // endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+      endTime: new Date(null, null, null, null, 0),
       pos: 1,
     },
   ]);
@@ -163,8 +168,12 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       setTypeSchedule('Continues Offer');
       setTimes([
         {
-          startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-          endTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+          // TODO: FIX IT
+          // startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+          startTime: new Date(null, null, null, null, 0),
+          // TODO: FIX IT
+          // endTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
+          endTime: new Date(null, null, null, null, 0),
           pos: 1,
         },
       ]);
@@ -183,10 +192,15 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           null,
           null,
           null,
-          format(new Date(), 'HH'),
-          format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          // TODO: FIX IT
+          // format(new Date(), 'HH'),
+          // format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          null,
+          null,
         ),
-        endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+        // TODO: FIX IT
+        // endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
+        endTime: new Date(null, null, null, null, null),
         pos: 1,
       },
     ]);
@@ -202,10 +216,16 @@ const MarketingSetup = ({ active, setActive, ads }) => {
           null,
           null,
           null,
-          format(new Date(), 'HH'),
-          format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          // TODO: FIX IT
+          // format(new Date(), 'HH'),
+          null,
+          // TODO: FIX IT
+          // format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          null,
         ),
-        endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+        // TODO: FIX IT
+        // endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
+        endTime: new Date(null, null, null, null, 0),
         pos: 1,
       },
     ]);
@@ -990,7 +1010,8 @@ const MarketingSetup = ({ active, setActive, ads }) => {
             <Tooltip
               className="absolute"
               placement="top-start"
-              style={{ '--i': num - 5 }}
+              // TODO: FIX IT
+              // style={{ '--i': num - 5 }}
               title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
               key={num}
               arrow
@@ -1184,6 +1205,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
   );
 };
 // eslint-disable-next-line
-const ItemHeatmap = React.forwardRef((props, ref) => <div {...props} ref={ref} />);
+const ItemHeatmap = React.forwardRef((props: any, ref: any) => <div {...props} ref={ref} />);
 
 export default MarketingSetup;

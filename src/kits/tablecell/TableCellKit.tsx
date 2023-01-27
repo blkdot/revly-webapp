@@ -1,6 +1,5 @@
-import React from 'react';
 import { TableCell } from '@mui/material';
 
-const TableCellKit = (props) => <TableCell {...props} />;
+const TableCellKit = (props: any) => <TableCell {...props} />;
 
 export default TableCellKit;

@@ -1,10 +1,9 @@
-import React from 'react';
-import { styled } from '@mui/material/styles';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import { styled } from '@mui/material/styles';
 
-import StepperKit from '../../kits/stepper/StepperKit';
 import StepKit from '../../kits/step/StepKit';
 import StepLabelKit from '../../kits/stepLabel/StepLabel';
+import StepperKit from '../../kits/stepper/StepperKit';
 
 import icrevly from '../../assets/images/small-logo-white.png';
 
@@ -30,7 +29,7 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
 }));
 
-const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
+const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }: any) => ({
   backgroundColor: theme.palette.grey[500],
   zIndex: 1,
   color: theme.palette.primary.icon,
@@ -49,17 +48,19 @@ const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   }),
 }));
 
-const ColorlibStepIcon = (props) => {
+const ColorlibStepIcon = (props: any) => {
   const { active, completed, className } = props;
 
   return (
-    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+    // TODO: FIX IT
+    // <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+    <ColorlibStepIconRoot className={className}>
       <img width={16} height={20} src={icrevly} alt="revly" />
     </ColorlibStepIconRoot>
   );
 };
 
-const Stepper = (props) => {
+const Stepper = (props: any) => {
   const { steps, step } = props;
 
   return (

@@ -1,22 +1,22 @@
-import * as React from 'react';
 import { useAtom } from 'jotai';
+import * as React from 'react';
 
-import './RestaurantDropdown.scss';
-import { usePlatform } from '../../hooks/usePlatform';
-import SelectKit from '../../kits/select/SelectKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import talabat from '../../assets/images/talabat-favicon.png';
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import talabat from '../../assets/images/talabat-favicon.png';
+import { platformList } from '../../data/platformList';
+import { usePlatform } from '../../hooks/usePlatform';
 import useVendors from '../../hooks/useVendors';
 import ButtonKit from '../../kits/button/ButtonKit';
+import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import MenuItemKit from '../../kits/menuItem/MenuItemKit';
+import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import SelectKit from '../../kits/select/SelectKit';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
-import { platformList } from '../../data/platformList';
+import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
+import './RestaurantDropdown.scss';
 
 const ITEM_HEIGHT = 110;
 const ITEM_PADDING_TOP = 8;
@@ -31,9 +31,16 @@ const MenuProps = {
   },
 };
 
-const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost, listing }) => {
+const RestaurantDropdownOld = ({
+  vendors,
+  vendorsSelected,
+  state,
+  setState,
+  cost,
+  listing,
+}: any) => {
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq } = useVendors();
+  const { vendors: vendorsReq } = useVendors(undefined);
   const { userPlatformData } = usePlatform();
   React.useEffect(() => {
     if (vendorsReq.vendorsArr.length > 0) {

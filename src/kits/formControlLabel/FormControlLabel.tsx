@@ -1,6 +1,5 @@
-import React from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-const FormControlLabelKit = (props) => <FormControlLabel {...props} />;
+const FormControlLabelKit = (props: any) => <FormControlLabel {...props} />;
 
 export default FormControlLabelKit;

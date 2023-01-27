@@ -1,6 +1,5 @@
 import { TimePicker } from '@mui/x-date-pickers';
-import React from 'react';
 
-const TimePickerKit = (props) => <TimePicker {...props} />;
+const TimePickerKit = (props: any) => <TimePicker {...props} />;
 
 export default TimePickerKit;

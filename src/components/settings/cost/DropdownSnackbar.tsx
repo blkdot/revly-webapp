@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAtom } from 'jotai';
-import { vendorsAtom } from '../../../store/vendorsAtom';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import RestaurantDropdownNew from '../../restaurantDropdown/RestaurantDropdownNew';
 import { usePlatform } from '../../../hooks/usePlatform';
-import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
 import useVendors from '../../../hooks/useVendors';
+import ButtonKit from '../../../kits/button/ButtonKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import { vendorsAtom } from '../../../store/vendorsAtom';
+import RestaurantDropdownNew from '../../restaurantDropdown/RestaurantDropdownNew';
+import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';
 
-const DropdownSnackbar = (props) => {
+const DropdownSnackbar = (props: any) => {
   // eslint-disable-next-line no-unused-vars
   const { onAdd, isUpdate, setIsUpdate, invoice } = props;
   const [vendors, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq } = useVendors();
+  const { vendors: vendorsReq } = useVendors(undefined);
   useEffect(() => {
     if (vendorsReq.vendorsArr.length < 0) {
       setVendors(vendorsReq);
     }
   }, [vendorsReq]);
   const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
-  const [procent, setProcent] = useState(0);
+  const [procent, setProcent] = useState<any>(0);
   const { userPlatformData } = usePlatform();
   const getPlatformActive = () => {
     if (userPlatformData.platforms.talabat.active && userPlatformData.platforms.deliveroo.active) {
@@ -90,7 +90,7 @@ const DropdownSnackbar = (props) => {
 
     const numCost = parseInt(strCost, 10);
 
-    const numDecimalCost = parseFloat(numCost / 100);
+    const numDecimalCost = parseFloat((numCost / 100).toString());
 
     onAdd(numDecimalCost, costVendors.vendorsObj);
   };

@@ -1,13 +1,12 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import './AuthForm.scss';
 
 import ButtonKit from '../../../kits/button/ButtonKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
+import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
-const AuthForm = (props) => {
+const AuthForm = (props: any) => {
   const {
     onChangeEmail,
     onChangePassword,

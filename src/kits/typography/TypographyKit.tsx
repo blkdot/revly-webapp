@@ -1,6 +1,5 @@
-import React from 'react';
 import Typography from '@mui/material/Typography';
 
-const TypographyKit = (props) => <Typography {...props} />;
+const TypographyKit = (props: any) => <Typography {...props} />;
 
 export default TypographyKit;

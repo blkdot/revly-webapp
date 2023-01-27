@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
 import { useAtom } from 'jotai';
+import { useEffect } from 'react';
 
-import './RestaurantDropdown.scss';
-import selectIcon from '../../assets/images/ic_select.png';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import BranchesIcon from '../../assets/images/ic_branch.png';
-import useVendors from '../../hooks/useVendors';
-import { vendorsAtom } from '../../store/vendorsAtom';
-import SelectKit from '../../kits/select/SelectKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import ButtonKit from '../../kits/button/ButtonKit';
+import selectIcon from '../../assets/images/ic_select.png';
 import { usePlatform } from '../../hooks/usePlatform';
+import useVendors from '../../hooks/useVendors';
+import ButtonKit from '../../kits/button/ButtonKit';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import SelectKit from '../../kits/select/SelectKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import { vendorsAtom } from '../../store/vendorsAtom';
+import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
+import './RestaurantDropdown.scss';
 
 const ITEM_HEIGHT = 200;
 const ITEM_PADDING_TOP = 10;
@@ -39,11 +39,11 @@ const RestaurantDropdownNew = ({
   cost,
   chainObj: chainObjProps,
   listing,
-}) => {
+}: any) => {
   const chainObj = chainObjProps;
 
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq } = useVendors();
+  const { vendors: vendorsReq } = useVendors(undefined);
   const { userPlatformData } = usePlatform();
   useEffect(() => {
     if (vendorsReq.vendorsArr.length < 0) {

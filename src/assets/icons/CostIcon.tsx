@@ -1,6 +1,4 @@
-import React from 'react';
-
-const CostIcon = ({ className }) => (
+const CostIcon = ({ className }: any) => (
   <svg
     className={className}
     xmlns="http://www.w3.org/2000/svg"

@@ -38,7 +38,7 @@ const useVendors = (isSign) => {
   useEffect(() => {
     if (isLoading || isError || isSign) return;
 
-    const newData = data;
+    const newData = data as any;
 
     delete newData?.master_email;
 

@@ -1,6 +1,5 @@
-import React from 'react';
 import { RadioGroup } from '@mui/material';
 
-const RadioGroupKit = (props) => <RadioGroup {...props} />;
+const RadioGroupKit = (props: any) => <RadioGroup {...props} />;
 
 export default RadioGroupKit;

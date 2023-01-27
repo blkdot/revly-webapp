@@ -1,12 +1,10 @@
-import React from 'react';
-
+import ButtonKit from '../../kits/button/ButtonKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
-import ButtonKit from '../../kits/button/ButtonKit';
 
 import logo from '../../assets/images/small-logo.png';
 
-const MarketingOfferRemove = (props) => {
+const MarketingOfferRemove = (props: any) => {
   const { setOpened, opened, CancelOffer } = props;
 
   return (

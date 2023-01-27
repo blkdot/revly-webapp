@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useEffect, useState } from 'react';
+import selectIcon from '../../assets/images/ic_select.png';
+import ButtonKit from '../../kits/button/ButtonKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import selectIcon from '../../assets/images/ic_select.png';
-import TooltipKit from '../../kits/toolTip/TooltipKit';
-import ButtonKit from '../../kits/button/ButtonKit';
 import RadioKit from '../../kits/radio/RadioKit';
+import TooltipKit from '../../kits/toolTip/TooltipKit';
 
 const RestaurantCheckboxAccordion = ({
   info,
@@ -20,7 +20,7 @@ const RestaurantCheckboxAccordion = ({
   vendors,
   display,
   listing,
-}) => {
+}: any) => {
   const [active, setActive] = useState(false);
   // we checking if all vendor in this chain are checked
   const getChecked = () =>
@@ -136,7 +136,8 @@ const RestaurantCheckboxAccordion = ({
             active ? 'active' : ''
           }`}
           onClick={() => setActive(!active)}
-          style={{ '--l': Object.keys(info).length }}
+          // TODO: FIX IT
+          // style={{ '--l': Object.keys(info).length }}
         >
           <div>
             <img

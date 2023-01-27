@@ -1,40 +1,40 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Route, Routes } from 'react-router-dom';
 
 import './App.scss';
 
 import { AuthContextProvider } from './contexts/AuthContext';
-import { PlatformProvider } from './contexts/PlatformContext';
 import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
+import { PlatformProvider } from './contexts/PlatformContext';
 
-import SignIn from './pages/signIn/SignIn';
-import SignUp from './pages/signUp/SignUp';
-import Dashboard from './pages/dashboard/Dashboard';
-import OnBoarding from './pages/onBoarding/OnBoarding';
-import Settings from './pages/settings/Settings';
-import ForgotPassword from './pages/forgotPassword/ForgotPassword';
-import ProtectedRoutes from './routes/ProtectedRoutes';
-import ProtectedOnboardRoutes from './routes/ProtectedOnboardRoutes';
+import AuthLayout from './components/layout/authLayout/AuthLayout';
 import Check from './pages/check/Check';
-import Planning from './pages/planning/Planning';
+import CompetitionAlerts from './pages/competition/CompetitionAlerts';
+import CompetitionListing from './pages/competition/CompetitionListing';
+import Dashboard from './pages/dashboard/Dashboard';
+import ForgotPassword from './pages/forgotPassword/ForgotPassword';
 import MarketingAds from './pages/marketing/MarketingAds';
 import MarketingOffer from './pages/marketing/MarketingOffer';
-import AuthLayout from './components/layout/authLayout/AuthLayout';
-import VerifyCode from './pages/verifyCode/VerifyCode';
+import OnBoarding from './pages/onBoarding/OnBoarding';
+import Planning from './pages/planning/Planning';
 import ResetPassword from './pages/resetPassword/ResetPassword';
-import CompetitionListing from './pages/competition/CompetitionListing';
-import CompetitionAlerts from './pages/competition/CompetitionAlerts';
+import Settings from './pages/settings/Settings';
+import SignIn from './pages/signIn/SignIn';
+import SignUp from './pages/signUp/SignUp';
+import VerifyCode from './pages/verifyCode/VerifyCode';
+import ProtectedOnboardRoutes from './routes/ProtectedOnboardRoutes';
+import ProtectedRoutes from './routes/ProtectedRoutes';
 
 const theme = createTheme({
   palette: {
     primary: {
       main: '#906BFF',
-      second: '#3AC3B1 ',
-      warning: '#FFC107',
+      // TODO: FIX IT
+      // second: '#3AC3B1 ',
+      // warning: '#FFC107',
     },
     grey: {
       500: '#919eab3d',

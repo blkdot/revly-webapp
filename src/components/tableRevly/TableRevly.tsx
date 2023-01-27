@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import './TableRevly.scss';
 
-import TableRowKit from '../../kits/tablerow/TableRowKit';
-import TableCellKit from '../../kits/tablecell/TableCellKit';
 import BoxKit from '../../kits/box/BoxKit';
 import PaperKit from '../../kits/paper/PaperKit';
-import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
+import TableCellKit from '../../kits/tablecell/TableCellKit';
+import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
+import TableRowKit from '../../kits/tablerow/TableRowKit';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
+import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 
-const TableRevly = (props) => {
+const TableRevly = (props: any) => {
   const { headers, rows, isLoading, mainFieldOrdered, onClickRow } = props;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');

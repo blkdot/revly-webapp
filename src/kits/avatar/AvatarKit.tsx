@@ -1,6 +1,5 @@
-import React from 'react';
 import { Avatar } from '@mui/material';
 
-const AvatarKit = (props) => <Avatar {...props} />;
+const AvatarKit = (props: any) => <Avatar {...props} />;
 
 export default AvatarKit;
