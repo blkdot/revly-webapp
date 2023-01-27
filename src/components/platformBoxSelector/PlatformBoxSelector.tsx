@@ -1,5 +1,4 @@
 import { FcCheckmark } from 'react-icons/fc';
-
 import './PlatformBoxSelector.scss';
 
 const PlatformBoxSelector = (props: any) => {

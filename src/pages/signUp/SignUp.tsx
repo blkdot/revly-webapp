@@ -1,16 +1,13 @@
 import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-import './SignUp.scss';
-
+import { verifyEmail } from '../../api/userApi';
+import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import { useAlert } from '../../hooks/useAlert';
-
-import { verifyEmail } from '../../api/userApi';
-import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 import useApi from '../../hooks/useApi';
+import './SignUp.scss';
 
 const SignUp = () => {
   const [value, setValue] = useState({

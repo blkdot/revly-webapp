@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-
 import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 import { usePlatform } from '../../../hooks/usePlatform';
 import useVendors from '../../../hooks/useVendors';
 import ButtonKit from '../../../kits/button/ButtonKit';

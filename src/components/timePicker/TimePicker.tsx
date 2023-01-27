@@ -1,4 +1,3 @@
-import * as React from 'react';
 import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import TimePickerKit from '../../kits/timePickerKit/TimePickerKit';
 

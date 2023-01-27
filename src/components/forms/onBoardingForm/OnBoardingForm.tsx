@@ -1,11 +1,9 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
-
-import './OnBoardingForm.scss';
-
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import './OnBoardingForm.scss';
 
 const OnBoardingForm = (props: any) => {
   const {

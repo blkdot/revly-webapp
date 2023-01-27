@@ -2,26 +2,22 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import './Navbar.scss';
-
-import { useUserAuth } from '../../contexts/AuthContext';
-import AccordionKit from '../../kits/accordion/AccordionKit';
-import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
-import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import Navlink from '../navlink/Navlink';
-
 import logoutIcon from '../../assets/images/ic_logout.png';
 import settingsIcon from '../../assets/images/ic_settings.png';
 import lines from '../../assets/images/lines.png';
 import logo from '../../assets/images/logo.png';
 import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
-
+import { useUserAuth } from '../../contexts/AuthContext';
 import { accordionLink, simpleLink } from '../../data/navbarData';
+import AccordionKit from '../../kits/accordion/AccordionKit';
+import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
+import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
+import ButtonKit from '../../kits/button/ButtonKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
+import Navlink from '../navlink/Navlink';
+import './Navbar.scss';
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);

@@ -1,25 +1,23 @@
-/* eslint-disable camelcase */
-import { format } from 'date-fns';
+/* eslint-disable camelcase */ import { format } from 'date-fns';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { getPlanningOfferDetails } from '../../../api/userApi';
 import Arrow from '../../../assets/icons/Arrow';
 import Calendar from '../../../assets/icons/Calendar';
 import ExpandIcon from '../../../assets/icons/ExpandIcon';
 import FastFood from '../../../assets/icons/FastFood';
 import Timer from '../../../assets/icons/Timer';
 import Warning from '../../../assets/icons/Warning';
-import useVendors from '../../../hooks/useVendors';
-import PaperKit from '../../../kits/paper/PaperKit';
-import MenuItem from './MenuItem';
-
-import { getPlanningOfferDetails } from '../../../api/userApi';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { platformObject } from '../../../data/platformList';
 import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';
+import useVendors from '../../../hooks/useVendors';
+import PaperKit from '../../../kits/paper/PaperKit';
 import SkeletonKit from '../../../kits/skeleton/SkeletonKit';
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
+import MenuItem from './MenuItem';
 import './OfferDetails.scss';
 
 const scheduleTypeMapping = {

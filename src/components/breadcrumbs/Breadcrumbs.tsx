@@ -1,12 +1,9 @@
-import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-
-import './Breadcrumbs.scss';
-
-import BreadcrumbsKit from '../../kits/breadcrumbs/BreadcrumbsKit';
 import BoxKit from '../../kits/box/BoxKit';
+import BreadcrumbsKit from '../../kits/breadcrumbs/BreadcrumbsKit';
 import LinkKit from '../../kits/link/LinkKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
+import './Breadcrumbs.scss';
 
 const Breadcrumbs = ({ links, activeLast = false }) => {
   const currentLink = links[links.length - 1].name;

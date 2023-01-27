@@ -1,11 +1,10 @@
+import adsIcon from '../assets/images/ic_ads.png';
+import alertsIcon from '../assets/images/ic_alerts.png';
+import competitionIcon from '../assets/images/ic_competiton.png';
 import dashboardIcon from '../assets/images/ic_dashboard.png';
-import planningIcon from '../assets/images/ic_planning.png';
-
 import marketingIcon from '../assets/images/ic_marketing.png';
 import offerIcon from '../assets/images/ic_offers.png';
-import adsIcon from '../assets/images/ic_ads.png';
-import competitionIcon from '../assets/images/ic_competiton.png';
-import alertsIcon from '../assets/images/ic_alerts.png';
+import planningIcon from '../assets/images/ic_planning.png';
 import rankingIcon from '../assets/images/ic_ranking.png';
 
 export const simpleLink = [

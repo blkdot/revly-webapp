@@ -1,21 +1,16 @@
 import { pascalCase } from 'change-case';
 import { CSSProperties, useEffect, useState } from 'react';
-
-import './SettingOnboarding.scss';
-
-import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
-
+import { useUserAuth } from '../../../contexts/AuthContext';
+import { platformList } from '../../../data/platformList';
+import { useAlert } from '../../../hooks/useAlert';
+import useApi from '../../../hooks/useApi';
+import { usePlatform } from '../../../hooks/usePlatform';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import ModalKit from '../../../kits/modal/ModalKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-
-import { useUserAuth } from '../../../contexts/AuthContext';
-import { useAlert } from '../../../hooks/useAlert';
-import useApi from '../../../hooks/useApi';
-import { usePlatform } from '../../../hooks/usePlatform';
-
-import { platformList } from '../../../data/platformList';
+import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
+import './SettingOnboarding.scss';
 
 const style: CSSProperties = {
   position: 'absolute',

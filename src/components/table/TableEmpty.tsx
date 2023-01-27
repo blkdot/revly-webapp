@@ -1,20 +1,16 @@
-// TODO: fix all linter problem
-import React from 'react';
-
-import './Table.scss';
-
+// TODO: fix all linter problemimport React from 'react';
+import { platformList } from '../../data/platformList';
 import BoxKit from '../../kits/box/BoxKit';
 import PaperKit from '../../kits/paper/PaperKit';
-import TableHeadKit from '../../kits/tablehead/TableHeadKit';
-import TableRowKit from '../../kits/tablerow/TableRowKit';
-import TableCellKit from '../../kits/tablecell/TableCellKit';
-import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
-import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
+import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import { platformList } from '../../data/platformList';
+import TableCellKit from '../../kits/tablecell/TableCellKit';
+import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
+import TableHeadKit from '../../kits/tablehead/TableHeadKit';
+import TableRowKit from '../../kits/tablerow/TableRowKit';
+import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
+import './Table.scss';
 
 const headCells = [
   {

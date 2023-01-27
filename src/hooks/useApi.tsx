@@ -1,24 +1,20 @@
+import { getAlerts, getAreas, getCompetitors, getRanking } from '../api/competitionApi';
 import {
-  settingsOnboardPlatform,
-  settingsOnboarded,
+  cancelOffer,
+  cancelOfferMaster,
+  OfferCrossPlatforms,
+  triggerOffers,
+} from '../api/marketingApi';
+import { getAds, getOffers } from '../api/planningApi';
+import {
+  settingsLoad,
   settingsLogin,
+  settingsOnboarded,
+  settingsOnboardPlatform,
   settingsOnboardPlatformStatus,
   settingsSave,
-  settingsLoad,
 } from '../api/settingsApi';
-
-import { getMetrics, getVendors, getHeatmap, getMenu, getOfferDetails } from '../api/userApi';
-
-import { getOffers, getAds } from '../api/planningApi';
-
-import { getCompetitors, getAlerts, getRanking, getAreas } from '../api/competitionApi';
-
-import {
-  triggerOffers,
-  cancelOffer,
-  OfferCrossPlatforms,
-  cancelOfferMaster,
-} from '../api/marketingApi';
+import { getHeatmap, getMenu, getMetrics, getOfferDetails, getVendors } from '../api/userApi';
 
 const useApi = () => ({
   settingsOnboardPlatform,

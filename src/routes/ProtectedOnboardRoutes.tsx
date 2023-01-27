@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
-
-import SpinnerKit from '../kits/spinner/SpinnerKit';
-
 import { useUserAuth } from '../contexts/AuthContext';
-
 import useApi from '../hooks/useApi';
 import { usePlatform } from '../hooks/usePlatform';
-
+import SpinnerKit from '../kits/spinner/SpinnerKit';
 import config from '../setup/config';
 
 const ProtectedOnboardRoutes = () => {

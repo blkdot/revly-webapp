@@ -1,6 +1,5 @@
-import './HighOrderBlock.scss';
-
 import FabKit from '../../kits/fab/FabKit';
+import './HighOrderBlock.scss';
 
 const HighOrderBlock = (props: any) => {
   const { children, color, higher } = props;

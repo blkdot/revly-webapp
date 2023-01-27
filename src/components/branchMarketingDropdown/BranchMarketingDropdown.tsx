@@ -1,12 +1,10 @@
-import * as React from 'react';
-
-import SelectKit from '../../kits/select/SelectKit';
+import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
+import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import SelectKit from '../../kits/select/SelectKit';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

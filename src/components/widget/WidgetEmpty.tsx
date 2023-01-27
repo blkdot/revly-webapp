@@ -1,14 +1,11 @@
 // TODO: fix all linter problem
-import React from 'react';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-
-import './Widget.scss';
-
-import TypographyKit from '../../kits/typography/TypographyKit';
-import CardContentKit from '../../kits/cardContent/CardContentKit';
 import CardKit from '../../kits/card/CardKit';
+import CardContentKit from '../../kits/cardContent/CardContentKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import './Widget.scss';
 
 const Widget = () => (
   <CardKit className='card_wrapper'>

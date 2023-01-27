@@ -1,10 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
-
 import { Link } from 'react-router-dom';
-
-import './SignUpForm.scss';
-
 import ButtonKit from '../../../../kits/button/ButtonKit';
 import CheckboxKit from '../../../../kits/checkbox/CheckboxKit';
 import FormControlLabelKit from '../../../../kits/formControlLabel/FormControlLabel';
@@ -12,8 +8,8 @@ import FormGroupKit from '../../../../kits/formGroup/FormGroupKit';
 import PhoneInputKit from '../../../../kits/phoneInput/PhoneInputKit';
 import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 import TypographyKit from '../../../../kits/typography/TypographyKit';
-
 import onlyNumber from '../../../../utlls/input/onlyNumber';
+import './SignUpForm.scss';
 
 const SignUpForm = (props: any) => {
   const {

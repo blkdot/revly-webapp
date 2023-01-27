@@ -1,9 +1,8 @@
 import { pascalCase } from 'change-case';
+import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import shortid from 'shortid';
-
-import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';

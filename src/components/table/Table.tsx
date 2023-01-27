@@ -1,10 +1,7 @@
 // TODO: fix all linter problem
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-unused-vars */
-/* eslint-disable import/no-extraneous-dependencies */
-import './Table.scss';
-
-import { format, getYear } from 'date-fns';
+/* eslint-disable import/no-extraneous-dependencies */ import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import deliveroo from '../../assets/images/deliveroo.png';
@@ -20,6 +17,7 @@ import TableCellKit from '../../kits/tablecell/TableCellKit';
 import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
 import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
+import './Table.scss';
 
 const EnhancedTableHead = ({ headCells }) => (
   <TableHeadKit className='table-head'>

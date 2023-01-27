@@ -5,7 +5,6 @@ import { useAtom } from 'jotai';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import React, { useEffect, useState } from 'react';
-
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';

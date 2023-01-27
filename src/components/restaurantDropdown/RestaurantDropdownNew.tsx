@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
-
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import selectIcon from '../../assets/images/ic_select.png';
 import { usePlatform } from '../../hooks/usePlatform';

@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-import './SignIn.scss';
-
 import SigninForm from '../../components/forms/signinForm/SigninForm';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import { useAlert } from '../../hooks/useAlert';
 import useVendors from '../../hooks/useVendors';
+import './SignIn.scss';
 
 const SignIn = () => {
   const [value, setValue] = useState({ email: '', password: '', remembered: true });

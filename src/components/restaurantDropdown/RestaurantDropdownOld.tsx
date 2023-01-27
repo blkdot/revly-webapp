@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai';
 import * as React from 'react';
-
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import talabat from '../../assets/images/talabat-favicon.png';

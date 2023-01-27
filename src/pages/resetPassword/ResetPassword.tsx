@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-import './ResetPassword.scss';
-
 import ResetPasswordForm from '../../components/forms/resetPasswordForm/ResetPasswordForm';
-
-import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
-import SpinnerKit from '../../kits/spinner/SpinnerKit';
-
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
+import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
+import SpinnerKit from '../../kits/spinner/SpinnerKit';
+import './ResetPassword.scss';
 
 const ResetPassword = () => {
   const { resetPassword, verifyResetCode } = useUserAuth();

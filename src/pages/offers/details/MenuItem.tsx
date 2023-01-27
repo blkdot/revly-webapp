@@ -2,9 +2,8 @@ import { Checkbox } from '@mui/material';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import defaultImage from '../../../assets/images/default.png';
-import useApi from '../../../hooks/useApi';
-
 import { useUserAuth } from '../../../contexts/AuthContext';
+import useApi from '../../../hooks/useApi';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {

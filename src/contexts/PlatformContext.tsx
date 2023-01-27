@@ -1,5 +1,4 @@
 import { createContext, useMemo, useState } from 'react';
-
 import { platformContexDefaultFormat } from '../data/platformList';
 
 export const PlatformContext = createContext(undefined);

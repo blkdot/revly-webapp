@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
 import { noCase, sentenceCase } from 'change-case';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import TableRowKit from '../../kits/tablerow/TableRowKit';
-import TableCellKit from '../../kits/tablecell/TableCellKit';
+import { headCellsAds, headCellsOffre, ignoredFields } from '../../data/planningOffers';
+import { platformObject } from '../../data/platformList';
 import BoxKit from '../../kits/box/BoxKit';
 import PaperKit from '../../kits/paper/PaperKit';
-import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
 import TableKit from '../../kits/table/TableKit';
 import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
+import TableCellKit from '../../kits/tablecell/TableCellKit';
+import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
+import TableRowKit from '../../kits/tablerow/TableRowKit';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
-import { ignoredFields, headCellsOffre, headCellsAds } from '../../data/planningOffers';
-import { platformObject } from '../../data/platformList';
+import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 
 const columnLabel = {
   type_schedule: 'Schedule type',

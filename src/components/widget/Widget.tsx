@@ -1,8 +1,5 @@
-import MovingIcon from '@mui/icons-material/Moving';
-
-import './Widget.scss';
-
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import MovingIcon from '@mui/icons-material/Moving';
 import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
@@ -12,6 +9,7 @@ import CardContentKit from '../../kits/cardContent/CardContentKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
+import './Widget.scss';
 
 const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading }) => {
   const { date } = useDate();

@@ -1,8 +1,5 @@
-import React from 'react';
-
-import './RestaurantForm.scss';
-
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import './RestaurantForm.scss';
 
 const RestaurantForm = () => (
   <div className='restaurant-form'>

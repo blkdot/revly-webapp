@@ -1,6 +1,5 @@
-import './Alert.scss';
-
 import AlertKit from '../../kits/alert/AlertKit';
+import './Alert.scss';
 
 const Alert = (props: any) => {
   const { severity, visible, children } = props;

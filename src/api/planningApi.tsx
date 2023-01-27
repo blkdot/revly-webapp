@@ -1,8 +1,6 @@
 import axios from 'axios';
-
-import { handleResponse } from './baseApi';
-
 import config from '../setup/config';
+import { handleResponse } from './baseApi';
 
 const { apiUrl } = config;
 

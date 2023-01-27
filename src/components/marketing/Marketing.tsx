@@ -1,6 +1,5 @@
-import React from 'react';
-import './Marketing.scss';
 import Widget from '../widget/Widget';
+import './Marketing.scss';
 
 const Marketing = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table, loading }) => {
   const marketingLinks = ['accrued_discounts', 'roi'];

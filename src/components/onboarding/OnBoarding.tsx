@@ -1,4 +1,3 @@
-import React from 'react';
 import { pascalCase } from 'change-case';
 import OnBoardingForm from '../forms/onBoardingForm/OnBoardingForm';
 

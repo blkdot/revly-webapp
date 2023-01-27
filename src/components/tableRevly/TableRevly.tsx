@@ -1,7 +1,4 @@
 import { useState } from 'react';
-
-import './TableRevly.scss';
-
 import BoxKit from '../../kits/box/BoxKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
@@ -12,6 +9,7 @@ import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
+import './TableRevly.scss';
 
 const TableRevly = (props: any) => {
   const { headers, rows, isLoading, mainFieldOrdered, onClickRow } = props;

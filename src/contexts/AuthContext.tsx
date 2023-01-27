@@ -1,6 +1,5 @@
 // TODO: fix linter problem
-/* eslint-disable react/jsx-no-constructed-context-values */
-import {
+/* eslint-disable react/jsx-no-constructed-context-values */ import {
   applyActionCode,
   browserLocalPersistence,
   browserSessionPersistence,
@@ -22,7 +21,6 @@ import {
 } from 'firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase-config';
-
 import { usePlatform } from '../hooks/usePlatform';
 
 const UserAuthContext = createContext(undefined);

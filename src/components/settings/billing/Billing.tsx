@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
 import { Add } from '@mui/icons-material';
-
-import './Billing.scss';
-
+import { useState } from 'react';
 import smallLogo from '../../../assets/images/small-logo.png';
-
 import ButtonKit from '../../../kits/button/ButtonKit';
-
+import AddAddressForm from '../../forms/addAddressForm/AddAddressForm';
 import AddPaymentForm from '../../forms/addPaymentForm/AddPaymentForm';
+import './Billing.scss';
+import Info from './info/Info';
 import Invoice from './invoice/Invoice';
 import PaymentMethod from './paymentMethod/PaymentMethod';
-import Info from './info/Info';
-import AddAddressForm from '../../forms/addAddressForm/AddAddressForm';
 
 const Billing = () => {
   const [inputValue, setInputValue] = useState({

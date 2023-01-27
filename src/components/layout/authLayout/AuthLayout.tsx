@@ -1,12 +1,9 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
-
-import icstrat from '../../../assets/images/ic_strat.png';
+import icframe from '../../../assets/images/ic_auth-frame.png';
 import iccompetitionwhite from '../../../assets/images/ic_competition-white.png';
 import icperf from '../../../assets/images/ic_perf.png';
+import icstrat from '../../../assets/images/ic_strat.png';
 import logo from '../../../assets/images/small-logo-white.png';
-import icframe from '../../../assets/images/ic_auth-frame.png';
-
 import './AuthLayout.scss';
 
 const AuthLayout = () => (

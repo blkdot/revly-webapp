@@ -1,19 +1,15 @@
 import { ArrowBack } from '@mui/icons-material';
+import { getAuth } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import './VerifyCode.scss';
-
-import { getAuth } from 'firebase/auth';
+import { verifyEmail } from '../../api/userApi';
 import VerifyCodeForm from '../../components/forms/verifyCodeForm/VerifyCodeForm';
 import Timer from '../../components/timer/Timer';
-
-import ModalKit from '../../kits/modal/ModalKit';
-
-import { verifyEmail } from '../../api/userApi';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
+import ModalKit from '../../kits/modal/ModalKit';
+import './VerifyCode.scss';
 
 const VerifyCode = () => {
   const { updatePhone, verifyPhone, isUpdatingPhone, setIsUpdatingPhone, logOut } = useUserAuth();

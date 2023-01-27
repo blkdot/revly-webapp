@@ -3,27 +3,22 @@ import { CSSProperties, useEffect, useState } from 'react';
 import { IoMdHelp } from 'react-icons/io';
 import { MdLogout } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-
-import './OnBoarding.scss';
-
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
+import HighOrderBlock from '../../components/highOrderBlock/HighOrderBlock';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import OnBoardingForm from '../../components/onboarding/OnBoarding';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
-
-import HighOrderBlock from '../../components/highOrderBlock/HighOrderBlock';
 import Stepper from '../../components/stepper/Stepper';
+import { useUserAuth } from '../../contexts/AuthContext';
+import { platformList } from '../../data/platformList';
+import { useAlert } from '../../hooks/useAlert';
+import useApi from '../../hooks/useApi';
+import { usePlatform } from '../../hooks/usePlatform';
 import ButtonKit from '../../kits/button/ButtonKit';
 import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
 import ModalKit from '../../kits/modal/ModalKit';
 import SpinnerKit from '../../kits/spinner/SpinnerKit';
-
-import { useUserAuth } from '../../contexts/AuthContext';
-import { useAlert } from '../../hooks/useAlert';
-import useApi from '../../hooks/useApi';
-import { usePlatform } from '../../hooks/usePlatform';
-
-import { platformList } from '../../data/platformList';
+import './OnBoarding.scss';
 
 const START_KEY = 'start';
 const END_KEY = 'last';

@@ -1,7 +1,4 @@
 import { useState } from 'react';
-
-import './MenuTable.scss';
-
 import SpinnerKit from '../../../../kits/spinner/SpinnerKit';
 import TableKit from '../../../../kits/table/TableKit';
 import TableBodyKit from '../../../../kits/tablebody/TableBodyKit';
@@ -10,6 +7,7 @@ import TableContainerKit from '../../../../kits/tablecontainer/TableContainerKit
 import TableHeadKit from '../../../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../../../kits/tablerow/TableRowKit';
 import TableSortLabelKit from '../../../../kits/tablesortlabel/TableSortLableKit';
+import './MenuTable.scss';
 
 const headRows = [
   {

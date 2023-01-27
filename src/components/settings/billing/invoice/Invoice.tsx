@@ -1,8 +1,6 @@
-import './Invoice.scss';
-
 import icinvoice from '../../../../assets/images/ic_invoice.png';
-
 import ButtonKit from '../../../../kits/button/ButtonKit';
+import './Invoice.scss';
 
 const Invoice = (props: any) => {
   const { date, amount } = props;

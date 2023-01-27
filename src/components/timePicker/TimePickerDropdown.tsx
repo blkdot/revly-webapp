@@ -1,9 +1,8 @@
+import { setMinutes } from 'date-fns';
 import getHours from 'date-fns/getHours';
 import setHours from 'date-fns/setHours';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-
-import { setMinutes } from 'date-fns';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';

@@ -1,9 +1,7 @@
-import React from 'react';
-
-import './Finance.scss';
-import Widget from '../widget/WidgetEmpty';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
+import Widget from '../widget/WidgetEmpty';
+import './Finance.scss';
 
 const FinanceEmpty = () => (
   <div className='block'>

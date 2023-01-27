@@ -1,9 +1,7 @@
-import './VerifyCodeForm.scss';
-
 import ButtonKit from '../../../kits/button/ButtonKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-
 import onlyNumber from '../../../utlls/input/onlyNumber';
+import './VerifyCodeForm.scss';
 
 const VerifyCodeForm = (props: any) => {
   const { values, handleChangeWithNextField, onVerify, disableVerify, onBlur, inputError } = props;

@@ -1,11 +1,8 @@
 import { pascalCase } from 'change-case';
-
 import { AiFillEdit } from 'react-icons/ai';
-
-import './PlatformSettingsBox.scss';
-
 import ButtonKit from '../../kits/button/ButtonKit';
 import SwitchKit from '../../kits/switch/SwitchKit';
+import './PlatformSettingsBox.scss';
 
 const PlatformSettingsBox = (props: any) => {
   const { active, src, type, registered, onChangeSwitch, onClick } = props;

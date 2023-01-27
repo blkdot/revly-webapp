@@ -3,14 +3,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
-
 import './App.scss';
-
+import AuthLayout from './components/layout/authLayout/AuthLayout';
 import { AuthContextProvider } from './contexts/AuthContext';
 import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
 import { PlatformProvider } from './contexts/PlatformContext';
-
-import AuthLayout from './components/layout/authLayout/AuthLayout';
 import Check from './pages/check/Check';
 import CompetitionAlerts from './pages/competition/CompetitionAlerts';
 import CompetitionListing from './pages/competition/CompetitionListing';

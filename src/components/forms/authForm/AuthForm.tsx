@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
-
-import './AuthForm.scss';
-
 import ButtonKit from '../../../kits/button/ButtonKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import './AuthForm.scss';
 
 const AuthForm = (props: any) => {
   const {

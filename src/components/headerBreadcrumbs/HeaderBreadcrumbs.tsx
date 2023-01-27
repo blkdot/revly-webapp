@@ -1,9 +1,6 @@
-import React from 'react';
-
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs';
-
 import BoxKit from '../../kits/box/BoxKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs';
 
 const HeaderBreadcrumbs = ({ heading, links, style }) => (
   <BoxKit sx={{ mb: 5, ...style }}>

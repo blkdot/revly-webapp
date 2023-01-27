@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { handleResponse } from '../api/baseApi';
-
-import config from '../setup/config';
 import { useUserAuth } from '../contexts/AuthContext';
+import config from '../setup/config';
 
 const { apiUrl } = config;
 

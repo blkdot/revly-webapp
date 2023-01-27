@@ -1,7 +1,5 @@
 import CostIcon from '../../../../assets/icons/CostIcon';
-
 import logo from '../../../../assets/images/small-logo.png';
-
 import ButtonKit from '../../../../kits/button/ButtonKit';
 
 const Invoice = (props: any) => {

@@ -1,6 +1,5 @@
-import './PlatformSelector.scss';
-
 import PlatformBoxSelector from '../platformBoxSelector/PlatformBoxSelector';
+import './PlatformSelector.scss';
 
 const PlatformSelector = (props: any) => {
   const { items, onClickItem, state, platforms, noText, errors, success } = props;

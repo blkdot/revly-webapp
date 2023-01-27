@@ -1,30 +1,8 @@
-/* eslint-disable no-unused-vars */
-import { pascalCase } from 'change-case';
+/* eslint-disable no-unused-vars */ import { pascalCase } from 'change-case';
+import { endOfMonth, endOfWeek } from 'date-fns';
 import { useAtom } from 'jotai';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-
-import { endOfMonth, endOfWeek } from 'date-fns';
-import './Marketing.scss';
-
-import Dates from '../../components/dates/Dates';
-import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
-import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
-import MarketingOfferRemove from '../../components/marketingOfferRemove/MarketingOfferRemove';
-import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
-
-import { platformObject } from '../../data/platformList';
-
-import BoxKit from '../../kits/box/BoxKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
-
-import usePlanningOffers from '../../hooks/usePlanningOffers';
-
 import Layers from '../../assets/icons/Layers';
 import Tag from '../../assets/icons/Tag';
 import Vector from '../../assets/icons/Vector';
@@ -32,12 +10,26 @@ import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
-
+import Dates from '../../components/dates/Dates';
+import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
+import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
+import MarketingOfferRemove from '../../components/marketingOfferRemove/MarketingOfferRemove';
+import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
+import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
+import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from '../../components/tableRevly/TableRevly';
+import { platformObject } from '../../data/platformList';
 import useDate from '../../hooks/useDate';
+import usePlanningOffers from '../../hooks/usePlanningOffers';
 import useQueryState from '../../hooks/useQueryState';
+import BoxKit from '../../kits/box/BoxKit';
+import ButtonKit from '../../kits/button/ButtonKit';
+import PaperKit from '../../kits/paper/PaperKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
+import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
 const MarketingOffer = () => {

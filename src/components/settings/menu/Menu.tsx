@@ -1,26 +1,21 @@
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-
-import './Menu.scss';
-
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
 import ictalabat from '../../../assets/images/talabat-favicon.png';
-
-import MenuDropdown from './menuDropdown/MenuDropdown';
-import MenuTable from './menuTable/MenuTable';
-
-import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
-import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
-
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';
+import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
+import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
+import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import { vendorsAtom } from '../../../store/vendorsAtom';
+import './Menu.scss';
+import MenuDropdown from './menuDropdown/MenuDropdown';
+import MenuTable from './menuTable/MenuTable';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);

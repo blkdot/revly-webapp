@@ -2,10 +2,8 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 // This file will handle any global functionnalities related to a context that do not belong to a specific context
 // To prevent creating so many other context
-
 import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
 import { createContext, useEffect, useState } from 'react';
-
 import Alert from '../components/alert/Alert';
 
 export const GlobalFunctionalitiesContext = createContext(undefined);

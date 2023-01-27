@@ -1,7 +1,6 @@
-import { useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-
 import qs from 'qs';
+import { useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const useQueryState = (query) => {
   const location = useLocation();

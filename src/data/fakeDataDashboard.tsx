@@ -1,5 +1,5 @@
-import talabat from '../assets/images/talabat.png';
 import deliveroo from '../assets/images/deliveroo.png';
+import talabat from '../assets/images/talabat.png';
 
 export const FinanceData = [
   {

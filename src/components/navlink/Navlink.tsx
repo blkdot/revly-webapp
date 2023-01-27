@@ -1,8 +1,6 @@
 import { NavLink } from 'react-router-dom';
-
-import './Navlink.scss';
-
 import ButtonKit from '../../kits/button/ButtonKit';
+import './Navlink.scss';
 
 const Navlink = (props: any) => {
   const { children, title, path, ...rest } = props;

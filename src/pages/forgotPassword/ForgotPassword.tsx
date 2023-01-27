@@ -1,19 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-
-import './ForgotPassword.scss';
-
-import logo from '../../assets/images/logo.png';
-
-import ForgotPasswordForm from '../../components/forms/forgotPasswordForm/ForgotPasswordForm';
-
-import CardKit from '../../kits/card/CardKit';
-
-import { useAlert } from '../../hooks/useAlert';
-
-import { firebaseCodeError } from '../../data/firebaseCodeError';
 import { forgotPassword } from '../../api/userApi';
+import logo from '../../assets/images/logo.png';
+import ForgotPasswordForm from '../../components/forms/forgotPasswordForm/ForgotPasswordForm';
+import { firebaseCodeError } from '../../data/firebaseCodeError';
+import { useAlert } from '../../hooks/useAlert';
+import CardKit from '../../kits/card/CardKit';
+import './ForgotPassword.scss';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');

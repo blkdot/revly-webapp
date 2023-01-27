@@ -1,6 +1,5 @@
-import React from 'react';
-import './Marketing.scss';
 import Widget from '../widget/WidgetEmpty';
+import './Marketing.scss';
 
 const MarketingEmpty = () => (
   <div className='block'>

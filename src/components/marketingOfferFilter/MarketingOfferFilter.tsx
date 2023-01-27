@@ -1,15 +1,14 @@
-import ButtonKit from '../../kits/button/ButtonKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
-
 import Basket from '../../assets/icons/Basket';
 import Layers from '../../assets/icons/Layers';
 import Switch from '../../assets/icons/Switch';
 import Tag from '../../assets/icons/Tag';
 import UserGroup from '../../assets/icons/UserGroup';
 import CloseIcon from '../../assets/images/ic_close.png';
+import ButtonKit from '../../kits/button/ButtonKit';
+import CheckboxKit from '../../kits/checkbox/CheckboxKit';
+import PaperKit from '../../kits/paper/PaperKit';
+import TextfieldKit from '../../kits/textfield/TextfieldKit';
+import TypographyKit from '../../kits/typography/TypographyKit';
 
 const MarketingOfferFilter = (props: any) => {
   const {

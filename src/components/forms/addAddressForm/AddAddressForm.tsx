@@ -1,9 +1,7 @@
-import './AddAddressForm.scss';
-
 import ButtonKit from '../../../kits/button/ButtonKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-
 import onlyNumber from '../../../utlls/input/onlyNumber';
+import './AddAddressForm.scss';
 
 const AddAddressForm = (props: any) => {
   const {

@@ -1,19 +1,19 @@
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
-import './Dates.scss';
-import React from 'react';
 import {
   endOfMonth,
+  endOfWeek,
+  getMonth,
+  startOfMonth,
+  startOfWeek,
   subDays,
   subMonths,
   subWeeks,
-  endOfWeek,
-  startOfWeek,
-  startOfMonth,
-  getMonth,
 } from 'date-fns';
-import PaperKit from '../../kits/paper/PaperKit';
+import React from 'react';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import ButtonKit from '../../kits/button/ButtonKit';
+import PaperKit from '../../kits/paper/PaperKit';
+import './Dates.scss';
 
 const date = new Date();
 

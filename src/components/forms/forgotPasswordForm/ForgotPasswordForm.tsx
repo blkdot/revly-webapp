@@ -1,8 +1,7 @@
-import './ForgotPasswordForm.scss';
-
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import './ForgotPasswordForm.scss';
 
 const ForgotPasswordForm = (props: any) => {
   const { onChange, onSubmit, disabled, error, isLoading } = props;

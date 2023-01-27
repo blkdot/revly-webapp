@@ -2,21 +2,15 @@ import { AxiosError } from 'axios';
 import { updateProfile } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import './General.scss';
-
-import country from '../../../data/country.json';
-
-import ButtonKit from '../../../kits/button/ButtonKit';
-
-import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
-
-import { useAlert } from '../../../hooks/useAlert';
-import validator from '../../../utlls/input/validator';
-
 import { useUserAuth } from '../../../contexts/AuthContext';
+import country from '../../../data/country.json';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
+import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';
+import ButtonKit from '../../../kits/button/ButtonKit';
+import validator from '../../../utlls/input/validator';
+import AccountSettingForm from '../../forms/accountSettingForm/AccountSettingForm';
+import './General.scss';
 
 const General = () => {
   const { user, setIsUpdatingPhone, verifyPhone } = useUserAuth();

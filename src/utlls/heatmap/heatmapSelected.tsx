@@ -1,7 +1,6 @@
+import { addDays, differenceInDays, format, getDay, getHours, isSameDay } from 'date-fns';
 import _ from 'lodash';
-import { getDay, isSameDay, getHours, differenceInDays, format, addDays } from 'date-fns';
-
-import { daysOrder, rangeHoursOpenedDay, maxHour, minHour } from './heatmapSelectedData';
+import { daysOrder, maxHour, minHour, rangeHoursOpenedDay } from './heatmapSelectedData';
 
 const typeMono = (dateRange, times, data) => {
   const { startDate, endDate } = dateRange;

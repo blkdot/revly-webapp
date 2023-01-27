@@ -1,8 +1,7 @@
+import logo from '../../assets/images/small-logo.png';
 import ButtonKit from '../../kits/button/ButtonKit';
 import PaperKit from '../../kits/paper/PaperKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
-
-import logo from '../../assets/images/small-logo.png';
 
 const MarketingOfferRemove = (props: any) => {
   const { setOpened, opened, CancelOffer } = props;
