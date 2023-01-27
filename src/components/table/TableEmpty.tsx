@@ -1,4 +1,3 @@
-// TODO: fix all linter problemimport React from 'react';
 import { platformList } from '../../data/platformList';
 import BoxKit from '../../kits/box/BoxKit';
 import PaperKit from '../../kits/paper/PaperKit';

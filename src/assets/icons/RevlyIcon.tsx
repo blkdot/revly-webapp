@@ -1,5 +1,3 @@
-import React from 'react';
-
 const RevlyIcon = () => (
   <svg width='15' height='16' viewBox='0 0 15 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path d='M0.0130209 0L4.24621 3.73095V7.96414L0.0130209 4.30494V0Z' fill='#212B36' />

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Tag = () => (
   <svg
     width='24'

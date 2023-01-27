@@ -1,5 +1,3 @@
-import React from 'react';
-
 const BaseIcon = () => (
   <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path d='M5.01302 4L9.24621 7.73095V11.9641L5.01302 8.30494V4Z' fill='#212B36' />
