@@ -30,7 +30,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
       }
 
       return parseFloat(
-        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0),
+        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0)
       );
     }
     return 0;
@@ -51,7 +51,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
       }
 
       return `${dayjs(afterPeriod.startDate).format('DD/MM')} - ${dayjs(afterPeriod.endDate).format(
-        'DD/MM',
+        'DD/MM'
       )}`;
     }
 
@@ -75,15 +75,15 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
     >
       <CardContentKit>
         <TypographyKit
-          component="div"
+          component='div'
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
         >
           <div>
             <TypographyKit
               style={{ textTransform: 'capitalize' }}
-              variant="subtitle2"
-              className="card-typography"
-              component="div"
+              variant='subtitle2'
+              className='card-typography'
+              component='div'
             >
               {getTitle()}
             </TypographyKit>
@@ -94,18 +94,18 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
                 style={{ margin: '10px 0 0 0', transform: 'scale(1)' }}
               />
             ) : (
-              <TypographyKit variant="h3" className="card-typography">
+              <TypographyKit variant='h3' className='card-typography'>
                 {renderMetrics()}
                 {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
               </TypographyKit>
             )}
           </div>
         </TypographyKit>
-        <div className="card_bottom">
+        <div className='card_bottom'>
           {loading ? (
             <SkeletonKit width={60} height={30} />
           ) : (
-            <div style={{ margin: 0 }} className="card_bottom">
+            <div style={{ margin: 0 }} className='card_bottom'>
               <PaperKit
                 className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
                   procent() < 0 ? 'decreased' : ''
@@ -122,13 +122,13 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
                 className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
                   procent() < 0 ? 'decreased' : ''
                 }`}
-                variant="body2"
+                variant='body2'
               >
                 {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
               </TypographyKit>
             </div>
           )}
-          <TypographyKit className="card-week" variant="body3">
+          <TypographyKit className='card-week' variant='body3'>
             than {getafterPeriod()}
           </TypographyKit>
         </div>

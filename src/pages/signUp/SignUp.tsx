@@ -72,7 +72,7 @@ const SignUp = () => {
         await logOut();
         navigate('/');
         triggerAlertWithMessageSuccess(
-          'We sent an email verification to your email, please check it (include spam) before signin',
+          'We sent an email verification to your email, please check it (include spam) before signin'
         );
       }
     } catch (e) {
@@ -87,7 +87,7 @@ const SignUp = () => {
       triggerAlertWithMessageError(message);
       setProcessing(false);
       await fetchSignInMethodsForEmail(getAuth(), value.email).then((res) =>
-        res.length > 0 ? deleteUser() : null,
+        res.length > 0 ? deleteUser() : null
       );
     }
   };
@@ -114,9 +114,9 @@ const SignUp = () => {
     !value.pointOfSale;
 
   return (
-    <div className="signup">
-      <p className="signup__signin-text">
-        Already have an account? &nbsp; <Link to="/">Sign In</Link>
+    <div className='signup'>
+      <p className='signup__signin-text'>
+        Already have an account? &nbsp; <Link to='/'>Sign In</Link>
       </p>
       <SignUpForm
         onChangeEmail={handleChange('email')}

@@ -2,47 +2,46 @@
 @import '../../../responsiveness.scss';
 
 .add-payment-form {
-    background-color: rgba(231, 223, 223, 0.304);
-    height: 0px;
-    border-radius: 10px;
-    transition: visibility 0s, height 0.2s;
-    visibility: hidden;
+  background-color: rgba(231, 223, 223, 0.304);
+  height: 0px;
+  border-radius: 10px;
+  transition: visibility 0s, height 0.2s;
+  visibility: hidden;
 
-    &.__visible {
-        height: 250px;
-        visibility: visible;
-        padding: 20px;
-        margin-top: 15px;
+  &.__visible {
+    height: 250px;
+    visibility: visible;
+    padding: 20px;
+    margin-top: 15px;
+  }
+
+  .add-payment-form__input-flex {
+    display: flex;
+    justify-content: space-between;
+
+    .add-payment-form__input-flex__input {
+      width: 48%;
+      margin: 12px 0;
     }
+  }
 
-    .add-payment-form__input-flex {
-        display: flex;
-        justify-content: space-between;
-
-        .add-payment-form__input-flex__input {
-            width: 48%;
-            margin: 12px 0;
-        }
-
-    }
-
-    .add-payment-form__btn-flex {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 7px;
-    }
+  .add-payment-form__btn-flex {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 7px;
+  }
 }
 
 @include mobileBreakpoint {
-    .add-payment-form {
-        &.__visible {
-            height: 400px;
-        }
-        .add-payment-form__input-flex {
-            display: block;
-           .add-payment-form__input-flex__input {
-                width: 100%;
-            }
-        }
+  .add-payment-form {
+    &.__visible {
+      height: 400px;
     }
+    .add-payment-form__input-flex {
+      display: block;
+      .add-payment-form__input-flex__input {
+        width: 100%;
+      }
+    }
+  }
 }

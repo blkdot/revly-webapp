@@ -9,7 +9,7 @@
   align-items: stretch;
   height: 100vh;
 
-.auth-layout__cover {
+  .auth-layout__cover {
     width: 45%;
     background-color: $color-main;
     text-align: left;
@@ -35,7 +35,7 @@
           left: 2.8vw;
         }
       }
-  
+
       .auth-layout__cover__center {
         display: flex;
         flex-direction: column;
@@ -67,7 +67,7 @@
           font-size: 32px;
           font-weight: 700;
         }
-  
+
         .__block {
           .auth-layout__cover__center-flex {
             display: flex;
@@ -118,7 +118,7 @@
           left: 4.5em;
           top: 1em;
         }
-  
+
         .auth-layout__cover__center {
           .__img-frame {
             top: 27em;
@@ -126,7 +126,7 @@
           .auth-layout__cover__center__text {
             font-size: 28px;
           }
-          
+
           .__block {
             margin-top: 3em;
           }
@@ -152,7 +152,7 @@
           top: 1.8em;
           left: 2em;
         }
-  
+
         .auth-layout__cover__center {
           .__img-frame {
             top: 27em;
@@ -160,7 +160,7 @@
           .auth-layout__cover__center__text {
             font-size: 20px;
           }
-          
+
           .__block {
             margin-top: 2em;
           }

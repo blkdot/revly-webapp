@@ -44,12 +44,12 @@ const headCells = [
 ];
 
 const EnhancedTableHead = () => (
-  <TableHeadKit className="table-head">
+  <TableHeadKit className='table-head'>
     <TableRowKit>
       {headCells.map((headCell) => (
-        <TableCellKit className="enchanced-table-cell" key={headCell.id}>
-          <TableSortLabelKit direction="asc">
-            <SkeletonKit variant="rectangular" width={100} />
+        <TableCellKit className='enchanced-table-cell' key={headCell.id}>
+          <TableSortLabelKit direction='asc'>
+            <SkeletonKit variant='rectangular' width={100} />
           </TableSortLabelKit>
         </TableCellKit>
       ))}
@@ -59,8 +59,8 @@ const EnhancedTableHead = () => (
 
 const renderRow = () =>
   platformList.map((row) => (
-    <TableRowKit key={row.name} className="table-row">
-      <TableCellKit component="th" id={row.name} scope="row">
+    <TableRowKit key={row.name} className='table-row'>
+      <TableCellKit component='th' id={row.name} scope='row'>
         <img
           className={`table-img ${row.name === 'deliveroo' ? 'img-del' : ''}`}
           src={row.src}
@@ -68,14 +68,14 @@ const renderRow = () =>
         />
       </TableCellKit>
       <TableCellKit>
-        <SkeletonKit variant="rectangular" width={100} />
+        <SkeletonKit variant='rectangular' width={100} />
       </TableCellKit>
       <TableCellKit>
-        <SkeletonKit variant="rectangular" width={100} />
+        <SkeletonKit variant='rectangular' width={100} />
       </TableCellKit>
       <TableCellKit>
         <span>
-          <SkeletonKit variant="rectangular" width={100} />
+          <SkeletonKit variant='rectangular' width={100} />
         </span>
       </TableCellKit>
     </TableRowKit>
@@ -83,25 +83,25 @@ const renderRow = () =>
 
 const TableEmpty = () => (
   <BoxKit sx={{ width: '100%' }}>
-    <PaperKit className="table-paper-wrapper">
+    <PaperKit className='table-paper-wrapper'>
       <TableContainerKit>
-        <TableKit className="table" aria-labelledby="tableTitle" size="medium">
+        <TableKit className='table' aria-labelledby='tableTitle' size='medium'>
           <EnhancedTableHead />
-          <TableBodyKit className="table-body">{renderRow()}</TableBodyKit>
+          <TableBodyKit className='table-body'>{renderRow()}</TableBodyKit>
           <TableHeadKit>
-            <TableRowKit className="table-row table-total">
-              <TableCellKit component="th" scope="row">
+            <TableRowKit className='table-row table-total'>
+              <TableCellKit component='th' scope='row'>
                 Total
               </TableCellKit>
               <TableCellKit>
-                <SkeletonKit variant="rectangular" width={100} />
+                <SkeletonKit variant='rectangular' width={100} />
               </TableCellKit>
               <TableCellKit>
-                <SkeletonKit variant="rectangular" width={100} />
+                <SkeletonKit variant='rectangular' width={100} />
               </TableCellKit>
               <TableCellKit>
                 <span>
-                  <SkeletonKit variant="rectangular" width={100} />
+                  <SkeletonKit variant='rectangular' width={100} />
                 </span>
               </TableCellKit>
             </TableRowKit>

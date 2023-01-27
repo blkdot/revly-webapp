@@ -15,12 +15,12 @@ const useQueryState = (query) => {
 
       const queryString = qs.stringify(
         { ...existingQueries, [query]: JSON.stringify(value) },
-        { skipNulls: true },
+        { skipNulls: true }
       );
 
       navigate(`${location.pathname}?${queryString}`);
     },
-    [query, JSON.stringify(location)],
+    [query, JSON.stringify(location)]
   );
 
   return [qs.parse(location.search, { ignoreQueryPrefix: true })[query], setQuery];

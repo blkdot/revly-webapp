@@ -70,7 +70,7 @@ const OnBoarding = () => {
 
   const getCurrentPlatformInsertion = () =>
     platformList.filter(
-      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered,
+      ({ name }) => selectedPlatform[name] && !userPlatformData.platforms[name].registered
     );
 
   const getActiveSteps = () => steps.filter((f) => f.active);
@@ -190,7 +190,7 @@ const OnBoarding = () => {
         access_token: user.accessToken,
         credentials: formValues,
       },
-      currentPlatform.name,
+      currentPlatform.name
     );
 
     setIsLoading(false);
@@ -198,7 +198,7 @@ const OnBoarding = () => {
     if (res instanceof Error) {
       setErrorPlatformConnect({ ...errorPlatformConnect, [currentPlatform.name]: true });
       triggerAlertWithMessageError(
-        `We couldn’t connect to your ${currentPlatform.name} account. Please double check your credentials or contact customer support`,
+        `We couldn’t connect to your ${currentPlatform.name} account. Please double check your credentials or contact customer support`
       );
       return;
     }
@@ -299,7 +299,7 @@ const OnBoarding = () => {
         </p>
         <div style={{ margin: '1.2rem 2rem 0.6rem' }}>
           <ButtonLoadingKit
-            variant="contained"
+            variant='contained'
             loading={isRedirecting}
             fullWidth
             onClick={handleClickStart}
@@ -329,7 +329,7 @@ const OnBoarding = () => {
 
     return (
       <div>
-        <ButtonKit variant="contained" disabled={isNextDisabled()} onClick={nextTarget}>
+        <ButtonKit variant='contained' disabled={isNextDisabled()} onClick={nextTarget}>
           Next
         </ButtonKit>
       </div>
@@ -341,7 +341,7 @@ const OnBoarding = () => {
 
     return (
       <ButtonLoadingKit
-        variant="contained"
+        variant='contained'
         onClick={handleSubmitLoginInfo}
         loading={isLoading}
         disabled={!currentPlatform || !formValues.email || !formValues.password}
@@ -417,21 +417,21 @@ const OnBoarding = () => {
   };
 
   return (
-    <div className="onboarding">
-      <div className="top-inputs">
+    <div className='onboarding'>
+      <div className='top-inputs'>
         {/* <RestaurantDropdownOld vendors={[]} vendorsSelected={[]} vendorsPlatform={[]} />
         <Dates /> */}
       </div>
       <FinanceEmpty />
       <MarketingEmpty />
-      <ModalKit open aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <ModalKit open aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
         <div style={style}>
           <Stepper step={step} steps={getActiveSteps()} />
           {renderStepScreens()}
           <div style={{ width: '100%', padding: '0.5rem 2rem 0rem' }}>{renderSendButton()}</div>
-          <div className="onboarding-actions">
+          <div className='onboarding-actions'>
             <div>
-              <ButtonKit variant="contained" disabled={isBackDisabled()} onClick={backTarget}>
+              <ButtonKit variant='contained' disabled={isBackDisabled()} onClick={backTarget}>
                 Back
               </ButtonKit>
             </div>
@@ -441,7 +441,7 @@ const OnBoarding = () => {
         </div>
       </ModalKit>
       <div style={{ cursor: 'pointer' }}>
-        <HighOrderBlock color="warning" higher>
+        <HighOrderBlock color='warning' higher>
           <IoMdHelp style={{ fontSize: '20px' }} />
         </HighOrderBlock>
       </div>
@@ -450,7 +450,7 @@ const OnBoarding = () => {
         onClick={handleLogout}
         tabIndex={0}
         onKeyDown={handleLogout}
-        role="button"
+        role='button'
       >
         <HighOrderBlock style={{ cursor: 'pointer' }}>
           <MdLogout style={{ fontSize: '20px' }} />

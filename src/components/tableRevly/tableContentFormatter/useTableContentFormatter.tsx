@@ -37,17 +37,17 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={vendor} className="render-row-tooltip column">
+                <span key={vendor} className='render-row-tooltip column'>
                   {vendor}
                 </span>
               ))
         }
         disableHoverListener={r[h.id]?.length === 0}
-        id="category-tooltip"
-        placement="right"
+        id='category-tooltip'
+        placement='right'
         arrow
       >
-        <span className="render-row-tooltip" key={h.id}>
+        <span className='render-row-tooltip' key={h.id}>
           {r[h.id] === null || !r[h.id] ? '-' : (r[h.id]?.length || 0)?.toLocaleString('en-US')}
         </span>
       </TooltipKit>
@@ -61,7 +61,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}
     >
       <img
-        className="planning-platform"
+        className='planning-platform'
         style={{ marginRight: '1.5rem' }}
         src={platformObject[r.platform].src}
         alt={platformObject[r.platform].name}
@@ -102,7 +102,7 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+      <span className='competition-table-alert' style={{ whiteSpace: 'nowrap' }}>
         {r[h.id] * 100}%
       </span>
     </TableCellKit>

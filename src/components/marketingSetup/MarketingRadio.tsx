@@ -32,7 +32,7 @@ const MarketingRadio = ({
       <div>
         {icon ? (
           <span className={className}>
-            <img src={icon} alt="Box Icon" />
+            <img src={icon} alt='Box Icon' />
           </span>
         ) : (
           ''

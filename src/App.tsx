@@ -52,7 +52,7 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <div className="App">
+    <div className='App'>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <PlatformProvider>
@@ -60,25 +60,25 @@ const App = () => (
               <GlobalFunctionalitiesContextProvider>
                 <Routes>
                   <Route element={<AuthLayout />}>
-                    <Route path="/" element={<SignIn />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/verify-code-signup" element={<VerifyCode />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path='/' element={<SignIn />} />
+                    <Route path='/signup' element={<SignUp />} />
+                    <Route path='/verify-code-signup' element={<VerifyCode />} />
+                    <Route path='/reset-password' element={<ResetPassword />} />
                   </Route>
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path='/forgot-password' element={<ForgotPassword />} />
                   <Route element={<ProtectedRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/planning" element={<Planning />} />
-                      <Route path="/competition/listing" element={<CompetitionListing />} />
-                      <Route path="/competition/alerts" element={<CompetitionAlerts />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/marketing/offer" element={<MarketingOffer />} />
-                      <Route path="/marketing/ads" element={<MarketingAds />} />
-                      <Route path="/verify-code" element={<VerifyCode />} />
+                      <Route path='/dashboard' element={<Dashboard />} />
+                      <Route path='/planning' element={<Planning />} />
+                      <Route path='/competition/listing' element={<CompetitionListing />} />
+                      <Route path='/competition/alerts' element={<CompetitionAlerts />} />
+                      <Route path='/settings' element={<Settings />} />
+                      <Route path='/marketing/offer' element={<MarketingOffer />} />
+                      <Route path='/marketing/ads' element={<MarketingAds />} />
+                      <Route path='/verify-code' element={<VerifyCode />} />
                     </Route>
-                    <Route path="/onboarding" element={<OnBoarding />} />
-                    <Route path="/check" element={<Check />} />
+                    <Route path='/onboarding' element={<OnBoarding />} />
+                    <Route path='/check' element={<Check />} />
                   </Route>
                 </Routes>
               </GlobalFunctionalitiesContextProvider>

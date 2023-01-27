@@ -8,7 +8,7 @@ const Alert = (props: any) => {
   if (!visible) return null;
 
   return (
-    <div className="alert-component">
+    <div className='alert-component'>
       <AlertKit severity={severity}>{children}</AlertKit>
     </div>
   );

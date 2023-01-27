@@ -238,13 +238,13 @@ const DateSelect = React.memo((props: any) => {
       id={`panel${index}bh-header`}
       expanded={expanded === `panel${index}`}
       onChange={handleChange(`panel${index}`)}
-      className="navbar-accordion"
+      className='navbar-accordion'
     >
       <ButtonKit
         onClick={changeSelect}
         className={`navbar-button-kit ${expanded === `panel${index}` ? 'active' : ''}`}
       >
-        <AccordionSummaryKit className="accordion-sum" expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummaryKit className='accordion-sum' expandIcon={<ExpandMoreIcon />}>
           <TypographyKit
             sx={{ display: 'flex', alignItems: 'center', gridGap: '5px', fontSize: '16px' }}
           >
@@ -252,7 +252,7 @@ const DateSelect = React.memo((props: any) => {
           </TypographyKit>
         </AccordionSummaryKit>
       </ButtonKit>
-      <AccordionDetailsKit className="date-accordion-details">
+      <AccordionDetailsKit className='date-accordion-details'>
         <ButtonKit
           className={`navbar-button-kit ${active === 'current' ? 'active' : ''}`}
           onClick={() => getDate(type === 'day' ? 'today' : type)}

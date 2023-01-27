@@ -39,7 +39,7 @@ const TableRevly = (props: any) => {
 
     if (!rows || rows.length < 1)
       return (
-        <TableRowKit className="no-data">
+        <TableRowKit className='no-data'>
           <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
             <span>No data retrieved</span>
           </TableCellKit>
@@ -58,7 +58,7 @@ const TableRevly = (props: any) => {
   const renderRowsContent = () =>
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
       <TableRowKit
-        className="marketing-table-top"
+        className='marketing-table-top'
         onClick={handleRowClick(r.data.master_offer_id)}
         key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
       >
@@ -66,13 +66,13 @@ const TableRevly = (props: any) => {
       </TableRowKit>
     ));
   return (
-    <BoxKit className="competition-box" sx={{ width: '100%' }}>
-      <PaperKit className="competition-table-paper" sx={{ width: '100%', mb: 2 }}>
-        <TableContainerKit id="tableContainer">
+    <BoxKit className='competition-box' sx={{ width: '100%' }}>
+      <PaperKit className='competition-table-paper' sx={{ width: '100%', mb: 2 }}>
+        <TableContainerKit id='tableContainer'>
           <TableKit
             sx={{ minWidth: 750, maxHeight: 250 }}
-            aria-labelledby="tableTitle"
-            size="medium"
+            aria-labelledby='tableTitle'
+            size='medium'
           >
             <EnhancedTableHead
               header={headers}

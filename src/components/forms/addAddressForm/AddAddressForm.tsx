@@ -19,50 +19,50 @@ const AddAddressForm = (props: any) => {
   return (
     <div className={`add-address-form ${visible ? '__visible' : ''}`}>
       <p style={{ marginBottom: 7 }}>Add new address</p>
-      <div className="add-address-form__input-flex">
+      <div className='add-address-form__input-flex'>
         <TextfieldKit
-          className="add-address-form__input-flex__input"
+          className='add-address-form__input-flex__input'
           onChange={handleInputChange}
-          name="name"
+          name='name'
           fullWidth
           value={nameValue}
-          label="Name"
+          label='Name'
         />
         <TextfieldKit
-          className="add-address-form__input-flex__input"
+          className='add-address-form__input-flex__input'
           onChange={handleInputChange}
           onKeyDown={onlyNumber}
-          name="phone"
+          name='phone'
           value={phoneValue}
           fullWidth
-          label="Phone"
+          label='Phone'
         />
       </div>
       <TextfieldKit
         style={{ margin: '12px 0' }}
         onChange={handleInputChange}
-        name="address"
+        name='address'
         fullWidth
-        label="Address"
+        label='Address'
         value={addressValue}
       />
-      <div className="add-address-form__btn-flex">
+      <div className='add-address-form__btn-flex'>
         <ButtonKit
-          size="small"
-          className="add-address-form__input-flex__input"
+          size='small'
+          className='add-address-form__input-flex__input'
           onChange={handleInputChange}
           onClick={onCancel}
-          variant="outlined"
+          variant='outlined'
         >
           Cancel
         </ButtonKit>
         <ButtonKit
           style={{ marginLeft: 15 }}
-          size="small"
-          className="add-address-form__input-flex__input"
+          size='small'
+          className='add-address-form__input-flex__input'
           onChange={handleInputChange}
           onClick={onSaveChange}
-          variant="contained"
+          variant='contained'
         >
           Save Change
         </ButtonKit>

@@ -111,8 +111,8 @@ const DropdownSnackbar = (props: any) => {
     });
   };
   return (
-    <div className="invoice snackbar">
-      <div className="snackbar-wrapper">
+    <div className='invoice snackbar'>
+      <div className='snackbar-wrapper'>
         {Object.keys(vendors.display).length > 0 ? (
           <RestaurantDropdownNew
             setState={setCostVendors}
@@ -131,15 +131,15 @@ const DropdownSnackbar = (props: any) => {
           />
         )}
         <TextfieldKit
-          size="small"
-          label="Type your Cost %"
-          className="snackbar-input-cost"
-          type="number"
+          size='small'
+          label='Type your Cost %'
+          className='snackbar-input-cost'
+          type='number'
           value={procent}
           onChange={handleChangeCost}
         />
       </div>
-      <ButtonKit disabled={!procent} onClick={addCost} className="snackbar-btn" variant="contained">
+      <ButtonKit disabled={!procent} onClick={addCost} className='snackbar-btn' variant='contained'>
         {isUpdate ? 'Update' : 'Add'}
       </ButtonKit>
     </div>

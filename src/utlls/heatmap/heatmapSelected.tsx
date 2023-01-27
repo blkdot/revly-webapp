@@ -82,7 +82,7 @@ const setSameDayTimeRange = (data, day, times) => {
 
   const range = _.range(
     rangeHoursOpenedDay[valueStartHour].hour,
-    rangeHoursOpenedDay[valueEndHour].hour,
+    rangeHoursOpenedDay[valueEndHour].hour
   );
 
   return { ...data, [day]: getHeatmapDataDayNewContent(data, day, range) };
@@ -155,7 +155,7 @@ const setAll = (data) =>
       ...acc,
       [cur]: getHeatmapDataDayNewContent(data, cur, _.range(minHour, maxHour + 1)),
     }),
-    data,
+    data
   );
 
 const getWorkweek = (data, isWorkweek) => {
@@ -204,7 +204,7 @@ const typeMulti = (
   isCustomdays,
   customisedDay,
   isEveryWeek,
-  everyWeek,
+  everyWeek
 ) => {
   const combinedTimesRange = times
     .map((t) => {
@@ -215,7 +215,7 @@ const typeMulti = (
 
       const range = _.range(
         rangeHoursOpenedDay[valueStartHour].hour,
-        rangeHoursOpenedDay[valueEndHour].hour + (valueEndHour === maxHour + 1 ? 1 : 0),
+        rangeHoursOpenedDay[valueEndHour].hour + (valueEndHour === maxHour + 1 ? 1 : 0)
       );
 
       return range;
@@ -235,7 +235,7 @@ const typeMulti = (
         [daysOrder[dayEveryWeekIndex]]: getHeatmapDataDayNewContent(
           newData,
           daysOrder[dayEveryWeekIndex],
-          combinedTimesRange,
+          combinedTimesRange
         ),
       };
     }
@@ -243,7 +243,7 @@ const typeMulti = (
 
   if (isCustomdays) {
     const daysSelectedOrderCustom = customisedDay.map((v) =>
-      daysOrder.findIndex((va) => v.toLowerCase() === va.toLowerCase()),
+      daysOrder.findIndex((va) => v.toLowerCase() === va.toLowerCase())
     );
 
     const newData = clearTimeSelected(data);
@@ -253,7 +253,7 @@ const typeMulti = (
         ...acc,
         [daysOrder[cur]]: getHeatmapDataDayNewContent(newData, daysOrder[cur], combinedTimesRange),
       }),
-      newData,
+      newData
     );
   }
 
@@ -272,7 +272,7 @@ const typeMulti = (
         ...acc,
         [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
       }),
-      data,
+      data
     );
   }
 
@@ -282,7 +282,7 @@ const typeMulti = (
         ...acc,
         [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
       }),
-      data,
+      data
     );
   }
 
@@ -301,7 +301,7 @@ const typeMulti = (
       ...acc,
       [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
     }),
-    data,
+    data
   );
 };
 
@@ -314,7 +314,7 @@ const heatmapSelected = (
   isCustomdays = false,
   customisedDay = [],
   isEveryWeek = false,
-  everyWeek = '',
+  everyWeek = ''
 ) => {
   if (!times) {
     return [];
@@ -330,7 +330,7 @@ const heatmapSelected = (
     isCustomdays,
     customisedDay,
     isEveryWeek,
-    everyWeek,
+    everyWeek
   );
 };
 

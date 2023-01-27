@@ -17,21 +17,21 @@ const VerifyCodeForm = (props: any) => {
         inputProps={{ maxLength: 1 }}
         autoFocus={i === 0}
         onKeyDown={onlyNumber}
-        className="__input"
+        className='__input'
         onBlur={() => onBlur(v)}
         error={inputError[v]}
       />
     ));
 
   return (
-    <div className="verify-code-form">
-      <div className="__input-block">{renderInput()}</div>
+    <div className='verify-code-form'>
+      <div className='__input-block'>{renderInput()}</div>
       <ButtonKit
         disabled={disableVerify}
-        variant="contained"
-        size="large"
+        variant='contained'
+        size='large'
         onClick={onVerify}
-        className="__btn"
+        className='__btn'
       >
         Verify
       </ButtonKit>

@@ -25,18 +25,18 @@ const Settings = () => {
     {
       value: 'general',
       icon: (
-        <div className="icon-block">
-          <Person className="__icon" />
+        <div className='icon-block'>
+          <Person className='__icon' />
         </div>
       ),
       component: <General />,
-      subtitle: <p className="subtitle" />,
+      subtitle: <p className='subtitle' />,
     },
     {
       value: 'billing',
       icon: (
-        <div className="icon-block">
-          <Description className="__icon" />
+        <div className='icon-block'>
+          <Description className='__icon' />
         </div>
       ),
       component: <Billing />,
@@ -44,42 +44,42 @@ const Settings = () => {
     {
       value: 'onboarding',
       icon: (
-        <div className="icon-block">
-          <Send className="__icon" />
+        <div className='icon-block'>
+          <Send className='__icon' />
         </div>
       ),
       component: <NewSettingsOnboarding />,
-      subtitle: <p className="subtitle" />,
+      subtitle: <p className='subtitle' />,
     },
     {
       value: 'change password',
       icon: (
-        <div className="icon-block">
-          <Password className="__icon" />
+        <div className='icon-block'>
+          <Password className='__icon' />
         </div>
       ),
       component: <ChangePassword />,
-      subtitle: <p className="subtitle" />,
+      subtitle: <p className='subtitle' />,
     },
     {
       value: 'menu',
       icon: (
-        <div className="icon-block">
-          <MenuIcon className="__icon __menu" />
+        <div className='icon-block'>
+          <MenuIcon className='__icon __menu' />
         </div>
       ),
       component: <Menu />,
-      subtitle: <p className="subtitle" />,
+      subtitle: <p className='subtitle' />,
     },
     {
       value: 'cost',
       icon: (
-        <div className="icon-block">
-          <CostIcon className="__icon __menu" />
+        <div className='icon-block'>
+          <CostIcon className='__icon __menu' />
         </div>
       ),
       component: <Cost />,
-      subtitle: <p className="subtitle" />,
+      subtitle: <p className='subtitle' />,
     },
   ];
 
@@ -88,18 +88,18 @@ const Settings = () => {
   };
 
   return (
-    <div className="setting-account">
-      <TypographyKit fontSize="32px" color="#212B36" fontWeight="700" variant="h4">
+    <div className='setting-account'>
+      <TypographyKit fontSize='32px' color='#212B36' fontWeight='700' variant='h4'>
         Settings - {currentTab.charAt(0).toUpperCase() + currentTab.slice(1)}
       </TypographyKit>
-      <div className="__content">
+      <div className='__content'>
         <TabsKit
           allowScrollButtonsMobile
-          variant="scrollable"
-          scrollButtons="auto"
+          variant='scrollable'
+          scrollButtons='auto'
           value={currentTab}
           onChange={handleTabChange}
-          className="setting-account__tabs"
+          className='setting-account__tabs'
         >
           {ACCOUNT_TABS.map((tab) => (
             <TabKit

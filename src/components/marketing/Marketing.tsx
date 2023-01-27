@@ -5,8 +5,8 @@ import Widget from '../widget/Widget';
 const Marketing = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table, loading }) => {
   const marketingLinks = ['accrued_discounts', 'roi'];
   return (
-    <div className="block">
-      <div className="cardsWrapper marketing">
+    <div className='block'>
+      <div className='cardsWrapper marketing'>
         {marketingLinks.map((info) => (
           <Widget
             table={table}

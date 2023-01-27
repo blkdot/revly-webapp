@@ -372,22 +372,22 @@ const RestaurantDropdownNew = ({
   };
   if (branch) {
     return (
-      <div className="restaurant-dropdown_wrapper branch">
+      <div className='restaurant-dropdown_wrapper branch'>
         <FormcontrolKit fullWidth>
           <SelectKit
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId='demo-simple-select-label'
+            id='demo-simple-select'
             multiple
             value={getChain()}
             MenuProps={MenuPropsBranch}
             renderValue={() => (
-              <div className="selected-dropdown branch">
-                <img src={BranchesIcon} alt="branches icon" />
+              <div className='selected-dropdown branch'>
+                <img src={BranchesIcon} alt='branches icon' />
                 <p>{getChain().join(', ')}</p>
               </div>
             )}
           >
-            <div className="dropdown-paper branch">
+            <div className='dropdown-paper branch'>
               {Object.keys(display).map((el, index) => (
                 <RestaurantCheckboxAccordion
                   key={el}
@@ -414,7 +414,7 @@ const RestaurantDropdownNew = ({
   return (
     <div className={`restaurant-dropdown_wrapper ${cost || listing ? 'cost' : ''}`}>
       {!listing ? (
-        <TypographyKit className="top-text-inputs" variant="subtitle">
+        <TypographyKit className='top-text-inputs' variant='subtitle'>
           Select a Vendor
         </TypographyKit>
       ) : (
@@ -422,26 +422,26 @@ const RestaurantDropdownNew = ({
       )}
       <FormcontrolKit fullWidth>
         <SelectKit
-          labelId="demo-simple-select-label"
-          id="demo-multiple-checkbox-vendors-new"
+          labelId='demo-simple-select-label'
+          id='demo-multiple-checkbox-vendors-new'
           multiple
           value={getChain()}
           MenuProps={cost ? MenuPropsBranch : MenuProps}
           renderValue={() => (
-            <div className="selected-dropdown">
-              <img className="select_icon" src={selectIcon} alt="Select Icon" />
+            <div className='selected-dropdown'>
+              <img className='select_icon' src={selectIcon} alt='Select Icon' />
               <p>{getChain().join(', ')}</p>
             </div>
           )}
         >
           <div className={`dropdown-paper ${cost ? 'cost' : ''}`}>
             {!(listing || cost) ? (
-              <div className="selected-chains">
+              <div className='selected-chains'>
                 <p>Selected: {getChain().length}</p>
                 <ButtonKit
                   disabled={Object.keys(display).length === getChain().length}
                   onClick={selectAll}
-                  variant="contained"
+                  variant='contained'
                 >
                   Select All
                 </ButtonKit>

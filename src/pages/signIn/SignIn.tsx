@@ -79,7 +79,7 @@ const SignIn = () => {
         await logOut();
         setProcessing(false);
         throw new Error(
-          'Email not verified, please check your email (include spam) for verification',
+          'Email not verified, please check your email (include spam) for verification'
         );
       }
 

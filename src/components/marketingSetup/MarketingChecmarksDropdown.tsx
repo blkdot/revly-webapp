@@ -42,7 +42,7 @@ const MarketingCheckmarksDropdown = ({
     } else {
       setName(
         // On autofill we get a stringified value.
-        typeof value === 'string' ? value.split(',') : value,
+        typeof value === 'string' ? value.split(',') : value
       );
     }
   };
@@ -61,7 +61,7 @@ const MarketingCheckmarksDropdown = ({
   const renderLoayaut = () => {
     if (Object.keys(personName?.display || {}).length > 0 && type === 'vendor') {
       return (
-        <div className="dropdown-paper cost">
+        <div className='dropdown-paper cost'>
           {Object.keys(display).map((el, index) => (
             <RestaurantCheckboxAccordion
               key={el}
@@ -124,19 +124,19 @@ const MarketingCheckmarksDropdown = ({
   return (
     <div style={{ width: '100%' }}>
       <FormcontrolKit
-        className="top-competition marketing-setup-dropdown"
+        className='top-competition marketing-setup-dropdown'
         sx={{ m: 1, width: 300 }}
       >
         <InputLabelKit
-          className="competition-dropdown restaurant-dropdown-input"
-          id="demo-multiple-checkbox-label"
+          className='competition-dropdown restaurant-dropdown-input'
+          id='demo-multiple-checkbox-label'
         >
-          {icon ? <img src={icon} alt="Select Icon" /> : ''}
+          {icon ? <img src={icon} alt='Select Icon' /> : ''}
           {title || 'Customised Days'}
         </InputLabelKit>
         <SelectKit
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
+          labelId='demo-multiple-checkbox-label'
+          id='demo-multiple-checkbox'
           multiple={type !== 'vendor'}
           value={getValue()}
           onChange={handleChange}

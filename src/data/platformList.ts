@@ -20,6 +20,6 @@ export const platformContexDefaultFormat = {
         access_token_bis: null,
       },
     }),
-    {},
+    {}
   ),
 };

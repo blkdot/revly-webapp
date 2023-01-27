@@ -79,17 +79,17 @@ const Competitor = ({ open, opened, platformList }) => {
   const render = () => {
     if (loadingReq) {
       return (
-        <div className="competitor-loading">
+        <div className='competitor-loading'>
           <SpinnerKit />
         </div>
       );
     }
     if (loading) {
       return (
-        <div className="progress-bar">
-          <img src={loadingImage} alt="Procces" />
-          <TypographyKit variant="h5">Competitor on process</TypographyKit>
-          <TypographyKit className="competitor-top-text-span">
+        <div className='progress-bar'>
+          <img src={loadingImage} alt='Procces' />
+          <TypographyKit variant='h5'>Competitor on process</TypographyKit>
+          <TypographyKit className='competitor-top-text-span'>
             We are processing your competitor data. You can check your competitor ranking after 24
             hours.
           </TypographyKit>
@@ -97,13 +97,13 @@ const Competitor = ({ open, opened, platformList }) => {
       );
     }
     return (
-      <div className="competitor-inputs">
+      <div className='competitor-inputs'>
         <span>Your Competitor data</span>
         <div>
           <TextfieldKit
-            className="competition-textfield"
-            label="Restaurant name"
-            variant="outlined"
+            className='competition-textfield'
+            label='Restaurant name'
+            variant='outlined'
             onChange={(e) => setRestaurant(e.target.value)}
             required
           />
@@ -124,47 +124,47 @@ const Competitor = ({ open, opened, platformList }) => {
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}
-                    alt="icon"
+                    alt='icon'
                   />
                   <ListItemTextKit primary={v.name} />
                 </div>
               </MenuItemKit>
             )}
             icon={PlatformIcon}
-            title="Platform"
-            id="platform_dropdown_menu"
-            type="platform"
-            className="competitor-dropdown"
+            title='Platform'
+            id='platform_dropdown_menu'
+            type='platform'
+            className='competitor-dropdown'
             setRow={setPlatform}
             select={platform}
           />
           <CompetitionDropdown
             icon={CountryIcon}
             setRow={setCountry}
-            title="Country"
-            className="competitor-dropdown"
+            title='Country'
+            className='competitor-dropdown'
             rows={['UAE', 'Kuwait', 'Qatar']}
             select={country}
           />
           <CompetitionDropdown
             icon={CityIcon}
             setRow={setCity}
-            title="City"
-            className="competitor-dropdown"
+            title='City'
+            className='competitor-dropdown'
             rows={['Dubai', 'Sharjah', 'Abu Dhabi', 'Kuwait City', 'Doha']}
             select={city}
           />
           <TextfieldKit
-            className="competition-textfield"
-            label="Area Name"
-            variant="outlined"
+            className='competition-textfield'
+            label='Area Name'
+            variant='outlined'
             onChange={(e) => setArea(e.target.value)}
             required
           />
           <CompetitionDropdown
             icon={CuisineIcon}
-            title="Cuisine filter"
-            className="competitor-dropdown"
+            title='Cuisine filter'
+            className='competitor-dropdown'
             setRow={setCuisineFilter}
             rows={['Italian', 'Burgers', 'Pizza', 'Sushi', 'Indian']}
             select={cuisineFilter}
@@ -175,29 +175,29 @@ const Competitor = ({ open, opened, platformList }) => {
   };
 
   return (
-    <div className="competitor-wrapper">
-      <ButtonKit onClick={() => open()} variant="contained" className="competition-add">
+    <div className='competitor-wrapper'>
+      <ButtonKit onClick={() => open()} variant='contained' className='competition-add'>
         <AddIcon />
         Add a Competitor
       </ButtonKit>
       <div
-        role="presentation"
+        role='presentation'
         tabIndex={-1}
         onClick={() => open()}
         className={`competitor-overlay ${opened ? 'active' : ''}`}
       >
-        <form role="presentation" tabIndex={-1} onSubmit={(e) => submit(e)}>
-          <PaperKit onClick={(e) => e.stopPropagation()} className="competitor-paper">
+        <form role='presentation' tabIndex={-1} onSubmit={(e) => submit(e)}>
+          <PaperKit onClick={(e) => e.stopPropagation()} className='competitor-paper'>
             <div style={{ height: '100%' }}>
-              <CloseIcon onClick={() => open()} className="competitor-close" />
-              <img className="competitor-lines" src={lines} alt="Lines" />
-              <TypographyKit className="competitor-top-text">Add a competitor</TypographyKit>
+              <CloseIcon onClick={() => open()} className='competitor-close' />
+              <img className='competitor-lines' src={lines} alt='Lines' />
+              <TypographyKit className='competitor-top-text'>Add a competitor</TypographyKit>
               {render()}
             </div>
-            <div className="competition_btn-wrapper">
+            <div className='competition_btn-wrapper'>
               <ButtonKit
-                type="submit"
-                variant="contained"
+                type='submit'
+                variant='contained'
                 className={`competition-add ${loading ? 'active' : ''}`}
               >
                 Add this competitor
@@ -207,8 +207,8 @@ const Competitor = ({ open, opened, platformList }) => {
                   open();
                   setLoading(false);
                 }}
-                variant="outlined"
-                className="competition-cancel"
+                variant='outlined'
+                className='competition-cancel'
               >
                 Cancel
               </ButtonKit>

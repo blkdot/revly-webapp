@@ -9,14 +9,14 @@ const MarketingOfferRemove = (props: any) => {
 
   return (
     <div
-      role="presentation"
+      role='presentation'
       tabIndex={-1}
       onClick={() => setOpened(false)}
       className={`delete-overlay ${opened ? 'active' : ''}`}
     >
-      <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper">
+      <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper'>
         <div>
-          <img src={logo} alt="logo" />
+          <img src={logo} alt='logo' />
           <TypographyKit>Are you sure you want to delete this offer ?</TypographyKit>
         </div>
         <TypographyKit>
@@ -24,10 +24,10 @@ const MarketingOfferRemove = (props: any) => {
           Tellus diam mi phasellus facilisi id iaculis egestas.
         </TypographyKit>
         <div>
-          <ButtonKit onClick={() => CancelOffer()} variant="contained">
+          <ButtonKit onClick={() => CancelOffer()} variant='contained'>
             Cancel Offer
           </ButtonKit>
-          <ButtonKit onClick={() => setOpened(false)} variant="outlined">
+          <ButtonKit onClick={() => setOpened(false)} variant='outlined'>
             Cancel
           </ButtonKit>
         </div>

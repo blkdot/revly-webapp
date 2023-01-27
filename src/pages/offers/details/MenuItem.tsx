@@ -24,7 +24,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
         vendor,
         drn_id: drnId,
       },
-      platform,
+      platform
     )
       .then((res) => setData(res.data))
       // eslint-disable-next-line no-console
@@ -56,7 +56,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
           width={40}
           height={40}
           src={url || defaultImage}
-          alt="item"
+          alt='item'
         />
         <div
           style={{
@@ -92,7 +92,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
           </span>
         </div>
       </div>
-      <div className="price">
+      <div className='price'>
         <span style={{ marginRight: '12px' }}>{`${price} AED`}</span>
         <span>{`${price * (discountRate / 100)} AED`}</span>
       </div>

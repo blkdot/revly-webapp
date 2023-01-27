@@ -35,9 +35,9 @@ const PlatformSelector = (props: any) => {
   };
 
   return (
-    <div className="onboarding-platform">
+    <div className='onboarding-platform'>
       {renderText()}
-      <div className="onboarding-platform__selector">{renderItems()}</div>
+      <div className='onboarding-platform__selector'>{renderItems()}</div>
     </div>
   );
 };

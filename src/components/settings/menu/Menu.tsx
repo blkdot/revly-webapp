@@ -44,7 +44,7 @@ const Menu = () => {
     try {
       const res = await getMenu(
         { master_email: user.email, access_token: user.accessToken, vendor: vendor || [] },
-        platforms,
+        platforms
       );
 
       const resp = Object.keys(res.data.menu_items || {})
@@ -106,15 +106,15 @@ const Menu = () => {
   };
 
   return (
-    <div className="menu">
-      <div className="__select-block">
-        <div className="__select">
+    <div className='menu'>
+      <div className='__select-block'>
+        <div className='__select'>
           <MenuDropdown
             onChange={handleCategoryChange}
             startIcon={
               <img
                 src={iccategory}
-                alt="category"
+                alt='category'
                 style={{ position: 'relative', bottom: '5px' }}
               />
             }
@@ -122,7 +122,7 @@ const Menu = () => {
             multiple
             renderValue={(selected) => selected.join(', ')}
             items={categoryList}
-            label="All Categories"
+            label='All Categories'
             renderOption={(v) => (
               <MenuItemKit key={v} value={v}>
                 <CheckboxKit checked={category.indexOf(v) > -1} />
@@ -131,14 +131,14 @@ const Menu = () => {
             )}
           />
         </div>
-        <div className="__select">
+        <div className='__select'>
           <MenuDropdown
             onChange={(e) => handleSelectChange(e, setBranch)}
             startIcon={
-              <img src={icbranch} alt="category" style={{ position: 'relative', bottom: '2px' }} />
+              <img src={icbranch} alt='category' style={{ position: 'relative', bottom: '2px' }} />
             }
             items={vendorList?.filter((v) => v.platform === platform)}
-            label="Select a branch"
+            label='Select a branch'
             value={branch}
             renderOption={(v) => (
               <MenuItemKit key={v.vendor_id} value={v}>
@@ -148,7 +148,7 @@ const Menu = () => {
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}
-                    alt="icon"
+                    alt='icon'
                   />
                   <ListItemTextKit primary={v.data.vendor_name} />
                 </div>
@@ -156,12 +156,12 @@ const Menu = () => {
             )}
           />
         </div>
-        <div className="__select">
+        <div className='__select'>
           <MenuDropdown
             onChange={(e) => handleSelectChange(e, setPlatform)}
-            startIcon={<img width={25} height={25} src={icplatform} alt="category" />}
+            startIcon={<img width={25} height={25} src={icplatform} alt='category' />}
             items={platformList}
-            label="Select a Platform"
+            label='Select a Platform'
             value={platform}
             renderOption={(v) => (
               <MenuItemKit key={v.name} value={v.name}>
@@ -178,7 +178,7 @@ const Menu = () => {
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}
-                    alt="icon"
+                    alt='icon'
                   />
                   <ListItemTextKit primary={v.name} />
                 </div>
@@ -187,7 +187,7 @@ const Menu = () => {
           />
         </div>
       </div>
-      <div className="__table-block">
+      <div className='__table-block'>
         <MenuTable
           data={filteredCategoryData.length > 0 ? filteredCategoryData : data}
           loading={loading}

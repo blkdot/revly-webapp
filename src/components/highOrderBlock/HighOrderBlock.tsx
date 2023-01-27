@@ -7,7 +7,7 @@ const HighOrderBlock = (props: any) => {
 
   return (
     <div className={`high-order-block-component ${higher ? '__push-top' : ''}`}>
-      <FabKit size="small" color={color || 'error'}>
+      <FabKit size='small' color={color || 'error'}>
         {children}
       </FabKit>
     </div>

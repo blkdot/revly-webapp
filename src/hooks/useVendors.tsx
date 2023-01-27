@@ -32,7 +32,7 @@ const useVendors = (isSign) => {
       }
       return {};
     },
-    { enabled: !isSign },
+    { enabled: !isSign }
   );
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const useVendors = (isSign) => {
           if (userPlatformData.platforms[p.name].active) {
             vendorsSelectedTemp.push(v.data.vendor_name);
           }
-        }),
+        })
       );
     const { ...rest } = newData;
     const display = newData.display ? newData.display : {};

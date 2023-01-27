@@ -25,60 +25,60 @@ const AccountSettingForm = (props: any) => {
   } = props;
 
   return (
-    <div className="account-form">
-      <div className="account-form__flex">
-        <div className="account-form__flex__block">
+    <div className='account-form'>
+      <div className='account-form__flex'>
+        <div className='account-form__flex__block'>
           <TextfieldKit
             helperText={valueName.error ? '* must be > 2 and only alphabet' : ''}
             error={valueName.error}
             value={valueName.value}
-            name="name"
+            name='name'
             onChange={(e) => handleInputChange(e, 'isAlphabet')}
-            className="account-form__flex__block__input"
+            className='account-form__flex__block__input'
             fullWidth
-            label="Name"
+            label='Name'
           />
           <TextfieldKit
             helperText={valueCity.error ? '* must be > 2 and only alphabet' : ''}
             error={valueCity.error}
             value={valueCity.value}
-            name="city"
+            name='city'
             onChange={(e) => handleInputChange(e, 'isAlphabet')}
-            className="account-form__flex__block__input"
+            className='account-form__flex__block__input'
             fullWidth
-            label="City"
+            label='City'
           />
-          <div className="account-form__flex__block__input-phone">
+          <div className='account-form__flex__block__input-phone'>
             <PhoneInputKit
               value={valueDial}
-              country="ae"
-              specialLabel=""
+              country='ae'
+              specialLabel=''
               inputProps={{ readOnly: false }}
               onChange={onDialChange}
-              containerClass="account-form__input-phone"
+              containerClass='account-form__input-phone'
             />
             <TextfieldKit
               value={valuePhone}
-              name="phone"
+              name='phone'
               onChange={(e) => handleInputChange(e)}
-              className="account-form__flex__block__input"
+              className='account-form__flex__block__input'
               fullWidth
-              label="Phone Number"
+              label='Phone Number'
               onKeyDown={onlyNumber}
             />
           </div>
         </div>
 
-        <div className="account-form__flex__block">
+        <div className='account-form__flex__block'>
           <TextfieldKit
             helperText={valueRestoName.error ? '* must be > 2' : ''}
             error={valueRestoName.error}
             value={valueRestoName.value}
-            name="restoName"
+            name='restoName'
             onChange={(e) => handleInputChange(e, 'length')}
-            className="account-form__flex__block__input"
+            className='account-form__flex__block__input'
             fullWidth
-            label="Restaurant Name"
+            label='Restaurant Name'
           />
           <AutoCompleteKit
             disableClearable
@@ -86,9 +86,9 @@ const AccountSettingForm = (props: any) => {
               <li {...prop}>
                 <img
                   style={{ marginRight: 10 }}
-                  width="20"
+                  width='20'
                   src={`https://flagcdn.com/${opt.code.toLowerCase()}.svg`}
-                  alt="flag"
+                  alt='flag'
                 />
                 {opt.name}
               </li>
@@ -109,14 +109,14 @@ const AccountSettingForm = (props: any) => {
 
               return opt.name;
             }}
-            className="account-form__flex__block__autocomplete"
-            renderInput={(params) => <TextfieldKit {...params} label="Country" />}
+            className='account-form__flex__block__autocomplete'
+            renderInput={(params) => <TextfieldKit {...params} label='Country' />}
           />
           <TextfieldKit
-            label="Role"
+            label='Role'
             fullWidth
-            name="role"
-            className="account-form__flex__block__input"
+            name='role'
+            className='account-form__flex__block__input'
             error={valueRole.error}
             value={valueRole.value}
             onChange={(e) => handleInputChange(e, 'length')}

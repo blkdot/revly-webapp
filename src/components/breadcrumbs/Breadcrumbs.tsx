@@ -24,7 +24,7 @@ const Breadcrumbs = ({ links, activeLast = false }) => {
 
     return (
       <div key={link.name}>
-        <TypographyKit variant="body2" className="breadcrumbs__active-last">
+        <TypographyKit variant='body2' className='breadcrumbs__active-last'>
           {currentLink}
         </TypographyKit>
       </div>
@@ -33,8 +33,8 @@ const Breadcrumbs = ({ links, activeLast = false }) => {
 
   return (
     <BreadcrumbsKit
-      className="breadcrumbs"
-      separator={<BoxKit component="span" className="breadcrumbs__box" />}
+      className='breadcrumbs'
+      separator={<BoxKit component='span' className='breadcrumbs__box' />}
     >
       {activeLast ? listDefault : listActiveLast}
     </BreadcrumbsKit>
@@ -46,12 +46,12 @@ const LinkItem = ({ link }) => {
   return (
     <LinkKit
       key={name}
-      variant="body2"
+      variant='body2'
       component={RouterLink}
       to={href || '#'}
-      className="breadcrumbs__link"
+      className='breadcrumbs__link'
     >
-      {icon && <BoxKit className="breadcrumbs__link-box">{icon}</BoxKit>}
+      {icon && <BoxKit className='breadcrumbs__link-box'>{icon}</BoxKit>}
       {name}
     </LinkKit>
   );

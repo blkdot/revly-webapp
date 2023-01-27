@@ -40,85 +40,85 @@ const SignUpForm = (props: any) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="signup-form">
-      <TypographyKit className="signup-form__text">Enroll in our Beta.</TypographyKit>
-      <TypographyKit className="signup-form__subtext">
+    <div className='signup-form'>
+      <TypographyKit className='signup-form__text'>Enroll in our Beta.</TypographyKit>
+      <TypographyKit className='signup-form__subtext'>
         Let&apos;s increase those sales together!
       </TypographyKit>
-      <div className="signup-form__form">
-        <div className="signup-form__flex">
+      <div className='signup-form__form'>
+        <div className='signup-form__flex'>
           <TextfieldKit
             error={errorFName}
             required
-            label="First Name"
+            label='First Name'
             onChange={(e) => onChangeFName(e.target.value)}
-            className="signup-form__flex__input"
+            className='signup-form__flex__input'
             onBlur={() => onBlur('fname')}
           />
           <TextfieldKit
             error={errorLName}
-            label="Last Name"
+            label='Last Name'
             required
             onChange={(e) => onChangeLName(e.target.value)}
-            className="signup-form__flex__input"
+            className='signup-form__flex__input'
             onBlur={() => onBlur('lname')}
           />
         </div>
-        <div className="signup-form__flex">
+        <div className='signup-form__flex'>
           <TextfieldKit
             error={errorRestoName}
             required
-            label="Restaurant name"
+            label='Restaurant name'
             onChange={(e) => onChangeRestoName(e.target.value)}
-            className="signup-form__flex__input"
+            className='signup-form__flex__input'
             fullWidth
             onBlur={() => onBlur('restoName')}
           />
 
           <TextfieldKit
-            label="# of points of sale"
+            label='# of points of sale'
             required
             onChange={(e) => onChangePointOfSales(e.target.value)}
-            className="signup-form__flex__input"
+            className='signup-form__flex__input'
             onKeyDown={onlyNumber}
             fullWidth
             onBlur={() => onBlur('pointOfSale')}
             error={errorPointOfSale}
           />
         </div>
-        <div className="signup-form__flex phone">
+        <div className='signup-form__flex phone'>
           <PhoneInputKit
             inputProps={{ readOnly: true }}
-            country="ae"
+            country='ae'
             onChange={(v, c) => onDialChange({ dialCode: c.dialCode, country: c.name })}
-            specialLabel=""
-            containerClass="signup-form__input-phone"
+            specialLabel=''
+            containerClass='signup-form__input-phone'
           />
           <TextfieldKit
-            label="Phone number"
+            label='Phone number'
             onChange={(e) => onChangePhone(e.target.value)}
-            className="signup-form__input"
+            className='signup-form__input'
             onKeyDown={onlyNumber}
             fullWidth
           />
         </div>
         <TextfieldKit
           error={errorEmail}
-          label="Email address"
+          label='Email address'
           required
           onChange={(e) => onChangeEmail(e.target.value)}
-          className="signup-form__input"
+          className='signup-form__input'
           fullWidth
           onBlur={() => onBlur('email')}
         />
         <TextfieldKit
           error={errorPassword}
-          label="Password"
+          label='Password'
           onBlur={() => onBlur('password')}
           required
           type={showPassword ? 'text' : 'password'}
           onChange={(e) => onChangePassword(e.target.value)}
-          className="signup-form__input"
+          className='signup-form__input'
           fullWidth
           InputProps={{
             endAdornment: showPassword ? (
@@ -134,24 +134,24 @@ const SignUpForm = (props: any) => {
             ),
           }}
         />
-        <FormGroupKit className="signup-form__check">
+        <FormGroupKit className='signup-form__check'>
           <FormControlLabelKit
             control={<CheckboxKit onChange={({ target }) => onChangeAgree(target.checked)} />}
             label={
-              <TypographyKit variant="body2" className="signup-form__check__text">
-                By signing up, I agree to Revly <Link to="/term-of-use">Term of Use</Link> and{' '}
-                <Link to="/privacy-policy">Privacy Policy</Link>.
+              <TypographyKit variant='body2' className='signup-form__check__text'>
+                By signing up, I agree to Revly <Link to='/term-of-use'>Term of Use</Link> and{' '}
+                <Link to='/privacy-policy'>Privacy Policy</Link>.
               </TypographyKit>
             }
           />
         </FormGroupKit>
         <ButtonKit
-          variant="contained"
+          variant='contained'
           style={{ borderRadius: 30 }}
           onClick={onSubmit}
-          className="signup-form__input"
+          className='signup-form__input'
           disabled={disabled}
-          size="large"
+          size='large'
         >
           Register
         </ButtonKit>

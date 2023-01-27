@@ -19,14 +19,14 @@ const AvatarUpload = (props: any) => {
   });
 
   return (
-    <div className="image-upload-container">
-      <div {...getRootProps()} className="image-upload">
+    <div className='image-upload-container'>
+      <div {...getRootProps()} className='image-upload'>
         <input {...getInputProps()} />
 
         {file && (
           <AvatarKit
-            className="image-upload__avatar"
-            alt="avatar"
+            className='image-upload__avatar'
+            alt='avatar'
             src={typeof file === 'string' ? file : ''}
           >
             N
@@ -35,7 +35,7 @@ const AvatarUpload = (props: any) => {
 
         <div className={`image-upload__placeholder ${file ? '__withfile' : ''}`}>
           <PhotoCamera />
-          <p className="image-upload__placeholder__text">
+          <p className='image-upload__placeholder__text'>
             {file ? 'Update photo' : 'Upload photo'}
           </p>
         </div>

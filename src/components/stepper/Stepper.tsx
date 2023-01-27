@@ -55,7 +55,7 @@ const ColorlibStepIcon = (props: any) => {
     // TODO: FIX IT
     // <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
     <ColorlibStepIconRoot className={className}>
-      <img width={16} height={20} src={icrevly} alt="revly" />
+      <img width={16} height={20} src={icrevly} alt='revly' />
     </ColorlibStepIconRoot>
   );
 };

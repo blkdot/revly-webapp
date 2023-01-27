@@ -8,7 +8,7 @@ const RangeSelector = (props: any) => {
 
   return (
     <div>
-      <TypographyKit variant="h6">
+      <TypographyKit variant='h6'>
         {pascalCase(label)} range selector [{values[0]} <TbArrowRightCircle /> {values[1]}]
       </TypographyKit>
       <Slider
@@ -17,7 +17,7 @@ const RangeSelector = (props: any) => {
         step={step ?? 1}
         value={values}
         onChange={(_, v) => onChange(v)}
-        valueLabelDisplay="auto"
+        valueLabelDisplay='auto'
       />
     </div>
   );

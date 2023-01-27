@@ -29,7 +29,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
       titleDate: 'current week',
       titleafterPeriod: 'last week',
       typeDate: 'week',
-    },
+    }
   );
 
   useEffect(() => {

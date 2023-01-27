@@ -60,7 +60,7 @@ const TooltipCategory = ({ obj, index }) => {
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [],
+    []
   );
 
   return (
@@ -68,11 +68,11 @@ const TooltipCategory = ({ obj, index }) => {
       <TooltipKit
         interactive={1}
         disableHoverListener={!hoverStatus}
-        id="category-tooltip"
+        id='category-tooltip'
         title={obj.name}
       >
         <div>
-          <ListItemTextKit className="list-item-category" primary={obj.name} />
+          <ListItemTextKit className='list-item-category' primary={obj.name} />
         </div>
       </TooltipKit>
       <b>{obj.price} AED</b>
@@ -162,49 +162,49 @@ const GetProgress = ({ progressData }) => {
     return typeSchedule !== 'Continues Offer' && duration === 'Program the offer duration';
   };
   const subtitle = () => (
-    <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+    <TypographyKit className='left-part-subtitle' color='#637381' variant='subtitle'>
       Create and manage all your offers. Set personalised rules to automatically trigger your
       offers.
     </TypographyKit>
   );
   const durationSelected = () => (
-    <div className="left-part-middle">
-      <TypographyKit variant="h6">{selected}. Select the Duration</TypographyKit>
+    <div className='left-part-middle'>
+      <TypographyKit variant='h6'>{selected}. Select the Duration</TypographyKit>
       {subtitle()}
       <RadioGroupKit
-        className="duration-wrapper"
-        aria-labelledby="demo-radio-buttons-group-label"
+        className='duration-wrapper'
+        aria-labelledby='demo-radio-buttons-group-label'
         value={duration}
         onChange={(e) => {
           setDuration(e.target.value);
         }}
-        name="radio-buttons-group-duration"
+        name='radio-buttons-group-duration'
       >
         <BoxKit
           className={`left-part-radio under-textfields radio-dates ${
             duration === 'Starting Now' ? 'active' : ''
           }`}
         >
-          <div className="radio">
+          <div className='radio'>
             <div>
               <span>
-                <img src={CalendarCheckedIcon} alt="Calendar checked Icon" />
+                <img src={CalendarCheckedIcon} alt='Calendar checked Icon' />
               </span>
               <div>
                 <div>Starting Now</div>
                 <p>{format(addMinutes(new Date(), 2), 'dd MMM yyyy HH:mm')}</p>
               </div>
             </div>
-            <FormControlLabelKit value="Starting Now" control={<RadioKit />} />
+            <FormControlLabelKit value='Starting Now' control={<RadioKit />} />
           </div>
           <div
-            className="picker-duration"
+            className='picker-duration'
             style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
           >
             <div style={{ width: '100%' }}>
               Ending Date
               <DatePickerDayKit
-                className="date-error"
+                className='date-error'
                 minDate={new Date()}
                 value={endingDate}
                 onChange={(newValue) => {
@@ -214,7 +214,7 @@ const GetProgress = ({ progressData }) => {
               />
             </div>
             {times.map((obj, index) => (
-              <div key={obj.pos} className="picker-duration" style={{ width: '100%' }}>
+              <div key={obj.pos} className='picker-duration' style={{ width: '100%' }}>
                 <div style={{ width: '100%' }}>
                   End Time
                   <TimePickerDropdown
@@ -223,7 +223,7 @@ const GetProgress = ({ progressData }) => {
                     startLimit={isEndingLimited() ? obj.startTime : null}
                     times={times}
                     index={index}
-                    type="endTime"
+                    type='endTime'
                   />
                 </div>
               </div>
@@ -235,28 +235,28 @@ const GetProgress = ({ progressData }) => {
             duration === 'Program the offer duration' ? 'active' : ''
           }`}
         >
-          <div className="radio">
+          <div className='radio'>
             <div>
               <span>
-                <img src={CalendarEventIcon} alt="Calendar Event Icon" />
+                <img src={CalendarEventIcon} alt='Calendar Event Icon' />
               </span>
               <div>
                 <div>Program the offer duration</div>
                 <p>
                   {typeSchedule || 'Recurrence customized'}
-                  <img src={ArrowIcon} alt="arrow" />
+                  <img src={ArrowIcon} alt='arrow' />
                 </p>
               </div>
             </div>
-            <FormControlLabelKit value="Program the offer duration" control={<RadioKit />} />
+            <FormControlLabelKit value='Program the offer duration' control={<RadioKit />} />
           </div>
           <div>
             <RadioGroupKit
-              className="radio-group-day"
-              aria-labelledby="demo-radio-buttons-group-label"
+              className='radio-group-day'
+              aria-labelledby='demo-radio-buttons-group-label'
               value={typeSchedule}
               onChange={(e) => setTypeSchedule(e.target.value)}
-              name="radio-buttons-group-days"
+              name='radio-buttons-group-days'
             >
               {[
                 'Continues Offer',
@@ -277,19 +277,19 @@ const GetProgress = ({ progressData }) => {
     </div>
   );
   const audienceSelected = (plat) => (
-    <div className="left-part-middle">
+    <div className='left-part-middle'>
       {plat === 'deliveroo' ? (
-        <TypographyKit variant="h6">{selected}.Select your target audience</TypographyKit>
+        <TypographyKit variant='h6'>{selected}.Select your target audience</TypographyKit>
       ) : (
         ''
       )}
       {subtitle()}
       {plat === 'deliveroo' ? (
-        <BoxKit className="left-part-radio under-textfields active">
-          <div className="radio">
+        <BoxKit className='left-part-radio under-textfields active'>
+          <div className='radio'>
             <div>
               <span>
-                <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
+                <img style={{ filter: 'none' }} src={AudienceIcon} alt='Audience Icon' />
               </span>
               <div>
                 <div>Target Audience</div>
@@ -298,11 +298,11 @@ const GetProgress = ({ progressData }) => {
           </div>
           <div>
             <RadioGroupKit
-              className="radio-group-day"
-              aria-labelledby="demo-radio-buttons-group-label"
+              className='radio-group-day'
+              aria-labelledby='demo-radio-buttons-group-label'
               value={targetAudience}
               onChange={(e) => setTargetAudience(e.target.value)}
-              name="radio-buttons-group-days"
+              name='radio-buttons-group-days'
             >
               {['All customers', 'New customer', 'Deliveroo plus', 'Inactive customers'].map(
                 (day) => (
@@ -310,7 +310,7 @@ const GetProgress = ({ progressData }) => {
                     <FormControlLabelKit value={day} control={<RadioKit />} />
                     <span>{day}</span>
                   </div>
-                ),
+                )
               )}
             </RadioGroupKit>
           </div>
@@ -322,14 +322,14 @@ const GetProgress = ({ progressData }) => {
         onClick={() => {
           setSmRule(true);
         }}
-        className="another-slot remove"
-        variant="contained"
+        className='another-slot remove'
+        variant='contained'
       >
-        <img src={SmRuleIcon} alt="Sm Rule" />
+        <img src={SmRuleIcon} alt='Sm Rule' />
         Combine with a smart rule
       </ButtonKit>
-      <ButtonKit disabled className="another-slot remove" variant="contained">
-        <img src={SpeakerIcon} alt="Speaker" />
+      <ButtonKit disabled className='another-slot remove' variant='contained'>
+        <img src={SpeakerIcon} alt='Speaker' />
         Combine with Ads
       </ButtonKit>
     </div>
@@ -344,14 +344,14 @@ const GetProgress = ({ progressData }) => {
     return audienceSelected(platformData);
   };
   const reccurenceSelected = () => (
-    <div className="left-part-middle">
-      <TypographyKit variant="h6">{selected}. Select the Recurrence detail</TypographyKit>
+    <div className='left-part-middle'>
+      <TypographyKit variant='h6'>{selected}. Select the Recurrence detail</TypographyKit>
       {subtitle()}
-      <BoxKit className="left-part-radio under-textfields radio-dates active">
-        <div className="radio">
+      <BoxKit className='left-part-radio under-textfields radio-dates active'>
+        <div className='radio'>
           <div>
             <span>
-              <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
+              <img style={{ filter: 'none' }} src={TimerIcon} alt='Timer Icon' />
             </span>
             <div>
               <div>Recurrence Details</div>
@@ -371,7 +371,7 @@ const GetProgress = ({ progressData }) => {
               'Every Sunday',
             ]}
             title={typeSchedule}
-            className="top-competition marketing-setup-dropdown"
+            className='top-competition marketing-setup-dropdown'
             setRow={setEveryWeek}
             select={everyWeek}
           />
@@ -387,11 +387,11 @@ const GetProgress = ({ progressData }) => {
         ) : (
           ''
         )}
-        <div className="picker-duration">
+        <div className='picker-duration'>
           <div>
             Starting Date
             <DatePickerDayKit
-              className="date-error"
+              className='date-error'
               shouldDisableDate={typeSchedule === 'Work Week' ? disableWeekends : null}
               value={startingDate}
               onChange={(newValue) => {
@@ -404,7 +404,7 @@ const GetProgress = ({ progressData }) => {
           <div>
             Ending Date
             <DatePickerDayKit
-              className="date-error"
+              className='date-error'
               shouldDisableDate={typeSchedule === 'Work Week' ? disableWeekends : null}
               minDate={new Date(startingDate)}
               value={getWorkWeek()}
@@ -419,7 +419,7 @@ const GetProgress = ({ progressData }) => {
           times.length > 1 ? (
             <div
               key={obj.pos}
-              className="picker-duration"
+              className='picker-duration'
               style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
             >
               <div style={{ width: '100%' }}>
@@ -430,7 +430,7 @@ const GetProgress = ({ progressData }) => {
                   setValue={setTimes}
                   times={times}
                   index={index}
-                  type="startTime"
+                  type='startTime'
                 />
               </div>
               <div style={{ width: '100%' }}>
@@ -441,12 +441,12 @@ const GetProgress = ({ progressData }) => {
                   setValue={setTimes}
                   times={times}
                   index={index}
-                  type="endTime"
+                  type='endTime'
                 />
               </div>
-              <div className="trash-wrapper">
+              <div className='trash-wrapper'>
                 <img
-                  role="presentation"
+                  role='presentation'
                   tabIndex={-1}
                   onClick={() => {
                     times.splice(index, 1);
@@ -463,14 +463,14 @@ const GetProgress = ({ progressData }) => {
                     });
                   }}
                   src={trash}
-                  alt="trash"
+                  alt='trash'
                 />
               </div>
             </div>
           ) : (
             <div
               key={obj.pos}
-              className="picker-duration"
+              className='picker-duration'
               style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
             >
               <div style={{ width: '100%' }}>
@@ -481,7 +481,7 @@ const GetProgress = ({ progressData }) => {
                   setValue={setTimes}
                   times={times}
                   index={index}
-                  type="startTime"
+                  type='startTime'
                 />
               </div>
               <div style={{ width: '100%' }}>
@@ -492,11 +492,11 @@ const GetProgress = ({ progressData }) => {
                   setValue={setTimes}
                   times={times}
                   index={index}
-                  type="endTime"
+                  type='endTime'
                 />
               </div>
             </div>
-          ),
+          )
         )}
         {typeSchedule === 'Continues Offer' || times.length === 3 ? (
           ''
@@ -513,7 +513,7 @@ const GetProgress = ({ progressData }) => {
                     // TODO: FIX IT
                     // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
                     null,
-                    0,
+                    0
                   ),
                   endTime: new Date(
                     null,
@@ -522,16 +522,16 @@ const GetProgress = ({ progressData }) => {
                     // TODO: FIX IT
                     // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
                     null,
-                    0,
+                    0
                   ),
                   pos: times[times.length - 1].pos + 1,
                 },
               ])
             }
-            className="another-slot"
-            variant="contained"
+            className='another-slot'
+            variant='contained'
           >
-            <img src={plus} alt="plus" />
+            <img src={plus} alt='plus' />
             Add Another Slot
           </ButtonKit>
         )}
@@ -573,7 +573,7 @@ const GetProgress = ({ progressData }) => {
       return;
     }
     const filtered = (filteredCategoryData.length > 0 ? filteredCategoryData : category).filter(
-      (obj) => obj.name.toLowerCase().includes(value.toLowerCase()),
+      (obj) => obj.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredCategoryData(filtered);
   };
@@ -590,15 +590,15 @@ const GetProgress = ({ progressData }) => {
 
   if (selected === 1) {
     return (
-      <div className="left-part-middle">
-        <TypographyKit variant="h6">{selected}. Select platform and branches</TypographyKit>
+      <div className='left-part-middle'>
+        <TypographyKit variant='h6'>{selected}. Select platform and branches</TypographyKit>
         {subtitle()}
-        <div className="left-part-radio-wrapper">
+        <div className='left-part-radio-wrapper'>
           {Object.keys(branch.display).length > 0 ? (
             <RadioGroupKit
-              aria-labelledby="demo-radio-buttons-group-label"
-              name="radio-buttons-group"
-              value=""
+              aria-labelledby='demo-radio-buttons-group-label'
+              name='radio-buttons-group'
+              value=''
             >
               {platformList
                 .filter((pf) => userPlatformData.platforms[pf.name].active)
@@ -616,8 +616,8 @@ const GetProgress = ({ progressData }) => {
             </RadioGroupKit>
           ) : (
             <RadioGroupKit
-              aria-labelledby="demo-radio-buttons-group-label"
-              name="radio-buttons-group"
+              aria-labelledby='demo-radio-buttons-group-label'
+              name='radio-buttons-group'
               onChange={(e) => getPlatformData(e)}
               value={platformData || ''}
             >
@@ -647,8 +647,8 @@ const GetProgress = ({ progressData }) => {
           <BranchMarketingDropdown
             rows={vendorsObj[platformData]}
             icon={BranchesIcon}
-            title="Select Branches"
-            className="top-competition marketing-dropdown"
+            title='Select Branches'
+            className='top-competition marketing-dropdown'
             setRow={setBranchData}
             select={branchData}
             platformData={platformObject[platformData]}
@@ -659,14 +659,14 @@ const GetProgress = ({ progressData }) => {
   }
   if (selected === 2) {
     return (
-      <div className="left-part-middle">
-        <TypographyKit variant="h6">{selected}. Select the Type of the offer</TypographyKit>
+      <div className='left-part-middle'>
+        <TypographyKit variant='h6'>{selected}. Select the Type of the offer</TypographyKit>
         {subtitle()}
         <RadioGroupKit
-          aria-labelledby="demo-radio-buttons-group-label"
+          aria-labelledby='demo-radio-buttons-group-label'
           value={menu}
           onChange={(e) => setMenu(e.target.value)}
-          name="radio-buttons-group-menu"
+          name='radio-buttons-group-menu'
         >
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
@@ -674,39 +674,39 @@ const GetProgress = ({ progressData }) => {
             }
                   `}
           >
-            <div className="radio">
+            <div className='radio'>
               <div>
                 <span>
-                  <img src={menuIcon} alt="Menu Icon" />
+                  <img src={menuIcon} alt='Menu Icon' />
                 </span>
                 <div>
                   <div>Discount on the whole Menu</div>
                   <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
-              <FormControlLabelKit value="Offer on the whole Menu" control={<RadioKit />} />
+              <FormControlLabelKit value='Offer on the whole Menu' control={<RadioKit />} />
             </div>
             <div style={{ width: '100%', marginTop: '0px' }}>
               <div style={{ width: '100%' }}>
                 {menuChanged === 'Offer on the whole Menu' ? (
-                  <div className="dropdown-wrapper">
-                    <TypographyKit className="min-max-textfields" variant="div">
-                      <TypographyKit variant="div">
+                  <div className='dropdown-wrapper'>
+                    <TypographyKit className='min-max-textfields' variant='div'>
+                      <TypographyKit variant='div'>
                         Percentage Discount
                         <MarketingPlaceholderDropdown
                           names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
-                          title="%"
+                          title='%'
                           setPersonName={setDiscountPercentage}
                           personName={discountPercentage}
                         />
                       </TypographyKit>
                     </TypographyKit>
-                    <TypographyKit className="min-max-textfields" variant="div">
-                      <TypographyKit variant="div">
+                    <TypographyKit className='min-max-textfields' variant='div'>
+                      <TypographyKit variant='div'>
                         Min. Order Value
                         <MarketingPlaceholderDropdown
                           names={['0 AED', '10 AED', '20 AED', '30 AED']}
-                          title="0 AED"
+                          title='0 AED'
                           setPersonName={setMinOrder}
                           personName={minOrder}
                         />
@@ -726,10 +726,10 @@ const GetProgress = ({ progressData }) => {
               } ${menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}
             >
-              <div className="radio">
+              <div className='radio'>
                 <div>
                   <span>
-                    <img src={ItemMenuIcon} alt="Item Menu Icon" />
+                    <img src={ItemMenuIcon} alt='Item Menu Icon' />
                   </span>
                   <div>
                     <div>Offer on An Item from the Menu</div>
@@ -740,40 +740,40 @@ const GetProgress = ({ progressData }) => {
                   ''
                 ) : (
                   <FormControlLabelKit
-                    value="Offer on An Item from the Menu"
+                    value='Offer on An Item from the Menu'
                     control={<RadioKit />}
                   />
                 )}
               </div>
               <div>
                 <RadioGroupKit
-                  aria-labelledby="demo-radio-buttons-group-label"
+                  aria-labelledby='demo-radio-buttons-group-label'
                   value={itemMenu}
                   onChange={(e) => setItemMenu(e.target.value)}
-                  name="radio-buttons-group-menu"
+                  name='radio-buttons-group-menu'
                 >
                   {itemMenuArr.map((obj) => (
                     <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
                   ))}
                   {menuChanged === 'Offer on An Item from the Menu' ? (
-                    <div className="dropdown-wrapper">
-                      <TypographyKit className="min-max-textfields" variant="div">
-                        <TypographyKit variant="div">
+                    <div className='dropdown-wrapper'>
+                      <TypographyKit className='min-max-textfields' variant='div'>
+                        <TypographyKit variant='div'>
                           Percentage Discount
                           <MarketingPlaceholderDropdown
                             names={getDiscountMovType('discount')}
-                            title="%"
+                            title='%'
                             setPersonName={setDiscountPercentage}
                             personName={discountPercentage}
                           />
                         </TypographyKit>
                       </TypographyKit>
-                      <TypographyKit className="min-max-textfields" variant="div">
-                        <TypographyKit variant="div">
+                      <TypographyKit className='min-max-textfields' variant='div'>
+                        <TypographyKit variant='div'>
                           Min. Order Value
                           <MarketingPlaceholderDropdown
                             names={getDiscountMovType('mov')}
-                            title="0 AED"
+                            title='0 AED'
                             setPersonName={setMinOrder}
                             personName={minOrder}
                           />
@@ -796,8 +796,8 @@ const GetProgress = ({ progressData }) => {
   if (menu === 'Offer on An Item from the Menu') {
     if (selected === 3) {
       return (
-        <div className="left-part-middle">
-          <TypographyKit variant="h6">{selected}. Select the discounted items</TypographyKit>
+        <div className='left-part-middle'>
+          <TypographyKit variant='h6'>{selected}. Select the discounted items</TypographyKit>
           {subtitle()}
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
@@ -805,10 +805,10 @@ const GetProgress = ({ progressData }) => {
             }
                   `}
           >
-            <div className="radio">
+            <div className='radio'>
               <div>
                 <span>
-                  <img src={ItemMenuIcon} alt="Item Menu Icon" />
+                  <img src={ItemMenuIcon} alt='Item Menu Icon' />
                 </span>
                 <div>
                   <div>Offer on An Item from the Menu</div>
@@ -816,31 +816,31 @@ const GetProgress = ({ progressData }) => {
                 </div>
               </div>
             </div>
-            <div className="picker-duration search-filter">
+            <div className='picker-duration search-filter'>
               <div>
                 <TextfieldKit
                   style={{ width: '45%' }}
-                  id="input-with-icon-textfield"
-                  placeholder="Search"
+                  id='input-with-icon-textfield'
+                  placeholder='Search'
                   onChange={catergorySearch}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">
-                        <img src={searchIcon} alt="Searh Icon" />
+                      <InputAdornment position='start'>
+                        <img src={searchIcon} alt='Searh Icon' />
                       </InputAdornment>
                     ),
                   }}
-                  variant="outlined"
+                  variant='outlined'
                 />
                 <div style={{ width: '55%' }}>
-                  <div className="__select menu-item-select">
+                  <div className='__select menu-item-select'>
                     <MenuDropdown
                       onChange={handleCategoryDataChange}
                       value={categoryData}
                       multiple
                       renderValue={(selectedMenu) => selectedMenu.join(', ')}
                       items={categoryDataList}
-                      label="All Categories"
+                      label='All Categories'
                       renderOption={(v) => (
                         <MenuItemKit key={v} value={v}>
                           <CheckboxKit checked={categoryData.indexOf(v) > -1} />
@@ -851,19 +851,19 @@ const GetProgress = ({ progressData }) => {
                   </div>
                 </div>
               </div>
-              <div className="max-amount">
+              <div className='max-amount'>
                 <p>Maximum amount: 10</p>
                 <div>
                   Selected: <span>{checked.length}</span>
                 </div>
               </div>
             </div>
-            <FormcontrolKit className="category-list">
+            <FormcontrolKit className='category-list'>
               {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
                 (obj, index) => (
                   // TODO: FIX IT
                   // <div className="menu-item-wrapper" key={obj.id} value={obj.name}>
-                  <div className="menu-item-wrapper" key={obj.id}>
+                  <div className='menu-item-wrapper' key={obj.id}>
                     <FormControlLabelKit
                       control={
                         <CheckboxKit
@@ -882,7 +882,7 @@ const GetProgress = ({ progressData }) => {
                       label={<TooltipCategory index={index} obj={obj} />}
                     />
                   </div>
-                ),
+                )
               )}
             </FormcontrolKit>
           </BoxKit>

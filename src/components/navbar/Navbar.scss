@@ -3,7 +3,7 @@
 .navbar_wrapper {
   position: relative;
   width: 70px;
-  transition: .5s;
+  transition: 0.5s;
   height: 100vh;
   z-index: 100;
 
@@ -25,7 +25,7 @@
   width: 70px;
   padding: 15px 12px 0 12px;
   overflow: hidden;
-  transition: .5s;
+  transition: 0.5s;
 
   &.opened {
     width: 280px;
@@ -33,7 +33,7 @@
     .nav-double-arrow.nav-double-arrow {
       opacity: 1;
       visibility: visible;
-      transition: .4s;
+      transition: 0.4s;
     }
 
     .navbar-button-kit.navbar-button-kit {
@@ -42,7 +42,7 @@
 
       span {
         visibility: visible;
-        transition: .5s;
+        transition: 0.5s;
         opacity: 1;
         width: fit-content;
         display: inline;
@@ -70,22 +70,23 @@
       background-color: rgba(144, 107, 255, 0.08);
 
       span {
-        color: #906BFF;
+        color: #906bff;
       }
 
       .nav-icon {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
       }
     }
 
     a.active button:hover {
-
       span {
-        color: #906BFF;
+        color: #906bff;
       }
 
       .nav-icon {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
       }
     }
 
@@ -97,25 +98,25 @@
       background-color: rgba(144, 107, 255, 0.08) !important;
 
       span {
-        color: #906BFF;
+        color: #906bff;
       }
 
       .nav-icon {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
       }
 
       &:hover {
-
         span {
-          color: #906BFF;
+          color: #906bff;
         }
 
         .nav-icon {
-          filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+          filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+            contrast(102%);
         }
       }
     }
-
   }
 
   .Navbar-footer.Navbar-footer {
@@ -124,8 +125,6 @@
     width: 90%;
   }
 }
-
-
 
 .card_bottom {
   display: flex;
@@ -142,7 +141,7 @@
   cursor: default;
   display: flex;
   justify-content: flex-end;
-  transition: .3s;
+  transition: 0.3s;
 
   .nav-logo {
     width: 120px;
@@ -217,13 +216,13 @@
   }
 
   &:hover {
-
     span {
-      color: #906BFF;
+      color: #906bff;
     }
 
     .nav-icon {
-      filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+      filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+        contrast(102%);
     }
   }
 }
@@ -247,7 +246,7 @@
   flex-direction: column;
   grid-gap: 10px;
 
-  >a {
+  > a {
     position: relative;
 
     button {
@@ -255,25 +254,25 @@
     }
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 15px;
       border-radius: 50%;
       top: 45%;
       width: 5px;
       height: 5px;
-      background: #637381
+      background: #637381;
     }
   }
 }
 
 .nav-double-arrow.nav-double-arrow {
   &:hover {
-    transition: .4s;
+    transition: 0.4s;
     transform: rotate(0deg) scale(1.2);
   }
 
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
   padding: 4px;
   width: 40px;
@@ -291,17 +290,14 @@
   }
 
   &.active {
-
     &:hover {
-      transition: .4s;
+      transition: 0.4s;
       transform: rotate(-180deg) scale(1.2);
     }
 
     transform: rotate(-180deg) scale(1);
-    transition: .4s;
-
+    transition: 0.4s;
   }
-
 }
 
 .nav-lines {
@@ -311,9 +307,7 @@
   top: 45%;
 }
 
-
-
-@media(max-width: 900px) {
+@media (max-width: 900px) {
   .navbar_wrapper {
     &.opened {
       width: 200px;
@@ -337,25 +331,25 @@
   }
 }
 
-@media(min-height: 1100px) {
+@media (min-height: 1100px) {
   .nav-lines {
     top: 35%;
   }
 }
 
-@media(max-height: 900px) {
+@media (max-height: 900px) {
   .nav-lines {
     top: 50%;
   }
 }
 
-@media(max-height: 800px) {
+@media (max-height: 800px) {
   .nav-lines {
     top: 55%;
   }
 }
 
-@media(max-height: 700px) {
+@media (max-height: 700px) {
   .nav-lines {
     top: 67%;
   }

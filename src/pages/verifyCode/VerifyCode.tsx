@@ -88,7 +88,7 @@ const VerifyCode = () => {
         await logOut();
         navigate('/');
         triggerAlertWithMessageSuccess(
-          'We sent an email verification to your email, please check it (include spam) before signin',
+          'We sent an email verification to your email, please check it (include spam) before signin'
         );
         return;
       }
@@ -134,16 +134,16 @@ const VerifyCode = () => {
   };
   return (
     <ModalKit open={showModal}>
-      <div className="verify-code">
-        <p onClick={goBack} tabIndex={-1} role="presentation" onKeyDown={goBack} className="__icon">
-          <ArrowBack fontSize="large" />
+      <div className='verify-code'>
+        <p onClick={goBack} tabIndex={-1} role='presentation' onKeyDown={goBack} className='__icon'>
+          <ArrowBack fontSize='large' />
         </p>
-        <p className="__title">Please check your phone message!</p>
-        <p className="__subtitle">
+        <p className='__title'>Please check your phone message!</p>
+        <p className='__subtitle'>
           We&apos;ve texted a 6-digit confirmation code to +{n}, please enter the code in below box
           to update your phone number.
         </p>
-        <div className="__form">
+        <div className='__form'>
           <VerifyCodeForm
             disableVerify={
               Object.keys(values)
@@ -157,9 +157,9 @@ const VerifyCode = () => {
             onBlur={onInputBlur}
           />
         </div>
-        <div className="__resend-block">
+        <div className='__resend-block'>
           Don&apos;t have a code? &nbsp;
-          <button disabled={isResend} type="button" aria-label="resend" onClick={handleResend}>
+          <button disabled={isResend} type='button' aria-label='resend' onClick={handleResend}>
             Resend
           </button>
           &nbsp;

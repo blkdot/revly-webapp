@@ -68,13 +68,13 @@ const Finance = ({
   };
   const financeLinks = ['revenue', 'n_orders', 'average_basket', 'profit'];
   return (
-    <div className="block">
-      <TypographyKit variant="h4">
+    <div className='block'>
+      <TypographyKit variant='h4'>
         <p>{getbeforePeriod()}</p>
         <span> results for </span>
         {isDisplay()}
       </TypographyKit>
-      <div className="cardsWrapper finance-wrapper">
+      <div className='cardsWrapper finance-wrapper'>
         {financeLinks.map((info) => (
           <Widget
             table={table}

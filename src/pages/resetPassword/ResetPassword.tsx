@@ -66,9 +66,9 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="reset-password">
-      <p className="__title">Reset your password</p>
-      <div className="__form">
+    <div className='reset-password'>
+      <p className='__title'>Reset your password</p>
+      <div className='__form'>
         <ResetPasswordForm
           onChangeNewPassword={handleChange('new')}
           onChangeConfirmPassword={handleChange('confirm')}
@@ -77,13 +77,13 @@ const ResetPassword = () => {
           errorConfirmPassword={error.confirm}
         />
       </div>
-      <div className="__btn-change">
+      <div className='__btn-change'>
         <ButtonLoadingKit
           disabled={!values.new || !values.confirm || values.new !== values.confirm}
           fullWidth
           loading={loading}
           onClick={handleReset}
-          variant="contained"
+          variant='contained'
         >
           Change Password
         </ButtonLoadingKit>

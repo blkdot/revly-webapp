@@ -62,8 +62,8 @@ const Dashboard = () => {
   const links = ['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'];
 
   return (
-    <div className="wrapper">
-      <div className="top-inputs">
+    <div className='wrapper'>
+      <div className='top-inputs'>
         {Object.keys(display).length > 0 ? (
           <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
@@ -102,11 +102,11 @@ const Dashboard = () => {
         <MarketingEmpty />
       )}
       {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 && !loading ? (
-        <PaperKit className="dashboard-paper-wrapper">
-          <div className="dashboard-links">
+        <PaperKit className='dashboard-paper-wrapper'>
+          <div className='dashboard-links'>
             {links.map((title) => (
               <div
-                role="presentation"
+                role='presentation'
                 tabIndex={-1}
                 onClick={() => setTable(title)}
                 className={title === table ? 'active' : ''}
@@ -116,7 +116,7 @@ const Dashboard = () => {
                 {getTitle(title)}
               </div>
             ))}
-            <div className="indicator" />
+            <div className='indicator' />
           </div>
           {links.map((info) =>
             info === table ? (
@@ -129,7 +129,7 @@ const Dashboard = () => {
               />
             ) : (
               ''
-            ),
+            )
           )}
         </PaperKit>
       ) : (

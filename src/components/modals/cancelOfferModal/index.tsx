@@ -32,7 +32,7 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer, platform }) => 
 
   return (
     <div>
-      <Modal isOpen={modalIsOpen} style={customStyles} contentLabel="Cancel Offer">
+      <Modal isOpen={modalIsOpen} style={customStyles} contentLabel='Cancel Offer'>
         <div>
           <div
             style={{
@@ -107,7 +107,7 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer, platform }) => 
                 border: 'none',
                 cursor: 'pointer',
               }}
-              type="button"
+              type='button'
               onClick={cancelOffer}
             >
               Yes, Cancel this Offer
@@ -123,7 +123,7 @@ const CancelOfferModal = ({ modalIsOpen, setIsOpen, cancelOffer, platform }) => 
                 borderRadius: '31px',
                 cursor: 'pointer',
               }}
-              type="button"
+              type='button'
               onClick={closeModal}
             >
               Close

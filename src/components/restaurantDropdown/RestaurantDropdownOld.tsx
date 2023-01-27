@@ -55,7 +55,7 @@ const RestaurantDropdownOld = ({
       // deleting vendor from vendorsSelectedTemp
       vendorsSelectedTemp.splice(
         vendorsSelected.findIndex((vendorName) => vendorName === value),
-        1,
+        1
       );
     } else if (!vendorsSelected.some((vendorName) => vendorName === value)) {
       // pushing vendor to vendorsSelectedTemp
@@ -170,19 +170,19 @@ const RestaurantDropdownOld = ({
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [vendors, vendorsOld?.ariaExpanded],
+    [vendors, vendorsOld?.ariaExpanded]
   );
   const [hoverStatus, setHover] = React.useState([]);
   const getHoverStatusVendor = (vendorName) => hoverStatus.find((v) => v === vendorName);
   const renderLayout = (info, index) => (
-    <div className="vendors-only" key={info.vendor_id}>
+    <div className='vendors-only' key={info.vendor_id}>
       <MenuItemKit
         disabled={!userPlatformData.platforms[info.platform].active}
         onClick={() => handleChange(info.data.vendor_name)}
       >
         <CheckboxKit checked={vendorsSelected.indexOf(info.data.vendor_name) > -1} />
         <img
-          className="restaurant-img"
+          className='restaurant-img'
           src={info.platform === 'talabat' ? talabat : deliveroo}
           alt={info.platform}
         />
@@ -190,25 +190,25 @@ const RestaurantDropdownOld = ({
           onClick={(e) => e.stopPropagation()}
           interactive={1}
           disableHoverListener={!getHoverStatusVendor(info.data.vendor_name)}
-          id="category-tooltip"
+          id='category-tooltip'
           title={info.data.vendor_name}
         >
           <div
-            role="presentation"
+            role='presentation'
             tabIndex={-1}
             onClick={() => handleChange(info.data.vendor_name)}
-            className="tooltip-vendor"
+            className='tooltip-vendor'
           >
             {info.data.vendor_name}
           </div>
         </TooltipKit>
         <div
-          role="presentation"
+          role='presentation'
           tabIndex={-1}
           onClick={(e) => e.stopPropagation()}
-          className="only-button"
+          className='only-button'
         >
-          <ButtonKit onClick={(e) => handleClick(e, index)} variant="contained">
+          <ButtonKit onClick={(e) => handleClick(e, index)} variant='contained'>
             Only
           </ButtonKit>
         </div>
@@ -217,20 +217,20 @@ const RestaurantDropdownOld = ({
   );
 
   return (
-    <div className="restaurant-dropdown_wrapper old">
-      <TypographyKit className="top-text-inputs" variant="subtitle">
+    <div className='restaurant-dropdown_wrapper old'>
+      <TypographyKit className='top-text-inputs' variant='subtitle'>
         Select a Vendor
       </TypographyKit>
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
         <SelectKit
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox-vendors-old"
+          labelId='demo-multiple-checkbox-label'
+          id='demo-multiple-checkbox-vendors-old'
           multiple
           value={vendorsSelected}
           input={<OutlindeInputKit />}
           renderValue={(selected) => (
             <div style={{ display: 'flex', alignItems: 'center', width: '90%', gridGap: '10px' }}>
-              <img className="select_icon" src={selectIcon} alt="Select Icon" />
+              <img className='select_icon' src={selectIcon} alt='Select Icon' />
               <span
                 style={{
                   display: 'block',
@@ -246,16 +246,16 @@ const RestaurantDropdownOld = ({
           MenuProps={MenuProps}
           sx={{ textTransform: 'capitalize', paddingLeft: '25px', paddingRight: '0px' }}
         >
-          <div className="dropdown-paper">
+          <div className='dropdown-paper'>
             {!listing ? (
-              <div className="selected-chains">
+              <div className='selected-chains'>
                 <p>Selected: {(cost ? state.vendorsSelected : vendorsSelected).length}</p>
                 <ButtonKit
                   disabled={
                     vendors.length === (cost ? state.vendorsSelected : vendorsSelected).length
                   }
                   onClick={selectAll}
-                  variant="contained"
+                  variant='contained'
                 >
                   Select All
                 </ButtonKit>

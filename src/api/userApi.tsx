@@ -46,7 +46,7 @@ export const forgotPassword = (email) =>
 export const verifyEmail = (user) =>
   axios
     .post(
-      `${firebaseApiUrl}/verifyEmail?email=${user.email}&fname=${user.fname}&lname=${user.lname}`,
+      `${firebaseApiUrl}/verifyEmail?email=${user.email}&fname=${user.fname}&lname=${user.lname}`
     )
     .then((res) => res)
     .catch(handleResponse);

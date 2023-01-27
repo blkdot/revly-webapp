@@ -21,7 +21,7 @@ export const PlatformProvider = ({ children }) => {
       setUserPlatformData,
       cleanPlatformData,
     }),
-    [userPlatformData],
+    [userPlatformData]
   );
 
   return <PlatformContext.Provider value={PlatformWrapper}>{children}</PlatformContext.Provider>;

@@ -22,10 +22,10 @@ import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
 
 const EnhancedTableHead = ({ headCells }) => (
-  <TableHeadKit className="table-head">
+  <TableHeadKit className='table-head'>
     <TableRowKit>
       {headCells.map((headCell) => (
-        <TableCellKit className="enchanced-table-cell" key={headCell.id}>
+        <TableCellKit className='enchanced-table-cell' key={headCell.id}>
           {headCell.label}
         </TableCellKit>
       ))}
@@ -65,7 +65,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
       }
 
       return `${dayjs(afterPeriod.startDate).format('DD/MM')} - ${dayjs(afterPeriod.endDate).format(
-        'DD/MM',
+        'DD/MM'
       )}`;
     }
 
@@ -84,7 +84,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
       }
 
       return `${dayjs(beforePeriod.startDate).format('DD/MM')} - ${dayjs(
-        beforePeriod.endDate,
+        beforePeriod.endDate
       ).format('DD/MM')}`;
     }
 
@@ -128,7 +128,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
         (
           metricsbeforePeriod.talabat[title] / (metricsafterPeriod.talabat[title] / 100) -
           100
-        ).toFixed(0),
+        ).toFixed(0)
       );
     }
     return '-';
@@ -144,7 +144,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
         (
           metricsbeforePeriod.deliveroo[title] / (metricsafterPeriod.deliveroo[title] / 100) -
           100
-        ).toFixed(0),
+        ).toFixed(0)
       );
     }
     return '-';
@@ -157,8 +157,8 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
 
       return Number(
         parseFloat(
-          (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0),
-        ),
+          (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0)
+        )
       );
     }
     return '-';
@@ -186,14 +186,14 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
   };
   return (
     <BoxKit sx={{ width: '100%' }}>
-      <PaperKit className="table-paper-wrapper">
+      <PaperKit className='table-paper-wrapper'>
         <TableContainerKit>
-          <TableKit className="table" aria-labelledby="tableTitle" size="medium">
+          <TableKit className='table' aria-labelledby='tableTitle' size='medium'>
             <EnhancedTableHead headCells={headCells} />
-            <TableBodyKit className="table-body">
+            <TableBodyKit className='table-body'>
               {!userPlatformData.platforms.deliveroo.active ? null : (
-                <TableRowKit tabIndex={-1} className="table-row">
-                  <TableCellKit component="th" id={0} scope="row">
+                <TableRowKit tabIndex={-1} className='table-row'>
+                  <TableCellKit component='th' id={0} scope='row'>
                     <img
                       className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
                       src={deliveroo}
@@ -230,8 +230,8 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
                 </TableRowKit>
               )}
               {!userPlatformData.platforms.talabat.active ? null : (
-                <TableRowKit tabIndex={-1} key={title} className="table-row">
-                  <TableCellKit component="th" id={0} scope="row">
+                <TableRowKit tabIndex={-1} key={title} className='table-row'>
+                  <TableCellKit component='th' id={0} scope='row'>
                     <img
                       className={`table-img ${title === 'deliveroo' ? 'img-del' : ''}`}
                       src={talabat}
@@ -269,8 +269,8 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
               )}
             </TableBodyKit>
             <TableHeadKit>
-              <TableRowKit className="table-row table-total">
-                <TableCellKit component="th" scope="row">
+              <TableRowKit className='table-row table-total'>
+                <TableCellKit component='th' scope='row'>
                   Total
                 </TableCellKit>
                 <TableCellKit>

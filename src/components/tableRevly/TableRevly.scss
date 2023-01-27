@@ -34,7 +34,7 @@
   }
 
   tbody {
-    >tr:nth-of-type(1) {
+    > tr:nth-of-type(1) {
       // background: rgba(144, 107, 255, 0.08);
       padding-right: 5px;
 
@@ -42,12 +42,12 @@
         border-radius: 8px 0 0 8px;
       }
 
-      >td:last-of-type {
+      > td:last-of-type {
         border-radius: 0 8px 8px 0;
         padding: 20px 15px;
         grid-gap: 8px;
 
-        >div {
+        > div {
           width: 100px;
           padding-left: 14px;
           transform: scale(1.5);
@@ -71,7 +71,6 @@
   border-bottom: 1px solid #919eab3d;
 
   &.selected {
-
     th,
     td {
       background: #ff484214 !important;
@@ -82,7 +81,7 @@
   td {
     white-space: nowrap;
 
-    >span {
+    > span {
       white-space: nowrap;
       text-align: center;
     }

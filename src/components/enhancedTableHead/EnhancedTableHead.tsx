@@ -17,7 +17,7 @@ const EnhancedTableHead = (props: any) => {
         {header.map((headCell) => (
           <TableCellKit
             key={headCell.id}
-            align="center"
+            align='center'
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{ height: '4rem' }}
@@ -31,7 +31,7 @@ const EnhancedTableHead = (props: any) => {
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <BoxKit component="span" sx={{ display: 'none' }}>
+                <BoxKit component='span' sx={{ display: 'none' }}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </BoxKit>
               ) : null}

@@ -172,7 +172,7 @@ const CompetitionAlerts = () => {
         setFilteredData(
           (comp.data ? comp.data.data : [])
             .map((v) => filt.filter((k) => k.name === v.vendor_name))
-            .flat(),
+            .flat()
         );
         setLoading(false);
       } catch (err) {
@@ -223,12 +223,12 @@ const CompetitionAlerts = () => {
         id: `${cur.id}_${r.id}`,
         data: r,
       }),
-      {},
+      {}
     );
 
   return (
-    <div className="wrapper">
-      <div className="top-inputs">
+    <div className='wrapper'>
+      <div className='top-inputs'>
         {Object.keys(display).length > 0 ? (
           <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
@@ -239,21 +239,21 @@ const CompetitionAlerts = () => {
           />
         )}
         <Dates
-          defaultTypeDate="day"
-          defaultTitle="today"
+          defaultTypeDate='day'
+          defaultTitle='today'
           beforePeriodBtn={beforePeriodBtn}
           setbeforePeriodBtn={setbeforePeriodBtn}
         />
       </div>
-      <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
+      <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
         Competition - Alerts
       </TypographyKit>
-      <TypographyKit variant="subtitle">
+      <TypographyKit variant='subtitle'>
         Keep an eye on your competitors marketing campaigns
       </TypographyKit>
-      <PaperKit className="competition-paper">
-        <div className="competition-top-input alerts-top-inputs">
-          <div className="competition-dropdowns">
+      <PaperKit className='competition-paper'>
+        <div className='competition-top-input alerts-top-inputs'>
+          <div className='competition-dropdowns'>
             <CompetitionDropdown
               rows={platformList}
               renderOptions={(v) => (
@@ -271,17 +271,17 @@ const CompetitionAlerts = () => {
                       width={24}
                       height={24}
                       style={{ objectFit: 'contain' }}
-                      alt="icon"
+                      alt='icon'
                     />
                     <ListItemTextKit primary={v.name} />
                   </div>
                 </MenuItemKit>
               )}
               icon={PlatformIcon}
-              title="Select a Platform"
-              id="platform_dropdown_menu"
-              type="platform"
-              className="top-competition"
+              title='Select a Platform'
+              id='platform_dropdown_menu'
+              type='platform'
+              className='top-competition'
               setRow={setPlatform}
               select={platform}
             />
@@ -297,19 +297,19 @@ const CompetitionAlerts = () => {
                 <MenuItemKit key={v.vendor_name} value={v}>
                   <CheckboxKit checked={competitor.indexOf(v) > -1} />
                   <ListItemTextKit
-                    className="competitor-dropdown-list-item"
+                    className='competitor-dropdown-list-item'
                     primary={v.vendor_name}
                   />
                 </MenuItemKit>
               )}
-              title="Competitor"
-              className="top-competition competitor"
+              title='Competitor'
+              className='top-competition competitor'
               select={competitor}
             />
           </div>
           <Competitor open={Open} opened={opened} platformList={platformList} />
         </div>
-        <TypographyKit variant="subtitle">
+        <TypographyKit variant='subtitle'>
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
@@ -317,7 +317,7 @@ const CompetitionAlerts = () => {
           isLoading={loading}
           headers={headersAlert}
           rows={(filteredData.length > 0 ? filteredData : competitionAlertsData).map(
-            renderRowsByHeader,
+            renderRowsByHeader
           )}
         />
       </PaperKit>

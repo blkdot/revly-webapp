@@ -8,12 +8,12 @@ const PaymentMethod = (props: any) => {
 
   return (
     <div className={`payment-method __${type}`}>
-      <div className="__text __flex">
-        <img src={type === 'mastercard' ? mastercard : visa} className="__type" alt="card" />
+      <div className='__text __flex'>
+        <img src={type === 'mastercard' ? mastercard : visa} className='__type' alt='card' />
         <p>{type === 'mastercard' ? 'Mas' : 'Visa'}</p>
       </div>
-      <p className="__cvv">{cvv}</p>
-      <div className="__name __flex">
+      <p className='__cvv'>{cvv}</p>
+      <div className='__name __flex'>
         <p>NAME</p>
         <p>MM/YY</p>
       </div>

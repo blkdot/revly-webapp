@@ -9,7 +9,7 @@ const OnBoarding = ({ platform, formValue, setFormValue }) => {
 
   const renderTitle = () => (
     <span
-      className="__form-card__text"
+      className='__form-card__text'
       style={{ fontSize: '16px', fontWeight: 600, color: '#212B36' }}
     >
       Link your{' '}
@@ -30,7 +30,7 @@ const OnBoarding = ({ platform, formValue, setFormValue }) => {
     </div>
   );
 
-  return <div className="onboarding__form">{renderForm()}</div>;
+  return <div className='onboarding__form'>{renderForm()}</div>;
 };
 
 export default OnBoarding;

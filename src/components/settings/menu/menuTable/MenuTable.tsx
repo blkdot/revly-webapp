@@ -39,7 +39,7 @@ const TableHead = ({ order, orderBy, onRequestSort }) => {
           <TableCellKit
             key={headCell.id}
             width={headCell.width}
-            align="left"
+            align='left'
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabelKit
@@ -114,8 +114,8 @@ const MenuTable = (props: any) => {
     );
 
   return (
-    <TableContainerKit className="menu-table">
-      <TableKit size="medium">
+    <TableContainerKit className='menu-table'>
+      <TableKit size='medium'>
         <TableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
         <TableBodyKit>
           {loading ? (

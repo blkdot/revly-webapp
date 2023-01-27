@@ -86,7 +86,7 @@ const PlanningOffersTable = ({ rows, type }) => {
       style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}
     >
       <img
-        className="planning-platform"
+        className='planning-platform'
         style={{ marginRight: '1.5rem' }}
         src={platformObject[r.platform].src}
         alt={platformObject[r.platform].name}
@@ -100,7 +100,7 @@ const PlanningOffersTable = ({ rows, type }) => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+      <span className='competition-table-alert' style={{ whiteSpace: 'nowrap' }}>
         {r[h.id]}%
       </span>
     </TableCellKit>
@@ -122,7 +122,7 @@ const PlanningOffersTable = ({ rows, type }) => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+      <span className='competition-table-alert' style={{ whiteSpace: 'nowrap' }}>
         {r[h.id] * 10}%
       </span>
     </TableCellKit>
@@ -189,7 +189,7 @@ const PlanningOffersTable = ({ rows, type }) => {
 
   const renderRowsByHeader = (r) =>
     getHeadCells().map((h) =>
-      cellTemplatesObject[h.id] ? cellTemplatesObject[h.id](r, h) : renderSimpleRow(r, h),
+      cellTemplatesObject[h.id] ? cellTemplatesObject[h.id](r, h) : renderSimpleRow(r, h)
     );
 
   const renderTableBody = () => {
@@ -205,7 +205,7 @@ const PlanningOffersTable = ({ rows, type }) => {
     return stableSort(rows, getComparator(order, orderBy)).map((row) => (
       <TableRowKit
         onClick={() => type !== 'ad' && navigateToOfferDetails(row)}
-        className="offer-row"
+        className='offer-row'
         key={row.offer_id}
         selected={false}
         style={{ marginTop: '0.5rem' }}
@@ -216,10 +216,10 @@ const PlanningOffersTable = ({ rows, type }) => {
   };
 
   return (
-    <BoxKit className="planning-box" sx={{ width: '100%' }}>
-      <PaperKit className="planning-box__paper" sx={{ width: '100%', mb: 2 }}>
-        <TableContainerKit id="adsContainer" className="planning-table-container">
-          <TableKit aria-labelledby="tableTitle" size="medium">
+    <BoxKit className='planning-box' sx={{ width: '100%' }}>
+      <PaperKit className='planning-box__paper' sx={{ width: '100%', mb: 2 }}>
+        <TableContainerKit id='adsContainer' className='planning-table-container'>
+          <TableKit aria-labelledby='tableTitle' size='medium'>
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}

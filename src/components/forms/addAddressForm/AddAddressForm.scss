@@ -2,48 +2,47 @@
 @import '../../../responsiveness.scss';
 
 .add-address-form {
-    background-color: rgba(231, 223, 223, 0.304);
-    height: 0;
-    border-radius: 10px;
-    transition: visibility 0s, height 0.2s;
-    visibility: hidden;
+  background-color: rgba(231, 223, 223, 0.304);
+  height: 0;
+  border-radius: 10px;
+  transition: visibility 0s, height 0.2s;
+  visibility: hidden;
 
-    &.__visible {
-        height: 250px;
-        visibility: visible;
-        position: unset;
-        padding: 20px;
-        margin-top: 15px;
+  &.__visible {
+    height: 250px;
+    visibility: visible;
+    position: unset;
+    padding: 20px;
+    margin-top: 15px;
+  }
+
+  .add-address-form__input-flex {
+    display: flex;
+    justify-content: space-between;
+
+    .add-address-form__input-flex__input {
+      width: 48%;
+      margin: 12px 0;
     }
+  }
 
-    .add-address-form__input-flex {
-        display: flex;
-        justify-content: space-between;
-
-        .add-address-form__input-flex__input {
-            width: 48%;
-            margin: 12px 0;
-        }
-
-    }
-
-    .add-address-form__btn-flex {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 7px;
-    }
+  .add-address-form__btn-flex {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 7px;
+  }
 }
 
 @include mobileBreakpoint {
-    .add-address-form {
-        &.__visible {
-            height: 400px;
-        }
-        .add-address-form__input-flex {
-            display: block;
-           .add-address-form__input-flex__input {
-                width: 100%;
-            }
-        }
+  .add-address-form {
+    &.__visible {
+      height: 400px;
     }
+    .add-address-form__input-flex {
+      display: block;
+      .add-address-form__input-flex__input {
+        width: 100%;
+      }
+    }
+  }
 }

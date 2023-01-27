@@ -35,7 +35,7 @@
       align-items: center;
       margin: 2.8em 0 0 0;
       padding: 12px 30px;
-      background-color: #F9FAFB;
+      background-color: #f9fafb;
       border-radius: 8px;
     }
 
@@ -81,7 +81,7 @@
 
       .__btn-add {
         width: 326px;
-        background-color: #F4F6F8;
+        background-color: #f4f6f8;
         color: $color-input-border;
         font-size: 15px;
       }
@@ -109,7 +109,7 @@
   .billing__info {
     .__btn-add {
       width: 100%;
-      background-color: #F4F6F8;
+      background-color: #f4f6f8;
       height: 72px;
       font-size: 15px;
       color: $color-table-th;
@@ -126,14 +126,15 @@
   align-items: flex-end;
   grid-gap: 15px;
   width: 60%;
-  .restaurant-dropdown_wrapper{
+  .restaurant-dropdown_wrapper {
     width: 50% !important;
-    >div:nth-of-type(1){
-    border-radius: 5px;
-    background-color: #fff;
-  }}
-  .snackbar-procent{
-    label{
+    > div:nth-of-type(1) {
+      border-radius: 5px;
+      background-color: #fff;
+    }
+  }
+  .snackbar-procent {
+    label {
       top: -6px;
     }
   }
@@ -151,7 +152,6 @@
       }
     }
   }
-
 }
 
 .snackbar-btn.snackbar-btn {

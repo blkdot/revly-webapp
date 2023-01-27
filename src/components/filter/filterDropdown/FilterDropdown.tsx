@@ -50,7 +50,7 @@ const FilterDropdown = (props: any) => {
         key={item.value}
         onClick={() => selectItem(item.value)}
         onKeyDown={() => selectItem(item.value)}
-        role="button"
+        role='button'
         tabIndex={0}
       >
         <CheckboxKit
@@ -67,7 +67,7 @@ const FilterDropdown = (props: any) => {
     }
 
     return (
-      <div className="comp-dropdown__content" ref={refDropdown}>
+      <div className='comp-dropdown__content' ref={refDropdown}>
         {renderItem()}
       </div>
     );
@@ -95,12 +95,12 @@ const FilterDropdown = (props: any) => {
   };
 
   return (
-    <div className="comp-dropdown">
+    <div className='comp-dropdown'>
       <ButtonKit
-        variant="outlined"
+        variant='outlined'
         onClick={() => setIsOpen(!isOpen)}
         onKeyPress={() => setIsOpen(!isOpen)}
-        role="button"
+        role='button'
         style={{ display: 'flex', justifyContent: 'flex-start' }}
         className={`${values.length > 0 ? '__active' : ''}`}
         tabIndex={0}

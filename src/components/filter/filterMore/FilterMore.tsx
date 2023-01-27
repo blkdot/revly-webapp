@@ -11,29 +11,29 @@ const FilterMore = (props: any) => {
   const { onClose, onChangeMultipleSelect, filters } = props;
 
   return (
-    <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper filter-paper">
+    <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper filter-paper'>
       <div>
         <TypographyKit>More Filters</TypographyKit>
         <img
-          role="presentation"
+          role='presentation'
           tabIndex={-1}
           onClick={() => onClose()}
           src={CloseIcon}
-          alt="close icon"
+          alt='close icon'
         />
       </div>
-      <TypographyKit variant="subtitle">
+      <TypographyKit variant='subtitle'>
         Proin ut tellus elit nunc, vel, lacinia consectetur condimentum id. Cursus magna massa
         vivamus risus.
       </TypographyKit>
-      <div className="filter-more">
+      <div className='filter-more'>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ marginTop: '0.5rem', width: '100%' }}>
             <FilterDropdown
               items={filterOffersData.status}
               values={filters.status}
               onChange={onChangeMultipleSelect('status')}
-              label="Status"
+              label='Status'
               style={{ width: '100%' }}
             />
           </div>
@@ -42,14 +42,14 @@ const FilterMore = (props: any) => {
               items={filterOffersData.days}
               values={filters.days}
               onChange={onChangeMultipleSelect('days')}
-              label="Days"
+              label='Days'
             />
           </div>
         </div>
       </div>
       <div>
-        <ButtonKit variant="contained">Confirme and Filter</ButtonKit>
-        <ButtonKit variant="outlined" onClick={() => onClose()}>
+        <ButtonKit variant='contained'>Confirme and Filter</ButtonKit>
+        <ButtonKit variant='outlined' onClick={() => onClose()}>
           Cancel
         </ButtonKit>
       </div>

@@ -11,7 +11,7 @@ const Timer = ({ onEnd }) => {
     return () => clearInterval(timer);
   }, [count]);
 
-  return <span className="timer">({count}s)</span>;
+  return <span className='timer'>({count}s)</span>;
 };
 
 export default Timer;

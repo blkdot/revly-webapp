@@ -8,11 +8,11 @@ const Invoice = (props: any) => {
   const { restaurant, cost, onDelete } = props;
 
   return (
-    <div className="invoice cost">
-      <div className="__flex">
+    <div className='invoice cost'>
+      <div className='__flex'>
         <img
           src={logo}
-          alt="restaurant-example"
+          alt='restaurant-example'
           style={{
             width: '3rem',
             borderRadius: '50%',
@@ -31,16 +31,16 @@ const Invoice = (props: any) => {
           <span>{restaurant}</span>
         </p>
       </div>
-      <div className="__flex">
-        <div style={{ marginRight: '40px' }} className="__flex">
-          <div className="__img-block">
+      <div className='__flex'>
+        <div style={{ marginRight: '40px' }} className='__flex'>
+          <div className='__img-block'>
             <CostIcon />
           </div>
           <p>
             Cost: <span>{cost}</span>
           </p>
         </div>
-        <ButtonKit color="error" onClick={onDelete} variant="outlined">
+        <ButtonKit color='error' onClick={onDelete} variant='outlined'>
           Delete
         </ButtonKit>
       </div>

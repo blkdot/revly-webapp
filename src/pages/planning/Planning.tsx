@@ -144,7 +144,7 @@ const Planning = () => {
         id: `${cur.id}_${r.start_date}_${r.end_date}_offers_${shortid.generate()}`,
         data: r,
       }),
-      {},
+      {}
     );
 
   const renderRowsByHeaderAds = (r) =>
@@ -155,7 +155,7 @@ const Planning = () => {
         id: `${cur.id}_${r.ad_id}_ads_${shortid.generate()}`,
         data: r,
       }),
-      {},
+      {}
     );
   const [opened, setOpened] = useState(false);
   const [clickedId, setClickedId] = useState('');
@@ -171,7 +171,7 @@ const Planning = () => {
           isLoading={isLoadingAds}
           headers={headersAds}
           rows={dataFiltered.map(renderRowsByHeaderAds)}
-          mainFieldOrdered="start_date"
+          mainFieldOrdered='start_date'
         />
       );
     }
@@ -180,7 +180,7 @@ const Planning = () => {
         isLoading={isLoadingOffers}
         headers={headersOffers}
         rows={dataFiltered.map(renderRowsByHeaderOffer)}
-        mainFieldOrdered="start_date"
+        mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
       />
     );
@@ -221,7 +221,7 @@ const Planning = () => {
 
         return { ...acc, platform, discount_type: discountType, discount_rate: procent, status };
       },
-      { discount_type: [], platform: [], discount_rate: [], status: [] },
+      { discount_type: [], platform: [], discount_rate: [], status: [] }
     );
 
     const clonedFilters = { ...filters };
@@ -312,7 +312,7 @@ const Planning = () => {
 
     if (filters.status.length > 0) {
       filteredData = filteredData.filter((f) =>
-        filters.status.includes(active ? f.ad_status : f.status),
+        filters.status.includes(active ? f.ad_status : f.status)
       );
     }
 
@@ -330,32 +330,32 @@ const Planning = () => {
       );
     }
     return (
-      <PaperKit className="marketing-paper offer-paper">
-        <div className="right-part">
-          <div className="right-part-header planning-links">
+      <PaperKit className='marketing-paper offer-paper'>
+        <div className='right-part'>
+          <div className='right-part-header planning-links'>
             <TypographyKit
               className={`right-part-header_link planning ${active ? 'active' : ''}`}
-              variant="div"
+              variant='div'
             >
               <BoxKit className={!active ? 'active' : ''} onClick={() => setActive(0)}>
-                <img src={offerIcon} alt="Offers managment icon" />
+                <img src={offerIcon} alt='Offers managment icon' />
                 Planning Offers
               </BoxKit>
               <BoxKit className={active ? 'active' : ''} onClick={() => setActive(1)}>
-                <img src={adsIcon} alt="Offer Performence icon" />
+                <img src={adsIcon} alt='Offer Performence icon' />
                 Planning Ads
               </BoxKit>
             </TypographyKit>
           </div>
         </div>
-        <TypographyKit variant="div" className="marketing-paper-top-btns">
-          <div className="marketing-filters">
+        <TypographyKit variant='div' className='marketing-paper-top-btns'>
+          <div className='marketing-filters'>
             <div>
               <FilterDropdown
                 items={filtersHead.platform}
                 values={filters.platform}
                 onChange={handleChangeMultipleFilter('platform')}
-                label="Platform"
+                label='Platform'
                 icon={<Layers />}
                 internalIconOnActive={platformObject}
                 maxShowned={1}
@@ -365,7 +365,7 @@ const Planning = () => {
                   items={filtersHead.discount_type}
                   values={filters.discount_type}
                   onChange={handleChangeMultipleFilter('discount_type')}
-                  label="Discount Type"
+                  label='Discount Type'
                   icon={<Tag />}
                   maxShowned={1}
                 />
@@ -375,17 +375,17 @@ const Planning = () => {
                   items={filtersHead.discount_rate}
                   values={filters.discount_rate}
                   onChange={handleChangeMultipleFilter('discount_rate')}
-                  label="Discount Amount"
+                  label='Discount Amount'
                   icon={<Tag />}
-                  customTag="%"
+                  customTag='%'
                   maxShowned={5}
                 />
               )}
             </div>
             <div>
               <ButtonKit
-                className="more-filter"
-                variant="outlined"
+                className='more-filter'
+                variant='outlined'
                 onClick={() => setOpenedFilter(true)}
                 disabled={isEmptyList()}
               >
@@ -401,8 +401,8 @@ const Planning = () => {
   };
 
   return (
-    <div className="wrapper">
-      <div className="top-inputs">
+    <div className='wrapper'>
+      <div className='top-inputs'>
         {Object.keys(display).length > 0 ? (
           <RestaurantDropdownNew chainObj={chainObj} />
         ) : (

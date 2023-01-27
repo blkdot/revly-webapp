@@ -1,37 +1,36 @@
 @import '../../../../library.scss';
 
 .menu-table {
-    border-radius: 8px;
-    max-height: 630px;
-    table {
-        thead {
-            background-color: #F9FAFB;
-            tr th {
-                padding: 1.5em 0 1.5em 4em;
-                border: none;
-                span {
-                    font-weight: 600;
-                    color: $color-second-third
-                }
-            }
+  border-radius: 8px;
+  max-height: 630px;
+  table {
+    thead {
+      background-color: #f9fafb;
+      tr th {
+        padding: 1.5em 0 1.5em 4em;
+        border: none;
+        span {
+          font-weight: 600;
+          color: $color-second-third;
         }
-
-        tbody {
-            tr {
-                td {
-                    border: none;
-                    font-weight: 600;
-                    color: $color-second-third;
-                    font-size: 14px;
-                    padding-top: 2em;
-                    height: 90px;
-                    padding-left: 3.5em;
-                    &:nth-child(5) {
-                        padding-left: 2.5em;
-                    }
-                }
-
-            }
-        }
+      }
     }
+
+    tbody {
+      tr {
+        td {
+          border: none;
+          font-weight: 600;
+          color: $color-second-third;
+          font-size: 14px;
+          padding-top: 2em;
+          height: 90px;
+          padding-left: 3.5em;
+          &:nth-child(5) {
+            padding-left: 2.5em;
+          }
+        }
+      }
+    }
+  }
 }

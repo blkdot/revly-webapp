@@ -73,7 +73,7 @@ export const AuthContextProvider = ({ children }) => {
       {
         size: 'invisible',
       },
-      auth,
+      auth
     );
   };
 

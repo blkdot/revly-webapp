@@ -8,7 +8,7 @@ const PlatformBoxSelector = (props: any) => {
 
   const renderIcon = () => {
     if ((platforms && platforms[name].registered) || classSuccess)
-      return <FcCheckmark className="onboarding-platform__selector-item__state-icon" />;
+      return <FcCheckmark className='onboarding-platform__selector-item__state-icon' />;
 
     return null;
   };
@@ -28,11 +28,11 @@ const PlatformBoxSelector = (props: any) => {
       className={`onboarding-platform__selector-item ${getClassState()}`}
       onClick={() => onClickItem(name)}
       onKeyDown={() => onClickItem(name)}
-      role="button"
+      role='button'
       tabIndex={0}
     >
       {renderIcon()}
-      <img src={src} alt={name} width="100" />
+      <img src={src} alt={name} width='100' />
     </div>
   );
 };

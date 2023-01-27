@@ -48,11 +48,11 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password">
-      <div className="forgot-password-cover">
-        <img src={logo} alt="cover" />
+    <div className='forgot-password'>
+      <div className='forgot-password-cover'>
+        <img src={logo} alt='cover' />
       </div>
-      <CardKit variant="outlined" className="card-forgot-password">
+      <CardKit variant='outlined' className='card-forgot-password'>
         <h2>Forgot your password ?</h2>
         <p>
           Please enter the address email associated with your account, and we&apos;ll email you a
@@ -66,7 +66,7 @@ const ForgotPassword = () => {
           error={isError}
         />
         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-          <Link to="/">Go back</Link>
+          <Link to='/'>Go back</Link>
         </div>
       </CardKit>
     </div>

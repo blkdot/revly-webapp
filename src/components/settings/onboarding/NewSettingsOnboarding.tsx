@@ -62,7 +62,7 @@ const NewSettingsOnboarding = () => {
         access_token: user.accessToken,
         active_status: v,
       },
-      k,
+      k
     );
 
     if (res instanceof Error) {
@@ -102,7 +102,7 @@ const NewSettingsOnboarding = () => {
         access_token: user.accessToken,
         active_status: false,
       },
-      platformActiveModal,
+      platformActiveModal
     );
 
     if (res instanceof Error) {
@@ -130,7 +130,7 @@ const NewSettingsOnboarding = () => {
           password: formData.password,
         },
       },
-      platformActiveModal,
+      platformActiveModal
     );
 
     setIsLoading(false);
@@ -162,22 +162,22 @@ const NewSettingsOnboarding = () => {
     ));
 
   return (
-    <div className="settings-onboarding">
-      <p className="__title">Your Connected Apps</p>
+    <div className='settings-onboarding'>
+      <p className='__title'>Your Connected Apps</p>
       {renderPlatform()}
       <ModalKit
         open={isOpenModal}
         onClose={closeWithoutConnecting}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
       >
         <div style={style}>
-          <div className="settings-onboarding__form">
+          <div className='settings-onboarding__form'>
             <span>
               Connect your {pascalCase(platformActiveModal)} account to your Revly account
             </span>
             <FormcontrolKit
-              className="auth-form"
+              className='auth-form'
               fullWidth
               style={{
                 display: 'flex',
@@ -186,27 +186,27 @@ const NewSettingsOnboarding = () => {
               }}
             >
               <TextfieldKit
-                label="Email"
-                size="small"
+                label='Email'
+                size='small'
                 onChange={(e) => handleChangeFormData('email', e.target.value)}
-                className="auth-form__input"
+                className='auth-form__input'
                 fullWidth
                 style={{ margin: '1rem 0.5rem' }}
               />
               <TextfieldKit
-                label="Password"
-                type="password"
-                size="small"
+                label='Password'
+                type='password'
+                size='small'
                 onChange={(e) => handleChangeFormData('password', e.target.value)}
-                className="auth-form__input"
+                className='auth-form__input'
                 style={{ margin: '1rem 0.5rem' }}
                 fullWidth
               />
             </FormcontrolKit>
             <div style={{ margin: 'auto', textAlign: 'center' }}>
               <ButtonLoadingKit
-                className="auth-form__input"
-                variant="contained"
+                className='auth-form__input'
+                variant='contained'
                 disabled={!formData.email || !formData.password}
                 onClick={handleSubmit}
                 loading={isLoading}

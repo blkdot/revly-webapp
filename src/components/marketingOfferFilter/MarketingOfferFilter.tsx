@@ -58,8 +58,8 @@ const MarketingOfferFilter = (props: any) => {
           >
             <span style={{ fontSize: '12px' }}>Min</span>
             <TextfieldKit
-              placeholder="$ 0"
-              type="number"
+              placeholder='$ 0'
+              type='number'
               value={avgBasketRange.min}
               onChange={(e) => setAvgBasketRange({ ...avgBasketRange, min: e.target.value })}
             />
@@ -74,8 +74,8 @@ const MarketingOfferFilter = (props: any) => {
           >
             <span style={{ fontSize: '12px' }}>Max</span>
             <TextfieldKit
-              placeholder="-"
-              type="number"
+              placeholder='-'
+              type='number'
               value={avgBasketRange.max}
               onChange={(e) => setAvgBasketRange({ ...avgBasketRange, max: e.target.value })}
             />
@@ -227,20 +227,20 @@ const MarketingOfferFilter = (props: any) => {
 
   return (
     <div
-      role="presentation"
+      role='presentation'
       tabIndex={-1}
       onClick={() => CloseFilterPopup(true)}
       className={`filter-overlay${openedFilter ? ' active' : ''}`}
     >
-      <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper filter-paper">
+      <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper filter-paper'>
         <div>
           <TypographyKit>More Filters</TypographyKit>
           <img
-            role="presentation"
+            role='presentation'
             tabIndex={-1}
             onClick={() => CloseFilterPopup(true)}
             src={CloseIcon}
-            alt="close icon"
+            alt='close icon'
           />
         </div>
         <div
@@ -324,13 +324,13 @@ const MarketingOfferFilter = (props: any) => {
         {renderAvgBasketFilter()}
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <ButtonKit
-            variant="contained"
+            variant='contained'
             style={{ marginRight: '1rem' }}
             onClick={() => CloseFilterPopup(false)}
           >
             Confirm and Filter
           </ButtonKit>
-          <ButtonKit variant="outlined" onClick={() => CloseFilterPopup(true)}>
+          <ButtonKit variant='outlined' onClick={() => CloseFilterPopup(true)}>
             Cancel
           </ButtonKit>
         </div>

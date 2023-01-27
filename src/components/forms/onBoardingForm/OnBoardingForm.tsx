@@ -27,9 +27,9 @@ const OnBoardingForm = (props: any) => {
 
     return (
       <ButtonLoadingKit
-        className="onboarding-form__input"
+        className='onboarding-form__input'
         onClick={onSubmit}
-        variant="contained"
+        variant='contained'
         disabled={disabled}
         loading={isLoading}
       >
@@ -39,22 +39,22 @@ const OnBoardingForm = (props: any) => {
   };
 
   return (
-    <div className="onboarding-form">
+    <div className='onboarding-form'>
       {title ? <h2>{title}</h2> : null}
-      <FormcontrolKit className="onboarding-form" fullWidth>
+      <FormcontrolKit className='onboarding-form' fullWidth>
         <TextfieldKit
-          label="Email address"
+          label='Email address'
           onChange={(e) => onChangeEmail(e.target.value)}
-          className="onboarding-form__input"
+          className='onboarding-form__input'
           fullWidth
           value={valueMail}
           error={isError}
         />
         <TextfieldKit
-          label="Password"
+          label='Password'
           type={showPassword ? 'text' : 'password'}
           onChange={(e) => onChangePassword(e.target.value)}
-          className="onboarding-form__input"
+          className='onboarding-form__input'
           error={isError}
           value={valuePassword}
           fullWidth

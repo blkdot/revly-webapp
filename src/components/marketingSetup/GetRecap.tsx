@@ -81,51 +81,51 @@ const GetRecap = ({ recapData }) => {
   if (smRule) {
     return (
       <div>
-        <div className="left-part-top">
+        <div className='left-part-top'>
           <div>
-            <TypographyKit variant="h4">Create a Smart Rule</TypographyKit>
+            <TypographyKit variant='h4'>Create a Smart Rule</TypographyKit>
 
             <img
               tabIndex={-1}
-              role="presentation"
+              role='presentation'
               onClick={() => closeSetup()}
               src={CloseIcon}
-              alt="close icon"
+              alt='close icon'
             />
           </div>
         </div>
-        <div className="left-part-middle sm-rule">
-          <TypographyKit className="left-part-subtitle" color="#637381" variant="subtitle">
+        <div className='left-part-middle sm-rule'>
+          <TypographyKit className='left-part-subtitle' color='#637381' variant='subtitle'>
             Create and manage all your offers. Set personalised rules to automatically trigger your
             offers.
           </TypographyKit>
-          <BoxKit className="left-part-radio sm-rule">
+          <BoxKit className='left-part-radio sm-rule'>
             <TypographyKit
               className={launchOrder.length === 2 ? 'active' : ''}
               sx={{ width: '100%' }}
-              variant="div"
+              variant='div'
             >
               <b>Launch the offer if the </b>
               {launchOrder.map((obj, index) =>
                 index === 1 ? (
                   <div key={obj.id}>
                     <MarketingPlaceholderDropdown
-                      className="sm-rule-and"
+                      className='sm-rule-and'
                       names={['And', 'Or']}
-                      title="And"
+                      title='And'
                       personName={obj.reletion}
                       handleChange={(e) => handleChange(e, 'reletion', index, 'launch')}
                     />
-                    <div className="smart-rule_drowdown">
+                    <div className='smart-rule_drowdown'>
                       <MarketingPlaceholderDropdown
                         readOnly
                         names={['# of orders', 'Daily Revenue']}
-                        title="Order"
+                        title='Order'
                         personName={obj.order}
                       />
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
-                        title="<"
+                        title='<'
                         setPersonName={setLaunchOrder}
                         personName={obj.arrow}
                         rowArr={launchOrder}
@@ -133,10 +133,10 @@ const GetRecap = ({ recapData }) => {
                       />
                       <TextfieldKit
                         required
-                        className="smart-rule-textfield"
-                        placeholder="Enter a Number"
-                        variant="outlined"
-                        type="number"
+                        className='smart-rule-textfield'
+                        placeholder='Enter a Number'
+                        variant='outlined'
+                        type='number'
                         onChange={({ target }) => {
                           launchOrder.splice(index, 1, { ...obj, number: target.value });
                           setLaunchOrder([...launchOrder]);
@@ -145,33 +145,33 @@ const GetRecap = ({ recapData }) => {
                     </div>
                   </div>
                 ) : (
-                  <div key={obj.id} className="smart-rule_drowdown">
+                  <div key={obj.id} className='smart-rule_drowdown'>
                     <MarketingPlaceholderDropdown
                       names={['# of orders', 'Daily Revenue']}
-                      title="Order"
+                      title='Order'
                       personName={obj.order}
                       handleChange={(e) => handleChange(e, 'order', index, 'launch')}
                     />
                     <MarketingPlaceholderDropdown
                       readOnly={!(launchOrder.length === 2)}
                       names={['>', '<']}
-                      title="<"
+                      title='<'
                       personName={obj.arrow}
                       handleChange={(e) => handleChange(e, 'arrow', index, 'launch')}
                     />
                     <TextfieldKit
                       required
-                      className="smart-rule-textfield"
-                      placeholder="Enter a Number"
-                      variant="outlined"
-                      type="number"
+                      className='smart-rule-textfield'
+                      placeholder='Enter a Number'
+                      variant='outlined'
+                      type='number'
                       onChange={({ target }) => {
                         launchOrder.splice(index, 1, { ...obj, number: target.value });
                         setLaunchOrder([...launchOrder]);
                       }}
                     />
                   </div>
-                ),
+                )
               )}
               {launchOrder.length === 2 ? (
                 <ButtonKit
@@ -179,7 +179,7 @@ const GetRecap = ({ recapData }) => {
                     launchOrder.splice(1, 1);
                     setLaunchOrder([...launchOrder]);
                   }}
-                  className="another-slot remove"
+                  className='another-slot remove'
                 >
                   <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
                 </ButtonKit>
@@ -198,45 +198,45 @@ const GetRecap = ({ recapData }) => {
                       },
                     ]);
                   }}
-                  className="another-slot"
+                  className='another-slot'
                 >
-                  <img src={plus} alt="plus" /> Add Rule
+                  <img src={plus} alt='plus' /> Add Rule
                 </ButtonKit>
               )}
             </TypographyKit>
             <TypographyKit
               className={stopOrder.length === 2 ? 'active' : ''}
               sx={{ width: '100%' }}
-              variant="div"
+              variant='div'
             >
               <b>Stop the offer if </b>
               {stopOrder.map((obj, index) =>
                 index === 1 ? (
                   <div key={obj.id}>
                     <MarketingPlaceholderDropdown
-                      className="sm-rule-and"
+                      className='sm-rule-and'
                       names={['And', 'Or']}
-                      title="And"
+                      title='And'
                       personName={obj.reletion}
                       handleChange={(e) => handleChange(e, 'reletion', index)}
                     />
-                    <div className="smart-rule_drowdown">
+                    <div className='smart-rule_drowdown'>
                       <MarketingPlaceholderDropdown
                         names={['# of orders', 'Daily Revenue']}
-                        title="Order"
+                        title='Order'
                         personName={obj.order}
                       />
                       <MarketingPlaceholderDropdown
                         readOnly
                         names={['>', '<']}
-                        title=">"
+                        title='>'
                         personName={obj.arrow}
                       />
                       <TextfieldKit
-                        className="smart-rule-textfield"
-                        placeholder="Enter a Number"
-                        variant="outlined"
-                        type="number"
+                        className='smart-rule-textfield'
+                        placeholder='Enter a Number'
+                        variant='outlined'
+                        type='number'
                         onChange={({ target }) => {
                           stopOrder.splice(index, 1, { ...obj, number: target.value });
                           setStopOrder([...stopOrder]);
@@ -245,31 +245,31 @@ const GetRecap = ({ recapData }) => {
                     </div>
                   </div>
                 ) : (
-                  <div key={obj.id} className="smart-rule_drowdown">
+                  <div key={obj.id} className='smart-rule_drowdown'>
                     <MarketingPlaceholderDropdown
                       names={['# of orders', 'Daily Revenue']}
-                      title="Order"
+                      title='Order'
                       personName={obj.order}
                       handleChange={(e) => handleChange(e, 'order', index)}
                     />
                     <MarketingPlaceholderDropdown
                       readOnly
                       names={['>', '<']}
-                      title=">"
+                      title='>'
                       personName={obj.arrow}
                     />
                     <TextfieldKit
-                      className="smart-rule-textfield"
-                      placeholder="Enter a Number"
-                      variant="outlined"
-                      type="number"
+                      className='smart-rule-textfield'
+                      placeholder='Enter a Number'
+                      variant='outlined'
+                      type='number'
                       onChange={({ target }) => {
                         stopOrder.splice(index, 1, { ...obj, number: target.value });
                         setStopOrder([...stopOrder]);
                       }}
                     />
                   </div>
-                ),
+                )
               )}
               {stopOrder.length === 2 ? (
                 <ButtonKit
@@ -277,7 +277,7 @@ const GetRecap = ({ recapData }) => {
                     stopOrder.splice(1, 1);
                     setStopOrder([...stopOrder]);
                   }}
-                  className="another-slot remove"
+                  className='another-slot remove'
                 >
                   <RemoveIcon width={30} height={30} sx={{ marginRight: 10 }} /> Remove rule
                 </ButtonKit>
@@ -296,9 +296,9 @@ const GetRecap = ({ recapData }) => {
                       },
                     ]);
                   }}
-                  className="another-slot"
+                  className='another-slot'
                 >
-                  <img src={plus} alt="plus" /> Add Rule
+                  <img src={plus} alt='plus' /> Add Rule
                 </ButtonKit>
               )}
             </TypographyKit>
@@ -310,22 +310,22 @@ const GetRecap = ({ recapData }) => {
   if (created) {
     return (
       <div style={{ height: '100%' }}>
-        <div className="left-part-top">
+        <div className='left-part-top'>
           <div>
-            <TypographyKit variant="h4"> </TypographyKit>
+            <TypographyKit variant='h4'> </TypographyKit>
 
             <img
               tabIndex={-1}
-              role="presentation"
+              role='presentation'
               onClick={() => closeSetup()}
               src={CloseIcon}
-              alt="close icon"
+              alt='close icon'
             />
           </div>
         </div>
-        <div className="created-wrapper">
-          <img src={CreatedIcon} alt="Created Icon" />
-          <TypographyKit variant="h3">Let’s Go !!</TypographyKit>
+        <div className='created-wrapper'>
+          <img src={CreatedIcon} alt='Created Icon' />
+          <TypographyKit variant='h3'>Let’s Go !!</TypographyKit>
           <p>The {ads ? 'Ads' : 'Offer'} has Been Created Successfuly</p>
         </div>
       </div>
@@ -341,22 +341,22 @@ const GetRecap = ({ recapData }) => {
     if (Object.keys(vendors.display).length > 0) {
       return (
         <div>
-          <div className="left-part-top">
+          <div className='left-part-top'>
             <div>
-              <TypographyKit variant="h4">{ads ? 'Ads' : 'Offer'} Recap </TypographyKit>
+              <TypographyKit variant='h4'>{ads ? 'Ads' : 'Offer'} Recap </TypographyKit>
 
               <img
                 tabIndex={-1}
-                role="presentation"
+                role='presentation'
                 onClick={() => closeSetup()}
                 src={CloseIcon}
-                alt="close icon"
+                alt='close icon'
               />
             </div>
           </div>
-          <BoxKit className="left-part-radio recap-left-part recap-left-part-inside">
+          <BoxKit className='left-part-radio recap-left-part recap-left-part-inside'>
             <div>
-              <img width={35} height={35} src={selectIcon} alt="select" />
+              <img width={35} height={35} src={selectIcon} alt='select' />
               {Object.keys(recapChainObj).map((cName, index) => {
                 if (Object.keys(recapChainObj[cName]).length > 0) {
                   if (index === Object.keys(recapChainObj).length - 1) {
@@ -375,23 +375,23 @@ const GetRecap = ({ recapData }) => {
               ))}
             </div>
           </BoxKit>
-          <BoxKit className="left-part-radio recap-left-part">
-            <div className="radio recap-box-wrapper">
-              <div className="recap-box">
+          <BoxKit className='left-part-radio recap-left-part'>
+            <div className='radio recap-box-wrapper'>
+              <div className='recap-box'>
                 <div>
                   <span>
-                    <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
+                    <img style={{ filter: 'none' }} src={TimerIcon} alt='Timer Icon' />
                   </span>
                   <div>
                     <div>{duration}</div>
                     {duration === 'Program the offer duration' ? (
-                      <img className="arrow-icon" style={{ left: 0 }} src={ArrowIcon} alt="arrow" />
+                      <img className='arrow-icon' style={{ left: 0 }} src={ArrowIcon} alt='arrow' />
                     ) : (
                       ''
                     )}
                   </div>
                   {duration === 'Program the offer duration' ? (
-                    <div className="customised-column">
+                    <div className='customised-column'>
                       <div>{typeSchedule}</div>
                       <p>
                         {typeSchedule === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
@@ -403,17 +403,17 @@ const GetRecap = ({ recapData }) => {
                 </div>
               </div>
             </div>
-            <div className="radio recap-box-wrapper column">
-              <div className="recap-between">
+            <div className='radio recap-box-wrapper column'>
+              <div className='recap-between'>
                 <div>
-                  <img src={CalendarCheckGrayIcon} alt="calendar check icon" />
+                  <img src={CalendarCheckGrayIcon} alt='calendar check icon' />
                   <div>
                     <div>Starting Date</div>
                     <div>{format(startingDate, 'dd MMM yyyy')}</div>
                   </div>
                 </div>
-                <div className="right">
-                  <img src={CalendarCloseGrayIcon} alt="calendar close icon" />
+                <div className='right'>
+                  <img src={CalendarCloseGrayIcon} alt='calendar close icon' />
                   <div>
                     <div>Ending Date</div>
                     <div>{getFormatedEndDate(endingDate, 'dd MMM yyyy', times)}</div>
@@ -421,23 +421,23 @@ const GetRecap = ({ recapData }) => {
                 </div>
               </div>
             </div>
-            <div className="radio recap-box-wrapper column">
+            <div className='radio recap-box-wrapper column'>
               {times.map((obj, index) => (
-                <div className="recap-between" key={obj.pos}>
+                <div className='recap-between' key={obj.pos}>
                   <div>
-                    <img src={TimerCheckGrayIcon} alt="timer check icon" />
+                    <img src={TimerCheckGrayIcon} alt='timer check icon' />
                     <div>
                       <div>Start Time {index + 1}</div>
                       <div>
                         {format(
                           obj.startTime,
-                          duration === 'Starting Now' ? 'HH:mm aaa' : 'HH:00 aaa',
+                          duration === 'Starting Now' ? 'HH:mm aaa' : 'HH:00 aaa'
                         )}
                       </div>
                     </div>
                   </div>
-                  <div className="right">
-                    <img src={TimerCloseGrayIcon} alt="timer check icon" />
+                  <div className='right'>
+                    <img src={TimerCloseGrayIcon} alt='timer check icon' />
                     <div>
                       <div>End Time {index + 1}</div>
                       <div>{format(obj.endTime, 'HH:mm aaa')}</div>
@@ -448,16 +448,16 @@ const GetRecap = ({ recapData }) => {
             </div>
           </BoxKit>
           {platform === 'deliveroo' ? (
-            <BoxKit className="left-part-radio recap-left-part">
-              <div className="radio recap-box-wrapper">
-                <div className="recap-box">
+            <BoxKit className='left-part-radio recap-left-part'>
+              <div className='radio recap-box-wrapper'>
+                <div className='recap-box'>
                   <div>
                     <span>
-                      <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
+                      <img style={{ filter: 'none' }} src={AudienceIcon} alt='Audience Icon' />
                     </span>
                     <div>
                       <div>Target Audience</div>
-                      <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                      <img className='arrow-icon not-display' src={ArrowIcon} alt='arrow' />
                     </div>
                     <div style={{ marginLeft: 0 }}>
                       <div>{targetAudience}</div>
@@ -469,9 +469,9 @@ const GetRecap = ({ recapData }) => {
           ) : (
             ''
           )}
-          <BoxKit className="left-part-radio under-textfields recap-left-part radio-dates active">
-            <div className="radio recap-box-wrapper">
-              <div className="recap-box">
+          <BoxKit className='left-part-radio under-textfields recap-left-part radio-dates active'>
+            <div className='radio recap-box-wrapper'>
+              <div className='recap-box'>
                 <div>
                   <span>
                     <img
@@ -482,7 +482,7 @@ const GetRecap = ({ recapData }) => {
                   <div>
                     <div>{menu}</div>
                     {menu === 'Offer on An Item from the Menu' ? (
-                      <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                      <img className='arrow-icon not-display' src={ArrowIcon} alt='arrow' />
                     ) : (
                       ''
                     )}
@@ -502,14 +502,14 @@ const GetRecap = ({ recapData }) => {
                 menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
               }`}
             >
-              <div className="recap-between mov">
+              <div className='recap-between mov'>
                 <div>
                   <div>
                     <div>Discount rate</div>
                     <div>{discountPercentage}</div>
                   </div>
                 </div>
-                <div className="right">
+                <div className='right'>
                   <div>
                     <div>Minimum Order</div>
                     <div>{minOrder}</div>
@@ -517,7 +517,7 @@ const GetRecap = ({ recapData }) => {
                 </div>
               </div>
               {menu === 'Offer on An Item from the Menu' ? (
-                <div className="recap-between no-border">
+                <div className='recap-between no-border'>
                   {getItemMenuNamePrice().map((obj) => (
                     <div>
                       <div>{obj.name}</div>
@@ -536,22 +536,22 @@ const GetRecap = ({ recapData }) => {
 
     return (
       <div>
-        <div className="left-part-top">
+        <div className='left-part-top'>
           <div>
-            <TypographyKit variant="h4">{ads ? 'Ads' : 'Offer'} Recap </TypographyKit>
+            <TypographyKit variant='h4'>{ads ? 'Ads' : 'Offer'} Recap </TypographyKit>
 
             <img
               tabIndex={-1}
-              role="presentation"
+              role='presentation'
               onClick={() => closeSetup()}
               src={CloseIcon}
-              alt="close icon"
+              alt='close icon'
             />
           </div>
         </div>
-        <BoxKit className="left-part-radio recap-left-part recap-left-part-inside">
+        <BoxKit className='left-part-radio recap-left-part recap-left-part-inside'>
           <div>
-            <img width={35} height={35} src={selectIcon} alt="select" />
+            <img width={35} height={35} src={selectIcon} alt='select' />
             <div>{branchData}</div>
           </div>
           <div>
@@ -559,23 +559,23 @@ const GetRecap = ({ recapData }) => {
             <img src={platformData === 'talabat' ? talabat : deliveroo} alt={platformData} />
           </div>
         </BoxKit>
-        <BoxKit className="left-part-radio recap-left-part">
-          <div className="radio recap-box-wrapper">
-            <div className="recap-box">
+        <BoxKit className='left-part-radio recap-left-part'>
+          <div className='radio recap-box-wrapper'>
+            <div className='recap-box'>
               <div>
                 <span>
-                  <img style={{ filter: 'none' }} src={TimerIcon} alt="Timer Icon" />
+                  <img style={{ filter: 'none' }} src={TimerIcon} alt='Timer Icon' />
                 </span>
                 <div>
                   <div>{duration}</div>
                   {duration === 'Program the offer duration' ? (
-                    <img className="arrow-icon" src={ArrowIcon} alt="arrow" />
+                    <img className='arrow-icon' src={ArrowIcon} alt='arrow' />
                   ) : (
                     ''
                   )}
                 </div>
                 {duration === 'Program the offer duration' ? (
-                  <div style={{ margin: 0 }} className="customised-column">
+                  <div style={{ margin: 0 }} className='customised-column'>
                     <div>{typeSchedule}</div>
                     <p>
                       {typeSchedule === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
@@ -587,17 +587,17 @@ const GetRecap = ({ recapData }) => {
               </div>
             </div>
           </div>
-          <div className="radio recap-box-wrapper column">
-            <div className="recap-between">
+          <div className='radio recap-box-wrapper column'>
+            <div className='recap-between'>
               <div>
-                <img src={CalendarCheckGrayIcon} alt="calendar check icon" />
+                <img src={CalendarCheckGrayIcon} alt='calendar check icon' />
                 <div>
                   <div>Starting Date</div>
                   <div>{format(startingDate, 'dd MMM yyyy')}</div>
                 </div>
               </div>
-              <div className="right">
-                <img src={CalendarCloseGrayIcon} alt="calendar close icon" />
+              <div className='right'>
+                <img src={CalendarCloseGrayIcon} alt='calendar close icon' />
                 <div>
                   <div>Ending Date</div>
                   <div>{format(endingDate, 'dd MMM yyyy')}</div>
@@ -605,23 +605,23 @@ const GetRecap = ({ recapData }) => {
               </div>
             </div>
           </div>
-          <div className="radio recap-box-wrapper column">
+          <div className='radio recap-box-wrapper column'>
             {times.map((obj, index) => (
-              <div className="recap-between" key={obj.pos}>
+              <div className='recap-between' key={obj.pos}>
                 <div>
-                  <img src={TimerCheckGrayIcon} alt="timer check icon" />
+                  <img src={TimerCheckGrayIcon} alt='timer check icon' />
                   <div>
                     <div>Start Time {index + 1}</div>
                     <div>
                       {format(
                         obj.startTime,
-                        duration === 'Starting Now' ? 'HH:mm aaa' : 'HH:00 aaa',
+                        duration === 'Starting Now' ? 'HH:mm aaa' : 'HH:00 aaa'
                       )}
                     </div>
                   </div>
                 </div>
-                <div className="right">
-                  <img src={TimerCloseGrayIcon} alt="timer check icon" />
+                <div className='right'>
+                  <img src={TimerCloseGrayIcon} alt='timer check icon' />
                   <div>
                     <div>End Time {index + 1}</div>
                     <div>{format(obj.endTime, 'HH:mm aaa')}</div>
@@ -632,16 +632,16 @@ const GetRecap = ({ recapData }) => {
           </div>
         </BoxKit>
         {platformData === 'deliveroo' ? (
-          <BoxKit className="left-part-radio recap-left-part">
-            <div className="radio recap-box-wrapper">
-              <div className="recap-box">
+          <BoxKit className='left-part-radio recap-left-part'>
+            <div className='radio recap-box-wrapper'>
+              <div className='recap-box'>
                 <div>
                   <span>
-                    <img style={{ filter: 'none' }} src={AudienceIcon} alt="Audience Icon" />
+                    <img style={{ filter: 'none' }} src={AudienceIcon} alt='Audience Icon' />
                   </span>
                   <div>
                     <div>Target Audience</div>
-                    <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                    <img className='arrow-icon not-display' src={ArrowIcon} alt='arrow' />
                   </div>
                   <div style={{ marginLeft: 0 }}>
                     <div>{targetAudience}</div>
@@ -653,9 +653,9 @@ const GetRecap = ({ recapData }) => {
         ) : (
           ''
         )}
-        <BoxKit className="left-part-radio under-textfields recap-left-part radio-dates active">
-          <div className="radio recap-box-wrapper">
-            <div className="recap-box">
+        <BoxKit className='left-part-radio under-textfields recap-left-part radio-dates active'>
+          <div className='radio recap-box-wrapper'>
+            <div className='recap-box'>
               <div>
                 <span>
                   <img
@@ -666,7 +666,7 @@ const GetRecap = ({ recapData }) => {
                 <div>
                   <div>{menu}</div>
                   {menu === 'Offer on An Item from the Menu' ? (
-                    <img className="arrow-icon not-display" src={ArrowIcon} alt="arrow" />
+                    <img className='arrow-icon not-display' src={ArrowIcon} alt='arrow' />
                   ) : (
                     ''
                   )}
@@ -686,14 +686,14 @@ const GetRecap = ({ recapData }) => {
               menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
             }`}
           >
-            <div className="recap-between mov">
+            <div className='recap-between mov'>
               <div>
                 <div>
                   <div>Procentage Discount</div>
                   <div>{discountPercentage}</div>
                 </div>
               </div>
-              <div className="right">
+              <div className='right'>
                 <div>
                   <div>Minimum Order</div>
                   <div>{minOrder}</div>
@@ -701,7 +701,7 @@ const GetRecap = ({ recapData }) => {
               </div>
             </div>
             {menu === 'Offer on An Item from the Menu' ? (
-              <div className="recap-between no-border">
+              <div className='recap-between no-border'>
                 {getItemMenuNamePrice().map((obj) => (
                   <div key={obj.name}>
                     <div>{obj.name}</div>
@@ -719,16 +719,16 @@ const GetRecap = ({ recapData }) => {
   }
   return (
     <div>
-      <div className="left-part-top">
+      <div className='left-part-top'>
         <div>
-          <TypographyKit variant="h4">Set up an {ads ? 'Ads' : 'Offer'}</TypographyKit>
+          <TypographyKit variant='h4'>Set up an {ads ? 'Ads' : 'Offer'}</TypographyKit>
 
           <img
             tabIndex={-1}
-            role="presentation"
+            role='presentation'
             onClick={() => closeSetup()}
             src={CloseIcon}
-            alt="close icon"
+            alt='close icon'
           />
         </div>
         <MarketingSetupStepper selected={selected} steps={steps} />

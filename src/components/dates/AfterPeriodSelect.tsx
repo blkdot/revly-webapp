@@ -32,7 +32,7 @@ const Day = ({
       ''
     ) : (
       <ButtonKit
-        className="navbar-button-kit"
+        className='navbar-button-kit'
         onClick={() => {
           setafterPeriodBtn({
             startDate: subDays(date, 1),
@@ -53,7 +53,7 @@ const Day = ({
       </ButtonKit>
     )}
     <ButtonKit
-      className="navbar-button-kit"
+      className='navbar-button-kit'
       onClick={() => {
         setafterPeriodBtn({
           startDate: subDays(startDateLeft, 1),
@@ -73,7 +73,7 @@ const Day = ({
       Day before
     </ButtonKit>
     <ButtonKit
-      className="navbar-button-kit"
+      className='navbar-button-kit'
       onClick={() => {
         setafterPeriodBtn({
           startDate: subWeeks(startDateLeft, 1),
@@ -92,7 +92,7 @@ const Day = ({
     >
       Same day last week
     </ButtonKit>
-    <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
+    <ButtonKit className='navbar-button-kit' onClick={openAfterPeriod}>
       Custom Day
     </ButtonKit>
   </div>
@@ -112,7 +112,7 @@ const Week = ({
       ''
     ) : (
       <ButtonKit
-        className="navbar-button-kit"
+        className='navbar-button-kit'
         onClick={() => {
           setafterPeriodBtn({
             startDate: startOfWeek(subWeeks(date, 1), { weekStartsOn: 1 }),
@@ -133,7 +133,7 @@ const Week = ({
       </ButtonKit>
     )}
     <ButtonKit
-      className="navbar-button-kit"
+      className='navbar-button-kit'
       onClick={() => {
         setafterPeriodBtn({
           startDate: startOfWeek(subWeeks(startDateLeft, 1), { weekStartsOn: 1 }),
@@ -152,7 +152,7 @@ const Week = ({
     >
       Week before
     </ButtonKit>
-    <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
+    <ButtonKit className='navbar-button-kit' onClick={openAfterPeriod}>
       Custom Week
     </ButtonKit>
   </div>
@@ -173,7 +173,7 @@ const Month = ({
       ''
     ) : (
       <ButtonKit
-        className="navbar-button-kit"
+        className='navbar-button-kit'
         onClick={() => {
           setafterPeriodBtn({
             startDate: startOfMonth(subMonths(date, 1)),
@@ -194,14 +194,14 @@ const Month = ({
       </ButtonKit>
     )}
     <ButtonKit
-      className="navbar-button-kit"
+      className='navbar-button-kit'
       onClick={() => {
         setafterPeriodBtn({
           startDate: startOfMonth(subMonths(startDateLeft, 1)).setFullYear(
-            getMonth(date) === 0 ? year - 1 : year,
+            getMonth(date) === 0 ? year - 1 : year
           ),
           endDate: endOfMonth(subMonths(startDateLeft, 1)).setFullYear(
-            getMonth(date) === 0 ? year - 1 : year,
+            getMonth(date) === 0 ? year - 1 : year
           ),
         });
         setTitleAfterPeriod('month before');
@@ -209,10 +209,10 @@ const Month = ({
           ...dateContext,
           afterPeriod: {
             startDate: startOfMonth(subMonths(startDateLeft, 1)).setFullYear(
-              getMonth(date) === 0 ? year - 1 : year,
+              getMonth(date) === 0 ? year - 1 : year
             ),
             endDate: endOfMonth(subMonths(startDateLeft, 1)).setFullYear(
-              getMonth(date) === 0 ? year - 1 : year,
+              getMonth(date) === 0 ? year - 1 : year
             ),
           },
           titleafterPeriod: 'month before',
@@ -222,7 +222,7 @@ const Month = ({
     >
       Month before
     </ButtonKit>
-    <ButtonKit className="navbar-button-kit" onClick={openAfterPeriod}>
+    <ButtonKit className='navbar-button-kit' onClick={openAfterPeriod}>
       Custom Month
     </ButtonKit>
   </div>

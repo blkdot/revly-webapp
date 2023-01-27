@@ -3,8 +3,8 @@ import './Marketing.scss';
 import Widget from '../widget/WidgetEmpty';
 
 const MarketingEmpty = () => (
-  <div className="block">
-    <div className="cardsWrapper marketing">
+  <div className='block'>
+    <div className='cardsWrapper marketing'>
       {[1, 2].map((f) => (
         <Widget key={f} />
       ))}

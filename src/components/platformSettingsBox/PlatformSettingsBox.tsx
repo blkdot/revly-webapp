@@ -14,7 +14,7 @@ const PlatformSettingsBox = (props: any) => {
     if (!active || !registered) return null;
 
     return (
-      <div className="__footer-action">
+      <div className='__footer-action'>
         <ButtonKit onClick={onClick}>
           <AiFillEdit />
           &nbsp;Edit
@@ -24,15 +24,15 @@ const PlatformSettingsBox = (props: any) => {
   };
 
   return (
-    <div className="platform-settings-box">
-      <div className="platform-settings-box__content">
-        <div className="__content__image">
+    <div className='platform-settings-box'>
+      <div className='platform-settings-box__content'>
+        <div className='__content__image'>
           <img src={src} alt={type} />
         </div>
-        <div className="__content__label">
+        <div className='__content__label'>
           <span>Connect your {pascalCase(type)} account to your Revly account</span>
         </div>
-        <div className="__content__switch">
+        <div className='__content__switch'>
           <span>{active ? 'Active' : 'Inactive'}</span>
           <SwitchKit checked={active} onChange={({ target }) => onChangeSwitch(target.checked)} />
         </div>

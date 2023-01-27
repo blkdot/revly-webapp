@@ -11,10 +11,10 @@ import PaperKit from '../../kits/paper/PaperKit';
 import SkeletonKit from '../../kits/skeleton/SkeletonKit';
 
 const Widget = () => (
-  <CardKit className="card_wrapper">
+  <CardKit className='card_wrapper'>
     <CardContentKit>
       <TypographyKit
-        component="div"
+        component='div'
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -24,29 +24,29 @@ const Widget = () => (
         <div>
           <TypographyKit
             sx={{ marginBottom: '15px' }}
-            variant="subtitle2"
-            className="card-typography"
-            component="div"
+            variant='subtitle2'
+            className='card-typography'
+            component='div'
           >
-            <SkeletonKit variant="rectangular" width={100} />
+            <SkeletonKit variant='rectangular' width={100} />
           </TypographyKit>
-          <TypographyKit variant="h3" className="card-typography">
-            <SkeletonKit variant="rectangular" width={100} />
+          <TypographyKit variant='h3' className='card-typography'>
+            <SkeletonKit variant='rectangular' width={100} />
           </TypographyKit>
-          <TypographyKit variant="h3" className="card-typography">
-            <SkeletonKit variant="rectangular" width={100} />
+          <TypographyKit variant='h3' className='card-typography'>
+            <SkeletonKit variant='rectangular' width={100} />
           </TypographyKit>
         </div>
       </TypographyKit>
-      <div className="card_bottom">
-        <PaperKit className="icon-paper">
+      <div className='card_bottom'>
+        <PaperKit className='icon-paper'>
           <ArrowRightAltIcon />
         </PaperKit>
-        <TypographyKit className="card-procent" variant="body2">
-          <SkeletonKit variant="rectangular" width={60} />
+        <TypographyKit className='card-procent' variant='body2'>
+          <SkeletonKit variant='rectangular' width={60} />
         </TypographyKit>
-        <TypographyKit className="card-week" variant="body3">
-          <SkeletonKit variant="rectangular" width={60} />
+        <TypographyKit className='card-week' variant='body3'>
+          <SkeletonKit variant='rectangular' width={60} />
         </TypographyKit>
       </div>
     </CardContentKit>

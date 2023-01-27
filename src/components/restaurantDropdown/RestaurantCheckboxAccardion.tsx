@@ -53,7 +53,7 @@ const RestaurantCheckboxAccordion = ({
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
-    [vendorsNew?.ariaExpanded, active, display],
+    [vendorsNew?.ariaExpanded, active, display]
   );
 
   const [hoverStatusChain, setHoverChain] = useState(false);
@@ -131,7 +131,7 @@ const RestaurantCheckboxAccordion = ({
       {!listing ? (
         <div
           tabIndex={-1}
-          role="presentation"
+          role='presentation'
           className={`checkbox-accordion ${!getDisabledChain() ? 'disabled' : ''} ${
             active ? 'active' : ''
           }`}
@@ -142,10 +142,10 @@ const RestaurantCheckboxAccordion = ({
           <div>
             <img
               tabIndex={-1}
-              role="presentation"
+              role='presentation'
               onClick={(e) => e.stopPropagation()}
               src={selectIcon}
-              alt="select icon"
+              alt='select icon'
             />
             <div
               style={{
@@ -167,18 +167,18 @@ const RestaurantCheckboxAccordion = ({
                 <span style={{ height: 40 }} />
               )}
               <TooltipKit
-                id="category-tooltip"
+                id='category-tooltip'
                 interactive={1}
                 disableHoverListener={!hoverStatusChain}
                 title={chainName}
               >
-                <p className="chain-name">{chainName}</p>
+                <p className='chain-name'>{chainName}</p>
               </TooltipKit>
             </div>
           </div>
           <ExpandMoreIcon style={{ cursor: 'pointer' }} />
           {!(branch || cost || listing) ? (
-            <div className="only-button">
+            <div className='only-button'>
               <ButtonKit
                 disabled={
                   (Object.keys(chainObj)[0] === chainName &&
@@ -188,7 +188,7 @@ const RestaurantCheckboxAccordion = ({
                   !getDisabledChain()
                 }
                 onClick={handleClick}
-                variant="contained"
+                variant='contained'
               >
                 Only
               </ButtonKit>
@@ -241,19 +241,19 @@ const RestaurantCheckboxAccordion = ({
               />
             )}
             <TooltipKit
-              id="category-tooltip"
+              id='category-tooltip'
               interactive={1}
               disableHoverListener={!getHoverStatusVendor(vendorName)}
               title={vendorName}
             >
-              <p className="vendor-name">{vendorName}</p>
+              <p className='vendor-name'>{vendorName}</p>
             </TooltipKit>
             {!(branch || cost || listing || !getInActiveVendor(vendorName)) ? (
-              <div className="only-button vendor">
+              <div className='only-button vendor'>
                 <ButtonKit
                   disabled={getVendorDisabled(vendorName)}
                   onClick={(e) => handleClickVendor(e, vendorName)}
-                  variant="contained"
+                  variant='contained'
                 >
                   Only
                 </ButtonKit>

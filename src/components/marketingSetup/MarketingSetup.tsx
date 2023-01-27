@@ -45,7 +45,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat',
   ]);
   const [platformData, setPlatformData] = useState(
-    userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat',
+    userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat'
   );
   const [selected, setSelected] = useState(1);
   const [links, setLinks] = useState('revenue');
@@ -78,7 +78,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { vendorsObj, vendorsArr } = vendors as any;
   const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
   const [branchData, setBranchData] = useState(
-    vendorsObj?.[platformData]?.[0]?.data?.vendor_name || '',
+    vendorsObj?.[platformData]?.[0]?.data?.vendor_name || ''
   );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
@@ -95,7 +95,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         // format(new Date(), 'HH'),
         // format(new Date(addMinutes(new Date(), 2)), 'mm'),
         null,
-        null,
+        null
       ),
       // TODO: FIX IT
       // endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
@@ -196,7 +196,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           // format(new Date(), 'HH'),
           // format(new Date(addMinutes(new Date(), 2)), 'mm'),
           null,
-          null,
+          null
         ),
         // TODO: FIX IT
         // endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
@@ -221,7 +221,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           null,
           // TODO: FIX IT
           // format(new Date(addMinutes(new Date(), 2)), 'mm'),
-          null,
+          null
         ),
         // TODO: FIX IT
         // endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
@@ -340,7 +340,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
         const res = await triggerOffers(
           Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
-          { ...dataReq, vendors: [clonedVendor] },
+          { ...dataReq, vendors: [clonedVendor] }
         );
 
         if (res instanceof Error) {
@@ -457,7 +457,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           revenue: initialisationRangeColorIndicesRevenue,
           orders: initialisationRangeColorIndicesOrders,
         });
-      },
+      }
     );
   };
 
@@ -478,7 +478,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (platform.length > 1) {
       platform.splice(
         platform.findIndex((el) => el === value),
-        1,
+        1
       );
     }
     setPlatform([...platform]);
@@ -505,7 +505,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
       const res = await getMenu(
         { master_email: user.email, access_token: user.accessToken, vendor },
-        platforms,
+        platforms
       );
 
       if (!res.data) {
@@ -572,7 +572,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       typeSchedule === 'Customised Days',
       customisedDay,
       typeSchedule === 'Same day every week',
-      everyWeek,
+      everyWeek
     );
 
     setHeatmapData({ ...heatmapData, [links]: response });
@@ -630,9 +630,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
             (obj) =>
               isValidDate(obj.endTime) &&
               obj.startTime !== null &&
-              !Number.isNaN(new Date(obj.endTime).getTime()),
+              !Number.isNaN(new Date(obj.endTime).getTime())
           )
-        ),
+        )
       );
       return;
     }
@@ -656,9 +656,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
                   !Number.isNaN(new Date(obj.endTime).getTime()) &&
                   isValidDate(obj.startTime) &&
                   obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.startTime).getTime()),
+                  !Number.isNaN(new Date(obj.startTime).getTime())
               )
-            ),
+            )
           );
           return;
         }
@@ -676,9 +676,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
                   !Number.isNaN(new Date(obj.endTime).getTime()) &&
                   isValidDate(obj.startTime) &&
                   obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.startTime).getTime()),
+                  !Number.isNaN(new Date(obj.startTime).getTime())
               )
-            ),
+            )
           );
           return;
         }
@@ -695,9 +695,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
                   !Number.isNaN(new Date(obj.endTime).getTime()) &&
                   isValidDate(obj.startTime) &&
                   obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.startTime).getTime()),
+                  !Number.isNaN(new Date(obj.startTime).getTime())
               )
-            ),
+            )
           );
         }
       }
@@ -781,29 +781,29 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   };
   // eslint-disable-next-line
   const renderTooltipContent = (data, num) => (
-    <div className="heatmap-tooltip">
-      <div className="heatmap-tooltip__item">
-        <span className="__item-text">
+    <div className='heatmap-tooltip'>
+      <div className='heatmap-tooltip__item'>
+        <span className='__item-text'>
           Daily {links} up to {rangeHoursOpenedDay[num].label}
         </span>
-        <span className="__item-value">
+        <span className='__item-value'>
           {data.x_accrued_intra_day}&nbsp;{links === 'revenue' ? 'AED' : ''}
         </span>
       </div>
-      <div className="heatmap-tooltip__item">
-        <span className="__item-text">
+      <div className='heatmap-tooltip__item'>
+        <span className='__item-text'>
           <span style={{ textTransform: 'capitalize', fontSize: 12 }}>{links}</span> generated at{' '}
           {rangeHoursOpenedDay[num].label}
         </span>
-        <span className="__item-value">
+        <span className='__item-value'>
           {data.x_timeslot}&nbsp;{links === 'revenue' ? 'AED' : ''}
         </span>
       </div>
-      <div className="heatmap-tooltip__item">
-        <span className="__item-text">
+      <div className='heatmap-tooltip__item'>
+        <span className='__item-text'>
           Daily {links} in % at {rangeHoursOpenedDay[num].label}{' '}
         </span>
-        <span className="__item-value">
+        <span className='__item-value'>
           {(data.x_percentage_intra_day * 100).toFixed(2)}&nbsp;%
         </span>
       </div>
@@ -845,7 +845,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     const arr = [];
     checked.forEach((c) => {
       category.forEach((obj) =>
-        obj.name === c ? arr.push({ name: obj.name, price: obj.price }) : false,
+        obj.name === c ? arr.push({ name: obj.name, price: obj.price }) : false
       );
     });
     return arr;
@@ -973,7 +973,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   };
 
   const renderSkeleton = (num) => (
-    <TypographyKit style={{ '--i': num - 5 }} className="absolute loading" key={num}>
+    <TypographyKit style={{ '--i': num - 5 }} className='absolute loading' key={num}>
       <span />
     </TypographyKit>
   );
@@ -981,7 +981,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const renderCells = () =>
     days.map((obj, index) => (
       // eslint-disable-next-line react/no-array-index-key
-      <TypographyKit key={`${obj}_${index}`} variant="div">
+      <TypographyKit key={`${obj}_${index}`} variant='div'>
         {_.range(minHour, maxHour + 1).map((num) => {
           if (heatmapLoading) return renderSkeleton(num);
 
@@ -1008,8 +1008,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           }
           return (
             <Tooltip
-              className="absolute"
-              placement="top-start"
+              className='absolute'
+              placement='top-start'
               // TODO: FIX IT
               // style={{ '--i': num - 5 }}
               title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
@@ -1018,7 +1018,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
             >
               <ItemHeatmap>
                 <TypographyKit
-                  className="heatmap-btn "
+                  className='heatmap-btn '
                   sx={getStyleHashureActive(heatmapData[links][obj][num])}
                 >
                   <span />
@@ -1058,8 +1058,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       );
 
     return (
-      <div className="left-part-bottom">
-        <ButtonKit onClick={() => handleBack()} variant="outlined" disabled={selected < 2}>
+      <div className='left-part-bottom'>
+        <ButtonKit onClick={() => handleBack()} variant='outlined' disabled={selected < 2}>
           Previous Step
         </ButtonKit>
         <ButtonKit
@@ -1079,7 +1079,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
             }
           }}
           disabled={disabled}
-          variant="contained"
+          variant='contained'
         >
           {getRecapBtn()}
         </ButtonKit>
@@ -1089,13 +1089,13 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
   return (
     <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
-      <PaperKit id="marketing-setup" className="marketing-paper">
-        <ContainerKit className="setup-container">
-          <div className="left-part">
+      <PaperKit id='marketing-setup' className='marketing-paper'>
+        <ContainerKit className='setup-container'>
+          <div className='left-part'>
             {triggerLoading ? null : <GetRecap recapData={recapData} />}
             {created ? (
-              <div className="left-part-bottom">
-                <ButtonKit onClick={() => closeSetup()} variant="outlined">
+              <div className='left-part-bottom'>
+                <ButtonKit onClick={() => closeSetup()} variant='outlined'>
                   CLose
                 </ButtonKit>
               </div>
@@ -1103,58 +1103,58 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
               renderLeftSideNotCreated()
             )}
           </div>
-          <div className="right-part">
-            <div className="right-part-header">
+          <div className='right-part'>
+            <div className='right-part-header'>
               <TypographyKit
                 className={`right-part-header_link setup ${links === 'orders' ? 'active' : ''}`}
-                variant="div"
+                variant='div'
               >
                 <BoxKit
                   className={links === 'revenue' ? 'active' : ''}
                   onClick={() => setLinks('revenue')}
                 >
-                  <img src={RevenueHeatMapIcon} alt="Revenue Heat Map Icon" />
+                  <img src={RevenueHeatMapIcon} alt='Revenue Heat Map Icon' />
                   Revenue
                 </BoxKit>
                 <BoxKit
                   className={links === 'orders' ? 'active' : ''}
                   onClick={() => setLinks('orders')}
                 >
-                  <img src={PlatformIcon} alt="Order Heat Map Icon" />
+                  <img src={PlatformIcon} alt='Order Heat Map Icon' />
                   Orders
                 </BoxKit>
               </TypographyKit>
               <Dates
                 isMarketingHeatMap
-                defaultTypeDate="week"
-                defaultTitle="last week"
+                defaultTypeDate='week'
+                defaultTitle='last week'
                 beforePeriodBtn={beforePeriodBtn}
                 setbeforePeriodBtn={setBeforePeriodBtn}
                 setupOffer
               />
             </div>
-            <TypographyKit variant="div" className="right-part-main">
-              <TypographyKit className="right-part-main-title" variant="div">
+            <TypographyKit variant='div' className='right-part-main'>
+              <TypographyKit className='right-part-main-title' variant='div'>
                 <TypographyKit
-                  variant="div"
+                  variant='div'
                   sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
                 >
-                  <TypographyKit variant="h6" style={{ fontSize: '15px' }}>
+                  <TypographyKit variant='h6' style={{ fontSize: '15px' }}>
                     Min {links === 'revenue' ? 'revenue' : 'number of orders'} from{' '}
                     {dayjs(beforePeriodBtn.startDate).format('MM-DD')} to{' '}
                     {dayjs(beforePeriodBtn.endDate).format('MM-DD')}
                   </TypographyKit>
-                  <TypographyKit variant="h6" style={{ fontSize: '15px' }}>
+                  <TypographyKit variant='h6' style={{ fontSize: '15px' }}>
                     Max {links === 'revenue' ? 'revenue' : 'number of orders'} from{' '}
                     {dayjs(beforePeriodBtn.startDate).format('MM-DD')} to{' '}
                     {dayjs(beforePeriodBtn.endDate).format('MM-DD')}
                   </TypographyKit>
                 </TypographyKit>
-                <TypographyKit variant="div" className="color-btns">
+                <TypographyKit variant='div' className='color-btns'>
                   {rangeColorIndices[links]?.map((r, i) => {
                     if (heatmapLoading) {
                       return (
-                        <SkeletonKit key={nanoid()} variant="rectangular" width={170} height={25} />
+                        <SkeletonKit key={nanoid()} variant='rectangular' width={170} height={25} />
                       );
                     }
                     return (
@@ -1163,25 +1163,25 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
                   })}
                 </TypographyKit>
               </TypographyKit>
-              <TypographyKit variant="div" sx={{ display: 'flex', margin: '30px 0' }}>
-                <TypographyKit variant="div" className="right-part-main-hour">
+              <TypographyKit variant='div' sx={{ display: 'flex', margin: '30px 0' }}>
+                <TypographyKit variant='div' className='right-part-main-hour'>
                   <TypographyKit style={{ paddingBottom: '15px' }}>
-                    <img src={OpacityLogo} alt="Logo" />
+                    <img src={OpacityLogo} alt='Logo' />
                   </TypographyKit>
                   {_.range(minHour, maxHour + 1).map((num) => (
                     <TypographyKit key={num}>{rangeHoursOpenedDay[num].label ?? num}</TypographyKit>
                   ))}
                 </TypographyKit>
-                <TypographyKit sx={{ width: '100%' }} variant="div">
-                  <TypographyKit variant="div" className="right-part-main-day">
+                <TypographyKit sx={{ width: '100%' }} variant='div'>
+                  <TypographyKit variant='div' className='right-part-main-day'>
                     {days.map((day) => (
                       <TypographyKit key={day}>{day.slice(0, 3)}</TypographyKit>
                     ))}
                   </TypographyKit>
 
-                  <TypographyKit className="right-part-main-heatmap" variant="div">
+                  <TypographyKit className='right-part-main-heatmap' variant='div'>
                     {days.map((day) => (
-                      <TypographyKit key={day} variant="div">
+                      <TypographyKit key={day} variant='div'>
                         {_.range(minHour, maxHour + 1).map((n) => (
                           <TypographyKit
                             className={`heatmap-btn `}
@@ -1193,7 +1193,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
                         ))}
                       </TypographyKit>
                     ))}
-                    <div className="heatmap-btn_wrapper">{renderCells()}</div>
+                    <div className='heatmap-btn_wrapper'>{renderCells()}</div>
                   </TypographyKit>
                 </TypographyKit>
               </TypographyKit>

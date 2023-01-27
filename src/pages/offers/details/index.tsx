@@ -54,11 +54,11 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     };
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span className="offer-title">Offer Status :</span>
+        <span className='offer-title'>Offer Status :</span>
 
         {status ? (
           <span
-            className="offer-status"
+            className='offer-status'
             style={{
               color: (statusColor[status.toLowerCase()] || statusColor.default)[0],
               backgroundColor: (statusColor[status.toLowerCase()] || statusColor.default)[1],
@@ -76,10 +76,10 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   };
   const renderPlatform = (platform) => (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <span className="offer-title">Platform :</span>
-      <span className="offer-sub-title">
+      <span className='offer-title'>Platform :</span>
+      <span className='offer-sub-title'>
         <img
-          className="planning-platform"
+          className='planning-platform'
           style={{ marginRight: '1.5rem' }}
           src={platformObject[platform].src}
           alt={platformObject[platform].name}
@@ -120,7 +120,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         chain_id,
         master_offer_id,
       },
-      platform,
+      platform
     ).then(() => {
       setOfferDetail({ ...offerDetail, status: 'Cancelled' });
       setofferDetailMaster({
@@ -149,7 +149,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
           .catch((err) => console.log({ err }))
       );
     },
-    { enabled: !!vendorsObj },
+    { enabled: !!vendorsObj }
   );
 
   const getMenuTypeOffer = () => {
@@ -166,39 +166,39 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         cancelOffer={handleCancelOfferMaster}
         platform={platform}
       />
-      <div className="wrapper marketing-wrapper">
-        <PaperKit className="marketing-paper offer-paper">
+      <div className='wrapper marketing-wrapper'>
+        <PaperKit className='marketing-paper offer-paper'>
           <div>
-            <div className="offer-details-actions">
-              <button onClick={() => setOpened(false)} type="button" className="back-icon">
+            <div className='offer-details-actions'>
+              <button onClick={() => setOpened(false)} type='button' className='back-icon'>
                 <Arrow />
                 <span style={{ paddingLeft: '5px' }}>Back</span>
               </button>
               <div>
                 {['Live', 'Active', 'Scheduled'].includes(
-                  offerDetailMaster?.master_offer?.offer_status,
+                  offerDetailMaster?.master_offer?.offer_status
                 ) && (
-                  <button onClick={openCancelModal} className="cancel-btn" type="button">
+                  <button onClick={openCancelModal} className='cancel-btn' type='button'>
                     <Warning />
                     <span style={{ color: '#FF4842' }}>Cancel Offer</span>
                   </button>
                 )}
               </div>
             </div>
-            <div className="offer-infos">
-              <div className="restau">
+            <div className='offer-infos'>
+              <div className='restau'>
                 <Calendar />
-                <div className="restau-infos">
-                  <div className="restau-name">
+                <div className='restau-infos'>
+                  <div className='restau-name'>
                     {vendor_name || <SkeletonKit width={70} height={30} />}
                   </div>
                 </div>
               </div>
-              <div className="offer">
+              <div className='offer'>
                 {renderOfferStatus(offerDetailMaster?.master_offer?.offer_status)}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span className="offer-title">Offer Date :</span>
-                  <span className="offer-sub-title">
+                  <span className='offer-title'>Offer Date :</span>
+                  <span className='offer-sub-title'>
                     {start_date || <SkeletonKit width={60} height={30} />}
                   </span>
                 </div>
@@ -206,58 +206,58 @@ const OfferDetailComponent = ({ data, setOpened }) => {
               </div>
             </div>
             {status !== 'Scheduled' && (
-              <div className="offer-visibility-container-scroll">
-                <div className="offer-visibility-container">
-                  <div className="offer-visibility-block">
+              <div className='offer-visibility-container-scroll'>
+                <div className='offer-visibility-container'>
+                  <div className='offer-visibility-block'>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span className="offer-visibility-title with-icon">Caroussel Visibility</span>
+                      <span className='offer-visibility-title with-icon'>Caroussel Visibility</span>
                       <Arrow />
                     </div>
-                    <div className="offer-visibility-sub-title">Caroussel</div>
+                    <div className='offer-visibility-sub-title'>Caroussel</div>
                   </div>
-                  <div className="offer-visibility-block">
+                  <div className='offer-visibility-block'>
                     <div>
-                      <span className="offer-visibility-title">Visibility Rank</span>
+                      <span className='offer-visibility-title'>Visibility Rank</span>
                     </div>
-                    <div className="offer-visibility-sub-title">
+                    <div className='offer-visibility-sub-title'>
                       {accured_discount === 0 || accured_discount ? accured_discount : '-'}
                     </div>
                   </div>
-                  <div className="offer-visibility-block">
+                  <div className='offer-visibility-block'>
                     <div>
-                      <span className="offer-visibility-title">#Orders</span>
+                      <span className='offer-visibility-title'>#Orders</span>
                     </div>
-                    <div className="offer-visibility-sub-title">
+                    <div className='offer-visibility-sub-title'>
                       {n_orders === 0 || n_orders ? n_orders : '-'}
                     </div>
                   </div>
-                  <div className="offer-visibility-block">
+                  <div className='offer-visibility-block'>
                     <div>
-                      <span className="offer-visibility-title">Avg Basket</span>
+                      <span className='offer-visibility-title'>Avg Basket</span>
                     </div>
-                    <div className="offer-visibility-sub-title">
+                    <div className='offer-visibility-sub-title'>
                       {average_basket === 0 || average_basket ? average_basket : '-'}
                     </div>
                   </div>
-                  <div className="offer-visibility-block">
+                  <div className='offer-visibility-block'>
                     <div>
-                      <span className="offer-visibility-title">Roi</span>
+                      <span className='offer-visibility-title'>Roi</span>
                     </div>
-                    <div className="offer-visibility-sub-title">{roi === 0 || roi ? roi : '-'}</div>
+                    <div className='offer-visibility-sub-title'>{roi === 0 || roi ? roi : '-'}</div>
                   </div>
-                  <div className="offer-visibility-block">
+                  <div className='offer-visibility-block'>
                     <div>
-                      <span className="offer-visibility-title">Revenue</span>
+                      <span className='offer-visibility-title'>Revenue</span>
                     </div>
-                    <div className="offer-visibility-sub-title">
+                    <div className='offer-visibility-sub-title'>
                       {revenue === 0 || revenue ? revenue : '-'}
                     </div>
                   </div>
-                  <div className="offer-visibility-block">
+                  <div className='offer-visibility-block'>
                     <div>
-                      <span className="offer-visibility-title">Profits</span>
+                      <span className='offer-visibility-title'>Profits</span>
                     </div>
-                    <div className="offer-visibility-sub-title">
+                    <div className='offer-visibility-sub-title'>
                       {profit === 0 || profit ? profit : '-'}
                     </div>
                   </div>
@@ -266,8 +266,8 @@ const OfferDetailComponent = ({ data, setOpened }) => {
             )}
             {master_offer_id && (
               <div>
-                <div className="offer-duration-container">
-                  <div className="offer-duration-block">
+                <div className='offer-duration-container'>
+                  <div className='offer-duration-block'>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <div
                         style={{
@@ -278,7 +278,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       >
                         <Timer />
                       </div>
-                      <span className="offer-duration width-left-icon width-right-icon">
+                      <span className='offer-duration width-left-icon width-right-icon'>
                         Program the offer duration
                       </span>
                       {scheduleTypeMapping[(type_schedule || '').toLowerCase()] || type_schedule ? (
@@ -288,7 +288,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       )}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span className="offer-duration  width-right-icon">
+                      <span className='offer-duration  width-right-icon'>
                         {scheduleTypeMapping[(type_schedule || '').toLowerCase()] ||
                           type_schedule ||
                           ''}
@@ -374,15 +374,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
 
                 {Object.keys(offerDetailMaster?.children_offers || {}).length === 0 &&
                 Object.keys(offerDetailMaster?.master_offer || {}).length === 0 ? (
-                  <div className="offerdetails_time_slots" style={{ width: '100%' }}>
+                  <div className='offerdetails_time_slots' style={{ width: '100%' }}>
                     <SpinnerKit />
                   </div>
                 ) : (
-                  <div className="offerdetails_time_slots_scroll">
+                  <div className='offerdetails_time_slots_scroll'>
                     {Object.keys(offerDetailMaster.children_offers).length === 0 ? (
                       ''
                     ) : (
-                      <div style={{ width: 'fit-content' }} className="offerdetails_time_slots">
+                      <div style={{ width: 'fit-content' }} className='offerdetails_time_slots'>
                         {Object.keys(offerDetailMaster?.children_offers || {}).map((id) => (
                           <TimeSlot key={id} data={offerDetailMaster.children_offers[id]} />
                         ))}
@@ -392,8 +392,8 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                 )}
               </div>
             )}
-            <div className="offer-duration-container">
-              <div className="offer-duration-block">
+            <div className='offer-duration-container'>
+              <div className='offer-duration-block'>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div
                     style={{
@@ -405,7 +405,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   >
                     <FastFood />
                   </div>
-                  <span className="offer-duration width-left-icon width-right-icon">
+                  <span className='offer-duration width-left-icon width-right-icon'>
                     {type_offer ? getMenuTypeOffer() : <SkeletonKit width={130} height={30} />}
                   </span>
                   {type_offer && type_offer !== 'Menu discount' ? <ExpandIcon /> : ''}

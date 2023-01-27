@@ -224,7 +224,7 @@ const MarketingOffer = () => {
         id: `${cur.id}_${r.offer_id}`,
         data: r,
       }),
-      {},
+      {}
     );
 
   const renderStatusFilter = (s) => {
@@ -288,7 +288,7 @@ const MarketingOffer = () => {
           target,
         };
       },
-      { discount_type: [], platform: [], discount_rate: [], status: [], target: [] },
+      { discount_type: [], platform: [], discount_rate: [], status: [], target: [] }
     );
 
     const clonedFilters = { ...filters };
@@ -431,38 +431,38 @@ const MarketingOffer = () => {
       );
     }
     return (
-      <PaperKit className="marketing-paper offer-paper">
-        <div className="right-part">
-          <div className="right-part-header marketing-links">
+      <PaperKit className='marketing-paper offer-paper'>
+        <div className='right-part'>
+          <div className='right-part-header marketing-links'>
             <TypographyKit
               className={`right-part-header_link marketing ${
                 scrollActive === 'more' ? 'active' : ''
               }`}
-              variant="div"
+              variant='div'
             >
-              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('less')}>
+              <div tabIndex={-1} role='presentation' onClick={() => handleScrollActive('less')}>
                 <BoxKit className={scrollActive === 'less' ? 'active' : ''}>
-                  <img src={OffersManagmentIcon} alt="Offers managment icon" />
+                  <img src={OffersManagmentIcon} alt='Offers managment icon' />
                   Offers Management
                 </BoxKit>
               </div>
-              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('more')}>
+              <div tabIndex={-1} role='presentation' onClick={() => handleScrollActive('more')}>
                 <BoxKit className={scrollActive === 'more' ? 'active' : ''}>
-                  <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
+                  <img src={OffersPerformenceIcon} alt='Offer Performence icon' />
                   Offers Performance
                 </BoxKit>
               </div>
             </TypographyKit>
           </div>
         </div>
-        <TypographyKit variant="div" className="marketing-paper-top-btns">
-          <div className="marketing-filters">
+        <TypographyKit variant='div' className='marketing-paper-top-btns'>
+          <div className='marketing-filters'>
             <div>
               <FilterDropdown
                 items={filtersHead.platform}
                 values={filters.platform}
                 onChange={handleChangeMultipleFilter('platform')}
-                label="Platform"
+                label='Platform'
                 icon={<Layers />}
                 internalIconOnActive={platformObject}
                 maxShowned={1}
@@ -471,7 +471,7 @@ const MarketingOffer = () => {
                 items={filtersHead.discount_type}
                 values={filters.discount_type}
                 onChange={handleChangeMultipleFilter('discount_type')}
-                label="Discount Type"
+                label='Discount Type'
                 icon={<Tag />}
                 maxShowned={1}
               />
@@ -479,16 +479,16 @@ const MarketingOffer = () => {
                 items={filtersHead.discount_rate}
                 values={filters.discount_rate}
                 onChange={handleChangeMultipleFilter('discount_rate')}
-                label="Discount Amount"
+                label='Discount Amount'
                 icon={<Tag />}
-                customTag="%"
+                customTag='%'
                 maxShowned={5}
               />
             </div>
             <div>
               <ButtonKit
-                className="more-filter"
-                variant="outlined"
+                className='more-filter'
+                variant='outlined'
                 onClick={() => setOpenedFilter(true)}
                 disabled={isEmptyList()}
               >
@@ -503,14 +503,14 @@ const MarketingOffer = () => {
           headers={headersOffers}
           rows={offersDataFiltered.map(renderRowsByHeader)}
           onClickRow={handleRowClick}
-          mainFieldOrdered="start_date"
+          mainFieldOrdered='start_date'
         />
       </PaperKit>
     );
   };
   return (
-    <div className="wrapper marketing-wrapper">
-      <div className="top-inputs">
+    <div className='wrapper marketing-wrapper'>
+      <div className='top-inputs'>
         {Object.keys(display).length > 0 ? (
           <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
@@ -522,21 +522,21 @@ const MarketingOffer = () => {
         )}
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
-      <div className="marketing-top">
-        <div className="marketing-top-text">
-          <TypographyKit variant="h4">Marketing - Offers</TypographyKit>
-          <TypographyKit color="#637381" variant="subtitle">
+      <div className='marketing-top'>
+        <div className='marketing-top-text'>
+          <TypographyKit variant='h4'>Marketing - Offers</TypographyKit>
+          <TypographyKit color='#637381' variant='subtitle'>
             Create and manage all your offers. Set personalised rules to automatically trigger your
             offers.
           </TypographyKit>
         </div>
-        <div className="markting-top-btns">
-          <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
-            <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
+        <div className='markting-top-btns'>
+          <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
+            <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
             Create a smart rule
           </ButtonKit>
-          <ButtonKit onClick={() => OpenSetup()} variant="contained">
-            <img src={SettingFuture} alt="Setting future icon" />
+          <ButtonKit onClick={() => OpenSetup()} variant='contained'>
+            <img src={SettingFuture} alt='Setting future icon' />
             Set up an offer
           </ButtonKit>
         </div>

@@ -54,7 +54,7 @@ const ProtectedRoutes = () => {
   }
 
   const renderLayout = () => (
-    <div className="user-page">
+    <div className='user-page'>
       <Navbar />
       <ContainerKit>
         <Outlet />
@@ -62,7 +62,7 @@ const ProtectedRoutes = () => {
     </div>
   );
 
-  return user ? renderLayout() : <Navigate to="/" />;
+  return user ? renderLayout() : <Navigate to='/' />;
 };
 
 export default ProtectedRoutes;

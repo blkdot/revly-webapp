@@ -34,13 +34,13 @@ const ResetPasswordForm = (props: any) => {
     );
 
   return (
-    <div className="reset-password-form">
+    <div className='reset-password-form'>
       <TextfieldKit
-        label="New Password"
+        label='New Password'
         type={showPassword.new ? 'text' : 'password'}
         fullWidth
         onBlur={() => onBlur('new')}
-        className="__input"
+        className='__input'
         onChange={({ target }) => onChangeNewPassword(target.value)}
         error={errorNewPassword}
         InputProps={{
@@ -48,13 +48,13 @@ const ResetPasswordForm = (props: any) => {
         }}
       />
       <TextfieldKit
-        label="Confirm Password"
+        label='Confirm Password'
         type={showPassword.confirm ? 'text' : 'password'}
         fullWidth
         onBlur={() => onBlur('confirm')}
         onChange={({ target }) => onChangeConfirmPassword(target.value)}
         error={errorConfirmPassword}
-        className="__input"
+        className='__input'
         InputProps={{
           endAdornment: endAdornment('confirm'),
         }}

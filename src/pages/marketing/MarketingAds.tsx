@@ -179,7 +179,7 @@ const MarketingAds = () => {
           status,
         };
       },
-      { platform: [], status: [] },
+      { platform: [], status: [] }
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
@@ -235,7 +235,7 @@ const MarketingAds = () => {
         id: r.ad_id,
         data: r,
       }),
-      {},
+      {}
     );
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
@@ -271,13 +271,13 @@ const MarketingAds = () => {
       isLoading={isLoadingAds}
       headers={headersAds}
       rows={adsFilteredData.map(renderRowsByHeader)}
-      mainFieldOrdered="start_date"
+      mainFieldOrdered='start_date'
     />
   );
 
   return (
-    <div className="wrapper marketing-wrapper">
-      <div className="top-inputs">
+    <div className='wrapper marketing-wrapper'>
+      <div className='top-inputs'>
         {Object.keys(display).length > 0 ? (
           <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
@@ -289,55 +289,55 @@ const MarketingAds = () => {
         )}
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
-      <div className="marketing-top">
-        <div className="marketing-top-text">
-          <TypographyKit variant="h4">Marketing - Ads</TypographyKit>
-          <TypographyKit color="#637381" variant="subtitle">
+      <div className='marketing-top'>
+        <div className='marketing-top-text'>
+          <TypographyKit variant='h4'>Marketing - Ads</TypographyKit>
+          <TypographyKit color='#637381' variant='subtitle'>
             Create and manage all your offers. Set personalised rules to automatically trigger your
             Ads.
           </TypographyKit>
         </div>
-        <div className="markting-top-btns">
-          <ButtonKit disabled className="sm-rule-btn disabled" variant="outlined">
-            <img src={SmartRuleBtnIcon} alt="Smart rule icon" />
+        <div className='markting-top-btns'>
+          <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
+            <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
             Create a smart rule
           </ButtonKit>
-          <ButtonKit disabled variant="contained">
-            <img src={SettingFuture} alt="Setting future icon" />
+          <ButtonKit disabled variant='contained'>
+            <img src={SettingFuture} alt='Setting future icon' />
             Set up an ad
           </ButtonKit>
         </div>
       </div>
-      <PaperKit className="marketing-paper offer-paper">
-        <div className="right-part">
-          <div className="right-part-header marketing-links">
+      <PaperKit className='marketing-paper offer-paper'>
+        <div className='right-part'>
+          <div className='right-part-header marketing-links'>
             <TypographyKit
               className={`right-part-header_link ${scrollActive === 'more' ? 'active' : ''}`}
-              variant="div"
+              variant='div'
             >
-              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('less')}>
+              <div tabIndex={-1} role='presentation' onClick={() => handleScrollActive('less')}>
                 <BoxKit className={scrollActive === 'less' ? 'active' : ''}>
-                  <img src={OffersManagmentIcon} alt="Offers managment icon" />
+                  <img src={OffersManagmentIcon} alt='Offers managment icon' />
                   Ads Management
                 </BoxKit>
               </div>
-              <div tabIndex={-1} role="presentation" onClick={() => handleScrollActive('more')}>
+              <div tabIndex={-1} role='presentation' onClick={() => handleScrollActive('more')}>
                 <BoxKit className={scrollActive === 'more' ? 'active' : ''}>
-                  <img src={OffersPerformenceIcon} alt="Offer Performence icon" />
+                  <img src={OffersPerformenceIcon} alt='Offer Performence icon' />
                   Ads Performance
                 </BoxKit>
               </div>
             </TypographyKit>
           </div>
         </div>
-        <TypographyKit variant="div" className="marketing-paper-top-btns">
-          <div className="marketing-filters">
+        <TypographyKit variant='div' className='marketing-paper-top-btns'>
+          <div className='marketing-filters'>
             <div>
               <FilterDropdown
                 items={filtersHead.platform}
                 values={filters.platform}
                 onChange={handleChangeMultipleFilter('platform')}
-                label="Platform"
+                label='Platform'
                 icon={<Layers />}
                 internalIconOnActive={platformObject}
                 maxShowned={1}
@@ -345,8 +345,8 @@ const MarketingAds = () => {
             </div>
             <div>
               <ButtonKit
-                className="more-filter"
-                variant="outlined"
+                className='more-filter'
+                variant='outlined'
                 onClick={() => setOpenedFilter(true)}
                 disabled={isEmptyList()}
               >
@@ -360,14 +360,14 @@ const MarketingAds = () => {
       </PaperKit>
       <MarketingSetup ads active={active} setActive={setActive} />
       <div
-        role="presentation"
+        role='presentation'
         tabIndex={-1}
         onClick={() => setOpened(false)}
         className={`delete-overlay ${opened ? 'active' : ''}`}
       >
-        <PaperKit onClick={(e) => e.stopPropagation()} className="marketing-paper">
+        <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper'>
           <div>
-            <img src={logo} alt="logo" />
+            <img src={logo} alt='logo' />
             <TypographyKit>Are you sure you want to delete this offer ?</TypographyKit>
           </div>
           <TypographyKit>
@@ -375,10 +375,10 @@ const MarketingAds = () => {
             Tellus diam mi phasellus facilisi id iaculis egestas.
           </TypographyKit>
           <div>
-            <ButtonKit onClick={() => CancelAd()} variant="contained">
+            <ButtonKit onClick={() => CancelAd()} variant='contained'>
               Cancel Offer
             </ButtonKit>
-            <ButtonKit onClick={() => setOpened(false)} variant="outlined">
+            <ButtonKit onClick={() => setOpened(false)} variant='outlined'>
               Cancel
             </ButtonKit>
           </div>

@@ -65,10 +65,10 @@ const CompetitionDropdown = (props: any) => {
         renderOptions(name)
       ) : (
         <MenuItemKit key={name} value={name}>
-          {title === 'Country' ? <img className="flag-img" src={getFlag(name)} alt={name} /> : ''}
+          {title === 'Country' ? <img className='flag-img' src={getFlag(name)} alt={name} /> : ''}
           {type === 'platform' ? (
             <img
-              className="flag-img"
+              className='flag-img'
               src={name === 'deliveroo' ? icdeliveroo : ictalabat}
               alt={name}
             />
@@ -77,24 +77,24 @@ const CompetitionDropdown = (props: any) => {
           )}
           <ListItemTextKit primary={name} />
         </MenuItemKit>
-      ),
+      )
     );
 
   return (
     <div className={`restaurant-dropdown_wrapper ${className}`}>
       <FormcontrolKit sx={{ m: 1, width: 250 }}>
         <InputLabelKit
-          className="restaurant-dropdown-input competition-dropdown"
-          id="demo-multiple-checkbox-label"
+          className='restaurant-dropdown-input competition-dropdown'
+          id='demo-multiple-checkbox-label'
         >
-          {icon ? <img src={icon} alt="Select Icon" /> : ''}
+          {icon ? <img src={icon} alt='Select Icon' /> : ''}
           {title}
         </InputLabelKit>
         <SelectKit
           required
           multiple={multiple}
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
+          labelId='demo-multiple-checkbox-label'
+          id='demo-multiple-checkbox'
           value={select === undefined ? '' : select}
           onChange={onChange || handleChange}
           input={<OutlindeInputKit label={title} />}
@@ -102,9 +102,9 @@ const CompetitionDropdown = (props: any) => {
             renderValue ? (
               renderValue(selected)
             ) : (
-              <div className="country-wrapper">
+              <div className='country-wrapper'>
                 {title === 'Country' ? (
-                  <img className="flag-img" src={getFlag(selected)} alt={selected} />
+                  <img className='flag-img' src={getFlag(selected)} alt={selected} />
                 ) : (
                   ''
                 )}
@@ -114,7 +114,7 @@ const CompetitionDropdown = (props: any) => {
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}
-                    alt="icon"
+                    alt='icon'
                   />
                 ) : (
                   ''

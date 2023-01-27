@@ -14,37 +14,37 @@ const Dev = () => (
   <div style={{ position: 'relative', height: '90vh', display: 'flex' }}>
     <TypographyKit style={{ position: 'absolute', top: '40px', right: '40px', fontWeight: 'bold' }}>
       Don&apos;t have an account ?{' '}
-      <Link style={{ color: '#00AB55', textDecoration: 'none' }} to="/signup">
+      <Link style={{ color: '#00AB55', textDecoration: 'none' }} to='/signup'>
         Get started
       </Link>
     </TypographyKit>
     <div style={{ margin: 'auto', minWidth: '340px', maxWidth: '520px' }}>
       <div style={{ marginBottom: '1.6rem' }}>
         <TypographyKit
-          variant="h5"
+          variant='h5'
           style={{ textAlign: 'start', marginBottom: '0.5rem', fontWeight: 'bold' }}
         >
           Sign in to Revly
         </TypographyKit>
-        <TypographyKit variant="body2" color="#637381" style={{ textAlign: 'start' }}>
+        <TypographyKit variant='body2' color='#637381' style={{ textAlign: 'start' }}>
           Enter your details below
         </TypographyKit>
       </div>
       <div>
-        <ButtonKit variant="outlined" size="medium" fullWidth style={{ marginBottom: '0.8rem' }}>
+        <ButtonKit variant='outlined' size='medium' fullWidth style={{ marginBottom: '0.8rem' }}>
           <FcGoogle style={{ fontSize: '24px' }} />
         </ButtonKit>
       </div>
       <DividerKit style={{ textAlign: 'center', marginBottom: '0.8rem' }}>
-        <TypographyKit variant="body2" color="#637381">
+        <TypographyKit variant='body2' color='#637381'>
           OR
         </TypographyKit>
       </DividerKit>
       <div style={{ marginBottom: '0.8rem' }}>
-        <TextfieldKit label="Email address" size="small" fullWidth />
+        <TextfieldKit label='Email address' size='small' fullWidth />
       </div>
       <div style={{ marginBottom: '0.8rem' }}>
-        <TextfieldKit type="password" label="Password" size="small" fullWidth />
+        <TextfieldKit type='password' label='Password' size='small' fullWidth />
       </div>
       <div
         style={{
@@ -57,7 +57,7 @@ const Dev = () => (
         <FormGroupKit>
           <FormControlLabelKit
             control={<CheckboxKit defaultChecked />}
-            label={<TypographyKit variant="body2">Remember me</TypographyKit>}
+            label={<TypographyKit variant='body2'>Remember me</TypographyKit>}
           />
         </FormGroupKit>
         <Link
@@ -67,13 +67,13 @@ const Dev = () => (
             fontSize: '12.25px',
             alignSelf: 'center',
           }}
-          to="/forgot-password"
+          to='/forgot-password'
         >
           Forgot Password ?
         </Link>
       </div>
       <div>
-        <ButtonKit fullWidth variant="contained">
+        <ButtonKit fullWidth variant='contained'>
           Login
         </ButtonKit>
       </div>

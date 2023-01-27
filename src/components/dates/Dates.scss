@@ -14,7 +14,7 @@
     align-items: center;
     grid-gap: 20px;
 
-    >span {
+    > span {
       width: 80px;
     }
   }
@@ -33,7 +33,7 @@
   width: 250px;
   padding: 10px 10px;
   box-shadow: none;
-  transition: .4s;
+  transition: 0.4s;
   height: 40px;
   border-radius: 30px;
   border: 1px solid rgba(145, 158, 171, 0.32);
@@ -49,19 +49,18 @@
 
     span {
       text-transform: capitalize;
-      color: #212B36;
-      transition: .4s;
+      color: #212b36;
+      transition: 0.4s;
     }
-
   }
 
   svg {
-    transition: .4s;
+    transition: 0.4s;
     fill: #637381;
   }
 
   &:hover {
-    background-color: #F0ECF4;
+    background-color: #f0ecf4;
     color: #823aa8;
 
     span {
@@ -85,23 +84,23 @@
       cursor: not-allowed;
 
       svg {
-        fill: #919EAB;
+        fill: #919eab;
       }
 
       span {
-        color: #919EAB;
+        color: #919eab;
       }
     }
 
     .top-text-inputs {
-      color: #919EAB;
+      color: #919eab;
 
       &::after {
         content: none;
       }
 
       &::before {
-        background-color: #DFE3E8;
+        background-color: #dfe3e8;
       }
     }
   }
@@ -120,7 +119,7 @@
   left: auto;
   right: 0;
 
-  transition: .4s;
+  transition: 0.4s;
 
   &.opened {
     opacity: 1;
@@ -130,7 +129,6 @@
   &.month {
     right: 30%;
   }
-
 
   .month_picker {
     padding: 0 15px;
@@ -142,14 +140,12 @@
 
     .Mui-selected {
       background-color: #704cfc;
-      box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
-        0px 2px 2px 0px rgb(0 0 0 / 14%),
+      box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%),
         0px 1px 5px 0px rgb(0 0 0 / 12%);
-      transition: .4s;
+      transition: 0.4s;
 
       &:hover {
-        box-shadow: 0px 2px 1px 1px rgb(0 0 0 / 20%),
-          0px 1px 1px 0px rgb(0 0 0 / 14%),
+        box-shadow: 0px 2px 1px 1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%),
           0px 1px 5px 0px rgb(0 0 0 / 12%);
       }
     }
@@ -187,17 +183,15 @@
   .rdrDateDisplay.rdrDateDisplay {
     color: #704cfc !important;
 
-    >span {
-      box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
-        0 2px 4px -1px rgb(145 158 171 / 24%);
+    > span {
+      box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
     }
   }
 
-  >div:nth-of-type(2) {
+  > div:nth-of-type(2) {
     overflow: hidden;
     border-radius: 0 8px 8px 0;
-    box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
-      0 2px 4px 0px rgb(145 158 171 / 24%);
+    box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px 0px rgb(145 158 171 / 24%);
   }
 
   .rdrDayPassive .rdrDayNumber span {
@@ -219,7 +213,7 @@
   width: 100vw;
   height: 100vh;
   position: fixed;
-  transition: .3s;
+  transition: 0.3s;
   left: 0;
   top: 0;
   z-index: 799;
@@ -228,7 +222,6 @@
     opacity: 1;
     visibility: visible;
   }
-
 }
 
 .date-select.date-select {
@@ -239,9 +232,8 @@
   left: 0;
   opacity: 0;
   visibility: hidden;
-  transition: .4s;
-  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
-    0 2px 4px -1px rgb(145 158 171 / 24%);
+  transition: 0.4s;
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
   width: 100%;
   border-radius: 12px;
 
@@ -250,7 +242,7 @@
     top: -7px;
     background-color: #fff;
     right: 15px;
-    content: "";
+    content: '';
     position: absolute;
     width: 20px;
     height: 20px;
@@ -262,20 +254,20 @@
     top: 0px;
     background-color: #fff;
     right: 10px;
-    content: "";
+    content: '';
     position: absolute;
     width: 40px;
     height: 20px;
   }
 
-  >div {
+  > div {
     padding: 15px 15px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 
-    >button {
+    > button {
       color: grey;
       width: 100%;
       display: flex;
@@ -285,8 +277,6 @@
       border-radius: 6px;
     }
   }
-
-
 
   &.selected {
     opacity: 1;
@@ -303,8 +293,7 @@
   display: flex;
   flex-direction: column;
   grid-gap: 5px;
-  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
-    0 2px 4px -1px rgb(145 158 171 / 24%);
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
 
   .navbar-accordion.navbar-accordion {
     &::before {
@@ -331,7 +320,6 @@
     &.active {
       background-color: #ebdbeb;
       color: #704cfc;
-
     }
 
     span {
@@ -379,7 +367,6 @@
         background: $color-light-grey;
       }
     }
-
   }
 }
 
@@ -388,7 +375,7 @@
   align-items: center;
   grid-gap: 20px;
 
-  >img {
+  > img {
     margin-top: 15px;
     width: 40px;
     height: 40px;
@@ -396,7 +383,7 @@
 }
 
 .expand-img {
-  transition: .4s;
+  transition: 0.4s;
 
   &.active {
     transform: scale(1, -1);
@@ -418,17 +405,17 @@
   }
 }
 
-@media(max-width: 1260px) {
+@media (max-width: 1260px) {
   .date-range.date-range {
     .rdrMonths {
-      >div:nth-of-type(2) {
+      > div:nth-of-type(2) {
         display: none;
       }
     }
   }
 }
 
-@media(max-width: 1024px) {
+@media (max-width: 1024px) {
   .date-range.date-range {
     &.month {
       right: 10%;
@@ -436,7 +423,7 @@
   }
 }
 
-@media(max-width: 818px) {
+@media (max-width: 818px) {
   .date-range.date-range {
     &.month {
       right: 0%;
@@ -448,22 +435,22 @@
   }
 }
 
-@media(max-width: 960px) {
+@media (max-width: 960px) {
   .dates {
     grid-gap: 10px;
   }
 }
 
-@media(max-width: 918px) {
+@media (max-width: 918px) {
   .dashboard-date {
-    >img {
+    > img {
       opacity: 0;
       display: none;
     }
   }
 }
 
-@media(max-width: 778px) {
+@media (max-width: 778px) {
   .dates {
     justify-content: flex-start;
     width: 100%;
@@ -475,10 +462,10 @@
     .date-picker_wrapper {
       width: 100%;
 
-      >div {
+      > div {
         width: 100% !important;
 
-        >div:nth-of-type(1) {
+        > div:nth-of-type(1) {
           width: 100%;
         }
       }

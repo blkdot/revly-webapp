@@ -10,37 +10,37 @@ import icframe from '../../../assets/images/ic_auth-frame.png';
 import './AuthLayout.scss';
 
 const AuthLayout = () => (
-  <div className="auth-layout">
-    <div className="auth-layout__cover">
-      <div className="__container">
-        <div className="auth-layout__cover__logo">
-          <img src={logo} alt="cover" />
+  <div className='auth-layout'>
+    <div className='auth-layout__cover'>
+      <div className='__container'>
+        <div className='auth-layout__cover__logo'>
+          <img src={logo} alt='cover' />
         </div>
-        <div className="auth-layout__cover__center">
-          <p className="auth-layout__cover__center__text">
+        <div className='auth-layout__cover__center'>
+          <p className='auth-layout__cover__center__text'>
             All-in-one solution to optimize your restaurant&apos;s revenue on delivery platforms
           </p>
-          <div className="__img-frame">
-            <img loading="lazy" src={icframe} alt="card" />
+          <div className='__img-frame'>
+            <img loading='lazy' src={icframe} alt='card' />
           </div>
-          <div className="__block">
-            <div className="auth-layout__cover__center-flex">
-              <img loading="lazy" src={icstrat} alt="card" />
-              <p className="center-flex__text">Set up a customized marketing strategy</p>
+          <div className='__block'>
+            <div className='auth-layout__cover__center-flex'>
+              <img loading='lazy' src={icstrat} alt='card' />
+              <p className='center-flex__text'>Set up a customized marketing strategy</p>
             </div>
-            <div className="auth-layout__cover__center-flex">
-              <img loading="lazy" src={icperf} alt="card" />
-              <p className="center-flex__text">Gain valuable insights on your performance</p>
+            <div className='auth-layout__cover__center-flex'>
+              <img loading='lazy' src={icperf} alt='card' />
+              <p className='center-flex__text'>Gain valuable insights on your performance</p>
             </div>
-            <div className="auth-layout__cover__center-flex">
-              <img loading="lazy" src={iccompetitionwhite} alt="card" />
-              <p className="center-flex__text">Stay on top of the competition</p>
+            <div className='auth-layout__cover__center-flex'>
+              <img loading='lazy' src={iccompetitionwhite} alt='card' />
+              <p className='center-flex__text'>Stay on top of the competition</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div className="auth-layout__form-block">
+    <div className='auth-layout__form-block'>
       <Outlet />
     </div>
   </div>

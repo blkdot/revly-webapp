@@ -18,7 +18,7 @@ const Congrats = () => {
   });
 
   return (
-    <div className="congrats">
+    <div className='congrats'>
       <span>Congratulation !</span>
     </div>
   );

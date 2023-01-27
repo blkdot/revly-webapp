@@ -84,11 +84,11 @@ const Cost = () => {
   };
 
   return (
-    <div className="billing">
-      <div className="billing__invoice __card">
-        <div className="__flex">
-          <div className="__head">
-            <p className="billing__card-title">Your Cost Information</p>
+    <div className='billing'>
+      <div className='billing__invoice __card'>
+        <div className='__flex'>
+          <div className='__head'>
+            <p className='billing__card-title'>Your Cost Information</p>
             {/* <p className="billing__card-subtitle">- -</p> */}
           </div>
         </div>

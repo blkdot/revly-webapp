@@ -189,8 +189,8 @@ const General = () => {
   };
 
   return (
-    <div className="general">
-      <p className="__title">Your personal data</p>
+    <div className='general'>
+      <p className='__title'>Your personal data</p>
       <AccountSettingForm
         valueName={{ value: inputValue.name, error: inputError.name }}
         valuePhone={inputValue.phone}
@@ -206,7 +206,7 @@ const General = () => {
         onInputCountryChange={(e, v) => setInputCountryValue(v)}
       />
       <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
-        <ButtonKit disabled={disableSave()} variant="contained" onClick={handleSave}>
+        <ButtonKit disabled={disableSave()} variant='contained' onClick={handleSave}>
           Save changes
         </ButtonKit>
       </div>

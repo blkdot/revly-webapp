@@ -77,7 +77,7 @@ const CompetitionListing = () => {
       const vendorsSelectedTemp = [
         vendorsArr.filter((v) => v.platform === platform)[
           Math.floor(
-            Math.random() * vendorsArr.filter((obj) => obj.platform === platform).length - 1,
+            Math.random() * vendorsArr.filter((obj) => obj.platform === platform).length - 1
           ) + 1
         ]?.data?.vendor_name,
       ];
@@ -174,7 +174,7 @@ const CompetitionListing = () => {
         id: `${cur.id}_${r.id}`,
         data: r,
       }),
-      {},
+      {}
     );
   const timeSlotObj = {
     'Throughout Day': 'Throughout Day',
@@ -304,8 +304,8 @@ const CompetitionListing = () => {
   }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
 
   return (
-    <div className="wrapper">
-      <div className="top-inputs">
+    <div className='wrapper'>
+      <div className='top-inputs'>
         {Object.keys(display).length > 0 ? (
           <RestaurantDropdownNew chainObj={chainObj} />
         ) : (
@@ -318,19 +318,19 @@ const CompetitionListing = () => {
           isListing
           beforePeriodBtn={beforePeriodBtn}
           setbeforePeriodBtn={setbeforePeriodBtn}
-          defaultTitle="Yesterday"
-          defaultTypeDate="day"
+          defaultTitle='Yesterday'
+          defaultTypeDate='day'
         />
       </div>
-      <TypographyKit sx={{ marginTop: '40px' }} variant="h4">
+      <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
         Competition - Listing
       </TypographyKit>
-      <TypographyKit variant="subtitle">
+      <TypographyKit variant='subtitle'>
         Be informed on how you rank compared to your competitors
       </TypographyKit>
-      <PaperKit className="competition-paper">
-        <div className="competition-top-input">
-          <div className="dropdowns">
+      <PaperKit className='competition-paper'>
+        <div className='competition-top-input'>
+          <div className='dropdowns'>
             {Array.isArray(platformList) && platformList.length > 0 ? (
               <CompetitionDropdown
                 rows={platformList}
@@ -349,16 +349,16 @@ const CompetitionListing = () => {
                         width={24}
                         height={24}
                         style={{ objectFit: 'contain' }}
-                        alt="icon"
+                        alt='icon'
                       />
                       <ListItemTextKit primary={v.name} />
                     </div>
                   </MenuItemKit>
                 )}
                 icon={PlatformIcon}
-                title="Select a Platform"
-                type="platform"
-                className="top-competition"
+                title='Select a Platform'
+                type='platform'
+                className='top-competition'
                 setRow={setPlatform}
                 select={platform}
               />
@@ -366,18 +366,18 @@ const CompetitionListing = () => {
               ''
             )}
 
-            <div className="listing-vendors">
+            <div className='listing-vendors'>
               <MarketingCheckmarksDropdown
                 names={vendorsArr
                   .filter((obj) => obj.platform === platform)
                   .map((obj) => obj.data.vendor_name)}
                 icon={selectIcon}
-                title="Select Vendors"
+                title='Select Vendors'
                 setName={setVendorsData}
                 personName={vendorsData}
                 width={400}
                 height={100}
-                type="vendor"
+                type='vendor'
                 platform={platform}
               />
             </div>
@@ -398,9 +398,9 @@ const CompetitionListing = () => {
                 </MenuItemKit>
               )}
               icon={TimeSlotIcon}
-              title="Select Timeslot"
-              type="timeslot"
-              className="top-competition not-platform"
+              title='Select Timeslot'
+              type='timeslot'
+              className='top-competition not-platform'
               setRow={setTimeSlot}
               select={timeSlot}
             />
@@ -422,16 +422,16 @@ const CompetitionListing = () => {
                 </MenuItemKit>
               )}
               icon={AreaIcon}
-              title="Select Area"
-              type="area"
-              className="top-competition not-platform"
+              title='Select Area'
+              type='area'
+              className='top-competition not-platform'
               setRow={setArea}
               select={area}
             />
           </div>
           <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>
-        <TypographyKit variant="subtitle">
+        <TypographyKit variant='subtitle'>
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
@@ -446,8 +446,8 @@ const CompetitionListing = () => {
               <ButtonKit
                 onClick={() => Open()}
                 key={num}
-                variant="contained"
-                className="competition-add competiton-table-btn"
+                variant='contained'
+                className='competition-add competiton-table-btn'
               >
                 <AddIcon />
                 Add a Competitor

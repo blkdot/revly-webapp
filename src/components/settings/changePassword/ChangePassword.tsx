@@ -97,31 +97,31 @@ const ChangePassword = () => {
   const renderForm = () => (
     <>
       {!isOnlyGoogle() && (
-        <div className="change-password__field">
+        <div className='change-password__field'>
           <TextfieldKit
-            type="password"
+            type='password'
             value={values.password}
             error={errors.password}
-            label="Old password"
+            label='Old password'
             fullWidth
             onChange={handleChange('password')}
           />
         </div>
       )}
 
-      <div className="change-password__field">
+      <div className='change-password__field'>
         <TextfieldKit
-          type="password"
+          type='password'
           value={values.confirmPassword}
           error={errors.confirm}
-          label="Confirm new password"
+          label='Confirm new password'
           fullWidth
           onChange={handleChange('confirmPassword')}
         />
       </div>
 
-      <div className="change-password__button">
-        <ButtonLoadingKit variant="contained" loading={isLoading} onClick={handleClickSubmit}>
+      <div className='change-password__button'>
+        <ButtonLoadingKit variant='contained' loading={isLoading} onClick={handleClickSubmit}>
           Save
         </ButtonLoadingKit>
       </div>
@@ -129,8 +129,8 @@ const ChangePassword = () => {
   );
 
   return (
-    <div className="change-password">
-      <p className="__title">Type your current password to change it</p>
+    <div className='change-password'>
+      <p className='__title'>Type your current password to change it</p>
       {renderForm()}
     </div>
   );

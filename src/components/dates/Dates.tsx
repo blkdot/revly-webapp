@@ -71,7 +71,7 @@ const Dates = (props: any) => {
   const [beforePeriodContext, setBeforePeriodContext] = useState(beforePeriodDateContext);
   const [year, setYear] = useState(new Date(beforePeriodContext.startDate).getFullYear());
   const [yearAfterPeriod, setYearAfterPeriod] = useState(
-    new Date(afterPeriodContext.startDate).getFullYear(),
+    new Date(afterPeriodContext.startDate).getFullYear()
   );
   const getExpanded = () => {
     if (!isMarketingHeatMap) {
@@ -90,7 +90,7 @@ const Dates = (props: any) => {
   const [beforePeriod, setbeforePeriod] = useState<any>([
     {
       startDate: new Date(
-        beforePeriodBtn ? beforePeriodBtn.startDate : beforePeriodContext.startDate,
+        beforePeriodBtn ? beforePeriodBtn.startDate : beforePeriodContext.startDate
       ),
       endDate: new Date(beforePeriodBtn ? beforePeriodBtn.endDate : beforePeriodContext.endDate),
       key: 'selection',
@@ -111,7 +111,7 @@ const Dates = (props: any) => {
   const beforePeriodContextStart = new Date(beforePeriodContext.startDate);
   const beforePeriodContextEnd = new Date(beforePeriodContext.endDate);
   const beforePeriodContextStartLocal = new Date(
-    beforePeriodContext.startDate,
+    beforePeriodContext.startDate
   ).toLocaleDateString();
   const beforePeriodContextEndLocal = new Date(beforePeriodContext.endDate).toLocaleDateString();
   const beforePeriodContextStartGetDate = new Date(beforePeriodContext.startDate).getDate();
@@ -121,7 +121,7 @@ const Dates = (props: any) => {
   const beforePeriodContextStartBtn = new Date(beforePeriodBtn?.startDate);
   // const beforePeriodContextEndBtn = new Date(beforePeriodBtn?.endDate);
   const beforePeriodContextBtnStartLocal = new Date(
-    beforePeriodBtn?.startDate,
+    beforePeriodBtn?.startDate
   ).toLocaleDateString();
   const beforePeriodContextBtnEndLocal = new Date(beforePeriodBtn?.endDate).toLocaleDateString();
   const beforePeriodContextBtnStartGetDate = new Date(beforePeriodBtn?.startDate).getDate();
@@ -150,7 +150,7 @@ const Dates = (props: any) => {
           endDate: new Date(afterPeriodContext.endDate),
         },
         typeDate: typeDateContext,
-      }),
+      })
     );
   };
   useEffect(() => {
@@ -180,7 +180,7 @@ const Dates = (props: any) => {
     const date = new Date();
     const { startLocal, startGetDay, endGetDay, dateGetDay, dateLocal } = getAllDateSetup(
       startDate,
-      endDate,
+      endDate
     );
 
     setBeforePeriodContext({ startDate, endDate });
@@ -367,7 +367,7 @@ const Dates = (props: any) => {
 
     const { startLocal, startGetDay, endGetDay, dateGetDay, dateLocal } = getAllDateSetup(
       beforePeriod[0].startDate,
-      beforePeriod[0].endDate,
+      beforePeriod[0].endDate
     );
     if (typeDate === 'month') {
       setbeforePeriodBtn({
@@ -486,7 +486,7 @@ const Dates = (props: any) => {
     const date = new Date();
     const { startLocal, startGetDate, endGetDate, startGetDay, dateGetDate } = getAllDateSetup(
       afterPeriod[0].startDate,
-      afterPeriod[0].endDate,
+      afterPeriod[0].endDate
     );
 
     setOpenedAfterPeriod(false);
@@ -766,7 +766,7 @@ const Dates = (props: any) => {
             : endOfMonth(beforePeriodContextEnd).getDate())
       ) {
         return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
-          beforePeriodContextStart,
+          beforePeriodContextStart
         )}`;
       }
       return `${beforePeriodContextStartLocal} - ${beforePeriodContextEndLocal}`;
@@ -791,7 +791,7 @@ const Dates = (props: any) => {
             : endOfMonth(beforePeriodContextStartBtn).getDate())
       ) {
         return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
-          beforePeriodContextStartBtn,
+          beforePeriodContextStartBtn
         )}`;
       }
       return `${beforePeriodContextBtnStartLocal} - ${beforePeriodContextBtnEndLocal}`;
@@ -813,7 +813,7 @@ const Dates = (props: any) => {
       afterPeriodContextEndGetDate === endOfMonth(afterPeriodContextEnd).getDate()
     ) {
       return `${format(afterPeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
-        afterPeriodContextStart,
+        afterPeriodContextStart
       )}`;
     }
 
@@ -869,7 +869,7 @@ const Dates = (props: any) => {
           moveRangeOnFirstSelection={false}
           months={2}
           ranges={beforePeriod}
-          direction="horizontal"
+          direction='horizontal'
           dragSelectionEnabled={false}
           weekStartsOn={1}
         />
@@ -877,11 +877,11 @@ const Dates = (props: any) => {
     }
     return typeDate === 'month' ? (
       <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-        <div className="month-wrapper">
-          <PaperKit className="year-dropdown-paper">
-            <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size="small">
+        <div className='month-wrapper'>
+          <PaperKit className='year-dropdown-paper'>
+            <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size='small'>
               <SelectKit
-                id="demo-select-small"
+                id='demo-select-small'
                 value={year}
                 onChange={(e) => handleChangeYear(e, setYear, setbeforePeriod)}
               >
@@ -894,7 +894,7 @@ const Dates = (props: any) => {
             </FormcontrolKit>
           </PaperKit>
           <MonthPickerKit
-            className="month_picker"
+            className='month_picker'
             date={dayjs(beforePeriod[0].startDate)}
             minDate={minDate}
             maxDate={offer ? new Date(addYears(maxDate, 1)) : maxDate}
@@ -920,7 +920,7 @@ const Dates = (props: any) => {
         moveRangeOnFirstSelection={false}
         months={2}
         ranges={beforePeriod}
-        direction="horizontal"
+        direction='horizontal'
         dragSelectionEnabled={false}
         weekStartsOn={1}
       />
@@ -957,18 +957,18 @@ const Dates = (props: any) => {
     );
   };
   return (
-    <div className="dates">
-      <div className="date-picker_wrapper">
-        <TypographyKit className="top-text-inputs" variant="subtitle">
+    <div className='dates'>
+      <div className='date-picker_wrapper'>
+        <TypographyKit className='top-text-inputs' variant='subtitle'>
           Show Data from
         </TypographyKit>
         <PaperKit
           onClick={() => setOpened(true)}
           style={{ background: '#fff' }}
-          component="div"
-          className="date-input"
+          component='div'
+          className='date-input'
         >
-          <TypographyKit className="date-typography">
+          <TypographyKit className='date-typography'>
             <CalendarMonthIcon />
             <span>{getbeforePeriod()}</span>
           </TypographyKit>
@@ -976,16 +976,16 @@ const Dates = (props: any) => {
         </PaperKit>
       </div>
       <div
-        role="presentation"
+        role='presentation'
         tabIndex={-1}
         className={`date-range ${opened ? 'opened ' : ''}${typeDate === 'month' ? 'month' : ''}`}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
-        <PaperKit style={{ background: '#fff' }} className="date-picker">
+        <PaperKit style={{ background: '#fff' }} className='date-picker'>
           {getDateSelect()}
-          <div className="date-btn-wrapper">
-            <ButtonKit onClick={handleClick} className="date-save-btn " variant="contained">
+          <div className='date-btn-wrapper'>
+            <ButtonKit onClick={handleClick} className='date-save-btn ' variant='contained'>
               Ok
             </ButtonKit>
           </div>
@@ -993,19 +993,19 @@ const Dates = (props: any) => {
         {getMarketingHeatMap()}
       </div>
       {!isMarketingHeatMap ? (
-        <div className="dashboard-date ">
-          <img src={switchIcon} alt="Compare" />
+        <div className='dashboard-date '>
+          <img src={switchIcon} alt='Compare' />
           <div className={`date-picker_wrapper ${!isDashboard ? 'disabled' : ''}`}>
-            <TypographyKit className="top-text-inputs" variant="subtitle">
+            <TypographyKit className='top-text-inputs' variant='subtitle'>
               Compare to
             </TypographyKit>
-            <TypographyKit component="div" className="date-input-wrapper">
+            <TypographyKit component='div' className='date-input-wrapper'>
               <PaperKit
                 style={{ background: '#fff' }}
                 onClick={() => setSelected(isDashboard ? !selected : false)}
                 className={`date-input ${selected ? 'selected' : ''}`}
               >
-                <TypographyKit component="div" className="date-typography">
+                <TypographyKit component='div' className='date-typography'>
                   <CalendarMonthIcon />
                   <span>{getDateAfterPeriod()}</span>
                 </TypographyKit>
@@ -1030,13 +1030,13 @@ const Dates = (props: any) => {
             </TypographyKit>
           </div>
           <div
-            role="presentation"
+            role='presentation'
             tabIndex={-1}
             className={`date-range range-afterPeriodContext ${openedAfterPeriod ? 'opened' : ''}`}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
-            <PaperKit style={{ background: '#fff' }} className="date-picker">
+            <PaperKit style={{ background: '#fff' }} className='date-picker'>
               {['day', 'week', 'month'].map((n, index) => (
                 <DateSelect
                   expanded={expanded}
@@ -1051,12 +1051,12 @@ const Dates = (props: any) => {
                   setYear={setYearAfterPeriod}
                 />
               ))}
-              <div className="date-btn-wrapper">
+              <div className='date-btn-wrapper'>
                 <ButtonKit
                   disabled={getafterPeriod()}
                   onClick={handleClickAfterPeriod}
                   className={`date-save-btn ${getafterPeriod() ? 'date-disabled-btn' : ''}`}
-                  variant="contained"
+                  variant='contained'
                 >
                   Ok
                 </ButtonKit>
@@ -1064,11 +1064,11 @@ const Dates = (props: any) => {
             </PaperKit>
             {typeDate === 'month' ? (
               <LocalizationProviderKit dateAdapter={AdapterDayjs}>
-                <div className="month-wrapper">
-                  <PaperKit className="year-dropdown-paper">
-                    <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size="small">
+                <div className='month-wrapper'>
+                  <PaperKit className='year-dropdown-paper'>
+                    <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size='small'>
                       <SelectKit
-                        id="demo-select-small"
+                        id='demo-select-small'
                         value={yearAfterPeriod}
                         onChange={(e) => handleChangeYear(e, setYearAfterPeriod, setafterPeriod)}
                       >
@@ -1081,7 +1081,7 @@ const Dates = (props: any) => {
                     </FormcontrolKit>
                   </PaperKit>
                   <MonthPickerKit
-                    className="month_picker"
+                    className='month_picker'
                     date={dayjs(afterPeriod[0].startDate)}
                     minDate={minDate}
                     maxDate={maxDate}
@@ -1089,7 +1089,7 @@ const Dates = (props: any) => {
                       setafterPeriod([
                         {
                           startDate: startOfMonth(
-                            new Date(newDateMonth).setFullYear(yearAfterPeriod),
+                            new Date(newDateMonth).setFullYear(yearAfterPeriod)
                           ),
                           endDate:
                             getMonth(new Date()) === getMonth(new Date(newDateMonth))
@@ -1112,7 +1112,7 @@ const Dates = (props: any) => {
                 moveRangeOnFirstSelection={false}
                 months={2}
                 ranges={afterPeriod}
-                direction="horizontal"
+                direction='horizontal'
                 dragSelectionEnabled={false}
                 weekStartsOn={1}
               />
@@ -1123,21 +1123,21 @@ const Dates = (props: any) => {
         ''
       )}
       <div
-        role="presentation"
+        role='presentation'
         tabIndex={-1}
         className={`date-range-overlay ${opened ? 'opened' : ''}`}
         onClick={() => setOpened(false)}
         onKeyDown={() => setOpened(false)}
       />
       <div
-        role="presentation"
+        role='presentation'
         tabIndex={-1}
         className={`date-range-overlay ${openedAfterPeriod ? 'opened' : ''}`}
         onClick={() => setOpenedAfterPeriod(false)}
         onKeyDown={() => setOpenedAfterPeriod(false)}
       />
       <div
-        role="presentation"
+        role='presentation'
         tabIndex={-1}
         className={`date-range-overlay ${selected ? 'opened' : ''}`}
         onClick={() => setSelected(false)}

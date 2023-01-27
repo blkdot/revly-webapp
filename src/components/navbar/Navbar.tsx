@@ -55,7 +55,7 @@ const Navbar = () => {
   const renderSimpleLink = () =>
     simpleLink.map((s) => (
       <Navlink title={s.title} path={s.path} key={s.title}>
-        <img className="nav-icon" src={s.src} alt={s.title} />
+        <img className='nav-icon' src={s.src} alt={s.title} />
       </Navlink>
     ));
 
@@ -64,7 +64,7 @@ const Navbar = () => {
       <AccordionKit
         expanded={!!((expanded === a.id && opened) || (expanded === a.id && open))}
         onChange={handleChange(a.id)}
-        className="navbar-accordion"
+        className='navbar-accordion'
         key={a.id}
       >
         <ButtonKit
@@ -73,7 +73,7 @@ const Navbar = () => {
           }`}
         >
           <AccordionSummaryKit
-            className="accordion-sum"
+            className='accordion-sum'
             expandIcon={opened || open ? <ExpandMoreIcon /> : ''}
           >
             <TypographyKit
@@ -84,12 +84,12 @@ const Navbar = () => {
                 fontSize: '14px',
               }}
             >
-              <img className="nav-icon" src={a.src} alt={a.title} />
+              <img className='nav-icon' src={a.src} alt={a.title} />
               <span>{a.title}</span>
             </TypographyKit>
           </AccordionSummaryKit>
         </ButtonKit>
-        <AccordionDetailsKit className="navbar-accordion-details">
+        <AccordionDetailsKit className='navbar-accordion-details'>
           {a.subs.map(renderAccordionLinkSub)}
         </AccordionDetailsKit>
       </AccordionKit>
@@ -97,7 +97,7 @@ const Navbar = () => {
 
   const renderAccordionLinkSub = (s) => (
     <Navlink title={s.title} path={s.path} key={s.title}>
-      <img className="nav-icon" src={s.src} alt={s.title} />
+      <img className='nav-icon' src={s.src} alt={s.title} />
     </Navlink>
   );
 
@@ -110,28 +110,28 @@ const Navbar = () => {
       >
         <ul>
           <li className={`Navbar_logo ${opened || open ? 'opened' : ''}`}>
-            <img className="nav-logo" src={logo} alt="Revly" />
-            <img className="nav-small-logo" src={smallLogo} alt="Revly" />
+            <img className='nav-logo' src={logo} alt='Revly' />
+            <img className='nav-small-logo' src={smallLogo} alt='Revly' />
             <div
-              role="presentation"
+              role='presentation'
               tabIndex={-1}
               onClick={() => setOpened(!opened)}
               className={`nav-double-arrow ${opened ? 'active' : ''}`}
             >
-              <img src={arrow} alt="Arrow" />
+              <img src={arrow} alt='Arrow' />
             </div>
           </li>
           {renderSimpleLink()}
           {renderAccordionLink()}
         </ul>
-        <img className="nav-lines" src={lines} alt="Gradient lines" />
-        <ul className="Navbar-footer">
-          <Navlink title="Settings" path="/settings">
-            <img className="nav-icon" src={settingsIcon} alt="Settings" />
+        <img className='nav-lines' src={lines} alt='Gradient lines' />
+        <ul className='Navbar-footer'>
+          <Navlink title='Settings' path='/settings'>
+            <img className='nav-icon' src={settingsIcon} alt='Settings' />
           </Navlink>
           <li>
-            <ButtonKit onClick={handleLogout} className="navbar-button-kit">
-              <img className="nav-icon" src={logoutIcon} alt="Logout" />
+            <ButtonKit onClick={handleLogout} className='navbar-button-kit'>
+              <img className='nav-icon' src={logoutIcon} alt='Logout' />
               <span>Log Out</span>
             </ButtonKit>
           </li>

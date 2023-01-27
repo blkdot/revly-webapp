@@ -29,40 +29,40 @@ const SigninForm = (props: any) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="signin-form">
-      <TypographyKit className="signin-form__get-started">
+    <div className='signin-form'>
+      <TypographyKit className='signin-form__get-started'>
         Don&apos;t have an account?{' '}
-        <Link className="__get-started__link" to="/signup">
+        <Link className='__get-started__link' to='/signup'>
           Get started
         </Link>
       </TypographyKit>
-      <div className="signin-form__block">
-        <div className="__block-head">
-          <TypographyKit variant="h5" className="__block-head__title">
+      <div className='signin-form__block'>
+        <div className='__block-head'>
+          <TypographyKit variant='h5' className='__block-head__title'>
             Sign in to Revly
           </TypographyKit>
-          <TypographyKit variant="body1" className="__block-head__sub">
+          <TypographyKit variant='body1' className='__block-head__sub'>
             Enter your details below
           </TypographyKit>
         </div>
-        <div className="__block-google">
+        <div className='__block-google'>
           <ButtonKit
-            variant="outlined"
-            size="large"
-            className="__block-google__button"
+            variant='outlined'
+            size='large'
+            className='__block-google__button'
             onClick={onGoogleSubmit}
           >
-            <FcGoogle className="__block-google__icon" />
+            <FcGoogle className='__block-google__icon' />
           </ButtonKit>
         </div>
-        <DividerKit className="__block-divider">
-          <TypographyKit variant="body2" className="__block-divider__text">
+        <DividerKit className='__block-divider'>
+          <TypographyKit variant='body2' className='__block-divider__text'>
             OR
           </TypographyKit>
         </DividerKit>
-        <div className="__block-field">
+        <div className='__block-field'>
           <TextfieldKit
-            label="Email address"
+            label='Email address'
             onBlur={() => onBlur('email')}
             required
             fullWidth
@@ -70,10 +70,10 @@ const SigninForm = (props: any) => {
             error={errorEmail}
           />
         </div>
-        <div className="__block-field">
+        <div className='__block-field'>
           <TextfieldKit
             required
-            label="Password"
+            label='Password'
             onBlur={() => onBlur('password')}
             type={showPassword ? 'text' : 'password'}
             fullWidth
@@ -94,7 +94,7 @@ const SigninForm = (props: any) => {
             }}
           />
         </div>
-        <div className="__block-field-check">
+        <div className='__block-field-check'>
           <FormGroupKit>
             <FormControlLabelKit
               control={
@@ -104,13 +104,13 @@ const SigninForm = (props: any) => {
                 />
               }
               label={
-                <TypographyKit variant="body2" className="__block-field-check__text">
+                <TypographyKit variant='body2' className='__block-field-check__text'>
                   Remember me
                 </TypographyKit>
               }
             />
           </FormGroupKit>
-          <Link className="__block-field-check__link" to="/forgot-password">
+          <Link className='__block-field-check__link' to='/forgot-password'>
             Forgot Password ?
           </Link>
         </div>
@@ -118,8 +118,8 @@ const SigninForm = (props: any) => {
           <ButtonKit
             style={{ borderRadius: 30 }}
             fullWidth
-            size="large"
-            variant="contained"
+            size='large'
+            variant='contained'
             onClick={onSubmit}
             disabled={disabled}
           >

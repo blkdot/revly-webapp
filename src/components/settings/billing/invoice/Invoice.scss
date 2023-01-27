@@ -1,65 +1,65 @@
 @import '../../../../library.scss';
 
 .invoice.invoice {
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 0;
+  align-items: center;
+  padding: 12px 30px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  flex-direction: row;
+
+  &.snackbar {
+    align-items: flex-end;
+  }
+
+  &.cost {
+    p {
+      color: #000;
+
+      span {
+        color: #637381;
+      }
+    }
+    .__img-block {
+      path {
+        fill: $color-main;
+      }
+    }
+    button {
+      width: 110px;
+      border-radius: 30px;
+      height: 35px;
+    }
+  }
+
+  p {
+    font-weight: 600;
+    font-size: 16px;
+    color: $color-second-third;
+  }
+
+  .__flex {
     display: flex;
-    justify-content: space-between;
-    margin: 14px 0;
-    align-items: center;
-    padding: 12px 30px;
-    background-color: #F9FAFB;
-    border-radius: 8px;
-    flex-direction: row;
-
-    &.snackbar {
-        align-items: flex-end;
-    }
-
-    &.cost {
-        p {
-            color: #000;
-
-            span {
-                color: #637381;
-            }
-        }
-        .__img-block{
-            path{
-                fill: $color-main;
-            }
-        }
-        button{
-            width: 110px;
-            border-radius: 30px;
-            height: 35px;
-        }
-    }
 
     p {
-        font-weight: 600;
-        font-size: 16px;
-        color: $color-second-third
+      margin-left: 0.6em;
     }
 
-    .__flex {
-        display: flex;
+    .__img-block {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(145, 158, 171, 0.24);
+      border-radius: 50%;
 
-        p {
-            margin-left: 0.6em;
-        }
-
-        .__img-block {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(145, 158, 171, 0.24);
-            border-radius: 50%;
-
-            img {
-                width: 30px;
-                height: 30px;
-            }
-        }
+      img {
+        width: 30px;
+        height: 30px;
+      }
     }
+  }
 }
