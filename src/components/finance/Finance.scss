@@ -1,4 +1,4 @@
-@import "../../library.scss";
+@import '../../library.scss';
 
 .finance-wrapper {
   justify-content: space-between;
@@ -30,11 +30,9 @@
       color: $color-main;
       text-transform: capitalize;
     }
-
   }
 
-  >h4:nth-of-type(2) {
+  > h4:nth-of-type(2) {
     font-weight: 600;
-
   }
 }

@@ -18,7 +18,6 @@
   .signin-form__block {
     margin: auto;
     width: 60%;
-    
 
     .__block-head {
       margin-bottom: calc(30px + 1rem);
@@ -96,8 +95,8 @@
 
   @include tabletBreakpoint {
     .__get-started__link.__get-started__link {
-        color: #fff;
-      }
+      color: #fff;
+    }
     .signin-form__block {
       width: 70%;
     }

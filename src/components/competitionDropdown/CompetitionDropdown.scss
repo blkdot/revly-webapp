@@ -1,5 +1,5 @@
 .competition-dropdown.competition-dropdown {
-  &[data-shrink=true] {
+  &[data-shrink='true'] {
     background: rgb(252, 252, 252);
     padding: 0 5px;
     top: 0 !important;
@@ -7,7 +7,8 @@
 
   &.Mui-focused.Mui-focused {
     img {
-      filter: invert(43%) sepia(17%) saturate(3109%) hue-rotate(219deg) brightness(109%) contrast(103%);
+      filter: invert(43%) sepia(17%) saturate(3109%) hue-rotate(219deg) brightness(109%)
+        contrast(103%);
     }
   }
 
@@ -15,7 +16,6 @@
     width: 24px;
     height: 24px;
   }
-
 }
 
 #platform_dropdown_menu {
@@ -25,7 +25,7 @@
   border: 1px solid rgba(145, 158, 171, 0.32);
   margin-top: 20px;
 
-  >ul {
+  > ul {
     border-radius: 12px;
     background-color: #fff;
     &::after {
@@ -33,7 +33,7 @@
       top: -7px;
       background-color: #fff;
       right: 15px;
-      content: "";
+      content: '';
       position: absolute;
       width: 20px;
       height: 20px;
@@ -46,29 +46,29 @@
       top: 0px;
       background-color: #fff;
       right: 10px;
-      content: "";
+      content: '';
       position: absolute;
       width: 40px;
       height: 20px;
     }
 
-    >li {
+    > li {
       background-color: #fff;
 
-      >div>span {
+      > div > span {
         overflow: hidden;
         text-overflow: ellipsis;
       }
     }
   }
 }
-.flag-img{
+.flag-img {
   width: 20px;
   height: 20px;
   object-fit: contain;
   margin-right: 5px;
 }
-.country-wrapper{
+.country-wrapper {
   display: flex;
   align-items: center;
   text-transform: capitalize;

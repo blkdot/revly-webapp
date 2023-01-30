@@ -22,7 +22,6 @@
 
   .paper-table {
     padding: 0px 20px;
-
   }
 }
 
@@ -42,7 +41,7 @@
   }
 
   &::-webkit-scrollbar-track {
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
     border-radius: 31px;
   }
 
@@ -51,7 +50,7 @@
     border-radius: 31px;
   }
 
-  >div {
+  > div {
     white-space: nowrap;
     text-transform: capitalize;
     padding: 8px 20px;
@@ -67,21 +66,23 @@
     height: 45px;
     text-align: center;
     cursor: pointer;
-    transition: .2s;
+    transition: 0.2s;
 
     &:hover {
-      color: #906BFF;
+      color: #906bff;
 
       img {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
       }
     }
 
     &.active {
-      color: #906BFF;
+      color: #906bff;
 
       img {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
       }
     }
 
@@ -91,39 +92,43 @@
   }
 
   .indicator.indicator {
-    transition: .4s;
+    transition: 0.4s;
     cursor: default;
     width: 135px;
     height: 3px;
     padding: 0;
-    background-color: #906BFF;
+    background-color: #906bff;
     position: absolute;
     bottom: 5px;
     left: 0px;
   }
 
-  >div:nth-of-type(2).active~.indicator {
+  > div:nth-of-type(2).active ~ .indicator {
     left: calc(135px * 1);
   }
 
-  >div:nth-of-type(3).active~.indicator {
+  > div:nth-of-type(3).active ~ .indicator {
     left: calc(140px * 2);
   }
 
-  >div:nth-of-type(4).active~.indicator {
+  > div:nth-of-type(4).active ~ .indicator {
     left: calc(142px * 3);
     width: 175px;
   }
 
-  >div:nth-of-type(5).active~.indicator {
+  > div:nth-of-type(5).active ~ .indicator {
     left: calc(150px * 4);
     width: 180px;
   }
 
-  >div:nth-of-type(6).active~.indicator {
+  > div:nth-of-type(6).active ~ .indicator {
     left: calc(160px * 5);
     width: 100px;
   }
+}
+
+.dashboard-stepper {
+  margin-top: 30px;
 }
 
 @media(max-width: 1100px) {

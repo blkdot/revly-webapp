@@ -1,16 +1,16 @@
 @import '../../library.scss';
 
 .signin {
-    .signin__signup-text {
-        position: absolute;
-        top: 1em;
-        right: 1em;
-        font-size: 14px;
-        font-weight: 600;
+  .signin__signup-text {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 14px;
+    font-weight: 600;
 
-        a {
-            text-decoration: none;
-            color: $color-main;
-        }
+    a {
+      text-decoration: none;
+      color: $color-main;
     }
+  }
 }

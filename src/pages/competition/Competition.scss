@@ -22,7 +22,7 @@
   padding-bottom: 25px;
   box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12);
   border-radius: 16px;
-  background: #FFFFFF;
+  background: #ffffff;
   margin-bottom: 40px;
 }
 
@@ -32,7 +32,7 @@
   width: 100%;
 
   &.competitor {
-    >div>div>div {
+    > div > div > div {
       padding-right: 20px !important;
     }
 
@@ -51,17 +51,17 @@
     }
   }
 
-  >div {
+  > div {
     height: 50px;
     border-radius: 30px;
     padding: 0 15px;
     cursor: pointer;
 
-    >div {
+    > div {
       height: 60px;
       cursor: pointer;
 
-      >div {
+      > div {
         padding-left: 20px;
       }
     }
@@ -73,7 +73,7 @@
   grid-gap: 15px;
   height: 45px;
   border-radius: 40px;
-  background-color: #906BFF;
+  background-color: #906bff;
   padding: 0 20px;
   text-transform: inherit;
   font-weight: 700;
@@ -82,7 +82,7 @@
   box-shadow: 0px 2px 16px rgb(43 0 171 / 24%) !important;
 
   &:hover {
-    background-color: #906BFF !important;
+    background-color: #906bff !important;
   }
 
   img {
@@ -94,18 +94,17 @@
 .competition-cancel.competition-cancel {
   height: 45px;
   border-radius: 40px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 0 25px;
   text-transform: inherit;
-  color: #212B36;
+  color: #212b36;
   font-weight: 700;
   font-size: 14px;
   line-height: 24px;
 
   &:hover {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
   }
-
 }
 
 .competition-top-input {
@@ -148,7 +147,7 @@
   }
 }
 
-@media(max-width: 1120px) {
+@media (max-width: 1120px) {
   .competition-top-input {
     justify-content: flex-start;
 
@@ -166,10 +165,10 @@
       width: 100%;
       justify-content: space-between;
 
-      >div {
+      > div {
         width: 46%;
 
-        >div {
+        > div {
           width: 100%;
         }
       }
@@ -177,11 +176,11 @@
   }
 }
 
-@media(max-width: 1100px) {
+@media (max-width: 1100px) {
   .competition-paper.competition-paper {
     padding: 0;
 
-    >span {
+    > span {
       padding: 0 25px;
       display: inline-block;
     }
@@ -190,10 +189,9 @@
   .competition-top-input {
     padding: 25px;
   }
-
 }
 
-@media(max-width: 950px) {
+@media (max-width: 950px) {
   .competition-top-input {
     justify-content: flex-start;
     flex-direction: column;
@@ -217,16 +215,16 @@
   }
 }
 
-@media(max-width: 900px) {
+@media (max-width: 900px) {
   .alerts-top-inputs {
     .competition-dropdowns {
       width: 100%;
       justify-content: space-between;
 
-      >div {
+      > div {
         width: 100%;
 
-        >div {
+        > div {
           width: 100%;
         }
       }
@@ -240,10 +238,9 @@
       }
     }
   }
-
 }
 
-@media(max-width: 770px) {
+@media (max-width: 770px) {
   .competitor-wrapper {
     width: 100%;
 
@@ -256,10 +253,8 @@
     .top-competition {
       width: 100%;
 
-      >div {
+      > div {
         width: 100%;
-
-
       }
     }
   }
@@ -269,7 +264,7 @@
   box-shadow: none;
   border: none;
 
-  >div {
+  > div {
     scroll-behavior: smooth;
 
     &::-webkit-scrollbar {
@@ -277,7 +272,7 @@
     }
 
     &::-webkit-scrollbar-track {
-      background-color: #F3F3F3;
+      background-color: #f3f3f3;
       border-radius: 31px;
     }
 
@@ -293,7 +288,7 @@
     font-weight: 600;
     font-size: 14px;
     line-height: 22px;
-    color: #212B36;
+    color: #212b36;
   }
 
   table {
@@ -301,28 +296,26 @@
   }
 
   tbody {
-    >tr {
+    > tr {
       cursor: pointer;
-      transition: .3s;
+      transition: 0.3s;
 
       &:hover {
         background: rgba(144, 107, 255, 0.08);
       }
     }
 
-    >tr:nth-of-type(1) {
+    > tr:nth-of-type(1) {
       padding-right: 5px;
 
       th {
         border-radius: 8px 0 0 8px;
       }
 
-
-
-      >td:last-of-type {
+      > td:last-of-type {
         border-radius: 0 8px 8px 0;
 
-        >div {
+        > div {
           width: 100px;
           padding-left: 14px;
           transform: scale(1.5);
@@ -341,17 +334,15 @@
   width: 100%;
   height: 72px;
   border-radius: 8px;
-  background: #F4F6F8;
+  background: #f4f6f8;
   color: #637381;
   box-shadow: none !important;
   border: none;
 
   &:hover {
-    background: #F4F6F8 !important;
+    background: #f4f6f8 !important;
   }
 }
-
-
 
 .competition-table-icon {
   width: 45px;
@@ -366,9 +357,8 @@
 .competition-table-alert {
   padding: 5px 7px;
   border-radius: 6px;
-  color: #893AED;
+  color: #893aed;
   background: rgba(144, 107, 255, 0.08);
-  ;
 }
 
 .competition-status {
@@ -378,15 +368,15 @@
 
   &.canceled,
   &.Canceled {
-    background: #FFF7CD;
-    color: #B78103;
+    background: #fff7cd;
+    color: #b78103;
   }
 
   &.active,
   &.Live,
   &.live {
-    background: rgba(84, 214, 44, .16);
-    color: #229A16;
+    background: rgba(84, 214, 44, 0.16);
+    color: #229a16;
   }
 
   &.Ended,
@@ -399,7 +389,7 @@
   &.Cancelled,
   &.cancelled {
     background: #ffc10729;
-    color: #B78103;
+    color: #b78103;
     text-transform: capitalize;
   }
 
@@ -408,14 +398,14 @@
   &.Upcoming,
   &.upcoming {
     background: #1890ff29;
-    color: #1890FF;
+    color: #1890ff;
     text-transform: capitalize;
   }
 }
 
 .listing-vendors-child {
-  >div {
-    >span {
+  > div {
+    > span {
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -433,18 +423,15 @@
     border-color: rgba(145, 158, 171, 0.32) !important;
   }
 
-
-
-  >div {
-
-    >div {
+  > div {
+    > div {
       margin: 0 !important;
     }
   }
 }
 
 .competitor-dropdown-list-item {
-  >span {
+  > span {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -452,25 +439,25 @@
   }
 }
 
-@media(max-width: 1400px) {
+@media (max-width: 1400px) {
   .competition-table-conatiner.competition-table-conatiner {
     width: 120%;
   }
 }
 
-@media(max-width: 1210px) {
+@media (max-width: 1210px) {
   .competition-table-conatiner.competition-table-conatiner {
     width: 150%;
   }
 }
 
-@media(max-width: 1145px) {
+@media (max-width: 1145px) {
   .competition-table-conatiner.competition-table-conatiner {
     width: 180%;
   }
 }
 
-@media(max-width: 1100px) {
+@media (max-width: 1100px) {
   .competition-table-conatiner.competition-table-conatiner {
     padding: 0;
 
@@ -481,21 +468,21 @@
   }
 }
 
-@media(max-width: 795px) {
+@media (max-width: 795px) {
   .competition-table-conatiner.competition-table-conatiner {
     width: 220%;
   }
 }
 
-@media(max-width: 695px) {
+@media (max-width: 695px) {
   .competition-table-conatiner.competition-table-conatiner {
     width: 250%;
   }
 }
 
 .competition-thead {
-  >tr {
-    >th:last-of-type {
+  > tr {
+    > th:last-of-type {
       text-align: center;
     }
   }

@@ -1,0 +1,20 @@
+@import '../../../library.scss';
+
+.general {
+  width: 100%;
+  border: 1px solid $color-sett-border;
+  padding: 32px;
+  border-radius: 8px;
+
+  .__title {
+    font-weight: 600;
+    font-size: 16px;
+    color: $color-second-third;
+    margin-bottom: 10px;
+  }
+
+  .general__input-block {
+    margin-bottom: 10px;
+    padding: 20px 0;
+  }
+}

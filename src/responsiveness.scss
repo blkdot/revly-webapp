@@ -7,25 +7,25 @@ $breakpoint-xl: 1200px;
 $breakpoint-infinite: 10000px;
 
 @mixin breakpoint($min, $max) {
-    @media only screen and (min-width: $min) and (max-width: $max) {
-        @content;
-    }
+  @media only screen and (min-width: $min) and (max-width: $max) {
+    @content;
+  }
 }
 
 @mixin mobileBreakpoint {
-    @include breakpoint($breakpoint-xs, $breakpoint-sm) {
-        @content;
-    }
+  @include breakpoint($breakpoint-xs, $breakpoint-sm) {
+    @content;
+  }
 }
 
 @mixin tabletBreakpoint {
-    @include breakpoint($breakpoint-sm, $breakpoint-lg) {
-        @content;
-    }
+  @include breakpoint($breakpoint-sm, $breakpoint-lg) {
+    @content;
+  }
 }
 
 @mixin desktopBreakpoint {
-    @include breakpoint($breakpoint-lg, $breakpoint-infinite) {
-        @content;
-    }
+  @include breakpoint($breakpoint-lg, $breakpoint-infinite) {
+    @content;
+  }
 }
