@@ -239,9 +239,8 @@
 }
 
 .navbar-accordion-details.navbar-accordion-details {
-  margin-left: 25px;
   position: relative;
-  padding: 8px 16px 0px 16px;
+  padding: 8px 16px 0px 5px;
   display: flex;
   flex-direction: column;
   grid-gap: 10px;
@@ -323,9 +322,7 @@
   .Navbar.Navbar.opened {
     .navbar-accordion-details.navbar-accordion-details {
       .navbar-button-kit.navbar-button-kit span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 40px;
+        width: fit-content;
       }
     }
   }

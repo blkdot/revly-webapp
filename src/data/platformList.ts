@@ -1,9 +1,18 @@
 import imageDeliveroo from '../assets/images/deliveroo.png';
+import imageDeliverooFavicon from '../assets/images/deliveroo-favicon.webp';
+import imageDeliverooFaviconWhite from '../assets/images/deliveroo-favicon-white.png';
 import imageTalabat from '../assets/images/talabat.png';
+import imageTalabatFavicon from '../assets/images/talabat-favicon.png';
 
 export const platformList = [
-  { src: imageDeliveroo, name: 'deliveroo', color: '#38BCB4' },
-  { src: imageTalabat, name: 'talabat', color: '#EF6400' },
+  {
+    srcFavicon: imageDeliverooFavicon,
+    srcFaviconWhite: imageDeliverooFaviconWhite,
+    src: imageDeliveroo,
+    name: 'deliveroo',
+    color: '#35B8B2',
+  },
+  { srcFavicon: imageTalabatFavicon, src: imageTalabat, name: 'talabat', color: '#FF5A00' },
 ];
 
 export const platformObject = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});

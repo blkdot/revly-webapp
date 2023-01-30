@@ -25,10 +25,5 @@ export const triggerOffers = (platform, body) =>
     .post(`${apiUrl}/marketing/offer/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
-export const OfferCrossPlatforms = (body) =>
-  axios
-    .post(`${apiUrl}/marketing/offer/offercrossplatforms`, body)
-    .then((res) => res)
-    .catch(handleResponse);
 
 export const _ = () => null;
