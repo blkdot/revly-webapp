@@ -34,12 +34,13 @@ const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setCli
     },
   ];
 
-  const cellTemplatesObject = {
-    branch_name: renderBranchRow,
-    accounts: renderAccountsRow,
-    linked_platforms: renderLinkedPlatformsRow,
-    branch_status: renderBranchStatusRow,
-  };
+  const /* A map of functions that will be used to render the cells. */
+    cellTemplatesObject = {
+      branch_name: renderBranchRow,
+      accounts: renderAccountsRow,
+      linked_platforms: renderLinkedPlatformsRow,
+      branch_status: renderBranchStatusRow,
+    };
   const renderRowsByHeader = (r) =>
     headersOnBoarding.reduce(
       (acc, cur) => ({
@@ -48,21 +49,21 @@ const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setCli
         id: `${cur.id}_${r.id}`,
         data: r,
       }),
-      {},
+      {}
     );
   const renderNoData = () => (
     <TableRowKit>
       <TableCellKit colSpan={7}>
-        <div className="onboarding-no-data">
-          <div className="onboarding-no-data_skeleton">
+        <div className='onboarding-no-data'>
+          <div className='onboarding-no-data_skeleton'>
             {[0, 1, 2].map((n) => (
               <div key={n}>
                 <span />
               </div>
             ))}
           </div>
-          <p className="__title">Get Started by connecting one of your accounts </p>
-          <span className="__subtitle">
+          <p className='__title'>Get Started by connecting one of your accounts </p>
+          <span className='__subtitle'>
             click on “ add new account “ button to connect to allow access to your delivery platform
             Information
           </span>
@@ -78,8 +79,9 @@ const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setCli
       setClickedBranch(data);
     }
   };
+
   return (
-    <div className="settings-onboarding bg onboarding-table">
+    <div className='settings-onboarding bg onboarding-table'>
       <TableRevly
         renderNoData={renderNoData()}
         headers={headersOnBoarding}
