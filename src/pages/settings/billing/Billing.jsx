@@ -1,22 +1,13 @@
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
+import AddAddressForm from 'components/forms/addAddressForm/AddAddressForm';
+import AddPaymentForm from 'components/forms/addPaymentForm/AddPaymentForm';
 import smallLogo from '../../../assets/images/small-logo.png';
 import ButtonKit from '../../../kits/button/ButtonKit';
-<<<<<<< HEAD:src/components/settings/billing/Billing.tsx
-import AddAddressForm from '../../forms/addAddressForm/AddAddressForm';
-import AddPaymentForm from '../../forms/addPaymentForm/AddPaymentForm';
 import './Billing.scss';
 import Info from './info/Info';
 import Invoice from './invoice/Invoice';
 import PaymentMethod from './paymentMethod/PaymentMethod';
-=======
-
-import AddPaymentForm from '../../../components/forms/addPaymentForm/AddPaymentForm';
-import Invoice from './invoice/Invoice';
-import PaymentMethod from './paymentMethod/PaymentMethod';
-import Info from './info/Info';
-import AddAddressForm from '../../../components/forms/addAddressForm/AddAddressForm';
->>>>>>> a4b48fd0d11d3447499c716b0cbefb87763e12b0:src/pages/settings/billing/Billing.jsx
 
 const Billing = () => {
   const [inputValue, setInputValue] = useState({

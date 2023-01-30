@@ -5,7 +5,6 @@ import { firebaseCodeError } from '../../../data/firebaseCodeError';
 import { useAlert } from '../../../hooks/useAlert';
 import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-import './ChangePassword.scss';
 
 const defaultValues = {
   password: '',

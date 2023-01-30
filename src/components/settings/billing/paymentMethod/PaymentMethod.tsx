@@ -1,6 +1,5 @@
 import mastercard from '../../../../assets/images/mastercard.svg';
 import visa from '../../../../assets/images/visa.svg';
-import './PaymentMethod.scss';
 
 const PaymentMethod = (props: any) => {
   const { cvv, type } = props;

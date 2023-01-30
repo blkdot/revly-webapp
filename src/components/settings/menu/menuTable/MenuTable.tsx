@@ -7,7 +7,6 @@ import TableContainerKit from '../../../../kits/tablecontainer/TableContainerKit
 import TableHeadKit from '../../../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../../../kits/tablerow/TableRowKit';
 import TableSortLabelKit from '../../../../kits/tablesortlabel/TableSortLableKit';
-import './MenuTable.scss';
 
 const headRows = [
   {

@@ -1,18 +1,5 @@
 import { pascalCase } from 'change-case';
-<<<<<<< HEAD:src/components/settings/onboarding/NewSettingsOnboarding.tsx
 import { CSSProperties, useEffect, useState } from 'react';
-=======
-
-import './SettingOnboarding.scss';
-
-import PlatformSettingsBox from '../../../components/platformSettingsBox/PlatformSettingsBox';
-
-import ModalKit from '../../../kits/modal/ModalKit';
-import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
-
->>>>>>> a4b48fd0d11d3447499c716b0cbefb87763e12b0:src/pages/settings/onboarding/SettingsOnboarding.jsx
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { platformList } from '../../../data/platformList';
 import { useAlert } from '../../../hooks/useAlert';
@@ -23,7 +10,6 @@ import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
 import ModalKit from '../../../kits/modal/ModalKit';
 import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
-import './SettingOnboarding.scss';
 
 const style: CSSProperties = {
   position: 'absolute',

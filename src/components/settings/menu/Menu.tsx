@@ -13,7 +13,6 @@ import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import { vendorsAtom } from '../../../store/vendorsAtom';
-import './Menu.scss';
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';
 

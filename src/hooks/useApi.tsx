@@ -2,7 +2,6 @@ import { getAlerts, getAreas, getCompetitors, getRanking } from '../api/competit
 import {
   cancelOffer,
   cancelOfferMaster,
-  OfferCrossPlatforms,
   triggerOffers,
 } from '../api/marketingApi';
 import { getAds, getOffers } from '../api/planningApi';
@@ -35,7 +34,6 @@ const useApi = () => ({
   getOfferDetails,
   cancelOffer,
   triggerOffers,
-  OfferCrossPlatforms,
   cancelOfferMaster,
   getAreas,
 });

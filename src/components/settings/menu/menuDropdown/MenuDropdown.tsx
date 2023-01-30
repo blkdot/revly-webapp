@@ -1,7 +1,6 @@
 import FormcontrolKit from '../../../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../../../kits/inputlabel/InputLabelKit';
 import SelectKit from '../../../../kits/select/SelectKit';
-import './MenuDropdown.scss';
 
 const MenuDropdown = (props: any) => {
   const {

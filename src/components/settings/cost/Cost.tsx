@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import useCost from '../../../hooks/useCost';
 import useVendors from '../../../hooks/useVendors';
 import SpinnerKit from '../../../kits/spinner/SpinnerKit';
-import './Cost.scss';
 import DropdownSnackbar from './DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
