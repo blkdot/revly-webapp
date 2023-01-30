@@ -219,7 +219,8 @@
             color: #906bff;
 
             img {
-            filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+              filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+                contrast(102%);
             }
           }
 
@@ -243,7 +244,8 @@
           color: #906bff;
 
           img {
-            filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+            filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+              contrast(102%);
           }
         }
 
@@ -349,7 +351,7 @@
     .loading {
       animation: skeleton-loading 1s linear infinite alternate;
     }
-    
+
     @keyframes skeleton-loading {
       0% {
         background-color: hsl(200, 20%, 80%);
@@ -580,7 +582,7 @@
       }
 
       .radio {
-        >div>span {
+        > div > span {
           background-color: #906bff14;
           img {
             filter: invert(38%) sepia(95%) saturate(820%) hue-rotate(224deg) brightness(103%)
@@ -623,8 +625,8 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          
-          background-color: #919EAB14;
+
+          background-color: #919eab14;
 
           img {
             width: 23px;
@@ -897,7 +899,7 @@
     }
   }
 
-  .country-wrapper{
+  .country-wrapper {
     display: flex;
     align-items: center;
     text-transform: capitalize;
@@ -951,14 +953,14 @@
     width: 46% !important;
   }
 }
-#category-tooltip .MuiTooltip-tooltip{
+#category-tooltip .MuiTooltip-tooltip {
   background-color: #212b36;
   width: fit-content;
   pointer-events: none;
   padding: 1rem;
   font-size: 10px;
-  >span{
-    &::before{
+  > span {
+    &::before {
       background-color: #212b36 !important;
     }
   }

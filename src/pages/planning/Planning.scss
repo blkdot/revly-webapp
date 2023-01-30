@@ -1,4 +1,4 @@
-@import "../../library.scss";
+@import '../../library.scss';
 
 .planning_top-nav {
   position: relative;
@@ -7,13 +7,12 @@
   margin-top: 50px;
   margin-bottom: 40px;
 
-  >h4 {
-
+  > h4 {
     cursor: pointer;
     text-decoration: none;
     color: $color-gray;
     font-size: 2.125rem;
-    transition: .4s;
+    transition: 0.4s;
 
     &.active {
       color: $color-main;
@@ -25,14 +24,14 @@
   }
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     width: 100px;
     height: 2px;
     background: $color-main;
     bottom: -5px;
     left: -5px;
-    transition: .4s;
+    transition: 0.4s;
   }
 
   &.active {
@@ -43,8 +42,7 @@
 }
 
 .planning_offers-table-container.planning_offers-table-container {
-  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%),
-    0 2px 4px -1px rgb(145 158 171 / 24%);
+  box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
   border-radius: 8px;
   th,
   tr,
@@ -62,48 +60,48 @@
   }
 }
 
-@media(max-width: 1360px){
-  .planning_offers-table-container.planning_offers-table-container{
-    table{
+@media (max-width: 1360px) {
+  .planning_offers-table-container.planning_offers-table-container {
+    table {
       width: 130%;
     }
   }
 }
-@media(max-width: 1130px) {
+@media (max-width: 1130px) {
   .planning_offers-table-container.planning_offers-table-container {
     table {
       width: 160%;
     }
   }
 }
-@media(max-width: 975px) {
+@media (max-width: 975px) {
   .planning_offers-table-container.planning_offers-table-container {
     table {
       width: 190%;
     }
   }
 }
-@media(max-width: 875px) {
+@media (max-width: 875px) {
   .planning_offers-table-container.planning_offers-table-container {
     table {
       width: 240%;
     }
   }
 }
-@media(max-width: 760px) {
+@media (max-width: 760px) {
   .planning_offers-table-container.planning_offers-table-container {
     table {
       width: 280%;
     }
   }
 }
-.right-part-header_link{
-  &.planning{
-    &::before{
+.right-part-header_link {
+  &.planning {
+    &::before {
       width: 160px !important;
     }
-    &.active{
-      &::before{
+    &.active {
+      &::before {
         left: 160px !important;
       }
     }

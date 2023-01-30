@@ -1,0 +1,118 @@
+@import '../../../library.scss';
+@import '../../../responsiveness.scss';
+
+.billing {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+
+  .__card {
+    border: 1px solid $color-sett-border;
+    padding: 32px;
+    border-radius: 8px;
+    width: 100%;
+
+    .billing__card-title {
+      color: $color-second-third;
+      font-weight: 600;
+      text-transform: capitalize;
+      font-size: 16px;
+    }
+
+    .billing__card-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      color: $color-table-th;
+      margin: 1em 0;
+    }
+  }
+
+  .billing__plan {
+    .billing__plan__flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2.8em 0 0 0;
+      padding: 12px 30px;
+      background-color: #f9fafb;
+      border-radius: 8px;
+    }
+
+    .__block {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      .__img-block {
+        background-color: rgba(145, 158, 171, 0.24);
+        border-radius: 50%;
+        width: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 48px;
+        img {
+          width: 20px;
+          height: 20px;
+        }
+      }
+      .__text {
+        font-weight: 700;
+        font-size: 20px;
+        color: $color-second-third;
+      }
+    }
+
+    .billing__plan__flex__btn {
+      display: flex;
+      gap: 16px;
+    }
+  }
+
+  .billing__payment {
+    .billing__payment__flex {
+      display: flex;
+      align-items: stretch;
+      gap: 15px;
+      margin-top: 3em;
+
+      .__btn-add {
+        width: 326px;
+        background-color: #f4f6f8;
+        color: $color-input-border;
+        font-size: 15px;
+      }
+    }
+  }
+
+  .billing__invoice {
+    .__flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10.5px;
+
+      .__head {
+        width: 80%;
+      }
+      .__btn {
+        height: 50px;
+        margin-right: 2.2em;
+      }
+    }
+  }
+
+  .billing__info {
+    .__btn-add {
+      width: 100%;
+      background-color: #f4f6f8;
+      height: 72px;
+      font-size: 15px;
+      color: $color-table-th;
+    }
+
+    .__info-block {
+      margin-top: 2.8em;
+    }
+  }
+}

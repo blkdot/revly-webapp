@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Arrow = () => (
+const Timer = () => (
   <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M12.4883 21C16.9066 21 20.4883 17.4183 20.4883 13C20.4883 8.58172 16.9066 5 12.4883 5C8.07 5 4.48828 8.58172 4.48828 13C4.48828 17.4183 8.07 21 12.4883 21Z"
@@ -31,4 +31,4 @@ const Arrow = () => (
   </svg>
 );
 
-export default Arrow;
+export default Timer;

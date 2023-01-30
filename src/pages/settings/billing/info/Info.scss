@@ -1,0 +1,30 @@
+@import '../../../../library.scss';
+
+.info {
+  background-color: #f9fafb;
+  padding: 28px 30px;
+  border-radius: 10px;
+  margin-bottom: 1em;
+
+  .__text {
+    margin-bottom: 1.5em;
+    font-weight: 400;
+    font-size: 16px;
+    color: $color-table-th;
+    span {
+      font-weight: 600;
+      font-size: 14px;
+      color: $color-second-third;
+    }
+  }
+
+  .__btn-flex {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    button {
+      width: 112px;
+    }
+  }
+}

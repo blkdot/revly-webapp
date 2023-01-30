@@ -2,147 +2,146 @@
 @import '../../../../library.scss';
 
 .signup-form {
-    width: 60%;
-    margin: auto;
-    text-align: left;
-        
-    .signup-form__text {
-        color: $color-second-third;
-        font-weight: 700;
-        font-size: 24px;
-    }
-  
-    .signup-form__subtext {
-        color: $color-arrow;
-        font-size: 16px;
-        margin-top: 10px;
-    }
-    
-    .signup-form__form {
-        margin-top: 30px;
-        .signup-form__flex {
-            display: flex;
-            justify-content: space-between;
-    
-            .signup-form__flex__input {
-                margin-top: 1rem;
-                width: 48%;
-            }
+  width: 60%;
+  margin: auto;
+  text-align: left;
 
-            &.phone {
-                .signup-form__input-phone {
-                    margin-top: 1.6rem;
-                    display: flex;
-                    justify-content: space-between;
-            
-                    width: 7.5em;
-                    input {
-                        width: 100%;
-                        background-color: transparent;
-                        height: 3.8rem;
-                        padding: 19px 14px 18.5px 39px;
-                        color: $color-input-border;
-                        border-color: #919eab65;
-                        border-radius: 8px;
-                        &:focus {
-                            border: 1.5px solid $color-main;
-                            box-shadow: none;
-                        }
-                    }
-            
-                    & .selected-flag {
-                        width: 110px;
-            
-                        &:focus .arrow, .arrow {
-                            left: 5.6em;
-                            top: 10%;
-                            border: solid $color-second-third;
-                            border-width: 0 2px 2px 0;
-                            display: inline-block;
-                            padding: 4px;
-                            transform: rotate(45deg);
-                            -webkit-transform: rotate(45deg);
-                            transition: transform .2s;
-            
-                            &.up {
-                                transform: rotate(225deg);
-                                -webkit-transform: rotate(225deg);
-                                border-width: 0 2px 2px 0;
-                                top: 35%
-                            }
-        
-                            @include mobileBreakpoint {
-                                left: 3em;
-                            }
-                        }
-                    }
-                }
+  .signup-form__text {
+    color: $color-second-third;
+    font-weight: 700;
+    font-size: 24px;
+  }
 
-                .signup-form__input {
-                    width: 70%;
-                }
-            }
-        }
-        
-        .signup-form__input {
+  .signup-form__subtext {
+    color: $color-arrow;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .signup-form__form {
+    margin-top: 30px;
+    .signup-form__flex {
+      display: flex;
+      justify-content: space-between;
+
+      .signup-form__flex__input {
+        margin-top: 1rem;
+        width: 48%;
+      }
+
+      &.phone {
+        .signup-form__input-phone {
+          margin-top: 1.6rem;
+          display: flex;
+          justify-content: space-between;
+
+          width: 7.5em;
+          input {
             width: 100%;
-            margin-top: 1.6rem;
-        }
-    }
-
-
-    .signup-form__check {
-        margin-bottom: 1rem;
-        margin-top: 1.5rem;
-        text-align: left;
-        
-        .signup-form__check__text {
-            font-size: 14px;
-        }
-
-        input {
-            vertical-align: middle;
-            cursor: pointer;
-        }
-
-        a {
-            color: black;
-        }
-    }
-
-
-    @include tabletBreakpoint {
-        width: 80%;
-    }
-
-    @include mobileBreakpoint {
-        width: 90%;
-        .signup-form__form {
-            .signup-form__flex {
-                display: block;
-
-                .signup-form__flex__input {
-                    width: 100%;
-                }
-
-                &.phone {
-                    display: flex;
-                }
-
-                &.phone {
-                    .signup-form__input-phone {
-                        width: 27%;
-                        input {
-                            width: 80px;
-                            padding: 19px 14px 18.5px 4em;
-                        }
-                    }
-
-                    & .signup-form__input {
-                        width: 75%;
-                    }
-                }
+            background-color: transparent;
+            height: 3.8rem;
+            padding: 19px 14px 18.5px 39px;
+            color: $color-input-border;
+            border-color: #919eab65;
+            border-radius: 8px;
+            &:focus {
+              border: 1.5px solid $color-main;
+              box-shadow: none;
             }
+          }
+
+          & .selected-flag {
+            width: 110px;
+
+            &:focus .arrow,
+            .arrow {
+              left: 5.6em;
+              top: 10%;
+              border: solid $color-second-third;
+              border-width: 0 2px 2px 0;
+              display: inline-block;
+              padding: 4px;
+              transform: rotate(45deg);
+              -webkit-transform: rotate(45deg);
+              transition: transform 0.2s;
+
+              &.up {
+                transform: rotate(225deg);
+                -webkit-transform: rotate(225deg);
+                border-width: 0 2px 2px 0;
+                top: 35%;
+              }
+
+              @include mobileBreakpoint {
+                left: 3em;
+              }
+            }
+          }
         }
+
+        .signup-form__input {
+          width: 70%;
+        }
+      }
     }
+
+    .signup-form__input {
+      width: 100%;
+      margin-top: 1.6rem;
+    }
+  }
+
+  .signup-form__check {
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    text-align: left;
+
+    .signup-form__check__text {
+      font-size: 14px;
+    }
+
+    input {
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    a {
+      color: black;
+    }
+  }
+
+  @include tabletBreakpoint {
+    width: 80%;
+  }
+
+  @include mobileBreakpoint {
+    width: 90%;
+    .signup-form__form {
+      .signup-form__flex {
+        display: block;
+
+        .signup-form__flex__input {
+          width: 100%;
+        }
+
+        &.phone {
+          display: flex;
+        }
+
+        &.phone {
+          .signup-form__input-phone {
+            width: 27%;
+            input {
+              width: 80px;
+              padding: 19px 14px 18.5px 4em;
+            }
+          }
+
+          & .signup-form__input {
+            width: 75%;
+          }
+        }
+      }
+    }
+  }
 }

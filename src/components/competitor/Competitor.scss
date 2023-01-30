@@ -13,7 +13,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-  transition: .4s;
+  transition: 0.4s;
 
   &.active {
     visibility: visible;
@@ -40,7 +40,7 @@
 
     .competitor-top-text {
       padding: 0 40px;
-      color: #212B36;
+      color: #212b36;
       font-weight: 700;
       font-size: 25px;
       line-height: 24px;
@@ -62,7 +62,7 @@
       top: 10px;
       cursor: pointer;
       border-radius: 50%;
-      border: 1px solid #EBEFF2;
+      border: 1px solid #ebeff2;
       padding: 5px;
     }
 
@@ -71,27 +71,25 @@
       justify-content: flex-start;
       color: #000000;
 
-
-
       &.Mui-focused {
         color: #823aa8 !important;
 
         fieldset {
           img {
-            filter: invert(43%) sepia(17%) saturate(3109%) hue-rotate(219deg) brightness(109%) contrast(103%);
+            filter: invert(43%) sepia(17%) saturate(3109%) hue-rotate(219deg) brightness(109%)
+              contrast(103%);
           }
         }
       }
 
-
-      >div {
+      > div {
         box-shadow: none;
         width: 100%;
 
         fieldset {
           border: 1px solid #919eab65;
           border-radius: 8px;
-          transition: .4s;
+          transition: 0.4s;
         }
       }
     }
@@ -131,15 +129,15 @@
   margin-bottom: 15px;
   width: 280px;
 
-  >div {
+  > div {
     border-radius: 8px;
     height: 60px;
     width: 100%;
 
-    >div {
+    > div {
       height: 60px;
 
-      >div {
+      > div {
         padding-left: 15px;
       }
     }
@@ -150,16 +148,16 @@
   margin-top: 120px;
   padding: 0 40px;
 
-  >div {
+  > div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin-top: 25px;
   }
 
-  >span {
+  > span {
     font-size: 16px;
-    color: #212B36;
+    color: #212b36;
     font-weight: 600;
     line-height: 24px;
   }
@@ -199,11 +197,11 @@
   width: 60%;
   height: 6px;
   border-radius: 24px;
-  background-color: #EBEFF2;
+  background-color: #ebeff2;
   margin-bottom: 20px;
 
-  >span {
-    background-color: #906BFF;
+  > span {
+    background-color: #906bff;
   }
 }
 
@@ -213,7 +211,7 @@
   top: 100px;
   width: 200px;
 }
-.competitor-loading{
+.competitor-loading {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -221,18 +219,17 @@
   height: 100%;
 }
 
-@media(max-height: 800px) {
+@media (max-height: 800px) {
   .competitor-dropdown.competitor-dropdown {
     width: 170px;
   }
 
   .competition-textfield.competition-textfield {
     width: 170px !important;
-
   }
 }
 
-@media(max-width: 900px) {
+@media (max-width: 900px) {
   .competitor-overlay {
     .competition-add.competition-add {
       width: fit-content !important;
@@ -240,14 +237,14 @@
   }
 }
 
-@media(max-width: 800px) {
+@media (max-width: 800px) {
   .competitor-overlay {
     .competitor-inputs {
-      >span {
+      > span {
         font-size: 18px;
       }
 
-      >div {
+      > div {
         justify-content: flex-start;
         grid-gap: 15px;
       }
@@ -274,49 +271,46 @@
       width: 280px;
       margin: 0;
 
-      >div {
+      > div {
         width: 280px;
-
       }
     }
   }
 }
-@media(max-width: 660px){
+@media (max-width: 660px) {
   .competitor-overlay {
-    .competitor-inputs{
+    .competitor-inputs {
       margin-top: 60px;
     }
-        .competition-textfield.competition-textfield {
-        width: 200px !important;
-      }
-  
-      .competitor-dropdown.competitor-dropdown {
+    .competition-textfield.competition-textfield {
+      width: 200px !important;
+    }
+
+    .competitor-dropdown.competitor-dropdown {
+      width: 200px;
+
+      > div {
         width: 200px;
-  
-        >div {
-          width: 200px;
-  
-        }
       }
     }
+  }
 }
-@media(max-width: 495px){
+@media (max-width: 495px) {
   .competitor-overlay {
-      .competitor-inputs {
-        margin-top: 60px;
-      }
-  
-      .competition-textfield.competition-textfield {
-        width: 100% !important;
-      }
-  
-      .competitor-dropdown.competitor-dropdown {
+    .competitor-inputs {
+      margin-top: 60px;
+    }
+
+    .competition-textfield.competition-textfield {
+      width: 100% !important;
+    }
+
+    .competitor-dropdown.competitor-dropdown {
+      width: 100%;
+
+      > div {
         width: 100%;
-  
-        >div {
-          width: 100%;
-  
-        }
       }
     }
+  }
 }
