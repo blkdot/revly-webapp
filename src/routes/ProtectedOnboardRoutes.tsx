@@ -6,9 +6,6 @@ import { usePlatform } from '../hooks/usePlatform';
 import SpinnerKit from '../kits/spinner/SpinnerKit';
 import config from '../setup/config';
 
-import ContainerKit from '../kits/container/ContainerKit';
-import Navbar from '../components/navbar/Navbar';
-
 const ProtectedOnboardRoutes = () => {
   const [allowed, setAllowed] = useState<any>(false);
   const [preAllowed, setPreAllowed] = useState(false);
@@ -94,14 +91,7 @@ const ProtectedOnboardRoutes = () => {
     );
   }
 
-  return (
-    <div className="user-page">
-      <Navbar />
-      <ContainerKit>
-        <Outlet />
-      </ContainerKit>
-    </div>
-  );
+  return <Outlet />;
 };
 
 export default ProtectedOnboardRoutes;
