@@ -82,13 +82,13 @@ const App = () => (
                       <Route path="/marketing/offer" element={<MarketingOffer />} />
                       <Route path="/marketing/ads" element={<MarketingAds />} />
                       <Route path="/verify-code" element={<VerifyCode />} />
+                      <Route path="/settings" element={<Settings />} />
                     </Route>
                     <Route path="/onboarding" element={<OnBoarding />} />
                     <Route path="/check" element={<Check />} />
                   </Route>
                   <Route element={<ProtectedSettingsRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
-                      <Route path="/settings" element={<Settings />} />
                       <Route path="/settings/general" element={<General />} />
                       <Route path="/settings/billing" element={<Billing />} />
                       <Route path="/settings/onboarding" element={<NewSettingsOnboarding />} />

@@ -18,7 +18,6 @@ import {
   isSameYear,
   startOfYear,
   isSameWeek,
-  isSameDay,
   isSameMonth,
 } from 'date-fns';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -182,7 +181,10 @@ const Dates = (props) => {
       startDate,
       endDate,
     );
-
+    if (getMonth(startDate) === 0) {
+      setYearAfterPeriod(year - 1);
+    }
+    setYearAfterPeriod(year);
     setBeforePeriodContext({ startDate, endDate });
     if (typeDate === 'day') {
       setAfterPeriodContext({
@@ -484,7 +486,7 @@ const Dates = (props) => {
         : new Date(afterPeriod[0].endDate);
     const startDateBeforePeriod = new Date(beforePeriodContext.startDate);
     const date = new Date();
-    const { startLocal, startGetDate, endGetDate, startGetDay, dateGetDate } = getAllDateSetup(
+    const { startLocal, startGetDay } = getAllDateSetup(
       afterPeriod[0].startDate,
       afterPeriod[0].endDate,
     );
@@ -566,7 +568,7 @@ const Dates = (props) => {
     }
 
     if (typeDate === 'month') {
-      if (startGetDate === 1 && endGetDate === dateGetDate) {
+      if (getMonth(startDate) === getMonth(subMonths(date, 1)) && yearAfterPeriod === year - 1) {
         setTitleafterPeriod('last month');
         setDateContext({
           ...dateContext,
@@ -587,35 +589,12 @@ const Dates = (props) => {
         });
         return;
       }
-      if (
-        getMonth(startDate) === getMonth(subMonths(startDateBeforePeriod, 1)) &&
-        getMonth(date) === 0
-      ) {
-        setTitleafterPeriod('month before');
-        setDateContext({
-          ...dateContext,
-          afterPeriod: { startDate, endDate },
-          titleafterPeriod: 'month before',
-        });
-        return;
-      }
       setTitleafterPeriod('custom');
       setDateContext({
         ...dateContext,
         afterPeriod: { startDate, endDate },
         titleafterPeriod: 'custom',
       });
-    }
-
-    if (getMonth(startDate, 1) === getMonth(subMonths(date, 1))) {
-      setTitleafterPeriod('last month');
-      setDateContext({
-        ...dateContext,
-        afterPeriod: { startDate, endDate },
-        titleafterPeriod: 'last month',
-      });
-
-      return;
     }
 
     setTitleafterPeriod('custom');
@@ -693,32 +672,6 @@ const Dates = (props) => {
         key: 'selection',
       },
     ]);
-  };
-  const getafterPeriod = () => {
-    const startDateAfterPeriod = new Date(afterPeriod[0].startDate);
-
-    if (typeDate === 'day') {
-      return isSameDay(startDateAfterPeriod, new Date(beforePeriodContextStart));
-    }
-
-    if (typeDate === 'week') {
-      return isSameWeek(startDateAfterPeriod, new Date(beforePeriodContextStart));
-    }
-
-    if (typeDate === 'month') {
-      if (
-        getYear(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) >=
-        getYear(new Date(new Date(beforePeriodContextStart).setFullYear(year)))
-      ) {
-        return (
-          getMonth(new Date(new Date(startDateAfterPeriod).setFullYear(yearAfterPeriod))) >
-          getMonth(new Date(new Date(beforePeriodContextStart).setFullYear(year)))
-        );
-      }
-      return false;
-    }
-
-    return false;
   };
 
   const handleOnChangeAfterPeriod = (ranges) => {
@@ -1053,9 +1006,15 @@ const Dates = (props) => {
               ))}
               <div className="date-btn-wrapper">
                 <ButtonKit
-                  disabled={getafterPeriod()}
+                  disabled={
+                    new Date(afterPeriod[0].startDate) >= new Date(beforePeriodContextStart)
+                  }
                   onClick={handleClickAfterPeriod}
-                  className={`date-save-btn ${getafterPeriod() ? 'date-disabled-btn' : ''}`}
+                  className={`date-save-btn ${
+                    new Date(afterPeriod[0].startDate) >= new Date(beforePeriodContextStart)
+                      ? 'date-disabled-btn'
+                      : ''
+                  }`}
                   variant="contained"
                 >
                   Ok

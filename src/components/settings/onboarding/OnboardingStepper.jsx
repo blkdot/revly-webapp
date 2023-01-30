@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
+import { Link } from 'react-router-dom';
 import StepKit from '../../../kits/step/StepKit';
 import StepLabelKit from '../../../kits/stepLabel/StepLabel';
 import StepperKit from '../../../kits/stepper/StepperKit';
@@ -82,8 +83,8 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
     }
     if (activeStep >= 100 && activeStep < 200 && index === 1) {
       return (
-        <ButtonKit className="settings-onboarding-btn connect" variant="contained">
-          Manage my branches
+        <ButtonKit className="settings-onboarding-btn connect manage" variant="contained">
+          <Link to="/settings/onboarding">Manage my branches</Link>
         </ButtonKit>
       );
     }
@@ -93,8 +94,7 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
     if (activeStep >= 200 && accounts.length === 1) {
       setTimeout(() => {
         setActive(false);
-        console.log('ss');
-      }, 2000);
+      }, 5000);
     }
   }, [activeStep]);
   return (

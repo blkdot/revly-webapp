@@ -667,8 +667,7 @@ const GetProgress = ({ progressData }) => {
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
               menu === 'Offer on the whole Menu' ? 'active' : ''
-            }
-                  `}
+            }`}
           >
             <div className="radio">
               <div>

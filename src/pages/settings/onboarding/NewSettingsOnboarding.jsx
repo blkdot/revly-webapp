@@ -17,7 +17,8 @@ const NewSettingsOnboarding = () => {
 
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
-    if (connectAccount === 'manageBranch' || connectAccount === 'completed') {
+    const clearArr = ['manageBranch', 'completed', 'manageAccount'];
+    if (clearArr.find((str) => str === connectAccount)) {
       setConnectAccount('account');
     }
     const body = document.querySelector('body');

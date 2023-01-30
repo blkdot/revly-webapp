@@ -538,7 +538,15 @@
     visibility: visible;
   }
 }
-
+.selected-dropdown_skeleton{
+  height: fit-content !important;
+  >span:nth-of-type(1){
+    width: 60%;
+  }
+  >span:nth-of-type(2){
+    width: 80%;
+  }
+}
 @media(max-width: 1200px) {
   .restaurant-dropdown_wrapper {
     width: 40%;
