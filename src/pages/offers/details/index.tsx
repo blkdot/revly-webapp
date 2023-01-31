@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */ import { format } from 'date-fns';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
@@ -79,31 +80,35 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         <img
           className='planning-platform'
           style={{ marginRight: '1.5rem' }}
-          src={platformObject[platform].src}
-          alt={platformObject[platform].name}
+          src={platformObject[platform.toLowerCase()].src}
+          alt={platformObject[platform.toLowerCase()].name}
         />
       </span>
     </div>
   );
 
   const { master_offer_id, platform } = offerDetail;
-  const { profit, revenue, accured_discount, roi, average_basket, n_orders } =
-    offerDetailMaster?.master_offer?.data || {};
   const {
+    profit,
+    revenue,
+    accrued_discount,
+    roi,
+    average_basket,
+    n_orders,
     minimum_order_value,
     start_date,
+    end_date,
     status,
-    vendor_name,
-    vendor_id,
-    offer_id,
+    chain_name,
+    vendor_ids,
+    offer_ids,
     type_schedule,
     discount_rate,
     type_offer,
-    end_date,
+    chain_id,
   } = offerDetailMaster?.master_offer || {};
 
-  const vendor = vendorsObj[platform]?.find((v) => +v.vendor_id === +vendor_id);
-  const chain_id = vendor ? vendor.chain_id : '';
+  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) => vendor_ids?.includes(v.vendor_id));
 
   const openCancelModal = () => setIsOpen(true);
 
@@ -112,9 +117,9 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       {
         master_email: user.email,
         access_token: user?.access_token || '',
-        platform_token: platforms[platform].access_token,
+        platform_token: platforms[platform.toLowerCase()].access_token,
         vendors: [vendor],
-        offer_id: offer_id || null,
+        offer_id: offer_ids || null,
         chain_id,
         master_offer_id,
       },
@@ -139,7 +144,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
           master_email: user.email,
           access_token: user?.access_token || '',
           vendors: vendorsObj,
-          platform,
+          platform: platform.toLowerCase(),
           master_offer_id,
         })
           .then((res) => setofferDetailMaster(res.data))
@@ -188,12 +193,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                 <Calendar />
                 <div className='restau-infos'>
                   <div className='restau-name'>
-                    {vendor_name || <SkeletonKit width={70} height={30} />}
+                    {chain_name || <SkeletonKit width={70} height={30} />}
                   </div>
                 </div>
               </div>
               <div className='offer'>
-                {renderOfferStatus(offerDetailMaster?.master_offer?.offer_status)}
+                {renderOfferStatus(offerDetailMaster?.master_offer?.status)}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span className='offer-title'>Offer Date :</span>
                   <span className='offer-sub-title'>
@@ -218,7 +223,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className='offer-visibility-title'>Visibility Rank</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
-                      {accured_discount === 0 || accured_discount ? accured_discount : '-'}
+                      {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
                     </div>
                   </div>
                   <div className='offer-visibility-block'>
@@ -513,7 +518,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   drnId={menuItem.drn_id}
                   discountRate={discount_rate}
                   platform={platform}
-                  vendorId={vendor_id}
+                  vendorId={vendor_ids}
                 />
               ))}
           </div>

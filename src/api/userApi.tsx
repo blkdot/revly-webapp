@@ -29,7 +29,7 @@ export const getOfferDetails = (body, platform) =>
 
 export const getPlanningOfferDetails = (body) =>
   axios
-    .post(`${apiUrl}/planning/offerdetails`, body)
+    .post(`${apiUrl}/planning/offerdetailsv2`, body)
     .then((res) => res)
     .catch(handleResponse);
 

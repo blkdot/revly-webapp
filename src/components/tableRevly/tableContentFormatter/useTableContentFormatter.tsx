@@ -1,10 +1,14 @@
 import React from 'react';
+import { useAtom } from 'jotai';
 import arrow from '../../../assets/images/arrow.png';
 import TableCellKit from '../../../kits/tablecell/TableCellKit';
 import { platformList, platformObject } from '../../../data/platformList';
 import TooltipKit from '../../../kits/toolTip/TooltipKit';
+import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const useTableContentFormatter = () => {
+  const [vendorsState] = useAtom(vendorsAtom);
+  const { vendorsArr } = vendorsState;
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
@@ -13,6 +17,18 @@ const useTableContentFormatter = () => {
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
+      </span>
+    </TableCellKit>
+  );
+  
+  const renderIsoDate = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={`${h.id}}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r[h.id] === null ? '-' : r[h.id]?.replace('T', ' ')?.toLocaleString('en-US')}
       </span>
     </TableCellKit>
   );
@@ -29,6 +45,18 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
+  const renderTimeSlot = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={`${h.id}}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {`${r.start_hour} - ${r.end_hour}`}
+      </span>
+    </TableCellKit>
+  );
+
   const renderRowTooltip = (r, h) => (
     <TableCellKit
       key={`${h.id}_${r.id}`}
@@ -39,17 +67,47 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={vendor} className="render-row-tooltip column">
+                <span key={vendor} className='render-row-tooltip column'>
                   {vendor}
                 </span>
               ))
         }
         disableHoverListener={r[h.id]?.length === 0}
-        id="category-tooltip"
-        placement="right"
+        id='category-tooltip'
+        placement='right'
         arrow
       >
-        <span className="render-row-tooltip" key={h.id}>
+        <span className='render-row-tooltip' key={h.id}>
+          {r[h.id] === null || !r[h.id] ? '-' : (r[h.id]?.length || 0)?.toLocaleString('en-US')}
+        </span>
+      </TooltipKit>
+    </TableCellKit>
+  );
+
+  const renderVendorId = (r, h) => (
+    <TableCellKit
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '10rem', textAlign: 'center' }}
+    >
+      <TooltipKit
+        title={
+          r[h.id] === null || !r[h.id]
+            ? '-'
+            : r[h.id].map((vendor) => {
+                const vendorData = vendorsArr.find((vObj) => vendor === vObj.vendor_id);
+                return (
+                  <span key={vendor} className='render-row-tooltip column'>
+                    {vendorData.data.vendor_name || vendor}
+                  </span>
+                );
+              })
+        }
+        disableHoverListener={r[h.id]?.length === 0}
+        id='category-tooltip'
+        placement='right'
+        arrow
+      >
+        <span className='render-row-tooltip' key={h.id}>
           {r[h.id] === null || !r[h.id] ? '-' : (r[h.id]?.length || 0)?.toLocaleString('en-US')}
         </span>
       </TooltipKit>
@@ -63,10 +121,10 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}
     >
       <img
-        className="planning-platform"
+        className='planning-platform'
         style={{ marginRight: '1.5rem' }}
-        src={platformObject[r.platform].src}
-        alt={platformObject[r.platform].name}
+        src={platformObject[r.platform.toLowerCase()].src}
+        alt={platformObject[r.platform.toLowerCase()].name}
       />
     </TableCellKit>
   );
@@ -104,7 +162,7 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+      <span className='competition-table-alert' style={{ whiteSpace: 'nowrap' }}>
         {r[h.id] * 100}%
       </span>
     </TableCellKit>
@@ -158,7 +216,7 @@ const useTableContentFormatter = () => {
 
   const renderOrdinalSuffix = (r, h) => (
     <TableCellKit>
-      {ordinalSuffixOf(r[h.id]) as any >= 100 && '> '}
+      {(ordinalSuffixOf(r[h.id]) as any) >= 100 && '> '}
       {ordinalSuffixOf(r[h.id])}
     </TableCellKit>
   );
@@ -170,19 +228,19 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
     >
       {r[h.id].status === 'in process' ? (
-        <span className="render-branch-row_skeleton" />
+        <span className='render-branch-row_skeleton' />
       ) : (
         <div
           className={`render-branch-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
         >
-          <p className="__title">{r[h.id].title}</p>
-          <span className="__subtitle">{r[h.id].address}</span>
+          <p className='__title'>{r[h.id].title}</p>
+          <span className='__subtitle'>{r[h.id].address}</span>
         </div>
       )}
     </TableCellKit>
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {
-    const getPlatform = (plat) => platformList.find((obj) => obj.name === plat);
+    const getPlatform = (plat) => platformList.find((obj) => obj.name === plat.toLowerCase());
     return (
       <TableCellKit
         style={{ paddingLeft: 0, cursor: 'pointer' }}
@@ -191,7 +249,7 @@ const useTableContentFormatter = () => {
       >
         {r[h.id].map((obj) => (
           <span
-            key={obj.platform}
+            key={obj.platform.toLowerCase()}
             style={{ '--color': getPlatform(obj.platform).color } as any}
             className={`render-linked-platforms-row ${
               obj.status === 'in process' ? 'process' : ''
@@ -201,9 +259,10 @@ const useTableContentFormatter = () => {
           >
             <img
               src={
-                getPlatform(obj.platform).srcFaviconWhite || getPlatform(obj.platform).srcFavicon
+                getPlatform(obj.platform.toLowerCase()).srcFaviconWhite ||
+                getPlatform(obj.platform.toLowerCase()).srcFavicon
               }
-              alt={obj.platform}
+              alt={obj.platform.toLowerCase()}
             />
           </span>
         ))}
@@ -219,9 +278,7 @@ const useTableContentFormatter = () => {
       <div
         className={`render-accounts-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
       >
-        {r[h.id] && r[h.id].length > 1
-          ? `${r[h.id][0]} + ${r[h.id].length - 1} more`
-          : r[h.id][0]}
+        {r[h.id] && r[h.id].length > 1 ? `${r[h.id][0]} + ${r[h.id].length - 1} more` : r[h.id][0]}
       </div>
     </TableCellKit>
   );
@@ -231,9 +288,9 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      <div className="render-branch_status-row_wrapper">
+      <div className='render-branch_status-row_wrapper'>
         <div className={`render-branch_status-row ${r[h.id].replace(/\s/g, '')}`}>{r[h.id]}</div>
-        {r[h.id] !== 'in process' ? <img className="arrow" src={arrow} alt="arrow" /> : ''}
+        {r[h.id] !== 'in process' ? <img className='arrow' src={arrow} alt='arrow' /> : ''}
       </div>
     </TableCellKit>
   );
@@ -253,6 +310,9 @@ const useTableContentFormatter = () => {
     renderLinkedPlatformsRow,
     renderAccountsRow,
     renderBranchStatusRow,
+    renderVendorId,
+    renderTimeSlot,
+    renderIsoDate,
   };
 };
 

@@ -136,8 +136,8 @@ const MarketingOfferFilter = (props: any) => {
     );
   };
 
-  const renderDiscountType = () => {
-    if (!filtersHead.discount_type || filtersHead.discount_type.length < 1) return null;
+  const renderTypeOffer = () => {
+    if (!filtersHead.type_offer || filtersHead.type_offer.length < 1) return null;
 
     return (
       <>
@@ -154,7 +154,7 @@ const MarketingOfferFilter = (props: any) => {
             <Tag /> Discount Type
           </span>
           <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.discount_type.map((item) => (
+            {filtersHead.type_offer.map((item) => (
               <div
                 key={item.value}
                 style={{
@@ -167,8 +167,8 @@ const MarketingOfferFilter = (props: any) => {
                 }}
               >
                 <CheckboxKit
-                  checked={filters.discount_type.includes(item.value)}
-                  onChange={() => handleChangeMultipleFilter('discount_type')(item.value)}
+                  checked={filters.type_offer.includes(item.value)}
+                  onChange={() => handleChangeMultipleFilter('type_offer')(item.value)}
                 />
                 <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
               </div>
@@ -275,7 +275,7 @@ const MarketingOfferFilter = (props: any) => {
           </div>
         </div>
         <hr />
-        {renderDiscountType()}
+        {renderTypeOffer()}
         {renderDiscountAmount()}
         <div
           style={{
