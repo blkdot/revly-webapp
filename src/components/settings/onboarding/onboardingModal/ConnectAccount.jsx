@@ -51,7 +51,7 @@ const ConnectAccount = ({ propsVariables }) => {
       )}
       <div className="onboarding-accounts_wrapper">
         {accounts.map((obj) => (
-          <div key={obj.email} className={`onboarding-account ${obj.connected ? 'connected' : ''}`}>
+          <div key={obj.email} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
               <span
                 className="onboarding-account_platform-logo"
@@ -74,8 +74,8 @@ const ConnectAccount = ({ propsVariables }) => {
                 <img src={TrashIcon} alt="trash" />
               </span>
               <div className="onboarding-account_switch">
-                <p>{obj.connected ? 'Connected' : 'Disconnected'}</p>
-                <SwitchKit checked={obj.connected} />
+                <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
+                <SwitchKit checked={obj.active} />
               </div>
             </div>
           </div>

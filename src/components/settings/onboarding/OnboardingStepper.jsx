@@ -10,6 +10,7 @@ import ButtonKit from '../../../kits/button/ButtonKit';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.png';
 import ClockIcon from '../../../assets/images/clock-settings_ic.png';
 import ShieldIcon from '../../../assets/images/shield-settings_ic.png';
+import { usePlatform } from '../../../hooks/usePlatform';
 
 const ColorlibStepIconRoot = styled('div')(({ ownerState }) => ({
   backgroundColor: 'rgba(145, 158, 171, 0.24);',
@@ -45,7 +46,8 @@ const ColorlibStepIcon = (props) => {
   );
 };
 const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
-  const [active, setActive] = useState(true);
+  const { userPlatformData } = usePlatform();
+  const [active, setActive] = useState(!userPlatformData.onboarded);
   const steps = [
     {
       label: 'Connect your Accounts',
@@ -120,7 +122,7 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
           </StepKit>
         ))}
       </StepperKit>
-      {accounts.length >= 1 && activeStep >= 200 ? (
+      {accounts.length >= 1 && activeStep >= 100 ? (
         <img
           className="onboarding-close_icon"
           tabIndex={-1}

@@ -69,13 +69,13 @@ const TooltipCategory = ({ obj, index }) => {
         interactive={1}
         disableHoverListener={!hoverStatus}
         id="category-tooltip"
-        title={obj.name}
+        title={obj.name || obj.item_name}
       >
         <div>
-          <ListItemTextKit className="list-item-category" primary={obj.name} />
+          <ListItemTextKit className="list-item-category" primary={obj.name || obj.item_name} />
         </div>
       </TooltipKit>
-      <b>{obj.price} AED</b>
+      <b>{obj.price || obj.unit_price} AED</b>
     </div>
   );
 };
@@ -131,6 +131,7 @@ const GetProgress = ({ progressData }) => {
     platformData,
     setBranchData,
     branchData,
+    getPlatformActive,
   } = progressData;
 
   useEffect(() => {
@@ -542,10 +543,10 @@ const GetProgress = ({ progressData }) => {
       return true;
     }
     if (Object.keys(display).length === 0) {
-      return platformData === 'talabat' || category.length === 0;
+      return category.length === 0;
     }
     if (platform.length < 2) {
-      return platform[0] === 'talabat' || category.length === 0;
+      return category.length === 0;
     }
     return false;
   };
@@ -597,7 +598,11 @@ const GetProgress = ({ progressData }) => {
               value=""
             >
               {platformList
-                .filter((pf) => userPlatformData.platforms[pf.name].active)
+                .filter((pf) =>
+                  userPlatformData.platforms[pf.name].length > 0
+                    ? userPlatformData.platforms[pf.name].filter((obj) => obj.active)
+                    : '',
+                )
                 .map((p) => (
                   <MarketingRadio
                     setState={getPlatform}
@@ -618,7 +623,11 @@ const GetProgress = ({ progressData }) => {
               value={platformData || ''}
             >
               {platformList
-                .filter((pf) => userPlatformData.platforms[pf.name].active)
+                .filter((pf) =>
+                  userPlatformData.platforms[pf.name].length > 0
+                    ? userPlatformData.platforms[pf.name].filter((obj) => obj.active)
+                    : '',
+                )
                 .map((p) => (
                   <MarketingRadio
                     state={platformData}
@@ -747,7 +756,7 @@ const GetProgress = ({ progressData }) => {
                   onChange={(e) => setItemMenu(e.target.value)}
                   name="radio-buttons-group-menu"
                 >
-                  {itemMenuArr.map((obj) => (
+                  {(getPlatformActive() === 'talabat' ? [] : itemMenuArr).map((obj) => (
                     <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
                   ))}
                   {menuChanged === 'Offer on An Item from the Menu' ? (
@@ -847,7 +856,7 @@ const GetProgress = ({ progressData }) => {
                 </div>
               </div>
               <div className="max-amount">
-                <p>Maximum amount: 10</p>
+                <p>{getPlatformActive() !== 'talabat' ? 'Maximum amount: 10' : ''}</p>
                 <div>
                   Selected: <span>{checked.length}</span>
                 </div>
@@ -861,15 +870,19 @@ const GetProgress = ({ progressData }) => {
                       control={
                         <CheckboxKit
                           onChange={({ target }) => {
-                            if (target.checked && checked.length < 10) {
+                            if (
+                              target.checked &&
+                              checked.length <
+                                (getPlatformActive() === 'talabat' ? category.length : 10)
+                            ) {
                               setChecked([...checked, target.value]);
                             } else if (!target.checked) {
                               checked.splice(checked.indexOf(target.value), 1);
                               setChecked([...checked]);
                             }
                           }}
-                          checked={checked.indexOf(obj.name) > -1}
-                          value={obj.name}
+                          checked={checked.indexOf(obj.name || obj.item_name) > -1}
+                          value={obj.name || obj.item_name}
                         />
                       }
                       label={<TooltipCategory index={index} obj={obj} />}

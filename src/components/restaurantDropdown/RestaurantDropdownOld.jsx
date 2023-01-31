@@ -167,12 +167,23 @@ const RestaurantDropdownOld = ({ vendors, vendorsSelected, state, setState, cost
   );
   const [hoverStatus, setHover] = React.useState([]);
   const getHoverStatusVendor = (vendorName) => hoverStatus.find((v) => v === vendorName);
+  const getDisabled = (info) => {
+    let a = false;
+    if (userPlatformData.platforms[info.platform].length > 0) {
+      userPlatformData.platforms[info.platform].forEach((obj) => {
+        obj.vendor_ids.forEach((id) => {
+          if (id === info.vendor_id) {
+            a = !obj.active;
+          }
+        });
+      });
+      return a;
+    }
+    return true;
+  };
   const renderLayout = (info, index) => (
     <div className="vendors-only" key={info.vendor_id}>
-      <MenuItemKit
-        disabled={!userPlatformData.platforms[info.platform].active}
-        onClick={() => handleChange(info.data.vendor_name)}
-      >
+      <MenuItemKit disabled={getDisabled(info)} onClick={() => handleChange(info.data.vendor_name)}>
         <CheckboxKit checked={vendorsSelected.indexOf(info.data.vendor_name) > -1} />
         <img
           className="restaurant-img"

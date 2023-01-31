@@ -20,7 +20,11 @@ function useMetrics() {
 
   const clonedVendor = { ...vendorsObj };
   delete clonedVendor.display;
-
+  Object.keys(clonedVendor).forEach((plat) => {
+    if (clonedVendor[plat].length === 0) {
+      delete clonedVendor[plat];
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState(0);
 
@@ -29,7 +33,7 @@ function useMetrics() {
 
     getMetrics({
       master_email: user.email,
-      access_token: '',
+      access_token: user.accessToken,
       vendors: clonedVendor,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),

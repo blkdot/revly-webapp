@@ -849,11 +849,10 @@
     flex-direction: row !important;
   }
   .max-amount {
-    margin-left: 15px;
     display: flex;
     align-items: center;
     justify-content: space-between !important;
-    width: 66% !important;
+    width: 100% !important;
     p {
       color: gray;
     }
@@ -1006,7 +1005,6 @@
 
 .category-list {
   margin-top: 20px !important;
-  margin-left: 15px !important;
   display: flex;
   flex-direction: column;
   align-items: flex-start !important;

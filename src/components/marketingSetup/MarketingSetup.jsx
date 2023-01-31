@@ -41,12 +41,19 @@ const defaultRangeColorIndices = [0, 0, 0, 0];
 
 const MarketingSetup = ({ active, setActive, ads }) => {
   const { userPlatformData } = usePlatform();
-  const [platform, setPlatform] = useState([
-    userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat',
-  ]);
-  const [platformData, setPlatformData] = useState(
-    userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat',
-  );
+  const getActivePlatform = () => {
+    let activePlatform = '';
+    Object.keys(userPlatformData.platforms).forEach((pl) => {
+      if (userPlatformData.platforms[pl].length > 0) {
+        if (userPlatformData.platforms[pl].find((obj) => obj.active)) {
+          activePlatform = pl;
+        }
+      }
+    });
+    return activePlatform;
+  };
+  const [platform, setPlatform] = useState([getActivePlatform()]);
+  const [platformData, setPlatformData] = useState(getActivePlatform());
   const [selected, setSelected] = useState(1);
   const [links, setLinks] = useState('revenue');
   const [menu, setMenu] = useState('Offer on the whole Menu');
@@ -278,17 +285,22 @@ const MarketingSetup = ({ active, setActive, ads }) => {
       userPlatformData.platforms[platformData].access_token_bis
     );
   };
+  const getPlatformActive = () => {
+    if (Object.keys(vendors.display).length > 0) {
+      return platform[0];
+    }
+    return platformData;
+  };
 
   const handleSchedule = async () => {
     let isStartingFromZero = true;
-    console.log(duration);
     if (duration === 'Starting Now') {
       setFreshStartingDate();
       isStartingFromZero = false;
     }
 
     const menuType =
-      menu === 'Offer on the whole Menu'
+      menu === 'Offer on the whole Menu' || getPlatformActive() === 'talabat'
         ? null
         : { menu_items: getMenuItem(), theme: getDiscountMovType('type') };
 
@@ -481,8 +493,6 @@ const MarketingSetup = ({ active, setActive, ads }) => {
 
   const getMenuData = async (vendor, platforms) => {
     try {
-      if (platforms === 'talabat') return;
-
       const res = await getMenu(
         { master_email: user.email, access_token: user.accessToken, vendor },
         platforms,
@@ -885,6 +895,7 @@ const MarketingSetup = ({ active, setActive, ads }) => {
     platformData,
     setBranchData,
     branchData,
+    getPlatformActive,
   };
 
   const recapData = {

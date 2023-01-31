@@ -44,7 +44,6 @@ const useVendors = (isSign) => {
 
     let vendorsSelectedTemp = [];
     let vendorsTemp = [];
-
     platformList
       .filter((p) => {
         if (!newData[p.name]) delete newData[p.name];
@@ -53,9 +52,11 @@ const useVendors = (isSign) => {
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
           vendorsTemp.push({ ...v, platform: p.name });
-          if (userPlatformData.platforms[p.name].active) {
-            vendorsSelectedTemp.push(v.data.vendor_name);
-          }
+          userPlatformData.platforms[p.name].forEach((obj) => {
+            if (obj.active) {
+              vendorsSelectedTemp.push(v.data.vendor_name);
+            }
+          });
         }),
       );
     const { ...rest } = newData;
@@ -92,7 +93,13 @@ const useVendors = (isSign) => {
       });
     });
     Object.keys(rest).forEach((platform) => {
-      if (!userPlatformData.platforms[platform].active) {
+      if (userPlatformData.platforms[platform].length > 0) {
+        userPlatformData.platforms[platform].forEach((obj) => {
+          if (!obj.active) {
+            delete rest[platform];
+          }
+        });
+      } else {
         delete rest[platform];
       }
     });

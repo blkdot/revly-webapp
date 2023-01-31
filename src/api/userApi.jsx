@@ -8,18 +8,19 @@ const { apiUrl, firebaseApiUrl } = config;
 
 export const getMetrics = (body) =>
   axios
-    .post(`${apiUrl}/user/metrics`, body)
+    .post(`${apiUrl}/user/metricsv2`, body)
     .then((res) => res)
     .catch(handleResponse);
 
-export const getVendors = (body) => axios.post(`${apiUrl}/user/vendors`, body).then(handleResponse);
+export const getVendors = (body) =>
+  axios.post(`${apiUrl}/user/vendorsv2`, body).then(handleResponse);
 
 export const getHeatmap = (type, body) =>
   axios.post(`${apiUrl}/user/heatmap/${type}`, body).then(handleResponse).catch(handleResponse);
 
 export const getMenu = (body, platform) =>
   axios
-    .post(`${apiUrl}/user/menu/${platform}`, body)
+    .post(`${apiUrl}/user/menuv2/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 

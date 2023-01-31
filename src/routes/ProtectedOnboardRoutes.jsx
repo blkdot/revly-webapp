@@ -85,7 +85,7 @@ const ProtectedOnboardRoutes = () => {
     };
   });
 
-  if (allowed instanceof Error) return <Navigate to="/settings/onboarding" />;
+  if (allowed instanceof Error) return <Navigate to="/dashboard" />;
 
   if (!allowed || !preAllowed) {
     return (

@@ -14,13 +14,21 @@ import UploadingCompleted from './onboardingModal/UploadingCompleted';
 const OnboardingModal = ({ propsVariables }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const { settingsOnboardPlatform } = useApi();
   const { user } = useUserAuth();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert('error');
-
+  const { triggerAlertWithMessageError } = useAlert('error');
+  const {
+    openCloseModal,
+    openedModal,
+    connectAccount,
+    setBranchDataUploading,
+    connect,
+    setConnectAccount,
+  } = propsVariables;
   const handleSubmitLogin = async (currentPlatform) => {
-    // setIsLoading(true);
+    setIsLoading(true);
     const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
@@ -30,27 +38,31 @@ const OnboardingModal = ({ propsVariables }) => {
           password,
         },
       },
-      currentPlatform.name,
+      currentPlatform,
     );
+    setIsLoading(false);
+    setConnectAccount('active');
 
-    // setIsLoading(false);
     if (res instanceof Error) {
       triggerAlertWithMessageError(
         `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`,
       );
       return;
     }
-
     setUserPlatformData({
       ...userPlatformData,
       platforms: { ...userPlatformData.platforms, [currentPlatform]: res },
     });
-    setEmail('');
-    setPassword('');
-    triggerAlertWithMessageSuccess(`You ${currentPlatform} account has been
-    linked successfully`);
+    setBranchDataUploading(
+      res.vendors.map((obj) => ({
+        branch_name: { title: obj.vendor_name, address: '' },
+        accounts: [email],
+        linked_platforms: [{ platform: connect, status: 'in process' }],
+        branch_status: 'in process',
+        id: obj.vendor_id,
+      })),
+    );
   };
-  const { openCloseModal, openedModal, connectAccount } = propsVariables;
   const connectAccountModalObject = {
     manageAccount: <ManageAccount propsVariables={propsVariables} />,
     manageBranch: <ManageBranch propsVariables={propsVariables} />,
@@ -62,7 +74,15 @@ const OnboardingModal = ({ propsVariables }) => {
     ),
     platform: (
       <ConnectPlatform
-        propsVariables={{ ...propsVariables, email, setEmail, setPassword, password }}
+        propsVariables={{
+          ...propsVariables,
+          email,
+          setEmail,
+          setPassword,
+          password,
+          handleSubmitLogin,
+          isLoading,
+        }}
       />
     ),
     account: <ConnectAccount propsVariables={propsVariables} />,

@@ -76,7 +76,7 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
   };
 
   const renderMetrics = () => {
-    if (metricsbeforePeriod.all[title]) {
+    if (metricsbeforePeriod.all?.[title]) {
       return getTitle() === 'roi'
         ? Math.round(metricsbeforePeriod.all[title] * 100)
         : parseFloat(metricsbeforePeriod.all[title].toFixed(1)).toLocaleString('en-US');

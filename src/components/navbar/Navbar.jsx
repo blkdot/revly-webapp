@@ -21,6 +21,7 @@ import lines from '../../assets/images/lines.png';
 
 import { simpleLink, accordionLink, settingsLink } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);
@@ -50,10 +51,15 @@ const Navbar = () => {
   const handleChange = (panel) => (_, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+  const { userPlatformData } = usePlatform();
   const renderSimpleLink = () =>
     simpleLink.map((s) => (
-      <Navlink title={s.title} path={s.path} key={s.title}>
+      <Navlink
+        className={!userPlatformData.onboarded && s.path !== '/dashboard' ? 'navlink-disabled' : ''}
+        title={s.title}
+        path={s.path}
+        key={s.title}
+      >
         <img className="nav-icon" src={s.src} alt={s.title} />
       </Navlink>
     ));
@@ -63,8 +69,9 @@ const Navbar = () => {
       <AccordionKit
         expanded={!!((expanded === a.id && opened) || (expanded === a.id && open))}
         onChange={handleChange(a.id)}
-        className="navbar-accordion"
+        className={`navbar-accordion ${!userPlatformData.onboarded ? 'disabled' : ''}`}
         key={a.id}
+        disabled={!userPlatformData.onboarded}
       >
         <ButtonKit
           className={`navbar-button-kit ${
@@ -99,8 +106,9 @@ const Navbar = () => {
       <AccordionKit
         expanded={!!((expanded === a.id && opened) || (expanded === a.id && open))}
         onChange={handleChange(a.id)}
-        className="navbar-accordion"
+        className={`navbar-accordion ${!userPlatformData.onboarded ? 'disabled' : ''}`}
         key={a.id}
+        disabled={!userPlatformData.onboarded}
       >
         <ButtonKit
           className={`navbar-button-kit ${

@@ -71,14 +71,15 @@ const Dashboard = () => {
   const [accounts, setAccounts] = useState([]);
   const [connectAccount, setConnectAccount] = useState('account');
   const [connect, setConnect] = useState('');
-
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
     if (connectAccount === 'manageBranch' || connectAccount === 'completed') {
       setConnectAccount('account');
     }
     const body = document.querySelector('body');
+    const navbar = document.querySelector('.Navbar');
     if (!openedModal) {
+      navbar.classList.add('openedModal');
       body.style.overflowY = 'hidden';
       return;
     }
@@ -134,8 +135,10 @@ const Dashboard = () => {
       ) : (
         ''
       )}
-      {(metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading) ||
-      !userPlatformData.onboarded ? (
+      {metricsbeforePeriod.length !== 0 &&
+      metricsafterPeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <Finance
           chainObj={chainObj}
           setTable={setTable}
@@ -150,8 +153,10 @@ const Dashboard = () => {
       ) : (
         <FinanceEmpty />
       )}
-      {(metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading) ||
-      !userPlatformData.onboarded ? (
+      {metricsbeforePeriod.length !== 0 &&
+      metricsafterPeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <Marketing
           setTable={setTable}
           table={table}
@@ -162,8 +167,10 @@ const Dashboard = () => {
       ) : (
         <MarketingEmpty />
       )}
-      {(metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 && !loading) ||
-      !userPlatformData.onboarded ? (
+      {metricsafterPeriod.length !== 0 &&
+      metricsbeforePeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <PaperKit className="dashboard-paper-wrapper">
           <div className="dashboard-links">
             {links.map((title) => (
