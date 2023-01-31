@@ -27,7 +27,7 @@
         * {
           &:not(img) {
             filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
-            contrast(102%);
+              contrast(102%);
           }
         }
       }

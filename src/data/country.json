@@ -1,42 +1,42 @@
 [
-    {
-      "name": "Jordan",
-      "code": "JO"
-    },
-    {
-      "name": "Kuwait",
-      "code": "KW"
-    },
-    {
-      "name": "Lebanon",
-      "code": "LB"
-    },
-    {
-      "name": "Oman",
-      "code": "OM"
-    },
-    {
-      "name": "Qatar",
-      "code": "QA"
-    },
-    {
-      "name": "Saudi Arabia",
-      "code": "SA"
-    },
-    {
-      "name": "United Arab Emirates",
-      "code": "AE"
-    },
-    {
-      "name": "Madagascar",
-      "code": "MG"
-    },
-    {
-      "name": "Maroc",
-      "code": "MA"
-    },
-    {
-      "name": "France",
-      "code": "FR"
-    }
+  {
+    "name": "Jordan",
+    "code": "JO"
+  },
+  {
+    "name": "Kuwait",
+    "code": "KW"
+  },
+  {
+    "name": "Lebanon",
+    "code": "LB"
+  },
+  {
+    "name": "Oman",
+    "code": "OM"
+  },
+  {
+    "name": "Qatar",
+    "code": "QA"
+  },
+  {
+    "name": "Saudi Arabia",
+    "code": "SA"
+  },
+  {
+    "name": "United Arab Emirates",
+    "code": "AE"
+  },
+  {
+    "name": "Madagascar",
+    "code": "MG"
+  },
+  {
+    "name": "Maroc",
+    "code": "MA"
+  },
+  {
+    "name": "France",
+    "code": "FR"
+  }
 ]

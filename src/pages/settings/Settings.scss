@@ -27,7 +27,6 @@
   }
 
   .setting-account__tabs {
-
     // .MuiTabs-indicator {
     //   display: none;
     // }
@@ -47,7 +46,7 @@
       padding: 0px 15px 0px 0px;
       gap: 10px;
       font-weight: 600;
-      transition: .2s;
+      transition: 0.2s;
 
       .icon-block {
         display: flex;
@@ -63,29 +62,27 @@
 
           &.__menu {
             path {
-              fill: $color-table-th
+              fill: $color-table-th;
             }
           }
         }
       }
 
       &.__active {
-        color: #906BFF;
+        color: #906bff;
 
         .icon-block {
-
           .__icon {
             color: $color-main;
 
             &.__menu {
               path {
-                fill: $color-main
+                fill: $color-main;
               }
             }
           }
         }
       }
-
     }
   }
 }

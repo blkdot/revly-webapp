@@ -5,24 +5,24 @@
   padding-left: 25px;
 
   &::before {
-    content: "";
+    content: '';
     border-radius: 50%;
     width: 8px;
     height: 8px;
     position: absolute;
-    background: #906BFF;
+    background: #906bff;
     left: 4.3px;
     top: 4px;
     z-index: 10;
   }
 
   &::after {
-    content: "";
+    content: '';
     border-radius: 50%;
     width: 16px;
     height: 16px;
     position: absolute;
-    background: #D5C8FA;
+    background: #d5c8fa;
     left: 0;
     top: 0;
   }
@@ -35,7 +35,7 @@
   margin-right: 10px;
   width: 95%;
 
-  >p {
+  > p {
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline-block;
@@ -57,12 +57,11 @@
     right: 0px;
   }
 
-  >.restaurant-dropdown {
+  > .restaurant-dropdown {
     overflow: hidden;
   }
 
-
-  >div {
+  > div {
     box-shadow: none;
     border-radius: 30px;
     margin: 0;
@@ -80,26 +79,21 @@
       border: none;
     }
 
-
-
-    >div {
+    > div {
       width: 100%;
       height: 40px;
 
-      >div {
+      > div {
         padding: 0 !important;
-        color: #212B36;
+        color: #212b36;
         width: 100% !important;
       }
     }
-
-
   }
 
   &.old {
-    >div {
-
-      >div {
+    > div {
+      > div {
         padding: 0 !important;
       }
     }
@@ -118,20 +112,19 @@
     width: 100% !important;
 
     .checkbox-accordion {
-      >div {
+      > div {
         width: 100% !important;
       }
     }
 
-    >div:nth-of-type(1) {
+    > div:nth-of-type(1) {
       width: 100%;
 
-      >div {
+      > div {
         padding-left: 10px;
         display: flex;
         grid-gap: 10px;
         align-items: center;
-
       }
     }
   }
@@ -148,7 +141,7 @@
   }
 
   &.Mui-focused.Mui-focused svg {
-    fill: $color-border
+    fill: $color-border;
   }
 }
 
@@ -170,7 +163,7 @@
   box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
   border: 1px solid rgba(145, 158, 171, 0.32);
 
-  >ul {
+  > ul {
     border-radius: 12px;
     background-color: #fff;
 
@@ -179,7 +172,7 @@
       top: -7px;
       background-color: #fff;
       right: 15px;
-      content: "";
+      content: '';
       position: absolute;
       width: 20px;
       height: 20px;
@@ -192,16 +185,16 @@
       top: 0px;
       background-color: #fff;
       right: 10px;
-      content: "";
+      content: '';
       position: absolute;
       width: 40px;
       height: 20px;
     }
 
-    >li {
+    > li {
       background-color: #fff;
 
-      >div>span {
+      > div > span {
         overflow: hidden;
         text-overflow: ellipsis;
       }
@@ -213,7 +206,7 @@
   width: 70%;
   overflow: hidden;
 
-  >div {
+  > div {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -230,7 +223,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 12px !important;
-  transition: .3s;
+  transition: 0.3s;
   overflow-y: auto;
   max-height: 500px;
   scroll-behavior: smooth;
@@ -255,7 +248,7 @@
       white-space: nowrap;
     }
 
-    >li {
+    > li {
       padding: 0;
 
       .only-button {
@@ -292,7 +285,7 @@
     z-index: 100;
     padding-bottom: 10px;
 
-    >p {
+    > p {
       font-size: 12px;
       font-weight: 600;
     }
@@ -309,7 +302,7 @@
   }
 
   &::-webkit-scrollbar-track {
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
     border-radius: 31px;
   }
 
@@ -325,7 +318,7 @@
     margin-left: 10px;
     opacity: 0;
     visibility: hidden;
-    transition: .3s;
+    transition: 0.3s;
 
     button {
       font-size: 10px;
@@ -338,7 +331,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    &.disabled{
+    &.disabled {
       pointer-events: none;
     }
     &:hover {
@@ -356,25 +349,23 @@
       cursor: pointer;
     }
 
-
-
     &::before {
       content: none;
       position: absolute;
       height: calc(39px * var(--l));
       top: 20px;
-      background-color: #F4F6F8;
+      background-color: #f4f6f8;
       width: 3px;
-      transition: .3s;
+      transition: 0.3s;
       left: 11px;
       z-index: -1;
     }
 
-    >div {
-      >img {
+    > div {
+      > img {
         width: 24px;
         height: 24px;
-        transition: .3s;
+        transition: 0.3s;
       }
 
       display: flex;
@@ -385,8 +376,8 @@
       width: 74%;
     }
 
-    >svg:last-child {
-      transition: .4s;
+    > svg:last-child {
+      transition: 0.4s;
       cursor: pointer;
     }
 
@@ -395,9 +386,9 @@
         content: '';
       }
 
-      >svg:last-child {
+      > svg:last-child {
         transform: rotate(180deg);
-        transition: .4s;
+        transition: 0.4s;
       }
     }
   }
@@ -410,14 +401,14 @@
   .accordion-dropdown {
     opacity: 0;
     visibility: hidden;
-    transition: .3s;
+    transition: 0.3s;
     height: 0;
     display: none;
-    &.Mui-disabled.Mui-disabled{
+    &.Mui-disabled.Mui-disabled {
       pointer-events: none;
     }
     &.listing {
-      >div {
+      > div {
         margin: 0;
 
         &::before,
@@ -451,7 +442,7 @@
       }
     }
 
-    >div {
+    > div {
       width: 95%;
       margin-left: 29px;
       position: relative;
@@ -468,7 +459,7 @@
         height: 3px;
         top: 18px;
         width: 15px;
-        background-color: #F4F6F8;
+        background-color: #f4f6f8;
         pointer-events: none;
       }
 
@@ -481,9 +472,8 @@
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background-color: #F4F6F8;
+        background-color: #f4f6f8;
         pointer-events: none;
-
       }
     }
 
@@ -497,7 +487,7 @@
     }
 
     &.vendor {
-      >label {
+      > label {
         margin-left: 40px;
 
         &::before {
@@ -513,7 +503,7 @@
 }
 
 .checkbox-accordion-wrapper {
-  transition: .3s;
+  transition: 0.3s;
   position: relative;
 
   &.active {
@@ -531,7 +521,7 @@
   visibility: hidden;
   z-index: 50;
   cursor: default !important;
-  transition: .3s;
+  transition: 0.3s;
 
   &.active {
     opacity: 1;
@@ -553,17 +543,17 @@
   }
 }
 
-@media(max-width: 1000px) {
+@media (max-width: 1000px) {
   .restaurant-dropdown_wrapper {
     width: 55%;
   }
 }
 
-@media(max-width: 778px) {
+@media (max-width: 778px) {
   .restaurant-dropdown_wrapper {
     width: 100%;
 
-    >div {
+    > div {
       width: 100% !important;
     }
   }

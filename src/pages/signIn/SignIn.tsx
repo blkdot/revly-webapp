@@ -1,0 +1,145 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import SigninForm from '../../components/forms/signinForm/SigninForm';
+import { useUserAuth } from '../../contexts/AuthContext';
+import { firebaseCodeError } from '../../data/firebaseCodeError';
+import { useAlert } from '../../hooks/useAlert';
+import useVendors from '../../hooks/useVendors';
+import './SignIn.scss';
+
+const SignIn = () => {
+  const [value, setValue] = useState({ email: '', password: '', remembered: true });
+  const [processing, setProcessing] = useState(false);
+  const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
+  const [errorData, setErrorData] = useState<any>({ email: false, password: false });
+  const [params] = useSearchParams();
+  const { setVendors } = useVendors(true);
+  const { setVendors: setVendorsReq } = useVendors(true);
+
+  const oobCode = params.get('oobCode');
+  const mode = params.get('mode');
+
+  // clear the localStorage
+  useEffect(() => {
+    const defaultState = {
+      vendorsSelected: [],
+      vendorsObj: {},
+      vendorsArr: [],
+      display: {},
+      chainObj: {},
+    };
+    localStorage.clear();
+    setVendorsReq(defaultState);
+    setVendors(defaultState);
+  }, []);
+
+  // clear the caches
+  caches.keys().then((names) => {
+    names.forEach((n) => {
+      caches.delete(n);
+    });
+  });
+
+  const navigate = useNavigate();
+
+  const { signIn, googleSignIn, user, logOut, verifyCodeEmail } = useUserAuth();
+
+  const verifyEmail = async (code) => {
+    try {
+      await verifyCodeEmail(code);
+      triggerAlertWithMessageSuccess('Email verified , you can sign in now');
+      navigate('/');
+    } catch (err) {
+      navigate('/');
+    }
+  };
+
+  useEffect(() => {
+    if (oobCode) {
+      logOut();
+      if (mode === 'resetPassword') {
+        navigate(`/reset-password?oobCode=${oobCode}`);
+      } else if (mode === 'verifyEmail') {
+        verifyEmail(oobCode);
+      }
+    } else if (user) {
+      navigate('/dashboard');
+    }
+  }, [oobCode, mode]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setProcessing(true);
+    try {
+      const res = await signIn(value.email, value.password, value.remembered);
+
+      if (!res.user.emailVerified) {
+        await logOut();
+        setProcessing(false);
+        throw new Error(
+          'Email not verified, please check your email (include spam) for verification'
+        );
+      }
+
+      navigate('/dashboard');
+    } catch (e) {
+      const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
+
+      if (firebaseCodeError[e.code] && firebaseCodeError[e.code].field) {
+        setErrorData({ [firebaseCodeError[e.code].field]: true });
+      }
+
+      triggerAlertWithMessageError(message);
+      setProcessing(false);
+    }
+  };
+
+  const handleGoogleSubmit = async (event) => {
+    event.preventDefault();
+    setProcessing(true);
+    try {
+      await googleSignIn();
+      navigate('/dashboard');
+    } catch (e) {
+      const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
+
+      if (firebaseCodeError[e.code].field) {
+        setErrorData({ [firebaseCodeError[e.code].field]: true });
+      }
+
+      triggerAlertWithMessageError(message);
+      setProcessing(false);
+    }
+  };
+
+  const handleChange = (k) => (v) => {
+    setErrorData({ ...errorData, [k]: false });
+    setValue({ ...value, [k]: v });
+  };
+
+  const handleChangeRemembered = (v) => {
+    setValue({ ...value, remembered: v });
+  };
+
+  const onInputBlur = (field) => {
+    if (!value[field]) {
+      setErrorData({ ...errorData, [field]: true });
+    }
+  };
+
+  return (
+    <SigninForm
+      onChangeEmail={handleChange('email')}
+      onChangePassword={handleChange('password')}
+      onChangeRemebered={handleChangeRemembered}
+      errorEmail={errorData.email}
+      onBlur={onInputBlur}
+      errorPassword={errorData.password}
+      onSubmit={handleSubmit}
+      onGoogleSubmit={handleGoogleSubmit}
+      disabled={!value.email || !value.password || processing}
+    />
+  );
+};
+
+export default SignIn;

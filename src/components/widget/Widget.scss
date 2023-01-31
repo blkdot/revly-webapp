@@ -27,7 +27,7 @@
       background-color: $color-icon !important;
     }
 
-    >svg {
+    > svg {
       width: 70%;
       height: 70%;
       object-fit: cover;
@@ -44,7 +44,6 @@
   }
 
   .card-icon {
-
     svg,
     img {
       filter: invert(58%) sepia(0%) saturate(671%) hue-rotate(147deg) brightness(87%) contrast(84%);
@@ -66,7 +65,8 @@
     }
 
     img {
-      filter: invert(13%) sepia(33%) saturate(5910%) hue-rotate(257deg) brightness(96%) contrast(91%);
+      filter: invert(13%) sepia(33%) saturate(5910%) hue-rotate(257deg) brightness(96%)
+        contrast(91%);
     }
 
     .card-week {
@@ -81,16 +81,11 @@
     .card-week {
       color: #4d2681 !important;
     }
-
   }
 
   .card-typography {
     font-weight: 600;
   }
-
-
-
-
 
   .card-procent {
     font-weight: 600;

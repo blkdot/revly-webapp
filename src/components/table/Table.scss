@@ -39,8 +39,7 @@
 }
 
 .table-row.table-row {
-
-  >th,
+  > th,
   td {
     border: none;
     font-weight: 600;
@@ -48,7 +47,7 @@
     font-size: 13px;
     text-transform: capitalize;
     position: relative;
-    >span{
+    > span {
       padding-left: 20px;
     }
   }
@@ -56,7 +55,7 @@
 
 .table-head {
   background: rgb(244, 246, 248);
-  th{
+  th {
     text-transform: capitalize;
   }
 }
@@ -74,8 +73,7 @@
 }
 
 .table-total.table-total {
-
-  >th,
+  > th,
   td {
     font-size: 15px;
   }
@@ -99,13 +97,13 @@
   }
 }
 
-@media(max-width: 1000px) {
+@media (max-width: 1000px) {
   .table.table {
     width: 150%;
   }
 }
 
-@media(max-width: 800px) {
+@media (max-width: 800px) {
   .table.table {
     width: 170%;
   }

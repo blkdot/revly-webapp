@@ -1,4 +1,4 @@
-@use "library";
+@use 'library';
 
 * {
   margin: 0;
@@ -76,16 +76,15 @@ h2 {
   flex-wrap: wrap;
 }
 
-@media(max-width: 1260px) {
+@media (max-width: 1260px) {
   .top-inputs {
     justify-content: flex-start;
   }
 }
 
-@media(max-width: 900px) {
+@media (max-width: 900px) {
   .user-page {
-
-    >.opened.opened~div {
+    > .opened.opened ~ div {
       width: calc(100% - 200px);
 
       .delete-overlay {
@@ -93,6 +92,5 @@ h2 {
         left: 200px;
       }
     }
-
   }
 }
