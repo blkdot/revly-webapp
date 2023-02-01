@@ -7,7 +7,7 @@ import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import OutlinedInputKit from '../../kits/outlinedInput/OutlinedInputKit';
 import SelectKit from '../../kits/select/SelectKit';
 import './CompetitionDropdown.scss';
 
@@ -97,7 +97,7 @@ const CompetitionDropdown = (props: any) => {
           id='demo-multiple-checkbox'
           value={select === undefined ? '' : select}
           onChange={onChange || handleChange}
-          input={<OutlindeInputKit label={title} />}
+          input={<OutlinedInputKit label={title} />}
           renderValue={(selected) =>
             renderValue ? (
               renderValue(selected)

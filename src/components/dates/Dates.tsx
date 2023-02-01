@@ -30,7 +30,7 @@ import useDate from '../../hooks/useDate';
 import ButtonKit from '../../kits/button/ButtonKit';
 import DatePickerKit from '../../kits/datePicker/DatePickerKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderkit';
+import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
 import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
 import PaperKit from '../../kits/paper/PaperKit';

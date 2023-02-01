@@ -3,7 +3,7 @@ import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import OutlinedInputKit from '../../kits/outlinedInput/OutlinedInputKit';
 import SelectKit from '../../kits/select/SelectKit';
 
 const ITEM_HEIGHT = 48;
@@ -47,7 +47,7 @@ const BranchMarketingDropdown = ({
           id='demo-multiple-checkbox'
           value={select === undefined ? '' : select}
           onChange={handleChange}
-          input={<OutlindeInputKit label={title} />}
+          input={<OutlinedInputKit label={title} />}
           renderValue={(selected) => selected}
           MenuProps={MenuProps}
         >

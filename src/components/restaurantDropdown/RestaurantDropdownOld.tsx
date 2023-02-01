@@ -10,7 +10,7 @@ import ButtonKit from '../../kits/button/ButtonKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import OutlinedInputKit from '../../kits/outlinedInput/OutlinedInputKit';
 import SelectKit from '../../kits/select/SelectKit';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
@@ -226,7 +226,7 @@ const RestaurantDropdownOld = ({
           id='demo-multiple-checkbox-vendors-old'
           multiple
           value={vendorsSelected}
-          input={<OutlindeInputKit />}
+          input={<OutlinedInputKit />}
           renderValue={(selected) => (
             <div style={{ display: 'flex', alignItems: 'center', width: '90%', gridGap: '10px' }}>
               <img className='select_icon' src={selectIcon} alt='Select Icon' />

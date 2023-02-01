@@ -2,7 +2,7 @@ import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
 import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import OutlinedInputKit from '../../kits/outlinedInput/OutlinedInputKit';
 import RadioKit from '../../kits/radio/RadioKit';
 import SelectKit from '../../kits/select/SelectKit';
 import RestaurantCheckboxAccordion from '../restaurantDropdown/RestaurantCheckboxAccardion';
@@ -140,7 +140,7 @@ const MarketingCheckmarksDropdown = ({
           multiple={type !== 'vendor'}
           value={getValue()}
           onChange={handleChange}
-          input={<OutlindeInputKit label={title || 'Customised Days'} />}
+          input={<OutlinedInputKit label={title || 'Customised Days'} />}
           renderValue={(selected) => getRenderValue(selected)}
           MenuProps={MenuProps}
         >

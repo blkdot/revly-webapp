@@ -8,7 +8,7 @@ import TableCellKit from '../../kits/tablecell/TableCellKit';
 import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
 import TableHeadKit from '../../kits/tablehead/TableHeadKit';
 import TableRowKit from '../../kits/tablerow/TableRowKit';
-import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLableKit';
+import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLabelKit';
 import './Table.scss';
 
 const headCells = [

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
 import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
+import OutlinedInputKit from '../../kits/outlinedInput/OutlinedInputKit';
 import SelectKit from '../../kits/select/SelectKit';
 import { minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
 
@@ -58,7 +58,7 @@ const TimePickerDropdown = (props: any) => {
       <SelectKit
         value={getHours(value) || 0}
         onChange={setTimes}
-        input={<OutlindeInputKit />}
+        input={<OutlinedInputKit />}
         inputProps={{ 'aria-label': 'Without label' }}
         style={{ width: '100%' }}
       >
