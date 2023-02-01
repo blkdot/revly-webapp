@@ -1,5 +1,4 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable no-unused-vars */ import { useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import useCost from '../../../hooks/useCost';
 import useVendors from '../../../hooks/useVendors';
@@ -8,47 +7,57 @@ import './Cost.scss';
 import DropdownSnackbar from './DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
+type TInvoice = {
+  id: string
+  restaurant: string
+  cost: string
+};
+
 const Cost = () => {
   const queryClient = useQueryClient();
-  const [invoice, setInvoice] = useState([]);
+  const [invoice, setInvoice] = useState<TInvoice[]>([]);
   const [isUpdate, setIsUpdate] = useState(false);
-  const { vendors } = useVendors(undefined);
-  const { vendorsObj } = vendors;
-
+  const { vendors } = useVendors(false);
+  
+  const { vendorsObj, vendorsArr } = vendors;
   const { load, save } = useCost(vendorsObj);
 
   const { isLoading, isError } = useQuery(['loadCost', { vendors }], load, {
     onSuccess: (data) => {
-      const newInvoice = [];
+      const newInvoice: TInvoice[] = [];
       Object.keys(data).forEach((platform) => {
         Object.keys(data[platform]).forEach((id) => {
           if (data[platform][id]) {
-            const element = vendorsObj[platform].find((vobj) => vobj.vendor_id == id);
+            const element = vendorsObj[platform].find((vobj) => String(vobj.vendor_id) === String(id));
 
-            if (element) {
-              const value = data[platform][id].cost;
+            if (!element) return;
 
-              const percent = parseFloat(value) * 100;
+            const currentCost = data[platform][id]?.cost || null;
 
-              const res = {
-                id,
-                restaurant: element.data.vendor_name,
-                cost: `${percent}%`,
-              };
+            if (!currentCost) return;
+  
+            const percent = parseFloat(currentCost) * 100;
 
-              newInvoice.push(res);
-            }
+            const res = {
+              id,
+              restaurant: element.data.vendor_name,
+              cost: `${percent}%`,
+            };
+
+            newInvoice.push(res);
           }
         });
       });
       setInvoice(newInvoice);
     },
+    enabled: Object.keys(vendorsObj).length > 0,
+    staleTime: Infinity
   });
 
   const { isLoading: isLoadingMutation, mutateAsync } = useMutation({
     mutationFn: save,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loadCost'] });
+      queryClient.invalidateQueries({ queryKey: ['loadCost', { vendors }] });
     },
   });
 
@@ -59,9 +68,16 @@ const Cost = () => {
     await mutateAsync({ cost: parseFloat(cost), vendors: v });
   };
 
-  const deleteCost = (index) => () => {
+  const deleteCost = (index, vendorId) => async () => {
     const clonedInvoice = [...invoice];
     clonedInvoice.splice(index, 1);
+    
+    const element = vendorsArr.find((vobj) => String(vobj.vendor_id) === String(vendorId));
+    
+    const { platform, ...rest } = element
+    
+    await mutateAsync({ cost: null, vendors: { [platform]: [{ ...rest }] } });
+
     setInvoice(clonedInvoice);
   };
 
@@ -72,7 +88,7 @@ const Cost = () => {
     return invoice?.map((obj, index) => (
       <Invoice
         key={obj.id}
-        onDelete={deleteCost(index)}
+        onDelete={deleteCost(index, obj.id)}
         restaurant={obj.restaurant}
         cost={obj.cost}
       />

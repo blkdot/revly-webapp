@@ -5,10 +5,48 @@ import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
 
-const useVendors = (isSign) => {
+export type TVendorsSelected = string[];
+type TVendorsObj = {
+  [x: string]: {
+    chain_id: string;
+    vendor_id: string;
+    meta: {
+      prefix_vendor_id: string;
+      drn_id?: string;
+    };
+    data: {
+      chain_name: string;
+      vendor_name: string;
+    };
+  }[];
+};
+
+export type TVendorsArr = {
+  chain_id: string;
+  vendor_id: string;
+  meta: {
+    prefix_vendor_id: string;
+    drn_id?: string;
+  };
+  data: {
+    chain_name: string;
+    vendor_name: string;
+  };
+  platform: string;
+}[];
+
+export type TVendors = {
+  vendorsSelected: TVendorsSelected;
+  vendorsObj: TVendorsObj;
+  vendorsArr: TVendorsArr;
+  display: any;
+  chainObj: any;
+};
+
+const useVendors = (isSign = false) => {
   const { getVendors } = useApi();
 
-  const [vendors, setVendors] = useState({
+  const [vendors, setVendors] = useState<TVendors>({
     vendorsSelected: [],
     vendorsObj: {},
     vendorsArr: [],
