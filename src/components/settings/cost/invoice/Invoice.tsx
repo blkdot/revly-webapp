@@ -1,4 +1,4 @@
-import CostIcon from '../../../../assets/icons/CostIcon';
+import { CostIcon } from 'assets/icons';
 import logo from '../../../../assets/images/small-logo.png';
 import ButtonKit from '../../../../kits/button/ButtonKit';
 

@@ -1,9 +1,8 @@
+import { Layers, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import Layers from '../../assets/icons/Layers';
-import Vector from '../../assets/icons/Vector';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';

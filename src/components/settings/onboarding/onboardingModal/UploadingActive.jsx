@@ -1,7 +1,6 @@
-import React from 'react';
+import { Arrow } from 'assets/icons';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import ButtonKit from '../../../../kits/button/ButtonKit';
-import Arrow from '../../../../assets/icons/Arrow';
 
 const UploadingActive = ({ propsVariables }) => {
   const {

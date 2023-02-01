@@ -1,7 +1,6 @@
 import { Description, Password, Person, Send } from '@mui/icons-material';
+import { CostIcon, MenuIcon } from 'assets/icons';
 import { useState } from 'react';
-import CostIcon from '../../assets/icons/CostIcon';
-import MenuIcon from '../../assets/icons/MenuIcon';
 import Billing from '../../components/settings/billing/Billing';
 import ChangePassword from '../../components/settings/changePassword/ChangePassword';
 import Cost from '../../components/settings/cost/Cost';

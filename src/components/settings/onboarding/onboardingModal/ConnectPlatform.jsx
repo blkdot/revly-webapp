@@ -1,10 +1,9 @@
-import React from 'react';
-import ButtonKit from '../../../../kits/button/ButtonKit';
+import { Arrow } from 'assets/icons';
 import CloseIcon from '../../../../assets/images/ic_close.png';
-import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
-import Arrow from '../../../../assets/icons/Arrow';
-import LodaingButtonKit from '../../../../kits/loadingButton/LoadingButtonKit';
 import { platformList } from '../../../../data/platformList';
+import ButtonKit from '../../../../kits/button/ButtonKit';
+import LodaingButtonKit from '../../../../kits/loadingButton/LoadingButtonKit';
+import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 
 const ConnectPlatform = ({ propsVariables }) => {
   const {
