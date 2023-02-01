@@ -50,7 +50,7 @@ export { default as TableCellKit } from './tablecell/TableCellKit';
 export { default as TableContainerKit } from './tablecontainer/TableContainerKit';
 export { default as TableHeadKit } from './tablehead/TableHeadKit';
 export { default as TableRowKit } from './tablerow/TableRowKit';
-export { default as TableSortLableKit } from './tablesortlabel/TableSortLabelKit';
+export { default as TableSortLabelKit } from './tablesortlabel/TableSortLabelKit';
 export { default as TabsKit } from './tabs/TabsKit';
 export { default as TextfieldKit } from './textfield/TextfieldKit';
 export { default as TimePickerKit } from './timePickerKit/TimePickerKit';

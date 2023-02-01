@@ -4,19 +4,21 @@
 /* eslint-disable import/no-extraneous-dependencies */ import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import {
+  BoxKit,
+  PaperKit,
+  SkeletonKit,
+  TableBodyKit,
+  TableCellKit,
+  TableContainerKit,
+  TableHeadKit,
+  TableKit,
+  TableRowKit,
+} from 'kits';
 import deliveroo from '../../assets/images/deliveroo.png';
 import talabat from '../../assets/images/talabat.png';
 import useDate from '../../hooks/useDate';
 import { usePlatform } from '../../hooks/usePlatform';
-import BoxKit from '../../kits/box/BoxKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import TableKit from '../../kits/table/TableKit';
-import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-import TableCellKit from '../../kits/tablecell/TableCellKit';
-import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
-import TableHeadKit from '../../kits/tablehead/TableHeadKit';
-import TableRowKit from '../../kits/tablerow/TableRowKit';
 import './Table.scss';
 
 const EnhancedTableHead = ({ headCells }) => (

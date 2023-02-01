@@ -1,4 +1,5 @@
 import { pascalCase } from 'change-case';
+import { ButtonKit, ButtonLoadingKit, ModalKit, SpinnerKit } from 'kits';
 import { CSSProperties, useEffect, useState } from 'react';
 import { IoMdHelp } from 'react-icons/io';
 import { MdLogout } from 'react-icons/md';
@@ -14,10 +15,6 @@ import { platformList } from '../../data/platformList';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
-import ButtonKit from '../../kits/button/ButtonKit';
-import ButtonLoadingKit from '../../kits/button/ButtonLoadingKit';
-import ModalKit from '../../kits/modal/ModalKit';
-import SpinnerKit from '../../kits/spinner/SpinnerKit';
 import './OnBoarding.scss';
 
 const START_KEY = 'start';

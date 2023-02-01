@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
+import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import competitorIcon from '../../assets/images/ic_competitor.png';
@@ -16,11 +17,6 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 

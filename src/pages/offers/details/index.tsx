@@ -8,6 +8,7 @@
   Warning,
 } from 'assets/icons';
 import { format } from 'date-fns';
+import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { getPlanningOfferDetails } from '../../../api/userApi';
@@ -17,9 +18,6 @@ import { platformObject } from '../../../data/platformList';
 import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';
 import useVendors from '../../../hooks/useVendors';
-import PaperKit from '../../../kits/paper/PaperKit';
-import SkeletonKit from '../../../kits/skeleton/SkeletonKit';
-import SpinnerKit from '../../../kits/spinner/SpinnerKit';
 import MenuItem from './MenuItem';
 import './OfferDetails.scss';
 

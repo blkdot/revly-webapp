@@ -1,5 +1,14 @@
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import {
+  ButtonKit,
+  ListItemTextKit,
+  MenuItemKit,
+  PaperKit,
+  SpinnerKit,
+  TextfieldKit,
+  TypographyKit,
+} from 'kits';
 import { useEffect, useState } from 'react';
 import { sendMail } from '../../api/competitionApi';
 import { settingsLoad } from '../../api/settingsApi';
@@ -13,13 +22,6 @@ import loadingImage from '../../assets/images/loading-image.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
-import ButtonKit from '../../kits/button/ButtonKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import SpinnerKit from '../../kits/spinner/SpinnerKit';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import './Competitor.scss';
 

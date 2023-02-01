@@ -1,4 +1,5 @@
 import { useAtom } from 'jotai';
+import { CheckboxKit, ListItemTextKit, MenuItemKit } from 'kits';
 import { useEffect, useState } from 'react';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
@@ -9,9 +10,6 @@ import { useUserAuth } from '../../../contexts/AuthContext';
 import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';
-import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
-import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';

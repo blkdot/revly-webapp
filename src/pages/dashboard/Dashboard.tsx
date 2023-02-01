@@ -1,4 +1,5 @@
 import { useAtom } from 'jotai';
+import { PaperKit } from 'kits';
 import { useState } from 'react';
 import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
@@ -16,7 +17,6 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 import Table from '../../components/table/Table';
 import TableEmpty from '../../components/table/TableEmpty';
 import useMetrics from '../../hooks/useMetrics';
-import PaperKit from '../../kits/paper/PaperKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Dashboard.scss';
 

@@ -1,5 +1,6 @@
 import { Description, Password, Person, Send } from '@mui/icons-material';
 import { CostIcon, MenuIcon } from 'assets/icons';
+import { BoxKit, TabKit, TabsKit, TypographyKit } from 'kits';
 import { useState } from 'react';
 import Billing from '../../components/settings/billing/Billing';
 import ChangePassword from '../../components/settings/changePassword/ChangePassword';
@@ -7,10 +8,6 @@ import Cost from '../../components/settings/cost/Cost';
 import General from '../../components/settings/general/General';
 import Menu from '../../components/settings/menu/Menu';
 import NewSettingsOnboarding from '../../components/settings/onboarding/NewSettingsOnboarding';
-import BoxKit from '../../kits/box/BoxKit';
-import TabKit from '../../kits/tab/TabKit';
-import TabsKit from '../../kits/tabs/TabsKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import './Settings.scss';
 
 const Settings = () => {

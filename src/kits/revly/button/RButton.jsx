@@ -6,8 +6,8 @@ const RButton = (props) => {
   const { onclick, children, ...rest } = props;
 
   return (
-    <div className="revly-btn">
-      <button type="button" onClick={onclick} {...rest}>
+    <div className='revly-btn'>
+      <button type='button' onClick={onclick} {...rest}>
         {children}
       </button>
     </div>

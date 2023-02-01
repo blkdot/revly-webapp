@@ -1,10 +1,12 @@
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlinedInputKit from '../../kits/outlinedInput/OutlinedInputKit';
-import SelectKit from '../../kits/select/SelectKit';
+import {
+  CheckboxKit,
+  FormControlKit,
+  InputLabelKit,
+  ListItemTextKit,
+  MenuItemKit,
+  OutlinedInputKit,
+  SelectKit,
+} from 'kits';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,7 +35,7 @@ const BranchMarketingDropdown = ({
 
   return (
     <div className={`restaurant-dropdown_wrapper ${className}`}>
-      <FormcontrolKit sx={{ m: 1, width: 250 }}>
+      <FormControlKit sx={{ m: 1, width: 250 }}>
         <InputLabelKit
           className='restaurant-dropdown-input competition-dropdown'
           id='demo-multiple-checkbox-label'
@@ -62,7 +64,7 @@ const BranchMarketingDropdown = ({
             </MenuItemKit>
           ))}
         </SelectKit>
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

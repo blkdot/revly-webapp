@@ -1,5 +1,4 @@
-import React from 'react';
-import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
+import FormControlKit from '../../../kits/formcontrol/FormcontrolKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import SelectKit from '../../../kits/select/SelectKit';
 
@@ -9,7 +8,7 @@ const OnboardingDropdown = ({ state, setState, rows }) => {
   };
 
   return (
-    <FormcontrolKit
+    <FormControlKit
       className={`onboarding-dropdown ${rows.length === 0 ? 'onboarding-dropdown_skeleton' : ''}`}
       sx={{ m: 1, minWidth: 120 }}
     >
@@ -26,7 +25,7 @@ const OnboardingDropdown = ({ state, setState, rows }) => {
           </MenuItemKit>
         ))}
       </SelectKit>
-    </FormcontrolKit>
+    </FormControlKit>
   );
 };
 

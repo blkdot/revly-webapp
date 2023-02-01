@@ -30,13 +30,13 @@ const OnboardingModal = ({ propsVariables }) => {
           password,
         },
       },
-      currentPlatform.name,
+      currentPlatform.name
     );
 
     // setIsLoading(false);
     if (res instanceof Error) {
       triggerAlertWithMessageError(
-        `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`,
+        `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
       );
       return;
     }
@@ -70,7 +70,7 @@ const OnboardingModal = ({ propsVariables }) => {
   return (
     <div
       tabIndex={-1}
-      role="presentation"
+      role='presentation'
       className={`onboarding-modal_overlay ${openedModal ? 'active' : ''}`}
       onClick={openCloseModal}
     >

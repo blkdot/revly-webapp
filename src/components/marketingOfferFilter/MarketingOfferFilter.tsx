@@ -1,10 +1,6 @@
 import { Basket, Layers, Switch, Tag, UserGroup } from 'assets/icons';
+import { ButtonKit, CheckboxKit, PaperKit, TextfieldKit, TypographyKit } from 'kits';
 import CloseIcon from '../../assets/images/ic_close.png';
-import ButtonKit from '../../kits/button/ButtonKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 
 const MarketingOfferFilter = (props: any) => {
   const {

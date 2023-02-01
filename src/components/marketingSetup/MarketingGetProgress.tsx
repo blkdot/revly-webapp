@@ -1,6 +1,21 @@
 import InputAdornment from '@mui/material/InputAdornment';
 import { addDays, addMinutes, format, getHours, isAfter, isSameDay } from 'date-fns';
 import { useAtom } from 'jotai';
+import {
+  BoxKit,
+  ButtonKit,
+  CheckboxKit,
+  DatePickerDayKit,
+  FormControlKit,
+  FormControlLabelKit,
+  ListItemTextKit,
+  MenuItemKit,
+  RadioGroupKit,
+  RadioKit,
+  TextfieldKit,
+  TooltipKit,
+  TypographyKit,
+} from 'kits';
 import { useEffect, useState } from 'react';
 import ArrowIcon from '../../assets/images/arrow.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
@@ -16,19 +31,6 @@ import TimerIcon from '../../assets/images/ic_timer.png';
 import trash from '../../assets/images/ic_trash.png';
 import plus from '../../assets/images/plus.png';
 import { platformList, platformObject } from '../../data/platformList';
-import BoxKit from '../../kits/box/BoxKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import DatePickerDayKit from '../../kits/datePicker/DatePickerDayKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import RadioKit from '../../kits/radio/RadioKit';
-import RadioGroupKit from '../../kits/radioGroup/RadioGroupKit';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TooltipKit from '../../kits/toolTip/TooltipKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
@@ -858,7 +860,7 @@ const GetProgress = ({ progressData }) => {
                 </div>
               </div>
             </div>
-            <FormcontrolKit className='category-list'>
+            <FormControlKit className='category-list'>
               {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
                 (obj, index) => (
                   // TODO: FIX IT
@@ -884,7 +886,7 @@ const GetProgress = ({ progressData }) => {
                   </div>
                 )
               )}
-            </FormcontrolKit>
+            </FormControlKit>
           </BoxKit>
         </div>
       );

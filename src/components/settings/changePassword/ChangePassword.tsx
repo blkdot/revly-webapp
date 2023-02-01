@@ -1,10 +1,9 @@
 import { updatePassword } from 'firebase/auth';
+import { ButtonLoadingKit, TextfieldKit } from 'kits';
 import { useState } from 'react';
 import { useUserAuth } from '../../../contexts/AuthContext';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
 import { useAlert } from '../../../hooks/useAlert';
-import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 
 const defaultValues = {
   password: '',

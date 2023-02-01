@@ -8,11 +8,10 @@ import {
   subMonths,
   subWeeks,
 } from 'date-fns';
+import { ButtonKit, PaperKit } from 'kits';
 import React from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
 import './Dates.scss';
 
 const date = new Date();

@@ -2,6 +2,15 @@ import { Tooltip } from '@mui/material';
 import { addDays, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
+import {
+  BoxKit,
+  ButtonKit,
+  ContainerKit,
+  PaperKit,
+  SkeletonKit,
+  SpinnerKit,
+  TypographyKit,
+} from 'kits';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import React, { useEffect, useState } from 'react';
@@ -12,13 +21,6 @@ import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
-import BoxKit from '../../kits/box/BoxKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import ContainerKit from '../../kits/container/ContainerKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import SpinnerKit from '../../kits/spinner/SpinnerKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { maxHour, minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';

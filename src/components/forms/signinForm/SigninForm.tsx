@@ -1,14 +1,16 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+  ButtonKit,
+  CheckboxKit,
+  DividerKit,
+  FormControlLabelKit,
+  FormGroupKit,
+  TextfieldKit,
+  TypographyKit,
+} from 'kits';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
-import DividerKit from '../../../kits/divider/DividerKit';
-import FormControlLabelKit from '../../../kits/formControlLabel/FormControlLabel';
-import FormGroupKit from '../../../kits/formGroup/FormGroupKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
-import TypographyKit from '../../../kits/typography/TypographyKit';
 import './SigninForm.scss';
 
 const SigninForm = (props: any) => {

@@ -1,14 +1,16 @@
+import {
+  BoxKit,
+  PaperKit,
+  SkeletonKit,
+  TableBodyKit,
+  TableCellKit,
+  TableContainerKit,
+  TableHeadKit,
+  TableKit,
+  TableRowKit,
+  TableSortLabelKit,
+} from 'kits';
 import { platformList } from '../../data/platformList';
-import BoxKit from '../../kits/box/BoxKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import TableKit from '../../kits/table/TableKit';
-import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-import TableCellKit from '../../kits/tablecell/TableCellKit';
-import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
-import TableHeadKit from '../../kits/tablehead/TableHeadKit';
-import TableRowKit from '../../kits/tablerow/TableRowKit';
-import TableSortLabelKit from '../../kits/tablesortlabel/TableSortLabelKit';
 import './Table.scss';
 
 const headCells = [

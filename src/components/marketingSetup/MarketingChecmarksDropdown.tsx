@@ -1,10 +1,12 @@
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlinedInputKit from '../../kits/outlinedInput/OutlinedInputKit';
-import RadioKit from '../../kits/radio/RadioKit';
-import SelectKit from '../../kits/select/SelectKit';
+import {
+  FormControlKit,
+  InputLabelKit,
+  ListItemTextKit,
+  MenuItemKit,
+  OutlinedInputKit,
+  RadioKit,
+  SelectKit,
+} from 'kits';
 import RestaurantCheckboxAccordion from '../restaurantDropdown/RestaurantCheckboxAccardion';
 
 const MarketingCheckmarksDropdown = ({
@@ -123,7 +125,7 @@ const MarketingCheckmarksDropdown = ({
   };
   return (
     <div style={{ width: '100%' }}>
-      <FormcontrolKit
+      <FormControlKit
         className='top-competition marketing-setup-dropdown'
         sx={{ m: 1, width: 300 }}
       >
@@ -146,7 +148,7 @@ const MarketingCheckmarksDropdown = ({
         >
           {renderLoayaut()}
         </SelectKit>
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

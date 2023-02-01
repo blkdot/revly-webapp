@@ -1,9 +1,7 @@
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { styled } from '@mui/material/styles';
+import { StepKit, StepLabelKit, StepperKit } from 'kits';
 import icrevly from '../../assets/images/small-logo-white.png';
-import StepKit from '../../kits/step/StepKit';
-import StepLabelKit from '../../kits/stepLabel/StepLabel';
-import StepperKit from '../../kits/stepper/StepperKit';
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
