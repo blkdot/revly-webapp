@@ -6,7 +6,7 @@ const { apiUrl, firebaseApiUrl } = config;
 
 export const getMetrics = (body) =>
   axios
-    .post(`${apiUrl}/user/metrics`, body)
+    .post(`${apiUrl}/user/metricsv2`, body)
     .then((res) => res)
     .catch(handleResponse);
 
