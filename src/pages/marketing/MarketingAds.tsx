@@ -55,37 +55,38 @@ const MarketingAds = () => {
     renderStatus,
     renderTarget,
     renderSimpleRow,
-    renderRowTooltip,
+    renderVendorId,
     renderScheduleType,
     renderCalculatedPercent,
     renderSimpleRowNotCentered,
+    renderIsoDate,
   } = useTableContentFormatter();
 
   const headersAds = [
     { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_names', disablePadding: true, label: 'Vendors' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'ad_serving_count', disablePadding: true, label: 'Impressions' },
-    { id: 'start_date', disablePadding: true, label: 'Start date' },
-    { id: 'end_date', disablePadding: true, label: 'End date' },
+    { id: 'valid_from', disablePadding: true, label: 'Start date' },
+    { id: 'valid_to', disablePadding: true, label: 'End date' },
     { id: 'attributed_order_value', disablePadding: true, label: 'Attributed order value' },
     { id: 'clicks_count', disablePadding: true, label: 'Clicks' },
     { id: 'conversion_rate', disablePadding: true, label: 'Conversion rate' },
     { id: 'new_customers_count', disablePadding: true, label: 'New customers' },
     { id: 'orders_count', disablePadding: true, label: 'Orders' },
-    { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
+    // { id: 'remaining_budget', disablePadding: true, label: 'Remaining budget' },
     { id: 'spend', disablePadding: true, label: 'Spend' },
     { id: 'return_on_ad_spent', disablePadding: true, label: 'Return on spent' },
     { id: 'total_budget', disablePadding: true, label: 'Total budget' },
-    { id: 'ad_status', disablePadding: true, label: 'Status' },
+    { id: 'status', disablePadding: true, label: 'Status' },
   ];
 
   const cellTemplatesObject = {
     chain_name: renderSimpleRowNotCentered,
-    vendor_names: renderRowTooltip,
+    vendor_ids: renderVendorId,
     platform: renderPlatform,
-    start_date: renderSimpleRow,
-    end_date: renderSimpleRow,
+    valid_from: renderIsoDate,
+    valid_to: renderIsoDate,
     type_schedule: renderScheduleType,
     slot_schedule: renderSimpleRow,
     discount_type: renderSimpleRow,
@@ -94,7 +95,6 @@ const MarketingAds = () => {
     attributed_order_value: renderCurrency,
     target: renderTarget,
     status: renderStatus,
-    ad_status: renderStatus,
     ad_serving_count: renderSimpleRow,
     clicks_count: renderSimpleRow,
     conversion_rate: renderCalculatedPercent,
@@ -171,7 +171,7 @@ const MarketingAds = () => {
 
         if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!status.includes(cur.status) && cur.status) status.push(cur.ad_status);
+        if (!status.includes(cur.status) && cur.status) status.push(cur.status);
 
         return {
           ...acc,
@@ -183,8 +183,8 @@ const MarketingAds = () => {
     );
 
     const preHeadPlatform = preHead.platform.map((s) => ({
-      value: s,
-      text: renderPlatformInsideFilter(s),
+      value: s.toLowerCase(),
+      text: renderPlatformInsideFilter(s.toLowerCase()),
     }));
 
     const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
@@ -203,7 +203,7 @@ const MarketingAds = () => {
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.ad_status));
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
     }
     setAdsFilteredData(filteredData);
   }, [JSON.stringify(filters), adsData]);

@@ -13,14 +13,14 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const { user } = useUserAuth();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
-  const vendor = vendorsObj[platform]?.find((v) => +v.vendor_id === +vendorId);
+  const vendor = vendorsObj[platform]?.find((v) => vendorId.include(v.vendor_id));
 
   const getOfferDetailData = () => {
     getOfferDetails(
       {
         master_email: user.email,
         access_token: '',
-        vendor,
+        vendors: vendor,
         drn_id: drnId,
       },
       platform

@@ -17,8 +17,8 @@ export const fomatOffers = (os) =>
 
 export const defaultFilterStateFormat = {
   platform: [],
-  discount_type: [],
+  type_offer: [],
   discount_rate: [],
   status: [],
-  target: [],
+  goal: [],
 };
