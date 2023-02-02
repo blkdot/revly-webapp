@@ -1,20 +1,30 @@
 import { useUserAuth } from 'contexts';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import SigninForm from '../../components/forms/signinForm/SigninForm';
+import SignInForm from '../../components/forms/signinForm/SigninForm';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import { useAlert } from '../../hooks/useAlert';
 import useVendors from '../../hooks/useVendors';
 import './SignIn.scss';
 
 const SignIn = () => {
-  const [value, setValue] = useState({ email: '', password: '', remembered: true });
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(false);
+
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+
+  const [remember, setRemember] = useState(false);
+
   const [processing, setProcessing] = useState(false);
   const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
-  const [errorData, setErrorData] = useState<any>({ email: false, password: false });
   const [params] = useSearchParams();
   const { setVendors } = useVendors(true);
   const { setVendors: setVendorsReq } = useVendors(true);
+
+  const { signIn, googleSignIn, user, logOut, verifyCodeEmail } = useUserAuth();
 
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
@@ -40,11 +50,8 @@ const SignIn = () => {
     });
   });
 
-  const navigate = useNavigate();
-
-  const { signIn, googleSignIn, user, logOut, verifyCodeEmail } = useUserAuth();
-
-  const verifyEmail = async (code) => {
+  // TODO: update dependencies
+  const verifyEmail = useCallback(async (code) => {
     try {
       await verifyCodeEmail(code);
       triggerAlertWithMessageSuccess('Email verified , you can sign in now');
@@ -52,7 +59,7 @@ const SignIn = () => {
     } catch (err) {
       navigate('/');
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (oobCode) {
@@ -67,11 +74,12 @@ const SignIn = () => {
     }
   }, [oobCode, mode]);
 
-  const handleSubmit = async (event) => {
+  // TODO: update dependencies
+  const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     setProcessing(true);
     try {
-      const res = await signIn(value.email, value.password, value.remembered);
+      const res = await signIn(email, password, remember);
 
       if (!res.user.emailVerified) {
         await logOut();
@@ -86,58 +94,61 @@ const SignIn = () => {
       const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
 
       if (firebaseCodeError[e.code] && firebaseCodeError[e.code].field) {
-        setErrorData({ [firebaseCodeError[e.code].field]: true });
+        if (firebaseCodeError[e.code].field === 'email') {
+          setEmailError(true);
+        } else if (firebaseCodeError[e.code].field === 'password') {
+          setPasswordError(true);
+        }
       }
 
       triggerAlertWithMessageError(message);
       setProcessing(false);
     }
-  };
+  }, []);
 
-  const handleGoogleSubmit = async (event) => {
+  // TODO: update dependencies
+  const handleGoogleSubmit = useCallback(async (event) => {
     event.preventDefault();
     setProcessing(true);
     try {
       await googleSignIn();
       navigate('/dashboard');
-    } catch (e) {
-      const message = firebaseCodeError[e.code] ? firebaseCodeError[e.code].message : e.message;
+    } catch (error) {
+      const message = firebaseCodeError[error.code]
+        ? firebaseCodeError[error.code].message
+        : error.message;
 
-      if (firebaseCodeError[e.code].field) {
-        setErrorData({ [firebaseCodeError[e.code].field]: true });
+      if (firebaseCodeError[error.code].field) {
+        if (firebaseCodeError[error.code].field === 'email') {
+          setEmailError(true);
+        } else if (firebaseCodeError[error.code].field === 'password') {
+          setPasswordError(true);
+        }
       }
 
       triggerAlertWithMessageError(message);
       setProcessing(false);
     }
-  };
+  }, []);
 
-  const handleChange = (k) => (v) => {
-    setErrorData({ ...errorData, [k]: false });
-    setValue({ ...value, [k]: v });
-  };
-
-  const handleChangeRemembered = (v) => {
-    setValue({ ...value, remembered: v });
-  };
-
-  const onInputBlur = (field) => {
-    if (!value[field]) {
-      setErrorData({ ...errorData, [field]: true });
-    }
-  };
+  const onEmailBlur = useCallback(() => setEmailError(!email), [email]);
+  const onPasswordBlur = useCallback(() => setPasswordError(!password), [password]);
 
   return (
-    <SigninForm
-      onChangeEmail={handleChange('email')}
-      onChangePassword={handleChange('password')}
-      onChangeRemebered={handleChangeRemembered}
-      errorEmail={errorData.email}
-      onBlur={onInputBlur}
-      errorPassword={errorData.password}
+    <SignInForm
+      email={email}
+      emailError={emailError}
+      setEmail={setEmail}
+      onEmailBlur={onEmailBlur}
+      password={password}
+      passwordError={passwordError}
+      setPassword={setPassword}
+      onPasswordBlur={onPasswordBlur}
+      remember={remember}
+      setRemember={setRemember}
       onSubmit={handleSubmit}
       onGoogleSubmit={handleGoogleSubmit}
-      disabled={!value.email || !value.password || processing}
+      disabled={!email || !password || processing}
     />
   );
 };
