@@ -1,12 +1,14 @@
 import AudienceIcon from 'assets/images/ic_audience.png';
 import SmRuleIcon from 'assets/images/ic_sm-rule.png';
 import SpeakerIcon from 'assets/images/ic_speaker.png';
-import BoxKit from 'kits/box/BoxKit';
-import ButtonKit from 'kits/button/ButtonKit';
-import FormControlLabelKit from 'kits/formControlLabel/FormControlLabel';
-import RadioKit from 'kits/radio/RadioKit';
-import RadioGroupKit from 'kits/radioGroup/RadioGroupKit';
-import TypographyKit from 'kits/typography/TypographyKit';
+import {
+  BoxKit,
+  ButtonKit,
+  FormControlLabelKit,
+  RadioGroupKit,
+  RadioKit,
+  TypographyKit,
+} from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
 

@@ -2,15 +2,17 @@ import { InputAdornment } from '@mui/material';
 import ItemMenuIcon from 'assets/images/ic_item-menu.png';
 import searchIcon from 'assets/images/ic_search.png';
 import MenuDropdown from 'components/settings/menu/menuDropdown/MenuDropdown';
-import BoxKit from 'kits/box/BoxKit';
-import CheckboxKit from 'kits/checkbox/CheckboxKit';
-import FormcontrolKit from 'kits/formcontrol/FormcontrolKit';
-import FormControlLabelKit from 'kits/formControlLabel/FormControlLabel';
-import ListItemTextKit from 'kits/listItemtext/ListItemTextKit';
-import MenuItemKit from 'kits/menuItem/MenuItemKit';
-import TextfieldKit from 'kits/textfield/TextfieldKit';
-import TooltipKit from 'kits/toolTip/TooltipKit';
-import TypographyKit from 'kits/typography/TypographyKit';
+import {
+  BoxKit,
+  CheckboxKit,
+  FormControlKit,
+  FormControlLabelKit,
+  ListItemTextKit,
+  MenuItemKit,
+  TextfieldKit,
+  TooltipKit,
+  TypographyKit,
+} from 'kits';
 import { FC, useEffect, useState } from 'react';
 import { Subtitle } from './components/Subtitle';
 
@@ -142,7 +144,7 @@ export const DiscountedItemsStep: FC<{
           </div>
         </div>
       </div>
-      <FormcontrolKit className='category-list'>
+      <FormControlKit className='category-list'>
         {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map((obj, i) => (
           // TODO: FIX IT
           // <div className="menu-item-wrapper" key={obj.id} value={obj.name}>
@@ -166,7 +168,7 @@ export const DiscountedItemsStep: FC<{
             />
           </div>
         ))}
-      </FormcontrolKit>
+      </FormControlKit>
     </BoxKit>
   </div>
 );

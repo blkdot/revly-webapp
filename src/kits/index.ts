@@ -17,7 +17,7 @@ export { default as DatePickerDayKit } from './datePicker/DatePickerDayKit';
 export { default as DatePickerKit } from './datePicker/DatePickerKit';
 export { default as DividerKit } from './divider/DividerKit';
 export { default as FabKit } from './fab/FabKit';
-export { default as FormControlKit } from './formcontrol/FormcontrolKit';
+export { default as FormControlKit } from './formcontrol/FormControl';
 export { default as FormControlLabelKit } from './formControlLabel/FormControlLabel';
 export { default as FormGroupKit } from './formGroup/FormGroupKit';
 export { default as InputKit } from './input/InputKit';

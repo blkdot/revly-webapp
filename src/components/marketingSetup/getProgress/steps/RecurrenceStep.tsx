@@ -5,11 +5,7 @@ import CompetitionDropdown from 'components/competitionDropdown/CompetitionDropd
 import MarketingCheckmarksDropdown from 'components/marketingSetup/MarketingChecmarksDropdown';
 import TimePickerDropdown from 'components/timePicker/TimePickerDropdown';
 import { getHours } from 'date-fns';
-import BoxKit from 'kits/box/BoxKit';
-import ButtonKit from 'kits/button/ButtonKit';
-import DatePickerDayKit from 'kits/datePicker/DatePickerDayKit';
-import TextfieldKit from 'kits/textfield/TextfieldKit';
-import TypographyKit from 'kits/typography/TypographyKit';
+import { BoxKit, ButtonKit, DatePickerDayKit, TextfieldKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
 

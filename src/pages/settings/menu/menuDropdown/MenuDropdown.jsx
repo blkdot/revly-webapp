@@ -1,4 +1,4 @@
-import FormControlKit from '../../../../kits/formcontrol/FormcontrolKit';
+import FormControlKit from '../../../../kits/formcontrol/FormControl';
 import InputLabelKit from '../../../../kits/inputlabel/InputLabelKit';
 import SelectKit from '../../../../kits/select/SelectKit';
 import './MenuDropdown.scss';

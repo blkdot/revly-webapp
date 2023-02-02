@@ -3,8 +3,7 @@ import BranchMarketingDropdown from 'components/branchMarketingDropdown/BranchMa
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
 import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
 import { platformList, platformObject } from 'data/platformList';
-import RadioGroupKit from 'kits/radioGroup/RadioGroupKit';
-import TypographyKit from 'kits/typography/TypographyKit';
+import { RadioGroupKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
 

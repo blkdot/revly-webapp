@@ -2,11 +2,7 @@ import ItemMenuIcon from 'assets/images/ic_item-menu.png';
 import menuIcon from 'assets/images/ic_menu.png';
 import MarketingPlaceholderDropdown from 'components/marketingSetup/MarketingPlaceholderDropdown';
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
-import BoxKit from 'kits/box/BoxKit';
-import FormControlLabelKit from 'kits/formControlLabel/FormControlLabel';
-import RadioKit from 'kits/radio/RadioKit';
-import RadioGroupKit from 'kits/radioGroup/RadioGroupKit';
-import TypographyKit from 'kits/typography/TypographyKit';
+import { BoxKit, FormControlLabelKit, RadioGroupKit, RadioKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
 
