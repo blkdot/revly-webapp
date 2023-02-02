@@ -1,16 +1,16 @@
+import { SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import useCost from '../../../hooks/useCost';
 import useVendors from '../../../hooks/useVendors';
-import SpinnerKit from '../../../kits/spinner/SpinnerKit';
 import './Cost.scss';
 import DropdownSnackbar from './DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
 type TInvoice = {
-  id: string
-  restaurant: string
-  cost: string
+  id: string;
+  restaurant: string;
+  cost: string;
 };
 
 const Cost = () => {
@@ -18,7 +18,7 @@ const Cost = () => {
   const [invoice, setInvoice] = useState<TInvoice[]>([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const { vendors } = useVendors(false);
-  
+
   const { vendorsObj, vendorsArr } = vendors;
   const { load, save } = useCost(vendorsObj);
 
@@ -28,14 +28,16 @@ const Cost = () => {
       Object.keys(data).forEach((platform) => {
         Object.keys(data[platform]).forEach((id) => {
           if (data[platform][id]) {
-            const element = vendorsObj[platform].find((vobj) => String(vobj.vendor_id) === String(id));
+            const element = vendorsObj[platform].find(
+              (vobj) => String(vobj.vendor_id) === String(id)
+            );
 
             if (!element) return;
 
             const currentCost = data[platform][id]?.cost || null;
 
             if (!currentCost) return;
-  
+
             const percent = parseFloat(currentCost) * 100;
 
             const res = {
@@ -51,7 +53,7 @@ const Cost = () => {
       setInvoice(newInvoice);
     },
     enabled: Object.keys(vendorsObj).length > 0,
-    staleTime: Infinity
+    staleTime: Infinity,
   });
 
   const { isLoading: isLoadingMutation, mutateAsync } = useMutation({
@@ -71,11 +73,11 @@ const Cost = () => {
   const deleteCost = (index, vendorId) => async () => {
     const clonedInvoice = [...invoice];
     clonedInvoice.splice(index, 1);
-    
+
     const element = vendorsArr.find((vobj) => String(vobj.vendor_id) === String(vendorId));
-    
-    const { platform, ...rest } = element
-    
+
+    const { platform, ...rest } = element;
+
     await mutateAsync({ cost: null, vendors: { [platform]: [{ ...rest }] } });
 
     setInvoice(clonedInvoice);

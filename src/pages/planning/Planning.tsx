@@ -1,11 +1,10 @@
+import { Layers, Tag, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import { useAtom } from 'jotai';
+import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import shortid from 'shortid';
-import Layers from '../../assets/icons/Layers';
-import Tag from '../../assets/icons/Tag';
-import Vector from '../../assets/icons/Vector';
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
 import Dates from '../../components/dates/Dates';
@@ -20,10 +19,6 @@ import useDate from '../../hooks/useDate';
 import usePlanningAds from '../../hooks/usePlanningAds';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
 import useQueryState from '../../hooks/useQueryState';
-import BoxKit from '../../kits/box/BoxKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
@@ -202,7 +197,8 @@ const Planning = () => {
       (acc, cur) => {
         const { platform, type_offer: discountType, discount_rate: procent, status } = acc;
 
-        if (!platform.includes(cur.platform.toLowerCase()) && cur.platform) platform.push(cur.platform.toLowerCase());
+        if (!platform.includes(cur.platform.toLowerCase()) && cur.platform)
+          platform.push(cur.platform.toLowerCase());
 
         if (!discountType.includes(cur.type_offer) && cur.type_offer)
           discountType.push(cur.type_offer);
@@ -240,21 +236,20 @@ const Planning = () => {
 
     const renderStatusFilter = (s) => {
       if (!s) return null;
-  
+
       return (
         <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${s}`}>
           {s}
         </span>
       );
     };
-  
+
     const renderPlatformInsideFilter = (s) => (
       <div key={s}>
         <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
         <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
       </div>
     );
-
 
     const preHeadPlatform = preHead.platform.map((s) => ({
       value: s.toLowerCase(),

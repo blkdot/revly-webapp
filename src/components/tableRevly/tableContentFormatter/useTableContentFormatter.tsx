@@ -1,9 +1,7 @@
-import React from 'react';
 import { useAtom } from 'jotai';
+import { TableCellKit, TooltipKit } from 'kits';
 import arrow from '../../../assets/images/arrow.png';
-import TableCellKit from '../../../kits/tablecell/TableCellKit';
 import { platformList, platformObject } from '../../../data/platformList';
-import TooltipKit from '../../../kits/toolTip/TooltipKit';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const useTableContentFormatter = () => {
@@ -20,7 +18,7 @@ const useTableContentFormatter = () => {
       </span>
     </TableCellKit>
   );
-  
+
   const renderIsoDate = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}

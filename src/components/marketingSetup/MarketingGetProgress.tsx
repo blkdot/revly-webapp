@@ -94,7 +94,6 @@ const GetProgress: FC<{
 
     return typeSchedule !== 'Continues Offer' && duration === 'Program the offer duration';
   };
-
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj, display } = vendors;
 

@@ -1,7 +1,4 @@
-import BoxKit from '../../kits/box/BoxKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import FormControlLabelKit from '../../kits/formControlLabel/FormControlLabel';
-import RadioKit from '../../kits/radio/RadioKit';
+import { BoxKit, CheckboxKit, FormControlLabelKit, RadioKit } from 'kits';
 
 const MarketingRadio = ({
   title,

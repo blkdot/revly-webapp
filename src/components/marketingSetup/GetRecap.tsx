@@ -1,5 +1,6 @@
 import RemoveIcon from '@mui/icons-material/Remove';
 import { format } from 'date-fns';
+import { BoxKit, ButtonKit, TextfieldKit, TypographyKit } from 'kits';
 import ArrowIcon from '../../assets/images/arrow.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
@@ -15,10 +16,6 @@ import TimerCloseGrayIcon from '../../assets/images/ic_timer-close-gray.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
 import plus from '../../assets/images/plus.png';
 import talabat from '../../assets/images/talabat.png';
-import BoxKit from '../../kits/box/BoxKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
 import GetProgress from './MarketingGetProgress';

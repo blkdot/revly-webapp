@@ -1,5 +1,5 @@
+import { ButtonKit } from 'kits';
 import { NavLink } from 'react-router-dom';
-import ButtonKit from '../../kits/button/ButtonKit';
 import './Navlink.scss';
 
 const Navlink = (props: any) => {

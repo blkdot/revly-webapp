@@ -1,14 +1,16 @@
+import {
+  FormControlKit,
+  InputLabelKit,
+  ListItemTextKit,
+  MenuItemKit,
+  OutlinedInputKit,
+  SelectKit,
+} from 'kits';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import Kuwait from '../../assets/images/Kuwait.png';
 import Qatar from '../../assets/images/Qatar.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import UAE from '../../assets/images/UAE.png';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import InputLabelKit from '../../kits/inputlabel/InputLabelKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import SelectKit from '../../kits/select/SelectKit';
 import './CompetitionDropdown.scss';
 
 const CompetitionDropdown = (props: any) => {
@@ -82,7 +84,7 @@ const CompetitionDropdown = (props: any) => {
 
   return (
     <div className={`restaurant-dropdown_wrapper ${className}`}>
-      <FormcontrolKit sx={{ m: 1, width: 250 }}>
+      <FormControlKit sx={{ m: 1, width: 250 }}>
         <InputLabelKit
           className='restaurant-dropdown-input competition-dropdown'
           id='demo-multiple-checkbox-label'
@@ -97,7 +99,7 @@ const CompetitionDropdown = (props: any) => {
           id='demo-multiple-checkbox'
           value={select === undefined ? '' : select}
           onChange={onChange || handleChange}
-          input={<OutlindeInputKit label={title} />}
+          input={<OutlinedInputKit label={title} />}
           renderValue={(selected) =>
             renderValue ? (
               renderValue(selected)
@@ -127,7 +129,7 @@ const CompetitionDropdown = (props: any) => {
         >
           {renderSelectOption(rows)}
         </SelectKit>
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

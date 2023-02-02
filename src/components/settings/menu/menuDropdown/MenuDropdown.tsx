@@ -1,6 +1,4 @@
-import FormcontrolKit from '../../../../kits/formcontrol/FormcontrolKit';
-import InputLabelKit from '../../../../kits/inputlabel/InputLabelKit';
-import SelectKit from '../../../../kits/select/SelectKit';
+import { FormControlKit, InputLabelKit, SelectKit } from 'kits';
 
 const MenuDropdown = (props: any) => {
   const {
@@ -18,7 +16,7 @@ const MenuDropdown = (props: any) => {
   const renderSelectItem = (arr) => arr?.map((v) => renderOption(v));
 
   return (
-    <FormcontrolKit fullWidth>
+    <FormControlKit fullWidth>
       <InputLabelKit>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           {startIcon}
@@ -36,7 +34,7 @@ const MenuDropdown = (props: any) => {
       >
         {renderSelectItem(items)}
       </SelectKit>
-    </FormcontrolKit>
+    </FormControlKit>
   );
 };
 
