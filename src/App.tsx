@@ -1,40 +1,38 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { QueryClientProvider, QueryClient } from 'react-query';
-
+import {
+  AuthContextProvider,
+  GlobalFunctionalitiesContextProvider,
+  PlatformProvider,
+} from 'contexts';
+import {
+  Check,
+  CompetitionAlerts,
+  CompetitionListing,
+  Dashboard,
+  ForgotPassword,
+  MarketingAds,
+  MarketingOffer,
+  OnBoarding,
+  Planning,
+  ResetPassword,
+  Settings,
+  SettingsBilling,
+  SettingsChangePassword,
+  SettingsCost,
+  SettingsGeneral,
+  SettingsMenu,
+  SettingsOnboarding,
+  SignIn,
+  SignUp,
+  VerifyCode,
+} from 'pages';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Route, Routes } from 'react-router-dom';
+import { ProtectedOnboardRoutes, ProtectedRoutes, ProtectedSettingsRoutes } from 'routes';
 import './App.scss';
-
-import { AuthContextProvider } from './contexts/AuthContext';
-import { PlatformProvider } from './contexts/PlatformContext';
-import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctionalitiesContext';
-
-import SignIn from './pages/signIn/SignIn';
-import SignUp from './pages/signUp/SignUp';
-import Dashboard from './pages/dashboard/Dashboard';
-import OnBoarding from './pages/onBoarding/OnBoarding';
-import Settings from './pages/settings/Settings';
-import ForgotPassword from './pages/forgotPassword/ForgotPassword';
-import ProtectedRoutes from './routes/ProtectedRoutes';
-import ProtectedOnboardRoutes from './routes/ProtectedOnboardRoutes';
-import Check from './pages/check/Check';
-import Planning from './pages/planning/Planning';
-import MarketingAds from './pages/marketing/MarketingAds';
-import MarketingOffer from './pages/marketing/MarketingOffer';
 import AuthLayout from './components/layout/authLayout/AuthLayout';
-import VerifyCode from './pages/verifyCode/VerifyCode';
-import ResetPassword from './pages/resetPassword/ResetPassword';
-import CompetitionListing from './pages/competition/CompetitionListing';
-import CompetitionAlerts from './pages/competition/CompetitionAlerts';
-import General from './pages/settings/general/General';
-import Billing from './pages/settings/billing/Billing';
-import NewSettingsOnboarding from './pages/settings/onboarding/NewSettingsOnboarding';
-import ChangePassword from './pages/settings/changePassword/ChangePassword';
-import Menu from './pages/settings/menu/Menu';
-import Cost from './pages/settings/cost/Cost';
-import ProtectedSettingsRoutes from './routes/ProtectedSettingsRoutes';
 
 const theme = createTheme({
   palette: {
@@ -89,12 +87,15 @@ const App = () => (
                   <Route element={<ProtectedSettingsRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
                       <Route path='/settings' element={<Settings />} />
-                      <Route path='/settings/general' element={<General />} />
-                      <Route path='/settings/billing' element={<Billing />} />
-                      <Route path='/settings/onboarding' element={<NewSettingsOnboarding />} />
-                      <Route path='/settings/change-password' element={<ChangePassword />} />
-                      <Route path='/settings/menu' element={<Menu />} />
-                      <Route path='/settings/cost' element={<Cost />} />
+                      <Route path='/settings/general' element={<SettingsGeneral />} />
+                      <Route path='/settings/billing' element={<SettingsBilling />} />
+                      <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
+                      <Route path='/settings/menu' element={<SettingsMenu />} />
+                      <Route path='/settings/cost' element={<SettingsCost />} />
+                      <Route
+                        path='/settings/change-password'
+                        element={<SettingsChangePassword />}
+                      />
                     </Route>
                   </Route>
                 </Routes>
