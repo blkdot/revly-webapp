@@ -1,5 +1,5 @@
 import InputAdornment from '@mui/material/InputAdornment';
-import { addDays, addMinutes, format, getHours, isAfter, isSameDay } from 'date-fns';
+import { addDays, addMinutes, format, getHours, isAfter, isSameDay, addHours } from 'date-fns';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -512,8 +512,7 @@ const GetProgress = ({ progressData }) => {
                     null,
                     null,
                     null,
-                    // TODO: FIX IT
-                    // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                    Number(format(addHours(times[times.length - 1].endTime, 1), 'HH')),
                     null,
                     0
                   ),
@@ -521,8 +520,7 @@ const GetProgress = ({ progressData }) => {
                     null,
                     null,
                     null,
-                    // TODO: FIX IT
-                    // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
+                    Number(format(addHours(times[times.length - 1].endTime, 1), 'HH')),
                     null,
                     0
                   ),

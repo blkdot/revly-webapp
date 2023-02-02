@@ -2,6 +2,7 @@ import { useUserAuth } from 'contexts';
 import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit } from 'kits';
 import { useEffect, useState } from 'react';
+import type { TVendorsArr } from 'hooks/useVendors';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
@@ -28,7 +29,7 @@ const Menu = () => {
   const { getMenu } = useApi();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr: vendorList } = vendors;
-  const [branch, setBranch] = useState('');
+  const [branch, setBranch] = useState<string | TVendorsArr >('');
   const { user } = useUserAuth();
 
   const getMenuData = async (vendor, platforms) => {
@@ -72,6 +73,7 @@ const Menu = () => {
   useEffect(() => {
     if (vendorList && vendorList.length) {
       const ve = vendorList?.filter((v) => v.platform === platform);
+
       setBranch(ve[0] || '');
     }
   }, [vendorList, platform]);

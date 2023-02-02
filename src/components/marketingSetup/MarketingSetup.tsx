@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from 'react';
 import { Tooltip } from '@mui/material';
+import { addDays, endOfWeek, format, startOfWeek, subWeeks, addMinutes, addHours } from 'date-fns';
 import { useUserAuth } from 'contexts';
-import { addDays, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import {
@@ -14,7 +15,7 @@ import {
 } from 'kits';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import React, { useEffect, useState } from 'react';
+import useVendors from 'hooks/useVendors';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
@@ -23,7 +24,12 @@ import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
-import { maxHour, minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
+import {
+  maxHour,
+  minHour,
+  rangeHoursOpenedDay,
+  daysOrder,
+} from '../../utlls/heatmap/heatmapSelectedData';
 import Dates from '../dates/Dates';
 import GetRecap from './GetRecap';
 import './MarketingSetup.scss';
@@ -40,6 +46,8 @@ const defaultHeatmapState = {
 
 const defaultRangeColorIndices = [0, 0, 0, 0];
 
+const ItemHeatmap = React.forwardRef((props: any, ref: any) => <div {...props} ref={ref} />);
+
 const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { userPlatformData } = usePlatform();
   const [platform, setPlatform] = useState([
@@ -48,6 +56,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const [platformData, setPlatformData] = useState(
     userPlatformData.platforms.deliveroo.active ? 'deliveroo' : 'talabat'
   );
+  const {
+    vendors: { vendorsObj: vendorsObjRequest },
+  } = useVendors();
   const [selected, setSelected] = useState(1);
   const [links, setLinks] = useState('revenue');
   const [menu, setMenu] = useState('Offer on the whole Menu');
@@ -76,7 +87,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
   const { getMenu } = useApi();
-  const { vendorsObj, vendorsArr } = vendors as any;
+  const { vendorsObj, vendorsArr } = vendors;
   const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
   const [branchData, setBranchData] = useState(
     vendorsObj?.[platformData]?.[0]?.data?.vendor_name || ''
@@ -92,15 +103,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         null,
         null,
         null,
-        // TODO: FIX IT
-        // format(new Date(), 'HH'),
-        // format(new Date(addMinutes(new Date(), 2)), 'mm'),
+        Number(format(new Date(), 'HH')),
+        Number(format(new Date(addMinutes(new Date(), 2)), 'mm')),
         null,
         null
       ),
-      // TODO: FIX IT
-      // endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
-      endTime: new Date(null, null, null, null, 0),
+      endTime: new Date(null, null, null, Number(format(addHours(new Date(), 1), 'HH')), 0),
       pos: 1,
     },
   ]);
@@ -110,6 +118,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const [filteredCategoryData, setFilteredCategoryData] = useState([]);
   const [targetAudience, setTargetAudience] = useState('All customers');
   const [created, setCreated] = useState(false);
+  const [recap, setRecap] = useState(false);
+  const [revenueData, setRevenueData] = useState(null);
+  const [ordersData, setOrdersData] = useState(null);
 
   const [launchOrder, setLaunchOrder] = useState([
     { order: '# of orders', arrow: '<', number: '', id: 1, reletion: 'And' },
@@ -147,6 +158,10 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   };
   const getDiscountMovType = (type) => itemMenuObj[itemMenu][type];
 
+  function isValidDate(d) {
+    return d instanceof Date && !Number.isNaN(d);
+  }
+
   const getHourArr = (hour, fromZero = true) => {
     const arr = [];
     times.forEach((obj) => {
@@ -162,26 +177,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     return arr;
   };
 
-  useEffect(() => {
-    if (duration === 'Starting Now') {
-      setFreshStartingDate();
-    } else {
-      setTypeSchedule('Continues Offer');
-      setTimes([
-        {
-          // TODO: FIX IT
-          // startTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-          startTime: new Date(null, null, null, null, 0),
-          // TODO: FIX IT
-          // endTime: new Date(null, null, null, format(new Date(), 'HH'), 0),
-          endTime: new Date(null, null, null, null, 0),
-          pos: 1,
-        },
-      ]);
-      clearTimeSelected();
-    }
-  }, [duration]);
-
   const setFreshStartingDate = () => {
     if (duration !== 'Starting Now') return;
 
@@ -193,19 +188,53 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           null,
           null,
           null,
-          // TODO: FIX IT
-          // format(new Date(), 'HH'),
-          // format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          Number(format(new Date(), 'HH')),
+          Number(format(new Date(addMinutes(new Date(), 2)), 'mm')),
           null,
           null
         ),
-        // TODO: FIX IT
-        // endTime: new Date(null, null, null, format(new Date(addHours(new Date(), 1)), 'HH'), 0),
-        endTime: new Date(null, null, null, null, null),
+        endTime: new Date(
+          null,
+          null,
+          null,
+          Number(format(new Date(addHours(new Date(), 1)), 'HH')),
+          0
+        ),
         pos: 1,
       },
     ]);
   };
+
+  const clearTimeSelected = () => {
+    const clonedheatmapData = { ...heatmapData };
+    
+    Object.values(clonedheatmapData[links]).forEach((objHeat, indexObjHeat) => {
+      if (objHeat) {
+        Object.keys(objHeat).forEach((num) => {
+          delete clonedheatmapData[links][Object.keys(clonedheatmapData[links])[indexObjHeat]][num]
+          .active;
+        });
+      }
+    });
+
+    setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
+  };
+
+  useEffect(() => {
+    if (duration === 'Starting Now') {
+      setFreshStartingDate();
+    } else {
+      setTypeSchedule('Continues Offer');
+      setTimes([
+        {
+          startTime: new Date(null, null, null, Number(format(new Date(), 'HH')), 0),
+          endTime: new Date(null, null, null, Number(format(new Date(), 'HH')), 0),
+          pos: 1,
+        },
+      ]);
+      clearTimeSelected();
+    }
+  }, [duration]);
 
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
@@ -217,16 +246,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           null,
           null,
           null,
-          // TODO: FIX IT
-          // format(new Date(), 'HH'),
+          Number(format(new Date(), 'HH')),
           null,
-          // TODO: FIX IT
-          // format(new Date(addMinutes(new Date(), 2)), 'mm'),
+          Number(format(new Date(addMinutes(new Date(), 2)), 'mm')),
           null
         ),
-        // TODO: FIX IT
-        // endTime: new Date(null, null, null, format(addHours(new Date(), 1), 'HH'), 0),
-        endTime: new Date(null, null, null, null, 0),
+        endTime: new Date(null, null, null, Number(format(addHours(new Date(), 1), 'HH')), 0),
         pos: 1,
       },
     ]);
@@ -302,7 +327,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
   const handleSchedule = async () => {
     let isStartingFromZero = true;
-    console.log(duration);
+
     if (duration === 'Starting Now') {
       setFreshStartingDate();
       isStartingFromZero = false;
@@ -397,9 +422,71 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     }
   };
 
+  const setHeatmapRangeFromState = () => {
+    setRangeColorIndices(() => {
+      const heatmaRangePlatform = revenueData?.[platform[0]].ranges;
+      const ordersRangePlatform = ordersData?.[platform[0]].ranges;
+
+      if (!heatmaRangePlatform || !ordersRangePlatform) {
+        return {
+          revenue: defaultRangeColorIndices,
+          orders: defaultRangeColorIndices,
+        };
+      }
+
+      return {
+        revenue: heatmaRangePlatform,
+        orders: ordersRangePlatform,
+      };
+    });
+  };
+
+  const setHeatmatDataFromState = () => {
+    setHeatmapData(() => {
+      if (!revenueData || !ordersData) return null;
+
+      const heatmaDataPlatform = { ...revenueData?.[platform[0]].heatmap };
+      const ordersDataPlatform = { ...ordersData?.[platform[0]].heatmap };
+      
+
+      if (!heatmaDataPlatform || !ordersDataPlatform) {
+        return{
+          revenue: defaultHeatmapState,
+          orders: defaultHeatmapState,
+        };
+      }
+
+      Object.keys(heatmaDataPlatform).forEach((oldKey) => {
+        const newKey = daysOrder[oldKey];
+  
+        heatmaDataPlatform[newKey] = heatmaDataPlatform[oldKey];
+  
+        delete heatmaDataPlatform[oldKey];
+      });
+  
+      Object.keys(ordersDataPlatform).forEach((oldKey) => {
+        const newKey = daysOrder[oldKey];
+  
+        ordersDataPlatform[newKey] = ordersDataPlatform[oldKey];
+        delete ordersDataPlatform[oldKey];
+      });
+  
+      return {
+        revenue: heatmaDataPlatform,
+        orders: ordersDataPlatform,
+      };
+    });
+  };
+
+  useEffect(() => {
+    if (heatmapLoading) return;
+
+    setHeatmatDataFromState();
+    setHeatmapRangeFromState();
+  }, [JSON.stringify(platform), revenueData, ordersData, heatmapLoading]);
+
   const getHeatmapData = () => {
     setHeatmapLoading(true);
-    delete vendorsObj.display;
 
     const body = {
       master_email: user.email,
@@ -407,7 +494,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
-      vendors: vendorsObj,
+      vendors: vendorsObjRequest,
     };
 
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
@@ -439,25 +526,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           return;
         }
 
-        const initialisationStateRevenue = resRevenue.data.all
-          ? resRevenue.data.all.heatmap
-          : defaultHeatmapState;
-        const initialisationStateOrders = resOrders.data.all
-          ? resOrders.data.all.heatmap
-          : defaultHeatmapState;
-
-        const initialisationRangeColorIndicesRevenue = resRevenue.data.all
-          ? resRevenue.data.all.ranges
-          : defaultRangeColorIndices;
-        const initialisationRangeColorIndicesOrders = resOrders.data.all
-          ? resOrders.data.all.ranges
-          : defaultRangeColorIndices;
-
-        setHeatmapData({ revenue: initialisationStateRevenue, orders: initialisationStateOrders });
-        setRangeColorIndices({
-          revenue: initialisationRangeColorIndicesRevenue,
-          orders: initialisationRangeColorIndicesOrders,
-        });
+        setOrdersData(resOrders.data);
+        setRevenueData(resRevenue.data);
       }
     );
   };
@@ -492,9 +562,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
   const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
 
-  const onChange = async (newValue, setDate) => {
+  const onChange = (newValue, setDate) => {
     setDate(newValue);
-    const date = await document.querySelectorAll('.date-error');
+    const date = document.querySelectorAll('.date-error');
     const arr = [];
     date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
     setDisabledDate(arr.every((bool) => bool === false));
@@ -512,17 +582,26 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       if (!res.data) {
         throw new Error('');
       }
-      if (res.data.menu_items === null) {
-        setCategory(null);
-      } else {
+
+      if (res.data.menu_items) {
         const resp = Object.keys(res.data.menu_items)
           .map((v) => res.data.menu_items[v])
           .map((k) => Object.keys(k).map((el) => k[el]))
           .flat();
-
-        setCategoryDataList(res.data.categories);
         setCategory(resp);
       }
+
+      if (res.data.categories) {
+        setCategoryDataList(res.data.categories);
+      }
+
+      // const resp = Object.keys(res.data.menu_items)
+      //   .map((v) => res.data.menu_items[v])
+      //   .map((k) => Object.keys(k).map((el) => k[el]))
+      //   .flat();
+      //   console.log(resp);
+      // setCategoryDataList(res.data.categories);
+      // setCategory(resp);
     } catch (err) {
       setCategory([]);
       triggerAlertWithMessageError('Error while retrieving data');
@@ -552,10 +631,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     setCategoryData(value);
   };
 
-  function isValidDate(d) {
-    return d instanceof Date && !Number.isNaN(d);
-  }
-
   const timeSelected = () => {
     if (duration !== 'Starting Now' && selected === 3) return;
 
@@ -579,23 +654,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     setHeatmapData({ ...heatmapData, [links]: response });
   };
 
-  const clearTimeSelected = () => {
-    const clonedheatmapData = { ...heatmapData };
-
-    Object.values(clonedheatmapData[links]).forEach((objHeat, indexObjHeat) => {
-      if (objHeat) {
-        Object.keys(objHeat).forEach((num) => {
-          if (objHeat[num].active) {
-            delete clonedheatmapData[links][Object.keys(clonedheatmapData[links])[indexObjHeat]][
-              num
-            ].active;
-          }
-        });
-      }
-    });
-
-    setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
-  };
   const getSteps = (stepsArr) => {
     if (Object.keys(vendors.display).length > 0) {
       if (platform.length < 2) {
@@ -713,11 +771,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       getSteps([0, 1, 2, 3]);
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
-        clearTimeSelected();
         return;
       }
       setDisabled(!branchData);
-      clearTimeSelected();
       return;
     }
     if (selected === 2) {
@@ -734,7 +790,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (menu === 'Offer on An Item from the Menu') {
       if (selected === 3) {
         setDisabled(checked.length === 0);
-        clearTimeSelected();
         return;
       }
       durationDisable(4, [0, 1, 2, 3, 4]);
@@ -835,8 +890,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       timeSelected();
     }
   }, [times, startingDate, endingDate, selected, typeSchedule]);
-
-  const [recap, setRecap] = useState(false);
 
   useEffect(() => {
     setFreshStartingDate();
@@ -979,57 +1032,65 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     </TypographyKit>
   );
 
-  const renderCells = () =>
-    days.map((obj, index) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <TypographyKit key={`${obj}_${index}`} variant='div'>
-        {_.range(minHour, maxHour + 1).map((num) => {
-          if (heatmapLoading) return renderSkeleton(num);
+  const renderCells = 
+    () =>
+      days.map((obj) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <TypographyKit key={obj} variant='div'>
+          {_.range(minHour, maxHour + 1).map((num) => {
+            if (heatmapLoading) return renderSkeleton(num);
 
-          if (
-            !heatmapData[links][obj] ||
-            !heatmapData[links][obj][num] ||
-            !heatmapData[links][obj][num].color
-          ) {
+            if (heatmapData[links][obj]?.[num] && heatmapData[links][obj][num]?.data)
+              return (
+                <TypographyKit
+                  component='div'
+                  style={{ '--i': num - 5 }}
+                  className='absolute'
+                  key={num}
+                >
+                  <Tooltip
+                    placement='top-start'
+                    title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
+                    arrow
+                  >
+                    <ItemHeatmap>
+                      <TypographyKit
+                        className='heatmap-btn '
+                        sx={getStyleHashureActive(heatmapData[links][obj][num])}
+                      >
+                        <span>&nbsp;</span>
+                      </TypographyKit>
+                    </ItemHeatmap>
+                  </Tooltip>
+                </TypographyKit>
+              );
+
+            if (heatmapData[links][obj]?.[num] && heatmapData[links][obj][num]?.active) {
+              return (
+                <TypographyKit
+                  component='div'
+                  style={{ '--i': num - 5 }}
+                  className='absolute active'
+                  key={num}
+                >
+                  <span>&nbsp;</span>
+                </TypographyKit>
+              );
+            }
+
             return (
               <TypographyKit
+                component='div'
                 style={{ '--i': num - 5 }}
-                className={`absolute ${
-                  heatmapData[links][obj] &&
-                  heatmapData[links][obj][num] &&
-                  heatmapData[links][obj][num]?.active
-                    ? 'active'
-                    : ''
-                }`}
+                className='absolute'
                 key={num}
               >
-                <span />
+                <span>&nbsp;</span>
               </TypographyKit>
             );
-          }
-          return (
-            <Tooltip
-              className='absolute'
-              placement='top-start'
-              // TODO: FIX IT
-              // style={{ '--i': num - 5 }}
-              title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
-              key={num}
-              arrow
-            >
-              <ItemHeatmap>
-                <TypographyKit
-                  className='heatmap-btn '
-                  sx={getStyleHashureActive(heatmapData[links][obj][num])}
-                >
-                  <span />
-                </TypographyKit>
-              </ItemHeatmap>
-            </Tooltip>
-          );
-        })}
-      </TypographyKit>
-    ));
+          })}
+        </TypographyKit>
+      ));
 
   const renderLeftSideNotCreated = () => {
     if (triggerLoading)
@@ -1086,6 +1147,17 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         </ButtonKit>
       </div>
     );
+  };
+
+  const renderIndiceColor = () => {
+    if (!rangeColorIndices || !rangeColorIndices[links] || heatmapLoading)
+      return [0, 0, 0, 0].map(() => (
+        <SkeletonKit key={nanoid()} variant='rectangular' width={170} height={25} />
+      ));
+
+    return rangeColorIndices[links]?.map((r, i) => (
+      <TypographyKit key={nanoid()}>{renderGradientValue(r, i)}</TypographyKit>
+    ));
   };
 
   return (
@@ -1152,16 +1224,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
                   </TypographyKit>
                 </TypographyKit>
                 <TypographyKit variant='div' className='color-btns'>
-                  {rangeColorIndices[links]?.map((r, i) => {
-                    if (heatmapLoading) {
-                      return (
-                        <SkeletonKit key={nanoid()} variant='rectangular' width={170} height={25} />
-                      );
-                    }
-                    return (
-                      <TypographyKit key={nanoid()}>{renderGradientValue(r, i)}</TypographyKit>
-                    );
-                  })}
+                  {renderIndiceColor()}
                 </TypographyKit>
               </TypographyKit>
               <TypographyKit variant='div' sx={{ display: 'flex', margin: '30px 0' }}>
@@ -1205,7 +1268,5 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     </div>
   );
 };
-// eslint-disable-next-line
-const ItemHeatmap = React.forwardRef((props: any, ref: any) => <div {...props} ref={ref} />);
 
 export default MarketingSetup;

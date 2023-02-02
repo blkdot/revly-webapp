@@ -33,14 +33,29 @@ export type TVendorsArr = {
     vendor_name: string;
   };
   platform: string;
-}[];
+};
+
+export type TChainVendor = {
+  [x: string]: {
+    [x: string]: {
+      meta: { prefix_vendor_id: string };
+      vendor_id: string;
+      chain_id: string;
+      data: {
+        chain_name: string;
+        vendor_name: string;
+      };
+      active: boolean;
+    };
+  };
+};
 
 export type TVendors = {
   vendorsSelected: TVendorsSelected;
   vendorsObj: TVendorsObj;
-  vendorsArr: TVendorsArr;
-  display: any;
-  chainObj: any;
+  vendorsArr: TVendorsArr[];
+  display: TChainVendor | Record<string, never>;
+  chainObj: TChainVendor | Record<string, never>;
 };
 
 const useVendors = (isSign = false) => {
