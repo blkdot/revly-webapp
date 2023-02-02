@@ -3,13 +3,15 @@ import CalendarCheckedIcon from 'assets/images/ic_calendar-checked.png';
 import CalendarEventIcon from 'assets/images/ic_calendar-event.png';
 import TimePickerDropdown from 'components/timePicker/TimePickerDropdown';
 import { addMinutes, format } from 'date-fns';
-import BoxKit from 'kits/box/BoxKit';
-import DatePickerDayKit from 'kits/datePicker/DatePickerDayKit';
-import FormControlLabelKit from 'kits/formControlLabel/FormControlLabel';
-import RadioKit from 'kits/radio/RadioKit';
-import RadioGroupKit from 'kits/radioGroup/RadioGroupKit';
-import TextfieldKit from 'kits/textfield/TextfieldKit';
-import TypographyKit from 'kits/typography/TypographyKit';
+import {
+  BoxKit,
+  DatePickerDayKit,
+  FormControlLabelKit,
+  RadioGroupKit,
+  RadioKit,
+  TextfieldKit,
+  TypographyKit,
+} from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
 

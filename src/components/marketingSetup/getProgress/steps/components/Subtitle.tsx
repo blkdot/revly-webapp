@@ -1,4 +1,4 @@
-import TypographyKit from 'kits/typography/TypographyKit';
+import { TypographyKit } from 'kits';
 
 // eslint-disable-next-line import/prefer-default-export
 export const Subtitle = () => (
