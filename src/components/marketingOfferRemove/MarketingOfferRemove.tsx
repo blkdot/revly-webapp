@@ -1,7 +1,5 @@
+import { ButtonKit, PaperKit, TypographyKit } from 'kits';
 import logo from '../../assets/images/small-logo.png';
-import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 
 const MarketingOfferRemove = (props: any) => {
   const { setOpened, opened, CancelOffer } = props;

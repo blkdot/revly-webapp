@@ -1,7 +1,5 @@
+import { ButtonKit, FormControlKit, TextfieldKit } from 'kits';
 import { Link } from 'react-router-dom';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import './AuthForm.scss';
 
 const AuthForm = (props: any) => {
@@ -18,7 +16,7 @@ const AuthForm = (props: any) => {
 
   return (
     <div>
-      <FormcontrolKit className='auth-form' fullWidth>
+      <FormControlKit className='auth-form' fullWidth>
         <TextfieldKit
           error={errorEmail}
           label='Email address'
@@ -55,7 +53,7 @@ const AuthForm = (props: any) => {
           <p>OR</p>
           <hr />
         </div>
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

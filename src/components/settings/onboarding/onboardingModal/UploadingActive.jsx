@@ -1,7 +1,6 @@
-import React from 'react';
+import { Arrow } from 'assets/icons';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import ButtonKit from '../../../../kits/button/ButtonKit';
-import Arrow from '../../../../assets/icons/Arrow';
 
 const UploadingActive = ({ propsVariables }) => {
   const {
@@ -44,52 +43,52 @@ const UploadingActive = ({ propsVariables }) => {
   };
   return (
     <div
-      className="onboarding-connect-account"
+      className='onboarding-connect-account'
       tabIndex={-1}
-      role="presentation"
+      role='presentation'
       onClick={(e) => e.stopPropagation()}
     >
       <img
-        className="onboarding-close_icon modal"
+        className='onboarding-close_icon modal'
         tabIndex={-1}
-        role="presentation"
+        role='presentation'
         src={CloseIcon}
-        alt="close icon"
+        alt='close icon'
         onClick={openCloseModal}
       />
       <div>
-        <p className="__title">Your Data is Being uploaded</p>
-        <span className="__subtitle">
+        <p className='__title'>Your Data is Being uploaded</p>
+        <span className='__subtitle'>
           Your {platform} account has been connect , we are uplouploading the necessary data to
           manage your brands
         </span>
       </div>
-      <div className="onboarding-branches-uploading">
-        <p className="__title">{branchDataUploading.length} Branches Has been uploaded</p>
+      <div className='onboarding-branches-uploading'>
+        <p className='__title'>{branchDataUploading.length} Branches Has been uploaded</p>
         {branchDataUploading.map((obj) => (
           <div key={obj.id}>
             <div>
-              <p className="__title">{obj.branch_name.title}</p>
-              <span className="__subtitle">{obj.branch_name.address}</span>
+              <p className='__title'>{obj.branch_name.title}</p>
+              <span className='__subtitle'>{obj.branch_name.address}</span>
             </div>
-            <ButtonKit variant="contained">Added</ButtonKit>
+            <ButtonKit variant='contained'>Added</ButtonKit>
           </div>
         ))}
       </div>
-      <div className="onboarding-platform-buttons account">
+      <div className='onboarding-platform-buttons account'>
         <ButtonKit
           style={{ '--color': '#F9FAFB', color: 'black' }}
           onClick={() => {
             setConnectAccount('platform');
             setBranchDataUploading([]);
           }}
-          variant="contained"
+          variant='contained'
         >
           Cancel
         </ButtonKit>
         <ButtonKit
-          className="onboarding-platform-buttons_confirm"
-          variant="contained"
+          className='onboarding-platform-buttons_confirm'
+          variant='contained'
           style={{ '--color': '#9A6FFF' }}
           onClick={confirm}
         >

@@ -1,8 +1,8 @@
 import { Checkbox } from '@mui/material';
+import { useUserAuth } from 'contexts';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import defaultImage from '../../../assets/images/default.png';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import useApi from '../../../hooks/useApi';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 

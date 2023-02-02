@@ -1,11 +1,11 @@
-/* eslint-disable no-unused-vars */ import { pascalCase } from 'change-case';
+/* eslint-disable no-unused-vars */
+import { Layers, Tag, Vector } from 'assets/icons';
+import { pascalCase } from 'change-case';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useAtom } from 'jotai';
+import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import Layers from '../../assets/icons/Layers';
-import Tag from '../../assets/icons/Tag';
-import Vector from '../../assets/icons/Vector';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
@@ -23,10 +23,6 @@ import { platformObject } from '../../data/platformList';
 import useDate from '../../hooks/useDate';
 import usePlanningOffers from '../../hooks/usePlanningOffers';
 import useQueryState from '../../hooks/useQueryState';
-import BoxKit from '../../kits/box/BoxKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
@@ -253,29 +249,18 @@ const MarketingOffer = () => {
   useEffect(() => {
     const preHead = offersData.reduce(
       (acc, cur) => {
-        const {
-          platform,
-          type_offer: typeOffer,
-          discount_rate: procent,
-          status,
-          goal,
-        } = acc;
+        const { platform, type_offer: typeOffer, discount_rate: procent, status, goal } = acc;
 
         if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!typeOffer.includes(cur.type_offer) && cur.type_offer)
-          typeOffer.push(cur.type_offer);
+        if (!typeOffer.includes(cur.type_offer) && cur.type_offer) typeOffer.push(cur.type_offer);
 
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
         if (!status.includes(cur.status) && cur.status) status.push(cur.status);
 
-        if (
-          !goal.includes(cur.goal) &&
-          !goal.includes(targetMapping[cur.goal]) &&
-          cur.goal
-        )
+        if (!goal.includes(cur.goal) && !goal.includes(targetMapping[cur.goal]) && cur.goal)
           goal.push(targetMapping[cur.goal] || cur.goal);
 
         return {
@@ -332,7 +317,7 @@ const MarketingOffer = () => {
       goal: preHeadTarget,
     });
   }, [JSON.stringify(offersData)]);
-  
+
   const CancelOffer = () => {
     row.forEach((obj, index) => {
       selected.forEach((n) => {

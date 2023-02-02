@@ -1,5 +1,4 @@
-import ButtonKit from '../../../kits/button/ButtonKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import { ButtonKit, TextfieldKit } from 'kits';
 import onlyNumber from '../../../utlls/input/onlyNumber';
 import './AddAddressForm.scss';
 

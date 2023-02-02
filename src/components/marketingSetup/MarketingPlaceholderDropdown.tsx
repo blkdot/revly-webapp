@@ -1,8 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import SelectKit from '../../kits/select/SelectKit';
+import { FormControlKit, MenuItemKit, OutlinedInputKit, SelectKit } from 'kits';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -46,13 +43,13 @@ const MarketingPlaceholderDropdown = ({
 
   return (
     <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''} ${className}`}>
-      <FormcontrolKit sx={{ m: 1, width: 300, mt: 3 }}>
+      <FormControlKit sx={{ m: 1, width: 300, mt: 3 }}>
         <SelectKit
           readOnly={readOnly}
           displayEmpty
           value={personName || ''}
           onChange={handleChange || handleChangeValue}
-          input={<OutlindeInputKit />}
+          input={<OutlinedInputKit />}
           renderValue={(selected) => <em>{selected || title}</em>}
           MenuProps={MenuProps}
           inputProps={{ 'aria-label': 'Without label' }}
@@ -63,7 +60,7 @@ const MarketingPlaceholderDropdown = ({
             </MenuItemKit>
           ))}
         </SelectKit>
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

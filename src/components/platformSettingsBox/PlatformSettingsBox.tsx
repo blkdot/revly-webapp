@@ -1,7 +1,6 @@
 import { pascalCase } from 'change-case';
+import { ButtonKit, SwitchKit } from 'kits';
 import { AiFillEdit } from 'react-icons/ai';
-import ButtonKit from '../../kits/button/ButtonKit';
-import SwitchKit from '../../kits/switch/SwitchKit';
 import './PlatformSettingsBox.scss';
 
 const PlatformSettingsBox = (props: any) => {
