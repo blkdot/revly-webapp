@@ -92,7 +92,9 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => {
-                const vendorData = vendorsObj[r.platform.toLowerCase()].find((vObj) => vendor === vObj.vendor_id);
+                const vendorData = vendorsObj[r.platform.toLowerCase()].find(
+                  (vObj) => vendor === vObj.vendor_id
+                );
 
                 if (!vendorData) return null;
 
