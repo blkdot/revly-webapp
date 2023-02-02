@@ -5,20 +5,20 @@ import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import shortid from 'shortid';
+import Dates from 'components/dates/Dates';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
+import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
+import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from 'components/tableRevly/TableRevly';
+import useDate from 'hooks/useDate';
+import usePlanningAds from 'hooks/usePlanningAds';
+import usePlanningOffers from 'hooks/usePlanningOffers';
+import useQueryState from 'hooks/useQueryState';
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
-import Dates from '../../components/dates/Dates';
-import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
-import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
-import useDate from '../../hooks/useDate';
-import usePlanningAds from '../../hooks/usePlanningAds';
-import usePlanningOffers from '../../hooks/usePlanningOffers';
-import useQueryState from '../../hooks/useQueryState';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
@@ -75,7 +75,6 @@ const Planning = () => {
     renderTarget,
     renderScheduleType,
     renderSimpleRow,
-    renderRowTooltip,
     renderVendorId,
     renderTimeSlot,
     renderIsoDate,
@@ -98,7 +97,7 @@ const Planning = () => {
 
   const headersAds = [
     { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_names', disablePadding: true, label: 'Vendors' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'valid_from', disablePadding: true, label: 'Start date' },
     { id: 'valid_to', disablePadding: true, label: 'End date' },
@@ -109,7 +108,6 @@ const Planning = () => {
   const cellTemplatesObject = {
     chain_name: renderSimpleRowNotCentered,
     platform: renderPlatform,
-    vendor_names: renderRowTooltip,
     vendor_ids: renderVendorId,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,

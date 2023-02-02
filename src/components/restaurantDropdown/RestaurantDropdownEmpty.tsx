@@ -1,6 +1,4 @@
-import React from 'react';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import { SkeletonKit, TypographyKit } from 'kits';
 import selectIcon from '../../assets/images/ic_select.png';
 
 const RestaurantDropdownEmpty = () => (

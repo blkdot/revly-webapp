@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
+import { useUserAuth } from 'contexts';
+import { SpinnerKit, ContainerKit } from 'kits';
+import Navbar from 'components/navbar/Navbar';
+import useDate from 'hooks/useDate';
 
-import { useUserAuth } from '../contexts/AuthContext';
-import SpinnerKit from '../kits/spinner/SpinnerKit';
-import ContainerKit from '../kits/container/ContainerKit';
-import Navbar from '../components/navbar/Navbar';
 import { settingsLink } from '../data/navbarData';
-import useDate from '../hooks/useDate';
 
 const ProtectedSettingsRoutes = () => {
   const { user } = useUserAuth();
@@ -39,7 +38,7 @@ const ProtectedSettingsRoutes = () => {
     }
   };
   useEffect(() => {
-    window.load = checkLeaveTime();
+    window.onload = checkLeaveTime;
     window.onbeforeunload = (e) => {
       localStorage.setItem('leaveTime', JSON.stringify(new Date()));
       e.target.hidden = true;

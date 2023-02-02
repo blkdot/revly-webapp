@@ -1,6 +1,6 @@
 import { Arrow } from 'assets/icons';
+import { ButtonKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
-import ButtonKit from '../../../../kits/button/ButtonKit';
 
 const UploadingActive = ({ propsVariables }) => {
   const {

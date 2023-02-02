@@ -1,12 +1,11 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 
 import './Navbar.scss';
 
-import { useUserAuth } from '../../contexts/AuthContext';
-import ButtonKit from '../../kits/button/ButtonKit';
-import Navlink from '../navlink/Navlink';
+import { ButtonKit } from 'kits';
+import Navlink from 'components/navlink/Navlink';
+import { useUserAuth } from 'contexts';
 
 import logo from '../../assets/images/logo.png';
 import smallLogo from '../../assets/images/small-logo.png';

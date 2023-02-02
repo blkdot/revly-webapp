@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import OnboardingStepper from '../../../components/settings/onboarding/OnboardingStepper';
-import OnboardingMiddleContent from '../../../components/settings/onboarding/OnboardingMiddleContent';
-import OnboardingModal from '../../../components/settings/onboarding/OnboardingModal';
-import OnboardingTable from '../../../components/settings/onboarding/OnboardingTable';
+import { useState } from 'react';
+import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
+import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMiddleContent';
+import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
+import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
 import './SettingOnboarding.scss';
 
 const NewSettingsOnboarding = () => {
