@@ -1,12 +1,9 @@
 import { setMinutes } from 'date-fns';
 import getHours from 'date-fns/getHours';
 import setHours from 'date-fns/setHours';
+import { FormControlKit, MenuItemKit, OutlinedInputKit, SelectKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import SelectKit from '../../kits/select/SelectKit';
 import { minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
 
 const TimePickerDropdown = (props: any) => {
@@ -54,11 +51,11 @@ const TimePickerDropdown = (props: any) => {
   const isDisabledItem = (k) => disabledTimes.includes(k);
 
   return (
-    <FormcontrolKit style={{ witdh: '100%' }}>
+    <FormControlKit style={{ witdh: '100%' }}>
       <SelectKit
         value={getHours(value) || 0}
         onChange={setTimes}
-        input={<OutlindeInputKit />}
+        input={<OutlinedInputKit />}
         inputProps={{ 'aria-label': 'Without label' }}
         style={{ width: '100%' }}
       >
@@ -72,7 +69,7 @@ const TimePickerDropdown = (props: any) => {
           </MenuItemKit>
         ))}
       </SelectKit>
-    </FormcontrolKit>
+    </FormControlKit>
   );
 };
 

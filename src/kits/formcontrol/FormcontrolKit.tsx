@@ -1,5 +1,5 @@
 import { FormControl } from '@mui/material';
 
-const FormcontrolKit = (props: any) => <FormControl {...props} />;
+const FormControlKit = (props: any) => <FormControl {...props} />;
 
-export default FormcontrolKit;
+export default FormControlKit;

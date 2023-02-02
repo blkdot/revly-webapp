@@ -56,10 +56,10 @@ const ProtectedSettingsRoutes = () => {
   }
 
   const renderLayout = () => (
-    <div className="user-page">
+    <div className='user-page'>
       <Navbar />
       <div>
-        <div className="settings-header">
+        <div className='settings-header'>
           <ContainerKit>
             Settings - {settingsLink[0].subs.find((obj) => obj.path === location.pathname).title}
           </ContainerKit>
@@ -71,7 +71,7 @@ const ProtectedSettingsRoutes = () => {
     </div>
   );
 
-  return user ? renderLayout() : <Navigate to="/" />;
+  return user ? renderLayout() : <Navigate to='/' />;
 };
 
 export default ProtectedSettingsRoutes;

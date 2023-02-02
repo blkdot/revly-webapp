@@ -1,7 +1,5 @@
+import { AutoCompleteKit, PhoneInputKit, TextfieldKit } from 'kits';
 import country from '../../../data/country.json';
-import AutoCompleteKit from '../../../kits/autoComplete/AutoCompleteKit';
-import PhoneInputKit from '../../../kits/phoneInput/PhoneInputKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import onlyNumber from '../../../utlls/input/onlyNumber';
 import './AccountSettingForm.scss';
 

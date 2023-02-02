@@ -1,6 +1,6 @@
+import { useUserAuth } from 'contexts';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';

@@ -1,7 +1,7 @@
 import { Slider } from '@mui/material';
 import { pascalCase } from 'change-case';
+import { TypographyKit } from 'kits';
 import { TbArrowRightCircle } from 'react-icons/tb';
-import TypographyKit from '../../kits/typography/TypographyKit';
 
 const RangeSelector = (props: any) => {
   const { min, max, label, onChange, values, step } = props;

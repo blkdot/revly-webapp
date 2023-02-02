@@ -1,13 +1,11 @@
-import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
-import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import { ButtonLoadingKit, FormControlKit, TextfieldKit } from 'kits';
 import './ForgotPasswordForm.scss';
 
 const ForgotPasswordForm = (props: any) => {
   const { onChange, onSubmit, disabled, error, isLoading } = props;
 
   return (
-    <FormcontrolKit className='forgot-password-form' fullWidth>
+    <FormControlKit className='forgot-password-form' fullWidth>
       <TextfieldKit
         error={error}
         label='Email address'
@@ -25,7 +23,7 @@ const ForgotPasswordForm = (props: any) => {
       >
         Send Email
       </ButtonLoadingKit>
-    </FormcontrolKit>
+    </FormControlKit>
   );
 };
 

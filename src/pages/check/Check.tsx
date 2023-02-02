@@ -1,6 +1,6 @@
+import { useUserAuth } from 'contexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserAuth } from '../../contexts/AuthContext';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
 

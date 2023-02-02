@@ -1,5 +1,4 @@
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TimePickerKit from '../../kits/timePickerKit/TimePickerKit';
+import { TextfieldKit, TimePickerKit } from 'kits';
 
 const BasicTimePicker = ({ value, setValue, type, times, index, defaultValue }) => {
   const setTimes = (newValue) => {

@@ -1,11 +1,10 @@
-import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
 import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
 import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import { useAtom } from 'jotai';
+import { ButtonKit, TextfieldKit } from 'kits';
+import { useEffect, useState } from 'react';
 import { usePlatform } from '../../../hooks/usePlatform';
 import useVendors from '../../../hooks/useVendors';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const DropdownSnackbar = (props: any) => {

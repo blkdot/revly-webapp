@@ -1,6 +1,6 @@
 import { PhotoCamera } from '@mui/icons-material';
+import { AvatarKit } from 'kits';
 import { useDropzone } from 'react-dropzone';
-import AvatarKit from '../../kits/avatar/AvatarKit';
 import './AvatarUpload.scss';
 
 const AvatarUpload = (props: any) => {

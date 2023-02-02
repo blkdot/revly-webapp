@@ -1,10 +1,9 @@
-import React from 'react';
-import ButtonKit from '../../../../kits/button/ButtonKit';
+import { Arrow } from 'assets/icons';
 import CloseIcon from '../../../../assets/images/ic_close.png';
-import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
-import Arrow from '../../../../assets/icons/Arrow';
-import LodaingButtonKit from '../../../../kits/loadingButton/LoadingButtonKit';
 import { platformList } from '../../../../data/platformList';
+import ButtonKit from '../../../../kits/button/ButtonKit';
+import LodaingButtonKit from '../../../../kits/loadingButton/LoadingButtonKit';
+import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 
 const ConnectPlatform = ({ propsVariables }) => {
   const {
@@ -23,38 +22,38 @@ const ConnectPlatform = ({ propsVariables }) => {
   const platformObj = platformList.find((obj) => obj.name === connect);
   return (
     <div
-      className="onboarding-connect-account"
+      className='onboarding-connect-account'
       tabIndex={-1}
-      role="presentation"
+      role='presentation'
       onClick={(e) => e.stopPropagation()}
     >
       <img
-        className="onboarding-close_icon modal"
+        className='onboarding-close_icon modal'
         tabIndex={-1}
-        role="presentation"
+        role='presentation'
         src={CloseIcon}
-        alt="close icon"
+        alt='close icon'
         onClick={openCloseModal}
       />
       <div>
-        <p className="__title">Connect to your {platform} Account</p>
-        <span className="__subtitle">
+        <p className='__title'>Connect to your {platform} Account</p>
+        <span className='__subtitle'>
           Use your {platform} Email and password to connect your account
         </span>
         <TextfieldKit
-          className="onboarding-textfield"
-          placeholder="Email Address"
+          className='onboarding-textfield'
+          placeholder='Email Address'
           onChange={({ target }) => setEmail(target.value)}
           value={email}
         />
         <TextfieldKit
-          className="onboarding-textfield"
-          placeholder="Password"
+          className='onboarding-textfield'
+          placeholder='Password'
           onChange={({ target }) => setPassword(target.value)}
           value={password}
         />
       </div>
-      <div className="onboarding-platform-buttons account">
+      <div className='onboarding-platform-buttons account'>
         <ButtonKit
           onClick={() => {
             setConnect('');
@@ -62,7 +61,7 @@ const ConnectPlatform = ({ propsVariables }) => {
             setEmail('');
             setPassword('');
           }}
-          variant="contained"
+          variant='contained'
           style={{ '--color': '#F9FAFB', color: 'black' }}
         >
           <Arrow />
@@ -86,7 +85,7 @@ const ConnectPlatform = ({ propsVariables }) => {
             }
             setBranchDataUploading([...arr]);
           }}
-          variant="contained"
+          variant='contained'
           style={{ '--color': platformObj.color }}
           disabled={!(email && password)}
         >
