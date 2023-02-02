@@ -177,13 +177,13 @@ const MarketingOffer = () => {
       label: 'Avg Basket',
     },
     {
-      id: 'data.roi',
+      id: 'roi',
       numeric: true,
       disablePadding: false,
       label: 'ROI',
     },
     {
-      id: 'data.revenue',
+      id: 'revenue',
       numeric: true,
       disablePadding: false,
       label: 'Revenue',
@@ -213,7 +213,7 @@ const MarketingOffer = () => {
         [cur.id]: cellTemplatesObject[cur.id]
           ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
           : r[cur.id],
-        id: `${cur.id}_${r.offer_id}`,
+        id: `${cur.id}_${r.offer_ids}`,
         data: r,
       }),
       {}
@@ -261,7 +261,7 @@ const MarketingOffer = () => {
           goal,
         } = acc;
 
-        if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
+        if (!platform.includes(cur.platform.toLowerCase()) && cur.platform) platform.push(cur.platform.toLowerCase());
 
         if (!typeOffer.includes(cur.type_offer) && cur.type_offer)
           typeOffer.push(cur.type_offer);
@@ -362,7 +362,7 @@ const MarketingOffer = () => {
     let filteredData = offersData;
 
     if (filters.platform.length > 0) {
-      filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
+      filteredData = filteredData.filter((f) => filters.platform.includes(f.platform.toLowerCase()));
     }
 
     if (filters.type_offer.length > 0) {
