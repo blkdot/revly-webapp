@@ -1,9 +1,9 @@
+import { useUserAuth } from 'contexts';
 import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { verifyEmail } from '../../api/userApi';
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';

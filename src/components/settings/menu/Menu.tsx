@@ -1,3 +1,4 @@
+import { useUserAuth } from 'contexts';
 import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -6,7 +7,6 @@ import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
 import ictalabat from '../../../assets/images/talabat-favicon.png';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';

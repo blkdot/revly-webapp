@@ -1,4 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useUserAuth } from 'contexts';
 import { useAtom } from 'jotai';
 import {
   AccordionDetailsKit,
@@ -14,12 +15,10 @@ import lines from '../../assets/images/lines.png';
 import logo from '../../assets/images/logo.png';
 import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
-import { useUserAuth } from '../../contexts/AuthContext';
-import Navlink from '../navlink/Navlink';
-import './Navbar.scss';
-
 import { accordionLink, settingsLink, simpleLink } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
+import Navlink from '../navlink/Navlink';
+import './Navbar.scss';
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);

@@ -1,9 +1,9 @@
+import { useUserAuth } from 'contexts';
 import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
 import { ContainerKit, SpinnerKit } from 'kits';
 import { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import Navbar from '../components/navbar/Navbar';
-import { useUserAuth } from '../contexts/AuthContext';
 import useDate from '../hooks/useDate';
 
 const ProtectedRoutes = () => {

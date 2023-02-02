@@ -1,7 +1,7 @@
 import { pascalCase } from 'change-case';
+import { useUserAuth } from 'contexts';
 import { ButtonLoadingKit, FormControlKit, ModalKit, TextfieldKit } from 'kits';
 import { CSSProperties, useEffect, useState } from 'react';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import { platformList } from '../../../data/platformList';
 import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';

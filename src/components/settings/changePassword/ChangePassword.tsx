@@ -1,7 +1,7 @@
+import { useUserAuth } from 'contexts';
 import { updatePassword } from 'firebase/auth';
 import { ButtonLoadingKit, TextfieldKit } from 'kits';
 import { useState } from 'react';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
 import { useAlert } from '../../../hooks/useAlert';
 

@@ -1,4 +1,5 @@
 import { pascalCase } from 'change-case';
+import { useUserAuth } from 'contexts';
 import { ButtonKit, ButtonLoadingKit, ModalKit, SpinnerKit } from 'kits';
 import { CSSProperties, useEffect, useState } from 'react';
 import { IoMdHelp } from 'react-icons/io';
@@ -10,7 +11,6 @@ import MarketingEmpty from '../../components/marketing/MarketingEmpty';
 import OnBoardingForm from '../../components/onboarding/OnBoarding';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
 import Stepper from '../../components/stepper/Stepper';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { platformList } from '../../data/platformList';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';

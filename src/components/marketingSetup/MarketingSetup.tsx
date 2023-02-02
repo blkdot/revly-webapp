@@ -1,4 +1,5 @@
 import { Tooltip } from '@mui/material';
+import { useUserAuth } from 'contexts';
 import { addDays, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
@@ -17,7 +18,6 @@ import React, { useEffect, useState } from 'react';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';

@@ -1,10 +1,10 @@
 import { AxiosError } from 'axios';
 import AccountSettingForm from 'components/forms/accountSettingForm/AccountSettingForm';
+import { useUserAuth } from 'contexts';
 import { updateProfile } from 'firebase/auth';
 import { ButtonKit } from 'kits';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import country from '../../../data/country.json';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
 import { useAlert } from '../../../hooks/useAlert';

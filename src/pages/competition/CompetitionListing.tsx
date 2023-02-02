@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
+import { useUserAuth } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
@@ -18,7 +19,6 @@ import RestaurantDropdownNew from '../../components/restaurantDropdown/Restauran
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';

@@ -7,13 +7,13 @@
   Timer,
   Warning,
 } from 'assets/icons';
+import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { getPlanningOfferDetails } from '../../../api/userApi';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import { platformObject } from '../../../data/platformList';
 import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';

@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { useUserAuth } from 'contexts';
 import { handleResponse } from '../api/baseApi';
-import { useUserAuth } from '../contexts/AuthContext';
 import config from '../setup/config';
 
 const { apiUrl } = config;

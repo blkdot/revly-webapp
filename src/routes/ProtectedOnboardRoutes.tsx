@@ -1,7 +1,7 @@
+import { useUserAuth } from 'contexts';
 import { SpinnerKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useUserAuth } from '../contexts/AuthContext';
 import useApi from '../hooks/useApi';
 import { usePlatform } from '../hooks/usePlatform';
 import config from '../setup/config';
