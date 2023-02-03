@@ -1,8 +1,8 @@
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
 import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
 import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
-import { platformList, platformObject } from 'data/platformList';
-import usePlatform from 'hooks/usePlatform';
+import { platformList } from 'data/platformList';
+import { usePlatform } from 'hooks/usePlatform';
 import { RadioGroupKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
