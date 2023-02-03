@@ -60,7 +60,9 @@ const Navbar = () => {
   const renderSimpleLink = () =>
     simpleLink.map((s) => (
       <Navlink
-        className={!userPlatformData.onboarded && s.path !== '/dashboardOnboard' ? 'navlink-disabled' : ''}
+        className={
+          !userPlatformData.onboarded && s.path !== '/dashboardOnboard' ? 'navlink-disabled' : ''
+        }
         title={s.title}
         path={s.path}
         key={s.title}

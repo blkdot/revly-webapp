@@ -13,7 +13,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const { user } = useUserAuth();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
-  
+
   const vendor = vendorsObj[platform.toLowerCase()]?.find((v) => vendorId.includes(+v.vendor_id));
 
   const getOfferDetailData = () => {

@@ -88,7 +88,7 @@ export const DiscountedItemsStep: FC<{
   setCategorySearch,
   setFilteredCategoryData,
   platform,
-}) =>{
+}) => {
   const categorySearchFunc = (e) => {
     const { value } = e.target;
     setCategorySearch(value);
@@ -106,8 +106,8 @@ export const DiscountedItemsStep: FC<{
     const filtered = (
       filteredCategoryData.length > 0
         ? categoryData
-          .map((v) => category.filter((k) => k.category_name === v || k.category === v))
-          .flat()
+            .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+            .flat()
         : category
     ).filter((obj) => (obj.name || obj.item_name).toLowerCase().includes(value.toLowerCase()));
     if (categoryData.length > 0 && filtered.length === 0) {
@@ -156,114 +156,116 @@ export const DiscountedItemsStep: FC<{
     }
   };
   return (
-  <div className='left-part-middle'>
-    <TypographyKit variant='h6'>{index}. Select the discounted items</TypographyKit>
-    <Subtitle />
-    <BoxKit
-      className={`left-part-radio under-textfields radio-dates ${menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''
+    <div className='left-part-middle'>
+      <TypographyKit variant='h6'>{index}. Select the discounted items</TypographyKit>
+      <Subtitle />
+      <BoxKit
+        className={`left-part-radio under-textfields radio-dates ${
+          menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''
         }
                   `}
-    >
-      <div className='radio'>
-        <div>
-          <span>
-            <img src={ItemMenuIcon} alt='Item Menu Icon' />
-          </span>
+      >
+        <div className='radio'>
           <div>
-            <div>Offer on An Item from the Menu</div>
-            <p>{itemMenu}</p>
-          </div>
-        </div>
-      </div>
-      <div className='picker-duration search-filter'>
-        <div>
-          <TextfieldKit
-            style={{ width: '45%' }}
-            id='input-with-icon-textfield'
-            placeholder='Search'
-            value={categorySearch}
-            onChange={categorySearchFunc}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <img src={searchIcon} alt='Searh Icon' />
-                </InputAdornment>
-              ),
-            }}
-            variant='outlined'
-          />
-          <div style={{ width: '55%' }}>
-            <div className='__select menu-item-select'>
-              <MenuDropdown
-                onChange={handleCategoryDataChange}
-                value={categoryData}
-                multiple
-                renderValue={(selectedMenu) => selectedMenu.join(', ')}
-                items={categoryDataList}
-                label='All Categories'
-                renderOption={(v) => (
-                  <MenuItemKit key={v} value={v}>
-                    <CheckboxKit checked={categoryData.indexOf(v) > -1} />
-                    <ListItemTextKit primary={v} />
-                  </MenuItemKit>
-                )}
-              />
+            <span>
+              <img src={ItemMenuIcon} alt='Item Menu Icon' />
+            </span>
+            <div>
+              <div>Offer on An Item from the Menu</div>
+              <p>{itemMenu}</p>
             </div>
           </div>
         </div>
-        <p className='max-amount-top'>Maximum amount: {getMaximumItem()}</p>
-        <div className='max-amount'>
+        <div className='picker-duration search-filter'>
           <div>
-            Selected ({checked.length}/{getMaximumItem()})
-          </div>
-          {platform[0] === 'talabat' ? (
-            <div className='max-amount-btns'>
-              <ButtonKit
-                disabled={
-                  (filteredCategoryData.length > 0 ? filteredCategoryData : category)
-                    .length === checked.length
-                }
-                onClick={selectAllItems}
-                variant='outlined'
-              >
-                Select all
-              </ButtonKit>
-              <ButtonKit disabled={checked.length <= 0} onClick={clearItems} variant='text'>
-                Clear
-              </ButtonKit>
+            <TextfieldKit
+              style={{ width: '45%' }}
+              id='input-with-icon-textfield'
+              placeholder='Search'
+              value={categorySearch}
+              onChange={categorySearchFunc}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <img src={searchIcon} alt='Searh Icon' />
+                  </InputAdornment>
+                ),
+              }}
+              variant='outlined'
+            />
+            <div style={{ width: '55%' }}>
+              <div className='__select menu-item-select'>
+                <MenuDropdown
+                  onChange={handleCategoryDataChange}
+                  value={categoryData}
+                  multiple
+                  renderValue={(selectedMenu) => selectedMenu.join(', ')}
+                  items={categoryDataList}
+                  label='All Categories'
+                  renderOption={(v) => (
+                    <MenuItemKit key={v} value={v}>
+                      <CheckboxKit checked={categoryData.indexOf(v) > -1} />
+                      <ListItemTextKit primary={v} />
+                    </MenuItemKit>
+                  )}
+                />
+              </div>
             </div>
-          ) : (
-            ''
+          </div>
+          <p className='max-amount-top'>Maximum amount: {getMaximumItem()}</p>
+          <div className='max-amount'>
+            <div>
+              Selected ({checked.length}/{getMaximumItem()})
+            </div>
+            {platform[0] === 'talabat' ? (
+              <div className='max-amount-btns'>
+                <ButtonKit
+                  disabled={
+                    (filteredCategoryData.length > 0 ? filteredCategoryData : category).length ===
+                    checked.length
+                  }
+                  onClick={selectAllItems}
+                  variant='outlined'
+                >
+                  Select all
+                </ButtonKit>
+                <ButtonKit disabled={checked.length <= 0} onClick={clearItems} variant='text'>
+                  Clear
+                </ButtonKit>
+              </div>
+            ) : (
+              ''
+            )}
+          </div>
+        </div>
+        <FormControlKit className='category-list'>
+          {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
+            (obj, indexObj) => (
+              // TODO: FIX IT
+              // <div className='menu-item-wrapper' key={obj.id} value={obj.name}>
+              <div className='menu-item-wrapper' key={obj.id || obj.item_id}>
+                <FormControlLabelKit
+                  control={
+                    <CheckboxKit
+                      onChange={({ target }) => {
+                        if (target.checked && checked.length < getMaximumItem()) {
+                          setChecked([...checked, target.value]);
+                        } else if (!target.checked) {
+                          checked.splice(checked.indexOf(target.value), 1);
+                          setChecked([...checked]);
+                        }
+                      }}
+                      checked={checked.indexOf(obj.name || obj.item_name) > -1}
+                      value={obj.name || obj.item_name}
+                    />
+                  }
+                  label={<TooltipCategory index={indexObj} obj={obj} />}
+                />
+              </div>
+            )
           )}
-        </div>
-      </div>
-      <FormControlKit className='category-list'>
-        {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
-          (obj, indexObj) => (
-            // TODO: FIX IT
-            // <div className='menu-item-wrapper' key={obj.id} value={obj.name}>
-            <div className='menu-item-wrapper' key={obj.id || obj.item_id}>
-              <FormControlLabelKit
-                control={
-                  <CheckboxKit
-                    onChange={({ target }) => {
-                      if (target.checked && checked.length < getMaximumItem()) {
-                        setChecked([...checked, target.value]);
-                      } else if (!target.checked) {
-                        checked.splice(checked.indexOf(target.value), 1);
-                        setChecked([...checked]);
-                      }
-                    }}
-                    checked={checked.indexOf(obj.name || obj.item_name) > -1}
-                    value={obj.name || obj.item_name}
-                  />
-                }
-                label={<TooltipCategory index={indexObj} obj={obj} />}
-              />
-            </div>
-          )
-        )}
-      </FormControlKit>
-    </BoxKit>
-  </div>
-)};
+        </FormControlKit>
+      </BoxKit>
+    </div>
+  );
+};

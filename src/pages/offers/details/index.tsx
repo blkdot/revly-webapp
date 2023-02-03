@@ -182,7 +182,8 @@ const OfferDetailComponent = ({ data, setOpened }) => {
               </button>
               <div>
                 {['Live', 'Active', 'Scheduled'].includes(
-                  offerDetailMaster?.master_offer?.offer_status || offerDetailMaster?.master_offer?.status
+                  offerDetailMaster?.master_offer?.offer_status ||
+                    offerDetailMaster?.master_offer?.status
                 ) && (
                   <button onClick={openCancelModal} className='cancel-btn' type='button'>
                     <Warning />

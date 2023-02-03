@@ -44,11 +44,11 @@ const RestaurantDropdownOld = ({
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
   const { vendors: vendorsReq } = useVendors(undefined);
   React.useEffect(() => {
-    if(vendorsReq.vendorsArr.length > 1){
-      setVendors(vendorsReq)
+    if (vendorsReq.vendorsArr.length > 1) {
+      setVendors(vendorsReq);
     }
-  }, [vendorsReq])
-  
+  }, [vendorsReq]);
+
   const handleChange = (value) => {
     const vendorsSelectedTemp = JSON.parse(JSON.stringify(vendorsSelected)); // copy vendorsSelected
     // check if some vendorName equal value and vendorsSelected have at least 1 vendor

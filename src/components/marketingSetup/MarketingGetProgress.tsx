@@ -314,6 +314,6 @@ const GetProgress: FC<{
       }
     }
   }
-}
+};
 
 export default GetProgress;
