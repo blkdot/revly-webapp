@@ -1,6 +1,4 @@
-import FormControlKit from '../../../kits/formcontrol/FormControl';
-import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
-import SelectKit from '../../../kits/select/SelectKit';
+import { FormControlKit, MenuItemKit, SelectKit } from 'kits';
 
 const OnboardingDropdown = ({ state, setState, rows }) => {
   const handleChange = (event) => {

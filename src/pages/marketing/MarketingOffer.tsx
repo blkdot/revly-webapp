@@ -6,23 +6,23 @@ import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
+import Dates from 'components/dates/Dates';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
+import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
+import MarketingSetup from 'components/marketingSetup/MarketingSetup';
+import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
+import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from 'components/tableRevly/TableRevly';
+import useDate from 'hooks/useDate';
+import usePlanningOffers from 'hooks/usePlanningOffers';
+import useQueryState from 'hooks/useQueryState';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
-import Dates from '../../components/dates/Dates';
-import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
-import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
-import MarketingOfferRemove from '../../components/marketingOfferRemove/MarketingOfferRemove';
-import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
-import useDate from '../../hooks/useDate';
-import usePlanningOffers from '../../hooks/usePlanningOffers';
-import useQueryState from '../../hooks/useQueryState';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
@@ -251,7 +251,8 @@ const MarketingOffer = () => {
       (acc, cur) => {
         const { platform, type_offer: typeOffer, discount_rate: procent, status, goal } = acc;
 
-        if (!platform.includes(cur.platform.toLowerCase()) && cur.platform) platform.push(cur.platform.toLowerCase());
+        if (!platform.includes(cur.platform.toLowerCase()) && cur.platform)
+          platform.push(cur.platform.toLowerCase());
 
         if (!typeOffer.includes(cur.type_offer) && cur.type_offer) typeOffer.push(cur.type_offer);
 
@@ -347,7 +348,9 @@ const MarketingOffer = () => {
     let filteredData = offersData;
 
     if (filters.platform.length > 0) {
-      filteredData = filteredData.filter((f) => filters.platform.includes(f.platform.toLowerCase()));
+      filteredData = filteredData.filter((f) =>
+        filters.platform.includes(f.platform.toLowerCase())
+      );
     }
 
     if (filters.type_offer.length > 0) {

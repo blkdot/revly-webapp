@@ -1,5 +1,3 @@
-import React from 'react';
-
 import './OnboardingPlatformDetails.scss';
 
 const OnboardingPlatformDetails = (props) => {

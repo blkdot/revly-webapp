@@ -6,7 +6,7 @@ import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const useTableContentFormatter = () => {
   const [vendorsState] = useAtom(vendorsAtom);
-  const { vendorsArr } = vendorsState;
+  const { vendorsObj } = vendorsState;
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
@@ -92,7 +92,12 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => {
-                const vendorData = vendorsArr.find((vObj) => vendor === vObj.vendor_id);
+                const vendorData = vendorsObj[r.platform.toLowerCase()].find(
+                  (vObj) => vendor === vObj.vendor_id
+                );
+
+                if (!vendorData) return null;
+
                 return (
                   <span key={vendor} className='render-row-tooltip column'>
                     {vendorData.data.vendor_name || vendor}

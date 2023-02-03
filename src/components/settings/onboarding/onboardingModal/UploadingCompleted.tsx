@@ -1,5 +1,4 @@
-import React from 'react';
-import ButtonKit from '../../../../kits/button/ButtonKit';
+import { ButtonKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import Congrats from '../../../../assets/images/congrats.png';
 

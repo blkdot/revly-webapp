@@ -1,9 +1,7 @@
 import { Arrow } from 'assets/icons';
+import { ButtonKit, ButtonLoadingKit, TextfieldKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import { platformList } from '../../../../data/platformList';
-import ButtonKit from '../../../../kits/button/ButtonKit';
-import LodaingButtonKit from '../../../../kits/loadingButton/LoadingButtonKit';
-import TextfieldKit from '../../../../kits/textfield/TextfieldKit';
 
 const ConnectPlatform = ({ propsVariables }) => {
   const {
@@ -67,7 +65,7 @@ const ConnectPlatform = ({ propsVariables }) => {
           <Arrow />
           Back
         </ButtonKit>
-        <LodaingButtonKit
+        <ButtonLoadingKit
           onClick={() => {
             setConnectAccount('active');
             const arr = [];
@@ -91,7 +89,7 @@ const ConnectPlatform = ({ propsVariables }) => {
         >
           <img src={platformObj.srcFaviconWhite || platformObj.srcFavicon} alt={platform} />
           Connect with {platform}
-        </LodaingButtonKit>
+        </ButtonLoadingKit>
       </div>
     </div>
   );

@@ -3,14 +3,14 @@ import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit } from 'kits';
 import { useEffect, useState } from 'react';
 import type { TVendorsArr } from 'hooks/useVendors';
+import useApi from 'hooks/useApi';
+import { useAlert } from 'hooks/useAlert';
+import { usePlatform } from 'hooks/usePlatform';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
 import ictalabat from '../../../assets/images/talabat-favicon.png';
-import { useAlert } from '../../../hooks/useAlert';
-import useApi from '../../../hooks/useApi';
-import { usePlatform } from '../../../hooks/usePlatform';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';
@@ -29,7 +29,7 @@ const Menu = () => {
   const { getMenu } = useApi();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr: vendorList } = vendors;
-  const [branch, setBranch] = useState<string | TVendorsArr >('');
+  const [branch, setBranch] = useState<string | TVendorsArr>('');
   const { user } = useUserAuth();
 
   const getMenuData = async (vendor, platforms) => {

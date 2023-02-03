@@ -16,12 +16,12 @@ import {
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import useVendors from 'hooks/useVendors';
+import { useAlert } from 'hooks/useAlert';
+import useApi from 'hooks/useApi';
+import { usePlatform } from 'hooks/usePlatform';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import { useAlert } from '../../hooks/useAlert';
-import useApi from '../../hooks/useApi';
-import { usePlatform } from '../../hooks/usePlatform';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import {
@@ -207,12 +207,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
   const clearTimeSelected = () => {
     const clonedheatmapData = { ...heatmapData };
-    
+
     Object.values(clonedheatmapData[links]).forEach((objHeat, indexObjHeat) => {
       if (objHeat) {
         Object.keys(objHeat).forEach((num) => {
           delete clonedheatmapData[links][Object.keys(clonedheatmapData[links])[indexObjHeat]][num]
-          .active;
+            .active;
         });
       }
     });
@@ -447,10 +447,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
       const heatmaDataPlatform = { ...revenueData?.[platform[0]].heatmap };
       const ordersDataPlatform = { ...ordersData?.[platform[0]].heatmap };
-      
 
       if (!heatmaDataPlatform || !ordersDataPlatform) {
-        return{
+        return {
           revenue: defaultHeatmapState,
           orders: defaultHeatmapState,
         };
@@ -458,19 +457,19 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
       Object.keys(heatmaDataPlatform).forEach((oldKey) => {
         const newKey = daysOrder[oldKey];
-  
+
         heatmaDataPlatform[newKey] = heatmaDataPlatform[oldKey];
-  
+
         delete heatmaDataPlatform[oldKey];
       });
-  
+
       Object.keys(ordersDataPlatform).forEach((oldKey) => {
         const newKey = daysOrder[oldKey];
-  
+
         ordersDataPlatform[newKey] = ordersDataPlatform[oldKey];
         delete ordersDataPlatform[oldKey];
       });
-  
+
       return {
         revenue: heatmaDataPlatform,
         orders: ordersDataPlatform,
@@ -1032,52 +1031,14 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     </TypographyKit>
   );
 
-  const renderCells = 
-    () =>
-      days.map((obj) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <TypographyKit key={obj} variant='div'>
-          {_.range(minHour, maxHour + 1).map((num) => {
-            if (heatmapLoading) return renderSkeleton(num);
+  const renderCells = () =>
+    days.map((obj) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <TypographyKit key={obj} variant='div'>
+        {_.range(minHour, maxHour + 1).map((num) => {
+          if (heatmapLoading) return renderSkeleton(num);
 
-            if (heatmapData[links][obj]?.[num] && heatmapData[links][obj][num]?.data)
-              return (
-                <TypographyKit
-                  component='div'
-                  style={{ '--i': num - 5 }}
-                  className='absolute'
-                  key={num}
-                >
-                  <Tooltip
-                    placement='top-start'
-                    title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
-                    arrow
-                  >
-                    <ItemHeatmap>
-                      <TypographyKit
-                        className='heatmap-btn '
-                        sx={getStyleHashureActive(heatmapData[links][obj][num])}
-                      >
-                        <span>&nbsp;</span>
-                      </TypographyKit>
-                    </ItemHeatmap>
-                  </Tooltip>
-                </TypographyKit>
-              );
-
-            if (heatmapData[links][obj]?.[num] && heatmapData[links][obj][num]?.active) {
-              return (
-                <TypographyKit
-                  component='div'
-                  style={{ '--i': num - 5 }}
-                  className='absolute active'
-                  key={num}
-                >
-                  <span>&nbsp;</span>
-                </TypographyKit>
-              );
-            }
-
+          if (heatmapData[links][obj]?.[num] && heatmapData[links][obj][num]?.data)
             return (
               <TypographyKit
                 component='div'
@@ -1085,12 +1046,49 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
                 className='absolute'
                 key={num}
               >
+                <Tooltip
+                  placement='top-start'
+                  title={renderTooltipContent(heatmapData[links][obj][num].data, num)}
+                  arrow
+                >
+                  <ItemHeatmap>
+                    <TypographyKit
+                      className='heatmap-btn '
+                      sx={getStyleHashureActive(heatmapData[links][obj][num])}
+                    >
+                      <span>&nbsp;</span>
+                    </TypographyKit>
+                  </ItemHeatmap>
+                </Tooltip>
+              </TypographyKit>
+            );
+
+          if (heatmapData[links][obj]?.[num] && heatmapData[links][obj][num]?.active) {
+            return (
+              <TypographyKit
+                component='div'
+                style={{ '--i': num - 5 }}
+                className='absolute active'
+                key={num}
+              >
                 <span>&nbsp;</span>
               </TypographyKit>
             );
-          })}
-        </TypographyKit>
-      ));
+          }
+
+          return (
+            <TypographyKit
+              component='div'
+              style={{ '--i': num - 5 }}
+              className='absolute'
+              key={num}
+            >
+              <span>&nbsp;</span>
+            </TypographyKit>
+          );
+        })}
+      </TypographyKit>
+    ));
 
   const renderLeftSideNotCreated = () => {
     if (triggerLoading)
