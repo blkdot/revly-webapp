@@ -18,3 +18,7 @@ To use them  use the following path:
 ## Code formatting
 
 Before every push, run `yarn prettify`
+
+## Error or task waiting to be fixed/done
+
+Search or use this type of comment to notify other coders about things need to be done/fixed `// TODO: xxx`
