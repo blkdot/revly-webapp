@@ -42,6 +42,8 @@
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/naming-convention": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-use-before-define": "warn"
+    "@typescript-eslint/no-use-before-define": "warn",
+    "react-hooks/rules-of-hooks": 1,
+    "react-hooks/exhaustive-deps": 1
   }
 }

@@ -22,20 +22,22 @@ import {
 } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import {
+  ButtonKit,
+  DatePickerKit,
+  FormControlKit,
+  LocalizationProviderKit,
+  MenuItemKit,
+  MonthPickerKit,
+  PaperKit,
+  SelectKit,
+  TypographyKit,
+} from 'kits';
 import React, { useEffect, useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import switchIcon from '../../assets/images/Switch.png';
 import useDate from '../../hooks/useDate';
-import ButtonKit from '../../kits/button/ButtonKit';
-import DatePickerKit from '../../kits/datePicker/DatePickerKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import LocalizationProviderKit from '../../kits/localizationProvider/LocalizationProviderkit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import MonthPickerKit from '../../kits/monthPicker/MonthPickerKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import SelectKit from '../../kits/select/SelectKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { getAllDateSetup } from '../../utlls/date/getAllDateSetup';
 import AfterPeriodSelect from './AfterPeriodSelect';
 import './Dates.scss';
@@ -879,7 +881,7 @@ const Dates = (props: any) => {
       <LocalizationProviderKit dateAdapter={AdapterDayjs}>
         <div className='month-wrapper'>
           <PaperKit className='year-dropdown-paper'>
-            <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size='small'>
+            <FormControlKit sx={{ m: 1, minWidth: 120 }} size='small'>
               <SelectKit
                 id='demo-select-small'
                 value={year}
@@ -891,7 +893,7 @@ const Dates = (props: any) => {
                   </MenuItemKit>
                 ))}
               </SelectKit>
-            </FormcontrolKit>
+            </FormControlKit>
           </PaperKit>
           <MonthPickerKit
             className='month_picker'
@@ -950,7 +952,7 @@ const Dates = (props: any) => {
             beforePeriod={beforePeriod}
             setupOffer={n === 'week' ? setupOffer : false}
             setYear={setYear}
-            offer={offer}
+            offer={!!offer}
           />
         ))}
       </div>
@@ -1066,7 +1068,7 @@ const Dates = (props: any) => {
               <LocalizationProviderKit dateAdapter={AdapterDayjs}>
                 <div className='month-wrapper'>
                   <PaperKit className='year-dropdown-paper'>
-                    <FormcontrolKit sx={{ m: 1, minWidth: 120 }} size='small'>
+                    <FormControlKit sx={{ m: 1, minWidth: 120 }} size='small'>
                       <SelectKit
                         id='demo-select-small'
                         value={yearAfterPeriod}
@@ -1078,7 +1080,7 @@ const Dates = (props: any) => {
                           </MenuItemKit>
                         ))}
                       </SelectKit>
-                    </FormcontrolKit>
+                    </FormControlKit>
                   </PaperKit>
                   <MonthPickerKit
                     className='month_picker'

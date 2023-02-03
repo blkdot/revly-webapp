@@ -1,8 +1,8 @@
 import { Checkbox } from '@mui/material';
+import { useUserAuth } from 'contexts';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import defaultImage from '../../../assets/images/default.png';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import useApi from '../../../hooks/useApi';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 
@@ -13,17 +13,18 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const { user } = useUserAuth();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
-  const vendor = vendorsObj[platform]?.find((v) => +v.vendor_id === +vendorId);
+
+  const vendor = vendorsObj[platform.toLowerCase()]?.find((v) => vendorId.includes(+v.vendor_id));
 
   const getOfferDetailData = () => {
     getOfferDetails(
       {
         master_email: user.email,
-        access_token: '',
+        access_token: user.accessToken,
         vendor,
         drn_id: drnId,
       },
-      platform
+      platform.toLowerCase()
     )
       .then((res) => setData(res.data))
       // eslint-disable-next-line no-console

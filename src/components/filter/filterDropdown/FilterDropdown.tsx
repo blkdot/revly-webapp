@@ -1,8 +1,7 @@
+import { ButtonKit, CheckboxKit } from 'kits';
 import { useRef, useState } from 'react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import useClickAwayListner from '../../../hooks/useClickAwayListner';
-import ButtonKit from '../../../kits/button/ButtonKit';
-import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 import './FilterDropdown.scss';
 
 const FilterDropdown = (props: any) => {

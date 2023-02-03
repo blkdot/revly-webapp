@@ -1,13 +1,10 @@
 import { useAtom } from 'jotai';
+import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
 import { useEffect } from 'react';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import selectIcon from '../../assets/images/ic_select.png';
 import { usePlatform } from '../../hooks/usePlatform';
 import useVendors from '../../hooks/useVendors';
-import ButtonKit from '../../kits/button/ButtonKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import SelectKit from '../../kits/select/SelectKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import './RestaurantDropdown.scss';
@@ -372,7 +369,7 @@ const RestaurantDropdownNew = ({
   if (branch) {
     return (
       <div className='restaurant-dropdown_wrapper branch'>
-        <FormcontrolKit fullWidth>
+        <FormControlKit fullWidth>
           <SelectKit
             labelId='demo-simple-select-label'
             id='demo-simple-select'
@@ -405,7 +402,7 @@ const RestaurantDropdownNew = ({
               ))}
             </div>
           </SelectKit>
-        </FormcontrolKit>
+        </FormControlKit>
       </div>
     );
   }
@@ -419,7 +416,7 @@ const RestaurantDropdownNew = ({
       ) : (
         ''
       )}
-      <FormcontrolKit fullWidth>
+      <FormControlKit fullWidth>
         <SelectKit
           labelId='demo-simple-select-label'
           id='demo-multiple-checkbox-vendors-new'
@@ -466,7 +463,7 @@ const RestaurantDropdownNew = ({
             ))}
           </div>
         </SelectKit>
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

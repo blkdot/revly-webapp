@@ -8,13 +8,13 @@
 
     width: 100%;
     height: 46px;
-  
+
     background: #906bff;
     border-radius: 30px;
     cursor: pointer;
     border: none;
     color: white;
-  
+
     &:hover {
       background: #1f007b;
       box-shadow: 0px 8px 16px rgb(43 0 171 / 24%);
@@ -29,7 +29,7 @@
     }
 
     &:disabled {
-      background-color: #919EAB;
+      background-color: #919eab;
       cursor: not-allowed;
 
       &:hover {

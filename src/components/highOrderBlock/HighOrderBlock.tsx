@@ -1,4 +1,4 @@
-import FabKit from '../../kits/fab/FabKit';
+import { FabKit } from 'kits';
 import './HighOrderBlock.scss';
 
 const HighOrderBlock = (props: any) => {

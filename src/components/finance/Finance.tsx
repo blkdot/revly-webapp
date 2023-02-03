@@ -1,8 +1,8 @@
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { TypographyKit } from 'kits';
 import useDate from '../../hooks/useDate';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import Widget from '../widget/Widget';
 import './Finance.scss';
 
@@ -64,7 +64,7 @@ const Finance = ({
     if (vendorsSelected.length > 2) {
       return `${vendorsSelected.length} selected vendors`;
     }
-    return <p> {vendorsSelected.join(', ')}</p>;
+    return <p> {vendorsSelected.map((obj) => obj.data.vendor_name).join(', ')}</p>;
   };
   const financeLinks = ['revenue', 'n_orders', 'average_basket', 'profit'];
   return (

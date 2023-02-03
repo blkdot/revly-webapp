@@ -1,5 +1,7 @@
+import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
+import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import competitorIcon from '../../assets/images/ic_competitor.png';
@@ -12,15 +14,9 @@ import RestaurantDropdownNew from '../../components/restaurantDropdown/Restauran
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 
@@ -126,7 +122,7 @@ const CompetitionAlerts = () => {
       const list = Object.keys(pl)
         .map((v) => ({
           name: v,
-          registered: pl[v].active,
+          registered: pl[v].some((obj) => obj.active),
         }))
         .filter((k) => k.registered === true);
 
@@ -197,9 +193,12 @@ const CompetitionAlerts = () => {
   }, [platform, vendors, beforePeriodBtn]);
 
   useEffect(() => {
-    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.chain_id);
-    setVendors({ ...vendors, vendorsSelected: arr });
-    localStorage.setItem('vendors', JSON.stringify({ ...vendors, vendorsSelected: arr }));
+    const arr = vendorsArr.filter(
+      (v) =>
+        v.platform === platform &&
+        (v.metadata.is_active === 'True' || v.metadata.is_active === true)
+    );
+    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });
   }, [platform]);
 
   const handleCompetitorChange = (e) => {

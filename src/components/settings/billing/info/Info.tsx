@@ -1,5 +1,5 @@
 import { Zoom } from '@mui/material';
-import ButtonKit from '../../../../kits/button/ButtonKit';
+import { ButtonKit } from 'kits';
 
 const Info = (props: any) => {
   const { name, address, phone, onDelete, onEdit } = props;

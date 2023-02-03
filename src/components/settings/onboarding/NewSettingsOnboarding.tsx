@@ -1,14 +1,11 @@
 import { pascalCase } from 'change-case';
+import { useUserAuth } from 'contexts';
+import { ButtonLoadingKit, FormControlKit, ModalKit, TextfieldKit } from 'kits';
 import { CSSProperties, useEffect, useState } from 'react';
-import { useUserAuth } from '../../../contexts/AuthContext';
 import { platformList } from '../../../data/platformList';
 import { useAlert } from '../../../hooks/useAlert';
 import useApi from '../../../hooks/useApi';
 import { usePlatform } from '../../../hooks/usePlatform';
-import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
-import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
-import ModalKit from '../../../kits/modal/ModalKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
 
 const style: CSSProperties = {
@@ -170,7 +167,7 @@ const SettingsOnboarding = () => {
             <span>
               Connect your {pascalCase(platformActiveModal)} account to your Revly account
             </span>
-            <FormcontrolKit
+            <FormControlKit
               className='auth-form'
               fullWidth
               style={{
@@ -196,7 +193,7 @@ const SettingsOnboarding = () => {
                 style={{ margin: '1rem 0.5rem' }}
                 fullWidth
               />
-            </FormcontrolKit>
+            </FormControlKit>
             <div style={{ margin: 'auto', textAlign: 'center' }}>
               <ButtonLoadingKit
                 className='auth-form__input'

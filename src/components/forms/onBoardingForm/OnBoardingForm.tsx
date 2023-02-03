@@ -1,8 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { ButtonLoadingKit, FormControlKit, TextfieldKit } from 'kits';
 import { useState } from 'react';
-import ButtonLoadingKit from '../../../kits/button/ButtonLoadingKit';
-import FormcontrolKit from '../../../kits/formcontrol/FormcontrolKit';
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
 import './OnBoardingForm.scss';
 
 const OnBoardingForm = (props: any) => {
@@ -39,7 +37,7 @@ const OnBoardingForm = (props: any) => {
   return (
     <div className='onboarding-form'>
       {title ? <h2>{title}</h2> : null}
-      <FormcontrolKit className='onboarding-form' fullWidth>
+      <FormControlKit className='onboarding-form' fullWidth>
         <TextfieldKit
           label='Email address'
           onChange={(e) => onChangeEmail(e.target.value)}
@@ -71,7 +69,7 @@ const OnBoardingForm = (props: any) => {
           }}
         />
         {renderButton()}
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

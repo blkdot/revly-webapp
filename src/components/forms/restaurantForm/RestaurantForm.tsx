@@ -1,4 +1,4 @@
-import TextfieldKit from '../../../kits/textfield/TextfieldKit';
+import { TextfieldKit } from 'kits';
 import './RestaurantForm.scss';
 
 const RestaurantForm = () => (

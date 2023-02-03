@@ -1,18 +1,20 @@
+import {
+  BoxKit,
+  PaperKit,
+  SkeletonKit,
+  TableBodyKit,
+  TableCellKit,
+  TableContainerKit,
+  TableKit,
+  TableRowKit,
+} from 'kits';
 import { useState } from 'react';
-import BoxKit from '../../kits/box/BoxKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import TableKit from '../../kits/table/TableKit';
-import TableBodyKit from '../../kits/tablebody/TableBodyKit';
-import TableCellKit from '../../kits/tablecell/TableCellKit';
-import TableContainerKit from '../../kits/tablecontainer/TableContainerKit';
-import TableRowKit from '../../kits/tablerow/TableRowKit';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 
 const TableRevly = (props: any) => {
-  const { headers, rows, isLoading, mainFieldOrdered, onClickRow } = props;
+  const { headers, rows, isLoading, mainFieldOrdered, onClickRow, renderNoData } = props;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
@@ -35,7 +37,10 @@ const TableRevly = (props: any) => {
   const renderRows = () => {
     if (isLoading) return renderSkeleton();
 
-    if (!rows || rows.length < 1)
+    if (!rows || rows.length < 1) {
+      if (renderNoData) {
+        return renderNoData;
+      }
       return (
         <TableRowKit className='no-data'>
           <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
@@ -43,6 +48,7 @@ const TableRevly = (props: any) => {
           </TableCellKit>
         </TableRowKit>
       );
+    }
 
     return renderRowsContent();
   };
@@ -57,7 +63,7 @@ const TableRevly = (props: any) => {
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
       <TableRowKit
         className='marketing-table-top'
-        onClick={handleRowClick(r.data.master_offer_id)}
+        onClick={handleRowClick(r.data.master_offer_id || r.data.id)}
         key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
       >
         {headers.map((h) => r[h.id])}

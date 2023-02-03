@@ -1,12 +1,14 @@
+import {
+  SpinnerKit,
+  TableBodyKit,
+  TableCellKit,
+  TableContainerKit,
+  TableHeadKit,
+  TableKit,
+  TableRowKit,
+  TableSortLabelKit,
+} from 'kits';
 import { useState } from 'react';
-import SpinnerKit from '../../../../kits/spinner/SpinnerKit';
-import TableKit from '../../../../kits/table/TableKit';
-import TableBodyKit from '../../../../kits/tablebody/TableBodyKit';
-import TableCellKit from '../../../../kits/tablecell/TableCellKit';
-import TableContainerKit from '../../../../kits/tablecontainer/TableContainerKit';
-import TableHeadKit from '../../../../kits/tablehead/TableHeadKit';
-import TableRowKit from '../../../../kits/tablerow/TableRowKit';
-import TableSortLabelKit from '../../../../kits/tablesortlabel/TableSortLableKit';
 
 const headRows = [
   {

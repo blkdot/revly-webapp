@@ -6,18 +6,19 @@ const { apiUrl, firebaseApiUrl } = config;
 
 export const getMetrics = (body) =>
   axios
-    .post(`${apiUrl}/user/metrics`, body)
+    .post(`${apiUrl}/user/metricsv2`, body)
     .then((res) => res)
     .catch(handleResponse);
 
-export const getVendors = (body) => axios.post(`${apiUrl}/user/vendors`, body).then(handleResponse);
+export const getVendors = (body) =>
+  axios.post(`${apiUrl}/user/vendorsv2`, body).then(handleResponse);
 
 export const getHeatmap = (type, body) =>
-  axios.post(`${apiUrl}/user/heatmap/${type}`, body).then(handleResponse).catch(handleResponse);
+  axios.post(`${apiUrl}/user/heatmapv2/${type}`, body).then(handleResponse).catch(handleResponse);
 
 export const getMenu = (body, platform) =>
   axios
-    .post(`${apiUrl}/user/menu/${platform}`, body)
+    .post(`${apiUrl}/user/menuv2/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 
@@ -29,7 +30,7 @@ export const getOfferDetails = (body, platform) =>
 
 export const getPlanningOfferDetails = (body) =>
   axios
-    .post(`${apiUrl}/planning/offerdetails`, body)
+    .post(`${apiUrl}/planning/offerdetailsv2`, body)
     .then((res) => res)
     .catch(handleResponse);
 
@@ -46,5 +47,16 @@ export const verifyEmail = (user) =>
     .post(
       `${firebaseApiUrl}/verifyEmail?email=${user.email}&fname=${user.fname}&lname=${user.lname}`
     )
+    .then((res) => res)
+    .catch(handleResponse);
+
+export const saveUser = (body) =>
+  axios
+    .post(`${apiUrl}/user/savev2`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+export const loadUser = (body) =>
+  axios
+    .post(`${apiUrl}/user/loadv2`, body)
     .then((res) => res)
     .catch(handleResponse);

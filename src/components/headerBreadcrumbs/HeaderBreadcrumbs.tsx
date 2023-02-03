@@ -1,5 +1,4 @@
-import BoxKit from '../../kits/box/BoxKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import { BoxKit, TypographyKit } from 'kits';
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs';
 
 const HeaderBreadcrumbs = ({ heading, links, style }) => (

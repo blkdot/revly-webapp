@@ -1,7 +1,7 @@
 import { Add } from '@mui/icons-material';
+import { ButtonKit } from 'kits';
 import { useState } from 'react';
 import smallLogo from '../../../assets/images/small-logo.png';
-import ButtonKit from '../../../kits/button/ButtonKit';
 import AddAddressForm from '../../forms/addAddressForm/AddAddressForm';
 import AddPaymentForm from '../../forms/addPaymentForm/AddPaymentForm';
 import Info from './info/Info';
