@@ -23,7 +23,7 @@ export const settingsLogin = (body) =>
   axios.post(`${apiUrl}/settingsv2/login`, body).then(handleResponse).catch(handleResponse);
 
 export const settingsSave = (body) =>
-  axios.post(`${apiUrl}/settingsv2/save`, body).then(handleResponse).catch(handleResponse);
+  axios.post(`${apiUrl}/settingsv2/savev2`, body).then(handleResponse).catch(handleResponse);
 
 export const settingsLoad = (body) =>
-  axios.post(`${apiUrl}/settingsv2/load`, body).then(handleResponse).catch(handleResponse);
+  axios.post(`${apiUrl}/settingsv2/loadv2`, body).then(handleResponse).catch(handleResponse);

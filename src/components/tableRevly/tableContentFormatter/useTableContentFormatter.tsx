@@ -39,17 +39,17 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={vendor} className="render-row-tooltip column">
+                <span key={vendor} className='render-row-tooltip column'>
                   {vendor}
                 </span>
               ))
         }
         disableHoverListener={r[h.id]?.length === 0}
-        id="category-tooltip"
-        placement="right"
+        id='category-tooltip'
+        placement='right'
         arrow
       >
-        <span className="render-row-tooltip" key={h.id}>
+        <span className='render-row-tooltip' key={h.id}>
           {r[h.id] === null || !r[h.id] ? '-' : (r[h.id]?.length || 0)?.toLocaleString('en-US')}
         </span>
       </TooltipKit>
@@ -63,7 +63,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}
     >
       <img
-        className="planning-platform"
+        className='planning-platform'
         style={{ marginRight: '1.5rem' }}
         src={platformObject[r.platform].src}
         alt={platformObject[r.platform].name}
@@ -104,7 +104,7 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
-      <span className="competition-table-alert" style={{ whiteSpace: 'nowrap' }}>
+      <span className='competition-table-alert' style={{ whiteSpace: 'nowrap' }}>
         {r[h.id] * 100}%
       </span>
     </TableCellKit>
@@ -158,7 +158,7 @@ const useTableContentFormatter = () => {
 
   const renderOrdinalSuffix = (r, h) => (
     <TableCellKit>
-      {ordinalSuffixOf(r[h.id]) as any >= 100 && '> '}
+      {(ordinalSuffixOf(r[h.id]) as any) >= 100 && '> '}
       {ordinalSuffixOf(r[h.id])}
     </TableCellKit>
   );
@@ -169,14 +169,12 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      {r[h.id].status === 'in process' ? (
-        <span className="render-branch-row_skeleton" />
+      {r.branch_status === 'in process' ? (
+        <span className='render-branch-row_skeleton' />
       ) : (
-        <div
-          className={`render-branch-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
-        >
-          <p className="__title">{r[h.id].title}</p>
-          <span className="__subtitle">{r[h.id].address}</span>
+        <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
+          <p className='__title'>{r[h.id].title}</p>
+          <span className='__subtitle'>{r[h.id].address}</span>
         </div>
       )}
     </TableCellKit>
@@ -193,11 +191,10 @@ const useTableContentFormatter = () => {
           <span
             key={obj.platform}
             style={{ '--color': getPlatform(obj.platform).color } as any}
-            className={`render-linked-platforms-row ${
-              obj.status === 'in process' ? 'process' : ''
-            } ${obj.status === 'active' ? 'active' : ''} ${
-              r.branchStatus === 'suspended' ? 'row-suspended' : ''
-            }`}
+            className={`render-linked-platforms-row ${obj.status.replace(
+              /\s/g,
+              ''
+            )} row-${r.branch_status.replace(/\s/g, '')}`}
           >
             <img
               src={
@@ -216,12 +213,8 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      <div
-        className={`render-accounts-row ${r[h.id].status === 'suspended' ? 'row-suspended' : ''}`}
-      >
-        {r[h.id] && r[h.id].length > 1
-          ? `${r[h.id][0]} + ${r[h.id].length - 1} more`
-          : r[h.id][0]}
+      <div className={`render-accounts-row ${r.branch_status.replace(/\s/g, '')}`}>
+        {r[h.id] && r[h.id].length > 1 ? `${r[h.id][0]} + ${r[h.id].length - 1} more` : r[h.id][0]}
       </div>
     </TableCellKit>
   );
@@ -231,9 +224,9 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      <div className="render-branch_status-row_wrapper">
+      <div className='render-branch_status-row_wrapper'>
         <div className={`render-branch_status-row ${r[h.id].replace(/\s/g, '')}`}>{r[h.id]}</div>
-        {r[h.id] !== 'in process' ? <img className="arrow" src={arrow} alt="arrow" /> : ''}
+        {r[h.id] !== 'in process' ? <img className='arrow' src={arrow} alt='arrow' /> : ''}
       </div>
     </TableCellKit>
   );

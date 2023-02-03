@@ -1,20 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { vendorsAtom } from 'store/vendorsAtom';
 import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
 
-const useVendors = (isSign) => {
+const useVendors = (isSign: any) => {
   const { getVendors } = useApi();
-
-  const [vendors, setVendors] = useState({
-    vendorsSelected: [],
-    vendorsObj: {},
-    vendorsArr: [],
-    display: {},
-    chainObj: {},
-  });
+  const [vendors, setVendors] = useAtom(vendorsAtom);
 
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();
@@ -40,7 +35,6 @@ const useVendors = (isSign) => {
     const newData = data as any;
 
     delete newData?.master_email;
-
     let vendorsSelectedTemp = [];
     let vendorsTemp = [];
     platformList
@@ -50,13 +44,26 @@ const useVendors = (isSign) => {
       })
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
-          vendorsTemp.push({ ...v, platform: p.name });
-          userPlatformData.platforms[p.name].forEach((obj) => {
-            if (obj.active) {
-              vendorsSelectedTemp.push(v.data.vendor_name);
-            }
+          const userPlatform = userPlatformData.platforms[p.name].find((obj) =>
+            obj.vendor_ids.some((id) => id === v.vendor_id)
+          ) || '';
+          vendorsTemp.push({
+            ...v,
+            platform: p.name,
+            email: userPlatform.email,
+            access_token: userPlatform.access_token,
+            access_token_bis: userPlatform.access_token_bis,
           });
-        }),
+          if (v.metadata.is_active === 'True' || v.metadata.is_active === true) {
+            vendorsSelectedTemp.push({
+              ...v,
+              platform: p.name,
+              email: userPlatform.email,
+              access_token: userPlatform.access_token,
+              access_token_bis: userPlatform.access_token_bis,
+            });
+          }
+        })
       );
     const { ...rest } = newData;
     const display = newData.display ? newData.display : {};
@@ -68,7 +75,7 @@ const useVendors = (isSign) => {
         Object.keys(chainObj[chainName][vendorName]).forEach((platform) => {
           chainObj[chainName][vendorName][platform] = {
             ...chainObj[chainName][vendorName][platform],
-            active: userPlatformData.platforms[platform].active,
+            active: userPlatformData.platforms[platform].length,
           };
           if (
             chainObj[chainName][vendorName][platform] === null ||
@@ -78,10 +85,10 @@ const useVendors = (isSign) => {
           }
           if (chainObj[chainName][vendorName][platform] !== null) {
             if ((vendorsObj[platform] || []).length === 0) {
-              if (userPlatformData.platforms[platform].active) {
+              if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
                 vendorsObj[platform] = [chainObj[chainName][vendorName][platform]];
               }
-            } else if (userPlatformData.platforms[platform].active) {
+            } else if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
               vendorsObj[platform] = [
                 ...vendorsObj[platform],
                 chainObj[chainName][vendorName][platform],
@@ -92,13 +99,7 @@ const useVendors = (isSign) => {
       });
     });
     Object.keys(rest).forEach((platform) => {
-      if (userPlatformData.platforms[platform].length > 0) {
-        userPlatformData.platforms[platform].forEach((obj) => {
-          if (!obj.active) {
-            delete rest[platform];
-          }
-        });
-      } else {
+      if (!userPlatformData.platforms[platform].some((obj) => obj.active)) {
         delete rest[platform];
       }
     });

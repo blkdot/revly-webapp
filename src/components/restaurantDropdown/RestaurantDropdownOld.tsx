@@ -4,7 +4,6 @@ import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import talabat from '../../assets/images/talabat-favicon.png';
 import { platformList } from '../../data/platformList';
-import { usePlatform } from '../../hooks/usePlatform';
 import useVendors from '../../hooks/useVendors';
 import ButtonKit from '../../kits/button/ButtonKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
@@ -37,35 +36,43 @@ const RestaurantDropdownOld = ({
   setState,
   cost,
   listing,
+  branch,
+  className,
 }: any) => {
-  const [vendorsContext, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq } = useVendors(undefined);
-  const { userPlatformData } = usePlatform();
-  React.useEffect(() => {
-    if (vendorsReq.vendorsArr.length > 0) {
-      setVendors(vendorsReq);
-    }
-  }, [vendorsReq]);
+  const [, setVendors] = useAtom(vendorsAtom);
+  const { vendors: vendorsContext } = useVendors(undefined);
 
   const handleChange = (value) => {
     const vendorsSelectedTemp = JSON.parse(JSON.stringify(vendorsSelected)); // copy vendorsSelected
     // check if some vendorName equal value and vendorsSelected have at least 1 vendor
-    if (vendorsSelected.some((vendorName) => vendorName === value) && vendorsSelected.length > 1) {
+    if (
+      vendorsSelected.some((obj) => obj.vendor_id === value.vendor_id) &&
+      vendorsSelected.length > 1
+    ) {
       // deleting vendor from vendorsSelectedTemp
       vendorsSelectedTemp.splice(
-        vendorsSelected.findIndex((vendorName) => vendorName === value),
+        vendorsSelected.findIndex((obj) => obj.vendor_id === value.vendor_id),
         1
       );
-    } else if (!vendorsSelected.some((vendorName) => vendorName === value)) {
-      // pushing vendor to vendorsSelectedTemp
-      vendorsSelectedTemp.push(value);
+    } else if (!vendorsSelected.some((obj) => obj.vendor_id === value.vendor_id)) {
+      if (branch) {
+        if (vendorsSelected.some((obj) => obj.email === value.email)) {
+          vendorsSelectedTemp.push(value);
+        } else {
+          vendorsSelectedTemp.splice(0, vendorsSelectedTemp.length);
+          vendorsSelectedTemp.push(value);
+        }
+      } else {
+        // pushing vendor to vendorsSelectedTemp
+        vendorsSelectedTemp.push(value);
+      }
     }
     const vendorsObjTemp = { talabat: [], deliveroo: [] };
-    vendorsSelectedTemp.forEach((vendorName) => {
+    vendorsSelectedTemp.forEach((objV) => {
       platformList.forEach((p) => {
         vendors.forEach((obj) => {
           // checking if vendor_name and platform from vendorsArr equal vendorName from vendorsSelectedTemp and platform
-          if (obj.data.vendor_name === vendorName && obj.platform === p.name) {
+          if (obj.vendor_id === objV.vendor_id && obj.platform === p.name) {
             // pushing the obj to vendorsObjTemp[p.name (talabat or deliveroo)]
             vendorsObjTemp[p.name].push(obj);
           }
@@ -80,9 +87,9 @@ const RestaurantDropdownOld = ({
       }
     });
     // checking if vendorsSelected or vendorsSelectedTemp have at least 1 vendor
-    if (vendorsSelected.length > 1 || vendorsSelectedTemp.length > 1) {
+    if (vendorsSelected.length > 1 || vendorsSelectedTemp.length >= 1) {
       // for own state not for global context
-      if (cost || listing) {
+      if (cost || listing || branch) {
         const newValue = {
           ...state,
           vendorsObj: vendorsObjTemp,
@@ -174,23 +181,17 @@ const RestaurantDropdownOld = ({
   const [hoverStatus, setHover] = React.useState([]);
   const getHoverStatusVendor = (vendorName) => hoverStatus.find((v) => v === vendorName);
   const getDisabled = (info) => {
-    let a = false;
-    if (userPlatformData.platforms[info.platform].length > 0) {
-      userPlatformData.platforms[info.platform].forEach((obj) => {
-        obj.vendor_ids.forEach((id) => {
-          if (id === info.vendor_id) {
-            a = !obj.active;
-          }
-        });
-      });
-      return a;
+    if (info.metadata.is_active === 'True' || info.metadata.is_active === true) {
+      return true;
     }
-    return true;
+    return false;
   };
   const renderLayout = (info, index) => (
-    <div className="vendors-only" key={info.vendor_id}>
-      <MenuItemKit disabled={getDisabled(info)} onClick={() => handleChange(info.data.vendor_name)}>
-        <CheckboxKit checked={vendorsSelected.indexOf(info.data.vendor_name) > -1} />
+    <div className='vendors-only' key={info.vendor_id}>
+      <MenuItemKit disabled={!getDisabled(info)} onClick={() => handleChange(info)}>
+        <CheckboxKit
+          checked={vendorsSelected.map((obj) => obj.vendor_id).indexOf(info.vendor_id) > -1}
+        />
         <img
           className='restaurant-img'
           src={info.platform === 'talabat' ? talabat : deliveroo}
@@ -206,7 +207,7 @@ const RestaurantDropdownOld = ({
           <div
             role='presentation'
             tabIndex={-1}
-            onClick={() => handleChange(info.data.vendor_name)}
+            onClick={() => handleChange(info)}
             className='tooltip-vendor'
           >
             {info.data.vendor_name}
@@ -225,12 +226,15 @@ const RestaurantDropdownOld = ({
       </MenuItemKit>
     </div>
   );
-
   return (
-    <div className='restaurant-dropdown_wrapper old'>
-      <TypographyKit className='top-text-inputs' variant='subtitle'>
-        Select a Vendor
-      </TypographyKit>
+    <div className={`restaurant-dropdown_wrapper old ${className}`}>
+      {!branch ? (
+        <TypographyKit className='top-text-inputs' variant='subtitle'>
+          Select a Vendor
+        </TypographyKit>
+      ) : (
+        ''
+      )}
       <FormcontrolKit sx={{ m: 1, width: 300 }}>
         <SelectKit
           labelId='demo-multiple-checkbox-label'
@@ -249,7 +253,7 @@ const RestaurantDropdownOld = ({
                   width: '90%',
                 }}
               >
-                {selected.join(', ')}
+                {selected.map((obj) => obj?.data?.vendor_name).join(', ')}
               </span>
             </div>
           )}
@@ -257,7 +261,7 @@ const RestaurantDropdownOld = ({
           sx={{ textTransform: 'capitalize', paddingLeft: '25px', paddingRight: '0px' }}
         >
           <div className='dropdown-paper'>
-            {!listing ? (
+            {!listing && !branch ? (
               <div className='selected-chains'>
                 <p>Selected: {(cost ? state.vendorsSelected : vendorsSelected).length}</p>
                 <ButtonKit

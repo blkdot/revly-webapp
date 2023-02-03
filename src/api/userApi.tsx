@@ -49,3 +49,14 @@ export const verifyEmail = (user) =>
     )
     .then((res) => res)
     .catch(handleResponse);
+
+export const saveUser = (body) =>
+  axios
+    .post(`${apiUrl}/user/savev2`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+export const loadUser = (body) =>
+  axios
+    .post(`${apiUrl}/user/loadv2`, body)
+    .then((res) => res)
+    .catch(handleResponse);

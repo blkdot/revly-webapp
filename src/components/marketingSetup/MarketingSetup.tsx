@@ -52,7 +52,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     return activePlatform;
   };
   const [platform, setPlatform] = useState([getActivePlatform()]);
-  const [platformData, setPlatformData] = useState(getActivePlatform());
   const [selected, setSelected] = useState(1);
   const [links, setLinks] = useState('revenue');
   const [menu, setMenu] = useState('Offer on the whole Menu');
@@ -81,11 +80,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
   const { getMenu } = useApi();
-  const { vendorsObj, vendorsArr } = vendors as any;
+  const { vendorsObj } = vendors as any;
   const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
-  const [branchData, setBranchData] = useState(
-    vendorsObj?.[platformData]?.[0]?.data?.vendor_name || ''
-  );
   const [startingDate, setStartingDate] = useState(new Date());
   const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
   const [typeSchedule, setTypeSchedule] = useState('Continues Offer');
@@ -128,6 +124,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const [checked, setChecked] = useState([]);
+  const [categoryLoading, setCategoryLoading] = useState(true);
   const itemMenuObj = {
     'Flash Deal': {
       discount: ['50%'],
@@ -258,8 +255,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     const arr = [];
     category.forEach((obj) => {
       checked.forEach((c) => {
-        if (obj.name === c) {
-          arr.push({ id: obj.id, drn_id: obj.drn_id });
+        if (obj.name || obj.item_name === c) {
+          arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
         }
       });
     });
@@ -269,29 +266,26 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   useEffect(() => {
     const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
     const newVendorsObj = { talabat: [], deliveroo: [] };
-    if (Object.keys(vendors.display).length > 0) {
-      Object.keys(newChainObj).forEach((chainName, index) => {
-        Object.keys(newChainObj[chainName]).forEach((vendorName) => {
-          if (index !== 0) {
-            delete newChainObj[chainName][vendorName];
-          } else {
-            platform.forEach((p) => {
-              newVendorsObj[p]?.push(newChainObj[chainName][vendorName][p]);
-            });
-          }
-        });
+    Object.keys(newChainObj).forEach((chainName, index) => {
+      Object.keys(newChainObj[chainName]).forEach((vendorName) => {
+        if (index !== 0) {
+          delete newChainObj[chainName][vendorName];
+        } else {
+          platform.forEach((p) => {
+            newVendorsObj[p]?.push(newChainObj[chainName][vendorName][p]);
+          });
+        }
       });
-      setBranch({
-        ...vendors,
-        vendorsObj: newVendorsObj,
-        chainObj: newChainObj,
-      });
-    } else {
-      setBranchData(vendorsObj?.[platformData]?.[0]?.data?.vendor_name);
-    }
+    });
+    setBranch({
+      ...vendors,
+      vendorsObj: newVendorsObj,
+      chainObj: newChainObj,
+      vendorsSelected:
+        [vendors.vendorsArr.filter((v) => platform.find((p) => v.platform === p && (v.metadata.is_active === 'True' || v.metadata.is_active === true)))[0]] || [],
+    });
     setMenu('Offer on the whole Menu');
-  }, [platform, vendors, platformData]);
-
+  }, [platform, vendors]);
   const getPlatformToken = () => {
     if (Object.keys(vendors.display).length > 0) {
       return (
@@ -299,18 +293,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         userPlatformData.platforms[platform[0]].access_token_bis
       );
     }
-    return (
-      userPlatformData.platforms[platformData].access_token ??
-      userPlatformData.platforms[platformData].access_token_bis
-    );
+    return branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis;
   };
-  const getPlatformActive = () => {
-    if (Object.keys(vendors.display).length > 0) {
-      return platform[0];
-    }
-    return platformData;
-  };
-
   const handleSchedule = async () => {
     let isStartingFromZero = true;
     if (duration === 'Starting Now') {
@@ -319,7 +303,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     }
 
     const menuType =
-      menu === 'Offer on the whole Menu' || getPlatformActive() === 'talabat'
+      menu === 'Offer on the whole Menu' || platform[0] === 'talabat'
         ? null
         : { menu_items: getMenuItem(), theme: getDiscountMovType('type') };
 
@@ -337,22 +321,17 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       access_token: user.accessToken,
       platform_token: getPlatformToken(),
       vendors: [{}],
+      chain_id: '',
     };
 
     try {
       if (platform.length < 2) {
         setTriggerLoading(true);
-        const newBranchData =
-          Object.keys(vendors.display).length > 0
-            ? branch.vendorsObj[platform[0]][0]
-            : vendorsArr.find((v) => v.data.vendor_name === branchData);
-        const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
-        delete clonedVendor.platform;
-
-        const res = await triggerOffers(
-          Object.keys(vendors.display).length > 0 ? platform[0] : platformData,
-          { ...dataReq, vendors: [clonedVendor] }
-        );
+        const res = await triggerOffers(platform[0], {
+          ...dataReq,
+          vendors: branch.vendorsSelected,
+          chain_id: String(branch.vendorsSelected[0].chain_id),
+        });
 
         if (res instanceof Error) {
           throw new Error(res.message);
@@ -365,19 +344,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       } else {
         const crossPlatform = platform.map(async (p) => {
           setTriggerLoading(true);
-          const newBranchData =
-            Object.keys(vendors.display).length > 0
-              ? branch.vendorsObj[p][0]
-              : vendorsArr.find((v) => v.data.vendor_name === branchData);
+          const newBranchData = branch.vendorsObj[p][0];
           const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
           delete clonedVendor.platform;
 
-          const platformToken =
-            userPlatformData.platforms[p].access_token ??
-            userPlatformData.platforms[p].access_token_bis;
           return triggerOffers(p, {
             ...dataReq,
-            platform_token: platformToken,
             vendors: [clonedVendor],
           });
         });
@@ -480,24 +452,25 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     getHeatmapData();
   }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj), active]);
 
-  const getPlatform = (e) => {
+  const getPlatform = (e, radio) => {
     const { value } = e.target;
+    if (radio) {
+      if (e.target.checked) {
+        setPlatform([value]);
+        return;
+      }
+    }
     if (e.target.checked) {
       setPlatform([...platform, value]);
       return;
     }
-    if (platform.length > 1) {
+    if (!e.target.checked) {
       platform.splice(
         platform.findIndex((el) => el === value),
         1
       );
     }
     setPlatform([...platform]);
-  };
-
-  const getPlatformData = (e) => {
-    const { value } = e.target;
-    setPlatformData(value);
   };
 
   const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
@@ -512,6 +485,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
   const getMenuData = async (vendor, platforms) => {
     try {
+      setCategoryLoading(true);
       const res = await getMenu(
         { master_email: user.email, access_token: user.accessToken, vendor },
         platforms
@@ -522,6 +496,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       }
       if (res.data.menu_items === null) {
         setCategory(null);
+        setCategoryLoading(false);
       } else {
         const resp = Object.keys(res.data.menu_items)
           .map((v) => res.data.menu_items[v])
@@ -530,36 +505,43 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
         setCategoryDataList(res.data.categories);
         setCategory(resp);
+        setCategoryLoading(false);
       }
     } catch (err) {
       setCategory([]);
+      setCategoryLoading(false);
       triggerAlertWithMessageError('Error while retrieving data');
     }
   };
 
   useEffect(() => {
-    const vendor = vendors.vendorsArr.find((v) => v.data.vendor_name === branchData);
-    if (Object.keys(vendors.display).length === 0) {
-      if (branchData && vendor.platform === platformData) {
-        getMenuData(vendor, platformData);
+    if (selected === 2) {
+      if (platform.length < 2 && branch) {
+        const vendorDisplay = vendors.vendorsObj[platform[0]][0];
+        getMenuData(vendorDisplay, platform[0]);
       }
-    } else if (platform.length < 2 && branch && selected === 2) {
-      const vendorDisplay = vendors.vendorsObj[platform[0]][0];
-      getMenuData(vendorDisplay, platform[0]);
     }
-  }, [platformData, branchData, platform, selected]);
-
+  }, [platform, selected]);
+  const [categorySearch, setCategorySearch] = useState('');
   const handleCategoryDataChange = (e) => {
     const { value } = e.target;
     if (value.length > 0) {
-      const arr = value.map((v) => category.filter((k) => k.category === v)).flat();
-      setFilteredCategoryData(arr);
+      const arr = value
+        .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+        .flat();
+      if (categorySearch) {
+        const filtered = arr.filter((obj) =>
+          (obj.name || obj.item_name).toLowerCase().includes(categorySearch.toLowerCase())
+        );
+        setFilteredCategoryData(filtered);
+      } else {
+        setFilteredCategoryData(arr);
+      }
     } else {
       setFilteredCategoryData([]);
     }
     setCategoryData(value);
   };
-
   function isValidDate(d) {
     return d instanceof Date && !Number.isNaN(d);
   }
@@ -605,22 +587,17 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     setHeatmapData({ ...heatmapData, [links]: { ...clonedheatmapData[links] } });
   };
   const getSteps = (stepsArr) => {
-    if (Object.keys(vendors.display).length > 0) {
-      if (platform.length < 2) {
-        if (platform[0] === 'talabat') {
-          setSteps(stepsArr);
-        } else {
-          setSteps([...stepsArr, stepsArr.length]);
-        }
+    if (platform.length < 2) {
+      if (platform[0] === 'talabat') {
+        setSteps(stepsArr);
       } else {
         setSteps([...stepsArr, stepsArr.length]);
       }
-    } else if (platformData === 'talabat') {
-      setSteps(stepsArr);
     } else {
       setSteps([...stepsArr, stepsArr.length]);
     }
   };
+
   const durationDisable = (n, stepsRange) => {
     if (selected === n) {
       clearTimeSelected();
@@ -719,19 +696,28 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   useEffect(() => {
     if (selected === 1) {
       getSteps([0, 1, 2, 3]);
+      setFilteredCategoryData([]);
+      setCategory([]);
+      setChecked([]);
+      setCategoryData([]);
+      setMenu('Offer on the whole Menu');
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         clearTimeSelected();
         return;
       }
-      setDisabled(!branchData);
       clearTimeSelected();
+      setDisabled(false);
       return;
     }
     if (selected === 2) {
       clearTimeSelected();
       if (menu === 'Offer on An Item from the Menu') {
         getSteps([0, 1, 2, 3, 4]);
+        if (platform[0] === 'talabat') {
+          setDisabled(!(menu && discountPercentage));
+          return;
+        }
         setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
         return;
       }
@@ -767,7 +753,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     itemMenu,
     checked,
     vendors,
-    branchData,
     targetAudience,
   ]);
 
@@ -854,7 +839,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     const arr = [];
     checked.forEach((c) => {
       category.forEach((obj) =>
-        obj.name === c ? arr.push({ name: obj.name, price: obj.price }) : false
+        obj.name === c || obj.item_name === c
+          ? arr.push({ name: obj.name || obj.item_name, price: obj.price || obj.unit_price })
+          : false
       );
     });
     return arr;
@@ -910,11 +897,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     setHeatmapData,
     heatmapData,
     links,
-    getPlatformData,
-    platformData,
-    setBranchData,
-    branchData,
-    getPlatformActive,
+    categoryLoading,
+    categorySearch,
+    setCategorySearch,
   };
 
   const recapData = {
@@ -945,8 +930,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     endingDate,
     times,
     targetAudience,
-    branchData,
-    platformData,
     vendors,
   };
 
@@ -1003,13 +986,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
             return (
               <TypographyKit
                 style={{ '--i': num - 5 }}
-                className={`absolute ${
-                  heatmapData[links][obj] &&
-                  heatmapData[links][obj][num] &&
-                  heatmapData[links][obj][num]?.active
+                className={`absolute ${heatmapData[links][obj] &&
+                    heatmapData[links][obj][num] &&
+                    heatmapData[links][obj][num]?.active
                     ? 'active'
                     : ''
-                }`}
+                  }`}
                 key={num}
               >
                 <span />

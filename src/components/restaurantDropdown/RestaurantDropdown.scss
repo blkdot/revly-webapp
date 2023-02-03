@@ -53,6 +53,28 @@
   position: relative;
   width: 30%;
 
+  &.branch {
+    .MuiSvgIcon-root {
+      right: 15px !important;
+    }
+
+    &.top-competition > div {
+      padding: 0 !important;
+    }
+
+    > div > div {
+      padding-left: 0 !important;
+
+      > div {
+        padding-right: 15% !important;
+        padding-left: 15px !important;
+        height: 50px;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
   .MuiSvgIcon-root {
     right: 0px;
   }
@@ -331,9 +353,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     &.disabled {
       pointer-events: none;
     }
+
     &:hover {
       .only-button {
         opacity: 1;
@@ -404,9 +428,11 @@
     transition: 0.3s;
     height: 0;
     display: none;
+
     &.Mui-disabled.Mui-disabled {
       pointer-events: none;
     }
+
     &.listing {
       > div {
         margin: 0;
@@ -528,16 +554,20 @@
     visibility: visible;
   }
 }
-.selected-dropdown_skeleton{
+
+.selected-dropdown_skeleton {
   height: fit-content !important;
-  >span:nth-of-type(1){
+
+  > span:nth-of-type(1) {
     width: 60%;
   }
-  >span:nth-of-type(2){
+
+  > span:nth-of-type(2) {
     width: 80%;
   }
 }
-@media(max-width: 1200px) {
+
+@media (max-width: 1200px) {
   .restaurant-dropdown_wrapper {
     width: 40%;
   }

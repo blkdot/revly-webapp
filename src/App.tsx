@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -13,9 +12,8 @@ import { GlobalFunctionalitiesContextProvider } from './contexts/GlobalFunctiona
 
 import SignIn from './pages/signIn/SignIn';
 import SignUp from './pages/signUp/SignUp';
+import DashboardOnboard from './pages/dashboard/DashboardOnboard';
 import Dashboard from './pages/dashboard/Dashboard';
-import OnBoarding from './pages/onBoarding/OnBoarding';
-import Settings from './pages/settings/Settings';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import ProtectedOnboardRoutes from './routes/ProtectedOnboardRoutes';
@@ -59,7 +57,7 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <div className="App">
+    <div className='App'>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <PlatformProvider>
@@ -67,34 +65,33 @@ const App = () => (
               <GlobalFunctionalitiesContextProvider>
                 <Routes>
                   <Route element={<AuthLayout />}>
-                    <Route path="/" element={<SignIn />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/verify-code-signup" element={<VerifyCode />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path='/' element={<SignIn />} />
+                    <Route path='/signup' element={<SignUp />} />
+                    <Route path='/verify-code-signup' element={<VerifyCode />} />
+                    <Route path='/reset-password' element={<ResetPassword />} />
                   </Route>
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path='/forgot-password' element={<ForgotPassword />} />
                   <Route element={<ProtectedRoutes />}>
+                    <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
                     <Route element={<ProtectedOnboardRoutes />}>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/planning" element={<Planning />} />
-                      <Route path="/competition/listing" element={<CompetitionListing />} />
-                      <Route path="/competition/alerts" element={<CompetitionAlerts />} />
-                      <Route path="/marketing/offer" element={<MarketingOffer />} />
-                      <Route path="/marketing/ads" element={<MarketingAds />} />
-                      <Route path="/verify-code" element={<VerifyCode />} />
+                      <Route path='/dashboard' element={<Dashboard />} />
+                      <Route path='/planning' element={<Planning />} />
+                      <Route path='/competition/listing' element={<CompetitionListing />} />
+                      <Route path='/competition/alerts' element={<CompetitionAlerts />} />
+                      <Route path='/marketing/offer' element={<MarketingOffer />} />
+                      <Route path='/marketing/ads' element={<MarketingAds />} />
+                      <Route path='/verify-code' element={<VerifyCode />} />
                     </Route>
-                    <Route path="/onboarding" element={<OnBoarding />} />
-                    <Route path="/check" element={<Check />} />
+                    <Route path='/check' element={<Check />} />
                   </Route>
                   <Route element={<ProtectedSettingsRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/settings/general" element={<General />} />
-                      <Route path="/settings/billing" element={<Billing />} />
-                      <Route path="/settings/onboarding" element={<NewSettingsOnboarding />} />
-                      <Route path="/settings/change-password" element={<ChangePassword />} />
-                      <Route path="/settings/menu" element={<Menu />} />
-                      <Route path="/settings/cost" element={<Cost />} />
+                      <Route path='/settings/general' element={<General />} />
+                      <Route path='/settings/billing' element={<Billing />} />
+                      <Route path='/settings/onboarding' element={<NewSettingsOnboarding />} />
+                      <Route path='/settings/change-password' element={<ChangePassword />} />
+                      <Route path='/settings/menu' element={<Menu />} />
+                      <Route path='/settings/cost' element={<Cost />} />
                     </Route>
                   </Route>
                 </Routes>

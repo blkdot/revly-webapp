@@ -1,9 +1,5 @@
 import { getAlerts, getAreas, getCompetitors, getRanking } from '../api/competitionApi';
-import {
-  cancelOffer,
-  cancelOfferMaster,
-  triggerOffers,
-} from '../api/marketingApi';
+import { cancelOffer, cancelOfferMaster, triggerOffers } from '../api/marketingApi';
 import { getAds, getOffers } from '../api/planningApi';
 import {
   settingsLoad,

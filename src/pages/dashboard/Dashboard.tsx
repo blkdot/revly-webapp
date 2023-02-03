@@ -124,7 +124,7 @@ const Dashboard = () => {
         <Dates isDashboard />
       </div>
       {!userPlatformData.onboarded ? (
-        <div className="dashboard-stepper">
+        <div className='dashboard-stepper'>
           <OnboardingModal propsVariables={propsVariables} />
           <OnboardingStepper
             activeStep={activeStep}
@@ -171,8 +171,8 @@ const Dashboard = () => {
       metricsbeforePeriod.length !== 0 &&
       !loading &&
       userPlatformData.onboarded ? (
-        <PaperKit className="dashboard-paper-wrapper">
-          <div className="dashboard-links">
+        <PaperKit className='dashboard-paper-wrapper'>
+          <div className='dashboard-links'>
             {links.map((title) => (
               <div
                 role='presentation'

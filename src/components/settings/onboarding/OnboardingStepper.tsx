@@ -38,7 +38,7 @@ const ColorlibStepIcon = (props: any) => {
     2: ClockIcon,
     3: ShieldIcon,
   };
-  const ownerProps = { ownerState: { completed, active } }
+  const ownerProps = { ownerState: { completed, active } };
   return (
     <ColorlibStepIconRoot {...ownerProps} className={className}>
       <img width={30} height={30} src={icons[icon]} alt={icon} />
@@ -77,8 +77,8 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
       return (
         <ButtonKit
           onClick={openCloseModal}
-          className="settings-onboarding-btn connect"
-          variant="contained"
+          className='settings-onboarding-btn connect'
+          variant='contained'
         >
           Connect
         </ButtonKit>
@@ -86,8 +86,8 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
     }
     if (activeStep >= 100 && activeStep < 200 && index === 1) {
       return (
-        <ButtonKit className="settings-onboarding-btn connect manage" variant="contained">
-          <Link to="/settings/onboarding">Manage my branches</Link>
+        <ButtonKit className='settings-onboarding-btn connect manage' variant='contained'>
+          <Link to='/settings/onboarding'>Manage my branches</Link>
         </ButtonKit>
       );
     }
@@ -103,7 +103,7 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
   return (
     <div className={`settings-onboarding bg ${!active ? 'close' : ''}`}>
       <StepperKit
-        className="onboarding-stepper"
+        className='onboarding-stepper'
         alternativeLabel
         activeStep={Number(String(activeStep / 100)[0])}
       >
@@ -111,13 +111,13 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
           <StepKit key={obj.label}>
             <StepLabelKit StepIconComponent={ColorlibStepIcon}>
               <span
-                style={{ ['--activeStep' as any]: `${getActiveStep(index)}%` }}
+                style={{ '--activeStep': `${getActiveStep(index)}%` } as any}
                 className={`${index !== 2 ? 'onboarding-stepper_line' : ''} ${
                   Number(String(activeStep / 100)[0]) >= index + 1 ? 'active' : ''
                 }`}
               />
-              <p className="__title">{`${index + 1}. ${obj.label}`}</p>
-              <div className="__subtitle">{obj.subtitle}</div>
+              <p className='__title'>{`${index + 1}. ${obj.label}`}</p>
+              <div className='__subtitle'>{obj.subtitle}</div>
               {getButton(index)}
             </StepLabelKit>
           </StepKit>
@@ -125,11 +125,11 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
       </StepperKit>
       {accounts.length >= 1 && activeStep >= 100 ? (
         <img
-          className="onboarding-close_icon"
+          className='onboarding-close_icon'
           tabIndex={-1}
-          role="presentation"
+          role='presentation'
           src={CloseIcon}
-          alt="close icon"
+          alt='close icon'
           onClick={() => setActive(false)}
         />
       ) : (

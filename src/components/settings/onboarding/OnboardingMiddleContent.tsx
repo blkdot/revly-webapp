@@ -6,16 +6,15 @@ import ButtonKit from '../../../kits/button/ButtonKit';
 
 const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
   const [kitchen, setKitchen] = useState('');
-
   return (
-    <div className="settings-onboarding-middle_content">
+    <div className='settings-onboarding-middle_content'>
       <div>
-        <p className="__title">Your branches list</p>
-        <span className="__subtitle">
+        <p className='__title'>Your branches list</p>
+        <span className='__subtitle'>
           Egestas vel augue nunc risus augue neque amet diam in. Proin.
         </span>
       </div>
-      <div className="settings-onboarding-btn_wrapper">
+      <div className='settings-onboarding-btn_wrapper'>
         {accounts.length > 0 ? (
           <OnboardingDropdown
             rows={branchData
@@ -33,17 +32,17 @@ const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConn
               openCloseModal();
               setConnectAccount('manageAccount');
             }}
-            className="settings-onboarding-btn white"
-            variant="contained"
+            className='settings-onboarding-btn white'
+            variant='contained'
           >
-            <img src={SettingsIcon} alt="settings-icon" />
+            <img src={SettingsIcon} alt='settings-icon' />
             Manage my Accounts
           </ButtonKit>
         ) : (
           ''
         )}
-        <ButtonKit onClick={openCloseModal} className="settings-onboarding-btn" variant="contained">
-          <img src={plus} alt="plus" />
+        <ButtonKit onClick={openCloseModal} className='settings-onboarding-btn' variant='contained'>
+          <img src={plus} alt='plus' />
           add new account
         </ButtonKit>
       </div>

@@ -23,38 +23,38 @@ const ConnectPlatform = ({ propsVariables }) => {
   const platformObj = platformList.find((obj) => obj.name === connect);
   return (
     <div
-      className="onboarding-connect-account"
+      className='onboarding-connect-account'
       tabIndex={-1}
-      role="presentation"
+      role='presentation'
       onClick={(e) => e.stopPropagation()}
     >
       <img
-        className="onboarding-close_icon modal"
+        className='onboarding-close_icon modal'
         tabIndex={-1}
-        role="presentation"
+        role='presentation'
         src={CloseIcon}
-        alt="close icon"
+        alt='close icon'
         onClick={openCloseModal}
       />
       <div>
-        <p className="__title">Connect to your {platform} Account</p>
-        <span className="__subtitle">
+        <p className='__title'>Connect to your {platform} Account</p>
+        <span className='__subtitle'>
           Use your {platform} Email and password to connect your account
         </span>
         <TextfieldKit
-          className="onboarding-textfield"
-          placeholder="Email Address"
+          className='onboarding-textfield'
+          placeholder='Email Address'
           onChange={({ target }) => setEmail(target.value)}
           value={email}
         />
         <TextfieldKit
-          className="onboarding-textfield"
-          placeholder="Password"
+          className='onboarding-textfield'
+          placeholder='Password'
           onChange={({ target }) => setPassword(target.value)}
           value={password}
         />
       </div>
-      <div className="onboarding-platform-buttons account">
+      <div className='onboarding-platform-buttons account'>
         <ButtonKit
           onClick={() => {
             setConnect('');
@@ -62,7 +62,7 @@ const ConnectPlatform = ({ propsVariables }) => {
             setEmail('');
             setPassword('');
           }}
-          variant="contained"
+          variant='contained'
           style={{ '--color': '#F9FAFB', color: 'black' }}
         >
           <Arrow />
@@ -72,7 +72,7 @@ const ConnectPlatform = ({ propsVariables }) => {
           onClick={() => {
             handleSubmitLogin(connect);
           }}
-          variant="contained"
+          variant='contained'
           style={{ '--color': platformObj.color }}
           disabled={!(email && password)}
           loading={isLoading}

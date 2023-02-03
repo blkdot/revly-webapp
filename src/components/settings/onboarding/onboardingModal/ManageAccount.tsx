@@ -1,25 +1,24 @@
-import React from 'react';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import SwitchKit from '../../../../kits/switch/SwitchKit';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import { platformList } from '../../../../data/platformList';
 
 const ManageAccount = ({ propsVariables }) => {
-  const { openCloseModal, accounts } = propsVariables;
+  const { openCloseModal, accounts, deleteAccount } = propsVariables;
   return (
-    <div tabIndex={-1} role="presentation" onClick={(e) => e.stopPropagation()}>
+    <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
       <img
-        className="onboarding-close_icon modal"
+        className='onboarding-close_icon modal'
         tabIndex={-1}
-        role="presentation"
+        role='presentation'
         src={CloseIcon}
-        alt="close icon"
+        alt='close icon'
         onClick={openCloseModal}
       />
       {accounts.length > 0 ? (
         <div>
-          <p className="__title">Manage your connected accounts</p>
-          <span className="__subtitle">
+          <p className='__title'>Manage your connected accounts</p>
+          <span className='__subtitle'>
             This allows you to enable, disable or delete your connected accounts , once an account
             is delated the brands and branches associated to it will be removed .
           </span>
@@ -27,15 +26,17 @@ const ManageAccount = ({ propsVariables }) => {
       ) : (
         ''
       )}
-      <div className="onboarding-accounts_wrapper">
+      <div className='onboarding-accounts_wrapper'>
         {accounts.map((obj) => (
           <div key={obj.email} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
               <span
-                className="onboarding-account_platform-logo"
-                style={{
-                  '--color': platformList.find((objP) => objP.name === obj.platform).color,
-                }}
+                className='onboarding-account_platform-logo'
+                style={
+                  {
+                    '--color': platformList.find((objP) => objP.name === obj.platform).color,
+                  } as any
+                }
               >
                 <img
                   src={
@@ -48,10 +49,15 @@ const ManageAccount = ({ propsVariables }) => {
               <p>{obj.email}</p>
             </div>
             <div>
-              <span className="onboarding-account_trash-icon">
-                <img src={TrashIcon} alt="trash" />
+              <span
+                tabIndex={-1}
+                role='presentation'
+                onClick={() => deleteAccount(obj.platform, obj.email)}
+                className='onboarding-account_trash-icon'
+              >
+                <img src={TrashIcon} alt='trash' />
               </span>
-              <div className="onboarding-account_switch">
+              <div className='onboarding-account_switch'>
                 <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
                 <SwitchKit checked={obj.active} />
               </div>

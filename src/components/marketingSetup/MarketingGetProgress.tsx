@@ -1,10 +1,11 @@
 import InputAdornment from '@mui/material/InputAdornment';
+import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
 import { addDays, addMinutes, format, getHours, isAfter, isSameDay } from 'date-fns';
 import { useAtom } from 'jotai';
+import SpinnerKit from 'kits/spinner/SpinnerKit';
 import { useEffect, useState } from 'react';
 import ArrowIcon from '../../assets/images/arrow.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
-import BranchesIcon from '../../assets/images/ic_branch.png';
 import CalendarCheckedIcon from '../../assets/images/ic_calendar-checked.png';
 import CalendarEventIcon from '../../assets/images/ic_calendar-event.png';
 import ItemMenuIcon from '../../assets/images/ic_item-menu.png';
@@ -15,7 +16,7 @@ import SpeakerIcon from '../../assets/images/ic_speaker.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
 import trash from '../../assets/images/ic_trash.png';
 import plus from '../../assets/images/plus.png';
-import { platformList, platformObject } from '../../data/platformList';
+import { platformList } from '../../data/platformList';
 import BoxKit from '../../kits/box/BoxKit';
 import ButtonKit from '../../kits/button/ButtonKit';
 import CheckboxKit from '../../kits/checkbox/CheckboxKit';
@@ -30,7 +31,6 @@ import TextfieldKit from '../../kits/textfield/TextfieldKit';
 import TooltipKit from '../../kits/toolTip/TooltipKit';
 import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
-import BranchMarketingDropdown from '../branchMarketingDropdown/BranchMarketingDropdown';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import RestaurantDropdownNew from '../restaurantDropdown/RestaurantDropdownNew';
 import MenuDropdown from '../settings/menu/menuDropdown/MenuDropdown';
@@ -68,11 +68,11 @@ const TooltipCategory = ({ obj, index }) => {
       <TooltipKit
         interactive={1}
         disableHoverListener={!hoverStatus}
-        id="category-tooltip"
+        id='category-tooltip'
         title={obj.name || obj.item_name}
       >
         <div>
-          <ListItemTextKit className="list-item-category" primary={obj.name || obj.item_name} />
+          <ListItemTextKit className='list-item-category' primary={obj.name || obj.item_name} />
         </div>
       </TooltipKit>
       <b>{obj.price || obj.unit_price} AED</b>
@@ -127,11 +127,9 @@ const GetProgress = ({ progressData }) => {
     setHeatmapData,
     heatmapData,
     links,
-    getPlatformData,
-    platformData,
-    setBranchData,
-    branchData,
-    getPlatformActive,
+    categoryLoading,
+    setCategorySearch,
+    categorySearch,
   } = progressData;
 
   useEffect(() => {
@@ -336,13 +334,10 @@ const GetProgress = ({ progressData }) => {
     </div>
   );
   const getAudience = () => {
-    if (Object.keys(display).length > 0) {
-      if (platform.length < 2) {
-        return audienceSelected(platform[0]);
-      }
-      return audienceSelected('deliveroo');
+    if (platform.length < 2) {
+      return audienceSelected(platform[0]);
     }
-    return audienceSelected(platformData);
+    return audienceSelected('deliveroo');
   };
   const reccurenceSelected = () => (
     <div className='left-part-middle'>
@@ -540,7 +535,7 @@ const GetProgress = ({ progressData }) => {
     </div>
   );
   const [vendors] = useAtom(vendorsAtom);
-  const { vendorsObj, display } = vendors;
+  const { display } = vendors;
 
   const getMenuActive = () => {
     if (category === null) {
@@ -567,15 +562,34 @@ const GetProgress = ({ progressData }) => {
     { title: 'Free Items', subtitle: 'Allow customers to choose a free items' },
   ];
 
-  const catergorySearch = (e) => {
+  const categorySearchFunc = (e) => {
     const { value } = e.target;
+    setCategorySearch(value);
     if (value === '') {
+      if (categoryData.length > 0) {
+        const arr = categoryData
+          .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+          .flat();
+        setFilteredCategoryData(arr);
+        return;
+      }
       setFilteredCategoryData([]);
       return;
     }
-    const filtered = (filteredCategoryData.length > 0 ? filteredCategoryData : category).filter(
-      (obj) => obj.name.toLowerCase().includes(value.toLowerCase())
-    );
+    const filtered = (
+      filteredCategoryData.length > 0
+        ? categoryData
+            .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+            .flat()
+        : category
+    ).filter((obj) => (obj.name || obj.item_name).toLowerCase().includes(value.toLowerCase()));
+    if (categoryData.length > 0 && filtered.length === 0) {
+      const arr = categoryData
+        .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+        .flat();
+      setFilteredCategoryData(arr);
+      return;
+    }
     setFilteredCategoryData(filtered);
   };
 
@@ -595,54 +609,29 @@ const GetProgress = ({ progressData }) => {
         <TypographyKit variant='h6'>{selected}. Select platform and branches</TypographyKit>
         {subtitle()}
         <div className='left-part-radio-wrapper'>
-          {Object.keys(branch.display).length > 0 ? (
-            <RadioGroupKit
-              aria-labelledby='demo-radio-buttons-group-label'
-              name='radio-buttons-group'
-              value=''
-            >
-              {platformList
-                .filter((pf) =>
-                  userPlatformData.platforms[pf.name].length > 0
-                    ? userPlatformData.platforms[pf.name].filter((obj) => obj.active)
-                    : '',
-                )
-                .map((p) => (
-                  <MarketingRadio
-                    setState={getPlatform}
-                    state={platform}
-                    checkbox
-                    key={p.name}
-                    className={p.name}
-                    icon={p.src}
-                    title={p.name}
-                  />
-                ))}
-            </RadioGroupKit>
-          ) : (
-            <RadioGroupKit
-              aria-labelledby='demo-radio-buttons-group-label'
-              name='radio-buttons-group'
-              onChange={(e) => getPlatformData(e)}
-              value={platformData || ''}
-            >
-              {platformList
-                .filter((pf) =>
-                  userPlatformData.platforms[pf.name].length > 0
-                    ? userPlatformData.platforms[pf.name].filter((obj) => obj.active)
-                    : '',
-                )
-                .map((p) => (
-                  <MarketingRadio
-                    state={platformData}
-                    key={p.name}
-                    className={p.name}
-                    icon={p.src}
-                    title={p.name}
-                  />
-                ))}
-            </RadioGroupKit>
-          )}
+          <RadioGroupKit
+            aria-labelledby='demo-radio-buttons-group-label'
+            name='radio-buttons-group'
+            value=''
+          >
+            {platformList
+              .filter((pf) =>
+                userPlatformData.platforms[pf.name].length > 0
+                  ? userPlatformData.platforms[pf.name].filter((obj) => obj.active)
+                  : ''
+              )
+              .map((p) => (
+                <MarketingRadio
+                  onChange={getPlatform}
+                  state={platform}
+                  checkbox={Object.keys(branch.display).length > 0}
+                  key={p.name}
+                  className={p.name}
+                  icon={p.src}
+                  title={p.name}
+                />
+              ))}
+          </RadioGroupKit>
         </div>
         {Object.keys(branch.display).length > 0 ? (
           <RestaurantDropdownNew
@@ -653,19 +642,27 @@ const GetProgress = ({ progressData }) => {
             state={branch}
           />
         ) : (
-          <BranchMarketingDropdown
-            rows={vendorsObj[platformData]}
-            icon={BranchesIcon}
-            title='Select Branches'
-            className='top-competition marketing-dropdown'
-            setRow={setBranchData}
-            select={branchData}
-            platformData={platformObject[platformData]}
+          <RestaurantDropdownOld
+            vendorsSelected={branch.vendorsSelected}
+            vendors={branch.vendorsArr.filter((v) => platform.find((p) => v.platform === p))}
+            setState={setBranch}
+            state={branch}
+            branch
+            className='offer-setup-dropdown'
           />
         )}
       </div>
     );
   }
+  const getItemMenuActive = () => {
+    if (categoryLoading) {
+      return <SpinnerKit className='item-menu_laoding' />;
+    }
+    if (!getMenuActive()) {
+      return <FormControlLabelKit value='Offer on An Item from the Menu' control={<RadioKit />} />;
+    }
+    return '';
+  };
   if (selected === 2) {
     return (
       <div className='left-part-middle'>
@@ -689,7 +686,7 @@ const GetProgress = ({ progressData }) => {
                   <img src={menuIcon} alt='Menu Icon' />
                 </span>
                 <div>
-                  <div>Discount on the whole Menu</div>
+                  <div>Offer on the whole Menu</div>
                   <p>Ex :&nbsp; -20% on the full menu</p>
                 </div>
               </div>
@@ -742,27 +739,21 @@ const GetProgress = ({ progressData }) => {
                   </span>
                   <div>
                     <div>Offer on An Item from the Menu</div>
-                    <p>Ex :&nbsp; -20% on the full menu</p>
+                    <p>Ex :&nbsp; -20% on an item</p>
                   </div>
                 </div>
-                {getMenuActive() ? (
-                  ''
-                ) : (
-                  <FormControlLabelKit
-                    value='Offer on An Item from the Menu'
-                    control={<RadioKit />}
-                  />
-                )}
+                {getItemMenuActive()}
               </div>
               <div>
-                <RadioGroupKit
-                  aria-labelledby='demo-radio-buttons-group-label'
-                  value={itemMenu}
-                  onChange={(e) => setItemMenu(e.target.value)}
-                  name='radio-buttons-group-menu'
-                >
-                  {(getPlatformActive() === 'talabat' ? [] : itemMenuArr).map((obj) => (
-                    <MarketingRadio key={obj.title} title={obj.title} subtitle={obj.subtitle} />
+                <div>
+                  {(platform[0] === 'talabat' ? [] : itemMenuArr).map((obj) => (
+                    <MarketingRadio
+                      state={itemMenu}
+                      onChange={(e) => setItemMenu(e.target.value)}
+                      key={obj.title}
+                      title={obj.title}
+                      subtitle={obj.subtitle}
+                    />
                   ))}
                   {menuChanged === 'Offer on An Item from the Menu' ? (
                     <div className='dropdown-wrapper'>
@@ -770,7 +761,11 @@ const GetProgress = ({ progressData }) => {
                         <TypographyKit variant='div'>
                           Percentage Discount
                           <MarketingPlaceholderDropdown
-                            names={getDiscountMovType('discount')}
+                            names={
+                              platform[0] === 'talabat'
+                                ? ['20%', '25%', '30%', '35%', '40%', '45%', '50%']
+                                : getDiscountMovType('discount')
+                            }
                             title='%'
                             setPersonName={setDiscountPercentage}
                             personName={discountPercentage}
@@ -779,20 +774,25 @@ const GetProgress = ({ progressData }) => {
                       </TypographyKit>
                       <TypographyKit className='min-max-textfields' variant='div'>
                         <TypographyKit variant='div'>
-                          Min. Order Value
-                          <MarketingPlaceholderDropdown
-                            names={getDiscountMovType('mov')}
-                            title='0 AED'
-                            setPersonName={setMinOrder}
-                            personName={minOrder}
-                          />
+                          Min. Order Value{' '}
+                          {platform[0] === 'talabat' ? <span className='static'>i</span> : ''}
+                          {platform[0] === 'talabat' ? (
+                            <div className='get_progress_min_order'>20 AED</div>
+                          ) : (
+                            <MarketingPlaceholderDropdown
+                              names={getDiscountMovType('mov')}
+                              title='0 AED'
+                              setPersonName={setMinOrder}
+                              personName={minOrder}
+                            />
+                          )}
                         </TypographyKit>
                       </TypographyKit>
                     </div>
                   ) : (
                     ''
                   )}
-                </RadioGroupKit>
+                </div>
               </div>
             </BoxKit>
           ) : (
@@ -802,6 +802,42 @@ const GetProgress = ({ progressData }) => {
       </div>
     );
   }
+  const getMaximumItem = () => {
+    if (platform[0] === 'talabat') {
+      if (category.length > 100) {
+        return 100;
+      }
+      return category.length;
+    }
+    return 10;
+  };
+  const clearItems = () => {
+    if (filteredCategoryData.length > 0) {
+      filteredCategoryData.forEach((obj) => {
+        checked.splice(
+          checked.findIndex((c) => c === obj.name || c === obj.item_name),
+          1
+        );
+      });
+      setChecked([...checked]);
+    } else {
+      setChecked([]);
+    }
+  };
+  const selectAllItems = () => {
+    if (filteredCategoryData.length > 0) {
+      checked.forEach((c, index) => {
+        filteredCategoryData.forEach((obj) => {
+          if ((obj.name || obj.item_name) === c) {
+            checked.splice(index, 1);
+          }
+        });
+      });
+      setChecked([...checked, ...filteredCategoryData.map((obj) => obj.name || obj.item_name)]);
+    } else {
+      setChecked([...category.map((obj) => obj.name || obj.item_name)]);
+    }
+  };
   if (menu === 'Offer on An Item from the Menu') {
     if (selected === 3) {
       return (
@@ -831,7 +867,8 @@ const GetProgress = ({ progressData }) => {
                   style={{ width: '45%' }}
                   id='input-with-icon-textfield'
                   placeholder='Search'
-                  onChange={catergorySearch}
+                  value={categorySearch}
+                  onChange={categorySearchFunc}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position='start'>
@@ -860,28 +897,43 @@ const GetProgress = ({ progressData }) => {
                   </div>
                 </div>
               </div>
-              <div className="max-amount">
-                <p>{getPlatformActive() !== 'talabat' ? 'Maximum amount: 10' : ''}</p>
+              <p className='max-amount-top'>Maximum amount: {getMaximumItem()}</p>
+              <div className='max-amount'>
                 <div>
-                  Selected: <span>{checked.length}</span>
+                  Selected ({checked.length}/{getMaximumItem()})
                 </div>
+                {platform[0] === 'talabat' ? (
+                  <div className='max-amount-btns'>
+                    <ButtonKit
+                      disabled={
+                        (filteredCategoryData.length > 0 ? filteredCategoryData : category)
+                          .length === checked.length
+                      }
+                      onClick={selectAllItems}
+                      variant='outlined'
+                    >
+                      Select all
+                    </ButtonKit>
+                    <ButtonKit disabled={checked.length > 0} onClick={clearItems} variant='text'>
+                      Clear
+                    </ButtonKit>
+                  </div>
+                ) : (
+                  ''
+                )}
               </div>
             </div>
             <FormcontrolKit className='category-list'>
               {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
                 (obj, index) => (
                   // TODO: FIX IT
-                  // <div className="menu-item-wrapper" key={obj.id} value={obj.name}>
-                  <div className='menu-item-wrapper' key={obj.id}>
+                  // <div className='menu-item-wrapper' key={obj.id} value={obj.name}>
+                  <div className='menu-item-wrapper' key={obj.id || obj.item_id}>
                     <FormControlLabelKit
                       control={
                         <CheckboxKit
                           onChange={({ target }) => {
-                            if (
-                              target.checked &&
-                              checked.length <
-                                (getPlatformActive() === 'talabat' ? category.length : 10)
-                            ) {
+                            if (target.checked && checked.length < getMaximumItem()) {
                               setChecked([...checked, target.value]);
                             } else if (!target.checked) {
                               checked.splice(checked.indexOf(target.value), 1);

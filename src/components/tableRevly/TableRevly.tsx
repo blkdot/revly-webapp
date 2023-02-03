@@ -35,8 +35,8 @@ const TableRevly = (props: any) => {
   const renderRows = () => {
     if (isLoading) return renderSkeleton();
 
-    if (!rows || rows.length < 1){
-      if(renderNoData){
+    if (!rows || rows.length < 1) {
+      if (renderNoData) {
         return renderNoData;
       }
       return (
@@ -47,7 +47,6 @@ const TableRevly = (props: any) => {
         </TableRowKit>
       );
     }
-      
 
     return renderRowsContent();
   };
@@ -62,7 +61,7 @@ const TableRevly = (props: any) => {
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
       <TableRowKit
         className='marketing-table-top'
-        onClick={handleRowClick(r.data.master_offer_id)}
+        onClick={handleRowClick(r.data.master_offer_id || r.data.id)}
         key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
       >
         {headers.map((h) => r[h.id])}
