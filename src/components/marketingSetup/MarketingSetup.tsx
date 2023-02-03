@@ -282,7 +282,15 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       vendorsObj: newVendorsObj,
       chainObj: newChainObj,
       vendorsSelected:
-        [vendors.vendorsArr.filter((v) => platform.find((p) => v.platform === p && (v.metadata.is_active === 'True' || v.metadata.is_active === true)))[0]] || [],
+        [
+          vendors.vendorsArr.filter((v) =>
+            platform.find(
+              (p) =>
+                v.platform === p &&
+                (v.metadata.is_active === 'True' || v.metadata.is_active === true)
+            )
+          )[0],
+        ] || [],
     });
     setMenu('Offer on the whole Menu');
   }, [platform, vendors]);
@@ -986,12 +994,13 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
             return (
               <TypographyKit
                 style={{ '--i': num - 5 }}
-                className={`absolute ${heatmapData[links][obj] &&
-                    heatmapData[links][obj][num] &&
-                    heatmapData[links][obj][num]?.active
+                className={`absolute ${
+                  heatmapData[links][obj] &&
+                  heatmapData[links][obj][num] &&
+                  heatmapData[links][obj][num]?.active
                     ? 'active'
                     : ''
-                  }`}
+                }`}
                 key={num}
               >
                 <span />

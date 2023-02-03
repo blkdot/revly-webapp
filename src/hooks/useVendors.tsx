@@ -44,9 +44,10 @@ const useVendors = (isSign: any) => {
       })
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
-          const userPlatform = userPlatformData.platforms[p.name].find((obj) =>
-            obj.vendor_ids.some((id) => id === v.vendor_id)
-          ) || '';
+          const userPlatform =
+            userPlatformData.platforms[p.name].find((obj) =>
+              obj.vendor_ids.some((id) => id === v.vendor_id)
+            ) || '';
           vendorsTemp.push({
             ...v,
             platform: p.name,
