@@ -1,10 +1,10 @@
 import { useUserAuth } from 'contexts';
-import { MouseEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import SignInForm from '../../components/forms/signinForm/SigninForm';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import { useAlert } from '../../hooks/useAlert';
 import useVendors from '../../hooks/useVendors';
+import SignInForm from './form/SignInForm';
 import './SignIn.scss';
 
 const SignIn = () => {
@@ -74,68 +74,60 @@ const SignIn = () => {
     }
   }, [oobCode, mode]);
 
-  const handleSubmit = useCallback(
-    async (e: MouseEvent) => {
-      e.preventDefault();
-      setProcessing(true);
-      try {
-        const res = await signIn(email, password, remember);
+  const handleSubmit = useCallback(async () => {
+    setProcessing(true);
+    try {
+      const res = await signIn(email, password, remember);
 
-        if (!res.user.emailVerified) {
-          await logOut();
-          setProcessing(false);
-          throw new Error(
-            'Email not verified, please check your email (include spam) for verification'
-          );
-        }
-
-        navigate('/dashboard');
-      } catch (error) {
-        const message = firebaseCodeError[error.code]
-          ? firebaseCodeError[error.code].message
-          : error.message;
-
-        if (firebaseCodeError[error.code] && firebaseCodeError[error.code].field) {
-          if (firebaseCodeError[error.code].field === 'email') {
-            setEmailError(true);
-          } else if (firebaseCodeError[error.code].field === 'password') {
-            setPasswordError(true);
-          }
-        }
-
-        triggerAlertWithMessageError(message);
+      if (!res.user.emailVerified) {
+        await logOut();
         setProcessing(false);
+        throw new Error(
+          'Email not verified, please check your email (include spam) for verification'
+        );
       }
-    },
-    [email, logOut, navigate, password, remember, signIn, triggerAlertWithMessageError]
-  );
 
-  const handleGoogleSubmit = useCallback(
-    async (e: MouseEvent) => {
-      e.preventDefault();
-      setProcessing(true);
-      try {
-        await googleSignIn();
-        navigate('/dashboard');
-      } catch (error) {
-        const message = firebaseCodeError[error.code]
-          ? firebaseCodeError[error.code].message
-          : error.message;
+      navigate('/dashboard');
+    } catch (error) {
+      const message = firebaseCodeError[error.code]
+        ? firebaseCodeError[error.code].message
+        : error.message;
 
-        if (firebaseCodeError[error.code].field) {
-          if (firebaseCodeError[error.code].field === 'email') {
-            setEmailError(true);
-          } else if (firebaseCodeError[error.code].field === 'password') {
-            setPasswordError(true);
-          }
+      if (firebaseCodeError[error.code] && firebaseCodeError[error.code].field) {
+        if (firebaseCodeError[error.code].field === 'email') {
+          setEmailError(true);
+        } else if (firebaseCodeError[error.code].field === 'password') {
+          setPasswordError(true);
         }
-
-        triggerAlertWithMessageError(message);
-        setProcessing(false);
       }
-    },
-    [googleSignIn, navigate, triggerAlertWithMessageError]
-  );
+
+      triggerAlertWithMessageError(message);
+      setProcessing(false);
+    }
+  }, [email, logOut, navigate, password, remember, signIn, triggerAlertWithMessageError]);
+
+  const handleGoogleSubmit = useCallback(async () => {
+    setProcessing(true);
+    try {
+      await googleSignIn();
+      navigate('/dashboard');
+    } catch (error) {
+      const message = firebaseCodeError[error.code]
+        ? firebaseCodeError[error.code].message
+        : error.message;
+
+      if (firebaseCodeError[error.code].field) {
+        if (firebaseCodeError[error.code].field === 'email') {
+          setEmailError(true);
+        } else if (firebaseCodeError[error.code].field === 'password') {
+          setPasswordError(true);
+        }
+      }
+
+      triggerAlertWithMessageError(message);
+      setProcessing(false);
+    }
+  }, [googleSignIn, navigate, triggerAlertWithMessageError]);
 
   const onEmailBlur = useCallback(() => setEmailError(!email), [email]);
   const onPasswordBlur = useCallback(() => setPasswordError(!password), [password]);

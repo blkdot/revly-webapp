@@ -8,10 +8,10 @@ import {
   TextfieldKit,
   TypographyKit,
 } from 'kits';
-import { FC, MouseEvent, useState } from 'react';
+import { FC, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-import './SigninForm.scss';
+import './SignInForm.scss';
 
 const SignInForm: FC<{
   email: string;
@@ -24,8 +24,8 @@ const SignInForm: FC<{
   onPasswordBlur: () => void;
   remember: boolean;
   setRemember: (v: boolean) => void;
-  onSubmit: (e: MouseEvent) => Promise<unknown>;
-  onGoogleSubmit: (e: MouseEvent) => Promise<unknown>;
+  onSubmit: () => Promise<unknown>;
+  onGoogleSubmit: () => Promise<unknown>;
   disabled: boolean;
 }> = ({
   email,
@@ -119,7 +119,6 @@ const SignInForm: FC<{
                 <CheckboxKit
                   value={remember}
                   onChange={({ target }) => setRemember(target.checked)}
-                  defaultChecked
                 />
               }
               label={
@@ -139,7 +138,6 @@ const SignInForm: FC<{
             fullWidth
             size='large'
             variant='contained'
-            // onClick={(e) => console.log(e)}
             onClick={onSubmit}
             disabled={disabled}
           >
