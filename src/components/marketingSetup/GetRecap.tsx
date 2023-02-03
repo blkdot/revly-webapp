@@ -50,9 +50,6 @@ const GetRecap = ({ recapData }) => {
     endingDate,
     times,
     targetAudience,
-    branchData,
-    platformData,
-    vendors,
   } = recapData;
   const handleChange = (e, type, index, order?) => {
     if (order === 'launch') {
@@ -335,202 +332,6 @@ const GetRecap = ({ recapData }) => {
         delete recapChainObj[cName];
       }
     });
-    if (Object.keys(vendors.display).length > 0) {
-      return (
-        <div>
-          <div className='left-part-top'>
-            <div>
-              <TypographyKit variant='h4'>{ads ? 'Ads' : 'Offer'} Recap </TypographyKit>
-
-              <img
-                tabIndex={-1}
-                role='presentation'
-                onClick={() => closeSetup()}
-                src={CloseIcon}
-                alt='close icon'
-              />
-            </div>
-          </div>
-          <BoxKit className='left-part-radio recap-left-part recap-left-part-inside'>
-            <div>
-              <img width={35} height={35} src={selectIcon} alt='select' />
-              {Object.keys(recapChainObj).map((cName, index) => {
-                if (Object.keys(recapChainObj[cName]).length > 0) {
-                  if (index === Object.keys(recapChainObj).length - 1) {
-                    return <div key={cName}>{cName}</div>;
-                  }
-
-                  return <div key={cName}>{`${cName}, `}</div>;
-                }
-                return '';
-              })}
-            </div>
-            <div>
-              <p>Platforms:</p>
-              {platform.map((p) => (
-                <img key={p} src={p === 'talabat' ? talabat : deliveroo} alt={p} />
-              ))}
-            </div>
-          </BoxKit>
-          <BoxKit className='left-part-radio recap-left-part'>
-            <div className='radio recap-box-wrapper'>
-              <div className='recap-box'>
-                <div>
-                  <span>
-                    <img style={{ filter: 'none' }} src={TimerIcon} alt='Timer Icon' />
-                  </span>
-                  <div>
-                    <div>{duration}</div>
-                    {duration === 'Program the offer duration' ? (
-                      <img className='arrow-icon' style={{ left: 0 }} src={ArrowIcon} alt='arrow' />
-                    ) : (
-                      ''
-                    )}
-                  </div>
-                  {duration === 'Program the offer duration' ? (
-                    <div className='customised-column'>
-                      <div>{typeSchedule}</div>
-                      <p>
-                        {typeSchedule === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
-                      </p>
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className='radio recap-box-wrapper column'>
-              <div className='recap-between'>
-                <div>
-                  <img src={CalendarCheckGrayIcon} alt='calendar check icon' />
-                  <div>
-                    <div>Starting Date</div>
-                    <div>{format(startingDate, 'dd MMM yyyy')}</div>
-                  </div>
-                </div>
-                <div className='right'>
-                  <img src={CalendarCloseGrayIcon} alt='calendar close icon' />
-                  <div>
-                    <div>Ending Date</div>
-                    <div>{getFormatedEndDate(endingDate, 'dd MMM yyyy', times)}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='radio recap-box-wrapper column'>
-              {times.map((obj, index) => (
-                <div className='recap-between' key={obj.pos}>
-                  <div>
-                    <img src={TimerCheckGrayIcon} alt='timer check icon' />
-                    <div>
-                      <div>Start Time {index + 1}</div>
-                      <div>
-                        {format(
-                          obj.startTime,
-                          duration === 'Starting Now' ? 'HH:mm aaa' : 'HH:00 aaa'
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className='right'>
-                    <img src={TimerCloseGrayIcon} alt='timer check icon' />
-                    <div>
-                      <div>End Time {index + 1}</div>
-                      <div>{format(obj.endTime, 'HH:mm aaa')}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </BoxKit>
-          {platform === 'deliveroo' ? (
-            <BoxKit className='left-part-radio recap-left-part'>
-              <div className='radio recap-box-wrapper'>
-                <div className='recap-box'>
-                  <div>
-                    <span>
-                      <img style={{ filter: 'none' }} src={AudienceIcon} alt='Audience Icon' />
-                    </span>
-                    <div>
-                      <div>Target Audience</div>
-                      <img className='arrow-icon not-display' src={ArrowIcon} alt='arrow' />
-                    </div>
-                    <div style={{ marginLeft: 0 }}>
-                      <div>{targetAudience}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </BoxKit>
-          ) : (
-            ''
-          )}
-          <BoxKit className='left-part-radio under-textfields recap-left-part radio-dates active'>
-            <div className='radio recap-box-wrapper'>
-              <div className='recap-box'>
-                <div>
-                  <span>
-                    <img
-                      src={menu === 'Offer on An Item from the Menu' ? ItemMenuIcon : menuIcon}
-                      alt={menu}
-                    />
-                  </span>
-                  <div>
-                    <div>{menu}</div>
-                    {menu === 'Offer on An Item from the Menu' ? (
-                      <img className='arrow-icon not-display' src={ArrowIcon} alt='arrow' />
-                    ) : (
-                      ''
-                    )}
-                  </div>
-                  {menu === 'Offer on An Item from the Menu' ? (
-                    <div style={{ marginLeft: 0 }}>
-                      <div>{itemMenu}</div>
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </div>
-            </div>
-            <div
-              className={`radio recap-box-wrapper between under ${
-                menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
-              }`}
-            >
-              <div className='recap-between mov'>
-                <div>
-                  <div>
-                    <div>Discount rate</div>
-                    <div>{discountPercentage}</div>
-                  </div>
-                </div>
-                <div className='right'>
-                  <div>
-                    <div>Minimum Order</div>
-                    <div>{minOrder}</div>
-                  </div>
-                </div>
-              </div>
-              {menu === 'Offer on An Item from the Menu' ? (
-                <div className='recap-between no-border'>
-                  {getItemMenuNamePrice().map((obj) => (
-                    <div>
-                      <div>{obj.name}</div>
-                      <div>{obj.price} AED</div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                ''
-              )}
-            </div>
-          </BoxKit>
-        </div>
-      );
-    }
-
     return (
       <div>
         <div className='left-part-top'>
@@ -549,11 +350,26 @@ const GetRecap = ({ recapData }) => {
         <BoxKit className='left-part-radio recap-left-part recap-left-part-inside'>
           <div>
             <img width={35} height={35} src={selectIcon} alt='select' />
-            <div>{branchData}</div>
+            {Object.keys(branch.display).length > 0 ? (
+              Object.keys(recapChainObj).map((cName, index) => {
+                if (Object.keys(recapChainObj[cName]).length > 0) {
+                  if (index === Object.keys(recapChainObj).length - 1) {
+                    return <div key={cName}>{cName}</div>;
+                  }
+
+                  return <div key={cName}>{`${cName}, `}</div>;
+                }
+                return '';
+              })
+            ) : (
+              <div>{branch.vendorsSelected.map((obj) => obj.data.vendor_name).join(', ')}</div>
+            )}
           </div>
           <div>
-            <p>Platform:</p>
-            <img src={platformData === 'talabat' ? talabat : deliveroo} alt={platformData} />
+            <p>Platforms:</p>
+            {platform.map((p) => (
+              <img key={p} src={p === 'talabat' ? talabat : deliveroo} alt={p} />
+            ))}
           </div>
         </BoxKit>
         <BoxKit className='left-part-radio recap-left-part'>
@@ -566,13 +382,13 @@ const GetRecap = ({ recapData }) => {
                 <div>
                   <div>{duration}</div>
                   {duration === 'Program the offer duration' ? (
-                    <img className='arrow-icon' src={ArrowIcon} alt='arrow' />
+                    <img className='arrow-icon' style={{ left: 0 }} src={ArrowIcon} alt='arrow' />
                   ) : (
                     ''
                   )}
                 </div>
                 {duration === 'Program the offer duration' ? (
-                  <div style={{ margin: 0 }} className='customised-column'>
+                  <div className='customised-column'>
                     <div>{typeSchedule}</div>
                     <p>
                       {typeSchedule === 'Customised Days' ? customisedDay.join(', ') : everyWeek}
@@ -597,7 +413,7 @@ const GetRecap = ({ recapData }) => {
                 <img src={CalendarCloseGrayIcon} alt='calendar close icon' />
                 <div>
                   <div>Ending Date</div>
-                  <div>{format(endingDate, 'dd MMM yyyy')}</div>
+                  <div>{getFormatedEndDate(endingDate, 'dd MMM yyyy', times)}</div>
                 </div>
               </div>
             </div>
@@ -628,7 +444,7 @@ const GetRecap = ({ recapData }) => {
             ))}
           </div>
         </BoxKit>
-        {platformData === 'deliveroo' ? (
+        {platform === 'deliveroo' ? (
           <BoxKit className='left-part-radio recap-left-part'>
             <div className='radio recap-box-wrapper'>
               <div className='recap-box'>
@@ -686,7 +502,7 @@ const GetRecap = ({ recapData }) => {
             <div className='recap-between mov'>
               <div>
                 <div>
-                  <div>Procentage Discount</div>
+                  <div>Discount rate</div>
                   <div>{discountPercentage}</div>
                 </div>
               </div>
@@ -700,7 +516,7 @@ const GetRecap = ({ recapData }) => {
             {menu === 'Offer on An Item from the Menu' ? (
               <div className='recap-between no-border'>
                 {getItemMenuNamePrice().map((obj) => (
-                  <div key={obj.name}>
+                  <div>
                     <div>{obj.name}</div>
                     <div>{obj.price} AED</div>
                   </div>

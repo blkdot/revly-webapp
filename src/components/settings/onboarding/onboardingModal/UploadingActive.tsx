@@ -1,6 +1,9 @@
-import { Arrow } from 'assets/icons';
-import { ButtonKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
+import ButtonKit from '../../../../kits/button/ButtonKit';
+import Arrow from '../../../../assets/icons/Arrow';
+import useApi from '../../../../hooks/useApi';
+import { useUserAuth } from '../../../../contexts/AuthContext';
+import { useAlert } from '../../../../hooks/useAlert';
 
 const UploadingActive = ({ propsVariables }) => {
   const {
@@ -9,7 +12,6 @@ const UploadingActive = ({ propsVariables }) => {
     setEmail,
     setPassword,
     setBranchData,
-    setActiveStep,
     openCloseModal,
     setAccounts,
     accounts,
@@ -17,29 +19,32 @@ const UploadingActive = ({ propsVariables }) => {
     connect,
     email,
     setConnectAccount,
+    setActiveStep,
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
-  const confirm = () => {
+  const { settingsOnboardPlatformStatus } = useApi();
+  const { triggerAlertWithMessageError } = useAlert();
+  const { user } = useUserAuth();
+  const confirm = async () => {
+    const res = await settingsOnboardPlatformStatus(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        email,
+        active_status: true,
+      },
+      connect
+    );
+    if (res instanceof Error) {
+      triggerAlertWithMessageError(res.message);
+      return;
+    }
+    setActiveStep(100);
     setConnectAccount('completed');
-    setAccounts([...accounts, { platform: connect, connected: true, email }]);
+    setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    const branchDataTemp = [...branchData];
     setBranchData([...branchData, ...branchDataUploading]);
-    let step = 100;
-    const intervalId = setInterval(() => {
-      step += 2;
-      setActiveStep(step);
-      if (step >= 200) {
-        clearInterval(intervalId);
-        const newBranchData = branchDataUploading.map((obj) => ({
-          ...obj,
-          branch_status: 'active',
-          linked_platforms: [{ ...obj.linked_platforms[0], status: 'active' }],
-        }));
-        setBranchData([...branchDataTemp, ...newBranchData]);
-      }
-    }, 250);
   };
   return (
     <div

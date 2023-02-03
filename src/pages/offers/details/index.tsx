@@ -125,7 +125,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         chain_id,
         master_offer_id,
       },
-      platform
+      platform.toLowerCase()
     ).then(() => {
       setOfferDetail({ ...offerDetail, status: 'Cancelled' });
       setofferDetailMaster({
@@ -163,6 +163,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
+  console.log(offerDetailMaster);
   return (
     <>
       <CancelOfferModal
@@ -181,7 +182,8 @@ const OfferDetailComponent = ({ data, setOpened }) => {
               </button>
               <div>
                 {['Live', 'Active', 'Scheduled'].includes(
-                  offerDetailMaster?.master_offer?.offer_status
+                  offerDetailMaster?.master_offer?.offer_status ||
+                    offerDetailMaster?.master_offer?.status
                 ) && (
                   <button onClick={openCancelModal} className='cancel-btn' type='button'>
                     <Warning />

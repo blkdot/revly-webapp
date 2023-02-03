@@ -1,3 +1,5 @@
+import { loadUser, saveUser } from 'api/userApi';
+import { useUserAuth } from 'contexts/AuthContext';
 import { TypographyKit, ButtonKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
@@ -7,10 +9,24 @@ import { platformList } from '../../../../data/platformList';
 import Arrow from '../../../../assets/images/arrow.png';
 
 const ManageBranch = ({ propsVariables }) => {
-  const { openCloseModal, clickedBranch, setBranchData, branchData } = propsVariables;
+  const { openCloseModal, clickedBranch, setBranchData, branchData, vendors } = propsVariables;
   const getPlatform = (plat) => platformList.find((obj) => obj.name === plat);
-  const changeStatus = () => {
-    if (clickedBranch.branch_status === 'active') {
+  const { user } = useUserAuth();
+  const changeStatus = async () => {
+    await saveUser({
+      access_token: user.accessToken,
+      vendors: {
+        [clickedBranch.linked_platforms[0].platform]: [
+          vendors.vendorsArr.find((objV) => objV.vendor_id === clickedBranch.id),
+        ],
+      },
+      data: {
+        is_active: !(
+          clickedBranch.branch_status === 'active' || clickedBranch.branch_status === 'in process'
+        ),
+      },
+    });
+    if (clickedBranch.branch_status === 'active' || clickedBranch.branch_status === 'in process') {
       branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
         'suspended';
     } else {
@@ -19,7 +35,16 @@ const ManageBranch = ({ propsVariables }) => {
     }
     setBranchData([...branchData]);
   };
-  const deleteBranch = () => {
+  const deleteBranch = async () => {
+    await saveUser({
+      access_token: user.accessToken,
+      vendors: {
+        [clickedBranch.linked_platforms[0].platform]: [
+          vendors.vendorsArr.find((objV) => objV.vendor_id === clickedBranch.id),
+        ],
+      },
+      data: { is_deleted: true },
+    });
     branchData.splice(
       branchData.findIndex((obj) => obj.id === clickedBranch.id),
       1
@@ -53,7 +78,9 @@ const ManageBranch = ({ propsVariables }) => {
             <p className='__title'>{clickedBranch.branch_name.title}</p>
             <span className='__subtitle'>{clickedBranch.branch_name.address}</span>
           </div>
-          <div className={`render-branch_status-row ${clickedBranch.branch_status}`}>
+          <div
+            className={`render-branch_status-row ${clickedBranch.branch_status.replace(/\s/g, '')}`}
+          >
             {clickedBranch.branch_status}
           </div>
         </div>

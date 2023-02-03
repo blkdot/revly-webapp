@@ -6,6 +6,7 @@ import CloseIcon from '../../../assets/images/ic_close.png';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.png';
 import ClockIcon from '../../../assets/images/clock-settings_ic.png';
 import ShieldIcon from '../../../assets/images/shield-settings_ic.png';
+import { usePlatform } from '../../../hooks/usePlatform';
 
 const ColorlibStepIconRoot = styled('div')(
   ({ ownerState }: { ownerState: { completed: boolean; active: boolean } }) => ({
@@ -27,7 +28,7 @@ const ColorlibStepIconRoot = styled('div')(
   })
 );
 
-const ColorlibStepIcon = (props) => {
+const ColorlibStepIcon = (props: any) => {
   const { active, completed, className, icon } = props;
 
   const icons = {
@@ -35,15 +36,17 @@ const ColorlibStepIcon = (props) => {
     2: ClockIcon,
     3: ShieldIcon,
   };
-
+  const ownerProps = { ownerState: { completed, active } };
   return (
-    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+    <ColorlibStepIconRoot {...ownerProps} className={className}>
       <img width={30} height={30} src={icons[icon]} alt={icon} />
     </ColorlibStepIconRoot>
   );
 };
+
 const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
-  const [active, setActive] = useState(true);
+  const { userPlatformData } = usePlatform();
+  const [active, setActive] = useState(!userPlatformData.onboarded);
   const steps = [
     {
       label: 'Connect your Accounts',
@@ -61,7 +64,7 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
         'All of the processed data is organized for easy management. This includes creating a personalized lists by brands and branches to access all of their important information on the different accounts.',
     },
   ];
-  const getActiveStep = (index) => {
+  const getActiveStep = (index: any) => {
     if (Number(String(activeStep / 100)[0]) === index) {
       return activeStep >= 100 ? activeStep - 100 : activeStep;
     }
@@ -119,7 +122,7 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
           </StepKit>
         ))}
       </StepperKit>
-      {accounts.length >= 1 && activeStep >= 200 ? (
+      {accounts.length >= 1 && activeStep >= 100 ? (
         <img
           className='onboarding-close_icon'
           tabIndex={-1}

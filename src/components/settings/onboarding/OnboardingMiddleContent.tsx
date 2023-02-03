@@ -6,7 +6,6 @@ import SettingsIcon from '../../../assets/images/ic_settings.png';
 
 const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
   const [kitchen, setKitchen] = useState('');
-
   return (
     <div className='settings-onboarding-middle_content'>
       <div>

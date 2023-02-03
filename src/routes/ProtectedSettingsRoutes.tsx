@@ -11,7 +11,6 @@ import { settingsLink } from '../data/navbarData';
 const ProtectedSettingsRoutes = () => {
   const { user } = useUserAuth();
   const { setDate } = useDate();
-  const location = useLocation();
   const defaultDate = {
     beforePeriod: {
       startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -25,6 +24,7 @@ const ProtectedSettingsRoutes = () => {
     titleafterPeriod: 'last week',
     typeDate: 'week',
   };
+  const location = useLocation();
   const clear = () => {
     localStorage.setItem('date', JSON.stringify(defaultDate));
     setDate(defaultDate);

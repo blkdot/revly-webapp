@@ -1,6 +1,6 @@
 import { ButtonKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
-import Congrats from '../../../../assets/images/congrats.png';
+import Congrats from '../../../../assets/images/congrats.gif';
 
 const UploadingCompleted = ({ propsVariables }) => {
   const { openCloseModal, setConnectAccount, connect } = propsVariables;

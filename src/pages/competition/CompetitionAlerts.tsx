@@ -122,7 +122,7 @@ const CompetitionAlerts = () => {
       const list = Object.keys(pl)
         .map((v) => ({
           name: v,
-          registered: pl[v].active,
+          registered: pl[v].some((obj) => obj.active),
         }))
         .filter((k) => k.registered === true);
 
@@ -193,9 +193,12 @@ const CompetitionAlerts = () => {
   }, [platform, vendors, beforePeriodBtn]);
 
   useEffect(() => {
-    const arr = vendorsArr.filter((v) => v.platform === platform).map((k) => k.chain_id);
-    setVendors({ ...vendors, vendorsSelected: arr });
-    localStorage.setItem('vendors', JSON.stringify({ ...vendors, vendorsSelected: arr }));
+    const arr = vendorsArr.filter(
+      (v) =>
+        v.platform === platform &&
+        (v.metadata.is_active === 'True' || v.metadata.is_active === true)
+    );
+    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });
   }, [platform]);
 
   const handleCompetitorChange = (e) => {

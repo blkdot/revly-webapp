@@ -60,15 +60,22 @@ const Menu = () => {
       triggerAlertWithMessageError('Error while retrieving data');
     }
   };
-
   useEffect(() => {
     if (userPlatformData) {
       const pl = userPlatformData.platforms;
       const list = Object.keys(pl)
-        .map((v) => ({
-          name: v,
-          registered: pl[v].active,
-        }))
+        .map((v) => {
+          if (pl[v].find((obj) => obj.active)) {
+            return {
+              name: v,
+              registered: true,
+            };
+          }
+          return {
+            name: v,
+            registered: false,
+          };
+        })
         .filter((k) => k.registered === true);
 
       setPlatform(list[0].name);

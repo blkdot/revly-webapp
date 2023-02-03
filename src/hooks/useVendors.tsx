@@ -5,14 +5,17 @@ import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
 
-export type TVendorsSelected = string[];
 type TVendorsObj = {
   [x: string]: {
     chain_id: string;
     vendor_id: string;
-    meta: {
+    metadata: {
+      is_active: string | boolean;
+      is_deleted: string | boolean;
       prefix_vendor_id: string;
-      drn_id?: string;
+      access_token: string;
+      access_token_bis: string;
+      email: string;
     };
     data: {
       chain_name: string;
@@ -24,9 +27,13 @@ type TVendorsObj = {
 export type TVendorsArr = {
   chain_id: string;
   vendor_id: string;
-  meta: {
+  metadata: {
+    is_active: string | boolean;
+    is_deleted: string | boolean;
     prefix_vendor_id: string;
-    drn_id?: string;
+    access_token: string;
+    access_token_bis: string;
+    email: string;
   };
   data: {
     chain_name: string;
@@ -51,7 +58,7 @@ export type TChainVendor = {
 };
 
 export type TVendors = {
-  vendorsSelected: TVendorsSelected;
+  vendorsSelected: TVendorsArr[];
   vendorsObj: TVendorsObj;
   vendorsArr: TVendorsArr[];
   display: TChainVendor | Record<string, never>;
@@ -93,10 +100,8 @@ const useVendors = (isSign = false) => {
     const newData = data as any;
 
     delete newData?.master_email;
-
     let vendorsSelectedTemp = [];
     let vendorsTemp = [];
-
     platformList
       .filter((p) => {
         if (!newData[p.name]) delete newData[p.name];
@@ -104,9 +109,25 @@ const useVendors = (isSign = false) => {
       })
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
-          vendorsTemp.push({ ...v, platform: p.name });
-          if (userPlatformData.platforms[p.name].active) {
-            vendorsSelectedTemp.push(v.data.vendor_name);
+          const userPlatform =
+            userPlatformData.platforms[p.name].find((obj) =>
+              obj.vendor_ids.some((id) => id === v.vendor_id)
+            ) || '';
+          vendorsTemp.push({
+            ...v,
+            platform: p.name,
+            email: userPlatform.email,
+            access_token: userPlatform.access_token,
+            access_token_bis: userPlatform.access_token_bis,
+          });
+          if (v.metadata.is_active === 'True' || v.metadata.is_active === true) {
+            vendorsSelectedTemp.push({
+              ...v,
+              platform: p.name,
+              email: userPlatform.email,
+              access_token: userPlatform.access_token,
+              access_token_bis: userPlatform.access_token_bis,
+            });
           }
         })
       );
@@ -120,7 +141,7 @@ const useVendors = (isSign = false) => {
         Object.keys(chainObj[chainName][vendorName]).forEach((platform) => {
           chainObj[chainName][vendorName][platform] = {
             ...chainObj[chainName][vendorName][platform],
-            active: userPlatformData.platforms[platform].active,
+            active: userPlatformData.platforms[platform].length,
           };
           if (
             chainObj[chainName][vendorName][platform] === null ||
@@ -130,10 +151,10 @@ const useVendors = (isSign = false) => {
           }
           if (chainObj[chainName][vendorName][platform] !== null) {
             if ((vendorsObj[platform] || []).length === 0) {
-              if (userPlatformData.platforms[platform].active) {
+              if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
                 vendorsObj[platform] = [chainObj[chainName][vendorName][platform]];
               }
-            } else if (userPlatformData.platforms[platform].active) {
+            } else if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
               vendorsObj[platform] = [
                 ...vendorsObj[platform],
                 chainObj[chainName][vendorName][platform],
@@ -144,7 +165,7 @@ const useVendors = (isSign = false) => {
       });
     });
     Object.keys(rest).forEach((platform) => {
-      if (!userPlatformData.platforms[platform].active) {
+      if (!userPlatformData.platforms[platform].some((obj) => obj.active)) {
         delete rest[platform];
       }
     });

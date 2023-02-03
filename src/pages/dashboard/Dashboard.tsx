@@ -1,3 +1,7 @@
+import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
+import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
+import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
+import { usePlatform } from 'hooks/usePlatform';
 import { useAtom } from 'jotai';
 import { PaperKit } from 'kits';
 import { useState } from 'react';
@@ -60,22 +64,81 @@ const Dashboard = () => {
     return RoiIcon;
   };
   const links = ['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'];
-
+  const [openedModal, setOpenedModal] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [branchDataUploading, setBranchDataUploading] = useState([]);
+  const [branchData, setBranchData] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [connectAccount, setConnectAccount] = useState('account');
+  const [connect, setConnect] = useState('');
+  const openCloseModal = () => {
+    setOpenedModal(!openedModal);
+    if (connectAccount === 'manageBranch' || connectAccount === 'completed') {
+      setConnectAccount('account');
+    }
+    const body = document.querySelector('body');
+    const navbar = document.querySelector('.Navbar');
+    if (!openedModal) {
+      navbar.classList.add('openedModal');
+      body.style.overflowY = 'hidden';
+      return;
+    }
+    body.style.overflowY = 'visible';
+  };
+  const propsVariables = {
+    openCloseModal,
+    setConnect,
+    connect,
+    setAccounts,
+    accounts,
+    setBranchData,
+    branchData,
+    setBranchDataUploading,
+    branchDataUploading,
+    setActiveStep,
+    activeStep,
+    openedModal,
+    connectAccount,
+    setConnectAccount,
+  };
+  const { userPlatformData } = usePlatform();
+  const getDropdown = () => {
+    if (!userPlatformData.onboarded) {
+      return <RestaurantDropdownEmpty />;
+    }
+    if (Object.keys(display).length > 0) {
+      return <RestaurantDropdownNew chainObj={chainObj} />;
+    }
+    return (
+      <RestaurantDropdownOld
+        vendorsSelected={vendorsSelected}
+        vendors={vendorsArr}
+        vendorsPlatform={Object.keys(vendorsObj)}
+      />
+    );
+  };
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        {Object.keys(display).length > 0 ? (
-          <RestaurantDropdownNew chainObj={chainObj} />
-        ) : (
-          <RestaurantDropdownOld
-            vendorsSelected={vendorsSelected}
-            vendors={vendorsArr}
-            vendorsPlatform={Object.keys(vendorsObj)}
-          />
-        )}
+        {getDropdown()}
         <Dates isDashboard />
       </div>
-      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading ? (
+      {!userPlatformData.onboarded ? (
+        <div className='dashboard-stepper'>
+          <OnboardingModal propsVariables={propsVariables} />
+          <OnboardingStepper
+            activeStep={activeStep}
+            accounts={accounts}
+            openCloseModal={openCloseModal}
+          />
+        </div>
+      ) : (
+        ''
+      )}
+      {metricsbeforePeriod.length !== 0 &&
+      metricsafterPeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <Finance
           chainObj={chainObj}
           setTable={setTable}
@@ -90,7 +153,10 @@ const Dashboard = () => {
       ) : (
         <FinanceEmpty />
       )}
-      {metricsbeforePeriod.length !== 0 && metricsafterPeriod.length !== 0 && !loading ? (
+      {metricsbeforePeriod.length !== 0 &&
+      metricsafterPeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <Marketing
           setTable={setTable}
           table={table}
@@ -101,7 +167,10 @@ const Dashboard = () => {
       ) : (
         <MarketingEmpty />
       )}
-      {metricsafterPeriod.length !== 0 && metricsbeforePeriod.length !== 0 && !loading ? (
+      {metricsafterPeriod.length !== 0 &&
+      metricsbeforePeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <PaperKit className='dashboard-paper-wrapper'>
           <div className='dashboard-links'>
             {links.map((title) => (

@@ -101,9 +101,9 @@ const MenuTable = (props: any) => {
     data.length > 0 ? (
       stableSort(data, getComparator(order, orderBy)).map((row) => (
         <TableRowKit key={row.id} tabIndex={-1}>
-          <TableCellKit>{row.name}</TableCellKit>
+          <TableCellKit>{row.name || row.item_name}</TableCellKit>
           <TableCellKit>{row.category}</TableCellKit>
-          <TableCellKit>AED {row.price}</TableCellKit>
+          <TableCellKit>AED {row.price || row.unit_price}</TableCellKit>
         </TableRowKit>
       ))
     ) : (

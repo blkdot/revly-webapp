@@ -15,6 +15,7 @@
     visibility: visible;
     transition: 0.4s;
     height: 100%;
+
     &.close {
       opacity: 0;
       visibility: hidden;
@@ -143,6 +144,12 @@
   text-transform: none !important;
   box-shadow: none !important;
   padding: 12px 20px !important;
+  white-space: nowrap;
+
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
 
   &.connect {
     padding: 8px 20px !important;
@@ -259,12 +266,12 @@
 
 .onboarding-modal_overlay {
   background-color: rgba($color: #212b36, $alpha: 0.8);
-  position: absolute;
+  position: fixed;
   height: 100%;
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 100;
+  z-index: 99;
   opacity: 0;
   visibility: hidden;
   transition: 0.4s;
@@ -344,6 +351,18 @@
         flex-direction: row;
         padding: 0;
 
+        .MuiCircularProgress-indeterminate {
+          width: 25px !important;
+          height: 25px !important;
+
+          > svg {
+            color: #fff;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+          }
+        }
+
         > button:nth-of-type(2) {
           width: 160%;
         }
@@ -383,6 +402,14 @@
     > div {
       display: flex;
       align-items: center;
+
+      > p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        margin-right: 10px;
+        width: 200px;
+      }
     }
 
     .onboarding-account_platform-logo {
@@ -414,7 +441,7 @@
 
     &.connected {
       .onboarding-account_platform-logo::before {
-        background-color: #9a6fff;
+        background-color: #2ec966;
       }
     }
 
@@ -426,20 +453,25 @@
       padding: 5px;
       cursor: pointer;
 
-      svg {
-        path {
-          fill: black;
-        }
-
-        > path:nth-of-type(2) {
-          stroke: black;
-        }
+      img {
+        width: 100%;
+        height: 100%;
+        filter: invert(0%) sepia(0%) saturate(7500%) hue-rotate(327deg) brightness(20%)
+          contrast(104%);
       }
     }
 
     .onboarding-account_switch {
       display: flex;
       align-items: center;
+
+      .Mui-checked {
+        color: #2ec966;
+      }
+
+      .Mui-checked + .MuiSwitch-track {
+        background-color: #2ec966;
+      }
 
       p {
         width: 110px;
@@ -605,24 +637,36 @@
     padding-bottom: 11px;
     img {
       margin-right: 10px;
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
     }
+
+    &.resume {
+      img {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
     &.pause {
       color: #fff;
       background-color: #ff4842;
+
       &:hover {
         background-color: #ff4842;
       }
     }
+
     &.delete {
       color: #ff4842;
       background-color: #ffedec;
       border-color: #ff4842 !important;
+
       img {
         filter: invert(53%) sepia(100%) saturate(5446%) hue-rotate(341deg) brightness(129%)
           contrast(109%);
       }
+
       &:hover {
         background-color: #ffedec;
       }
@@ -649,5 +693,84 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 1300px) {
+  .settings-onboarding-middle_content {
+    flex-wrap: wrap;
+    grid-gap: 15px;
+
+    .settings-onboarding-btn_wrapper {
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+  }
+}
+
+@media (max-width: 1150px) {
+  .onboarding-modal_overlay > div {
+    width: 45%;
+  }
+}
+
+@media (max-width: 1050px) {
+  .onboarding-stepper {
+    .MuiStepLabel-label {
+      .__title {
+        font-size: 14px;
+      }
+
+      .__subtitle {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .onboarding-modal_overlay > div {
+    width: 55%;
+  }
+
+  .onboarding-stepper {
+    flex-direction: column !important;
+
+    > div > span {
+      padding-top: 16px;
+      flex-direction: row !important;
+      justify-content: space-between;
+
+      > span:nth-of-type(2) {
+        width: 85%;
+
+        > span {
+          margin-top: 0;
+
+          .onboarding-stepper_line {
+            left: 28px;
+            top: 65px;
+            width: 4px;
+            height: calc(100% - 55px);
+
+            &::before {
+              width: 100%;
+              height: var(--activeStep);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 660px) {
+  .settings-onboarding-middle_content {
+    .settings-onboarding-btn_wrapper {
+      > button {
+        width: 100%;
+      }
+    }
   }
 }

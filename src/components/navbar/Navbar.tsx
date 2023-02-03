@@ -17,6 +17,7 @@ import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
 import { accordionLink, settingsLink, simpleLink } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
+import { usePlatform } from '../../hooks/usePlatform';
 import Navlink from '../navlink/Navlink';
 import './Navbar.scss';
 
@@ -48,6 +49,7 @@ const Navbar = () => {
   const handleChange = (panel) => (_, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  const { userPlatformData } = usePlatform();
 
   const renderAccordionLinkSub = (s) => (
     <Navlink title={s.title} path={s.path} key={s.title}>
@@ -57,7 +59,14 @@ const Navbar = () => {
 
   const renderSimpleLink = () =>
     simpleLink.map((s) => (
-      <Navlink title={s.title} path={s.path} key={s.title}>
+      <Navlink
+        className={
+          !userPlatformData.onboarded && s.path !== '/dashboardOnboard' ? 'navlink-disabled' : ''
+        }
+        title={s.title}
+        path={s.path}
+        key={s.title}
+      >
         <img className='nav-icon' src={s.src} alt={s.title} />
       </Navlink>
     ));
@@ -69,8 +78,9 @@ const Navbar = () => {
           !!((expanded === (a.id as any) && opened) || (expanded === (a.id as any) && open))
         }
         onChange={handleChange(a.id)}
-        className='navbar-accordion'
+        className={`navbar-accordion ${!userPlatformData.onboarded ? 'disabled' : ''}`}
         key={a.id}
+        disabled={!userPlatformData.onboarded}
       >
         <ButtonKit
           className={`navbar-button-kit ${
@@ -107,8 +117,9 @@ const Navbar = () => {
           !!((expanded === (a.id as any) && opened) || (expanded === (a.id as any) && open))
         }
         onChange={handleChange(a.id)}
-        className='navbar-accordion'
+        className={`navbar-accordion ${!userPlatformData.onboarded ? 'disabled' : ''}`}
         key={a.id}
+        disabled={!userPlatformData.onboarded}
       >
         <ButtonKit
           className={`navbar-button-kit ${
