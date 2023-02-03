@@ -60,7 +60,7 @@ const ConnectPlatform = ({ propsVariables }) => {
             setPassword('');
           }}
           variant='contained'
-          style={{ '--color': '#F9FAFB', color: 'black' }}
+          style={{ '--color': '#F9FAFB', color: 'black' } as React.CSSProperties}
         >
           <Arrow />
           Back

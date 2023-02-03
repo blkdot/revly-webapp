@@ -82,7 +82,7 @@ const UploadingActive = ({ propsVariables }) => {
       </div>
       <div className='onboarding-platform-buttons account'>
         <ButtonKit
-          style={{ '--color': '#F9FAFB', color: 'black' }}
+          style={{ '--color': '#F9FAFB', color: 'black' } as React.CSSProperties}
           onClick={() => {
             setConnectAccount('platform');
             setBranchDataUploading([]);
@@ -94,7 +94,7 @@ const UploadingActive = ({ propsVariables }) => {
         <ButtonKit
           className='onboarding-platform-buttons_confirm'
           variant='contained'
-          style={{ '--color': '#9A6FFF' }}
+          style={{ '--color': '#9A6FFF' } as React.CSSProperties}
           onClick={confirm}
         >
           Confirm <Arrow />
