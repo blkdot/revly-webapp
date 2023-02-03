@@ -1,10 +1,6 @@
 // TODO: fix all linter problem
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import CardKit from '../../kits/card/CardKit';
-import CardContentKit from '../../kits/cardContent/CardContentKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import { CardContentKit, CardKit, PaperKit, SkeletonKit, TypographyKit } from 'kits';
 import './Widget.scss';
 
 const Widget = () => (

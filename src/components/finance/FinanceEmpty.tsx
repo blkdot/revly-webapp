@@ -1,5 +1,4 @@
-import SkeletonKit from '../../kits/skeleton/SkeletonKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
+import { SkeletonKit, TypographyKit } from 'kits';
 import Widget from '../widget/WidgetEmpty';
 import './Finance.scss';
 

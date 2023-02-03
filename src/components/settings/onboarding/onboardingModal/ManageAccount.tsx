@@ -1,5 +1,5 @@
+import { TypographyKit, SwitchKit } from 'kits';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
-import SwitchKit from '../../../../kits/switch/SwitchKit';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import { platformList } from '../../../../data/platformList';
 
@@ -30,13 +30,12 @@ const ManageAccount = ({ propsVariables }) => {
         {accounts.map((obj) => (
           <div key={obj.email} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
-              <span
+              <TypographyKit
+                components='span'
                 className='onboarding-account_platform-logo'
-                style={
-                  {
-                    '--color': platformList.find((objP) => objP.name === obj.platform).color,
-                  } as any
-                }
+                style={{
+                  '--color': platformList.find((objP) => objP.name === obj.platform).color,
+                }}
               >
                 <img
                   src={
@@ -45,7 +44,7 @@ const ManageAccount = ({ propsVariables }) => {
                   }
                   alt={obj.platform}
                 />
-              </span>
+              </TypographyKit>
               <p>{obj.email}</p>
             </div>
             <div>

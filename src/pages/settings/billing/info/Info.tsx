@@ -1,5 +1,5 @@
 import { Zoom } from '@mui/material';
-import ButtonKit from '../../../../kits/button/ButtonKit';
+import { ButtonKit } from 'kits';
 import './Info.scss';
 
 const Info = (props: any) => {

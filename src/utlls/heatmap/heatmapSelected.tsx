@@ -2,58 +2,6 @@ import { addDays, differenceInDays, format, getDay, getHours, isSameDay } from '
 import _ from 'lodash';
 import { daysOrder, maxHour, minHour, rangeHoursOpenedDay } from './heatmapSelectedData';
 
-const typeMono = (dateRange, times, data) => {
-  const { startDate, endDate } = dateRange;
-
-  const sameDay = isSameDay(startDate, endDate);
-
-  const indexDayStart = getDay(new Date(startDate));
-
-  if (sameDay) return setSameDayTimeRange(data, daysOrder[indexDayStart], times);
-
-  const diff = differenceInDays(endDate, startDate);
-
-  if (diff >= 7) {
-    return setAll(data);
-  }
-
-  const indexDayEnd = getDay(new Date(endDate));
-
-  if (diff === 0)
-    return setSideBySideDayTimeRange(data, daysOrder[indexDayStart], daysOrder[indexDayEnd], times);
-
-  if (diff === 6) {
-    const { startTime, endTime } = times;
-
-    const valueStartHour = getHour(startTime);
-    const valueEndHour = getHour(endTime);
-
-    if (valueEndHour >= valueStartHour - 1) {
-      return setAll(data);
-    }
-  }
-
-  return setContinuesDayRange(data, indexDayStart, indexDayEnd, times);
-};
-
-export const getFormatedEndDate = (value, struct, times) => {
-  const len = times.length;
-
-  const endingHour = times[len - 1].endTime;
-
-  const endingIndexHeatmap = getHour(endingHour);
-
-  const isEndedNextDay = rangeHoursOpenedDay[endingIndexHeatmap].isNext ?? false;
-
-  if (isEndedNextDay) {
-    const newDay = addDays(value, 1);
-
-    return format(newDay, struct);
-  }
-
-  return format(value, struct);
-};
-
 const getHour = (h) => {
   let hour = getHours(h);
 
@@ -156,6 +104,58 @@ const setAll = (data) =>
     }),
     data
   );
+
+const typeMono = (dateRange, times, data) => {
+  const { startDate, endDate } = dateRange;
+
+  const sameDay = isSameDay(startDate, endDate);
+
+  const indexDayStart = getDay(new Date(startDate));
+
+  if (sameDay) return setSameDayTimeRange(data, daysOrder[indexDayStart], times);
+
+  const diff = differenceInDays(endDate, startDate);
+
+  if (diff >= 7) {
+    return setAll(data);
+  }
+
+  const indexDayEnd = getDay(new Date(endDate));
+
+  if (diff === 0)
+    return setSideBySideDayTimeRange(data, daysOrder[indexDayStart], daysOrder[indexDayEnd], times);
+
+  if (diff === 6) {
+    const { startTime, endTime } = times;
+
+    const valueStartHour = getHour(startTime);
+    const valueEndHour = getHour(endTime);
+
+    if (valueEndHour >= valueStartHour - 1) {
+      return setAll(data);
+    }
+  }
+
+  return setContinuesDayRange(data, indexDayStart, indexDayEnd, times);
+};
+
+export const getFormatedEndDate = (value, struct, times) => {
+  const len = times.length;
+
+  const endingHour = times[len - 1].endTime;
+
+  const endingIndexHeatmap = getHour(endingHour);
+
+  const isEndedNextDay = rangeHoursOpenedDay[endingIndexHeatmap].isNext ?? false;
+
+  if (isEndedNextDay) {
+    const newDay = addDays(value, 1);
+
+    return format(newDay, struct);
+  }
+
+  return format(value, struct);
+};
 
 const getWorkweek = (data, isWorkweek) => {
   const cData = [...data];

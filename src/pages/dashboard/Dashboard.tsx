@@ -3,6 +3,7 @@ import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import { usePlatform } from 'hooks/usePlatform';
 import { useAtom } from 'jotai';
+import { PaperKit } from 'kits';
 import { useState } from 'react';
 import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
@@ -20,7 +21,6 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 import Table from '../../components/table/Table';
 import TableEmpty from '../../components/table/TableEmpty';
 import useMetrics from '../../hooks/useMetrics';
-import PaperKit from '../../kits/paper/PaperKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Dashboard.scss';
 
@@ -29,7 +29,8 @@ const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { chainObj, vendorsObj, display, vendorsSelected, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
-
+  console.log(vendors);
+  
   const getTitle = (title) => {
     if (title === 'n_orders') {
       return 'orders';

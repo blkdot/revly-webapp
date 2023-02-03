@@ -1,8 +1,6 @@
-import React from 'react';
+import { TableRowKit, TableCellKit } from 'kits';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../tableRevly/TableRevly';
-import useTableContentFormatter from '../../tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRowKit from '../../../kits/tablerow/TableRowKit';
-import TableCellKit from '../../../kits/tablecell/TableCellKit';
 
 const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch }) => {
   const { renderAccountsRow, renderBranchStatusRow, renderBranchRow, renderLinkedPlatformsRow } =

@@ -1,34 +1,32 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
-import StepKit from '../../../kits/step/StepKit';
-import StepLabelKit from '../../../kits/stepLabel/StepLabel';
-import StepperKit from '../../../kits/stepper/StepperKit';
+import { StepKit, StepLabelKit, StepperKit, ButtonKit, TypographyKit } from 'kits';
 import CloseIcon from '../../../assets/images/ic_close.png';
-import ButtonKit from '../../../kits/button/ButtonKit';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.png';
 import ClockIcon from '../../../assets/images/clock-settings_ic.png';
 import ShieldIcon from '../../../assets/images/shield-settings_ic.png';
 import { usePlatform } from '../../../hooks/usePlatform';
 
-const ColorlibStepIconRoot = styled('div')(({ ownerState }: any) => ({
-  backgroundColor: 'rgba(145, 158, 171, 0.24);',
-  zIndex: 1,
-  color: '#fff',
-  width: 45,
-  height: 45,
-  display: 'flex',
-  borderRadius: '50%',
-  justifyContent: 'center',
-  alignItems: 'center',
-  ...(ownerState.active && {
-    background: 'rgba(213, 200, 250, 0.3);',
-  }),
-  ...(ownerState.completed && {
-    background: 'rgba(213, 200, 250, 0.3);',
-  }),
-}));
+const ColorlibStepIconRoot = styled('div')(
+  ({ ownerState }: { ownerState: { completed: boolean; active: boolean } }) => ({
+    backgroundColor: 'rgba(145, 158, 171, 0.24);',
+    zIndex: 1,
+    color: '#fff',
+    width: 45,
+    height: 45,
+    display: 'flex',
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...(ownerState.active && {
+      background: 'rgba(213, 200, 250, 0.3);',
+    }),
+    ...(ownerState.completed && {
+      background: 'rgba(213, 200, 250, 0.3);',
+    }),
+  })
+);
 
 const ColorlibStepIcon = (props: any) => {
   const { active, completed, className, icon } = props;
@@ -110,8 +108,9 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
         {steps.map((obj, index) => (
           <StepKit key={obj.label}>
             <StepLabelKit StepIconComponent={ColorlibStepIcon}>
-              <span
-                style={{ '--activeStep': `${getActiveStep(index)}%` } as any}
+              <TypographyKit
+                components='span'
+                style={{ '--activeStep': `${getActiveStep(index)}%` }}
                 className={`${index !== 2 ? 'onboarding-stepper_line' : ''} ${
                   Number(String(activeStep / 100)[0]) >= index + 1 ? 'active' : ''
                 }`}

@@ -1,5 +1,5 @@
+import { BaseIcon } from 'assets/icons';
 import Modal from 'react-modal';
-import BaseIcon from '../../../assets/icons/BaseIcon';
 
 const customStyles = {
   overlay: {

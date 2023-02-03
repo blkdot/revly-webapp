@@ -1,15 +1,80 @@
-import { useAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useUserAuth } from 'contexts';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { vendorsAtom } from 'store/vendorsAtom';
-import { useUserAuth } from '../contexts/AuthContext';
 import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
 
-const useVendors = (isSign: any) => {
+type TVendorsObj = {
+  [x: string]: {
+    chain_id: string;
+    vendor_id: string;
+    metadata: {
+      is_active: string | boolean;
+      is_deleted: string | boolean;
+      prefix_vendor_id: string;
+      access_token: string;
+      access_token_bis: string;
+      email: string;
+    };
+    data: {
+      chain_name: string;
+      vendor_name: string;
+    };
+  }[];
+};
+
+export type TVendorsArr = {
+  chain_id: string;
+  vendor_id: string;
+  metadata: {
+    is_active: string | boolean;
+    is_deleted: string | boolean;
+    prefix_vendor_id: string;
+    access_token: string;
+    access_token_bis: string;
+    email: string;
+  };
+  data: {
+    chain_name: string;
+    vendor_name: string;
+  };
+  platform: string;
+};
+
+export type TChainVendor = {
+  [x: string]: {
+    [x: string]: {
+      meta: { prefix_vendor_id: string };
+      vendor_id: string;
+      chain_id: string;
+      data: {
+        chain_name: string;
+        vendor_name: string;
+      };
+      active: boolean;
+    };
+  };
+};
+
+export type TVendors = {
+  vendorsSelected: TVendorsArr[];
+  vendorsObj: TVendorsObj;
+  vendorsArr: TVendorsArr[];
+  display: TChainVendor | Record<string, never>;
+  chainObj: TChainVendor | Record<string, never>;
+};
+
+const useVendors = (isSign = false) => {
   const { getVendors } = useApi();
-  const [vendors, setVendors] = useAtom(vendorsAtom);
+
+  const [vendors, setVendors] = useState<TVendors>({
+    vendorsSelected: [],
+    vendorsObj: {},
+    vendorsArr: [],
+    display: {},
+    chainObj: {},
+  });
 
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();

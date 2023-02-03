@@ -1,7 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
+import { useUserAuth } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
+import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import AreaIcon from '../../assets/images/ic_area.png';
@@ -17,15 +19,9 @@ import RestaurantDropdownNew from '../../components/restaurantDropdown/Restauran
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
-import { useUserAuth } from '../../contexts/AuthContext';
 import { useAlert } from '../../hooks/useAlert';
 import useApi from '../../hooks/useApi';
 import { usePlatform } from '../../hooks/usePlatform';
-import ButtonKit from '../../kits/button/ButtonKit';
-import ListItemTextKit from '../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 

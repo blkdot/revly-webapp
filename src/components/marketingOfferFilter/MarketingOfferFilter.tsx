@@ -1,14 +1,6 @@
-import Basket from '../../assets/icons/Basket';
-import Layers from '../../assets/icons/Layers';
-import Switch from '../../assets/icons/Switch';
-import Tag from '../../assets/icons/Tag';
-import UserGroup from '../../assets/icons/UserGroup';
+import { Basket, Layers, Switch, Tag, UserGroup } from 'assets/icons';
+import { ButtonKit, CheckboxKit, PaperKit, TextfieldKit, TypographyKit } from 'kits';
 import CloseIcon from '../../assets/images/ic_close.png';
-import ButtonKit from '../../kits/button/ButtonKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TextfieldKit from '../../kits/textfield/TextfieldKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 
 const MarketingOfferFilter = (props: any) => {
   const {
@@ -136,8 +128,8 @@ const MarketingOfferFilter = (props: any) => {
     );
   };
 
-  const renderDiscountType = () => {
-    if (!filtersHead.discount_type || filtersHead.discount_type.length < 1) return null;
+  const renderTypeOffer = () => {
+    if (!filtersHead.type_offer || filtersHead.type_offer.length < 1) return null;
 
     return (
       <>
@@ -154,7 +146,7 @@ const MarketingOfferFilter = (props: any) => {
             <Tag /> Discount Type
           </span>
           <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.discount_type.map((item) => (
+            {filtersHead.type_offer.map((item) => (
               <div
                 key={item.value}
                 style={{
@@ -167,8 +159,8 @@ const MarketingOfferFilter = (props: any) => {
                 }}
               >
                 <CheckboxKit
-                  checked={filters.discount_type.includes(item.value)}
-                  onChange={() => handleChangeMultipleFilter('discount_type')(item.value)}
+                  checked={filters.type_offer.includes(item.value)}
+                  onChange={() => handleChangeMultipleFilter('type_offer')(item.value)}
                 />
                 <span style={{ display: 'flex', alignSelf: 'center' }}>{item.text}</span>
               </div>
@@ -275,7 +267,7 @@ const MarketingOfferFilter = (props: any) => {
           </div>
         </div>
         <hr />
-        {renderDiscountType()}
+        {renderTypeOffer()}
         {renderDiscountAmount()}
         <div
           style={{

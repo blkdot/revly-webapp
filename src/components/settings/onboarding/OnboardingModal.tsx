@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { settingsOnboardPlatformStatus, settingsSave } from 'api/settingsApi';
 import { useState } from 'react';
-import { useUserAuth } from '../../../contexts/AuthContext';
-import { useAlert } from '../../../hooks/useAlert';
-import useApi from '../../../hooks/useApi';
+import { useUserAuth } from 'contexts';
+import { useAlert } from 'hooks/useAlert';
+import useApi from 'hooks/useApi';
 import ConnectAccount from './onboardingModal/ConnectAccount';
 import ConnectPlatform from './onboardingModal/ConnectPlatform';
 import ManageAccount from './onboardingModal/ManageAccount';
@@ -25,9 +24,10 @@ const OnboardingModal = ({ propsVariables }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { settingsOnboardPlatform } = useApi();
+  const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
   const { user } = useUserAuth();
-  const { triggerAlertWithMessageError } = useAlert();
+  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
+
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
     const res = await settingsOnboardPlatform(

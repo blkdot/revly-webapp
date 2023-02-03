@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { ButtonKit } from 'kits';
+import OnboardingDropdown from './OnboardingDropdown';
 import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
-import OnboardingDropdown from './OnboardingDropdown';
-import ButtonKit from '../../../kits/button/ButtonKit';
 
 const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
   const [kitchen, setKitchen] = useState('');

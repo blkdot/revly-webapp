@@ -5,6 +5,6 @@ import { handleResponse } from './baseApi';
 const { apiUrl } = config;
 
 export const getOffers = (body) =>
-  axios.post(`${apiUrl}/planning/offersv2`, body).catch(handleResponse);
+  axios.post(`${apiUrl}/planning/offersv3`, body).catch(handleResponse);
 
-export const getAds = (body) => axios.post(`${apiUrl}/planning/adsv2`, body).catch(handleResponse);
+export const getAds = (body) => axios.post(`${apiUrl}/planning/adsv3`, body).catch(handleResponse);

@@ -12,14 +12,16 @@ import {
   subMonths,
   subWeeks,
 } from 'date-fns';
+import {
+  AccordionDetailsKit,
+  AccordionKit,
+  AccordionSummaryKit,
+  ButtonKit,
+  TypographyKit,
+} from 'kits';
 import React, { useEffect, useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import AccordionKit from '../../kits/accordion/AccordionKit';
-import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
-import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import './Dates.scss';
 
 const DateSelect = React.memo((props: any) => {

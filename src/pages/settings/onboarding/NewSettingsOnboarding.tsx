@@ -1,12 +1,11 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { loadUser } from 'api/userApi';
 import { useUserAuth } from 'contexts/AuthContext';
 import useVendors from 'hooks/useVendors';
-import OnboardingStepper from '../../../components/settings/onboarding/OnboardingStepper';
-import OnboardingMiddleContent from '../../../components/settings/onboarding/OnboardingMiddleContent';
-import OnboardingModal from '../../../components/settings/onboarding/OnboardingModal';
-import OnboardingTable from '../../../components/settings/onboarding/OnboardingTable';
+import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
+import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMiddleContent';
+import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
+import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
 import { usePlatform } from '../../../hooks/usePlatform';
 import './SettingOnboarding.scss';
 

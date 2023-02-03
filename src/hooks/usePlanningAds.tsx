@@ -1,6 +1,6 @@
+import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
-import { useUserAuth } from '../contexts/AuthContext';
 import useApi from './useApi';
 import useVendors from './useVendors';
 

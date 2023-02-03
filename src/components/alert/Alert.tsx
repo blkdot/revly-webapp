@@ -1,4 +1,4 @@
-import AlertKit from '../../kits/alert/AlertKit';
+import { AlertKit } from 'kits';
 import './Alert.scss';
 
 const Alert = (props: any) => {

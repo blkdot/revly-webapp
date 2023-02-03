@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAtom } from 'jotai';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import './Navbar.scss';
-
-import { useUserAuth } from '../../contexts/AuthContext';
-import AccordionSummaryKit from '../../kits/accordionSummary/AccordionSummaryKit';
-import AccordionKit from '../../kits/accordion/AccordionKit';
-import AccordionDetailsKit from '../../kits/accordionDetails/AccordionDetails';
-import TypographyKit from '../../kits/typography/TypographyKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import Navlink from '../navlink/Navlink';
-
-import logo from '../../assets/images/logo.png';
-import smallLogo from '../../assets/images/small-logo.png';
-import arrow from '../../assets/images/navbar-arrow.png';
+import { useUserAuth } from 'contexts';
+import { useAtom } from 'jotai';
+import {
+  AccordionDetailsKit,
+  AccordionKit,
+  AccordionSummaryKit,
+  ButtonKit,
+  TypographyKit,
+} from 'kits';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import logoutIcon from '../../assets/images/ic_logout.png';
 import lines from '../../assets/images/lines.png';
-
-import { simpleLink, accordionLink, settingsLink } from '../../data/navbarData';
+import logo from '../../assets/images/logo.png';
+import arrow from '../../assets/images/navbar-arrow.png';
+import smallLogo from '../../assets/images/small-logo.png';
+import { accordionLink, settingsLink, simpleLink } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import { usePlatform } from '../../hooks/usePlatform';
+import Navlink from '../navlink/Navlink';
+import './Navbar.scss';
 
 const Navbar = () => {
   const [opened, setOpened] = useState(true);
@@ -62,7 +60,7 @@ const Navbar = () => {
   const renderSimpleLink = () =>
     simpleLink.map((s) => (
       <Navlink
-        className={!userPlatformData.onboarded && s.path !== '/dashboard' ? 'navlink-disabled' : ''}
+        className={!userPlatformData.onboarded && s.path !== '/dashboardOnboard' ? 'navlink-disabled' : ''}
         title={s.title}
         path={s.path}
         key={s.title}

@@ -1,32 +1,28 @@
-/* eslint-disable no-unused-vars */ import { pascalCase } from 'change-case';
+/* eslint-disable no-unused-vars */
+import { Layers, Tag, Vector } from 'assets/icons';
+import { pascalCase } from 'change-case';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useAtom } from 'jotai';
+import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import Layers from '../../assets/icons/Layers';
-import Tag from '../../assets/icons/Tag';
-import Vector from '../../assets/icons/Vector';
+import Dates from 'components/dates/Dates';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
+import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
+import MarketingSetup from 'components/marketingSetup/MarketingSetup';
+import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
+import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevly from 'components/tableRevly/TableRevly';
+import useDate from 'hooks/useDate';
+import usePlanningOffers from 'hooks/usePlanningOffers';
+import useQueryState from 'hooks/useQueryState';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
-import Dates from '../../components/dates/Dates';
-import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
-import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
-import MarketingOfferRemove from '../../components/marketingOfferRemove/MarketingOfferRemove';
-import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
-import useDate from '../../hooks/useDate';
-import usePlanningOffers from '../../hooks/usePlanningOffers';
-import useQueryState from '../../hooks/useQueryState';
-import BoxKit from '../../kits/box/BoxKit';
-import ButtonKit from '../../kits/button/ButtonKit';
-import PaperKit from '../../kits/paper/PaperKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
@@ -111,7 +107,7 @@ const MarketingOffer = () => {
 
   const headersOffers = [
     {
-      id: 'vendor_name',
+      id: 'chain_name',
       numeric: false,
       disablePadding: false,
       label: 'Branche',
@@ -135,7 +131,7 @@ const MarketingOffer = () => {
       label: 'Platfrom',
     },
     {
-      id: 'discount_type',
+      id: 'type_offer',
       numeric: true,
       disablePadding: false,
       label: 'Discount Type',
@@ -153,10 +149,10 @@ const MarketingOffer = () => {
       label: 'Min Order',
     },
     {
-      id: 'target',
+      id: 'goal',
       numeric: true,
       disablePadding: false,
-      label: 'Target',
+      label: 'goal',
     },
     {
       id: 'status',
@@ -165,25 +161,25 @@ const MarketingOffer = () => {
       label: 'Status',
     },
     {
-      id: 'data.n_orders',
+      id: 'n_orders',
       numeric: true,
       disablePadding: false,
       label: '#Orders',
     },
     {
-      id: 'data.average_basket',
+      id: 'average_basket',
       numeric: true,
       disablePadding: false,
       label: 'Avg Basket',
     },
     {
-      id: 'data.roi',
+      id: 'roi',
       numeric: true,
       disablePadding: false,
       label: 'ROI',
     },
     {
-      id: 'data.revenue',
+      id: 'revenue',
       numeric: true,
       disablePadding: false,
       label: 'Revenue',
@@ -191,19 +187,19 @@ const MarketingOffer = () => {
   ];
 
   const cellTemplatesObject = {
-    vendor_name: renderSimpleRow,
+    chain_name: renderSimpleRow,
     platform: renderPlatform,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
-    discount_type: renderSimpleRow,
+    type_offer: renderSimpleRow,
     discount_rate: renderPercent,
-    target: renderTarget,
+    goal: renderTarget,
     minimum_order_value: renderSimpleRow,
     status: renderStatus,
-    'data.n_orders': renderSimpleRow,
-    'data.average_basket': renderSimpleRow,
-    'data.roi': renderSimpleRow,
-    'data.revenue': renderCurrency,
+    n_orders: renderSimpleRow,
+    average_basket: renderSimpleRow,
+    roi: renderSimpleRow,
+    revenue: renderCurrency,
   };
 
   const renderRowsByHeader = (r, i) =>
@@ -213,7 +209,7 @@ const MarketingOffer = () => {
         [cur.id]: cellTemplatesObject[cur.id]
           ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
           : r[cur.id],
-        id: `${cur.id}_${r.offer_id}`,
+        id: `${cur.id}_${r.offer_ids}`,
         data: r,
       }),
       {}
@@ -243,44 +239,41 @@ const MarketingOffer = () => {
     subscribers: 'Deliveroo Plus',
   };
 
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
+
   useEffect(() => {
     const preHead = offersData.reduce(
       (acc, cur) => {
-        const {
-          platform,
-          discount_type: discountType,
-          discount_rate: procent,
-          status,
-          target,
-        } = acc;
+        const { platform, type_offer: typeOffer, discount_rate: procent, status, goal } = acc;
 
-        if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
+        if (!platform.includes(cur.platform.toLowerCase()) && cur.platform)
+          platform.push(cur.platform.toLowerCase());
 
-        if (!discountType.includes(cur.discount_type) && cur.discount_type)
-          discountType.push(cur.discount_type);
+        if (!typeOffer.includes(cur.type_offer) && cur.type_offer) typeOffer.push(cur.type_offer);
 
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
         if (!status.includes(cur.status) && cur.status) status.push(cur.status);
 
-        if (
-          !target.includes(cur.target) &&
-          !target.includes(targetMapping[cur.target]) &&
-          cur.target
-        )
-          target.push(targetMapping[cur.target] || cur.target);
+        if (!goal.includes(cur.goal) && !goal.includes(targetMapping[cur.goal]) && cur.goal)
+          goal.push(targetMapping[cur.goal] || cur.goal);
 
         return {
           ...acc,
           platform,
-          discount_type: discountType,
+          type_offer: typeOffer,
           discount_rate: procent,
           status,
-          target,
+          goal,
         };
       },
-      { discount_type: [], platform: [], discount_rate: [], status: [], target: [] }
+      { type_offer: [], platform: [], discount_rate: [], status: [], goal: [] }
     );
 
     const clonedFilters = { ...filters };
@@ -289,8 +282,8 @@ const MarketingOffer = () => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
     });
 
-    clonedFilters.discount_type.forEach((fp, i) => {
-      if (!preHead.discount_type.includes(fp)) clonedFilters.discount_type.splice(i, 1);
+    clonedFilters.type_offer.forEach((fp, i) => {
+      if (!preHead.type_offer.includes(fp)) clonedFilters.type_offer.splice(i, 1);
     });
 
     clonedFilters.discount_rate.forEach((fp, i) => {
@@ -301,37 +294,31 @@ const MarketingOffer = () => {
       if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
     });
 
-    clonedFilters.target.forEach((fp, i) => {
-      if (!preHead.target.includes(fp)) clonedFilters.target.splice(i, 1);
+    clonedFilters.goal.forEach((fp, i) => {
+      if (!preHead.goal.includes(fp)) clonedFilters.goal.splice(i, 1);
     });
 
     setFilters(clonedFilters);
 
     const preHeadPlatform = preHead.platform.map((s) => ({
-      value: s,
-      text: renderPlatformInsideFilter(s),
+      value: s.toLowerCase(),
+      text: renderPlatformInsideFilter(s.toLowerCase()),
     }));
 
-    const preHeadDiscountType = preHead.discount_type.map((s) => ({ value: s, text: s }));
-    const preHeadTarget = preHead.target.map((s) => ({ value: s, text: s }));
+    const preHeadtypeOffer = preHead.type_offer.map((s) => ({ value: s, text: s }));
+    const preHeadTarget = preHead.goal.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
-      discount_type: preHeadDiscountType,
+      type_offer: preHeadtypeOffer,
       discount_rate: preHeadProcent,
       status: preHeadStatus,
-      target: preHeadTarget,
+      goal: preHeadTarget,
     });
   }, [JSON.stringify(offersData)]);
 
-  const renderPlatformInsideFilter = (s) => (
-    <div key={s}>
-      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
-      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
-    </div>
-  );
   const CancelOffer = () => {
     row.forEach((obj, index) => {
       selected.forEach((n) => {
@@ -361,11 +348,13 @@ const MarketingOffer = () => {
     let filteredData = offersData;
 
     if (filters.platform.length > 0) {
-      filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
+      filteredData = filteredData.filter((f) =>
+        filters.platform.includes(f.platform.toLowerCase())
+      );
     }
 
-    if (filters.discount_type.length > 0) {
-      filteredData = filteredData.filter((f) => filters.discount_type.includes(f.discount_type));
+    if (filters.type_offer.length > 0) {
+      filteredData = filteredData.filter((f) => filters.type_offer.includes(f.type_offer));
     }
 
     if (filters.discount_rate.length > 0) {
@@ -376,8 +365,8 @@ const MarketingOffer = () => {
       filteredData = filteredData.filter((f) => filters.status.includes(f.status));
     }
 
-    if (filters.target.length > 0) {
-      filteredData = filteredData.filter((f) => filters.target.includes(f.target));
+    if (filters.goal.length > 0) {
+      filteredData = filteredData.filter((f) => filters.goal.includes(f.goal));
     }
 
     setOffersDataFiltered(filteredData);
@@ -460,9 +449,9 @@ const MarketingOffer = () => {
                 maxShowned={1}
               />
               <FilterDropdown
-                items={filtersHead.discount_type}
-                values={filters.discount_type}
-                onChange={handleChangeMultipleFilter('discount_type')}
+                items={filtersHead.type_offer}
+                values={filters.type_offer}
+                onChange={handleChangeMultipleFilter('type_offer')}
                 label='Discount Type'
                 icon={<Tag />}
                 maxShowned={1}

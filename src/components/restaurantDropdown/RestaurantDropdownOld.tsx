@@ -1,18 +1,20 @@
 import { useAtom } from 'jotai';
+import {
+  ButtonKit,
+  CheckboxKit,
+  FormControlKit,
+  MenuItemKit,
+  OutlinedInputKit,
+  SelectKit,
+  TooltipKit,
+  TypographyKit,
+} from 'kits';
 import * as React from 'react';
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import talabat from '../../assets/images/talabat-favicon.png';
 import { platformList } from '../../data/platformList';
 import useVendors from '../../hooks/useVendors';
-import ButtonKit from '../../kits/button/ButtonKit';
-import CheckboxKit from '../../kits/checkbox/CheckboxKit';
-import FormcontrolKit from '../../kits/formcontrol/FormcontrolKit';
-import MenuItemKit from '../../kits/menuItem/MenuItemKit';
-import OutlindeInputKit from '../../kits/outlindeInput/OutlindeInputKit';
-import SelectKit from '../../kits/select/SelectKit';
-import TooltipKit from '../../kits/toolTip/TooltipKit';
-import TypographyKit from '../../kits/typography/TypographyKit';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './RestaurantDropdown.scss';
 
@@ -39,9 +41,14 @@ const RestaurantDropdownOld = ({
   branch,
   className,
 }: any) => {
-  const [, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsContext } = useVendors(undefined);
-
+  const [vendorsContext, setVendors] = useAtom(vendorsAtom);
+  const { vendors: vendorsReq } = useVendors(undefined);
+  React.useEffect(() => {
+    if(vendorsReq.vendorsArr.length > 1){
+      setVendors(vendorsReq)
+    }
+  }, [vendorsReq])
+  
   const handleChange = (value) => {
     const vendorsSelectedTemp = JSON.parse(JSON.stringify(vendorsSelected)); // copy vendorsSelected
     // check if some vendorName equal value and vendorsSelected have at least 1 vendor
@@ -235,13 +242,13 @@ const RestaurantDropdownOld = ({
       ) : (
         ''
       )}
-      <FormcontrolKit sx={{ m: 1, width: 300 }}>
+      <FormControlKit sx={{ m: 1, width: 300 }}>
         <SelectKit
           labelId='demo-multiple-checkbox-label'
           id='demo-multiple-checkbox-vendors-old'
           multiple
           value={vendorsSelected}
-          input={<OutlindeInputKit />}
+          input={<OutlinedInputKit />}
           renderValue={(selected) => (
             <div style={{ display: 'flex', alignItems: 'center', width: '90%', gridGap: '10px' }}>
               <img className='select_icon' src={selectIcon} alt='Select Icon' />
@@ -280,7 +287,7 @@ const RestaurantDropdownOld = ({
             {!listing ? vendors?.map((info, index) => renderLayout(info, index)) : ''}
           </div>
         </SelectKit>
-      </FormcontrolKit>
+      </FormControlKit>
     </div>
   );
 };

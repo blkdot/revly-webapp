@@ -1,11 +1,11 @@
 import { loadUser, saveUser } from 'api/userApi';
 import { useUserAuth } from 'contexts/AuthContext';
+import { TypographyKit, ButtonKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
 import ResumeIcon from '../../../../assets/images/ic_resume.png';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import { platformList } from '../../../../data/platformList';
-import ButtonKit from '../../../../kits/button/ButtonKit';
 import Arrow from '../../../../assets/images/arrow.png';
 
 const ManageBranch = ({ propsVariables }) => {
@@ -88,8 +88,9 @@ const ManageBranch = ({ propsVariables }) => {
           {clickedBranch.linked_platforms.map((obj, index) => (
             <div className='manage-branch-accounts' key={obj.platform}>
               <div>
-                <span
-                  style={{ '--color': getPlatform(obj.platform).color } as any}
+                <TypographyKit
+                  components='span'
+                  style={{ '--color': getPlatform(obj.platform).color }}
                   className={`render-linked-platforms-row ${obj.status}`}
                 >
                   <img
@@ -99,7 +100,7 @@ const ManageBranch = ({ propsVariables }) => {
                     }
                     alt={obj.platform}
                   />
-                </span>
+                </TypographyKit>
                 <div className='render-accounts-row'>{clickedBranch.accounts[index]}</div>
               </div>
               <div>

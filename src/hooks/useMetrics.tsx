@@ -1,7 +1,7 @@
+import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
-import { useUserAuth } from '../contexts/AuthContext';
 import { vendorsAtom } from '../store/vendorsAtom';
 import useApi from './useApi';
 import useDate from './useDate';

@@ -12,7 +12,13 @@ export const platformList = [
     name: 'deliveroo',
     color: '#35B8B2',
   },
-  { srcFavicon: imageTalabatFavicon, src: imageTalabat, name: 'talabat', color: '#FF5A00' },
+  {
+    srcFavicon: imageTalabatFavicon,
+    srcFaviconWhite: imageTalabatFavicon,
+    src: imageTalabat,
+    name: 'talabat',
+    color: '#FF5A00',
+  },
 ];
 
 export const platformObject = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});

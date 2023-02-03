@@ -1,6 +1,6 @@
-import CostIcon from '../../../../assets/icons/CostIcon';
+import { CostIcon } from 'assets/icons';
+import { ButtonKit } from 'kits';
 import logo from '../../../../assets/images/small-logo.png';
-import ButtonKit from '../../../../kits/button/ButtonKit';
 
 const Invoice = (props: any) => {
   const { restaurant, cost, onDelete } = props;
