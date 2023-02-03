@@ -2,20 +2,19 @@
 
 ## Start the project
 
-We are currently using **npm**
+Use `yarn start` to start the project
 
-### To run the project with the API in localhost `npm run start`
+## Import forward
 
-### To run the project with the simulation of our API in localhost `npm run dev`
+Some of our local files are re exported.  
+To use them  use the following path:
 
-### To run the linter and check every error inside the code `npm run lint`
+- `kits`: `import {} from 'kits'`
+- `contexts`: `import {} from 'contexts'`
+- `icons`: `import {} from 'assets/icons'`
+- `hooks`: `import {} from 'hooks'`
+- `components`: `import {} from 'components'`
 
-### To run the linter, check and fix every error inside the code `npm run lint:fix`
+## Code formatting
 
-## Code style
-
-You can rely to this documentation to learn more about our coding style: <https://github.com/airbnb/javascript>
-
-## Error or task waiting to be fixed/done
-
-Search or use this type of comment to notify other coders about things need to be done/fixed `// TODO: xxx`
+Before every push, run `yarn prettify`
