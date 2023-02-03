@@ -8,24 +8,40 @@ import {
   TextfieldKit,
   TypographyKit,
 } from 'kits';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-import './SigninForm.scss';
+import './SignInForm.scss';
 
-const SigninForm = (props: any) => {
-  const {
-    onChangeEmail,
-    onChangePassword,
-    onSubmit,
-    onGoogleSubmit,
-    disabled,
-    errorEmail,
-    errorPassword,
-    onChangeRemebered,
-    onBlur,
-  } = props;
-
+const SignInForm: FC<{
+  email: string;
+  emailError: boolean;
+  setEmail: (v: string) => void;
+  onEmailBlur: () => void;
+  password: string;
+  passwordError: boolean;
+  setPassword: (v: string) => void;
+  onPasswordBlur: () => void;
+  remember: boolean;
+  setRemember: (v: boolean) => void;
+  onSubmit: () => Promise<unknown>;
+  onGoogleSubmit: () => Promise<unknown>;
+  disabled: boolean;
+}> = ({
+  email,
+  emailError,
+  setEmail,
+  onEmailBlur,
+  password,
+  passwordError,
+  onPasswordBlur,
+  setPassword,
+  remember,
+  setRemember,
+  onSubmit,
+  onGoogleSubmit,
+  disabled,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -62,23 +78,25 @@ const SigninForm = (props: any) => {
         </DividerKit>
         <div className='__block-field'>
           <TextfieldKit
+            value={email}
             label='Email address'
-            onBlur={() => onBlur('email')}
+            onBlur={onEmailBlur}
             required
             fullWidth
-            onChange={({ target }) => onChangeEmail(target.value)}
-            error={errorEmail}
+            onChange={({ target }) => setEmail(target.value)}
+            error={emailError}
           />
         </div>
         <div className='__block-field'>
           <TextfieldKit
             required
+            value={password}
             label='Password'
-            onBlur={() => onBlur('password')}
+            onBlur={onPasswordBlur}
             type={showPassword ? 'text' : 'password'}
             fullWidth
-            onChange={({ target }) => onChangePassword(target.value)}
-            error={errorPassword}
+            onChange={({ target }) => setPassword(target.value)}
+            error={passwordError}
             InputProps={{
               endAdornment: showPassword ? (
                 <VisibilityOff
@@ -99,8 +117,8 @@ const SigninForm = (props: any) => {
             <FormControlLabelKit
               control={
                 <CheckboxKit
-                  onChange={({ target }) => onChangeRemebered(target.checked)}
-                  defaultChecked
+                  value={remember}
+                  onChange={({ target }) => setRemember(target.checked)}
                 />
               }
               label={
@@ -131,4 +149,4 @@ const SigninForm = (props: any) => {
   );
 };
 
-export default SigninForm;
+export default SignInForm;
