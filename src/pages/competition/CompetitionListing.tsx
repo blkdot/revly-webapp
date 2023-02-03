@@ -126,47 +126,49 @@ const CompetitionListing = () => {
       disablePadding: true,
       label: 'Name',
     },
+    // {
+    //   id: 'platform',
+    //   numeric: false,
+    //   disablePadding: true,
+    //   label: 'Platform',
+    // },
     {
-      id: 'platform',
-      numeric: false,
-      disablePadding: true,
-      label: 'Platform',
-    },
-    {
-      id: 'r_offers',
+      id: 'discount_type',
       numeric: false,
       disablePadding: true,
       label: 'Listing in offers',
     },
     {
-      id: 'r_cuis',
+      id: 'cuisine',
       numeric: false,
       disablePadding: true,
       label: `Listing in ${cuisine} cuisine`,
     },
     {
-      id: 'r_all',
+      id: 'cuisine_and_discount_type',
       numeric: false,
       disablePadding: true,
       label: 'Listing in offers and cuisine',
     },
   ];
 
-  const { renderPlatform, renderSimpleRow, renderOrdinalSuffix } = useTableContentFormatter();
+  const { renderSimpleRow, renderOrdinalSuffix } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
-    platform: renderPlatform,
-    r_offers: renderOrdinalSuffix,
-    r_cuis: renderOrdinalSuffix,
-    r_all: renderOrdinalSuffix,
+    cuisine: renderOrdinalSuffix,
+    discount_type: renderOrdinalSuffix,
+    cuisine_and_discount_type: renderOrdinalSuffix,
+    r_offers: renderOrdinalSuffix, // TODO: remove this on new API version
+    r_cuis: renderOrdinalSuffix, // TODO: remove this on new API version
+    r_all: renderOrdinalSuffix, // TODO: remove this on new API version
   };
 
   const renderRowsByHeader = (r) =>
     headersAlert.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
+        [cur.id]: cellTemplatesObject?.[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
         id: `${cur.id}_${r.id}`,
         data: r,
       }),
@@ -211,17 +213,17 @@ const CompetitionListing = () => {
           throw new Error('');
         }
 
-        const filt = ranking.data.data.map((v) => ({
-          name: v.name,
-          r_offers: v.basket_discount_only,
-          r_cuis: v.italian_only,
-          r_all: v.italian_basket_discount,
-          ov: v.no_filter,
-          platform,
-          id: v.id,
-        }));
+        // const filt = ranking.data.data.map((v) => ({
+        //   name: v.name,
+        //   r_offers: v.cuisine,
+        //   r_cuis: v.italian_only,
+        //   r_all: v.italian_basket_discount,
+        //   ov: v.no_filter,
+        //   platform,
+        //   id: v.id,
+        // }));
 
-        setCompetitionListingData(filt);
+        setCompetitionListingData(ranking.data.data);
         setCuisine(ranking.data.cuisine);
         setLoading(false);
         if (stack === queue) setQueue(0);
@@ -435,6 +437,7 @@ const CompetitionListing = () => {
           isLoading={loading}
           headers={headersAlert}
           rows={competitionListingData.map(renderRowsByHeader)}
+          noEmptyMessage
         />
         {loading
           ? null

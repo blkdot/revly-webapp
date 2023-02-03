@@ -1,49 +1,41 @@
 import { useUserAuth } from 'contexts';
 import { SpinnerKit } from 'kits';
 import { useEffect, useState } from 'react';
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import {  Outlet, useLocation } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import { usePlatform } from '../hooks/usePlatform';
 import config from '../setup/config';
 
 const ProtectedOnboardRoutes = () => {
-  const [allowed, setAllowed] = useState<any>(false);
-  const [preAllowed, setPreAllowed] = useState(false);
+  const [allowed, setAllowed] = useState<boolean>(false);
   const { user } = useUserAuth();
-  const { settingsLogin, settingsOnboarded } = useApi();
+  const { settingsLogin } = useApi();
   const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
   const { timeRefreshToken } = config;
   const location = useLocation();
-  const navigate = useNavigate();
 
-  const getPlatformData = async () => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
-
+  const reccurentLogin = async () => {
     try {
-      const res = await settingsOnboarded({
+      const res = await settingsLogin({
         master_email: user.email,
         access_token: user.accessToken,
       });
-
-      if (res instanceof Error || !res.onboarded || !res.platforms) throw new Error('');
-
+  
+      if (res instanceof Error || !res.onboarded) {
+        cleanPlatformData();
+        return;
+      }
+  
       setUserPlatformData({
         onboarded: true,
         platforms: { ...userPlatformData.platforms, ...res.platforms },
       });
-
-      setPreAllowed(true);
     } catch (error) {
-      setAllowed(error);
+      console.error(error);
+    } finally {
+      setAllowed(true);
     }
   };
-
-  useEffect(() => {
-    getPlatformData();
-  }, []);
 
   useEffect(() => {
     if (!userPlatformData.onboarded) {
@@ -52,25 +44,6 @@ const ProtectedOnboardRoutes = () => {
 
     setAllowed(true);
   }, [location]);
-
-  const reccurentLogin = async () => {
-    const res = await settingsLogin({
-      master_email: user.email,
-      access_token: user.accessToken,
-    });
-
-    if (res instanceof Error || !res.onboarded) {
-      cleanPlatformData();
-      setAllowed(new Error(''));
-      return;
-    }
-
-    setUserPlatformData({
-      onboarded: true,
-      platforms: { ...userPlatformData.platforms, ...res.platforms },
-    });
-    setAllowed(true);
-  };
 
   useEffect(() => {
     const autoRefresh = setInterval(() => {
@@ -81,9 +54,7 @@ const ProtectedOnboardRoutes = () => {
     };
   });
 
-  if ((allowed as any) instanceof Error) return <Navigate to='/onboarding' />;
-
-  if (!allowed || !preAllowed) {
+  if (!allowed) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
