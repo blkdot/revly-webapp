@@ -29,7 +29,7 @@ const ConnectAccount = ({ propsVariables }) => {
             }}
             variant='contained'
             key={obj.name}
-            style={{ '--color': obj.color }}
+            style={{ '--color': obj.color } as React.CSSProperties}
           >
             <img src={obj.srcFaviconWhite || obj.srcFavicon} alt={obj.name} />
             Connect with {obj.name.charAt(0).toUpperCase() + obj.name.slice(1)}

@@ -38,7 +38,7 @@ const UploadingCompleted = ({ propsVariables }) => {
             setConnectAccount('account');
           }}
           variant='contained'
-          style={{ '--color': '#F9FAFB', color: 'black' }}
+          style={{ '--color': '#F9FAFB', color: 'black' } as React.CSSProperties}
         >
           Close
         </ButtonKit>
