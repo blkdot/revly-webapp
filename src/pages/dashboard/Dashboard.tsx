@@ -29,7 +29,6 @@ const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { chainObj, vendorsObj, display, vendorsSelected, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
-  console.log(vendors);
   
   const getTitle = (title) => {
     if (title === 'n_orders') {
