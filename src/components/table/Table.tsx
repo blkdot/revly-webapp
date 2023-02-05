@@ -4,6 +4,7 @@
 /* eslint-disable import/no-extraneous-dependencies */ import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { useDate, usePlatform } from 'hooks';
 import {
   BoxKit,
   PaperKit,
@@ -17,8 +18,6 @@ import {
 } from 'kits';
 import deliveroo from '../../assets/images/deliveroo.png';
 import talabat from '../../assets/images/talabat.png';
-import useDate from '../../hooks/useDate';
-import { usePlatform } from '../../hooks/usePlatform';
 import './Table.scss';
 
 const EnhancedTableHead = ({ headCells }) => (

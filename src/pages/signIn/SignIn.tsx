@@ -1,9 +1,8 @@
 import { useUserAuth } from 'contexts';
+import { useAlert, useVendors } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
-import { useAlert } from '../../hooks/useAlert';
-import useVendors from '../../hooks/useVendors';
 import SignInForm from './form/SignInForm';
 import './SignIn.scss';
 

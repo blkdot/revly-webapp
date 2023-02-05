@@ -22,6 +22,7 @@ import {
 } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { useDate } from 'hooks';
 import {
   ButtonKit,
   DatePickerKit,
@@ -37,7 +38,6 @@ import React, { useEffect, useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import switchIcon from '../../assets/images/Switch.png';
-import useDate from '../../hooks/useDate';
 import { getAllDateSetup } from '../../utlls/date/getAllDateSetup';
 import AfterPeriodSelect from './AfterPeriodSelect';
 import './Dates.scss';

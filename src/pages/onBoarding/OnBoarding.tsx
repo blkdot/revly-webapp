@@ -1,5 +1,6 @@
 import { pascalCase } from 'change-case';
 import { useUserAuth } from 'contexts';
+import { useAlert, useApi, usePlatform } from 'hooks';
 import { ButtonKit, ButtonLoadingKit, ModalKit, SpinnerKit } from 'kits';
 import { CSSProperties, useEffect, useState } from 'react';
 import { IoMdHelp } from 'react-icons/io';
@@ -12,9 +13,6 @@ import OnBoardingForm from '../../components/onboarding/OnBoarding';
 import PlatformSelector from '../../components/platformSelector/PlatformSelector';
 import Stepper from '../../components/stepper/Stepper';
 import { platformList } from '../../data/platformList';
-import { useAlert } from '../../hooks/useAlert';
-import useApi from '../../hooks/useApi';
-import { usePlatform } from '../../hooks/usePlatform';
 import './OnBoarding.scss';
 
 const START_KEY = 'start';

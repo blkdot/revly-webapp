@@ -1,3 +1,4 @@
+import { useAlert } from 'hooks';
 import { CardKit } from 'kits';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,7 +7,6 @@ import { forgotPassword } from '../../api/userApi';
 import logo from '../../assets/images/logo.png';
 import ForgotPasswordForm from '../../components/forms/forgotPasswordForm/ForgotPasswordForm';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
-import { useAlert } from '../../hooks/useAlert';
 import './ForgotPassword.scss';
 
 const ForgotPassword = () => {

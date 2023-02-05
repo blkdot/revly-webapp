@@ -1,3 +1,4 @@
+import { useMetrics } from 'hooks';
 import { useAtom } from 'jotai';
 import { PaperKit } from 'kits';
 import { useState } from 'react';
@@ -16,7 +17,6 @@ import RestaurantDropdownNew from '../../components/restaurantDropdown/Restauran
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import Table from '../../components/table/Table';
 import TableEmpty from '../../components/table/TableEmpty';
-import useMetrics from '../../hooks/useMetrics';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Dashboard.scss';
 

@@ -1,9 +1,8 @@
 /* eslint-disable eqeqeq */
-/* eslint-disable no-unused-vars */ import { SpinnerKit } from 'kits';
+/* eslint-disable no-unused-vars */ import { useCost, useVendors } from 'hooks';
+import { SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import useCost from '../../../hooks/useCost';
-import useVendors from '../../../hooks/useVendors';
 import DropdownSnackbar from './DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
