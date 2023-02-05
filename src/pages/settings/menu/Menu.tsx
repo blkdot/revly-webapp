@@ -1,13 +1,8 @@
+import { useUserAuth } from 'contexts';
+import { useAlert, useApi, usePlatform } from 'hooks';
+import { TVendorsArr } from 'hooks/useVendors';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import type { TVendorsArr } from 'hooks/useVendors';
-
-import { useUserAuth } from 'contexts';
-
-import { useAlert } from 'hooks/useAlert';
-import useApi from 'hooks/useApi';
-import { usePlatform } from 'hooks/usePlatform';
-
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';

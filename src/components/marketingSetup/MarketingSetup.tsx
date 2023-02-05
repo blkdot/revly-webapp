@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
 import { Tooltip } from '@mui/material';
-import { addDays, endOfWeek, format, startOfWeek, subWeeks, addMinutes, addHours } from 'date-fns';
 import { useUserAuth } from 'contexts';
+import { addDays, addHours, addMinutes, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import dayjs from 'dayjs';
+import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -15,20 +15,17 @@ import {
 } from 'kits';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import useVendors from 'hooks/useVendors';
-import { useAlert } from 'hooks/useAlert';
-import useApi from 'hooks/useApi';
-import { usePlatform } from 'hooks/usePlatform';
+import React, { useEffect, useState } from 'react';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import {
+  daysOrder,
   maxHour,
   minHour,
   rangeHoursOpenedDay,
-  daysOrder,
 } from '../../utlls/heatmap/heatmapSelectedData';
 import Dates from '../dates/Dates';
 import GetRecap from './GetRecap';

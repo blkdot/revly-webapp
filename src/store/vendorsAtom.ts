@@ -1,5 +1,5 @@
-import { atom } from 'jotai';
 import type { TVendors } from 'hooks/useVendors';
+import { atom } from 'jotai';
 
 export const vendorsAtom = atom<TVendors>({
   vendorsSelected: [],
