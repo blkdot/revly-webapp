@@ -2,6 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useUserAuth } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
+import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -19,9 +20,6 @@ import RestaurantDropdownNew from '../../components/restaurantDropdown/Restauran
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
-import { useAlert } from '../../hooks/useAlert';
-import useApi from '../../hooks/useApi';
-import { usePlatform } from '../../hooks/usePlatform';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 

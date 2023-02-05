@@ -1,3 +1,4 @@
+import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   ButtonKit,
@@ -14,7 +15,6 @@ import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import selectIcon from '../../assets/images/ic_select.png';
 import talabat from '../../assets/images/talabat-favicon.png';
 import { platformList } from '../../data/platformList';
-import useVendors from '../../hooks/useVendors';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './RestaurantDropdown.scss';
 

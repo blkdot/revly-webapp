@@ -2,13 +2,12 @@ import { AxiosError } from 'axios';
 import AccountSettingForm from 'components/forms/accountSettingForm/AccountSettingForm';
 import { useUserAuth } from 'contexts';
 import { updateProfile } from 'firebase/auth';
+import { useAlert, useApi } from 'hooks';
 import { ButtonKit } from 'kits';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import country from '../../../data/country.json';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
-import { useAlert } from '../../../hooks/useAlert';
-import useApi from '../../../hooks/useApi';
 import validator from '../../../utlls/input/validator';
 import './General.scss';
 

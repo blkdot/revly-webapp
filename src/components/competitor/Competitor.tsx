@@ -1,6 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUserAuth } from 'contexts';
+import { useAlert } from 'hooks';
 import {
   ButtonKit,
   ListItemTextKit,
@@ -21,7 +22,6 @@ import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import lines from '../../assets/images/lines.png';
 import loadingImage from '../../assets/images/loading-image.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
-import { useAlert } from '../../hooks/useAlert';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import './Competitor.scss';
 

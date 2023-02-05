@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const useClickAwayListner = (ref, onClickAway) => {
+const useClickAwayListener = (ref, onClickAway) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!ref.current || ref.current.contains(event.target)) {
@@ -18,4 +18,4 @@ const useClickAwayListner = (ref, onClickAway) => {
   }, []);
 };
 
-export default useClickAwayListner;
+export default useClickAwayListener;

@@ -1,7 +1,7 @@
+import { useClickAwayListener } from 'hooks';
 import { ButtonKit, CheckboxKit } from 'kits';
 import { useRef, useState } from 'react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
-import useClickAwayListner from '../../../hooks/useClickAwayListner';
 import './FilterDropdown.scss';
 
 const FilterDropdown = (props: any) => {
@@ -36,7 +36,7 @@ const FilterDropdown = (props: any) => {
     return `${values.join(`${customTag ?? ''}, `)}${customTag ?? ''}`;
   };
 
-  useClickAwayListner(refDropdown, () => setIsOpen(false));
+  useClickAwayListener(refDropdown, () => setIsOpen(false));
 
   const renderItem = () =>
     items.map((item) => (

@@ -3,8 +3,8 @@ import MovingIcon from '@mui/icons-material/Moving';
 import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { useDate } from 'hooks';
 import { CardContentKit, CardKit, PaperKit, SkeletonKit, TypographyKit } from 'kits';
-import useDate from '../../hooks/useDate';
 import './Widget.scss';
 
 const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading }) => {

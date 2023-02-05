@@ -1,6 +1,7 @@
 import { Layers, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import { endOfMonth, endOfWeek } from 'date-fns';
+import { useDate, usePlanningAds } from 'hooks';
 import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -18,8 +19,6 @@ import RestaurantDropdownOld from '../../components/restaurantDropdown/Restauran
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
-import useDate from '../../hooks/useDate';
-import usePlanningAds from '../../hooks/usePlanningAds';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';

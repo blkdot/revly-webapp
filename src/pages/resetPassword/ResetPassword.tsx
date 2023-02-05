@@ -1,9 +1,9 @@
 import { useUserAuth } from 'contexts';
+import { useAlert } from 'hooks';
 import { ButtonLoadingKit, SpinnerKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ResetPasswordForm from '../../components/forms/resetPasswordForm/ResetPasswordForm';
-import { useAlert } from '../../hooks/useAlert';
 import './ResetPassword.scss';
 
 const ResetPassword = () => {

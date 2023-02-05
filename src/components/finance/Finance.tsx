@@ -1,8 +1,8 @@
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { useDate } from 'hooks';
 import { TypographyKit } from 'kits';
-import useDate from '../../hooks/useDate';
 import Widget from '../widget/Widget';
 import './Finance.scss';
 
