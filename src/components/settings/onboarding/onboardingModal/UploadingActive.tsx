@@ -1,9 +1,8 @@
-import CloseIcon from '../../../../assets/images/ic_close.png';
-import ButtonKit from '../../../../kits/button/ButtonKit';
+import { useAlert, useApi } from 'hooks';
 import Arrow from '../../../../assets/icons/Arrow';
-import useApi from '../../../../hooks/useApi';
+import CloseIcon from '../../../../assets/images/ic_close.png';
 import { useUserAuth } from '../../../../contexts/AuthContext';
-import { useAlert } from '../../../../hooks/useAlert';
+import ButtonKit from '../../../../kits/button/ButtonKit';
 
 const UploadingActive = ({ propsVariables }) => {
   const {

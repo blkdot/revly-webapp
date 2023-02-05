@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
+import { usePlatform } from 'hooks';
+import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kits';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { StepKit, StepLabelKit, StepperKit, ButtonKit, TypographyKit } from 'kits';
-import CloseIcon from '../../../assets/images/ic_close.png';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.png';
 import ClockIcon from '../../../assets/images/clock-settings_ic.png';
+import CloseIcon from '../../../assets/images/ic_close.png';
 import ShieldIcon from '../../../assets/images/shield-settings_ic.png';
-import { usePlatform } from '../../../hooks/usePlatform';
 
 const ColorlibStepIconRoot = styled('div')(
   ({ ownerState }: { ownerState: { completed: boolean; active: boolean } }) => ({

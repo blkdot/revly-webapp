@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react';
 import { useUserAuth } from 'contexts';
-import { useAlert } from 'hooks/useAlert';
-import useApi from 'hooks/useApi';
+import { useAlert, useApi } from 'hooks';
+import { useState } from 'react';
 import ConnectAccount from './onboardingModal/ConnectAccount';
 import ConnectPlatform from './onboardingModal/ConnectPlatform';
 import ManageAccount from './onboardingModal/ManageAccount';

@@ -1,10 +1,5 @@
 import { Layers, Tag, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
-import { endOfMonth, endOfWeek } from 'date-fns/esm';
-import { useAtom } from 'jotai';
-import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
-import shortid from 'shortid';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
@@ -12,10 +7,12 @@ import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropd
 import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from 'components/tableRevly/TableRevly';
-import useDate from 'hooks/useDate';
-import usePlanningAds from 'hooks/usePlanningAds';
-import usePlanningOffers from 'hooks/usePlanningOffers';
-import useQueryState from 'hooks/useQueryState';
+import { endOfMonth, endOfWeek } from 'date-fns/esm';
+import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
+import { useAtom } from 'jotai';
+import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
+import { useEffect, useState } from 'react';
+import shortid from 'shortid';
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
 import { platformObject } from '../../data/platformList';
