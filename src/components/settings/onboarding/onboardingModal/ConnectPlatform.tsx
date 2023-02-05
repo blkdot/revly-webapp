@@ -13,8 +13,8 @@ const ConnectPlatform = ({ propsVariables }) => {
     password,
     setConnect,
     setConnectAccount,
-    setBranchDataUploading,
-    branchData,
+    handleSubmitLogin,
+    isLoading,
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const platformObj = platformList.find((obj) => obj.name === connect);
@@ -60,32 +60,19 @@ const ConnectPlatform = ({ propsVariables }) => {
             setPassword('');
           }}
           variant='contained'
-          style={{ '--color': '#F9FAFB', color: 'black' }}
+          style={{ '--color': '#F9FAFB', color: 'black' } as React.CSSProperties}
         >
           <Arrow />
           Back
         </ButtonKit>
         <ButtonLoadingKit
           onClick={() => {
-            setConnectAccount('active');
-            const arr = [];
-            for (let i = branchData.length; i < branchData.length + 10; i++) {
-              arr.push({
-                branch_name: {
-                  title: `THE KITCHEN - Allentown ${i}`,
-                  address: '4140 Parker Rd. Allentown, New Mexico 31134',
-                },
-                accounts: [email],
-                linked_platforms: [{ platform: connect, status: 'in process' }],
-                branch_status: 'in process',
-                id: i,
-              });
-            }
-            setBranchDataUploading([...arr]);
+            handleSubmitLogin(connect);
           }}
           variant='contained'
           style={{ '--color': platformObj.color }}
           disabled={!(email && password)}
+          loading={isLoading}
         >
           <img src={platformObj.srcFaviconWhite || platformObj.srcFavicon} alt={platform} />
           Connect with {platform}

@@ -64,7 +64,7 @@ const Finance = ({
     if (vendorsSelected.length > 2) {
       return `${vendorsSelected.length} selected vendors`;
     }
-    return <p> {vendorsSelected.join(', ')}</p>;
+    return <p> {vendorsSelected.map((obj) => obj.data.vendor_name).join(', ')}</p>;
   };
   const financeLinks = ['revenue', 'n_orders', 'average_basket', 'profit'];
   return (

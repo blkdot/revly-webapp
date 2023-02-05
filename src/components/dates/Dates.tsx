@@ -952,7 +952,7 @@ const Dates = (props: any) => {
             beforePeriod={beforePeriod}
             setupOffer={n === 'week' ? setupOffer : false}
             setYear={setYear}
-            offer={offer}
+            offer={!!offer}
           />
         ))}
       </div>

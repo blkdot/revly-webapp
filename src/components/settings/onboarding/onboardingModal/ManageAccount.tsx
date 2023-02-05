@@ -4,7 +4,7 @@ import CloseIcon from '../../../../assets/images/ic_close.png';
 import { platformList } from '../../../../data/platformList';
 
 const ManageAccount = ({ propsVariables }) => {
-  const { openCloseModal, accounts } = propsVariables;
+  const { openCloseModal, accounts, deleteAccount } = propsVariables;
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
       <img
@@ -28,7 +28,7 @@ const ManageAccount = ({ propsVariables }) => {
       )}
       <div className='onboarding-accounts_wrapper'>
         {accounts.map((obj) => (
-          <div key={obj.email} className={`onboarding-account ${obj.connected ? 'connected' : ''}`}>
+          <div key={obj.email} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
               <TypographyKit
                 components='span'
@@ -48,12 +48,17 @@ const ManageAccount = ({ propsVariables }) => {
               <p>{obj.email}</p>
             </div>
             <div>
-              <span className='onboarding-account_trash-icon'>
+              <span
+                tabIndex={-1}
+                role='presentation'
+                onClick={() => deleteAccount(obj.platform, obj.email)}
+                className='onboarding-account_trash-icon'
+              >
                 <img src={TrashIcon} alt='trash' />
               </span>
               <div className='onboarding-account_switch'>
-                <p>{obj.connected ? 'Connected' : 'Disconnected'}</p>
-                <SwitchKit checked={obj.connected} />
+                <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
+                <SwitchKit checked={obj.active} />
               </div>
             </div>
           </div>

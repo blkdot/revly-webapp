@@ -13,17 +13,18 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const { user } = useUserAuth();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
-  const vendor = vendorsObj[platform]?.find((v) => vendorId.include(v.vendor_id));
+
+  const vendor = vendorsObj[platform.toLowerCase()]?.find((v) => vendorId.includes(+v.vendor_id));
 
   const getOfferDetailData = () => {
     getOfferDetails(
       {
         master_email: user.email,
-        access_token: '',
-        vendors: vendor,
+        access_token: user.accessToken,
+        vendor,
         drn_id: drnId,
       },
-      platform
+      platform.toLowerCase()
     )
       .then((res) => setData(res.data))
       // eslint-disable-next-line no-console

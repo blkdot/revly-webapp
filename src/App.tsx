@@ -14,10 +14,8 @@ import {
   ForgotPassword,
   MarketingAds,
   MarketingOffer,
-  OnBoarding,
   Planning,
   ResetPassword,
-  Settings,
   SettingsBilling,
   SettingsChangePassword,
   SettingsCost,
@@ -27,6 +25,7 @@ import {
   SignIn,
   SignUp,
   VerifyCode,
+  DashboardOnboard,
 } from 'pages';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
@@ -72,6 +71,7 @@ const App = () => (
                   </Route>
                   <Route path='/forgot-password' element={<ForgotPassword />} />
                   <Route element={<ProtectedRoutes />}>
+                    <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
                     <Route element={<ProtectedOnboardRoutes />}>
                       <Route path='/dashboard' element={<Dashboard />} />
                       <Route path='/planning' element={<Planning />} />
@@ -81,12 +81,10 @@ const App = () => (
                       <Route path='/marketing/ads' element={<MarketingAds />} />
                       <Route path='/verify-code' element={<VerifyCode />} />
                     </Route>
-                    <Route path='/onboarding' element={<OnBoarding />} />
                     <Route path='/check' element={<Check />} />
                   </Route>
                   <Route element={<ProtectedSettingsRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
-                      <Route path='/settings' element={<Settings />} />
                       <Route path='/settings/general' element={<SettingsGeneral />} />
                       <Route path='/settings/billing' element={<SettingsBilling />} />
                       <Route path='/settings/onboarding' element={<SettingsOnboarding />} />

@@ -1,8 +1,8 @@
-import BranchesIcon from 'assets/images/ic_branch.png';
-import BranchMarketingDropdown from 'components/branchMarketingDropdown/BranchMarketingDropdown';
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
 import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
-import { platformList, platformObject } from 'data/platformList';
+import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import { platformList } from 'data/platformList';
+import { usePlatform } from 'hooks/usePlatform';
 import { RadioGroupKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
@@ -13,56 +13,35 @@ export const PlatformStep: FC<{
   branch: {
     display: any;
     chainObj: any;
-  };
-  userPlatformData: {
-    platforms: Record<
-      string,
-      {
-        access_token: string;
-        access_token_bis: string;
-        active: boolean;
-        registered: boolean;
-      }
-    >;
+    vendorsSelected: any;
+    vendorsArr: any;
   };
   getPlatform: any;
-  getPlatformData: any;
   setBranch: any;
-  platformData: any;
-  setBranchData: any;
-  branchData: any;
-  vendorsObj: any;
   platform: any;
-}> = ({
-  index,
-  branch,
-  userPlatformData,
-  getPlatform,
-  getPlatformData,
-  setBranch,
-  platformData,
-  setBranchData,
-  branchData,
-  vendorsObj,
-  platform,
-}) => (
-  <div className='left-part-middle'>
-    <TypographyKit variant='h6'>{index}. Select platform and branches</TypographyKit>
-    <Subtitle />
-    <div className='left-part-radio-wrapper'>
-      {Object.keys(branch.display).length > 0 ? (
+}> = ({ index, branch, getPlatform, setBranch, platform }) => {
+  const { userPlatformData } = usePlatform();
+  return (
+    <div className='left-part-middle'>
+      <TypographyKit variant='h6'>{index}. Select platform and branches</TypographyKit>
+      <Subtitle />
+      <div className='left-part-radio-wrapper'>
         <RadioGroupKit
           aria-labelledby='demo-radio-buttons-group-label'
           name='radio-buttons-group'
           value=''
         >
           {platformList
-            .filter((pf) => userPlatformData.platforms[pf.name].active)
+            .filter((pf) =>
+              userPlatformData.platforms[pf.name].length > 0
+                ? userPlatformData.platforms[pf.name].filter((obj) => obj.active)
+                : ''
+            )
             .map((p) => (
               <MarketingRadio
-                setState={getPlatform}
+                onChange={getPlatform}
                 state={platform}
-                checkbox
+                checkbox={Object.keys(branch.display).length > 0}
                 key={p.name}
                 className={p.name}
                 icon={p.src}
@@ -70,45 +49,25 @@ export const PlatformStep: FC<{
               />
             ))}
         </RadioGroupKit>
+      </div>
+      {Object.keys(branch.display).length > 0 ? (
+        <RestaurantDropdownNew
+          platforms={platform}
+          chainObj={branch.chainObj}
+          branch
+          setState={setBranch}
+          state={branch}
+        />
       ) : (
-        <RadioGroupKit
-          aria-labelledby='demo-radio-buttons-group-label'
-          name='radio-buttons-group'
-          onChange={(e) => getPlatformData(e)}
-          value={platformData || ''}
-        >
-          {platformList
-            .filter((pf) => userPlatformData.platforms[pf.name].active)
-            .map((p) => (
-              <MarketingRadio
-                state={platformData}
-                key={p.name}
-                className={p.name}
-                icon={p.src}
-                title={p.name}
-              />
-            ))}
-        </RadioGroupKit>
+        <RestaurantDropdownOld
+          vendorsSelected={branch.vendorsSelected}
+          vendors={branch.vendorsArr.filter((v) => platform.find((p) => v.platform === p))}
+          setState={setBranch}
+          state={branch}
+          branch
+          className='offer-setup-dropdown'
+        />
       )}
     </div>
-    {Object.keys(branch.display).length > 0 ? (
-      <RestaurantDropdownNew
-        platforms={platform}
-        chainObj={branch.chainObj}
-        branch
-        setState={setBranch}
-        state={branch}
-      />
-    ) : (
-      <BranchMarketingDropdown
-        rows={vendorsObj[platformData]}
-        icon={BranchesIcon}
-        title='Select Branches'
-        className='top-competition marketing-dropdown'
-        setRow={setBranchData}
-        select={branchData}
-        platformData={platformObject[platformData]}
-      />
-    )}
-  </div>
-);
+  );
+};

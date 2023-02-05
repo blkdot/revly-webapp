@@ -81,16 +81,29 @@ const MarketingCheckmarksDropdown = ({
         </div>
       );
     }
+    const getDisabled = (info) => {
+      if (info.metadata.is_active === 'True' || info.metadata.is_active === true) {
+        return true;
+      }
+      return false;
+    };
     return names.map((name) => (
       <MenuItemKit
         className={type === 'vendor' ? 'listing-vendors-child' : ''}
-        key={name}
+        key={name.data.vendor_name}
         value={name}
+        disabled={!getDisabled(name)}
       >
         <RadioKit
-          checked={(type === 'vendor' ? personName.vendorsSelected : personName).indexOf(name) > -1}
+          checked={
+            type === 'vendor'
+              ? personName.vendorsSelected
+                  .map((obj) => obj?.data?.vendor_name)
+                  .indexOf(name?.data?.vendor_name) > -1
+              : personName.indexOf(name) > -1
+          }
         />
-        <ListItemTextKit primary={name} />
+        <ListItemTextKit primary={name.data.vendor_name} />
       </MenuItemKit>
     ));
   };
@@ -119,7 +132,7 @@ const MarketingCheckmarksDropdown = ({
       if (Object.keys(display).length > 0) {
         return getVendor().join(', ');
       }
-      return personName.vendorsSelected.join(', ');
+      return personName.vendorsSelected.map((obj) => obj?.data?.vendor_name).join(', ');
     }
     return selected.join(', ');
   };

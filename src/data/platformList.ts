@@ -28,12 +28,14 @@ export const platformContexDefaultFormat = {
   platforms: platformList.reduce(
     (acc, { name }) => ({
       ...acc,
-      [name]: {
-        registered: false,
-        active: false,
-        access_token: null,
-        access_token_bis: null,
-      },
+      [name]: [
+        {
+          registered: false,
+          active: false,
+          access_token: null,
+          access_token_bis: null,
+        },
+      ],
     }),
     {}
   ),

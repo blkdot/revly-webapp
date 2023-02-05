@@ -25,6 +25,10 @@
   padding: 15px 12px 0 12px;
   overflow: hidden;
   transition: 0.5s;
+  &.openedModal {
+    background-color: #fff;
+  }
+  transition: 0.5s;
 
   &.opened {
     width: 280px;
@@ -227,7 +231,7 @@
 }
 
 .navbar-accordion.navbar-accordion {
-  background: none;
+  background: none !important;
   border: none;
   box-shadow: none;
   margin: 0 !important;
@@ -235,8 +239,17 @@
   &::before {
     content: none;
   }
-}
 
+  &.disabled {
+    .navbar-button-kit {
+      pointer-events: none;
+    }
+  }
+}
+.navlink-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
 .navbar-accordion-details.navbar-accordion-details {
   position: relative;
   padding: 8px 16px 0px 5px;
