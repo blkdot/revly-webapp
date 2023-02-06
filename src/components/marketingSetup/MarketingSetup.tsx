@@ -202,23 +202,17 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     const clonedheatmapData = { ...heatmapData };
 
     days.forEach((day, index) => {
-      if (!clonedheatmapData.revenue?.[index]) return;
+      if (clonedheatmapData.revenue?.[index]) {
+        _.range(minHour, maxHour + 1).forEach((num) => {
+          if (clonedheatmapData.revenue?.[index] && clonedheatmapData.revenue[index]?.[num]) {
+            delete clonedheatmapData.revenue[index][num]?.active;
+          }
 
-      _.range(minHour, maxHour + 1).forEach((num) => {
-        if (!clonedheatmapData.revenue[index]?.[num]) return;
-
-        delete clonedheatmapData.revenue[index][num]?.active;
-      });
-    });
-
-    days.forEach((__, index) => {
-      if (!clonedheatmapData.orders?.[index]) return;
-
-      _.range(minHour, maxHour + 1).forEach((num) => {
-        if (!clonedheatmapData.orders[index]?.[num]) return;
-
-        delete clonedheatmapData.orders[index][num]?.active;
-      });
+          if (clonedheatmapData.orders?.[index] && clonedheatmapData.orders[index]?.[num]) {
+            delete clonedheatmapData.orders[index][num]?.active;
+          }
+        });
+      }
     });
 
     setHeatmapData({ ...heatmapData, ...clonedheatmapData });
