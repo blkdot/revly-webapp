@@ -1,6 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import { useUserAuth } from 'contexts';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
