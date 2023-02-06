@@ -21,12 +21,7 @@ import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
-import {
-  daysOrder,
-  maxHour,
-  minHour,
-  rangeHoursOpenedDay,
-} from '../../utlls/heatmap/heatmapSelectedData';
+import { maxHour, minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
 import Dates from '../dates/Dates';
 import GetRecap from './GetRecap';
 import './MarketingSetup.scss';
@@ -204,18 +199,29 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   };
 
   const clearTimeSelected = () => {
-    
     const clonedheatmapData = { ...heatmapData };
 
-    Object.values(clonedheatmapData[links]).forEach((objHeat, indexObjHeat) => {
-      if (objHeat) {
-        Object.keys(objHeat).forEach((num) => {
-          delete clonedheatmapData[links][Object.keys(clonedheatmapData[links])[indexObjHeat]][num]
-            .active;
-        });
-      }
+    days.forEach((day, index) => {
+      if (!clonedheatmapData.revenue?.[index]) return;
+
+      _.range(minHour, maxHour + 1).forEach((num) => {
+        if (!clonedheatmapData.revenue[index]?.[num]) return;
+
+        delete clonedheatmapData.revenue[index][num]?.active;
+      });
     });
 
+    days.forEach((__, index) => {
+      if (!clonedheatmapData.orders?.[index]) return;
+
+      _.range(minHour, maxHour + 1).forEach((num) => {
+        if (!clonedheatmapData.orders[index]?.[num]) return;
+
+        delete clonedheatmapData.orders[index][num]?.active;
+      });
+    });
+
+    setHeatmapData({ ...heatmapData, ...clonedheatmapData });
   };
 
   useEffect(() => {
@@ -407,7 +413,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       setTriggerLoading(false);
     }
   };
-  
+
   const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
       const heatmaRangePlatform = revenueData?.[platform[0]].ranges;
