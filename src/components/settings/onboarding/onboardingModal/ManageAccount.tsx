@@ -4,7 +4,7 @@ import CloseIcon from '../../../../assets/images/ic_close.png';
 import { platformList } from '../../../../data/platformList';
 
 const ManageAccount = ({ propsVariables }) => {
-  const { openCloseModal, accounts, deleteAccount } = propsVariables;
+  const { openCloseModal, accounts, deleteAccount, changeStatusAccount } = propsVariables;
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
       <img
@@ -58,7 +58,7 @@ const ManageAccount = ({ propsVariables }) => {
               </span>
               <div className='onboarding-account_switch'>
                 <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
-                <SwitchKit checked={obj.active} />
+                <SwitchKit onChange={() => changeStatusAccount(obj)} checked={obj.active} />
               </div>
             </div>
           </div>

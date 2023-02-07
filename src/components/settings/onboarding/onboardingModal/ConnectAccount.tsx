@@ -1,6 +1,3 @@
-import { settingsOnboardPlatformStatus, settingsSave } from 'api/settingsApi';
-import { useUserAuth } from 'contexts/AuthContext';
-import { saveUser } from 'api/userApi';
 import { platformList } from '../../../../data/platformList';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import SwitchKit from '../../../../kits/switch/SwitchKit';
@@ -14,40 +11,8 @@ const ConnectAccount = ({ propsVariables }) => {
     setConnect,
     setConnectAccount,
     deleteAccount,
-    setAccounts,
-    vendors,
+    changeStatusAccount,
   } = propsVariables;
-  const { user } = useUserAuth();
-  const changeStatus = async (obj) => {
-    await settingsSave({
-      master_email: user.email,
-      platform: obj.platform,
-      email: obj.email,
-      data: { is_active: !obj.active },
-    });
-    if (accounts.length === 1) {
-      await settingsOnboardPlatformStatus(
-        {
-          master_email: user.email,
-          access_token: user.accessToken,
-          email: obj.email,
-          active_status: false,
-        },
-        obj.platform
-      );
-    }
-    await saveUser({
-      access_token: user.accessToken,
-      vendors: {
-        [obj.platform]: vendors.vendorsArr.filter((objV) => objV.email === obj.email),
-      },
-      data: {
-        is_active: !obj.active,
-      },
-    });
-    accounts.find((objAcc) => objAcc.email === obj.email).active = !obj.active;
-    setAccounts([...accounts]);
-  };
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
       <img
@@ -123,7 +88,7 @@ const ConnectAccount = ({ propsVariables }) => {
               </span>
               <div className='onboarding-account_switch'>
                 <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
-                <SwitchKit onChange={() => changeStatus(obj)} checked={obj.active} />
+                <SwitchKit onChange={() => changeStatusAccount(obj)} checked={obj.active} />
               </div>
             </div>
           </div>

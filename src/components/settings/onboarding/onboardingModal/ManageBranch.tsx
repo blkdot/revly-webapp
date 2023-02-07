@@ -12,14 +12,41 @@ const ManageBranch = ({ propsVariables }) => {
   const { openCloseModal, clickedBranch, setBranchData, branchData, vendors } = propsVariables;
   const getPlatform = (plat) => platformList.find((obj) => obj.name === plat);
   const { user } = useUserAuth();
-  const changeStatus = async () => {
+
+  const vendorsBranch = () => {
+    const object = {};
+    Object.keys(vendors.display).forEach((cName) => {
+      Object.keys(vendors.display[cName]).forEach((vName) => {
+        Object.keys(vendors.display[cName][vName].platforms).forEach((plat) => {
+          if (
+            clickedBranch.accounts.find(
+              (email) => email === vendors.display[cName][vName].platforms[plat].email
+            )
+          ) {
+            object[plat] = [vendors.display[cName][vName].platforms[plat]];
+          }
+        });
+      });
+    });
+    return object;
+  };
+  const deleteBranch = async () => {
     await saveUser({
       access_token: user.accessToken,
-      vendors: {
-        [clickedBranch.linked_platforms[0].platform]: [
-          vendors.vendorsArr.find((objV) => objV.vendor_id === clickedBranch.id),
-        ],
-      },
+      vendors: vendorsBranch(),
+      data: { is_deleted: true },
+    });
+    branchData.splice(
+      branchData.findIndex((obj) => obj.id === clickedBranch.id),
+      1
+    );
+    openCloseModal();
+    setBranchData([...branchData]);
+  };
+  const changeStatusBranch = async () => {
+    await saveUser({
+      access_token: user.accessToken,
+      vendors: vendorsBranch(),
       data: {
         is_active: !(
           clickedBranch.branch_status === 'active' || clickedBranch.branch_status === 'in process'
@@ -33,23 +60,6 @@ const ManageBranch = ({ propsVariables }) => {
       branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
         'active';
     }
-    setBranchData([...branchData]);
-  };
-  const deleteBranch = async () => {
-    await saveUser({
-      access_token: user.accessToken,
-      vendors: {
-        [clickedBranch.linked_platforms[0].platform]: [
-          vendors.vendorsArr.find((objV) => objV.vendor_id === clickedBranch.id),
-        ],
-      },
-      data: { is_deleted: true },
-    });
-    branchData.splice(
-      branchData.findIndex((obj) => obj.id === clickedBranch.id),
-      1
-    );
-    openCloseModal();
     setBranchData([...branchData]);
   };
   return (
@@ -113,11 +123,11 @@ const ManageBranch = ({ propsVariables }) => {
       </div>
       <div className='manage-branch-buttons'>
         {clickedBranch.branch_status === 'active' ? (
-          <ButtonKit onClick={changeStatus} className='pause' variant='contained'>
+          <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained'>
             <img src={PauseIcon} alt='pause' /> Suspend activity from this branch
           </ButtonKit>
         ) : (
-          <ButtonKit onClick={changeStatus} className='resume' variant='contained'>
+          <ButtonKit onClick={changeStatusBranch} className='resume' variant='contained'>
             <img src={ResumeIcon} alt='resume' /> Resume activity from this branch
           </ButtonKit>
         )}

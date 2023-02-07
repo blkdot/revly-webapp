@@ -71,9 +71,11 @@ const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setCli
   );
   const onClickRow = (id: any) => {
     const { data } = branchData.map(renderRowsByHeader).find((obj) => +obj.data.id === +id);
-    setConnectAccount('manageBranch');
-    openCloseModal();
-    setClickedBranch(data);
+    if (data.branch_status !== 'in process') {
+      setConnectAccount('manageBranch');
+      openCloseModal();
+      setClickedBranch(data);
+    }
   };
 
   return (

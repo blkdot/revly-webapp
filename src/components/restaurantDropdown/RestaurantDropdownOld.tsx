@@ -121,9 +121,9 @@ const RestaurantDropdownOld = ({
   const handleClick = (e, index) => {
     e.stopPropagation();
     const vendorsObjTemp = { [vendors[index].platform]: [vendors[index]] }; // putting only the clicked vendor to vendorsObjTemp
-    const vendorsSelectedTemp = [vendors[index].data.vendor_name]; // putting obly the vendor_name vendorsSelectedTemp
+    const vendorsSelectedTemp = [vendors[index]]; // putting obly the vendor_name vendorsSelectedTemp
     // for own state not for globalcontext
-    if (cost) {
+    if (cost || branch) {
       setState({
         ...state,
         vendorsObj: vendorsObjTemp,
@@ -140,12 +140,16 @@ const RestaurantDropdownOld = ({
   };
   // function when click we select all vendors
   const selectAll = () => {
-    const vendorsSelectedTemp = vendors.map((obj) => obj.data.vendor_name); // putting all vendor_name to vendorsSelectedTemp
-    const vendorsObjTemp = { talabat: [], deliveroo: [] };
+    const vendorsSelectedTemp = [...vendors]; // putting all vendor_name to vendorsSelectedTemp
+    const vendorsObjTemp = {};
     // putting all vendor to vendorsObjTemp
-    vendors.forEach((obj) => {
+    vendors.forEach((obj: any) => {
       // push the obj of vendorsArr
-      vendorsObjTemp[obj.platform].push(obj);
+      if ((vendorsObjTemp[obj.platform] || []).length > 0) {
+        vendorsObjTemp[obj.platform].push(obj);
+      } else {
+        vendorsObjTemp[obj.platform] = [obj];
+      }
     });
     // for own state not for globalcontext
     if (cost) {

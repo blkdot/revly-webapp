@@ -1,6 +1,5 @@
-import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
-import { usePlatform, useVendors } from 'hooks';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, TextfieldKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -18,48 +17,26 @@ const DropdownSnackbar = (props: any) => {
   }, [vendorsReq]);
   const [costVendors, setCostVendors] = useState(JSON.parse(JSON.stringify(vendors)));
   const [procent, setProcent] = useState<any>(0);
-  const { userPlatformData } = usePlatform();
-  const getPlatformActive = () => {
-    if (userPlatformData.platforms.talabat.active && userPlatformData.platforms.deliveroo.active) {
-      return ['talabat', 'deliveroo'];
-    }
-    if (userPlatformData.platforms.talabat.active) {
-      return ['talabat'];
-    }
-
-    return ['deliveroo'];
-  };
-  const platform = getPlatformActive();
   useEffect(() => {
-    const newChainObj = {};
-    const newVendorsObj = { talabat: [], deliveroo: [] };
-    if (Object.keys(vendors.display).length > 0) {
-      Object.keys(vendors.display).forEach((chainName, index) => {
-        Object.keys(vendors.display[chainName]).forEach((vendorName) => {
-          if (index === 0) {
-            newChainObj[chainName] = {
-              ...newChainObj[chainName],
-              [vendorName]: { ...vendors.display[chainName][vendorName] },
-            };
-            platform.forEach((p) => {
-              newVendorsObj[p]?.push(vendors.display[chainName][vendorName][p]);
-            });
-          }
-        });
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
+    Object.keys(displayTemp).forEach((chainName, indexC) => {
+      Object.keys(displayTemp[chainName]).forEach((vendorName, indexV) => {
+        if (indexC === 0 && indexV === 0) {
+          displayTemp[chainName][vendorName].checked = true;
+          Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
+            vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
+          });
+        } else {
+          displayTemp[chainName][vendorName].checked = false;
+        }
       });
-      setCostVendors({
-        ...vendors,
-        vendorsObj: newVendorsObj,
-        chainObj: newChainObj,
-      });
-    } else {
-      newVendorsObj[platform[0]] = [(vendors.vendorsObj[platform[0]] || [])[0]];
-      setCostVendors({
-        ...vendors,
-        vendorsSelected: [vendors.vendorsSelected[0]],
-        vendorsObj: newVendorsObj,
-      });
-    }
+    });
+    setCostVendors({
+      ...vendors,
+      display: displayTemp,
+      vendorsObj: vendorsObjTemp,
+    });
   }, [vendors]);
 
   useEffect(() => {
@@ -110,23 +87,12 @@ const DropdownSnackbar = (props: any) => {
   return (
     <div className='invoice snackbar'>
       <div className='snackbar-wrapper'>
-        {Object.keys(vendors.display).length > 0 ? (
-          <RestaurantDropdownNew
-            setState={setCostVendors}
-            state={costVendors}
-            cost
-            platforms={platform}
-            chainObj={costVendors.chainObj}
-          />
-        ) : (
-          <RestaurantDropdownOld
-            vendorsSelected={costVendors.vendorsSelected}
-            vendors={costVendors.vendorsArr.filter((v) => platform.find((p) => v.platform === p))}
-            setState={setCostVendors}
-            state={costVendors}
-            cost
-          />
-        )}
+        <RestaurantDropdown
+          className='snackbar-dropdown'
+          state={costVendors}
+          setState={setCostVendors}
+          cost
+        />
         <TextfieldKit
           size='small'
           label='Type your Cost %'

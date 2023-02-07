@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { useUserAuth } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
@@ -16,8 +17,6 @@ import CompetitionDropdown from '../../components/competitionDropdown/Competitio
 import Competitor from '../../components/competitor/Competitor';
 import Dates from '../../components/dates/Dates';
 import MarketingCheckmarksDropdown from '../../components/marketingSetup/MarketingChecmarksDropdown';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { vendorsAtom } from '../../store/vendorsAtom';
@@ -49,48 +48,6 @@ const CompetitionListing = () => {
   const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
   const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendors)));
-
-  useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(display));
-    if (Object.keys(displayTemp).length > 0) {
-      const chainRandom =
-        Object.keys(displayTemp)[
-          Math.floor(Math.random() * Object.keys(displayTemp).length - 1) + 1
-        ];
-      const vendorRandom = Object.keys(displayTemp[chainRandom])[
-        Math.floor(Math.random() * Object.keys(displayTemp[chainRandom]).length - 1) + 1
-      ];
-      setVendorsData({
-        ...vendors,
-        chainObj: {
-          [chainRandom]: { [vendorRandom]: { ...displayTemp[chainRandom][vendorRandom] } },
-        },
-        vendorsObj: { [platform]: [displayTemp?.[chainRandom]?.[vendorRandom]?.[platform]] },
-      });
-    } else {
-      const vendorsSelectedTemp = [
-        vendorsArr.filter((v) => v.platform === platform)[
-          Math.floor(
-            Math.random() *
-              vendorsArr.filter(
-                (obj) =>
-                  obj.platform === platform &&
-                  (obj.metadata.is_active === 'True' || obj.metadata.is_active === true)
-              ).length
-          )
-        ],
-      ];
-      setVendorsData({
-        ...vendors,
-        vendorsSelected: vendorsSelectedTemp,
-        vendorsObj: {
-          [platform]: [
-            vendorsArr.find((obj) => obj?.vendor_id === vendorsSelectedTemp[0]?.vendor_id),
-          ],
-        },
-      });
-    }
-  }, [vendors, platform]);
 
   const Open = () => {
     setOpened(!opened);
@@ -276,46 +233,87 @@ const CompetitionListing = () => {
     }, 750);
   };
   useEffect(() => {
-    if (Object.keys(display).length > 0) {
-      if (platform && area && timeSlot && vendorsData.vendorsObj[platform] !== null) {
-        getData(platform, vendorsData.vendorsObj[platform], queue);
-      }
-    } else if (
-      platform &&
-      vendorsData?.vendorsArr?.length > 0 &&
-      area &&
-      timeSlot &&
-      vendorsData.vendorsObj[platform] !== null
-    ) {
+    if (platform && area && timeSlot && vendorsData.vendorsObj[platform] !== null) {
       getData(platform, vendorsData.vendorsObj[platform], queue);
     }
   }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue]);
 
   useEffect(() => {
-    if (Object.keys(display).length > 0) {
-      if (platform && vendorsData.vendorsObj[platform] !== null) {
-        getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
-      }
-    } else if (
-      platform &&
-      vendorsData.vendorsArr.length > 0 &&
-      vendorsData.vendorsObj[platform] !== null
-    ) {
+    if (platform && vendorsData.vendorsObj[platform] !== null) {
       getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
     }
   }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
+  console.log(vendorsData);
 
+  useEffect(() => {
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
+    if (Object.keys(display).length > 0) {
+      Object.keys(displayTemp).forEach((chainName) => {
+        Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+          displayTemp[chainName][vendorName].checked = false;
+          Object.keys(displayTemp[chainName][vendorName].platforms).forEach((platformV) => {
+            if (platform !== platformV && !displayTemp[chainName][vendorName].is_matched) {
+              displayTemp[chainName][vendorName].deleted = true;
+            }
+          });
+        });
+      });
+      const chainRandom = Math.floor(
+        Math.random() *
+          Object.keys(displayTemp).filter((cName) =>
+            Object.keys(displayTemp[cName]).every(
+              (vName) => !(displayTemp[cName][vName].deleted || false)
+            )
+          ).length
+      );
+
+      const vendorRandom = Math.floor(
+        Math.random() *
+          Object.keys(
+            displayTemp[
+              Object.keys(displayTemp).filter((cName) =>
+                Object.keys(displayTemp[cName]).every(
+                  (vName) => !(displayTemp[cName][vName].deleted || false)
+                )
+              )[chainRandom]
+            ]
+          ).length
+      );
+
+      Object.keys(displayTemp)
+        .filter((cName) =>
+          Object.keys(displayTemp[cName]).every(
+            (vName) => !(displayTemp[cName][vName].deleted || false)
+          )
+        )
+        .forEach((chainName, indexC) => {
+          Object.keys(displayTemp[chainName]).forEach((vendorName, indexV) => {
+            if (indexC === chainRandom && indexV === vendorRandom) {
+              displayTemp[chainName][vendorName].checked = true;
+              Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
+                if (platform === plat) {
+                  vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
+                } else {
+                  delete vendorsObjTemp[plat];
+                }
+              });
+            } else {
+              displayTemp[chainName][vendorName].checked = false;
+            }
+          });
+        });
+      setVendorsData({
+        ...vendors,
+        display: displayTemp,
+        vendorsObj: vendorsObjTemp,
+      });
+    }
+  }, [platform, vendors]);
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        {Object.keys(display).length > 0 ? (
-          <RestaurantDropdownNew chainObj={chainObj} />
-        ) : (
-          <RestaurantDropdownOld
-            vendorsSelected={vendorsSelected}
-            vendors={vendorsArr.filter((v) => v.platform === platform)}
-          />
-        )}
+        <RestaurantDropdown />
         <Dates
           isListing
           beforePeriodBtn={beforePeriodBtn}
@@ -368,18 +366,8 @@ const CompetitionListing = () => {
               ''
             )}
 
-            <div className='listing-vendors'>
-              <MarketingCheckmarksDropdown
-                names={vendorsArr.filter((obj) => obj.platform === platform)}
-                icon={selectIcon}
-                title='Select Vendors'
-                setName={setVendorsData}
-                personName={vendorsData}
-                width={400}
-                height={100}
-                type='vendor'
-                platform={platform}
-              />
+            <div className='listing-vendors top-competition'>
+              <RestaurantDropdown listing state={vendorsData} setState={setVendorsData} />
             </div>
             <CompetitionDropdown
               rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}

@@ -40,7 +40,7 @@
     text-overflow: ellipsis;
     display: inline-block;
     white-space: nowrap;
-    width: 320px;
+    width: 80%;
   }
 }
 
@@ -171,7 +171,8 @@
   width: 20px;
   height: 20px;
   object-fit: contain;
-  margin-right: 10px;
+  margin-right: 8px;
+  margin-left: 2px;
 }
 
 .select_icon {
@@ -287,6 +288,7 @@
       }
 
       &:hover {
+        background-color: #fff;
         .only-button {
           opacity: 1 !important;
           visibility: visible !important;
@@ -353,6 +355,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-right: 15px;
+
+    > div > div {
+      padding-left: 15px;
+    }
 
     &.disabled {
       pointer-events: none;
@@ -566,6 +573,7 @@
     width: 80%;
   }
 }
+
 @media (max-width: 1200px) {
   .restaurant-dropdown_wrapper {
     width: 40%;

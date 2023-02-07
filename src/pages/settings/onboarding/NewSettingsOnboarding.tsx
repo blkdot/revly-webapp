@@ -1,56 +1,20 @@
-import { loadUser } from 'api/userApi';
 import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMiddleContent';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
-import { useUserAuth } from 'contexts/AuthContext';
 import { usePlatform, useVendors } from 'hooks';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
 import './SettingOnboarding.scss';
 
 const NewSettingsOnboarding = () => {
   const [openedModal, setOpenedModal] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [branchDataUploading, setBranchDataUploading] = useState([]);
+  const [, setVendors] = useAtom(vendorsAtom);
   const { vendors } = useVendors(undefined);
   const { userPlatformData } = usePlatform();
-  const { user } = useUserAuth();
-  const getBranchData = (res: object) => {
-    const arr = [];
-    Object.keys(userPlatformData.platforms).forEach((plat: string) => {
-      userPlatformData.platforms[plat].forEach((obj: any) => {
-        obj.vendor_ids.forEach((id: string) => {
-          vendors.vendorsArr.forEach((objV: any) => {
-            if (objV.vendor_id === id) {
-              arr.push({
-                branch_name: { title: objV.data.vendor_name, address: '' },
-                accounts: [obj.email],
-                linked_platforms: [{ platform: plat, status: 'active' }],
-                branch_status:
-                  res[plat]?.[id].is_active === 'True' || res[plat]?.[id].is_active === true
-                    ? 'active'
-                    : 'suspended',
-                id,
-              });
-            }
-          });
-        });
-      });
-    });
-    return arr;
-  };
-  const [branchData, setBranchData] = useState([]);
-  useEffect(() => {
-    if (vendors.vendorsArr.length > 0) {
-      (async () => {
-        const res = await loadUser({
-          access_token: user.accessToken,
-          vendors: vendors.vendorsObj,
-        });
-        setBranchData(getBranchData(res.data));
-      })();
-    }
-  }, [vendors]);
   const getAccounts = () => {
     const arr = [];
     Object.keys(userPlatformData.platforms).forEach((plat: string) => {
@@ -61,6 +25,53 @@ const NewSettingsOnboarding = () => {
     return arr;
   };
   const [accounts, setAccounts] = useState(getAccounts() || []);
+  const getBranchData = () => {
+    const arr = [];
+    Object.keys(vendors.display).forEach((cName) => {
+      Object.keys(vendors.display[cName]).forEach((vName) => {
+        arr.push({ name: vName, data: vendors.display[cName][vName] });
+      });
+    });
+    const vendorsAccounts = (obj: any) =>
+      Object.keys(obj.data.platforms).map((plat) => obj.data.platforms[plat].email);
+
+    const vendorPlatform = (obj: any) =>
+      Object.keys(obj.data.platforms).map((plat) => ({
+        platform: plat,
+        status: accounts.find((objAcc) => objAcc.email === obj.data.platforms[plat].email).active
+          ? 'active'
+          : 'suspended',
+      }));
+
+    const vendorsStatus = (obj: any) => {
+      if (
+        Object.keys(obj.data.platforms).some(
+          (plat) =>
+            obj.data.platforms[plat].metadata.is_active === 'True' ||
+            obj.data.platforms[plat].metadata.is_active === true
+        )
+      ) {
+        if (obj.data.is_matched) {
+          return 'active';
+        }
+        return 'in process';
+      }
+      return 'suspended';
+    };
+    return arr.map((obj) => ({
+      branch_name: { title: obj.name, address: '' },
+      accounts: vendorsAccounts(obj),
+      linked_platforms: vendorPlatform(obj),
+      branch_status: vendorsStatus(obj),
+      id: obj.data.platforms[Object.keys(obj.data.platforms)[0]].vendor_id,
+    }));
+  };
+  const [branchData, setBranchData] = useState([]);
+  useEffect(() => {
+    setVendors(vendors);
+    setBranchData(getBranchData());
+  }, [vendors]);
+
   const [connectAccount, setConnectAccount] = useState('account');
   const [connect, setConnect] = useState('');
   const [clickedBranch, setClickedBranch] = useState({});

@@ -1,3 +1,4 @@
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -105,16 +106,7 @@ const Dashboard = () => {
     if (!userPlatformData.onboarded) {
       return <RestaurantDropdownEmpty />;
     }
-    if (Object.keys(display).length > 0) {
-      return <RestaurantDropdownNew chainObj={chainObj} />;
-    }
-    return (
-      <RestaurantDropdownOld
-        vendorsSelected={vendorsSelected}
-        vendors={vendorsArr}
-        vendorsPlatform={Object.keys(vendorsObj)}
-      />
-    );
+    return <RestaurantDropdown />;
   };
   return (
     <div className='wrapper'>

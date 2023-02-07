@@ -19,6 +19,7 @@ const UploadingActive = ({ propsVariables }) => {
     email,
     setConnectAccount,
     setActiveStep,
+    deleteAccount,
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { settingsOnboardPlatformStatus } = useApi();
@@ -43,7 +44,7 @@ const UploadingActive = ({ propsVariables }) => {
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    setBranchData([...branchData, ...branchDataUploading]);
+    setBranchData([...branchDataUploading, ...branchData]);
   };
   return (
     <div
@@ -85,6 +86,7 @@ const UploadingActive = ({ propsVariables }) => {
           onClick={() => {
             setConnectAccount('platform');
             setBranchDataUploading([]);
+            deleteAccount(connect, email);
           }}
           variant='contained'
         >
