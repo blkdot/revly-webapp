@@ -1,17 +1,15 @@
-import { useEffect } from 'react';
-import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
-import { Outlet, Navigate, useLocation } from 'react-router-dom';
-import { useUserAuth } from 'contexts';
-import { SpinnerKit, ContainerKit } from 'kits';
 import Navbar from 'components/navbar/Navbar';
-import useDate from 'hooks/useDate';
-
+import { useUserAuth } from 'contexts';
+import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
+import { useDate } from 'hooks';
+import { ContainerKit, SpinnerKit } from 'kits';
+import { useEffect } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { settingsLink } from '../data/navbarData';
 
 const ProtectedSettingsRoutes = () => {
   const { user } = useUserAuth();
   const { setDate } = useDate();
-  const location = useLocation();
   const defaultDate = {
     beforePeriod: {
       startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -25,6 +23,7 @@ const ProtectedSettingsRoutes = () => {
     titleafterPeriod: 'last week',
     typeDate: 'week',
   };
+  const location = useLocation();
   const clear = () => {
     localStorage.setItem('date', JSON.stringify(defaultDate));
     setDate(defaultDate);

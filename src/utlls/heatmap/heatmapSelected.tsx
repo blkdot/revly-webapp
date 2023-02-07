@@ -91,16 +91,16 @@ const setContinuesDayRange = (data, indexDayStart, indexDayEnd, times) => {
 
     return {
       ...acc,
-      [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], rangeUsed),
+      [cur]: getHeatmapDataDayNewContent(data, cur, rangeUsed),
     };
   }, data);
 };
 
 const setAll = (data) =>
   daysOrder.reduce(
-    (acc, cur) => ({
+    (acc, cur, i) => ({
       ...acc,
-      [cur]: getHeatmapDataDayNewContent(data, cur, _.range(minHour, maxHour + 1)),
+      [i]: getHeatmapDataDayNewContent(data, i, _.range(minHour, maxHour + 1)),
     }),
     data
   );
@@ -112,7 +112,7 @@ const typeMono = (dateRange, times, data) => {
 
   const indexDayStart = getDay(new Date(startDate));
 
-  if (sameDay) return setSameDayTimeRange(data, daysOrder[indexDayStart], times);
+  if (sameDay) return setSameDayTimeRange(data, indexDayStart, times);
 
   const diff = differenceInDays(endDate, startDate);
 
@@ -122,8 +122,7 @@ const typeMono = (dateRange, times, data) => {
 
   const indexDayEnd = getDay(new Date(endDate));
 
-  if (diff === 0)
-    return setSideBySideDayTimeRange(data, daysOrder[indexDayStart], daysOrder[indexDayEnd], times);
+  if (diff === 0) return setSideBySideDayTimeRange(data, indexDayStart, indexDayEnd, times);
 
   if (diff === 6) {
     const { startTime, endTime } = times;
@@ -231,9 +230,9 @@ const typeMulti = (
     if (dayEveryWeekIndex > -1) {
       return {
         ...newData,
-        [daysOrder[dayEveryWeekIndex]]: getHeatmapDataDayNewContent(
+        [dayEveryWeekIndex]: getHeatmapDataDayNewContent(
           newData,
-          daysOrder[dayEveryWeekIndex],
+          dayEveryWeekIndex,
           combinedTimesRange
         ),
       };
@@ -250,7 +249,7 @@ const typeMulti = (
     return daysSelectedOrderCustom.reduce(
       (acc, cur) => ({
         ...acc,
-        [daysOrder[cur]]: getHeatmapDataDayNewContent(newData, daysOrder[cur], combinedTimesRange),
+        [cur]: getHeatmapDataDayNewContent(newData, cur, combinedTimesRange),
       }),
       newData
     );
@@ -269,7 +268,7 @@ const typeMulti = (
     return getWorkweek([indexDayStart], isWorkweek).reduce(
       (acc, cur) => ({
         ...acc,
-        [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
+        [cur]: getHeatmapDataDayNewContent(data, cur, combinedTimesRange),
       }),
       data
     );
@@ -279,7 +278,7 @@ const typeMulti = (
     return getWorkweek(_.range(0, 7), isWorkweek).reduce(
       (acc, cur) => ({
         ...acc,
-        [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
+        [cur]: getHeatmapDataDayNewContent(data, cur, combinedTimesRange),
       }),
       data
     );
@@ -298,7 +297,7 @@ const typeMulti = (
   return getWorkweek(daysSelectedOrder, isWorkweek).reduce(
     (acc, cur) => ({
       ...acc,
-      [daysOrder[cur]]: getHeatmapDataDayNewContent(data, daysOrder[cur], combinedTimesRange),
+      [cur]: getHeatmapDataDayNewContent(data, cur, combinedTimesRange),
     }),
     data
   );

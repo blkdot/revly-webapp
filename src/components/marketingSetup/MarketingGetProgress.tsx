@@ -1,5 +1,6 @@
 import { addDays, isAfter, isSameDay } from 'date-fns';
 import { useAtom } from 'jotai';
+import { FormControlLabelKit, RadioKit, SpinnerKit } from 'kits';
 import { FC, useEffect, useState } from 'react';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import { AudienceStep } from './getProgress/steps/AudienceStep';
@@ -18,7 +19,6 @@ const GetProgress: FC<{
     getPlatform,
     platform,
     handleCategoryDataChange,
-    userPlatformData,
     setBranch,
     branch,
     menu,
@@ -60,10 +60,9 @@ const GetProgress: FC<{
     setHeatmapData,
     heatmapData,
     links,
-    getPlatformData,
-    platformData,
-    setBranchData,
-    branchData,
+    categoryLoading,
+    setCategorySearch,
+    categorySearch,
   } = progressData;
 
   useEffect(() => {
@@ -95,31 +94,19 @@ const GetProgress: FC<{
     return typeSchedule !== 'Continues Offer' && duration === 'Program the offer duration';
   };
   const [vendors] = useAtom(vendorsAtom);
-  const { vendorsObj, display } = vendors;
+  const { display } = vendors;
 
   const getMenuActive = () => {
     if (category === null) {
       return true;
     }
     if (Object.keys(display).length === 0) {
-      return platformData === 'talabat' || category.length === 0;
+      return category.length === 0;
     }
     if (platform.length < 2) {
-      return platform[0] === 'talabat' || category.length === 0;
+      return category.length === 0;
     }
     return false;
-  };
-
-  const categorySearch = (e) => {
-    const { value } = e.target;
-    if (value === '') {
-      setFilteredCategoryData([]);
-      return;
-    }
-    const filtered = (filteredCategoryData.length > 0 ? filteredCategoryData : category).filter(
-      (obj) => obj.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredCategoryData(filtered);
   };
 
   const [menuChanged, setMenuChanged] = useState('');
@@ -137,14 +124,8 @@ const GetProgress: FC<{
       <PlatformStep
         index={selected}
         branch={branch}
-        userPlatformData={userPlatformData}
         getPlatform={getPlatform}
-        getPlatformData={getPlatformData}
         setBranch={setBranch}
-        platformData={platformData}
-        setBranchData={setBranchData}
-        branchData={branchData}
-        vendorsObj={vendorsObj}
         platform={platform}
       />
     );
@@ -165,6 +146,7 @@ const GetProgress: FC<{
         getDiscountMovType={getDiscountMovType}
         menuChanged={menuChanged}
         getMenuActive={getMenuActive}
+        categoryLoading={categoryLoading}
       />
     );
   }
@@ -183,6 +165,9 @@ const GetProgress: FC<{
           filteredCategoryData={filteredCategoryData}
           menuChanged={menuChanged}
           category={category}
+          setCategorySearch={setCategorySearch}
+          setFilteredCategoryData={setFilteredCategoryData}
+          platform={platform}
         />
       );
     }
@@ -209,8 +194,6 @@ const GetProgress: FC<{
           <AudienceStep
             index={selected}
             platform={platform}
-            platformData={platformData}
-            display={display}
             targetAudience={targetAudience}
             setTargetAudience={setTargetAudience}
             setSmRule={setSmRule}
@@ -251,8 +234,6 @@ const GetProgress: FC<{
           <AudienceStep
             index={selected}
             platform={platform}
-            platformData={platformData}
-            display={display}
             targetAudience={targetAudience}
             setTargetAudience={setTargetAudience}
             setSmRule={setSmRule}
@@ -285,8 +266,6 @@ const GetProgress: FC<{
           <AudienceStep
             index={selected}
             platform={platform}
-            platformData={platformData}
-            display={display}
             targetAudience={targetAudience}
             setTargetAudience={setTargetAudience}
             setSmRule={setSmRule}
@@ -327,8 +306,6 @@ const GetProgress: FC<{
           <AudienceStep
             index={selected}
             platform={platform}
-            platformData={platformData}
-            display={display}
             targetAudience={targetAudience}
             setTargetAudience={setTargetAudience}
             setSmRule={setSmRule}

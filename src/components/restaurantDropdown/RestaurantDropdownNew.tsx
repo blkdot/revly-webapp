@@ -1,10 +1,9 @@
+import { usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
 import { useEffect } from 'react';
 import BranchesIcon from '../../assets/images/ic_branch.png';
 import selectIcon from '../../assets/images/ic_select.png';
-import { usePlatform } from '../../hooks/usePlatform';
-import useVendors from '../../hooks/useVendors';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import './RestaurantDropdown.scss';

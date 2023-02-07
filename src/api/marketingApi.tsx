@@ -12,17 +12,17 @@ export const getOffers = (body) =>
 
 export const cancelOffer = (body, platform) =>
   axios
-    .post(`${apiUrl}/marketing/cancel/${platform}`, body)
+    .post(`${apiUrl}/marketingv2/cancel/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 export const cancelOfferMaster = (body, platform) =>
   axios
-    .post(`${apiUrl}/marketing/mastercancel/${platform}`, body)
+    .post(`${apiUrl}/marketingv2/mastercancel/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 export const triggerOffers = (platform, body) =>
   axios
-    .post(`${apiUrl}/marketing/offer/${platform}`, body)
+    .post(`${apiUrl}/marketingv2/offer/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 

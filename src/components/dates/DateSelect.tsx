@@ -38,6 +38,7 @@ const DateSelect = React.memo((props: any) => {
     setYear,
     offer,
   } = props;
+
   useEffect(() => {
     const date = new Date();
     const startDate = new Date(beforePeriod[0].startDate);

@@ -4,6 +4,7 @@
 /* eslint-disable import/no-extraneous-dependencies */ import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { useDate, usePlatform } from 'hooks';
 import {
   BoxKit,
   PaperKit,
@@ -17,8 +18,6 @@ import {
 } from 'kits';
 import deliveroo from '../../assets/images/deliveroo.png';
 import talabat from '../../assets/images/talabat.png';
-import useDate from '../../hooks/useDate';
-import { usePlatform } from '../../hooks/usePlatform';
 import './Table.scss';
 
 const EnhancedTableHead = ({ headCells }) => (
@@ -37,7 +36,12 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
   const { date } = useDate();
   const { beforePeriod, afterPeriod, titleDate, titleafterPeriod, typeDate } = date;
   const { userPlatformData } = usePlatform();
-
+  const isPlatformActive = (plat: string) => {
+    if (userPlatformData.platforms[plat].length > 0) {
+      return userPlatformData.platforms[plat].some((obj: any) => obj.active);
+    }
+    return false;
+  };
   const getTitle = () => {
     if (title === 'n_orders') {
       return 'orders';
@@ -191,7 +195,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
           <TableKit className='table' aria-labelledby='tableTitle' size='medium'>
             <EnhancedTableHead headCells={headCells} />
             <TableBodyKit className='table-body'>
-              {!userPlatformData.platforms.deliveroo.active ? null : (
+              {!isPlatformActive('deliveroo') ? null : (
                 <TableRowKit tabIndex={-1} className='table-row'>
                   <TableCellKit component='th' id={0} scope='row'>
                     <img
@@ -229,7 +233,7 @@ const EnhancedTable = ({ title, metricsbeforePeriod, metricsafterPeriod, loading
                   </TableCellKit>
                 </TableRowKit>
               )}
-              {!userPlatformData.platforms.talabat.active ? null : (
+              {!isPlatformActive('talabat') ? null : (
                 <TableRowKit tabIndex={-1} key={title} className='table-row'>
                   <TableCellKit component='th' id={0} scope='row'>
                     <img

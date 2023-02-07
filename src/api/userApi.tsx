@@ -10,7 +10,8 @@ export const getMetrics = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
-export const getVendors = (body) => axios.post(`${apiUrl}/user/vendors`, body).then(handleResponse);
+export const getVendors = (body) =>
+  axios.post(`${apiUrl}/user/vendorsv2`, body).then(handleResponse);
 
 export const getHeatmap = (type, body) =>
   axios.post(`${apiUrl}/user/heatmapv2/${type}`, body).then(handleResponse).catch(handleResponse);
@@ -46,5 +47,16 @@ export const verifyEmail = (user) =>
     .post(
       `${firebaseApiUrl}/verifyEmail?email=${user.email}&fname=${user.fname}&lname=${user.lname}`
     )
+    .then((res) => res)
+    .catch(handleResponse);
+
+export const saveUser = (body) =>
+  axios
+    .post(`${apiUrl}/user/savev2`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+export const loadUser = (body) =>
+  axios
+    .post(`${apiUrl}/user/loadv2`, body)
     .then((res) => res)
     .catch(handleResponse);

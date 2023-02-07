@@ -1,8 +1,7 @@
+import { usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, TextfieldKit } from 'kits';
 import { useEffect, useState } from 'react';
-import { usePlatform } from '../../../hooks/usePlatform';
-import useVendors from '../../../hooks/useVendors';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 import RestaurantDropdownNew from '../../restaurantDropdown/RestaurantDropdownNew';
 import RestaurantDropdownOld from '../../restaurantDropdown/RestaurantDropdownOld';

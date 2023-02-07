@@ -7,7 +7,7 @@ const useQueryState = (query: string) => {
   const navigate = useNavigate();
 
   const setQuery = useCallback(
-    (value: Record<string,never>) => {
+    (value: Record<string, never>) => {
       const existingQueries = qs.parse(location.search, {
         ignoreQueryPrefix: true,
       });
@@ -22,7 +22,10 @@ const useQueryState = (query: string) => {
     [query, JSON.stringify(location)]
   );
 
-  return [qs.parse(location.search, { ignoreQueryPrefix: true })[query], setQuery] as [string,(value: Record<string, never>) => void];
+  return [qs.parse(location.search, { ignoreQueryPrefix: true })[query], setQuery] as [
+    string,
+    (value: Record<string, never>) => void
+  ];
 };
 
 export default useQueryState;

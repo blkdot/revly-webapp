@@ -2,6 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useUserAuth } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
+import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -19,9 +20,6 @@ import RestaurantDropdownNew from '../../components/restaurantDropdown/Restauran
 import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
-import { useAlert } from '../../hooks/useAlert';
-import useApi from '../../hooks/useApi';
-import { usePlatform } from '../../hooks/usePlatform';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 
@@ -73,19 +71,27 @@ const CompetitionListing = () => {
       const vendorsSelectedTemp = [
         vendorsArr.filter((v) => v.platform === platform)[
           Math.floor(
-            Math.random() * vendorsArr.filter((obj) => obj.platform === platform).length - 1
-          ) + 1
-        ]?.data?.vendor_name,
+            Math.random() *
+              vendorsArr.filter(
+                (obj) =>
+                  obj.platform === platform &&
+                  (obj.metadata.is_active === 'True' || obj.metadata.is_active === true)
+              ).length
+          )
+        ],
       ];
       setVendorsData({
         ...vendors,
         vendorsSelected: vendorsSelectedTemp,
         vendorsObj: {
-          [platform]: [vendorsArr.find((obj) => obj.data.vendor_name === vendorsSelectedTemp[0])],
+          [platform]: [
+            vendorsArr.find((obj) => obj?.vendor_id === vendorsSelectedTemp[0]?.vendor_id),
+          ],
         },
       });
     }
   }, [vendors, platform]);
+
   const Open = () => {
     setOpened(!opened);
     const body = document.querySelector('body');
@@ -110,7 +116,7 @@ const CompetitionListing = () => {
       const list = Object.keys(pl)
         .map((v) => ({
           name: v,
-          registered: pl[v].active,
+          registered: pl[v].some((obj) => obj.active),
         }))
         .filter((k) => k.registered === true);
 
@@ -366,9 +372,7 @@ const CompetitionListing = () => {
 
             <div className='listing-vendors'>
               <MarketingCheckmarksDropdown
-                names={vendorsArr
-                  .filter((obj) => obj.platform === platform)
-                  .map((obj) => obj.data.vendor_name)}
+                names={vendorsArr.filter((obj) => obj.platform === platform)}
                 icon={selectIcon}
                 title='Select Vendors'
                 setName={setVendorsData}

@@ -1,6 +1,7 @@
-import { Button } from '@mui/material';
+import { Button, ButtonProps } from '@mui/material';
+import { FC } from 'react';
 
-const ButtonKit = (props: any) => (
+const ButtonKit: FC<ButtonProps> = (props) => (
   <Button
     sx={{
       borderRadius: '8px',

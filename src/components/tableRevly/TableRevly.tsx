@@ -14,7 +14,8 @@ import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 
 const TableRevly = (props: any) => {
-  const { headers, rows, isLoading, mainFieldOrdered, onClickRow, noEmptyMessage } = props;
+  const { headers, rows, isLoading, mainFieldOrdered, onClickRow, noEmptyMessage, renderNoData } =
+    props;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
@@ -34,10 +35,29 @@ const TableRevly = (props: any) => {
       </TableRowKit>
     ));
 
+  const handleRowClick = (id) => () => {
+    if (!onClickRow) return;
+
+    onClickRow(id);
+  };
+
+  const renderRowsContent = () =>
+    stableSort(rows, getComparator(order, orderBy)).map((r) => (
+      <TableRowKit
+        className='marketing-table-top'
+        onClick={handleRowClick(r.data.master_offer_id || r.data.id)}
+        key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
+      >
+        {headers.map((h) => r[h.id])}
+      </TableRowKit>
+    ));
   const renderRows = () => {
     if (isLoading) return renderSkeleton();
 
-    if (!rows || rows.length < 1){
+    if (!rows || rows.length < 1) {
+      if (renderNoData) {
+        return renderNoData;
+      }
 
       if (noEmptyMessage) {
         return null;
@@ -55,22 +75,6 @@ const TableRevly = (props: any) => {
     return renderRowsContent();
   };
 
-  const handleRowClick = (id) => () => {
-    if (!onClickRow) return;
-
-    onClickRow(id);
-  };
-
-  const renderRowsContent = () =>
-    stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit
-        className='marketing-table-top'
-        onClick={handleRowClick(r.data.master_offer_id)}
-        key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
-      >
-        {headers.map((h) => r[h.id])}
-      </TableRowKit>
-    ));
   return (
     <BoxKit className='competition-box' sx={{ width: '100%' }}>
       <PaperKit className='competition-table-paper' sx={{ width: '100%', mb: 2 }}>

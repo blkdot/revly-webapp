@@ -1,3 +1,13 @@
+type TDaysObject = {
+  Sunday: any[];
+  Monday: any[];
+  Tuesday: any[];
+  Wednesday: any[];
+  Thursday: any[];
+  Friday: any[];
+  Saturday: any[];
+};
+
 export const rangeHoursOpenedDay = {
   5: { hour: 5, value: 5, label: '5AM', isNext: false },
   6: { hour: 6, value: 6, label: '6AM', isNext: false },
@@ -29,21 +39,21 @@ export const maxHour = 27;
 export const minHour = 5;
 
 export const daysOrder = [
-  'Sunday',
   'Monday',
   'Tuesday',
   'Wednesday',
   'Thursday',
   'Friday',
   'Saturday',
+  'Sunday',
 ];
 
-export const daysObject = {
-  Sunday: [],
+export const daysObject: TDaysObject = {
   Monday: [],
   Tuesday: [],
   Wednesday: [],
   Thursday: [],
   Friday: [],
   Saturday: [],
+  Sunday: [],
 };

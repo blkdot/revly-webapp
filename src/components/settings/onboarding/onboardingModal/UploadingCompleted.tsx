@@ -1,6 +1,6 @@
 import { ButtonKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.png';
-import Congrats from '../../../../assets/images/congrats.png';
+import Congrats from '../../../../assets/images/congrats.gif';
 
 const UploadingCompleted = ({ propsVariables }) => {
   const { openCloseModal, setConnectAccount, connect } = propsVariables;
@@ -38,7 +38,7 @@ const UploadingCompleted = ({ propsVariables }) => {
             setConnectAccount('account');
           }}
           variant='contained'
-          style={{ '--color': '#F9FAFB', color: 'black' }}
+          style={{ '--color': '#F9FAFB', color: 'black' } as React.CSSProperties}
         >
           Close
         </ButtonKit>

@@ -1,23 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable camelcase */ import {
-  Arrow,
-  Calendar,
-  ExpandIcon,
-  FastFood,
-  Timer,
-  Warning,
-} from 'assets/icons';
+/* eslint-disable camelcase */
+import { useQuery } from '@tanstack/react-query';
+import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
+import { useApi, usePlatform, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
 import { getPlanningOfferDetails } from '../../../api/userApi';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import { platformObject } from '../../../data/platformList';
-import useApi from '../../../hooks/useApi';
-import { usePlatform } from '../../../hooks/usePlatform';
-import useVendors from '../../../hooks/useVendors';
 import MenuItem from './MenuItem';
 import './OfferDetails.scss';
 
@@ -125,7 +117,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         chain_id,
         master_offer_id,
       },
-      platform
+      platform.toLowerCase()
     ).then(() => {
       setOfferDetail({ ...offerDetail, status: 'Cancelled' });
       setofferDetailMaster({
@@ -163,6 +155,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
+  console.log(offerDetailMaster);
   return (
     <>
       <CancelOfferModal
@@ -181,7 +174,8 @@ const OfferDetailComponent = ({ data, setOpened }) => {
               </button>
               <div>
                 {['Live', 'Active', 'Scheduled'].includes(
-                  offerDetailMaster?.master_offer?.offer_status
+                  offerDetailMaster?.master_offer?.offer_status ||
+                    offerDetailMaster?.master_offer?.status
                 ) && (
                   <button onClick={openCancelModal} className='cancel-btn' type='button'>
                     <Warning />

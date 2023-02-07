@@ -1,60 +1,88 @@
 import { useUserAuth } from 'contexts';
+import { useApi, usePlatform } from 'hooks';
 import { SpinnerKit } from 'kits';
 import { useEffect, useState } from 'react';
-import {  Outlet, useLocation } from 'react-router-dom';
-import useApi from '../hooks/useApi';
-import { usePlatform } from '../hooks/usePlatform';
-import config from '../setup/config';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+// import config from '../setup/config';
 
 const ProtectedOnboardRoutes = () => {
-  const [allowed, setAllowed] = useState<boolean>(false);
+  const [allowed, setAllowed] = useState<any>(false);
+  const [preAllowed, setPreAllowed] = useState(false);
   const { user } = useUserAuth();
-  const { settingsLogin } = useApi();
+  const { settingsLogin, settingsOnboarded } = useApi();
   const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
-  const { timeRefreshToken } = config;
-  const location = useLocation();
+  // const { timeRefreshToken } = config;
+  // const location = useLocation();
+  const navigate = useNavigate();
 
-  const reccurentLogin = async () => {
+  const getPlatformData = async () => {
+    if (!user) {
+      navigate('/');
+      return;
+    }
+
     try {
-      const res = await settingsLogin({
+      const res = await settingsOnboarded({
         master_email: user.email,
         access_token: user.accessToken,
       });
-  
-      if (res instanceof Error || !res.onboarded) {
-        cleanPlatformData();
-        return;
-      }
-  
+
+      if (res instanceof Error || !res.onboarded || !res.platforms) throw new Error('');
+
       setUserPlatformData({
         onboarded: true,
         platforms: { ...userPlatformData.platforms, ...res.platforms },
       });
+
+      setPreAllowed(true);
     } catch (error) {
-      console.error(error);
-    } finally {
-      setAllowed(true);
+      setAllowed(error);
     }
   };
 
   useEffect(() => {
-    if (!userPlatformData.onboarded) {
-      reccurentLogin();
-    }
+    getPlatformData();
+  }, []);
 
-    setAllowed(true);
-  }, [location]);
+  // useEffect(() => {
+  //   if (!userPlatformData.onboarded) {
+  //     reccurentLogin();
+  //   }
 
-  useEffect(() => {
-    const autoRefresh = setInterval(() => {
-      reccurentLogin();
-    }, timeRefreshToken);
-    return () => {
-      clearInterval(autoRefresh);
-    };
-  });
+  //   setAllowed(true);
+  // }, [location]);
 
-  if (!allowed) {
+  // const reccurentLogin = async () => {
+  //   const res = await settingsLogin({
+  //     master_email: user.email,
+  //     access_token: user.accessToken,
+  //   });
+
+  //   if (res instanceof Error || !res.onboarded) {
+  //     cleanPlatformData();
+  //     setAllowed(new Error(''));
+  //     return;
+  //   }
+
+  //   setUserPlatformData({
+  //     onboarded: true,
+  //     platforms: { ...userPlatformData.platforms, ...res.platforms },
+  //   });
+  //   setAllowed(true);
+  // };
+
+  // useEffect(() => {
+  //   const autoRefresh = setInterval(() => {
+  //     reccurentLogin();
+  //   }, timeRefreshToken);
+  //   return () => {
+  //     clearInterval(autoRefresh);
+  //   };
+  // });
+
+  if ((allowed as any) instanceof Error) return <Navigate to='/dashboardOnboard' />;
+
+  if (!preAllowed) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />

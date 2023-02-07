@@ -81,28 +81,15 @@ const Audience: FC<{
 export const AudienceStep: FC<{
   index: number;
   platform: any;
-  platformData: any;
-  display: any;
   targetAudience: any;
   setTargetAudience: any;
   setSmRule: any;
-}> = ({ index, platform, platformData, display, targetAudience, setTargetAudience, setSmRule }) => {
-  if (Object.keys(display).length > 0) {
-    if (platform.length < 2) {
-      return (
-        <Audience
-          index={index}
-          plat={platform[0]}
-          targetAudience={targetAudience}
-          setTargetAudience={setTargetAudience}
-          setSmRule={setSmRule}
-        />
-      );
-    }
+}> = ({ index, platform, targetAudience, setTargetAudience, setSmRule }) => {
+  if (platform.length < 2) {
     return (
       <Audience
         index={index}
-        plat='deliveroo'
+        plat={platform[0]}
         targetAudience={targetAudience}
         setTargetAudience={setTargetAudience}
         setSmRule={setSmRule}
@@ -112,7 +99,7 @@ export const AudienceStep: FC<{
   return (
     <Audience
       index={index}
-      plat={platformData}
+      plat='deliveroo'
       targetAudience={targetAudience}
       setTargetAudience={setTargetAudience}
       setSmRule={setSmRule}

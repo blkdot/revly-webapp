@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   AuthContextProvider,
   GlobalFunctionalitiesContextProvider,
@@ -11,13 +12,12 @@ import {
   CompetitionAlerts,
   CompetitionListing,
   Dashboard,
+  DashboardOnboard,
   ForgotPassword,
   MarketingAds,
   MarketingOffer,
-  OnBoarding,
   Planning,
   ResetPassword,
-  Settings,
   SettingsBilling,
   SettingsChangePassword,
   SettingsCost,
@@ -28,7 +28,6 @@ import {
   SignUp,
   VerifyCode,
 } from 'pages';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedOnboardRoutes, ProtectedRoutes, ProtectedSettingsRoutes } from 'routes';
 import './App.scss';
@@ -50,6 +49,7 @@ const theme = createTheme({
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: false,
       refetchOnWindowFocus: false,
     },
   },
@@ -72,6 +72,7 @@ const App = () => (
                   </Route>
                   <Route path='/forgot-password' element={<ForgotPassword />} />
                   <Route element={<ProtectedRoutes />}>
+                    <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
                     <Route element={<ProtectedOnboardRoutes />}>
                       <Route path='/dashboard' element={<Dashboard />} />
                       <Route path='/planning' element={<Planning />} />
@@ -81,12 +82,10 @@ const App = () => (
                       <Route path='/marketing/ads' element={<MarketingAds />} />
                       <Route path='/verify-code' element={<VerifyCode />} />
                     </Route>
-                    <Route path='/onboarding' element={<OnBoarding />} />
                     <Route path='/check' element={<Check />} />
                   </Route>
                   <Route element={<ProtectedSettingsRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
-                      <Route path='/settings' element={<Settings />} />
                       <Route path='/settings/general' element={<SettingsGeneral />} />
                       <Route path='/settings/billing' element={<SettingsBilling />} />
                       <Route path='/settings/onboarding' element={<SettingsOnboarding />} />

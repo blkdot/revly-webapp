@@ -1,4 +1,4 @@
-import { BoxKit, CheckboxKit, FormControlLabelKit, RadioKit } from 'kits';
+import { BoxKit, CheckboxKit, RadioKit } from 'kits';
 
 const MarketingRadio = ({
   title,
@@ -7,7 +7,7 @@ const MarketingRadio = ({
   className,
   disabled,
   checkbox,
-  setState,
+  onChange,
   state,
 }: any) => {
   const getButton = () => {
@@ -15,14 +15,22 @@ const MarketingRadio = ({
       return (
         <CheckboxKit
           onChange={(e) => {
-            setState(e);
+            onChange(e);
           }}
           value={title}
           checked={state.indexOf(title) > -1}
         />
       );
     }
-    return <FormControlLabelKit value={title} control={<RadioKit />} />;
+    return (
+      <RadioKit
+        onChange={(e) => {
+          onChange(e, true);
+        }}
+        value={title}
+        checked={state.indexOf(title) > -1}
+      />
+    );
   };
   return (
     <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''} ${!icon ? 'reversed' : ''}`}>

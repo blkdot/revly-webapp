@@ -1,8 +1,8 @@
-import { updatePassword } from 'firebase/auth';
-import { useState } from 'react';
 import { useUserAuth } from 'contexts';
+import { updatePassword } from 'firebase/auth';
+import { useAlert } from 'hooks';
 import { ButtonLoadingKit, TextfieldKit } from 'kits';
-import { useAlert } from 'hooks/useAlert';
+import { useState } from 'react';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
 import './ChangePassword.scss';
 

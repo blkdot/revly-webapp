@@ -1,11 +1,9 @@
 import { pascalCase } from 'change-case';
 import { useUserAuth } from 'contexts';
+import { useAlert, useApi, usePlatform } from 'hooks';
 import { ButtonLoadingKit, FormControlKit, ModalKit, TextfieldKit } from 'kits';
 import { CSSProperties, useEffect, useState } from 'react';
 import { platformList } from '../../../data/platformList';
-import { useAlert } from '../../../hooks/useAlert';
-import useApi from '../../../hooks/useApi';
-import { usePlatform } from '../../../hooks/usePlatform';
 import PlatformSettingsBox from '../../platformSettingsBox/PlatformSettingsBox';
 
 const style: CSSProperties = {

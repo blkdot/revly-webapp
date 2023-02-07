@@ -1,6 +1,6 @@
+import { usePlatform } from 'hooks';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePlatform } from '../../hooks/usePlatform';
 import './Congrats.scss';
 
 const Congrats = () => {

@@ -4,6 +4,7 @@ import searchIcon from 'assets/images/ic_search.png';
 import MenuDropdown from 'components/settings/menu/menuDropdown/MenuDropdown';
 import {
   BoxKit,
+  ButtonKit,
   CheckboxKit,
   FormControlKit,
   FormControlLabelKit,
@@ -45,13 +46,13 @@ const TooltipCategory = ({ obj, index }) => {
         interactive={1}
         disableHoverListener={!hoverStatus}
         id='category-tooltip'
-        title={obj.name}
+        title={obj.name || obj.item_name}
       >
         <div>
-          <ListItemTextKit className='list-item-category' primary={obj.name} />
+          <ListItemTextKit className='list-item-category' primary={obj.name || obj.item_name} />
         </div>
       </TooltipKit>
-      <b>{obj.price} AED</b>
+      <b>{obj.price || obj.unit_price} AED</b>
     </div>
   );
 };
@@ -69,6 +70,9 @@ export const DiscountedItemsStep: FC<{
   filteredCategoryData: any;
   menuChanged: any;
   category: any;
+  setCategorySearch: any;
+  setFilteredCategoryData: any;
+  platform: any;
 }> = ({
   index,
   checked,
@@ -81,94 +85,187 @@ export const DiscountedItemsStep: FC<{
   filteredCategoryData,
   menuChanged,
   category,
-}) => (
-  <div className='left-part-middle'>
-    <TypographyKit variant='h6'>{index}. Select the discounted items</TypographyKit>
-    <Subtitle />
-    <BoxKit
-      className={`left-part-radio under-textfields radio-dates ${
-        menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''
+  setCategorySearch,
+  setFilteredCategoryData,
+  platform,
+}) => {
+  const categorySearchFunc = (e) => {
+    const { value } = e.target;
+    setCategorySearch(value);
+    if (value === '') {
+      if (categoryData.length > 0) {
+        const arr = categoryData
+          .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+          .flat();
+        setFilteredCategoryData(arr);
+        return;
       }
+      setFilteredCategoryData([]);
+      return;
+    }
+    const filtered = (
+      filteredCategoryData.length > 0
+        ? categoryData
+            .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+            .flat()
+        : category
+    ).filter((obj) => (obj.name || obj.item_name).toLowerCase().includes(value.toLowerCase()));
+    if (categoryData.length > 0 && filtered.length === 0) {
+      const arr = categoryData
+        .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+        .flat();
+      setFilteredCategoryData(arr);
+      return;
+    }
+    setFilteredCategoryData(filtered);
+  };
+  const getMaximumItem = () => {
+    if (platform[0] === 'talabat') {
+      if (category.length > 100) {
+        return 100;
+      }
+      return category.length;
+    }
+    return 10;
+  };
+  const clearItems = () => {
+    if (filteredCategoryData.length > 0) {
+      filteredCategoryData.forEach((obj) => {
+        checked.splice(
+          checked.findIndex((c) => c === obj.name || c === obj.item_name),
+          1
+        );
+      });
+      setChecked([...checked]);
+    } else {
+      setChecked([]);
+    }
+  };
+  const selectAllItems = () => {
+    if (filteredCategoryData.length > 0) {
+      checked.forEach((c, indexC) => {
+        filteredCategoryData.forEach((obj) => {
+          if ((obj.name || obj.item_name) === c) {
+            checked.splice(indexC, 1);
+          }
+        });
+      });
+      setChecked([...checked, ...filteredCategoryData.map((obj) => obj.name || obj.item_name)]);
+    } else {
+      setChecked([...category.map((obj) => obj.name || obj.item_name)]);
+    }
+  };
+  return (
+    <div className='left-part-middle'>
+      <TypographyKit variant='h6'>{index}. Select the discounted items</TypographyKit>
+      <Subtitle />
+      <BoxKit
+        className={`left-part-radio under-textfields radio-dates ${
+          menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''
+        }
                   `}
-    >
-      <div className='radio'>
-        <div>
-          <span>
-            <img src={ItemMenuIcon} alt='Item Menu Icon' />
-          </span>
+      >
+        <div className='radio'>
           <div>
-            <div>Offer on An Item from the Menu</div>
-            <p>{itemMenu}</p>
-          </div>
-        </div>
-      </div>
-      <div className='picker-duration search-filter'>
-        <div>
-          <TextfieldKit
-            style={{ width: '45%' }}
-            id='input-with-icon-textfield'
-            placeholder='Search'
-            onChange={categorySearch}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <img src={searchIcon} alt='Searh Icon' />
-                </InputAdornment>
-              ),
-            }}
-            variant='outlined'
-          />
-          <div style={{ width: '55%' }}>
-            <div className='__select menu-item-select'>
-              <MenuDropdown
-                onChange={handleCategoryDataChange}
-                value={categoryData}
-                multiple
-                renderValue={(selectedMenu) => selectedMenu.join(', ')}
-                items={categoryDataList}
-                label='All Categories'
-                renderOption={(v) => (
-                  <MenuItemKit key={v} value={v}>
-                    <CheckboxKit checked={categoryData.indexOf(v) > -1} />
-                    <ListItemTextKit primary={v} />
-                  </MenuItemKit>
-                )}
-              />
+            <span>
+              <img src={ItemMenuIcon} alt='Item Menu Icon' />
+            </span>
+            <div>
+              <div>Offer on An Item from the Menu</div>
+              <p>{itemMenu}</p>
             </div>
           </div>
         </div>
-        <div className='max-amount'>
-          <p>Maximum amount: 10</p>
+        <div className='picker-duration search-filter'>
           <div>
-            Selected: <span>{checked.length}</span>
+            <TextfieldKit
+              style={{ width: '45%' }}
+              id='input-with-icon-textfield'
+              placeholder='Search'
+              value={categorySearch}
+              onChange={categorySearchFunc}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <img src={searchIcon} alt='Searh Icon' />
+                  </InputAdornment>
+                ),
+              }}
+              variant='outlined'
+            />
+            <div style={{ width: '55%' }}>
+              <div className='__select menu-item-select'>
+                <MenuDropdown
+                  onChange={handleCategoryDataChange}
+                  value={categoryData}
+                  multiple
+                  renderValue={(selectedMenu) => selectedMenu.join(', ')}
+                  items={categoryDataList}
+                  label='All Categories'
+                  renderOption={(v) => (
+                    <MenuItemKit key={v} value={v}>
+                      <CheckboxKit checked={categoryData.indexOf(v) > -1} />
+                      <ListItemTextKit primary={v} />
+                    </MenuItemKit>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+          <p className='max-amount-top'>Maximum amount: {getMaximumItem()}</p>
+          <div className='max-amount'>
+            <div>
+              Selected ({checked.length}/{getMaximumItem()})
+            </div>
+            {platform[0] === 'talabat' ? (
+              <div className='max-amount-btns'>
+                <ButtonKit
+                  disabled={
+                    (filteredCategoryData.length > 0 ? filteredCategoryData : category).length ===
+                    checked.length
+                  }
+                  onClick={selectAllItems}
+                  variant='outlined'
+                >
+                  Select all
+                </ButtonKit>
+                <ButtonKit disabled={checked.length <= 0} onClick={clearItems} variant='text'>
+                  Clear
+                </ButtonKit>
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         </div>
-      </div>
-      <FormControlKit className='category-list'>
-        {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map((obj, i) => (
-          // TODO: FIX IT
-          // <div className="menu-item-wrapper" key={obj.id} value={obj.name}>
-          <div className='menu-item-wrapper' key={obj.id}>
-            <FormControlLabelKit
-              control={
-                <CheckboxKit
-                  onChange={({ target }) => {
-                    if (target.checked && checked.length < 10) {
-                      setChecked([...checked, target.value]);
-                    } else if (!target.checked) {
-                      checked.splice(checked.indexOf(target.value), 1);
-                      setChecked([...checked]);
-                    }
-                  }}
-                  checked={checked.indexOf(obj.name) > -1}
-                  value={obj.name}
+        <FormControlKit className='category-list'>
+          {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
+            (obj, indexObj) => (
+              // TODO: FIX IT
+              // <div className='menu-item-wrapper' key={obj.id} value={obj.name}>
+              <div className='menu-item-wrapper' key={obj.id || obj.item_id}>
+                <FormControlLabelKit
+                  control={
+                    <CheckboxKit
+                      onChange={({ target }) => {
+                        if (target.checked && checked.length < getMaximumItem()) {
+                          setChecked([...checked, target.value]);
+                        } else if (!target.checked) {
+                          checked.splice(checked.indexOf(target.value), 1);
+                          setChecked([...checked]);
+                        }
+                      }}
+                      checked={checked.indexOf(obj.name || obj.item_name) > -1}
+                      value={obj.name || obj.item_name}
+                    />
+                  }
+                  label={<TooltipCategory index={indexObj} obj={obj} />}
                 />
-              }
-              label={<TooltipCategory index={i} obj={obj} />}
-            />
-          </div>
-        ))}
-      </FormControlKit>
-    </BoxKit>
-  </div>
-);
+              </div>
+            )
+          )}
+        </FormControlKit>
+      </BoxKit>
+    </div>
+  );
+};

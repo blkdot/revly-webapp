@@ -1,10 +1,5 @@
 import { Layers, Tag, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
-import { endOfMonth, endOfWeek } from 'date-fns/esm';
-import { useAtom } from 'jotai';
-import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
-import shortid from 'shortid';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
@@ -12,10 +7,12 @@ import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropd
 import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from 'components/tableRevly/TableRevly';
-import useDate from 'hooks/useDate';
-import usePlanningAds from 'hooks/usePlanningAds';
-import usePlanningOffers from 'hooks/usePlanningOffers';
-import useQueryState from 'hooks/useQueryState';
+import { endOfMonth, endOfWeek } from 'date-fns/esm';
+import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
+import { useAtom } from 'jotai';
+import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
+import { useEffect, useState } from 'react';
+import shortid from 'shortid';
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
 import { platformObject } from '../../data/platformList';
@@ -36,6 +33,7 @@ const Planning = () => {
   const [active, setActive] = useState(0);
   const { date } = useDate();
   const [vendors] = useAtom(vendorsAtom);
+
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));
@@ -48,14 +46,14 @@ const Planning = () => {
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: getOfferDate(),
-    ...JSON.parse((dateSaved || '{}')),
+    ...JSON.parse(dateSaved || '{}'),
   });
   const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
     ...defaultFilterStateFormat,
-    ...JSON.parse((filtersSaved || '{}')),
+    ...JSON.parse(filtersSaved || '{}'),
   });
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
@@ -258,7 +256,10 @@ const Planning = () => {
 
     const preHeadTypeOffer = preHead.type_offer.map((s: string) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s: string) => ({ value: s, text: `${s} %` }));
-    const preHeadStatus = preHead.status.map((s: string) => ({ value: s, text: renderStatusFilter(s) }));
+    const preHeadStatus = preHead.status.map((s: string) => ({
+      value: s,
+      text: renderStatusFilter(s),
+    }));
 
     setFiltersHead({
       platform: preHeadPlatform,

@@ -1,5 +1,6 @@
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import { FC } from 'react';
 
-const CheckboxKit = (props: any) => <Checkbox {...props} />;
+const CheckboxKit: FC<CheckboxProps> = (props) => <Checkbox {...props} />;
 
 export default CheckboxKit;
