@@ -1,18 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable camelcase */ import {
-  Arrow,
-  Calendar,
-  ExpandIcon,
-  FastFood,
-  Timer,
-  Warning,
-} from 'assets/icons';
+/* eslint-disable camelcase */
+import { useQuery } from '@tanstack/react-query';
+import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
 import { useApi, usePlatform, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
 import { getPlanningOfferDetails } from '../../../api/userApi';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import { platformObject } from '../../../data/platformList';

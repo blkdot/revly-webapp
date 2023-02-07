@@ -307,6 +307,7 @@ const CompetitionAlerts = () => {
           rows={(filteredData.length > 0 ? filteredData : competitionAlertsData).map(
             renderRowsByHeader
           )}
+          renderNoData
         />
       </PaperKit>
     </div>
