@@ -1,4 +1,11 @@
-import { timesAtom, itemMenuAtom, everyWeekAtom, customisedDayAtom, typeScheduleAtom, targetAudienceAtom } from 'store/marketingSetupAtom';
+import {
+  timesAtom,
+  itemMenuAtom,
+  everyWeekAtom,
+  customisedDayAtom,
+  typeScheduleAtom,
+  targetAudienceAtom,
+} from 'store/marketingSetupAtom';
 import { addMinutes, format, addHours } from 'date-fns';
 import { useAtom } from 'jotai';
 

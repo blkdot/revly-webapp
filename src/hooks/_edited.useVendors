@@ -21,7 +21,7 @@ type TVendorsObj = {
       chain_name: string;
       vendor_name: string;
     };
-  }[];
+  };
 };
 
 export type TVendorsArr = {
@@ -59,10 +59,20 @@ export type TChainVendor = {
 
 export type TVendors = {
   vendorsSelected: TVendorsArr[];
-  vendorsObj: TVendorsObj;
+  vendorsObj: TVendorsObj[];
   vendorsArr: TVendorsArr[];
   display: TChainVendor | Record<string, never>;
   chainObj: TChainVendor | Record<string, never>;
+};
+
+type TResponse = {
+  deliveroo?: TVendorsObj[];
+  talabat?: TVendorsObj[];
+  display:
+    | {
+        [x: string]: { is_matched: boolean & TVendorsObj };
+      }
+    | Record<string, never>;
 };
 
 const useVendors = (isSign = false) => {
@@ -70,7 +80,7 @@ const useVendors = (isSign = false) => {
 
   const [vendors, setVendors] = useState<TVendors>({
     vendorsSelected: [],
-    vendorsObj: {},
+    vendorsObj: [],
     vendorsArr: [],
     display: {},
     chainObj: {},
@@ -97,11 +107,8 @@ const useVendors = (isSign = false) => {
   useEffect(() => {
     if (isLoading || isError || isSign) return;
 
-    const newData = data as any;
+    const newData = data as TResponse;
 
-    delete newData?.master_email;
-    delete newData?.display;
-    newData.display = {};
     let vendorsSelectedTemp = [];
     let vendorsTemp = [];
     platformList
@@ -115,6 +122,7 @@ const useVendors = (isSign = false) => {
             userPlatformData.platforms[p.name].find((obj) =>
               obj.vendor_ids.some((id) => id === v.vendor_id)
             ) || '';
+
           vendorsTemp.push({
             ...v,
             platform: p.name,
@@ -122,6 +130,7 @@ const useVendors = (isSign = false) => {
             access_token: userPlatform.access_token,
             access_token_bis: userPlatform.access_token_bis,
           });
+
           if (v.metadata.is_active === 'True' || v.metadata.is_active === true) {
             vendorsSelectedTemp.push({
               ...v,

@@ -1,6 +1,7 @@
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
 import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
 import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import { TVendors } from 'hooks/useVendors';
 import { platformList } from 'data/platformList';
 import { usePlatform } from 'hooks';
 import { RadioGroupKit, TypographyKit } from 'kits';
@@ -10,12 +11,7 @@ import { Subtitle } from './components/Subtitle';
 // eslint-disable-next-line import/prefer-default-export
 export const PlatformStep: FC<{
   index: number;
-  branch: {
-    display: any;
-    chainObj: any;
-    vendorsSelected: any;
-    vendorsArr: any;
-  };
+  branch: TVendors | Record<string, never>;
   getPlatform: any;
   setBranch: any;
   platform: any;
@@ -41,7 +37,9 @@ export const PlatformStep: FC<{
               <MarketingRadio
                 onChange={getPlatform}
                 state={platform}
-                checkbox={Object.keys(branch.display).length > 0}
+                checkbox={
+                  branch && branch?.display ? Object.keys(branch.display).length > 0 : false
+                }
                 key={p.name}
                 className={p.name}
                 icon={p.src}

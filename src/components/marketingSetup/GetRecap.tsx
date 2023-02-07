@@ -1,6 +1,31 @@
 import RemoveIcon from '@mui/icons-material/Remove';
 import { format } from 'date-fns';
 import { BoxKit, ButtonKit, TextfieldKit, TypographyKit } from 'kits';
+import {
+  platformAtom,
+  selectedAtom,
+  menuAtom,
+  discountPercentageAtom,
+  minOrderPercentageAtom,
+  durationAtom,
+  branchAtom,
+  endingDateAtom,
+  typeScheduleAtom,
+  customisedDayAtom,
+  timesAtom,
+  everyWeekAtom,
+  itemMenuAtom,
+  targetAudienceAtom,
+  createdAtom,
+  recapAtom,
+  launchOrderAtom,
+  stepsAtom,
+  smRuleAtom,
+  stopOrderAtom,
+  startingDateAtom,
+} from 'store/marketingSetupAtom';
+import { useAtom } from 'jotai';
+import { FC } from 'react';
 import ArrowIcon from '../../assets/images/arrow.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
@@ -21,36 +46,31 @@ import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupSteppe
 import GetProgress from './MarketingGetProgress';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 
-const GetRecap = ({ recapData }) => {
-  const {
-    progressData,
-    smRule,
-    launchOrder,
-    setLaunchOrder,
-    setStopOrder,
-    stopOrder,
-    created,
-    closeSetup,
-    ads,
-    menu,
-    minOrder,
-    discountPercentage,
-    itemMenu,
-    recap,
-    steps,
-    selected,
-    getItemMenuNamePrice,
-    branch,
-    platform,
-    duration,
-    typeSchedule,
-    customisedDay,
-    everyWeek,
-    startingDate,
-    endingDate,
-    times,
-    targetAudience,
-  } = recapData;
+const GetRecap: FC<any> = (props) => {
+  const { closeSetup, ads, getItemMenuNamePrice } = props;
+
+  const [platform] = useAtom(platformAtom);
+  const [selected] = useAtom(selectedAtom);
+  const [menu] = useAtom(menuAtom);
+  const [discountPercentage] = useAtom(discountPercentageAtom);
+  const [minOrder] = useAtom(minOrderPercentageAtom);
+  const [duration] = useAtom(durationAtom);
+  const [endingDate] = useAtom(endingDateAtom);
+  const [typeSchedule] = useAtom(typeScheduleAtom);
+  const [branch] = useAtom(branchAtom);
+  const [customisedDay] = useAtom(customisedDayAtom);
+  const [everyWeek] = useAtom(everyWeekAtom);
+  const [itemMenu] = useAtom(itemMenuAtom);
+  const [targetAudience] = useAtom(targetAudienceAtom);
+  const [created] = useAtom(createdAtom);
+  const [recap] = useAtom(recapAtom);
+  const [times] = useAtom(timesAtom);
+  const [launchOrder, setLaunchOrder] = useAtom(launchOrderAtom);
+  const [stopOrder, setStopOrder] = useAtom(stopOrderAtom);
+  const [startingDate] = useAtom(startingDateAtom);
+
+  const [smRule] = useAtom(smRuleAtom);
+  const [steps] = useAtom(stepsAtom);
   const handleChange = (e, type, index, order?) => {
     if (order === 'launch') {
       if (type === 'order') {
@@ -444,7 +464,7 @@ const GetRecap = ({ recapData }) => {
             ))}
           </div>
         </BoxKit>
-        {platform === 'deliveroo' ? (
+        {platform.includes('deliveroo') ? (
           <BoxKit className='left-part-radio recap-left-part'>
             <div className='radio recap-box-wrapper'>
               <div className='recap-box'>
@@ -546,7 +566,7 @@ const GetRecap = ({ recapData }) => {
         </div>
         <MarketingSetupStepper selected={selected} steps={steps} />
       </div>
-      <GetProgress progressData={progressData} />
+      <GetProgress />
     </div>
   );
 };

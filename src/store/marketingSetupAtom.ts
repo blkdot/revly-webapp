@@ -90,3 +90,10 @@ export const categoryLoadingAtom = atom(false);
 export const smRuleAtom = atom(false);
 
 export const categorySearchAtom = atom('');
+
+export const defaultHeatmapState = { 0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} };
+
+export const heatmapDataAtom = atom({
+  revenue: defaultHeatmapState,
+  orders: defaultHeatmapState,
+});

@@ -16,7 +16,7 @@ import {
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   platformAtom,
   selectedAtom,
@@ -44,13 +44,12 @@ import {
   targetAudienceAtom,
   createdAtom,
   recapAtom,
-  launchOrderAtom,
-  stopOrderAtom,
   stepsAtom,
   checkedAtom,
   categoryLoadingAtom,
   smRuleAtom,
-  categorySearchAtom,
+  heatmapDataAtom,
+  defaultHeatmapState,
 } from 'store/marketingSetupAtom';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -61,11 +60,10 @@ import Dates from '../dates/Dates';
 import GetRecap from './GetRecap';
 import './MarketingSetup.scss';
 
-const defaultHeatmapState = { 0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} };
-
 const defaultRangeColorIndices = [0, 0, 0, 0];
 
 const ItemHeatmap = React.forwardRef((props: any, ref: any) => <div {...props} ref={ref} />);
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { getActivePlatform, userPlatformData } = usePlatform();
@@ -74,44 +72,40 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const [selected, setSelected] = useAtom(selectedAtom);
   const [links, setLinks] = useAtom(linkAtom);
   const [menu, setMenu] = useAtom(menuAtom);
-  const [discountPercentage, setDiscountPercentage] = useAtom(discountPercentageAtom);
-  const [minOrder, setMinOrder] = useAtom(minOrderPercentageAtom);
-  const [duration, setDuration] = useAtom(durationAtom);
+  const [discountPercentage] = useAtom(discountPercentageAtom);
+  const [minOrder] = useAtom(minOrderPercentageAtom);
+  const [duration] = useAtom(durationAtom);
   const [disabled, setDisabled] = useAtom(disabledAtom);
   const [triggerLoading, setTriggerLoading] = useAtom(triggerLoadingAtom);
   const [beforePeriodBtn, setBeforePeriodBtn] = useAtom(beforePeriodBtnAtom);
-  const [categoryDataList, setCategoryDataList] = useAtom(categoryDataListAtom);
-  const [categoryData, setCategoryData] = useAtom(categoryDataAtom);
+  const [, setCategoryDataList] = useAtom(categoryDataListAtom);
+  const [, setCategoryData] = useAtom(categoryDataAtom);
   const [startingDate, setStartingDate] = useAtom(startingDateAtom);
-  const [endingDate, setEndingDate] = useAtom(endingDateAtom);
+  const [endingDate] = useAtom(endingDateAtom);
   const [typeSchedule, setTypeSchedule] = useAtom(typeScheduleAtom);
-  const [disabledDate, setDisabledDate] = useAtom(disabledDateAtom);
+  const [disabledDate] = useAtom(disabledDateAtom);
   const [branch, setBranch] = useAtom(branchAtom);
   const [customisedDay, setCustomisedDay] = useAtom(customisedDayAtom);
-  const [everyWeek, setEveryWeek] = useAtom(everyWeekAtom);
+  const [everyWeek] = useAtom(everyWeekAtom);
   const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
   const [category, setCategory] = useAtom(categoryAtom);
-  const [filteredCategoryData, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
-  const [targetAudience, setTargetAudience] = useAtom(targetAudienceAtom);
+  const [, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
+  const [targetAudience] = useAtom(targetAudienceAtom);
   const [created, setCreated] = useAtom(createdAtom);
   const [recap, setRecap] = useAtom(recapAtom);
   const [times, setTimes] = useAtom(timesAtom);
-  const [launchOrder, setLaunchOrder] = useAtom(launchOrderAtom);
-  const [stopOrder, setStopOrder] = useAtom(stopOrderAtom);
-  const [categorySearch, setCategorySearch] = useAtom(categorySearchAtom);
 
   const [smRule, setSmRule] = useAtom(smRuleAtom);
   const [steps, setSteps] = useAtom(stepsAtom);
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const [checked, setChecked] = useAtom(checkedAtom);
-  const [categoryLoading, setCategoryLoading] = useAtom(categoryLoadingAtom);
+  const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
 
   useEffect(() => {
     setPlatform([getActivePlatform()]);
-    setBranch(JSON.parse(JSON.stringify(vendors)));
+    setBranch({ ...vendors });
   }, [getActivePlatform, setBranch, setPlatform, vendors]);
 
   const { getHeatmap, triggerOffers, getMenu } = useApi();
@@ -125,14 +119,10 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     getDiscountMovType,
     getTargetAudience,
     getTypeSchedule,
-    disableWeekends,
   } = useMarketingSetup();
 
+  const [heatmapData, setHeatmapData] = useAtom(heatmapDataAtom);
   const [heatmapLoading, setHeatmapLoading] = useState(false);
-  const [heatmapData, setHeatmapData] = useState({
-    revenue: defaultHeatmapState,
-    orders: defaultHeatmapState,
-  });
   const [rangeColorIndices, setRangeColorIndices] = useState({
     revenue: defaultRangeColorIndices,
     orders: defaultRangeColorIndices,
@@ -141,7 +131,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const [revenueData, setRevenueData] = useState(null);
   const [ordersData, setOrdersData] = useState(null);
 
-  const setFreshStartingDate = () => {
+  const setFreshStartingDate = useCallback(() => {
     if (duration !== 'Starting Now') return;
 
     setStartingDate(new Date());
@@ -153,9 +143,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         pos: 1,
       },
     ]);
-  };
+  }, [duration, setEndTimeFormat, setStartTimeFormat, setStartingDate, setTimes, setTypeSchedule]);
 
-  const clearTimeSelected = () => {
+  const clearTimeSelected = useCallback(() => {
     const clonedheatmapData = { ...heatmapData };
 
     days.forEach((__, index) => {
@@ -173,7 +163,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     });
 
     setHeatmapData({ ...heatmapData, ...clonedheatmapData });
-  };
+  }, [days, heatmapData, setHeatmapData]);
 
   useEffect(() => {
     if (duration === 'Starting Now') {
@@ -190,7 +180,14 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       },
     ]);
     clearTimeSelected();
-  }, [duration]);
+  }, [
+    clearTimeSelected,
+    duration,
+    setFreshStartingDate,
+    setStartTimeFormat,
+    setTimes,
+    setTypeSchedule,
+  ]);
 
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
@@ -204,7 +201,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         pos: 1,
       },
     ]);
-  }, [typeSchedule]);
+  }, [setCustomisedDay, setEndTimeFormat, setStartTimeFormat, setTimes, typeSchedule]);
 
   const getMenuItem = () => {
     const arr = [];
@@ -251,7 +248,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         ] || [],
     });
     setMenu('Offer on the whole Menu');
-  }, [platform, vendors]);
+  }, [platform, setBranch, setMenu, vendors]);
 
   const getPlatformToken = () => {
     if (Object.keys(vendors.display).length > 0) {
@@ -351,7 +348,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     }
   };
 
-  const setHeatmapRangeFromState = () => {
+  const setHeatmapRangeFromState = useCallback(() => {
     setRangeColorIndices(() => {
       const heatmaRangePlatform = revenueData?.[platform[0]].ranges;
       const ordersRangePlatform = ordersData?.[platform[0]].ranges;
@@ -368,9 +365,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         orders: ordersRangePlatform,
       };
     });
-  };
+  }, [ordersData, platform, revenueData]);
 
-  const setHeatmatDataFromState = () => {
+  const setHeatmatDataFromState = useCallback(() => {
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
@@ -389,16 +386,23 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         orders: ordersDataPlatform,
       };
     });
-  };
+  }, [ordersData, platform, revenueData, setHeatmapData]);
 
   useEffect(() => {
     if (heatmapLoading) return;
 
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
-  }, [JSON.stringify(platform), revenueData, ordersData, heatmapLoading]);
+  }, [
+    platform,
+    revenueData,
+    ordersData,
+    heatmapLoading,
+    setHeatmatDataFromState,
+    setHeatmapRangeFromState,
+  ]);
 
-  const getHeatmapData = () => {
+  const getHeatmapData = useCallback(() => {
     setHeatmapLoading(true);
 
     const body = {
@@ -443,7 +447,15 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         setRevenueData(resRevenue.data);
       }
     );
-  };
+  }, [
+    beforePeriodBtn.endDate,
+    beforePeriodBtn.startDate,
+    getHeatmap,
+    setHeatmapData,
+    user.accessToken,
+    user.email,
+    vendorsObj,
+  ]);
 
   useEffect(() => {
     if (!vendorsObj) return;
@@ -451,73 +463,51 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (!active) return;
 
     getHeatmapData();
-  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj), active]);
+  }, [beforePeriodBtn, vendorsObj, active, getHeatmapData]);
 
-  const getPlatform = (e, radio) => {
-    const { value } = e.target;
+  const getMenuData = useCallback(
+    async (vendor, platforms) => {
+      try {
+        setCategoryLoading(true);
+        const res = await getMenu(
+          { master_email: user.email, access_token: user.accessToken, vendor },
+          platforms
+        );
 
-    if (radio) {
-      if (e.target.checked) {
-        setPlatform([value]);
-        return;
-      }
-    }
+        if (!res.data) {
+          throw new Error('');
+        }
+        if (res.data.menu_items === null) {
+          setCategory(null);
+          setCategoryLoading(false);
+        } else {
+          const resp = Object.keys(res.data.menu_items)
+            .map((v) => res.data.menu_items[v])
+            .map((k) => Object.keys(k).map((el) => k[el]))
+            .flat();
+          setCategory(resp);
+          setCategoryLoading(false);
+        }
 
-    if (e.target.checked) {
-      setPlatform([...platform, value]);
-      return;
-    }
-
-    if (!e.target.checked) {
-      platform.splice(
-        platform.findIndex((el) => el === value),
-        1
-      );
-    }
-
-    setPlatform([...platform]);
-  };
-
-  const onChange = (newValue, setDate) => {
-    setDate(newValue);
-    const date = document.querySelectorAll('.date-error');
-    const arr = [];
-    date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
-    setDisabledDate(arr.every((bool) => bool === false));
-  };
-
-  const getMenuData = async (vendor, platforms) => {
-    try {
-      setCategoryLoading(true);
-      const res = await getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor },
-        platforms
-      );
-
-      if (!res.data) {
-        throw new Error('');
-      }
-      if (res.data.menu_items === null) {
-        setCategory(null);
+        if (res.data.categories) {
+          setCategoryDataList(res.data.categories);
+        }
+      } catch (err) {
+        setCategory([]);
         setCategoryLoading(false);
-      } else {
-        const resp = Object.keys(res.data.menu_items)
-          .map((v) => res.data.menu_items[v])
-          .map((k) => Object.keys(k).map((el) => k[el]))
-          .flat();
-        setCategory(resp);
-        setCategoryLoading(false);
+        triggerAlertWithMessageError('Error while retrieving data');
       }
-
-      if (res.data.categories) {
-        setCategoryDataList(res.data.categories);
-      }
-    } catch (err) {
-      setCategory([]);
-      setCategoryLoading(false);
-      triggerAlertWithMessageError('Error while retrieving data');
-    }
-  };
+    },
+    [
+      getMenu,
+      setCategory,
+      setCategoryDataList,
+      setCategoryLoading,
+      triggerAlertWithMessageError,
+      user.accessToken,
+      user.email,
+    ]
+  );
 
   useEffect(() => {
     if (selected === 2) {
@@ -526,29 +516,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         getMenuData(vendorDisplay, platform[0]);
       }
     }
-  }, [platform, selected]);
-  
-  const handleCategoryDataChange = (e) => {
-    const { value } = e.target;
-    if (value.length > 0) {
-      const arr = value
-        .map((v) => category.filter((k) => k.category_name === v || k.category === v))
-        .flat();
-      if (categorySearch) {
-        const filtered = arr.filter((obj) =>
-          (obj.name || obj.item_name).toLowerCase().includes(categorySearch.toLowerCase())
-        );
-        setFilteredCategoryData(filtered);
-      } else {
-        setFilteredCategoryData(arr);
-      }
-    } else {
-      setFilteredCategoryData([]);
-    }
-    setCategoryData(value);
-  };
+  }, [branch, getMenuData, platform, selected, vendors.vendorsObj]);
 
-  const timeSelected = () => {
+  const timeSelected = useCallback(() => {
     if (duration !== 'Starting Now' && selected === 3) return;
 
     const typeObject = {
@@ -569,114 +539,149 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     );
 
     setHeatmapData({ ...heatmapData, [links]: response });
-  };
+  }, [
+    customisedDay,
+    duration,
+    endingDate,
+    everyWeek,
+    getTypeSchedule,
+    heatmapData,
+    links,
+    selected,
+    setHeatmapData,
+    startingDate,
+    times,
+    typeSchedule,
+  ]);
 
-  const getSteps = (stepsArr) => {
-    if (platform.length < 2) {
-      if (platform[0] === 'talabat') {
-        setSteps(stepsArr);
+  const getSteps = useCallback(
+    (stepsArr) => {
+      if (platform.length < 2) {
+        if (platform[0] === 'talabat') {
+          setSteps(stepsArr);
+        } else {
+          setSteps([...stepsArr, stepsArr.length]);
+        }
       } else {
         setSteps([...stepsArr, stepsArr.length]);
       }
-    } else {
-      setSteps([...stepsArr, stepsArr.length]);
-    }
-  };
+    },
+    [platform, setSteps]
+  );
 
-  const durationDisable = (n, stepsRange) => {
-    if (selected === n) {
-      clearTimeSelected();
-      timeSelected();
-      if (duration === 'Program the offer duration') {
-        getSteps([...stepsRange, stepsRange.length]);
-        setDisabled(!typeSchedule);
+  const durationDisable = useCallback(
+    (n, stepsRange) => {
+      if (selected === n) {
+        clearTimeSelected();
+        timeSelected();
+        if (duration === 'Program the offer duration') {
+          getSteps([...stepsRange, stepsRange.length]);
+          setDisabled(!typeSchedule);
+          return;
+        }
+        getSteps(stepsRange);
+        setDisabled(
+          !(
+            endingDate !== null &&
+            disabledDate &&
+            times.every(
+              (obj) =>
+                isValidDate(obj.endTime) &&
+                obj.startTime !== null &&
+                !Number.isNaN(new Date(obj.endTime).getTime())
+            )
+          )
+        );
         return;
       }
-      getSteps(stepsRange);
-      setDisabled(
-        !(
-          endingDate !== null &&
-          disabledDate &&
-          times.every(
-            (obj) =>
-              isValidDate(obj.endTime) &&
-              obj.startTime !== null &&
-              !Number.isNaN(new Date(obj.endTime).getTime())
-          )
-        )
-      );
-      return;
-    }
-    if (selected === n + 1) {
-      setDisabled(!targetAudience);
-    }
-    if (duration === 'Program the offer duration') {
       if (selected === n + 1) {
-        timeSelected();
-        if (typeSchedule === 'Same day every week') {
-          setDisabled(
-            !(
-              startingDate !== null &&
-              endingDate !== null &&
-              disabledDate &&
-              everyWeek &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                  isValidDate(obj.startTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.startTime).getTime())
-              )
-            )
-          );
-          return;
-        }
-        if (typeSchedule === 'Customised Days') {
-          setDisabled(
-            !(
-              startingDate !== null &&
-              endingDate !== null &&
-              disabledDate &&
-              customisedDay.length > 0 &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                  isValidDate(obj.startTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.startTime).getTime())
-              )
-            )
-          );
-          return;
-        }
-        if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
-          setDisabled(
-            !(
-              startingDate !== null &&
-              endingDate !== null &&
-              disabledDate &&
-              times.every(
-                (obj) =>
-                  isValidDate(obj.endTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                  isValidDate(obj.startTime) &&
-                  obj.startTime !== null &&
-                  !Number.isNaN(new Date(obj.startTime).getTime())
-              )
-            )
-          );
-        }
-      }
-      if (selected === n + 2) {
         setDisabled(!targetAudience);
       }
-    }
-  };
+      if (duration === 'Program the offer duration') {
+        if (selected === n + 1) {
+          timeSelected();
+          if (typeSchedule === 'Same day every week') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                everyWeek &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime())
+                )
+              )
+            );
+            return;
+          }
+          if (typeSchedule === 'Customised Days') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                customisedDay.length > 0 &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime())
+                )
+              )
+            );
+            return;
+          }
+          if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
+            setDisabled(
+              !(
+                startingDate !== null &&
+                endingDate !== null &&
+                disabledDate &&
+                times.every(
+                  (obj) =>
+                    isValidDate(obj.endTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                    isValidDate(obj.startTime) &&
+                    obj.startTime !== null &&
+                    !Number.isNaN(new Date(obj.startTime).getTime())
+                )
+              )
+            );
+          }
+        }
+        if (selected === n + 2) {
+          setDisabled(!targetAudience);
+        }
+      }
+    },
+    [
+      clearTimeSelected,
+      customisedDay.length,
+      disabledDate,
+      duration,
+      endingDate,
+      everyWeek,
+      getSteps,
+      isValidDate,
+      selected,
+      setDisabled,
+      startingDate,
+      targetAudience,
+      timeSelected,
+      times,
+      typeSchedule,
+    ]
+  );
 
   useEffect(() => {
     if (selected === 1) {
@@ -737,6 +742,15 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     checked,
     vendors,
     targetAudience,
+    getSteps,
+    setFilteredCategoryData,
+    setCategory,
+    setChecked,
+    setCategoryData,
+    setMenu,
+    setDisabled,
+    clearTimeSelected,
+    durationDisable,
   ]);
 
   const renderGradientValue = (v, i) => {
@@ -799,22 +813,22 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   useEffect(() => {
     setSelected(1);
     setRecap(false);
-  }, [active]);
+  }, [active, setRecap, setSelected]);
 
   useEffect(() => {
     setItemMenu('Flash Deal');
-  }, [menu]);
+  }, [menu, setItemMenu]);
 
   useEffect(() => {
     clearTimeSelected();
     if (selected >= 3) {
       timeSelected();
     }
-  }, [times, startingDate, endingDate, selected, typeSchedule]);
+  }, [times, startingDate, endingDate, selected, typeSchedule, clearTimeSelected, timeSelected]);
 
   useEffect(() => {
     setFreshStartingDate();
-  }, [recap]);
+  }, [recap, setFreshStartingDate]);
 
   const getItemMenuNamePrice = () => {
     const arr = [];
@@ -826,91 +840,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       );
     });
     return arr;
-  };
-
-  const progressData = {
-    selected,
-    getPlatform,
-    platform,
-    handleCategoryDataChange,
-    vendorsObj,
-    setBranch,
-    branch,
-    menu,
-    setMenu,
-    setDiscountPercentage,
-    discountPercentage,
-    setMinOrder,
-    minOrder,
-    itemMenu,
-    setItemMenu,
-    getDiscountMovType,
-    categoryData,
-    categoryDataList,
-    filteredCategoryData,
-    setFilteredCategoryData,
-    category,
-    setChecked,
-    checked,
-    duration,
-    setDuration,
-    endingDate,
-    onChange,
-    setEndingDate,
-    times,
-    setTimes,
-    typeSchedule,
-    setTypeSchedule,
-    targetAudience,
-    setTargetAudience,
-    setSteps,
-    setSelected,
-    setEveryWeek,
-    everyWeek,
-    days,
-    setCustomisedDay,
-    customisedDay,
-    disableWeekends,
-    startingDate,
-    setStartingDate,
-    setSmRule,
-    setHeatmapData,
-    heatmapData,
-    links,
-    categoryLoading,
-    categorySearch,
-    setCategorySearch,
-  };
-
-  const recapData = {
-    progressData,
-    smRule,
-    launchOrder,
-    setLaunchOrder,
-    setStopOrder,
-    stopOrder,
-    created,
-    closeSetup,
-    ads,
-    minOrder,
-    discountPercentage,
-    menu,
-    itemMenu,
-    recap,
-    steps,
-    selected,
-    getItemMenuNamePrice,
-    branch,
-    platform,
-    duration,
-    typeSchedule,
-    customisedDay,
-    everyWeek,
-    startingDate,
-    endingDate,
-    times,
-    targetAudience,
-    vendors,
   };
 
   const getRecapBtn = () => {
@@ -927,7 +856,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (recap) {
       setRecap(false);
       return;
-    } 
+    }
 
     if (smRule) {
       setSmRule(false);
@@ -1085,7 +1014,13 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       <PaperKit id='marketing-setup' className='marketing-paper'>
         <ContainerKit className='setup-container'>
           <div className='left-part'>
-            {triggerLoading ? null : <GetRecap recapData={recapData} />}
+            {triggerLoading ? null : (
+              <GetRecap
+                getItemMenuNamePrice={getItemMenuNamePrice}
+                closeSetup={closeSetup}
+                ads={ads}
+              />
+            )}
             {created ? (
               <div className='left-part-bottom'>
                 <ButtonKit onClick={() => closeSetup()} variant='outlined'>
