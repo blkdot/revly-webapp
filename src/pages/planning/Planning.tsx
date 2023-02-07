@@ -33,6 +33,7 @@ const Planning = () => {
   const [active, setActive] = useState(0);
   const { date } = useDate();
   const [vendors] = useAtom(vendorsAtom);
+
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));

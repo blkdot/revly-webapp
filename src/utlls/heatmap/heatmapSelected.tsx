@@ -122,8 +122,7 @@ const typeMono = (dateRange, times, data) => {
 
   const indexDayEnd = getDay(new Date(endDate));
 
-  if (diff === 0)
-    return setSideBySideDayTimeRange(data, indexDayStart, indexDayEnd, times);
+  if (diff === 0) return setSideBySideDayTimeRange(data, indexDayStart, indexDayEnd, times);
 
   if (diff === 6) {
     const { startTime, endTime } = times;
