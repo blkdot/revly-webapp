@@ -349,6 +349,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
       </div>
     );
   }
+
   const selectedVendors = () => {
     const arr = [];
     Object.keys(branch.display).forEach((cName) => {
@@ -360,6 +361,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
     });
     return arr;
   };
+
   if (recap) {
     const recapChainObj = JSON.parse(JSON.stringify(branch.chainObj));
     Object.keys(recapChainObj).forEach((cName) => {
@@ -367,6 +369,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
         delete recapChainObj[cName];
       }
     });
+
     return (
       <div>
         <div className='left-part-top'>
@@ -552,6 +555,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
       </div>
     );
   }
+
   return (
     <div>
       <div className='left-part-top'>

@@ -195,7 +195,9 @@ const CompetitionAlerts = () => {
         v.platform === platform &&
         (v.metadata.is_active === 'True' || v.metadata.is_active === true)
     );
-    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });
+
+    // TODO: fix the type here
+    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } as any});
   }, [platform]);
 
   const handleCompetitorChange = (e) => {

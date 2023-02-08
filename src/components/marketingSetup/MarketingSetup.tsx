@@ -158,7 +158,7 @@ const MarketingSetup: React.FC<{
 
   const [checked, setChecked] = useAtom(checkedAtom);
   const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
-  const { vendors, selectedVendors } = useVendors(undefined);
+  const { vendors, selectedVendors } = useVendors();
   const { vendorsObj } = vendors;
 
   useEffect(() => {

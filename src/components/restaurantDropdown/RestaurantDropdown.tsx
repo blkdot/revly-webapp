@@ -157,7 +157,7 @@ const RestaurantDropdown: FC<{
           <div className={`dropdown-paper ${pageType === 'cost' ? 'cost' : ''}`}>
             {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
               <div className='selected-chains'>
-                <p>Selected: {selectedVendors('name').length}</p>
+                <p>Selected: {selectedVendors('name')?.length}</p>
                 <ButtonKit disabled={false} onClick={selectAll} variant='contained'>
                   Select All
                 </ButtonKit>
