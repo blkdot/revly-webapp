@@ -1,4 +1,5 @@
 import { useAtom } from 'jotai';
+import { parseISO, format } from 'date-fns';
 import { TableCellKit, TooltipKit } from 'kits';
 import arrow from '../../../assets/images/arrow.png';
 import { platformList, platformObject } from '../../../data/platformList';
@@ -10,7 +11,7 @@ const useTableContentFormatter = () => {
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
-      key={`${h.id}}`}
+      key={h.id}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
@@ -22,11 +23,45 @@ const useTableContentFormatter = () => {
   const renderIsoDate = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
-      key={`${h.id}}`}
+      key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
-      <span style={{ textAlign: 'justify' }} key={h.id}>
+      <span style={{ textAlign: 'justify' }}>
         {r[h.id] === null ? '-' : r[h.id]?.replace('T', ' ')?.toLocaleString('en-US')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderIsoDateOnly = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={`${h.id}_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }}>
+        {r[h.id] === null ? '-' : <>{format(parseISO(r[h.id]), 'Y-MM-dd')}</>}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderIsoStartTimeOnlyFromDate = (r, h, i = 0) => (
+    <TableCellKit
+      key={`start_hour_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }}>
+        {r.start_date === null ? '-' : <>{format(parseISO(r.start_date), 'HH:mm')}</>}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderIsoEndTimeOnlyFromDate = (r, h, i = 0) => (
+    <TableCellKit
+      key={`end_hour_${r.id}`}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }}>
+        {r.end_date === null ? '-' : <>{format(parseISO(r.end_date), 'HH:mm')}</>}
       </span>
     </TableCellKit>
   );
@@ -46,7 +81,7 @@ const useTableContentFormatter = () => {
   const renderTimeSlot = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
-      key={`${h.id}}`}
+      key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
@@ -280,6 +315,7 @@ const useTableContentFormatter = () => {
       </div>
     </TableCellKit>
   );
+
   const renderBranchStatusRow = (r, h, i = 0) => (
     <TableCellKit
       style={{ paddingLeft: 0, textAlign: 'left', cursor: 'pointer' }}
@@ -292,6 +328,7 @@ const useTableContentFormatter = () => {
       </div>
     </TableCellKit>
   );
+
   return {
     renderTarget,
     renderScheduleType,
@@ -311,6 +348,9 @@ const useTableContentFormatter = () => {
     renderVendorId,
     renderTimeSlot,
     renderIsoDate,
+    renderIsoDateOnly,
+    renderIsoStartTimeOnlyFromDate,
+    renderIsoEndTimeOnlyFromDate,
   };
 };
 
