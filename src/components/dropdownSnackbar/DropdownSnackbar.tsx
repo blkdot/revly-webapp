@@ -1,9 +1,9 @@
-import { useEffect, useState, FC } from 'react';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, TextfieldKit } from 'kits';
-import { vendorsAtom } from '../../../store/vendorsAtom';
+import { FC, useEffect, useState } from 'react';
+import { vendorsAtom } from '../../store/vendorsAtom';
 
 const DropdownSnackbar: FC<{
   onAdd: any;
