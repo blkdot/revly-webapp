@@ -26,7 +26,7 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
-      <span style={{ textAlign: 'justify' }} key={h.id}>
+      <span style={{ textAlign: 'justify' }}>
         {r[h.id] === null ? '-' : r[h.id]?.replace('T', ' ')?.toLocaleString('en-US')}
       </span>
     </TableCellKit>
@@ -38,7 +38,7 @@ const useTableContentFormatter = () => {
       key={`${h.id}_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
-      <span style={{ textAlign: 'justify' }} key={h.id}>
+      <span style={{ textAlign: 'justify' }}>
         {r[h.id] === null ? '-' : <>{format(parseISO(r[h.id]), 'Y-MM-dd')}</>}
       </span>
     </TableCellKit>
@@ -46,11 +46,10 @@ const useTableContentFormatter = () => {
 
   const renderIsoStartTimeOnlyFromDate = (r, h, i = 0) => (
     <TableCellKit
-      id={`end_date_${i}`}
-      key={`start_date_${r.id}`}
+      key={`start_hour_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
-      <span style={{ textAlign: 'justify' }} key={h.id}>
+      <span style={{ textAlign: 'justify' }}>
         {r.start_date === null ? '-' : <>{format(parseISO(r.start_date), 'HH:mm')}</>}
       </span>
     </TableCellKit>
@@ -58,11 +57,10 @@ const useTableContentFormatter = () => {
 
   const renderIsoEndTimeOnlyFromDate = (r, h, i = 0) => (
     <TableCellKit
-      id={`end_date_${i}`}
-      key={`end_date_${r.id}`}
+      key={`end_hour_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
-      <span style={{ textAlign: 'justify' }} key={h.id}>
+      <span style={{ textAlign: 'justify' }}>
         {r.end_date === null ? '-' : <>{format(parseISO(r.end_date), 'HH:mm')}</>}
       </span>
     </TableCellKit>
@@ -317,6 +315,7 @@ const useTableContentFormatter = () => {
       </div>
     </TableCellKit>
   );
+
   const renderBranchStatusRow = (r, h, i = 0) => (
     <TableCellKit
       style={{ paddingLeft: 0, textAlign: 'left', cursor: 'pointer' }}
@@ -329,6 +328,7 @@ const useTableContentFormatter = () => {
       </div>
     </TableCellKit>
   );
+
   return {
     renderTarget,
     renderScheduleType,

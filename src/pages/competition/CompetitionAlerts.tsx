@@ -156,7 +156,7 @@ const CompetitionAlerts = () => {
             start_hour: v.start_hour,
             end_hour: v.end_hour,
             status: v.status,
-            id: v.vendor_id,
+            id: v.alert_id,
           }))
           .sort((a, b) => a.status - b.status);
         setCompetitionAlertsData(filt || []);
