@@ -11,7 +11,6 @@ import {
   TextfieldKit,
   TypographyKit,
 } from 'kits';
-import useVendors from 'hooks/useVendors';
 import { useEffect, useState } from 'react';
 import { sendMail } from '../../api/competitionApi';
 import { settingsLoad } from '../../api/settingsApi';
@@ -38,9 +37,7 @@ const Competitor = ({ open, opened, platformList }) => {
   const { user } = useUserAuth();
   const { showAlert, setAlertMessage } = useAlert();
   const [userRestoName, setUserRestoName] = useState('');
-  const { vendors } = useVendors();
-  const { vendorsObj } = vendors;
-  console.log(vendorsObj);
+
   const getUserData = async () => {
     try {
       const data = await settingsLoad({
