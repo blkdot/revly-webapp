@@ -279,7 +279,7 @@ const useTableContentFormatter = () => {
     const getPlatform = (plat) => platformList.find((obj) => obj.name === plat.toLowerCase());
     return (
       <TableCellKit
-        style={{ paddingLeft: 0, cursor: 'pointer' }}
+        style={{ paddingLeft: 0, cursor: 'pointer', textAlign: 'left' }}
         id={`${h.id}_${i}`}
         key={`${h.id}_${r.id}`}
       >

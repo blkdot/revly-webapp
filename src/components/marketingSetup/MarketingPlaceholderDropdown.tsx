@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { FormControlKit, MenuItemKit, OutlinedInputKit, SelectKit } from 'kits';
 
@@ -21,15 +22,15 @@ function getStyles(name, personName, theme) {
   };
 }
 
-const MarketingPlaceholderDropdown = ({
-  setPersonName,
-  personName,
-  title,
-  names,
-  className,
-  readOnly,
-  handleChange,
-}: any) => {
+const MarketingPlaceholderDropdown: FC<{
+  setPersonName?: any;
+  personName?: any;
+  title?: any;
+  names?: any;
+  className?: any;
+  readOnly?: any;
+  handleChange?: any;
+}> = ({ setPersonName, personName, title, names, className, readOnly, handleChange }) => {
   const theme = useTheme();
 
   const handleChangeValue = (event) => {
@@ -64,5 +65,13 @@ const MarketingPlaceholderDropdown = ({
     </div>
   );
 };
-
+MarketingPlaceholderDropdown.defaultProps = {
+  setPersonName: null,
+  personName: null,
+  title: '',
+  names: null,
+  className: '',
+  readOnly: false,
+  handleChange: null,
+};
 export default MarketingPlaceholderDropdown;

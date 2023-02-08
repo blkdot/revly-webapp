@@ -32,55 +32,36 @@ function usePlanningAds({ dateRange }) {
         // here we checking is it newAdsArray is not empty
         if (newAdsArray.length > 0) {
           // here we checking is it display is not empty
-          if (Object.keys(display).length > 0) {
-            newAdsArray.forEach((obj, index) => {
-              Object.keys(display).forEach((chainName) => {
-                Object.keys(display[chainName]).forEach((vendorName) => {
-                  obj?.vendor_ids?.forEach((id) => {
-                    // here we put chainName to key chain_name (chain_name: chainName)
-                    newAdsArray[index].chain_name = chainName;
-                    // check is it id equal display id
-                    if (id === display[chainName][vendorName][obj.platform].vendor_id) {
-                      // check is it vendor_names is not empty empty
-                      if ((newAdsArray[index].vendor_names || []).length > 0) {
-                        // we take the curennt value and push new value
-                        newAdsArray[index].vendor_names = [
-                          ...newAdsArray[index].vendor_names,
-                          vendorName,
-                        ];
-                      } else {
-                        // we just put the new value
-                        newAdsArray[index].vendor_names = [vendorName];
-                      }
-                    }
-                  });
-                });
-              });
-            });
-          } else {
-            newAdsArray.forEach((obj, index) => {
-              vendorsArr.forEach((objVendor) => {
+          newAdsArray.forEach((obj, index) => {
+            Object.keys(display).forEach((chainName) => {
+              Object.keys(display[chainName]).forEach((vendorName) => {
                 obj?.vendor_ids?.forEach((id) => {
-                  // check is it id equal venodorArr id
-                  if (id === objVendor.vendor_id) {
-                    // here we put chainName to key chain_name (chain_name: chainName)
-                    newAdsArray[index].chain_name = objVendor.data.chain_name;
+                  // here we put chainName to key chain_name (chain_name: chainName)
+                  newAdsArray[index].chain_name = chainName;
+                  // check is it id equal display id
+                  if (
+                    id ===
+                    display[chainName][vendorName].platforms[obj.platform.toLowerCase()]?.vendor_id
+                  ) {
                     // check is it vendor_names is not empty empty
-                    if ((obj?.vendor_names || []).length > 0) {
+                    if ((newAdsArray[index].vendor_names || []).length > 0) {
                       // we take the curennt value and push new value
                       newAdsArray[index].vendor_names = [
                         ...newAdsArray[index].vendor_names,
-                        objVendor.data.vendor_name,
+                        vendorName,
                       ];
                     } else {
                       // we just put the new value
-                      newAdsArray[index].vendor_names = [objVendor.data.vendor_name];
+                      newAdsArray[index].vendor_names = [vendorName];
                     }
                   }
                 });
               });
             });
-          }
+            if ((newAdsArray[index].vendor_names || []).length === 0) {
+              newAdsArray.splice(index, 1);
+            }
+          });
         }
         setAds(newAdsArray || []);
         setIsLoading(false);

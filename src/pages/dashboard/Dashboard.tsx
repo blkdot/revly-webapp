@@ -1,3 +1,4 @@
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -16,8 +17,6 @@ import Finance from '../../components/finance/Finance';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import Marketing from '../../components/marketing/Marketing';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import Table from '../../components/table/Table';
 import TableEmpty from '../../components/table/TableEmpty';
 import { vendorsAtom } from '../../store/vendorsAtom';
@@ -26,7 +25,7 @@ import './Dashboard.scss';
 const Dashboard = () => {
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
   const [vendors] = useAtom(vendorsAtom);
-  const { chainObj, vendorsObj, display, vendorsSelected, vendorsArr } = vendors;
+  const { chainObj, display, vendorsSelected, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
 
   const getTitle = (title) => {
@@ -105,16 +104,7 @@ const Dashboard = () => {
     if (!userPlatformData.onboarded) {
       return <RestaurantDropdownEmpty />;
     }
-    if (Object.keys(display).length > 0) {
-      return <RestaurantDropdownNew chainObj={chainObj} />;
-    }
-    return (
-      <RestaurantDropdownOld
-        vendorsSelected={vendorsSelected}
-        vendors={vendorsArr}
-        vendorsPlatform={Object.keys(vendorsObj)}
-      />
-    );
+    return <RestaurantDropdown />;
   };
   return (
     <div className='wrapper'>

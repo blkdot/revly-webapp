@@ -122,7 +122,6 @@ const GetRecap = ({ recapData }) => {
                         title='<'
                         setPersonName={setLaunchOrder}
                         personName={obj.arrow}
-                        rowArr={launchOrder}
                         handleChange={(e) => handleChange(e, 'arrow', index, 'launch')}
                       />
                       <TextfieldKit
@@ -325,6 +324,17 @@ const GetRecap = ({ recapData }) => {
       </div>
     );
   }
+  const selectedVendors = () => {
+    const arr = [];
+    Object.keys(branch.display).forEach((cName) => {
+      Object.keys(branch.display[cName]).forEach((vName) => {
+        if (branch.display[cName][vName].checked) {
+          arr.push(vName);
+        }
+      });
+    });
+    return arr;
+  };
   if (recap) {
     const recapChainObj = JSON.parse(JSON.stringify(branch.chainObj));
     Object.keys(recapChainObj).forEach((cName) => {
@@ -350,20 +360,7 @@ const GetRecap = ({ recapData }) => {
         <BoxKit className='left-part-radio recap-left-part recap-left-part-inside'>
           <div>
             <img width={35} height={35} src={selectIcon} alt='select' />
-            {Object.keys(branch.display).length > 0 ? (
-              Object.keys(recapChainObj).map((cName, index) => {
-                if (Object.keys(recapChainObj[cName]).length > 0) {
-                  if (index === Object.keys(recapChainObj).length - 1) {
-                    return <div key={cName}>{cName}</div>;
-                  }
-
-                  return <div key={cName}>{`${cName}, `}</div>;
-                }
-                return '';
-              })
-            ) : (
-              <div>{branch.vendorsSelected.map((obj) => obj.data.vendor_name).join(', ')}</div>
-            )}
+            {selectedVendors().join(', ')}
           </div>
           <div>
             <p>Platforms:</p>

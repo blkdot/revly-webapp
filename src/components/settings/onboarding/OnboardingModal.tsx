@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { saveUser } from 'api/userApi';
 import { useUserAuth } from 'contexts';
 import { useAlert, useApi } from 'hooks';
 import { useState } from 'react';
@@ -9,7 +10,7 @@ import ManageBranch from './onboardingModal/ManageBranch';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
-const OnboardingModal = ({ propsVariables }) => {
+const OnboardingModal = ({ propsVariables }: any) => {
   const {
     openCloseModal,
     openedModal,
@@ -19,6 +20,9 @@ const OnboardingModal = ({ propsVariables }) => {
     setConnectAccount,
     accounts,
     setAccounts,
+    branchData,
+    setBranchData,
+    vendors,
   } = propsVariables;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -53,7 +57,7 @@ const OnboardingModal = ({ propsVariables }) => {
         branch_name: { title: obj.vendor_name, address: '' },
         accounts: [email],
         linked_platforms: [{ platform: connect, status: 'active' }],
-        branch_status: 'active',
+        branch_status: 'in process',
         id: obj.vendor_id,
       }))
     );
@@ -65,30 +69,86 @@ const OnboardingModal = ({ propsVariables }) => {
       email: clickedEmail,
       data: { is_deleted: true },
     });
-    if (accounts.length === 1) {
-      await settingsOnboardPlatformStatus(
-        {
-          master_email: user.email,
-          access_token: user.accessToken,
-          email: clickedEmail,
-          active_status: false,
-        },
-        platform
-      );
-    }
     accounts.splice(
       accounts.findIndex((obj) => obj.email === clickedEmail),
       1
     );
+    setBranchData(
+      branchData.filter((obj) => obj.accounts.some((objAcc) => objAcc !== clickedEmail))
+    );
     setAccounts([...accounts]);
   };
+
+  const changeStatusAccount = async (obj: any) => {
+    const vendorsBranch = () => {
+      const arr = [];
+      Object.keys(vendors.display).forEach((cName) => {
+        Object.keys(vendors.display[cName]).forEach((vName) => {
+          if (vendors.display[cName][vName].platforms[obj.platform]?.email === obj.email) {
+            arr.push(vendors.display[cName][vName].platforms[obj.platform]);
+          }
+        });
+      });
+      return arr;
+    };
+    await saveUser({
+      access_token: user.accessToken,
+      vendors: { [obj.platform]: vendorsBranch() },
+      data: { is_active: !obj.active },
+    });
+
+    await settingsOnboardPlatformStatus(
+      {
+        master_email: user.email,
+        access_token: user.accessToken,
+        email: obj.email,
+        active_status: !obj.active,
+      },
+      obj.platform
+    );
+    accounts.find((objAcc) => objAcc.email === obj.email).active = !obj.active;
+    setAccounts([...accounts]);
+    setBranchData(
+      branchData.map((objB) => {
+        const linked_platforms = [...objB.linked_platforms];
+        if (objB.accounts.find((emailAcc: string) => emailAcc === obj.email)) {
+          if (!obj.active) {
+            linked_platforms.find((objLink) => objLink.platform === obj.platform).status =
+              'suspended';
+            if (objB.linked_platforms.every((objLink) => objLink.status !== 'active')) {
+              return { ...objB, branch_status: 'suspended', linked_platforms };
+            }
+            if (objB.linked_platforms.length === 1) {
+              return { ...objB, branch_status: 'suspended', linked_platforms };
+            }
+            return { ...objB, linked_platforms };
+          }
+          linked_platforms.find((objLink) => objLink.platform === obj.platform).status = 'active';
+          if (objB.linked_platforms.length > 1) {
+            return { ...objB, branch_status: 'active', linked_platforms };
+          }
+          return { ...objB, branch_status: 'in process', linked_platforms };
+        }
+        return objB;
+      })
+    );
+  };
   const connectAccountModalObject = {
-    manageAccount: <ManageAccount propsVariables={{ ...propsVariables, deleteAccount }} />,
-    manageBranch: <ManageBranch propsVariables={propsVariables} />,
+    manageAccount: (
+      <ManageAccount propsVariables={{ ...propsVariables, deleteAccount, changeStatusAccount }} />
+    ),
+    manageBranch: <ManageBranch propsVariables={{ ...propsVariables }} />,
     completed: <UploadingCompleted propsVariables={propsVariables} />,
     active: (
       <UploadingActive
-        propsVariables={{ ...propsVariables, email, setEmail, setPassword, password }}
+        propsVariables={{
+          ...propsVariables,
+          email,
+          setEmail,
+          setPassword,
+          password,
+          deleteAccount,
+        }}
       />
     ),
     platform: (
@@ -104,7 +164,9 @@ const OnboardingModal = ({ propsVariables }) => {
         }}
       />
     ),
-    account: <ConnectAccount propsVariables={{ ...propsVariables, deleteAccount }} />,
+    account: (
+      <ConnectAccount propsVariables={{ ...propsVariables, deleteAccount, changeStatusAccount }} />
+    ),
   };
   return (
     <div

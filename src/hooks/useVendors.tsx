@@ -45,6 +45,12 @@ export type TVendorsArr = {
 export type TChainVendor = {
   [x: string]: {
     [x: string]: {
+      deleted: boolean;
+      platforms: any;
+      email: string;
+      access_token: string;
+      access_token_bis: string;
+      checked: boolean;
       meta: { prefix_vendor_id: string };
       vendor_id: string;
       chain_id: string;
@@ -132,59 +138,71 @@ const useVendors = (isSign = false) => {
         })
       );
     const { ...rest } = newData;
-    const display = newData.display ? newData.display : {};
-    delete rest.display;
-    const vendorsObj = {};
-    const chainObj = JSON.parse(JSON.stringify(display));
-    Object.keys(chainObj).forEach((chainName) => {
-      Object.keys(chainObj[chainName]).forEach((vendorName) => {
-        Object.keys(chainObj[chainName][vendorName]).forEach((platform) => {
-          chainObj[chainName][vendorName][platform] = {
-            ...chainObj[chainName][vendorName][platform],
-            active: userPlatformData.platforms[platform].length,
-          };
+
+    const display = newData.display ? { ...newData.display } : {};
+
+    Object.keys(rest).forEach((platform) => {
+      if (!userPlatformData.platforms[platform]?.some((obj) => obj.active)) {
+        delete rest[platform];
+      }
+    });
+    Object.keys(display).forEach((chainName) => {
+      Object.keys(display[chainName]).forEach((vendorName) => {
+        Object.keys(display[chainName][vendorName].platforms).forEach((platform) => {
+          const platformObj = display[chainName][vendorName].platforms[platform];
+          const userPlatform =
+            userPlatformData.platforms[platform].find((obj) =>
+              obj.vendor_ids.some((id: string) => id === platformObj.vendor_id)
+            ) || {};
+          display[chainName][vendorName].email = userPlatform.email;
+          display[chainName][vendorName].platforms[platform].email = userPlatform.email;
+          display[chainName][vendorName].platforms[platform].access_token =
+            userPlatform.access_token;
+          display[chainName][vendorName].platforms[platform].access_token_bis =
+            userPlatform.access_token_bis;
           if (
-            chainObj[chainName][vendorName][platform] === null ||
-            !chainObj[chainName][vendorName][platform].vendor_id
+            platformObj.metadata.is_active === 'True' ||
+            platformObj.metadata.is_active === true
           ) {
-            delete chainObj[chainName][vendorName][platform];
-          }
-          if (chainObj[chainName][vendorName][platform] !== null) {
-            if ((vendorsObj[platform] || []).length === 0) {
-              if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
-                vendorsObj[platform] = [chainObj[chainName][vendorName][platform]];
-              }
-            } else if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
-              vendorsObj[platform] = [
-                ...vendorsObj[platform],
-                chainObj[chainName][vendorName][platform],
-              ];
-            }
+            display[chainName][vendorName].checked = true;
+            display[chainName][vendorName].active = true;
+          } else {
+            display[chainName][vendorName].checked = false;
+            display[chainName][vendorName].active = false;
           }
         });
       });
     });
-    Object.keys(rest).forEach((platform) => {
-      if (!userPlatformData.platforms[platform].some((obj) => obj.active)) {
-        delete rest[platform];
-      }
-    });
+
     const dataV = {
       vendorsSelected: vendorsSelectedTemp,
       vendorsArr: vendorsTemp,
-      vendorsObj: Object.keys(display).length > 0 ? vendorsObj : rest,
-      display: chainObj,
-      chainObj,
+      vendorsObj: rest,
+      display,
+      chainObj: { ...display },
     };
     setVendors(dataV);
-    Object.keys(display).forEach((key) => {
-      delete display[key];
-    });
     vendorsTemp = [];
     vendorsSelectedTemp = [];
   }, [data]);
-
-  return { vendors, setVendors };
+  const selectedVendors = (name: string, plat?: string) => {
+    const arr = [];
+    Object.keys(vendors.display).forEach((cName) => {
+      Object.keys(vendors.display[cName]).forEach((vName) => {
+        if (vendors.display[cName][vName].checked) {
+          if (name === 'name') {
+            arr.push(vName);
+          } else if (name === 'full') {
+            arr.push(vendors.display[cName][vName].platforms[plat]);
+          } else {
+            arr.push(vendors.display[cName][vName]);
+          }
+        }
+      });
+    });
+    return arr;
+  };
+  return { vendors, setVendors, selectedVendors };
 };
 
 export default useVendors;

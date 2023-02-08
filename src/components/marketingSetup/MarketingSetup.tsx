@@ -2,7 +2,7 @@ import { Tooltip } from '@mui/material';
 import { useUserAuth } from 'contexts';
 import { addDays, addHours, addMinutes, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform } from 'hooks';
+import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -78,6 +78,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
   const [vendors] = useAtom(vendorsAtom);
+  const { selectedVendors } = useVendors(undefined);
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
@@ -291,45 +292,54 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   };
 
   useEffect(() => {
-    const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
-    const newVendorsObj = { talabat: [], deliveroo: [] };
-    Object.keys(newChainObj).forEach((chainName, index) => {
-      Object.keys(newChainObj[chainName]).forEach((vendorName) => {
-        if (index !== 0) {
-          delete newChainObj[chainName][vendorName];
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
+    Object.keys(displayTemp).forEach((chainName) => {
+      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+        displayTemp[chainName][vendorName].checked = false;
+        if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
+          displayTemp[chainName][vendorName].deleted = true;
         } else {
-          platform.forEach((p) => {
-            newVendorsObj[p]?.push(newChainObj[chainName][vendorName][p]);
+          Object.keys(displayTemp[chainName][vendorName].platforms).forEach((platformV) => {
+            if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
+              displayTemp[chainName][vendorName].deleted = true;
+            }
           });
         }
       });
     });
+
+    Object.keys(displayTemp)
+      .filter((cName) =>
+        Object.keys(displayTemp[cName]).every(
+          (vName) => !(displayTemp[cName][vName].deleted || false)
+        )
+      )
+      .forEach((chainName, indexC) => {
+        Object.keys(displayTemp[chainName]).forEach((vendorName, indexV) => {
+          if (indexC === 0 && indexV === 0) {
+            displayTemp[chainName][vendorName].checked = true;
+            Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
+              if (platform.length > 1) {
+                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
+              } else if (platform[0] === plat) {
+                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
+              } else {
+                delete vendorsObjTemp[plat];
+              }
+            });
+          } else {
+            displayTemp[chainName][vendorName].checked = false;
+          }
+        });
+      });
     setBranch({
       ...vendors,
-      vendorsObj: newVendorsObj,
-      chainObj: newChainObj,
-      vendorsSelected:
-        [
-          vendors.vendorsArr.filter((v) =>
-            platform.find(
-              (p) =>
-                v.platform === p &&
-                (v.metadata.is_active === 'True' || v.metadata.is_active === true)
-            )
-          )[0],
-        ] || [],
+      display: displayTemp,
+      vendorsObj: vendorsObjTemp,
     });
     setMenu('Offer on the whole Menu');
   }, [platform, vendors]);
-  const getPlatformToken = () => {
-    if (Object.keys(vendors.display).length > 0) {
-      return (
-        userPlatformData.platforms[platform[0]].access_token ??
-        userPlatformData.platforms[platform[0]].access_token_bis
-      );
-    }
-    return branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis;
-  };
   const handleSchedule = async () => {
     let isStartingFromZero = true;
     if (duration === 'Starting Now') {
@@ -338,7 +348,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     }
 
     const menuType =
-      menu === 'Offer on the whole Menu' || platform[0] === 'talabat'
+      menu === 'Offer on the whole Menu'
         ? null
         : { menu_items: getMenuItem(), theme: getDiscountMovType('type') };
 
@@ -354,7 +364,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
       master_email: user.email,
       access_token: user.accessToken,
-      platform_token: getPlatformToken(),
+      platform_token: '',
       vendors: [{}],
       chain_id: '',
     };
@@ -364,8 +374,11 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         setTriggerLoading(true);
         const res = await triggerOffers(platform[0], {
           ...dataReq,
-          vendors: branch.vendorsSelected,
-          chain_id: String(branch.vendorsSelected[0].chain_id),
+          vendors: selectedVendors('full', platform[0]),
+          chain_id: String(selectedVendors('full', platform[0])[0].chain_id),
+          platform_token:
+            selectedVendors('full', platform[0])[0].access_token ??
+            selectedVendors('full', platform[0])[0].access_token_bis,
         });
 
         if (res instanceof Error) {
@@ -379,13 +392,14 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       } else {
         const crossPlatform = platform.map(async (p) => {
           setTriggerLoading(true);
-          const newBranchData = branch.vendorsObj[p][0];
-          const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
-          delete clonedVendor.platform;
 
           return triggerOffers(p, {
             ...dataReq,
-            vendors: [clonedVendor],
+            vendors: selectedVendors('full', p),
+            chain_id: String(selectedVendors('full', p)[0].chain_id),
+            platform_token:
+              selectedVendors('full', p)[0].access_token ??
+              selectedVendors('full', p)[0].access_token_bis,
           });
         });
 
@@ -516,24 +530,21 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     getHeatmapData();
   }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj), active]);
 
-  const getPlatform = (e, radio) => {
+  const getPlatform = (e) => {
     const { value } = e.target;
-    if (radio) {
-      if (e.target.checked) {
-        setPlatform([value]);
-        return;
+    if (platform.length > 1) {
+      if (!e.target.checked) {
+        platform.splice(
+          platform.findIndex((el) => el === value),
+          1
+        );
       }
     }
     if (e.target.checked) {
       setPlatform([...platform, value]);
       return;
     }
-    if (!e.target.checked) {
-      platform.splice(
-        platform.findIndex((el) => el === value),
-        1
-      );
-    }
+
     setPlatform([...platform]);
   };
 
@@ -573,14 +584,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       if (res.data.categories) {
         setCategoryDataList(res.data.categories);
       }
-
-      // const resp = Object.keys(res.data.menu_items)
-      //   .map((v) => res.data.menu_items[v])
-      //   .map((k) => Object.keys(k).map((el) => k[el]))
-      //   .flat();
-      //   console.log(resp);
-      // setCategoryDataList(res.data.categories);
-      // setCategory(resp);
     } catch (err) {
       setCategory([]);
       setCategoryLoading(false);

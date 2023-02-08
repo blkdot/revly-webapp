@@ -1,7 +1,11 @@
+import { settingsOnboarded } from 'api/settingsApi';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
-import { useState } from 'react';
+import { useUserAuth } from 'contexts';
+import { usePlatform } from 'hooks';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Dates from '../../components/dates/Dates';
 import FinanceEmpty from '../../components/finance/FinanceEmpty';
 import MarketingEmpty from '../../components/marketing/MarketingEmpty';
@@ -46,6 +50,26 @@ const DashboardOnboard = () => {
     connectAccount,
     setConnectAccount,
   };
+  const { user } = useUserAuth();
+  const { userPlatformData, setUserPlatformData } = usePlatform();
+  const onboard = async () => {
+    const res = await settingsOnboarded({
+      master_email: user.email,
+      access_token: user.accessToken,
+    });
+
+    setUserPlatformData({
+      onboarded: res.onboarded,
+      platforms: { ...userPlatformData.platforms, ...res.platforms },
+    });
+  };
+  const navigate = useNavigate();
+  useEffect(() => {
+    onboard();
+    if (userPlatformData.onboarded) {
+      navigate('/dashboard');
+    }
+  }, [branchData]);
   return (
     <div className='wrapper'>
       <div className='top-inputs'>

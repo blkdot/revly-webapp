@@ -70,12 +70,11 @@ const MarketingCheckmarksDropdown = ({
               info={display[el]}
               chainName={el}
               handleChangeVendor={handleChangeVendor}
-              chainObj={chainObj}
               index={index}
               setVendors={setName}
               vendors={personName}
               display={display}
-              listing
+              pageType='listing'
             />
           ))}
         </div>

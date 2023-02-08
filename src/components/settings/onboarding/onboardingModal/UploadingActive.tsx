@@ -1,10 +1,28 @@
 import { useAlert, useApi } from 'hooks';
+import { FC } from 'react';
+import { ButtonKit } from 'kits';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import { useUserAuth } from '../../../../contexts/AuthContext';
-import ButtonKit from '../../../../kits/button/ButtonKit';
 
-const UploadingActive = ({ propsVariables }) => {
+const UploadingActive: FC<{
+  propsVariables: {
+    branchDataUploading: any;
+    setBranchDataUploading: any;
+    setEmail: any;
+    setPassword: any;
+    setBranchData: any;
+    openCloseModal: any;
+    setAccounts: any;
+    accounts: any;
+    branchData: any;
+    connect: any;
+    email: any;
+    setConnectAccount: any;
+    setActiveStep: any;
+    deleteAccount: any;
+  };
+}> = ({ propsVariables }) => {
   const {
     branchDataUploading,
     setBranchDataUploading,
@@ -19,6 +37,7 @@ const UploadingActive = ({ propsVariables }) => {
     email,
     setConnectAccount,
     setActiveStep,
+    deleteAccount,
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { settingsOnboardPlatformStatus } = useApi();
@@ -38,12 +57,13 @@ const UploadingActive = ({ propsVariables }) => {
       triggerAlertWithMessageError(res.message);
       return;
     }
+
     setActiveStep(100);
     setConnectAccount('completed');
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    setBranchData([...branchData, ...branchDataUploading]);
+    setBranchData([...branchDataUploading, ...branchData]);
   };
   return (
     <div
@@ -85,6 +105,7 @@ const UploadingActive = ({ propsVariables }) => {
           onClick={() => {
             setConnectAccount('platform');
             setBranchDataUploading([]);
+            deleteAccount(connect, email);
           }}
           variant='contained'
         >
