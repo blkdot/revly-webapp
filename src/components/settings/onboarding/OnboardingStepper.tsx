@@ -1,7 +1,7 @@
 import { styled } from '@mui/system';
 import { usePlatform } from 'hooks';
 import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { Link } from 'react-router-dom';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.png';
 import ClockIcon from '../../../assets/images/clock-settings_ic.png';
@@ -43,8 +43,11 @@ const ColorlibStepIcon = (props: any) => {
     </ColorlibStepIconRoot>
   );
 };
-
-const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
+const OnboardingStepper: FC<{
+  openCloseModal: any;
+  activeStep: number;
+  accounts: any;
+}> = ({ openCloseModal, activeStep, accounts }) => {
   const { userPlatformData } = usePlatform();
   const [active, setActive] = useState(!userPlatformData.onboarded);
   const steps = [
@@ -74,7 +77,7 @@ const OnboardingStepper = ({ openCloseModal, activeStep, accounts }) => {
     if (activeStep < 100 && index === 0) {
       return (
         <ButtonKit
-          onClick={openCloseModal}
+          onClick={(e) => openCloseModal(e)}
           className='settings-onboarding-btn connect'
           variant='contained'
         >

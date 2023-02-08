@@ -12,6 +12,7 @@
     padding: 32px;
     border-radius: 8px;
     width: 100%;
+    background-color: #fff;
 
     .billing__card-title {
       color: $color-second-third;
@@ -126,13 +127,20 @@
   align-items: flex-end;
   grid-gap: 15px;
   width: 60%;
+
+  .snackbar-dropdown p {
+    font-size: 14px;
+    font-weight: 500;
+  }
   .restaurant-dropdown_wrapper {
     width: 50% !important;
+
     > div:nth-of-type(1) {
       border-radius: 5px;
       background-color: #fff;
     }
   }
+
   .snackbar-procent {
     label {
       top: -6px;

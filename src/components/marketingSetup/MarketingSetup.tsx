@@ -124,7 +124,7 @@ const MarketingSetup: React.FC<{
   // eslint-disable-next-line react/require-default-props
   ads?: boolean;
 }> = ({ active, setActive, ads }) => {
-  const { getActivePlatform, userPlatformData } = usePlatform();
+  const { getActivePlatform } = usePlatform();
 
   const [platform, setPlatform] = useAtom(platformAtom);
   const [selected, setSelected] = useAtom(selectedAtom);
@@ -158,7 +158,7 @@ const MarketingSetup: React.FC<{
 
   const [checked, setChecked] = useAtom(checkedAtom);
   const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
-  const { vendors } = useVendors();
+  const { vendors, selectedVendors } = useVendors(undefined);
   const { vendorsObj } = vendors;
 
   useEffect(() => {
@@ -247,36 +247,51 @@ const MarketingSetup: React.FC<{
   }, [typeSchedule]);
 
   useEffect(() => {
-    const newChainObj = { ...vendors.chainObj };
-    const newVendorsObj = { talabat: [], deliveroo: [] };
-
-    Object.keys(newChainObj).forEach((chainName, index) => {
-      Object.keys(newChainObj[chainName]).forEach((vendorName) => {
-        if (index !== 0) {
-          delete newChainObj[chainName][vendorName];
-          return;
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
+    Object.keys(displayTemp).forEach((chainName) => {
+      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+        displayTemp[chainName][vendorName].checked = false;
+        if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
+          displayTemp[chainName][vendorName].deleted = true;
+        } else {
+          Object.keys(displayTemp[chainName][vendorName].platforms).forEach((platformV) => {
+            if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
+              displayTemp[chainName][vendorName].deleted = true;
+            }
+          });
         }
-
-        platform.forEach((p) => {
-          newVendorsObj[p]?.push(newChainObj[chainName][vendorName][p]);
-        });
       });
     });
 
+    Object.keys(displayTemp)
+      .filter((cName) =>
+        Object.keys(displayTemp[cName]).every(
+          (vName) => !(displayTemp[cName][vName].deleted || false)
+        )
+      )
+      .forEach((chainName, indexC) => {
+        Object.keys(displayTemp[chainName]).forEach((vendorName, indexV) => {
+          if (indexC === 0 && indexV === 0) {
+            displayTemp[chainName][vendorName].checked = true;
+            Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
+              if (platform.length > 1) {
+                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
+              } else if (platform[0] === plat) {
+                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
+              } else {
+                delete vendorsObjTemp[plat];
+              }
+            });
+          } else {
+            displayTemp[chainName][vendorName].checked = false;
+          }
+        });
+      });
     setBranch({
       ...vendors,
-      vendorsObj: newVendorsObj,
-      chainObj: newChainObj,
-      vendorsSelected:
-        [
-          vendors.vendorsArr.filter((v) =>
-            platform.find(
-              (p) =>
-                v.platform === p &&
-                (v.metadata.is_active === 'True' || v.metadata.is_active === true)
-            )
-          )[0],
-        ] || [],
+      display: displayTemp,
+      vendorsObj: vendorsObjTemp,
     });
     setMenu('Offer on the whole Menu');
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -290,7 +305,7 @@ const MarketingSetup: React.FC<{
     }
 
     const menuType =
-      menu === 'Offer on the whole Menu' || platform[0] === 'talabat'
+      menu === 'Offer on the whole Menu'
         ? null
         : { menu_items: getMenuItem(category, checked), theme: getDiscountMovType('type') };
 
@@ -306,19 +321,21 @@ const MarketingSetup: React.FC<{
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
       master_email: user.email,
       access_token: user.accessToken,
+      platform_token: '',
       vendors: [{}],
       chain_id: '',
     };
 
     try {
       if (platform.length < 2) {
-        console.log(branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis);
         setTriggerLoading(true);
         const res = await triggerOffers(platform[0], {
           ...dataReq,
-          vendors: branch.vendorsSelected,
-          chain_id: String(branch.vendorsSelected[0].chain_id),
-          platform_token: branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis,
+          vendors: selectedVendors('full', platform[0]),
+          chain_id: String(selectedVendors('full', platform[0])[0].chain_id),
+          platform_token:
+            selectedVendors('full', platform[0])[0].access_token ??
+            selectedVendors('full', platform[0])[0].access_token_bis,
         });
 
         if (res instanceof Error) {
@@ -332,14 +349,14 @@ const MarketingSetup: React.FC<{
       } else {
         const crossPlatform = platform.map(async (p) => {
           setTriggerLoading(true);
-          const newBranchData = branch.vendorsObj[p][0];
-          const clonedVendor = JSON.parse(JSON.stringify(newBranchData || {}));
-          delete clonedVendor.platform;
 
           return triggerOffers(p, {
             ...dataReq,
-            vendors: [clonedVendor],
-            platform_token: branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis,
+            vendors: selectedVendors('full', p),
+            chain_id: String(selectedVendors('full', p)[0].chain_id),
+            platform_token:
+              selectedVendors('full', p)[0].access_token ??
+              selectedVendors('full', p)[0].access_token_bis,
           });
         });
 
@@ -389,7 +406,6 @@ const MarketingSetup: React.FC<{
 
   const setHeatmatDataFromState = () => {
     setHeatmapData(() => {
-      console.log(platform);
       if (!revenueData || !ordersData) return null;
 
       const heatmaDataPlatform = { ...revenueData?.[platform[0]].heatmap };

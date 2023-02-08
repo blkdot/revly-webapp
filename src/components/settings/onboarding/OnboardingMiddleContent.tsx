@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import { ButtonKit } from 'kits';
 import OnboardingDropdown from './OnboardingDropdown';
 import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
 
-const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
+const OnboardingMiddleContent: FC<{
+  branchData: any;
+  openCloseModal: any;
+  accounts: any;
+  setConnectAccount: any;
+}> = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
   const [kitchen, setKitchen] = useState('');
   return (
     <div className='settings-onboarding-middle_content'>
@@ -41,7 +46,11 @@ const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConn
         ) : (
           ''
         )}
-        <ButtonKit onClick={openCloseModal} className='settings-onboarding-btn' variant='contained'>
+        <ButtonKit
+          onClick={(e) => openCloseModal(e)}
+          className='settings-onboarding-btn'
+          variant='contained'
+        >
           <img src={plus} alt='plus' />
           add new account
         </ButtonKit>

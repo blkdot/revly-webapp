@@ -1,26 +1,22 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ButtonKit, CheckboxKit, InputLabelKit, RadioKit, TooltipKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { ButtonKit, CheckboxKit, InputLabelKit, MenuItemKit, RadioKit, TooltipKit } from 'kits';
+import { useEffect, useState, FC } from 'react';
 import selectIcon from '../../assets/images/ic_select.png';
+import deliveroo from '../../assets/images/deliveroo-favicon.webp';
+import talabat from '../../assets/images/talabat-favicon.png';
 
-const RestaurantCheckboxAccordion = ({
-  info,
-  chainName,
-  handleChange,
-  handleChangeVendor,
-  chainObj,
-  branch,
-  cost,
-  index,
-  setVendors,
-  vendors,
-  display,
-  listing,
-}: any) => {
+const RestaurantCheckboxAccordion: FC<{
+  info: object;
+  chainName: string;
+  handleChangeVendor: any;
+  index: string | number;
+  setVendors: any;
+  vendors: any;
+  display: any;
+  pageType: string;
+}> = ({ info, chainName, handleChangeVendor, index, setVendors, vendors, display, pageType }) => {
   const [active, setActive] = useState(false);
   // we checking if all vendor in this chain are checked
-  const getChecked = () =>
-    Object.values(chainObj[chainName] || {}).length === Object.values(info).length;
   const compareSize = () => {
     // get 1 element of .chain-name
     const textElementChain = document.querySelectorAll('.chain-name')[index];
@@ -55,85 +51,29 @@ const RestaurantCheckboxAccordion = ({
   const [hoverStatusChain, setHoverChain] = useState(false);
   const [hoverStatusVendor, setHoverVendor] = useState([]);
   const getHoverStatusVendor = (vName) => hoverStatusVendor.find((v) => v === vName);
-  // function for chain button "Only"
-  const handleClick = (e) => {
-    e.stopPropagation();
-    const vendorsObjTemp = { talabat: [], deliveroo: [] };
-    Object.keys(display[chainName]).forEach((vName) => {
-      Object.keys(display[chainName][vName]).forEach((p) => {
-        vendorsObjTemp[p].push(display[chainName][vName][p]);
-      });
-    });
-    Object.keys(vendorsObjTemp).forEach((p) => {
-      if (vendorsObjTemp[p].length === 0) {
-        delete vendorsObjTemp[p];
-      }
-    });
-    setVendors({
-      ...vendors,
-      chainObj: { [chainName]: display[chainName] },
-      vendorsObj: vendorsObjTemp,
-    });
-  };
   // function for vendor button "Only"
   const handleClickVendor = (e, vendorName) => {
     e.stopPropagation();
-    const chainObjTemp = { [chainName]: { [vendorName]: { ...display[chainName][vendorName] } } };
-    const vendorsObjTemp = {};
-    Object.keys(display[chainName][vendorName]).forEach((p) => {
-      vendorsObjTemp[p] = [display[chainName][vendorName][p]];
-    });
-    setVendors({
-      ...vendors,
-      chainObj: chainObjTemp,
-      vendorsObj: vendorsObjTemp,
-    });
-  };
-  const getVendorDisabled = (vendorName) => {
-    if (Object.keys(chainObj).length === 1) {
-      return (
-        Object.keys(chainObj[chainName] || {})[0] === vendorName &&
-        Object.keys(chainObj[chainName] || {}).length === 1
-      );
-    }
-    return false;
-  };
-  const getDisabledChain = () => {
-    const arrBool = [];
-    Object.keys(info).forEach((vName) => {
-      Object.keys(info[vName]).forEach((platform) => {
-        if (info[vName][platform].active) {
-          arrBool.push(true);
-        } else {
-          arrBool.push(false);
-        }
+    const displayTemp = JSON.parse(JSON.stringify(display));
+    Object.keys(displayTemp).forEach((cName) => {
+      Object.keys(displayTemp[cName]).forEach((vName) => {
+        displayTemp[cName][vName].checked = false;
       });
     });
-    return arrBool.some((bool) => bool);
-  };
-  const getInActiveVendor = (vendorName) => {
-    const arrBool = [];
-    Object.keys(info[vendorName]).forEach((platform) => {
-      if (info[vendorName][platform].active) {
-        arrBool.push(true);
-      } else {
-        arrBool.push(false);
-      }
-    });
-    return arrBool.some((bool) => bool);
+    displayTemp[chainName][vendorName].checked = true;
+    setVendors({ ...vendors, display: displayTemp });
   };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
-      {!listing ? (
+      {Object.values(info).every((objV: any) => !objV.is_matched) ? (
+        ''
+      ) : (
         <div
           tabIndex={-1}
           role='presentation'
-          className={`checkbox-accordion ${!getDisabledChain() ? 'disabled' : ''} ${
-            active ? 'active' : ''
-          }`}
+          style={{ '--length': Object.keys(info).length } as React.CSSProperties}
+          className={`checkbox-accordion ${false ? 'disabled' : ''} ${active ? 'active' : ''}`}
           onClick={() => setActive(!active)}
-          // TODO: FIX IT
-          // style={{ '--l': Object.keys(info).length }}
         >
           <div>
             <img
@@ -151,17 +91,7 @@ const RestaurantCheckboxAccordion = ({
                 alignItems: 'center',
               }}
             >
-              {!cost ? (
-                <CheckboxKit
-                  disabled={!getDisabledChain()}
-                  checked={getChecked()}
-                  onClick={(e) => e.stopPropagation()}
-                  value={chainName}
-                  onChange={(e) => handleChange(e.target.value, e.target.checked)}
-                />
-              ) : (
-                <span style={{ height: 40 }} />
-              )}
+              <span style={{ height: 40 }} />
               <TooltipKit
                 id='category-tooltip'
                 interactive={1}
@@ -173,93 +103,100 @@ const RestaurantCheckboxAccordion = ({
             </div>
           </div>
           <ExpandMoreIcon style={{ cursor: 'pointer' }} />
-          {!(branch || cost || listing) ? (
-            <div className='only-button'>
-              <ButtonKit
-                disabled={
-                  (Object.keys(chainObj)[0] === chainName &&
-                    Object.keys(chainObj).length === 1 &&
-                    Object.keys(chainObj[chainName]).length ===
-                      Object.keys(display[chainName]).length) ||
-                  !getDisabledChain()
-                }
-                onClick={handleClick}
-                variant='contained'
-              >
-                Only
-              </ButtonKit>
-            </div>
-          ) : (
-            ''
-          )}
         </div>
-      ) : (
-        ''
       )}
-      {Object.keys(info).map((vendorName) => (
-        <InputLabelKit
-          disabled={!getInActiveVendor(vendorName)}
-          key={vendorName}
-          className={`accordion-dropdown ${active ? 'active' : ''} ${
-            listing ? 'active listing' : ''
-          } `}
-        >
-          <div>
-            {listing ? (
-              <RadioKit
-                disabled={
-                  branch
-                    ? !(
-                        Object.keys(chainObj?.[chainName] || {}).length > 0 ||
-                        info[vendorName].active
-                      )
-                    : !getInActiveVendor(vendorName)
-                }
-                checked={!!chainObj?.[chainName]?.[vendorName]}
-                onChange={(e) => handleChangeVendor(e, chainName)}
-                value={vendorName}
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : (
-              <CheckboxKit
-                disabled={
-                  branch
-                    ? !(
-                        Object.keys(chainObj?.[chainName] || {}).length > 0 ||
-                        info[vendorName].active
-                      )
-                    : !getInActiveVendor(vendorName)
-                }
-                checked={!!chainObj?.[chainName]?.[vendorName]}
-                onChange={(e) => handleChangeVendor(e, chainName)}
-                value={vendorName}
-                onClick={(e) => e.stopPropagation()}
-              />
-            )}
-            <TooltipKit
-              id='category-tooltip'
-              interactive={1}
-              disableHoverListener={!getHoverStatusVendor(vendorName)}
-              title={vendorName}
-            >
-              <p className='vendor-name'>{vendorName}</p>
-            </TooltipKit>
-            {!(branch || cost || listing || !getInActiveVendor(vendorName)) ? (
+      {Object.keys(info).map((vendorName) => {
+        if (vendorName === 'checked' || vendorName === 'active' || info[vendorName].deleted) {
+          return '';
+        }
+        if (Object.values(info).every((objV: any) => !objV.is_matched)) {
+          return (
+            <div className='vendors-only' key={vendorName}>
+              <MenuItemKit disabled={!info[vendorName].active}>
+                <img className='restaurant-img' src={talabat} alt='talabat' />
+                {pageType === 'listing' ? (
+                  <RadioKit
+                    value={vendorName}
+                    onChange={({ target }) => handleChangeVendor(target, chainName)}
+                    checked={info[vendorName].checked}
+                  />
+                ) : (
+                  <CheckboxKit
+                    value={vendorName}
+                    onChange={({ target }) => handleChangeVendor(target, chainName)}
+                    checked={info[vendorName].checked}
+                  />
+                )}
+                <TooltipKit
+                  onClick={(e) => e.stopPropagation()}
+                  interactive={1}
+                  disableHoverListener={!getHoverStatusVendor(vendorName)}
+                  id='category-tooltip'
+                  title={vendorName}
+                >
+                  <div role='presentation' tabIndex={-1} className='tooltip-vendor'>
+                    {vendorName}
+                  </div>
+                </TooltipKit>
+                <div
+                  role='presentation'
+                  tabIndex={-1}
+                  onClick={(e) => e.stopPropagation()}
+                  className='only-button'
+                >
+                  <ButtonKit onClick={(e) => handleClickVendor(e, vendorName)} variant='contained'>
+                    Only
+                  </ButtonKit>
+                </div>
+              </MenuItemKit>
+            </div>
+          );
+        }
+        return (
+          <InputLabelKit
+            disabled={!info[vendorName].active}
+            key={vendorName}
+            className={`accordion-dropdown ${active ? 'active' : ''} `}
+          >
+            <div>
+              {pageType === 'listing' ? (
+                <RadioKit
+                  disabled={!info[vendorName].active}
+                  checked={info[vendorName].checked}
+                  onChange={({ target }) => handleChangeVendor(target, chainName)}
+                  value={vendorName}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              ) : (
+                <CheckboxKit
+                  disabled={!info[vendorName].active}
+                  checked={info[vendorName].checked}
+                  onChange={({ target }) => handleChangeVendor(target, chainName)}
+                  value={vendorName}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              )}
+              <TooltipKit
+                id='category-tooltip'
+                interactive={1}
+                disableHoverListener={!getHoverStatusVendor(vendorName)}
+                title={vendorName}
+              >
+                <p className='vendor-name'>{vendorName}</p>
+              </TooltipKit>
               <div className='only-button vendor'>
                 <ButtonKit
-                  disabled={getVendorDisabled(vendorName)}
+                  disabled={!info[vendorName].active}
                   onClick={(e) => handleClickVendor(e, vendorName)}
                   variant='contained'
                 >
                   Only
                 </ButtonKit>
               </div>
-            ) : (
-              ''
-            )}
-          </div>
-        </InputLabelKit>
-      ))}
+            </div>
+          </InputLabelKit>
+        );
+      })}
     </div>
   );
 };

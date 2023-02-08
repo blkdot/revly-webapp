@@ -1,6 +1,5 @@
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
-import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { TVendors } from 'hooks/useVendors';
 import { platformList } from 'data/platformList';
 import { usePlatform } from 'hooks';
@@ -40,7 +39,6 @@ export const PlatformStep: FC<{
               <MarketingRadio
                 onChange={getPlatform}
                 state={platform}
-                checkbox={Object.keys(branch.display).length > 0}
                 key={p.name}
                 className={p.name}
                 icon={p.src}
@@ -49,24 +47,12 @@ export const PlatformStep: FC<{
             ))}
         </RadioGroupKit>
       </div>
-      {Object.keys(branch.display).length > 0 ? (
-        <RestaurantDropdownNew
-          platforms={platform}
-          chainObj={branch.chainObj}
-          branch
-          setState={setBranch}
-          state={branch}
-        />
-      ) : (
-        <RestaurantDropdownOld
-          vendorsSelected={branch.vendorsSelected}
-          vendors={branch.vendorsArr.filter((v) => platform.find((p) => v.platform === p))}
-          setState={setBranch}
-          state={branch}
-          branch
-          className='offer-setup-dropdown'
-        />
-      )}
+      <RestaurantDropdown
+        className='offer-setup-dropdown'
+        pageType='branch'
+        setState={setBranch}
+        state={branch}
+      />
     </div>
   );
 };

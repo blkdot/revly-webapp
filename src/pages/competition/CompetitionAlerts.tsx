@@ -4,6 +4,7 @@ import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -11,8 +12,6 @@ import ictalabat from '../../assets/images/talabat-favicon.png';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import Competitor from '../../components/competitor/Competitor';
 import Dates from '../../components/dates/Dates';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { vendorsAtom } from '../../store/vendorsAtom';
@@ -226,15 +225,7 @@ const CompetitionAlerts = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        {Object.keys(display).length > 0 ? (
-          <RestaurantDropdownNew chainObj={chainObj} />
-        ) : (
-          <RestaurantDropdownOld
-            vendorsSelected={vendorsSelected}
-            vendors={vendorsArr}
-            vendorsPlatform={Object.keys(vendorsObj)}
-          />
-        )}
+        <RestaurantDropdown />
         <Dates
           defaultTypeDate='day'
           defaultTitle='today'
