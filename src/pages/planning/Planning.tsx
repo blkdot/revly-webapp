@@ -28,8 +28,8 @@ const defaultFilterStateFormat = {
 };
 
 const Planning = () => {
-  const [dateSaved, setDateSaved] = useQueryState('date') as any;
-  const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
+  const [dateSaved, setDateSaved] = useQueryState('date');
+  const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const [active, setActive] = useState(0);
   const { date } = useDate();
   const [vendors] = useAtom(vendorsAtom);
@@ -46,14 +46,14 @@ const Planning = () => {
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: getOfferDate(),
-    ...JSON.parse((dateSaved || '{}') as any),
+    ...JSON.parse(dateSaved || '{}'),
   });
   const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
     ...defaultFilterStateFormat,
-    ...JSON.parse((filtersSaved || '{}') as any),
+    ...JSON.parse(filtersSaved || '{}'),
   });
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
@@ -132,7 +132,7 @@ const Planning = () => {
       {}
     );
 
-  const renderRowsByHeaderAds = (r) =>
+  const renderRowsByHeaderAds = (r: Record<string, never>) =>
     headersAds.reduce(
       (acc, cur) => ({
         ...acc,
@@ -142,9 +142,11 @@ const Planning = () => {
       }),
       {}
     );
+
   const [opened, setOpened] = useState(false);
   const [clickedId, setClickedId] = useState('');
-  const handleRowClick = (id) => {
+
+  const handleRowClick = (id: string) => {
     setOpened(true);
     setClickedId(id);
   };
@@ -173,7 +175,7 @@ const Planning = () => {
 
   const CloseFilterPopup = (cancel = false) => {
     if (cancel) {
-      setFilters(JSON.parse(filtersSaved as string));
+      setFilters(JSON.parse(filtersSaved));
     }
 
     const body = document.querySelector('body');
@@ -186,6 +188,23 @@ const Planning = () => {
 
     return source.length < 1;
   };
+
+  const renderStatusFilter = (s: string) => {
+    if (!s) return null;
+
+    return (
+      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${s}`}>
+        {s}
+      </span>
+    );
+  };
+
+  const renderPlatformInsideFilter = (s: string) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
 
   useEffect(() => {
     const source = active ? ads : offers;
@@ -230,31 +249,17 @@ const Planning = () => {
 
     setFilters(clonedFilters);
 
-    const renderStatusFilter = (s) => {
-      if (!s) return null;
-
-      return (
-        <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${s}`}>
-          {s}
-        </span>
-      );
-    };
-
-    const renderPlatformInsideFilter = (s) => (
-      <div key={s}>
-        <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
-        <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
-      </div>
-    );
-
-    const preHeadPlatform = preHead.platform.map((s) => ({
+    const preHeadPlatform = preHead.platform.map((s: string) => ({
       value: s.toLowerCase(),
       text: renderPlatformInsideFilter(s.toLowerCase()),
     }));
 
-    const preHeadTypeOffer = preHead.type_offer.map((s) => ({ value: s, text: s }));
-    const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
+    const preHeadTypeOffer = preHead.type_offer.map((s: string) => ({ value: s, text: s }));
+    const preHeadProcent = preHead.discount_rate.map((s: string) => ({ value: s, text: `${s} %` }));
+    const preHeadStatus = preHead.status.map((s: string) => ({
+      value: s,
+      text: renderStatusFilter(s),
+    }));
 
     setFiltersHead({
       platform: preHeadPlatform,
@@ -264,10 +269,10 @@ const Planning = () => {
     });
   }, [ads, offers, active, JSON.stringify(dateRange)]);
 
-  const handleChangeMultipleFilter = (k) => (v) => {
+  const handleChangeMultipleFilter = (k: string) => (v: string) => {
     const propertyFilter = filters[k];
 
-    const index = propertyFilter.findIndex((p) => p === v);
+    const index = propertyFilter.findIndex((p: string) => p === v);
 
     if (index < 0) {
       setFilters({ ...filters, [k]: [...propertyFilter, v] });
@@ -309,8 +314,7 @@ const Planning = () => {
     if (opened) {
       return (
         <OfferDetailComponent
-          // eslint-disable-next-line eqeqeq
-          data={offers.find((o) => o.master_offer_id == clickedId)}
+          data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
           setOpened={setOpened}
         />
       );

@@ -6,7 +6,7 @@ const { apiUrl, firebaseApiUrl } = config;
 
 export const getAlerts = (body, platform) =>
   axios
-    .post(`${apiUrl}/competition/alert/${platform}`, body)
+    .post(`${apiUrl}/competition/alertsv2/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
 
