@@ -17,6 +17,9 @@ export const PlatformStep: FC<{
   platform: any;
 }> = ({ index, branch, getPlatform, setBranch, platform }) => {
   const { userPlatformData } = usePlatform();
+  
+  if (!branch || Object.keys(branch).length < 1) return null;
+
   return (
     <div className='left-part-middle'>
       <TypographyKit variant='h6'>{index}. Select platform and branches</TypographyKit>
@@ -37,9 +40,7 @@ export const PlatformStep: FC<{
               <MarketingRadio
                 onChange={getPlatform}
                 state={platform}
-                checkbox={
-                  branch && branch?.display ? Object.keys(branch.display).length > 0 : false
-                }
+                checkbox={Object.keys(branch.display).length > 0}
                 key={p.name}
                 className={p.name}
                 icon={p.src}

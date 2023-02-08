@@ -1,8 +1,7 @@
 import { Tooltip } from '@mui/material';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
-import { vendorsAtom } from 'store/vendorsAtom';
-import { useAlert, useApi, usePlatform, useMarketingSetup } from 'hooks';
+import { useAlert, useApi, usePlatform, useMarketingSetup, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -16,7 +15,7 @@ import {
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   platformAtom,
   selectedAtom,
@@ -65,6 +64,30 @@ const defaultRangeColorIndices = [0, 0, 0, 0];
 const ItemHeatmap = React.forwardRef((props: any, ref: any) => <div {...props} ref={ref} />);
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+const getMenuItem = (category, checked) => {
+  const arr = [];
+  category.forEach((obj) =>
+    checked.forEach((c) => {
+      if (obj.name || obj.item_name === c) {
+        arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
+      }
+    })
+  );
+  return arr;
+};
+
+const getItemMenuNamePrice = (checked, category) => {
+  const arr = [];
+  checked.forEach((c) => {
+    category.forEach((obj) =>
+      obj.name === c || obj.item_name === c
+        ? arr.push({ name: obj.name || obj.item_name, price: obj.price || obj.unit_price })
+        : false
+    );
+  });
+  return arr;
+};
+
 const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { getActivePlatform, userPlatformData } = usePlatform();
 
@@ -100,7 +123,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
   const [checked, setChecked] = useAtom(checkedAtom);
   const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
-  const [vendors] = useAtom(vendorsAtom);
+  const { vendors } = useVendors();
   const { vendorsObj } = vendors;
 
   useEffect(() => {
@@ -131,7 +154,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const [revenueData, setRevenueData] = useState(null);
   const [ordersData, setOrdersData] = useState(null);
 
-  const setFreshStartingDate = useCallback(() => {
+  const setFreshStartingDate = () => {
     if (duration !== 'Starting Now') return;
 
     setStartingDate(new Date());
@@ -143,9 +166,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         pos: 1,
       },
     ]);
-  }, [duration, setEndTimeFormat, setStartTimeFormat, setStartingDate, setTimes, setTypeSchedule]);
+  };
 
-  const clearTimeSelected = useCallback(() => {
+  const clearTimeSelected = () => {
     const clonedheatmapData = { ...heatmapData };
 
     days.forEach((__, index) => {
@@ -163,7 +186,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     });
 
     setHeatmapData({ ...heatmapData, ...clonedheatmapData });
-  }, [days, heatmapData, setHeatmapData]);
+  };
 
   useEffect(() => {
     if (duration === 'Starting Now') {
@@ -180,14 +203,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       },
     ]);
     clearTimeSelected();
-  }, [
-    clearTimeSelected,
-    duration,
-    setFreshStartingDate,
-    setStartTimeFormat,
-    setTimes,
-    setTypeSchedule,
-  ]);
+  }, [duration]);
 
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
@@ -201,19 +217,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         pos: 1,
       },
     ]);
-  }, [setCustomisedDay, setEndTimeFormat, setStartTimeFormat, setTimes, typeSchedule]);
-
-  const getMenuItem = () => {
-    const arr = [];
-    category.forEach((obj) =>
-      checked.forEach((c) => {
-        if (obj.name || obj.item_name === c) {
-          arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
-        }
-      })
-    );
-    return arr;
-  };
+  }, [typeSchedule]);
 
   useEffect(() => {
     const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
@@ -248,7 +252,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         ] || [],
     });
     setMenu('Offer on the whole Menu');
-  }, [platform, setBranch, setMenu, vendors]);
+  }, [platform, vendors]);
 
   const getPlatformToken = () => {
     if (Object.keys(vendors.display).length > 0) {
@@ -274,7 +278,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     const menuType =
       menu === 'Offer on the whole Menu' || platform[0] === 'talabat'
         ? null
-        : { menu_items: getMenuItem(), theme: getDiscountMovType('type') };
+        : { menu_items: getMenuItem(category, checked), theme: getDiscountMovType('type') };
 
     const dataReq = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
@@ -348,7 +352,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     }
   };
 
-  const setHeatmapRangeFromState = useCallback(() => {
+  const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
       const heatmaRangePlatform = revenueData?.[platform[0]].ranges;
       const ordersRangePlatform = ordersData?.[platform[0]].ranges;
@@ -365,9 +369,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         orders: ordersRangePlatform,
       };
     });
-  }, [ordersData, platform, revenueData]);
+  };
 
-  const setHeatmatDataFromState = useCallback(() => {
+  const setHeatmatDataFromState = () => {
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
@@ -386,23 +390,16 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         orders: ordersDataPlatform,
       };
     });
-  }, [ordersData, platform, revenueData, setHeatmapData]);
+  };
 
   useEffect(() => {
     if (heatmapLoading) return;
 
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
-  }, [
-    platform,
-    revenueData,
-    ordersData,
-    heatmapLoading,
-    setHeatmatDataFromState,
-    setHeatmapRangeFromState,
-  ]);
+  }, [platform, revenueData, ordersData, heatmapLoading]);
 
-  const getHeatmapData = useCallback(() => {
+  const getHeatmapData = () => {
     setHeatmapLoading(true);
 
     const body = {
@@ -447,15 +444,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         setRevenueData(resRevenue.data);
       }
     );
-  }, [
-    beforePeriodBtn.endDate,
-    beforePeriodBtn.startDate,
-    getHeatmap,
-    setHeatmapData,
-    user.accessToken,
-    user.email,
-    vendorsObj,
-  ]);
+  };
 
   useEffect(() => {
     if (!vendorsObj) return;
@@ -463,51 +452,40 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (!active) return;
 
     getHeatmapData();
-  }, [beforePeriodBtn, vendorsObj, active, getHeatmapData]);
+  }, [beforePeriodBtn, vendorsObj, active]);
 
-  const getMenuData = useCallback(
-    async (vendor, platforms) => {
-      try {
-        setCategoryLoading(true);
-        const res = await getMenu(
-          { master_email: user.email, access_token: user.accessToken, vendor },
-          platforms
-        );
+  const getMenuData = async (vendor, platforms) => {
+    try {
+      setCategoryLoading(true);
+      const res = await getMenu(
+        { master_email: user.email, access_token: user.accessToken, vendor },
+        platforms
+      );
 
-        if (!res.data) {
-          throw new Error('');
-        }
-        if (res.data.menu_items === null) {
-          setCategory(null);
-          setCategoryLoading(false);
-        } else {
-          const resp = Object.keys(res.data.menu_items)
-            .map((v) => res.data.menu_items[v])
-            .map((k) => Object.keys(k).map((el) => k[el]))
-            .flat();
-          setCategory(resp);
-          setCategoryLoading(false);
-        }
-
-        if (res.data.categories) {
-          setCategoryDataList(res.data.categories);
-        }
-      } catch (err) {
-        setCategory([]);
-        setCategoryLoading(false);
-        triggerAlertWithMessageError('Error while retrieving data');
+      if (!res.data) {
+        throw new Error('');
       }
-    },
-    [
-      getMenu,
-      setCategory,
-      setCategoryDataList,
-      setCategoryLoading,
-      triggerAlertWithMessageError,
-      user.accessToken,
-      user.email,
-    ]
-  );
+      if (res.data.menu_items === null) {
+        setCategory(null);
+        setCategoryLoading(false);
+      } else {
+        const resp = Object.keys(res.data.menu_items)
+          .map((v) => res.data.menu_items[v])
+          .map((k) => Object.keys(k).map((el) => k[el]))
+          .flat();
+        setCategory(resp);
+        setCategoryLoading(false);
+      }
+
+      if (res.data.categories) {
+        setCategoryDataList(res.data.categories);
+      }
+    } catch (err) {
+      setCategory([]);
+      setCategoryLoading(false);
+      triggerAlertWithMessageError('Error while retrieving data');
+    }
+  };
 
   useEffect(() => {
     if (selected === 2) {
@@ -516,9 +494,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         getMenuData(vendorDisplay, platform[0]);
       }
     }
-  }, [branch, getMenuData, platform, selected, vendors.vendorsObj]);
+  }, [platform, selected]);
 
-  const timeSelected = useCallback(() => {
+  const timeSelected = () => {
     if (duration !== 'Starting Now' && selected === 3) return;
 
     const typeObject = {
@@ -539,149 +517,114 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     );
 
     setHeatmapData({ ...heatmapData, [links]: response });
-  }, [
-    customisedDay,
-    duration,
-    endingDate,
-    everyWeek,
-    getTypeSchedule,
-    heatmapData,
-    links,
-    selected,
-    setHeatmapData,
-    startingDate,
-    times,
-    typeSchedule,
-  ]);
+  };
 
-  const getSteps = useCallback(
-    (stepsArr) => {
-      if (platform.length < 2) {
-        if (platform[0] === 'talabat') {
-          setSteps(stepsArr);
-        } else {
-          setSteps([...stepsArr, stepsArr.length]);
-        }
+  const getSteps = (stepsArr) => {
+    if (platform.length < 2) {
+      if (platform[0] === 'talabat') {
+        setSteps(stepsArr);
       } else {
         setSteps([...stepsArr, stepsArr.length]);
       }
-    },
-    [platform, setSteps]
-  );
+    } else {
+      setSteps([...stepsArr, stepsArr.length]);
+    }
+  };
 
-  const durationDisable = useCallback(
-    (n, stepsRange) => {
-      if (selected === n) {
-        clearTimeSelected();
-        timeSelected();
-        if (duration === 'Program the offer duration') {
-          getSteps([...stepsRange, stepsRange.length]);
-          setDisabled(!typeSchedule);
-          return;
-        }
-        getSteps(stepsRange);
-        setDisabled(
-          !(
-            endingDate !== null &&
-            disabledDate &&
-            times.every(
-              (obj) =>
-                isValidDate(obj.endTime) &&
-                obj.startTime !== null &&
-                !Number.isNaN(new Date(obj.endTime).getTime())
-            )
-          )
-        );
+  const durationDisable = (n, stepsRange) => {
+    if (selected === n) {
+      clearTimeSelected();
+      timeSelected();
+      if (duration === 'Program the offer duration') {
+        getSteps([...stepsRange, stepsRange.length]);
+        setDisabled(!typeSchedule);
         return;
       }
+      getSteps(stepsRange);
+      setDisabled(
+        !(
+          endingDate !== null &&
+          disabledDate &&
+          times.every(
+            (obj) =>
+              isValidDate(obj.endTime) &&
+              obj.startTime !== null &&
+              !Number.isNaN(new Date(obj.endTime).getTime())
+          )
+        )
+      );
+      return;
+    }
+    if (selected === n + 1) {
+      setDisabled(!targetAudience);
+    }
+    if (duration === 'Program the offer duration') {
       if (selected === n + 1) {
+        timeSelected();
+        if (typeSchedule === 'Same day every week') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              everyWeek &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime())
+              )
+            )
+          );
+          return;
+        }
+        if (typeSchedule === 'Customised Days') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              customisedDay.length > 0 &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime())
+              )
+            )
+          );
+          return;
+        }
+        if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
+          setDisabled(
+            !(
+              startingDate !== null &&
+              endingDate !== null &&
+              disabledDate &&
+              times.every(
+                (obj) =>
+                  isValidDate(obj.endTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.endTime).getTime()) &&
+                  isValidDate(obj.startTime) &&
+                  obj.startTime !== null &&
+                  !Number.isNaN(new Date(obj.startTime).getTime())
+              )
+            )
+          );
+        }
+      }
+      if (selected === n + 2) {
         setDisabled(!targetAudience);
       }
-      if (duration === 'Program the offer duration') {
-        if (selected === n + 1) {
-          timeSelected();
-          if (typeSchedule === 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                everyWeek &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime())
-                )
-              )
-            );
-            return;
-          }
-          if (typeSchedule === 'Customised Days') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                customisedDay.length > 0 &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime())
-                )
-              )
-            );
-            return;
-          }
-          if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
-            setDisabled(
-              !(
-                startingDate !== null &&
-                endingDate !== null &&
-                disabledDate &&
-                times.every(
-                  (obj) =>
-                    isValidDate(obj.endTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.endTime).getTime()) &&
-                    isValidDate(obj.startTime) &&
-                    obj.startTime !== null &&
-                    !Number.isNaN(new Date(obj.startTime).getTime())
-                )
-              )
-            );
-          }
-        }
-        if (selected === n + 2) {
-          setDisabled(!targetAudience);
-        }
-      }
-    },
-    [
-      clearTimeSelected,
-      customisedDay.length,
-      disabledDate,
-      duration,
-      endingDate,
-      everyWeek,
-      getSteps,
-      isValidDate,
-      selected,
-      setDisabled,
-      startingDate,
-      targetAudience,
-      timeSelected,
-      times,
-      typeSchedule,
-    ]
-  );
+    }
+  };
 
   useEffect(() => {
     if (selected === 1) {
@@ -724,8 +667,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (menu === 'Offer on the whole Menu') {
       durationDisable(3, [0, 1, 2, 3]);
     }
-  }, [
-    menu,
+  }, [menu,
     minOrder,
     branch,
     platform,
@@ -739,19 +681,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     everyWeek,
     customisedDay,
     itemMenu,
-    checked,
     vendors,
-    targetAudience,
-    getSteps,
-    setFilteredCategoryData,
-    setCategory,
-    setChecked,
-    setCategoryData,
-    setMenu,
-    setDisabled,
-    clearTimeSelected,
-    durationDisable,
-  ]);
+    targetAudience,]);
 
   const renderGradientValue = (v, i) => {
     const indices = links === 'revenue' ? 'AED' : '';
@@ -813,34 +744,22 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   useEffect(() => {
     setSelected(1);
     setRecap(false);
-  }, [active, setRecap, setSelected]);
+  }, [active]);
 
   useEffect(() => {
     setItemMenu('Flash Deal');
-  }, [menu, setItemMenu]);
+  }, [menu]);
 
   useEffect(() => {
     clearTimeSelected();
     if (selected >= 3) {
       timeSelected();
     }
-  }, [times, startingDate, endingDate, selected, typeSchedule, clearTimeSelected, timeSelected]);
+  }, [times, startingDate, endingDate, selected, typeSchedule]);
 
   useEffect(() => {
     setFreshStartingDate();
-  }, [recap, setFreshStartingDate]);
-
-  const getItemMenuNamePrice = () => {
-    const arr = [];
-    checked.forEach((c) => {
-      category.forEach((obj) =>
-        obj.name === c || obj.item_name === c
-          ? arr.push({ name: obj.name || obj.item_name, price: obj.price || obj.unit_price })
-          : false
-      );
-    });
-    return arr;
-  };
+  }, [recap]);
 
   const getRecapBtn = () => {
     if (recap) {
@@ -1016,7 +935,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           <div className='left-part'>
             {triggerLoading ? null : (
               <GetRecap
-                getItemMenuNamePrice={getItemMenuNamePrice}
+                getItemMenuNamePrice={() => getItemMenuNamePrice(checked, category)}
                 closeSetup={closeSetup}
                 ads={ads}
               />

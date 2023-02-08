@@ -180,7 +180,7 @@ const GetProgress: FC = () => {
     setMenuChanged(menu);
   }, [menu, itemMenu]);
 
-  if (selected === 1) {
+  if (selected === 1 && branch) {
     return (
       <PlatformStep
         index={selected}

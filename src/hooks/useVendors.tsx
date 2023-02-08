@@ -1,3 +1,5 @@
+import { useAtom } from 'jotai';
+import { vendorsAtom } from 'store/vendorsAtom';
 import { useQuery } from '@tanstack/react-query';
 import { useUserAuth } from 'contexts';
 import { useEffect, useState } from 'react';
@@ -67,6 +69,7 @@ export type TVendors = {
 
 const useVendors = (isSign = false) => {
   const { getVendors } = useApi();
+  const [, setVendorsAtom] = useAtom(vendorsAtom);
 
   const [vendors, setVendors] = useState<TVendors>({
     vendorsSelected: [],
@@ -179,6 +182,7 @@ const useVendors = (isSign = false) => {
       chainObj,
     };
     setVendors(dataV);
+    setVendorsAtom(dataV);
     Object.keys(display).forEach((key) => {
       delete display[key];
     });

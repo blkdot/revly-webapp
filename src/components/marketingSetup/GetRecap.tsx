@@ -46,9 +46,7 @@ import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupSteppe
 import GetProgress from './MarketingGetProgress';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 
-const GetRecap: FC<any> = (props) => {
-  const { closeSetup, ads, getItemMenuNamePrice } = props;
-
+const GetRecap: FC<any> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
   const [platform] = useAtom(platformAtom);
   const [selected] = useAtom(selectedAtom);
   const [menu] = useAtom(menuAtom);
@@ -98,7 +96,6 @@ const GetRecap: FC<any> = (props) => {
         <div className='left-part-top'>
           <div>
             <TypographyKit variant='h4'>Create a Smart Rule</TypographyKit>
-
             <img
               tabIndex={-1}
               role='presentation'
@@ -167,7 +164,7 @@ const GetRecap: FC<any> = (props) => {
                       handleChange={(e) => handleChange(e, 'order', index, 'launch')}
                     />
                     <MarketingPlaceholderDropdown
-                      readOnly={!(launchOrder.length === 2)}
+                      readOnly={launchOrder.length !== 2}
                       names={['>', '<']}
                       title='<'
                       personName={obj.arrow}
