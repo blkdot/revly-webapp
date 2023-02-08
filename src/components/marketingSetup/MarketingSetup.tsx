@@ -88,6 +88,26 @@ const getItemMenuNamePrice = (checked, category) => {
   return arr;
 };
 
+const clearTimeSelected = (heatmapData) => {
+  const clonedheatmapData = { ...heatmapData };
+
+  days.forEach((__, index) => {
+    if (!clonedheatmapData.revenue?.[index]) return;
+
+    _.range(minHour, maxHour + 1).forEach((num) => {
+      if (clonedheatmapData.revenue?.[index] && clonedheatmapData.revenue[index]?.[num]) {
+        delete clonedheatmapData.revenue[index][num]?.active;
+      }
+
+      if (clonedheatmapData.orders?.[index] && clonedheatmapData.orders[index]?.[num]) {
+        delete clonedheatmapData.orders[index][num]?.active;
+      }
+    });
+  });
+
+  return { ...heatmapData, ...clonedheatmapData };
+};
+
 const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { getActivePlatform, userPlatformData } = usePlatform();
 
@@ -168,26 +188,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     ]);
   };
 
-  const clearTimeSelected = () => {
-    const clonedheatmapData = { ...heatmapData };
-
-    days.forEach((__, index) => {
-      if (!clonedheatmapData.revenue?.[index]) return;
-
-      _.range(minHour, maxHour + 1).forEach((num) => {
-        if (clonedheatmapData.revenue?.[index] && clonedheatmapData.revenue[index]?.[num]) {
-          delete clonedheatmapData.revenue[index][num]?.active;
-        }
-
-        if (clonedheatmapData.orders?.[index] && clonedheatmapData.orders[index]?.[num]) {
-          delete clonedheatmapData.orders[index][num]?.active;
-        }
-      });
-    });
-
-    setHeatmapData({ ...heatmapData, ...clonedheatmapData });
-  };
-
   useEffect(() => {
     if (duration === 'Starting Now') {
       setFreshStartingDate();
@@ -202,7 +202,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         pos: 1,
       },
     ]);
-    clearTimeSelected();
+    setHeatmapData(clearTimeSelected(heatmapData));
   }, [duration]);
 
   useEffect(() => {
@@ -533,7 +533,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
   const durationDisable = (n, stepsRange) => {
     if (selected === n) {
-      clearTimeSelected();
+      setHeatmapData(clearTimeSelected(heatmapData));
       timeSelected();
       if (duration === 'Program the offer duration') {
         getSteps([...stepsRange, stepsRange.length]);
@@ -643,7 +643,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       return;
     }
     if (selected === 2) {
-      clearTimeSelected();
+      setHeatmapData(clearTimeSelected(heatmapData));
       if (menu === 'Offer on An Item from the Menu') {
         getSteps([0, 1, 2, 3, 4]);
         if (platform[0] === 'talabat') {
@@ -751,7 +751,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   }, [menu]);
 
   useEffect(() => {
-    clearTimeSelected();
+    setHeatmapData(clearTimeSelected(heatmapData));
     if (selected >= 3) {
       timeSelected();
     }
