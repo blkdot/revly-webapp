@@ -78,7 +78,7 @@ export type TCategoryAtom = {
 };
 export const categoryAtom = atom<TCategoryAtom[]>([]);
 
-export const filteredCategoryDataAtom = atom([]);
+export const filteredCategoryDataAtom = atom<TCategoryAtom[]>([]);
 
 export const targetAudienceAtom = atom('All customers');
 

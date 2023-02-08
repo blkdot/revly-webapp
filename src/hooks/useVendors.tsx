@@ -33,14 +33,14 @@ export type TVendorsArr = {
     is_active: string | boolean;
     is_deleted: string | boolean;
     prefix_vendor_id: string;
-    access_token: string;
-    access_token_bis: string;
     email: string;
   };
   data: {
     chain_name: string;
     vendor_name: string;
   };
+  access_token: string;
+  access_token_bis: string;
   platform: string;
 };
 

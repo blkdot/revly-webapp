@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
@@ -163,7 +164,7 @@ const MarketingSetup: React.FC<{
   useEffect(() => {
     setPlatform([getActivePlatform()]);
     setBranch({ ...vendors });
-  }, [getActivePlatform, setBranch, setPlatform, vendors]);
+  }, [vendors]);
 
   const { getHeatmap, triggerOffers, getMenu } = useApi();
   const { user } = useUserAuth();
@@ -281,20 +282,6 @@ const MarketingSetup: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, vendors]);
 
-  const getPlatformToken = () => {
-    if (Object.keys(vendors.display).length > 0) {
-      return (
-        userPlatformData.platforms[platform[0]].access_token ??
-        userPlatformData.platforms[platform[0]].access_token_bis
-      );
-    }
-
-    return (
-      branch.vendorsSelected[0].metadata.access_token ??
-      branch.vendorsSelected[0].metadata.access_token_bis
-    );
-  };
-
   const handleSchedule = async () => {
     let isStartingFromZero = true;
     if (duration === 'Starting Now') {
@@ -319,18 +306,19 @@ const MarketingSetup: React.FC<{
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
       master_email: user.email,
       access_token: user.accessToken,
-      platform_token: getPlatformToken(),
       vendors: [{}],
       chain_id: '',
     };
 
     try {
       if (platform.length < 2) {
+        console.log(branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis);
         setTriggerLoading(true);
         const res = await triggerOffers(platform[0], {
           ...dataReq,
           vendors: branch.vendorsSelected,
           chain_id: String(branch.vendorsSelected[0].chain_id),
+          platform_token: branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis,
         });
 
         if (res instanceof Error) {
@@ -351,6 +339,7 @@ const MarketingSetup: React.FC<{
           return triggerOffers(p, {
             ...dataReq,
             vendors: [clonedVendor],
+            platform_token: branch.vendorsSelected[0].access_token ?? branch.vendorsSelected[0].access_token_bis,
           });
         });
 
@@ -400,6 +389,7 @@ const MarketingSetup: React.FC<{
 
   const setHeatmatDataFromState = () => {
     setHeatmapData(() => {
+      console.log(platform);
       if (!revenueData || !ordersData) return null;
 
       const heatmaDataPlatform = { ...revenueData?.[platform[0]].heatmap };

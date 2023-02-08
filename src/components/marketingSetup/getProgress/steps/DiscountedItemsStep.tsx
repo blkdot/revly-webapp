@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { InputAdornment } from '@mui/material';
 import ItemMenuIcon from 'assets/images/ic_item-menu.png';
 import searchIcon from 'assets/images/ic_search.png';
 import MenuDropdown from 'components/settings/menu/menuDropdown/MenuDropdown';
+import { type TCategoryAtom } from 'store/marketingSetupAtom';
 import {
   BoxKit,
   ButtonKit,
@@ -14,11 +16,11 @@ import {
   TooltipKit,
   TypographyKit,
 } from 'kits';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, ChangeEvent, SetStateAction } from 'react';
 import { Subtitle } from './components/Subtitle';
 
 const TooltipCategory = ({ obj, index }) => {
-  const [hoverStatus, setHover] = useState<any>(false);
+  const [hoverStatus, setHover] = useState<boolean>(false);
   // we getting the textElement
   const textElement = document.querySelectorAll('.list-item-category')[index];
   const compareSize = () => {
@@ -32,13 +34,6 @@ const TooltipCategory = ({ obj, index }) => {
     compareSize();
     window.addEventListener('resize', compareSize);
   }, []);
-
-  useEffect(
-    () => () => {
-      window.removeEventListener('resize', compareSize);
-    },
-    []
-  );
 
   return (
     <div>
@@ -61,18 +56,18 @@ const TooltipCategory = ({ obj, index }) => {
 export const DiscountedItemsStep: FC<{
   index: number;
   checked: string[];
-  setChecked: any;
-  itemMenu: any;
-  categorySearch: any;
-  handleCategoryDataChange: any;
-  categoryDataList: any;
+  setChecked: (update?: SetStateAction<string[]>) => void;
+  itemMenu: string;
+  categorySearch: string;
+  handleCategoryDataChange: (e: ChangeEvent<HTMLFormElement>) => void;
+  categoryDataList: string[];
   categoryData: string[];
-  filteredCategoryData: any;
-  menuChanged: any;
-  category: any;
-  setCategorySearch: any;
-  setFilteredCategoryData: any;
-  platform: any;
+  filteredCategoryData: TCategoryAtom[];
+  menuChanged: string;
+  category: TCategoryAtom[];
+  setCategorySearch: (update?: SetStateAction<string>) => void;
+  setFilteredCategoryData: (update?: SetStateAction<TCategoryAtom[]>) => void;
+  platform: string[];
 }> = ({
   index,
   checked,
@@ -240,7 +235,7 @@ export const DiscountedItemsStep: FC<{
         </div>
         <FormControlKit className='category-list'>
           {(filteredCategoryData.length > 0 ? filteredCategoryData : category).map(
-            (obj, indexObj) => (
+            (obj: TCategoryAtom, indexObj: number) => (
               // TODO: FIX IT
               // <div className='menu-item-wrapper' key={obj.id} value={obj.name}>
               <div className='menu-item-wrapper' key={obj.id || obj.item_id}>

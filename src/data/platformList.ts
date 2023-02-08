@@ -39,7 +39,8 @@ export const platformContexDefaultFormat: {
       active: boolean;
       access_token: string | null;
       access_token_bis: string | null;
-    };
+      vendor_ids: number[];
+    }[];
   };
 } = {
   onboarded: false,
@@ -52,6 +53,7 @@ export const platformContexDefaultFormat: {
           active: false,
           access_token: null,
           access_token_bis: null,
+          vendor_ids: [],
         },
       ],
     }),

@@ -25,7 +25,7 @@ import {
   startingDateAtom,
 } from 'store/marketingSetupAtom';
 import { useAtom } from 'jotai';
-import { FC } from 'react';
+import { FC, type ChangeEvent } from 'react';
 import ArrowIcon from '../../assets/images/arrow.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
@@ -46,7 +46,14 @@ import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupSteppe
 import GetProgress from './MarketingGetProgress';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 
-const GetRecap: FC<any> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
+type TProps = {
+  closeSetup: () => void;
+  // eslint-disable-next-line react/require-default-props
+  ads?: boolean;
+  getItemMenuNamePrice: () => { name: string; price: number }[];
+};
+
+const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
   const [platform] = useAtom(platformAtom);
   const [selected] = useAtom(selectedAtom);
   const [menu] = useAtom(menuAtom);
@@ -69,7 +76,7 @@ const GetRecap: FC<any> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
 
   const [smRule] = useAtom(smRuleAtom);
   const [steps] = useAtom(stepsAtom);
-  const handleChange = (e, type, index, order?) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, type: string, index: number, order?: string) => {
     if (order === 'launch') {
       if (type === 'order') {
         launchOrder[index + 1] = {
@@ -90,6 +97,7 @@ const GetRecap: FC<any> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
       setStopOrder([...stopOrder]);
     }
   };
+
   if (smRule) {
     return (
       <div>
@@ -533,7 +541,7 @@ const GetRecap: FC<any> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
             {menu === 'Offer on An Item from the Menu' ? (
               <div className='recap-between no-border'>
                 {getItemMenuNamePrice().map((obj) => (
-                  <div>
+                  <div key={obj.name}>
                     <div>{obj.name}</div>
                     <div>{obj.price} AED</div>
                   </div>

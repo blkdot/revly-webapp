@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { addDays, isAfter, isSameDay } from 'date-fns';
 import { useMarketingSetup } from 'hooks';
 import {
@@ -29,7 +30,7 @@ import {
   heatmapDataAtom,
 } from 'store/marketingSetupAtom';
 import { useAtom } from 'jotai';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, ChangeEvent } from 'react';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import { AudienceStep } from './getProgress/steps/AudienceStep';
 import { DiscountedItemsStep } from './getProgress/steps/DiscountedItemsStep';
@@ -131,7 +132,7 @@ const GetProgress: FC = () => {
     return typeSchedule !== 'Continues Offer' && duration === 'Program the offer duration';
   };
 
-  const handleCategoryDataChange = (e) => {
+  const handleCategoryDataChange = (e: ChangeEvent<HTMLFormElement>) => {
     const { value } = e.target;
     if (value.length > 0) {
       const arr = value
