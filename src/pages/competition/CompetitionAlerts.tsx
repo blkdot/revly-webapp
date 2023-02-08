@@ -72,25 +72,25 @@ const CompetitionAlerts = () => {
       id: 'start_date',
       numeric: false,
       disablePadding: true,
-      label: 'Starting Date',
+      label: 'Start Date',
     },
     {
       id: 'end_date',
       numeric: false,
       disablePadding: true,
-      label: 'Ending Date',
+      label: 'End Date',
     },
     {
       id: 'start_hour',
       numeric: false,
       disablePadding: true,
-      label: 'Starting Hour',
+      label: 'Start Hour',
     },
     {
       id: 'end_hour',
       numeric: false,
       disablePadding: true,
-      label: 'Ending Hour',
+      label: 'End Hour',
     },
     {
       id: 'status',
@@ -100,16 +100,16 @@ const CompetitionAlerts = () => {
     },
   ];
 
-  const { renderPercent, renderStatus, renderSimpleRow } = useTableContentFormatter();
+  const { renderPercent, renderStatus, renderSimpleRow, renderIsoDateOnly, renderIsoStartTimeOnlyFromDate, renderIsoEndTimeOnlyFromDate } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
     type: renderSimpleRow,
     alert: renderPercent,
-    start_date: renderSimpleRow,
-    end_date: renderSimpleRow,
-    start_hour: renderSimpleRow,
-    end_hour: renderSimpleRow,
+    start_date: renderIsoDateOnly,
+    end_date: renderIsoDateOnly,
+    start_hour: renderIsoStartTimeOnlyFromDate,
+    end_hour: renderIsoEndTimeOnlyFromDate,
     status: renderStatus,
   };
 
@@ -155,7 +155,7 @@ const CompetitionAlerts = () => {
             start_hour: v.start_hour,
             end_hour: v.end_hour,
             status: v.status,
-            id: v.vendor_id,
+            id: v.alert_id,
           }))
           .sort((a, b) => a.status - b.status);
         setCompetitionAlertsData(filt || []);
@@ -307,7 +307,6 @@ const CompetitionAlerts = () => {
           rows={(filteredData.length > 0 ? filteredData : competitionAlertsData).map(
             renderRowsByHeader
           )}
-          renderNoData
         />
       </PaperKit>
     </div>
