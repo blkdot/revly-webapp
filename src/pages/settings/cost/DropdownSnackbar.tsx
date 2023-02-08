@@ -1,17 +1,21 @@
+import { useEffect, useState, FC } from 'react';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, TextfieldKit } from 'kits';
-import { useEffect, useState } from 'react';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 
-const DropdownSnackbar = (props: any) => {
+const DropdownSnackbar: FC<{
+  onAdd: any;
+  isUpdate: any;
+  setIsUpdate: any;
+  invoice: any;
+}> = ({ onAdd, isUpdate, setIsUpdate, invoice }) => {
   // eslint-disable-next-line no-unused-vars
-  const { onAdd, isUpdate, setIsUpdate, invoice } = props;
   const [vendors, setVendors] = useAtom(vendorsAtom);
   const { vendors: vendorsReq } = useVendors(undefined);
   useEffect(() => {
-    if (vendorsReq.vendorsArr.length < 0) {
+    if (Object.keys(vendorsReq.display).length > 0) {
       setVendors(vendorsReq);
     }
   }, [vendorsReq]);
@@ -91,7 +95,6 @@ const DropdownSnackbar = (props: any) => {
           className='snackbar-dropdown'
           state={costVendors}
           setState={setCostVendors}
-          cost
         />
         <TextfieldKit
           size='small'

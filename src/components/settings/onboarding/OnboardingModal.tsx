@@ -10,7 +10,7 @@ import ManageBranch from './onboardingModal/ManageBranch';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
-const OnboardingModal = ({ propsVariables }) => {
+const OnboardingModal = ({ propsVariables }: any) => {
   const {
     openCloseModal,
     openedModal,

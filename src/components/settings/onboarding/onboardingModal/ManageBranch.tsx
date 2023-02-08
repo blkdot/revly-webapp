@@ -1,14 +1,23 @@
-import { loadUser, saveUser } from 'api/userApi';
+import { FC } from 'react';
+import { saveUser } from 'api/userApi';
 import { useUserAuth } from 'contexts/AuthContext';
 import { TypographyKit, ButtonKit } from 'kits';
+import { platformList } from 'data/platformList';
+import TrashIcon from '../../../../assets/images/ic_trash.png';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
 import ResumeIcon from '../../../../assets/images/ic_resume.png';
-import TrashIcon from '../../../../assets/images/ic_trash.png';
-import { platformList } from '../../../../data/platformList';
 import Arrow from '../../../../assets/images/arrow.png';
 
-const ManageBranch = ({ propsVariables }) => {
+const ManageBranch: FC<{
+  propsVariables: {
+    openCloseModal: any;
+    clickedBranch: any;
+    setBranchData: any;
+    branchData: any;
+    vendors: any;
+  };
+}> = ({ propsVariables }) => {
   const { openCloseModal, clickedBranch, setBranchData, branchData, vendors } = propsVariables;
   const getPlatform = (plat) => platformList.find((obj) => obj.name === plat);
   const { user } = useUserAuth();

@@ -315,7 +315,7 @@ const CompetitionListing = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        <RestaurantDropdown />
+        <RestaurantDropdown setState='' state='' pageType='' className='' />
         <Dates
           isListing
           beforePeriodBtn={beforePeriodBtn}
@@ -369,7 +369,11 @@ const CompetitionListing = () => {
             )}
 
             <div className='listing-vendors top-competition'>
-              <RestaurantDropdown listing state={vendorsData} setState={setVendorsData} />
+              <RestaurantDropdown
+                pageType='listing'
+                state={vendorsData}
+                setState={setVendorsData}
+              />
             </div>
             <CompetitionDropdown
               rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}

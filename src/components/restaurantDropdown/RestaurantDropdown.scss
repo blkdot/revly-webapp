@@ -383,7 +383,7 @@
     &::before {
       content: none;
       position: absolute;
-      height: calc(39px * var(--l));
+      height: calc(39px * var(--length));
       top: 20px;
       background-color: #f4f6f8;
       width: 3px;

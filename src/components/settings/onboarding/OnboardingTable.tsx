@@ -1,8 +1,14 @@
+import { FC } from 'react';
 import { TableRowKit, TableCellKit } from 'kits';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../tableRevly/TableRevly';
+import TableRevly from 'components/tableRevly/TableRevly';
 
-const OnboardingTable = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch }) => {
+const OnboardingTable: FC<{
+  branchData: any;
+  openCloseModal: any;
+  setConnectAccount: any;
+  setClickedBranch: any;
+}> = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch }) => {
   const { renderAccountsRow, renderBranchStatusRow, renderBranchRow, renderLinkedPlatformsRow } =
     useTableContentFormatter();
   const headersOnBoarding = [

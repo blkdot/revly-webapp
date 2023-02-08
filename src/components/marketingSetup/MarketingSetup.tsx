@@ -2,7 +2,7 @@ import { Tooltip } from '@mui/material';
 import { useUserAuth } from 'contexts';
 import { addDays, addHours, addMinutes, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform } from 'hooks';
+import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -78,6 +78,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
   const [vendors] = useAtom(vendorsAtom);
+  const { selectedVendors } = useVendors(undefined);
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
@@ -339,24 +340,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     });
     setMenu('Offer on the whole Menu');
   }, [platform, vendors]);
-  const selectedVendors = (name, plat) => {
-    const arr = [];
-    Object.keys(branch.display).forEach((cName) => {
-      Object.keys(branch.display[cName]).forEach((vName) => {
-        if (branch.display[cName][vName].checked) {
-          if (name === 'full') {
-            arr.push(branch.display[cName][vName].platforms[plat]);
-          } else {
-            arr.push(branch.display[cName][vName]);
-          }
-        }
-      });
-    });
-    return arr;
-  };
-  const getPlatformToken = () =>
-    selectedVendors('token', '')[0].access_token ??
-    selectedVendors('token', '')[0].access_token_bis;
   const handleSchedule = async () => {
     let isStartingFromZero = true;
     if (duration === 'Starting Now') {
@@ -381,7 +364,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
       master_email: user.email,
       access_token: user.accessToken,
-      platform_token: getPlatformToken(),
+      platform_token: '',
       vendors: [{}],
       chain_id: '',
     };
@@ -393,6 +376,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
           ...dataReq,
           vendors: selectedVendors('full', platform[0]),
           chain_id: String(selectedVendors('full', platform[0])[0].chain_id),
+          platform_token:
+            selectedVendors('full', platform[0])[0].access_token ??
+            selectedVendors('full', platform[0])[0].access_token_bis,
         });
 
         if (res instanceof Error) {
@@ -411,6 +397,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
             ...dataReq,
             vendors: selectedVendors('full', p),
             chain_id: String(selectedVendors('full', p)[0].chain_id),
+            platform_token:
+              selectedVendors('full', p)[0].access_token ??
+              selectedVendors('full', p)[0].access_token_bis,
           });
         });
 

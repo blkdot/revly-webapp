@@ -154,6 +154,7 @@ const useVendors = (isSign = false) => {
             userPlatformData.platforms[platform].find((obj) =>
               obj.vendor_ids.some((id: string) => id === platformObj.vendor_id)
             ) || {};
+          display[chainName][vendorName].email = userPlatform.email;
           display[chainName][vendorName].platforms[platform].email = userPlatform.email;
           display[chainName][vendorName].platforms[platform].access_token =
             userPlatform.access_token;
@@ -184,8 +185,24 @@ const useVendors = (isSign = false) => {
     vendorsTemp = [];
     vendorsSelectedTemp = [];
   }, [data]);
-
-  return { vendors, setVendors };
+  const selectedVendors = (name: string, plat?: string) => {
+    const arr = [];
+    Object.keys(vendors.display).forEach((cName) => {
+      Object.keys(vendors.display[cName]).forEach((vName) => {
+        if (vendors.display[cName][vName].checked) {
+          if (name === 'name') {
+            arr.push(vName);
+          } else if (name === 'full') {
+            arr.push(vendors.display[cName][vName].platforms[plat]);
+          } else {
+            arr.push(vendors.display[cName][vName]);
+          }
+        }
+      });
+    });
+    return arr;
+  };
+  return { vendors, setVendors, selectedVendors };
 };
 
 export default useVendors;

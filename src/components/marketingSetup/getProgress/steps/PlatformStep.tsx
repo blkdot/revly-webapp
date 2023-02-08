@@ -50,7 +50,7 @@ export const PlatformStep: FC<{
       </div>
       <RestaurantDropdown
         className='offer-setup-dropdown'
-        branch
+        pageType='branch'
         setState={setBranch}
         state={branch}
       />

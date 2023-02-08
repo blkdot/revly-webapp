@@ -1,6 +1,11 @@
+import { FC } from 'react';
 import { FormControlKit, MenuItemKit, SelectKit } from 'kits';
 
-const OnboardingDropdown = ({ state, setState, rows }) => {
+const OnboardingDropdown: FC<{
+  state: any;
+  setState: any;
+  rows: any;
+}> = ({ state, setState, rows }) => {
   const handleChange = (event) => {
     setState(event.target.value);
   };

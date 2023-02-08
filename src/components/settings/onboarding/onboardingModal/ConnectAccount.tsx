@@ -1,10 +1,20 @@
-import { platformList } from '../../../../data/platformList';
+import { FC } from 'react';
+import { platformList } from 'data/platformList';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import SwitchKit from '../../../../kits/switch/SwitchKit';
 import ButtonKit from '../../../../kits/button/ButtonKit';
 import CloseIcon from '../../../../assets/images/ic_close.png';
 
-const ConnectAccount = ({ propsVariables }) => {
+const ConnectAccount: FC<{
+  propsVariables: {
+    openCloseModal: any;
+    accounts: any;
+    setConnect: any;
+    setConnectAccount: any;
+    deleteAccount: any;
+    changeStatusAccount: any;
+  };
+}> = ({ propsVariables }) => {
   const {
     openCloseModal,
     accounts,

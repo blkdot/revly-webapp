@@ -122,7 +122,6 @@ const GetRecap = ({ recapData }) => {
                         title='<'
                         setPersonName={setLaunchOrder}
                         personName={obj.arrow}
-                        rowArr={launchOrder}
                         handleChange={(e) => handleChange(e, 'arrow', index, 'launch')}
                       />
                       <TextfieldKit

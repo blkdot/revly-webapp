@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCost, useVendors } from 'hooks';
 import { SpinnerKit } from 'kits';
 import { useState } from 'react';
-import DropdownSnackbar from './DropdownSnackbar';
+import DropdownSnackbar from 'pages/settings/cost/DropdownSnackbar';
 import Invoice from './invoice/Invoice';
 
 const Cost = () => {

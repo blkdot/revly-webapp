@@ -1,20 +1,20 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ButtonKit, CheckboxKit, InputLabelKit, MenuItemKit, RadioKit, TooltipKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import selectIcon from '../../assets/images/ic_select.png';
 import deliveroo from '../../assets/images/deliveroo-favicon.webp';
 import talabat from '../../assets/images/talabat-favicon.png';
 
-const RestaurantCheckboxAccordion = ({
-  info,
-  chainName,
-  handleChangeVendor,
-  index,
-  setVendors,
-  vendors,
-  display,
-  listing,
-}: any) => {
+const RestaurantCheckboxAccordion: FC<{
+  info: object;
+  chainName: string;
+  handleChangeVendor: any;
+  index: string | number;
+  setVendors: any;
+  vendors: any;
+  display: any;
+  pageType: string;
+}> = ({ info, chainName, handleChangeVendor, index, setVendors, vendors, display, pageType }) => {
   const [active, setActive] = useState(false);
   // we checking if all vendor in this chain are checked
   const compareSize = () => {
@@ -51,26 +51,6 @@ const RestaurantCheckboxAccordion = ({
   const [hoverStatusChain, setHoverChain] = useState(false);
   const [hoverStatusVendor, setHoverVendor] = useState([]);
   const getHoverStatusVendor = (vName) => hoverStatusVendor.find((v) => v === vName);
-  // function for chain button "Only"
-  const handleClick = (e) => {
-    e.stopPropagation();
-    const vendorsObjTemp = { talabat: [], deliveroo: [] };
-    Object.keys(display[chainName]).forEach((vName) => {
-      Object.keys(display[chainName][vName]).forEach((p) => {
-        vendorsObjTemp[p].push(display[chainName][vName][p]);
-      });
-    });
-    Object.keys(vendorsObjTemp).forEach((p) => {
-      if (vendorsObjTemp[p].length === 0) {
-        delete vendorsObjTemp[p];
-      }
-    });
-    setVendors({
-      ...vendors,
-      chainObj: { [chainName]: display[chainName] },
-      vendorsObj: vendorsObjTemp,
-    });
-  };
   // function for vendor button "Only"
   const handleClickVendor = (e, vendorName) => {
     e.stopPropagation();
@@ -83,7 +63,6 @@ const RestaurantCheckboxAccordion = ({
     displayTemp[chainName][vendorName].checked = true;
     setVendors({ ...vendors, display: displayTemp });
   };
-  const getInActiveVendor = (vendorName) => {};
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       {Object.values(info).every((objV: any) => !objV.is_matched) ? (
@@ -92,7 +71,7 @@ const RestaurantCheckboxAccordion = ({
         <div
           tabIndex={-1}
           role='presentation'
-          style={{ '--l': Object.keys(info).length } as React.CSSProperties}
+          style={{ '--length': Object.keys(info).length } as React.CSSProperties}
           className={`checkbox-accordion ${false ? 'disabled' : ''} ${active ? 'active' : ''}`}
           onClick={() => setActive(!active)}
         >
@@ -135,7 +114,7 @@ const RestaurantCheckboxAccordion = ({
             <div className='vendors-only' key={vendorName}>
               <MenuItemKit disabled={!info[vendorName].active}>
                 <img className='restaurant-img' src={talabat} alt='talabat' />
-                {listing ? (
+                {pageType === 'listing' ? (
                   <RadioKit
                     value={vendorName}
                     onChange={({ target }) => handleChangeVendor(target, chainName)}
@@ -180,7 +159,7 @@ const RestaurantCheckboxAccordion = ({
             className={`accordion-dropdown ${active ? 'active' : ''} `}
           >
             <div>
-              {listing ? (
+              {pageType === 'listing' ? (
                 <RadioKit
                   disabled={!info[vendorName].active}
                   checked={info[vendorName].checked}

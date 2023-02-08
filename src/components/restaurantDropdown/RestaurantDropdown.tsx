@@ -1,7 +1,7 @@
 import { usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import selectIcon from '../../assets/images/ic_select.png';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
@@ -25,32 +25,22 @@ const MenuPropsBranch = {
     },
   },
 };
-
-const RestaurantDropdown = ({ setState, state, branch, cost, listing, className }: any) => {
+const RestaurantDropdown: FC<{
+  setState?: any;
+  state?: any;
+  pageType?: string;
+  className?: string;
+}> = ({ setState, state, pageType, className }) => {
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq } = useVendors(undefined);
+  const { vendors: vendorsReq, selectedVendors } = useVendors(undefined);
   useEffect(() => {
-    if (vendorsReq.vendorsArr.length > 0) {
+    if (Object.keys(vendorsReq.display).length > 0) {
       setVendors(vendorsReq);
     }
   }, [vendorsReq]);
 
   const { display, vendorsObj } = state || vendorsContext;
-  const selectedVendors = (name) => {
-    const arr = [];
-    Object.keys(display).forEach((cName) => {
-      Object.keys(display[cName]).forEach((vName) => {
-        if (display[cName][vName].checked) {
-          if (name === 'name') {
-            arr.push(vName);
-          } else {
-            arr.push(display[cName][vName]);
-          }
-        }
-      });
-    });
-    return arr;
-  };
+
   // function for vendor
   const handleChangeVendor = (target, chainName) => {
     const { value, checked } = target;
@@ -76,7 +66,7 @@ const RestaurantDropdown = ({ setState, state, branch, cost, listing, className 
       }
     }
     if (checked) {
-      if (listing) {
+      if (pageType === 'listing') {
         Object.keys(displayTemp).forEach((cName) => {
           Object.keys(displayTemp[cName]).forEach((vName) => {
             displayTemp[cName][vName].checked = false;
@@ -89,9 +79,9 @@ const RestaurantDropdown = ({ setState, state, branch, cost, listing, className 
         setState({ ...state, display: displayTemp, vendorsObj: vendorsObjTemp });
         return;
       }
-      if (branch) {
+      if (pageType === 'branch') {
         if (
-          selectedVendors('object').every(
+          selectedVendors('vendors').every(
             (obj: any) => obj.email === displayTemp[chainName][value].email
           )
         ) {
@@ -139,9 +129,11 @@ const RestaurantDropdown = ({ setState, state, branch, cost, listing, className 
   };
   return (
     <div
-      className={`restaurant-dropdown_wrapper ${cost || listing ? 'cost' : ''} ${className || ''}`}
+      className={`restaurant-dropdown_wrapper ${
+        pageType === 'cost' || pageType === 'listing' ? 'cost' : ''
+      } ${className || ''}`}
     >
-      {!(listing || branch) ? (
+      {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
         <TypographyKit className='top-text-inputs' variant='subtitle'>
           Select a Vendor
         </TypographyKit>
@@ -154,7 +146,7 @@ const RestaurantDropdown = ({ setState, state, branch, cost, listing, className 
           id='demo-multiple-checkbox-vendors-new'
           multiple
           value={[1]}
-          MenuProps={cost ? MenuPropsBranch : MenuProps}
+          MenuProps={pageType === 'cost' ? MenuPropsBranch : MenuProps}
           renderValue={() => (
             <div className='selected-dropdown'>
               <img className='select_icon' src={selectIcon} alt='Select Icon' />
@@ -162,8 +154,8 @@ const RestaurantDropdown = ({ setState, state, branch, cost, listing, className 
             </div>
           )}
         >
-          <div className={`dropdown-paper ${cost ? 'cost' : ''}`}>
-            {!(listing || cost || branch) ? (
+          <div className={`dropdown-paper ${pageType === 'cost' ? 'cost' : ''}`}>
+            {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
               <div className='selected-chains'>
                 <p>Selected: {selectedVendors('name').length}</p>
                 <ButtonKit disabled={false} onClick={selectAll} variant='contained'>
@@ -179,12 +171,11 @@ const RestaurantDropdown = ({ setState, state, branch, cost, listing, className 
                 info={display[el]}
                 chainName={el}
                 handleChangeVendor={handleChangeVendor}
-                cost={cost}
                 index={index}
                 setVendors={state ? setState : setVendors}
                 vendors={vendorsContext}
                 display={display}
-                listing={listing}
+                pageType={pageType}
               />
             ))}
           </div>
@@ -193,5 +184,10 @@ const RestaurantDropdown = ({ setState, state, branch, cost, listing, className 
     </div>
   );
 };
-
+RestaurantDropdown.defaultProps = {
+  setState: null,
+  state: null,
+  pageType: '',
+  className: '',
+};
 export default RestaurantDropdown;

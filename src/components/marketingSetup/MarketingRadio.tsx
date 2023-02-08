@@ -1,6 +1,15 @@
-import { BoxKit, CheckboxKit, RadioKit } from 'kits';
+import { FC } from 'react';
+import { BoxKit, CheckboxKit } from 'kits';
 
-const MarketingRadio = ({ title, subtitle, icon, className, disabled, onChange, state }: any) => (
+const MarketingRadio: FC<{
+  title?: string;
+  subtitle?: string;
+  icon?: any;
+  className?: string;
+  disabled?: boolean;
+  onChange?: any;
+  state?: any;
+}> = ({ title, subtitle, icon, className, disabled, onChange, state }) => (
   <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''} ${!icon ? 'reversed' : ''}`}>
     <div>
       {icon ? (
@@ -28,5 +37,13 @@ const MarketingRadio = ({ title, subtitle, icon, className, disabled, onChange, 
     )}
   </BoxKit>
 );
-
+MarketingRadio.defaultProps = {
+  title: '',
+  subtitle: '',
+  icon: null,
+  className: '',
+  disabled: false,
+  onChange: null,
+  state: null,
+};
 export default MarketingRadio;
