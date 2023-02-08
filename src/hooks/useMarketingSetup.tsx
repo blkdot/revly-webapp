@@ -60,9 +60,9 @@ const useMarketingSetup = () => {
   const setEndTimeFormat = (value: Date) =>
     new Date(null, null, null, Number(format(new Date(addHours(value, 1)), 'HH')), 0);
 
-  const isValidDate = (d) => d instanceof Date && !Number.isNaN(d);
+  const isValidDate = (d: Date) => d instanceof Date && !Number.isNaN(d);
 
-  const getHourArr = (hour, fromZero = true) => {
+  const getHourArr = (hour: 'startTime' | 'endTime', fromZero = true): string[] => {
     const arr = [];
     times.forEach((obj) => {
       if (
@@ -77,7 +77,8 @@ const useMarketingSetup = () => {
     return arr;
   };
 
-  const getDiscountMovType = (type: string) => itemMenuObj[itemMenu][type];
+  const getDiscountMovType = (type: 'discount' | 'mov' | 'type'): string | string[] =>
+    itemMenuObj[itemMenu][type];
 
   const typeScheduleObj = {
     'Continues Offer': 'once',
@@ -87,11 +88,11 @@ const useMarketingSetup = () => {
     'Customised Days': customisedDay.toString().toLowerCase().replace(/,/g, '.'),
   };
 
-  const getTypeSchedule = () => typeScheduleObj[typeSchedule] || 'now';
+  const getTypeSchedule = (): string => typeScheduleObj[typeSchedule] || 'now';
 
-  const getTargetAudience = () => targetAudienceObj[targetAudience] || 'orders';
+  const getTargetAudience = (): string => targetAudienceObj[targetAudience] || 'orders';
 
-  const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
+  const disableWeekends = (date: Date) => date.getDay() === 0 || date.getDay() === 6;
 
   return {
     setStartTimeFormat,

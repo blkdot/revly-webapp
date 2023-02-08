@@ -17,7 +17,7 @@ export const PlatformStep: FC<{
   platform: any;
 }> = ({ index, branch, getPlatform, setBranch, platform }) => {
   const { userPlatformData } = usePlatform();
-  
+
   if (!branch || Object.keys(branch).length < 1) return null;
 
   return (

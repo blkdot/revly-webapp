@@ -60,13 +60,13 @@ const TooltipCategory = ({ obj, index }) => {
 // eslint-disable-next-line import/prefer-default-export
 export const DiscountedItemsStep: FC<{
   index: number;
-  checked: any;
+  checked: string[];
   setChecked: any;
   itemMenu: any;
   categorySearch: any;
   handleCategoryDataChange: any;
   categoryDataList: any;
-  categoryData: any;
+  categoryData: string[];
   filteredCategoryData: any;
   menuChanged: any;
   category: any;

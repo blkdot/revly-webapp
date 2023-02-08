@@ -3,7 +3,7 @@ import { atom } from 'jotai';
 import { addDays, addHours, addMinutes, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 
 // The list of active platform to show on the first screen
-export const platformAtom = atom([]);
+export const platformAtom = atom<string[]>([]);
 
 // The selected screen during offer trigger
 export const selectedAtom = atom(1);
@@ -30,9 +30,9 @@ export const beforePeriodBtnAtom = atom({
   endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
 });
 
-export const categoryDataListAtom = atom([]);
+export const categoryDataListAtom = atom<string[]>([]);
 export const branchAtom = atom<TVendors | Record<string, never>>({});
-export const categoryDataAtom = atom([]);
+export const categoryDataAtom = atom<string[]>([]);
 
 export const startingDateAtom = atom(new Date());
 export const endingDateAtom = atom(new Date(addDays(new Date(new Date()), 1)));
@@ -41,7 +41,7 @@ export const typeScheduleAtom = atom('Continues Offer');
 
 export const disabledDateAtom = atom(true);
 
-export const customisedDayAtom = atom([]);
+export const customisedDayAtom = atom<string[]>([]);
 
 export const timesAtom = atom([
   {
@@ -63,7 +63,20 @@ export const everyWeekAtom = atom('');
 
 export const itemMenuAtom = atom('');
 
-export const categoryAtom = atom([]);
+export type TCategoryAtom = {
+  id?: string | number;
+  item_id: string | number;
+  name?: string;
+  item_name: string;
+  price?: number;
+  unit_price: number;
+  metadata: {
+    drn_id: string;
+  };
+  category_name: string;
+  category: string;
+};
+export const categoryAtom = atom<TCategoryAtom[]>([]);
 
 export const filteredCategoryDataAtom = atom([]);
 
@@ -83,7 +96,7 @@ export const stopOrderAtom = atom([
 
 export const stepsAtom = atom([0, 1, 2, 3, 4]);
 
-export const checkedAtom = atom([]);
+export const checkedAtom = atom<string[]>([]);
 
 export const categoryLoadingAtom = atom(false);
 
@@ -93,7 +106,76 @@ export const categorySearchAtom = atom('');
 
 export const defaultHeatmapState = { 0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} };
 
-export const heatmapDataAtom = atom({
+export type TOfferDataResponse = {
+  data: { x_accrued_intra_day: number; x_percentage_intra_day: number; x_timeslot: number };
+  color: string;
+  value: number;
+};
+
+export type THeatmapData = {
+  revenue: {
+    0?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    1?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    2?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    3?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    4?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    5?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    6?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+  };
+  orders: {
+    0?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    1?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    2?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    3?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    4?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    5?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+    6?: {
+      [x: number]: TOfferDataResponse;
+      active?: boolean;
+    };
+  };
+};
+
+export const heatmapDataAtom = atom<THeatmapData>({
   revenue: defaultHeatmapState,
   orders: defaultHeatmapState,
 });

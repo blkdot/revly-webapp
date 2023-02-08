@@ -15,7 +15,7 @@ import {
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState, type createRef } from 'react';
 import {
   platformAtom,
   selectedAtom,
@@ -49,6 +49,9 @@ import {
   smRuleAtom,
   heatmapDataAtom,
   defaultHeatmapState,
+  type TCategoryAtom,
+  type THeatmapData,
+  type TOfferDataResponse,
 } from 'store/marketingSetupAtom';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -61,40 +64,46 @@ import './MarketingSetup.scss';
 
 const defaultRangeColorIndices = [0, 0, 0, 0];
 
-const ItemHeatmap = React.forwardRef((props: any, ref: any) => <div {...props} ref={ref} />);
+const ItemHeatmap = React.forwardRef((props: { children: ReactNode }, ref: typeof createRef) => (
+  <div {...props} ref={ref} />
+));
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const getMenuItem = (category, checked) => {
+const getMenuItem = (
+  category: TCategoryAtom[],
+  checked: string[]
+): { id: string | number; drn_id: string | number }[] => {
   const arr = [];
   category.forEach((obj) =>
     checked.forEach((c) => {
-      if (obj.name || obj.item_name === c) {
-        arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
-      }
+      if (!obj.name && obj.item_name !== c) return;
+      arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
     })
   );
   return arr;
 };
 
-const getItemMenuNamePrice = (checked, category) => {
+const getItemMenuNamePrice = (
+  checked: string[],
+  category: TCategoryAtom[]
+): { name: string; price: number }[] => {
   const arr = [];
   checked.forEach((c) => {
-    category.forEach((obj) =>
-      obj.name === c || obj.item_name === c
-        ? arr.push({ name: obj.name || obj.item_name, price: obj.price || obj.unit_price })
-        : false
-    );
+    category.forEach((obj) => {
+      if (obj.name !== c && obj.item_name !== c) return;
+      arr.push({ name: obj.name || obj.item_name, price: obj.price || obj.unit_price });
+    });
   });
   return arr;
 };
 
-const clearTimeSelected = (heatmapData) => {
+const clearTimeSelected = (heatmapData: THeatmapData): THeatmapData => {
   const clonedheatmapData = { ...heatmapData };
 
   days.forEach((__, index) => {
     if (!clonedheatmapData.revenue?.[index]) return;
 
-    _.range(minHour, maxHour + 1).forEach((num) => {
+    _.range(minHour, maxHour + 1).forEach((num: number) => {
       if (clonedheatmapData.revenue?.[index] && clonedheatmapData.revenue[index]?.[num]) {
         delete clonedheatmapData.revenue[index][num]?.active;
       }
@@ -108,7 +117,12 @@ const clearTimeSelected = (heatmapData) => {
   return { ...heatmapData, ...clonedheatmapData };
 };
 
-const MarketingSetup = ({ active, setActive, ads }: any) => {
+const MarketingSetup: React.FC<{
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  // eslint-disable-next-line react/require-default-props
+  ads?: boolean;
+}> = ({ active, setActive, ads }) => {
   const { getActivePlatform, userPlatformData } = usePlatform();
 
   const [platform, setPlatform] = useAtom(platformAtom);
@@ -171,8 +185,18 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     orders: defaultRangeColorIndices,
   });
 
-  const [revenueData, setRevenueData] = useState(null);
-  const [ordersData, setOrdersData] = useState(null);
+  const [revenueData, setRevenueData] = useState<{
+    [x: string]: {
+      heatmap: { [x: number]: { [x: number]: TOfferDataResponse } };
+      ranges: number[];
+    };
+  } | null>(null);
+  const [ordersData, setOrdersData] = useState<{
+    [x: string]: {
+      heatmap: { [x: number]: { [x: number]: TOfferDataResponse } };
+      ranges: number[];
+    };
+  } | null>(null);
 
   const setFreshStartingDate = () => {
     if (duration !== 'Starting Now') return;
@@ -203,6 +227,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       },
     ]);
     setHeatmapData(clearTimeSelected(heatmapData));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration]);
 
   useEffect(() => {
@@ -217,10 +242,11 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         pos: 1,
       },
     ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeSchedule]);
 
   useEffect(() => {
-    const newChainObj = JSON.parse(JSON.stringify(vendors.chainObj));
+    const newChainObj = { ...vendors.chainObj };
     const newVendorsObj = { talabat: [], deliveroo: [] };
 
     Object.keys(newChainObj).forEach((chainName, index) => {
@@ -252,6 +278,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         ] || [],
     });
     setMenu('Offer on the whole Menu');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, vendors]);
 
   const getPlatformToken = () => {
@@ -397,6 +424,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, revenueData, ordersData, heatmapLoading]);
 
   const getHeatmapData = () => {
@@ -452,6 +480,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (!active) return;
 
     getHeatmapData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beforePeriodBtn, vendorsObj, active]);
 
   const getMenuData = async (vendor, platforms) => {
@@ -494,6 +523,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         getMenuData(vendorDisplay, platform[0]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, selected]);
 
   const timeSelected = () => {
@@ -519,7 +549,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     setHeatmapData({ ...heatmapData, [links]: response });
   };
 
-  const getSteps = (stepsArr) => {
+  const getSteps = (stepsArr: number[]) => {
     if (platform.length < 2) {
       if (platform[0] === 'talabat') {
         setSteps(stepsArr);
@@ -531,7 +561,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     }
   };
 
-  const durationDisable = (n, stepsRange) => {
+  const durationDisable = (n: number, stepsRange: number[]) => {
     if (selected === n) {
       setHeatmapData(clearTimeSelected(heatmapData));
       timeSelected();
@@ -667,7 +697,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (menu === 'Offer on the whole Menu') {
       durationDisable(3, [0, 1, 2, 3]);
     }
-  }, [menu,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    menu,
     minOrder,
     branch,
     platform,
@@ -682,7 +714,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     customisedDay,
     itemMenu,
     vendors,
-    targetAudience,]);
+    targetAudience,
+  ]);
 
   const renderGradientValue = (v, i) => {
     const indices = links === 'revenue' ? 'AED' : '';
@@ -744,10 +777,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   useEffect(() => {
     setSelected(1);
     setRecap(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   useEffect(() => {
     setItemMenu('Flash Deal');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menu]);
 
   useEffect(() => {
@@ -755,10 +790,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (selected >= 3) {
       timeSelected();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [times, startingDate, endingDate, selected, typeSchedule]);
 
   useEffect(() => {
     setFreshStartingDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recap]);
 
   const getRecapBtn = () => {

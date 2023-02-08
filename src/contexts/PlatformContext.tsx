@@ -14,15 +14,14 @@ export const PlatformProvider = ({ children }) => {
     setUserPlatformData(platformContexDefaultFormat);
   };
 
-  const getActivePlatform = () => {
+  const getActivePlatform = (): string => {
     let activePlatform = '';
     Object.keys(userPlatformData.platforms).forEach((pl) => {
-      if (userPlatformData.platforms[pl].length > 0) {
-        if (userPlatformData.platforms[pl].find((obj) => obj.active)) {
-          activePlatform = pl;
-        }
+      if (userPlatformData.platforms[pl].active) {
+        activePlatform = pl;
       }
     });
+
     return activePlatform;
   };
 
