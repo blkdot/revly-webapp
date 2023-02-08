@@ -100,7 +100,14 @@ const CompetitionAlerts = () => {
     },
   ];
 
-  const { renderPercent, renderStatus, renderSimpleRow, renderIsoDateOnly, renderIsoStartTimeOnlyFromDate, renderIsoEndTimeOnlyFromDate } = useTableContentFormatter();
+  const {
+    renderPercent,
+    renderStatus,
+    renderSimpleRow,
+    renderIsoDateOnly,
+    renderIsoStartTimeOnlyFromDate,
+    renderIsoEndTimeOnlyFromDate,
+  } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
@@ -197,7 +204,7 @@ const CompetitionAlerts = () => {
     );
 
     // TODO: fix the type here
-    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } as any});
+    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } as any });
   }, [platform]);
 
   const handleCompetitorChange = (e) => {

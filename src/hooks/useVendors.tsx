@@ -127,17 +127,17 @@ const useVendors = (isSign = false) => {
           vendorsTemp.push({
             ...v,
             platform: p.name,
-            email: userPlatform[0].email, // TODO: check compatibilty
-            access_token: userPlatform[0].access_token, // TODO: check compatibilty
-            access_token_bis: userPlatform[0].access_token_bis, // TODO: check compatibilty
+            email: userPlatform.email, // TODO: check compatibilty
+            access_token: userPlatform.access_token, // TODO: check compatibilty
+            access_token_bis: userPlatform.access_token_bis, // TODO: check compatibilty
           });
           if (v.metadata.is_active === 'True' || v.metadata.is_active === true) {
             vendorsSelectedTemp.push({
               ...v,
               platform: p.name,
-              email: userPlatform[0].email, // TODO: check compatibilty
-              access_token: userPlatform[0].access_token, // TODO: check compatibilty
-              access_token_bis: userPlatform[0].access_token_bis, // TODO: check compatibilty
+              email: userPlatform.email, // TODO: check compatibilty
+              access_token: userPlatform.access_token, // TODO: check compatibilty
+              access_token_bis: userPlatform.access_token_bis, // TODO: check compatibilty
             });
           }
         })
@@ -159,12 +159,12 @@ const useVendors = (isSign = false) => {
             userPlatformData.platforms[platform].find((obj) =>
               obj.vendor_ids.some((id: number) => id === platformObj.vendor_id)
             ) || {};
-          display[chainName][vendorName].email = userPlatform[0].email; // TODO: check compatibilty
-          display[chainName][vendorName].platforms[platform].email = userPlatform[0].email; // TODO: check compatibilty
+          display[chainName][vendorName].email = userPlatform.email; // TODO: check compatibilty
+          display[chainName][vendorName].platforms[platform].email = userPlatform.email; // TODO: check compatibilty
           display[chainName][vendorName].platforms[platform].access_token =
-            userPlatform[0].access_token; // TODO: check compatibilty
+            userPlatform.access_token; // TODO: check compatibilty
           display[chainName][vendorName].platforms[platform].access_token_bis =
-            userPlatform[0].access_token_bis; // TODO: check compatibilty
+            userPlatform.access_token_bis; // TODO: check compatibilty
           if (
             platformObj.metadata.is_active === 'True' ||
             platformObj.metadata.is_active === true

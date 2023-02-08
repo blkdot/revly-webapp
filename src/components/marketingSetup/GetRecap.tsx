@@ -76,7 +76,12 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
 
   const [smRule] = useAtom(smRuleAtom);
   const [steps] = useAtom(stepsAtom);
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, type: string, index: number, order?: string) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type: string,
+    index: number,
+    order?: string
+  ) => {
     if (order === 'launch') {
       if (type === 'order') {
         launchOrder[index + 1] = {

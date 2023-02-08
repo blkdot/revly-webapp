@@ -17,18 +17,18 @@ export const usePlatform = () =>
       };
     };
     setUserPlatformData: React.Dispatch<
-    React.SetStateAction<{
-      onboarded: boolean;
-      platforms: {
-        [x: string]: {
-          registered: boolean;
-          active: boolean;
-          access_token: string;
-          access_token_bis: string;
-          vendor_ids: number[];
-        }[];
-      };
-    }>
+      React.SetStateAction<{
+        onboarded: boolean;
+        platforms: {
+          [x: string]: {
+            registered: boolean;
+            active: boolean;
+            access_token: string;
+            access_token_bis: string;
+            vendor_ids: number[];
+          }[];
+        };
+      }>
     >;
     cleanPlatformData: () => void;
   }>(PlatformContext);
