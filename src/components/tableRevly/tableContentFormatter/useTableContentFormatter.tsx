@@ -44,24 +44,26 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderIsoStartTimeOnlyFromDate = (r, h, i = 0) => (
+  const stepsMinute = 1000 * 60 * 30;
+
+  const renderIsoStartTimeOnlyFromDate = (r) => (
     <TableCellKit
       key={`start_hour_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r.start_date === null ? '-' : <>{format(parseISO(r.start_date), 'HH:mm')}</>}
+        {r.start_date === null ? '-' : <>{format(Math.round(parseISO(r.start_date).getTime()  / stepsMinute) * stepsMinute, 'HH:mm')}</>}
       </span>
     </TableCellKit>
   );
 
-  const renderIsoEndTimeOnlyFromDate = (r, h, i = 0) => (
+  const renderIsoEndTimeOnlyFromDate = (r) => (
     <TableCellKit
       key={`end_hour_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r.end_date === null ? '-' : <>{format(parseISO(r.end_date), 'HH:mm')}</>}
+        {r.end_date === null ? '-' : <>{format(Math.round(parseISO(r.end_date).getTime()  / stepsMinute) * stepsMinute, 'HH:mm')}</>}
       </span>
     </TableCellKit>
   );

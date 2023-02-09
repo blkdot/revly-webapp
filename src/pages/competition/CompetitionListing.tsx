@@ -9,14 +9,12 @@ import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from
 import { useEffect, useState } from 'react';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import AreaIcon from '../../assets/images/ic_area.png';
-import selectIcon from '../../assets/images/ic_select.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import Competitor from '../../components/competitor/Competitor';
 import Dates from '../../components/dates/Dates';
-import MarketingCheckmarksDropdown from '../../components/marketingSetup/MarketingChecmarksDropdown';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { vendorsAtom } from '../../store/vendorsAtom';
@@ -24,9 +22,46 @@ import './Competition.scss';
 
 let fnDelays = null;
 let fnDelaysAreas = null;
+
+const timeSlotObj = {
+  'Throughout Day': 'Throughout Day',
+  'Breakfast (04:00 - 11:00)': 'Breakfast',
+  'Lunch (11:00 - 14:00)': 'Lunch',
+  'Interpeak (14:00 - 17:00)': 'Interpeak',
+  'Dinner (17:00 - 00:00)': 'Dinner',
+  'Late night (00:00 - 04:00)': 'Late Night',
+};
+
+const headersAlert = (cuisine: string) => [
+  {
+    id: 'name',
+    numeric: false,
+    disablePadding: true,
+    label: 'Name',
+  },
+  {
+    id: 'discount_type',
+    numeric: false,
+    disablePadding: true,
+    label: 'Listing in offers',
+  },
+  {
+    id: 'cuisine',
+    numeric: false,
+    disablePadding: true,
+    label: `Listing in ${cuisine} cuisine`,
+  },
+  {
+    id: 'cuisine_and_discount_type',
+    numeric: false,
+    disablePadding: true,
+    label: 'Listing in offers and cuisine',
+  },
+];
+
 const CompetitionListing = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsSelected, display, chainObj } = vendors;
+  const { display } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
@@ -82,39 +117,6 @@ const CompetitionListing = () => {
     }
   }, [userPlatformData]);
 
-  const headersAlert = [
-    {
-      id: 'name',
-      numeric: false,
-      disablePadding: true,
-      label: 'Name',
-    },
-    // {
-    //   id: 'platform',
-    //   numeric: false,
-    //   disablePadding: true,
-    //   label: 'Platform',
-    // },
-    {
-      id: 'discount_type',
-      numeric: false,
-      disablePadding: true,
-      label: 'Listing in offers',
-    },
-    {
-      id: 'cuisine',
-      numeric: false,
-      disablePadding: true,
-      label: `Listing in ${cuisine} cuisine`,
-    },
-    {
-      id: 'cuisine_and_discount_type',
-      numeric: false,
-      disablePadding: true,
-      label: 'Listing in offers and cuisine',
-    },
-  ];
-
   const { renderSimpleRow, renderOrdinalSuffix } = useTableContentFormatter();
 
   const cellTemplatesObject = {
@@ -128,7 +130,7 @@ const CompetitionListing = () => {
   };
 
   const renderRowsByHeader = (r) =>
-    headersAlert.reduce(
+    headersAlert(cuisine).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject?.[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
@@ -137,14 +139,7 @@ const CompetitionListing = () => {
       }),
       {}
     );
-  const timeSlotObj = {
-    'Throughout Day': 'Throughout Day',
-    'Breakfast (04:00 - 11:00)': 'Breakfast',
-    'Lunch (11:00 - 14:00)': 'Lunch',
-    'Interpeak (14:00 - 17:00)': 'Interpeak',
-    'Dinner (17:00 - 00:00)': 'Dinner',
-    'Late night (00:00 - 04:00)': 'Late Night',
-  };
+
   useEffect(() => {
     setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
   }, [area]);
@@ -164,8 +159,11 @@ const CompetitionListing = () => {
           master_email: user.email,
           access_token: user.accessToken,
           vendors: vend || [],
+          day_period: timeSlotObj[timeSlot] || 'All',
           timeslot: timeSlotObj[timeSlot] || timeSlot,
-          location: area === 'Everywhere' ? 'ALL' : area,
+          filter_location: area === 'Everywhere' ? 'All' : area,
+          filter_offer: '',
+          filter_cuisine: '',
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
@@ -176,18 +174,8 @@ const CompetitionListing = () => {
           throw new Error('');
         }
 
-        // const filt = ranking.data.data.map((v) => ({
-        //   name: v.name,
-        //   r_offers: v.cuisine,
-        //   r_cuis: v.italian_only,
-        //   r_all: v.italian_basket_discount,
-        //   ov: v.no_filter,
-        //   platform,
-        //   id: v.id,
-        // }));
-
-        setCompetitionListingData(ranking.data.data);
-        setCuisine(ranking.data.cuisine);
+        setCompetitionListingData(ranking.data?.data || []);
+        setCuisine(ranking.data?.cuisine || 'Italian');
         setLoading(false);
         if (stack === queue) setQueue(0);
       } catch (err) {
@@ -431,7 +419,7 @@ const CompetitionListing = () => {
         </TypographyKit>
         <TableRevly
           isLoading={loading}
-          headers={headersAlert}
+          headers={headersAlert(cuisine)}
           rows={competitionListingData.map(renderRowsByHeader)}
           noEmptyMessage
         />
