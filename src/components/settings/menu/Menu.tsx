@@ -59,7 +59,7 @@ const Menu = () => {
       const list = Object.keys(pl)
         .map((v) => ({
           name: v,
-          registered: pl[v].some((pdata) => pdata.registered),
+          registered: pl[v].some((pdata) => pdata.active),
         }))
         .filter((k) => k.registered === true);
 
