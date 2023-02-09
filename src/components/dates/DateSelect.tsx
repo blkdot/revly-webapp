@@ -224,7 +224,11 @@ const DateSelect = React.memo((props: any) => {
       setYear(new Date().getFullYear());
     } else {
       setSelections([
-        { startDate: startOfMonth(new Date()), endDate: new Date(), key: 'selection' },
+        {
+          startDate: startOfMonth(new Date()),
+          endDate: offer ? endOfMonth(new Date()) : new Date(),
+          key: 'selection',
+        },
       ]);
       setYear(new Date().getFullYear());
     }
