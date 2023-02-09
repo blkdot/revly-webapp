@@ -29,7 +29,7 @@ import {
   VerifyCode,
 } from 'pages';
 import { Route, Routes } from 'react-router-dom';
-import { ProtectedOnboardRoutes, ProtectedRoutes, ProtectedSettingsRoutes } from 'routes';
+import { MainLayout, ProtectedOnboardRoutes, ProtectedRoutesNew, SettingsLayout } from 'routes';
 import './App.scss';
 import AuthLayout from './components/layout/authLayout/AuthLayout';
 
@@ -57,21 +57,21 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <div className='App'>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
-          <PlatformProvider>
-            <AuthContextProvider>
-              <GlobalFunctionalitiesContextProvider>
-                <Routes>
-                  <Route element={<AuthLayout />}>
-                    <Route path='/' element={<SignIn />} />
-                    <Route path='/signup' element={<SignUp />} />
-                    <Route path='/verify-code-signup' element={<VerifyCode />} />
-                    <Route path='/reset-password' element={<ResetPassword />} />
-                  </Route>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <ThemeProvider theme={theme}>
+        <PlatformProvider>
+          <AuthContextProvider>
+            <GlobalFunctionalitiesContextProvider>
+              <Routes>
+                <Route element={<AuthLayout />}>
+                  <Route path='/' element={<SignIn />} />
+                  <Route path='/signup' element={<SignUp />} />
+                  <Route path='/verify-code-signup' element={<VerifyCode />} />
+                  <Route path='/reset-password' element={<ResetPassword />} />
+                </Route>
+                <Route element={<ProtectedRoutesNew />}>
                   <Route path='/forgot-password' element={<ForgotPassword />} />
-                  <Route element={<ProtectedRoutes />}>
+                  <Route element={<MainLayout />}>
                     <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
                     <Route element={<ProtectedOnboardRoutes />}>
                       <Route path='/dashboard' element={<Dashboard />} />
@@ -84,7 +84,7 @@ const App = () => (
                     </Route>
                     <Route path='/check' element={<Check />} />
                   </Route>
-                  <Route element={<ProtectedSettingsRoutes />}>
+                  <Route element={<SettingsLayout />}>
                     <Route element={<ProtectedOnboardRoutes />}>
                       <Route path='/settings/general' element={<SettingsGeneral />} />
                       <Route path='/settings/billing' element={<SettingsBilling />} />
@@ -97,13 +97,13 @@ const App = () => (
                       />
                     </Route>
                   </Route>
-                </Routes>
-              </GlobalFunctionalitiesContextProvider>
-            </AuthContextProvider>
-          </PlatformProvider>
-        </ThemeProvider>
-      </LocalizationProvider>
-    </div>
+                </Route>
+              </Routes>
+            </GlobalFunctionalitiesContextProvider>
+          </AuthContextProvider>
+        </PlatformProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   </QueryClientProvider>
 );
 
