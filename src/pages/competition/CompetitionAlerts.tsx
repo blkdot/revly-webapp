@@ -200,11 +200,11 @@ const CompetitionAlerts = () => {
     const arr = vendorsArr.filter(
       (v) =>
         v.platform === platform &&
-        (v.metadata.is_active === 'True' || v.metadata.is_active === true)
+        (v.metadata.is_active === true)
     );
 
     // TODO: fix the type here
-    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } as any });
+    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });
   }, [platform]);
 
   const handleCompetitorChange = (e) => {
