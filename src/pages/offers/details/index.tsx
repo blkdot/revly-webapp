@@ -111,7 +111,8 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       {
         master_email: user.email,
         access_token: user?.access_token || '',
-        platform_token: platforms[platform.toLowerCase()].access_token,
+        // TODO: check this
+        platform_token: platforms[platform.toLowerCase()][0].access_token,
         vendors: [vendor],
         offer_id: offer_ids || null,
         chain_id,

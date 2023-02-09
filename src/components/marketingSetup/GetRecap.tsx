@@ -2,6 +2,31 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { format } from 'date-fns';
 import { BoxKit, ButtonKit, TextfieldKit, TypographyKit } from 'kits';
+import {
+  platformAtom,
+  selectedAtom,
+  menuAtom,
+  discountPercentageAtom,
+  minOrderPercentageAtom,
+  durationAtom,
+  branchAtom,
+  endingDateAtom,
+  typeScheduleAtom,
+  customisedDayAtom,
+  timesAtom,
+  everyWeekAtom,
+  itemMenuAtom,
+  targetAudienceAtom,
+  createdAtom,
+  recapAtom,
+  launchOrderAtom,
+  stepsAtom,
+  smRuleAtom,
+  stopOrderAtom,
+  startingDateAtom,
+} from 'store/marketingSetupAtom';
+import { useAtom } from 'jotai';
+import { FC, type ChangeEvent } from 'react';
 import ArrowIcon from '../../assets/images/arrow.png';
 import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
@@ -22,37 +47,42 @@ import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupSteppe
 import GetProgress from './MarketingGetProgress';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';
 
-const GetRecap = ({ recapData }) => {
-  const {
-    progressData,
-    smRule,
-    launchOrder,
-    setLaunchOrder,
-    setStopOrder,
-    stopOrder,
-    created,
-    closeSetup,
-    ads,
-    menu,
-    minOrder,
-    discountPercentage,
-    itemMenu,
-    recap,
-    steps,
-    selected,
-    getItemMenuNamePrice,
-    branch,
-    platform,
-    duration,
-    typeSchedule,
-    customisedDay,
-    everyWeek,
-    startingDate,
-    endingDate,
-    times,
-    targetAudience,
-  } = recapData;
-  const handleChange = (e, type, index, order?) => {
+type TProps = {
+  closeSetup: () => void;
+  // eslint-disable-next-line react/require-default-props
+  ads?: boolean;
+  getItemMenuNamePrice: () => { name: string; price: number }[];
+};
+
+const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
+  const [platform] = useAtom(platformAtom);
+  const [selected] = useAtom(selectedAtom);
+  const [menu] = useAtom(menuAtom);
+  const [discountPercentage] = useAtom(discountPercentageAtom);
+  const [minOrder] = useAtom(minOrderPercentageAtom);
+  const [duration] = useAtom(durationAtom);
+  const [endingDate] = useAtom(endingDateAtom);
+  const [typeSchedule] = useAtom(typeScheduleAtom);
+  const [branch] = useAtom(branchAtom);
+  const [customisedDay] = useAtom(customisedDayAtom);
+  const [everyWeek] = useAtom(everyWeekAtom);
+  const [itemMenu] = useAtom(itemMenuAtom);
+  const [targetAudience] = useAtom(targetAudienceAtom);
+  const [created] = useAtom(createdAtom);
+  const [recap] = useAtom(recapAtom);
+  const [times] = useAtom(timesAtom);
+  const [launchOrder, setLaunchOrder] = useAtom(launchOrderAtom);
+  const [stopOrder, setStopOrder] = useAtom(stopOrderAtom);
+  const [startingDate] = useAtom(startingDateAtom);
+
+  const [smRule] = useAtom(smRuleAtom);
+  const [steps] = useAtom(stepsAtom);
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type: string,
+    index: number,
+    order?: string
+  ) => {
     if (order === 'launch') {
       if (type === 'order') {
         launchOrder[index + 1] = {
@@ -73,13 +103,13 @@ const GetRecap = ({ recapData }) => {
       setStopOrder([...stopOrder]);
     }
   };
+
   if (smRule) {
     return (
       <div>
         <div className='left-part-top'>
           <div>
             <TypographyKit variant='h4'>Create a Smart Rule</TypographyKit>
-
             <img
               tabIndex={-1}
               role='presentation'
@@ -147,7 +177,7 @@ const GetRecap = ({ recapData }) => {
                       handleChange={(e) => handleChange(e, 'order', index, 'launch')}
                     />
                     <MarketingPlaceholderDropdown
-                      readOnly={!(launchOrder.length === 2)}
+                      readOnly={launchOrder.length !== 2}
                       names={['>', '<']}
                       title='<'
                       personName={obj.arrow}
@@ -332,6 +362,7 @@ const GetRecap = ({ recapData }) => {
         delete recapChainObj[cName];
       }
     });
+
     return (
       <div>
         <div className='left-part-top'>
@@ -431,7 +462,7 @@ const GetRecap = ({ recapData }) => {
             ))}
           </div>
         </BoxKit>
-        {platform === 'deliveroo' ? (
+        {platform.includes('deliveroo') ? (
           <BoxKit className='left-part-radio recap-left-part'>
             <div className='radio recap-box-wrapper'>
               <div className='recap-box'>
@@ -504,7 +535,7 @@ const GetRecap = ({ recapData }) => {
             {menu === 'Offer on An Item from the Menu' ? (
               <div className='recap-between no-border'>
                 {getItemMenuNamePrice().map((obj) => (
-                  <div>
+                  <div key={obj.name}>
                     <div>{obj.name}</div>
                     <div>{obj.price} AED</div>
                   </div>
@@ -518,6 +549,7 @@ const GetRecap = ({ recapData }) => {
       </div>
     );
   }
+
   return (
     <div>
       <div className='left-part-top'>
@@ -534,7 +566,7 @@ const GetRecap = ({ recapData }) => {
         </div>
         <MarketingSetupStepper selected={selected} steps={steps} />
       </div>
-      <GetProgress progressData={progressData} />
+      <GetProgress />
     </div>
   );
 };

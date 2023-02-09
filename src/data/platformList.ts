@@ -21,9 +21,31 @@ export const platformList = [
   },
 ];
 
-export const platformObject = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
+export const platformObject: {
+  [x: string]: {
+    srcFavicon: string;
+    srcFaviconWhite: string;
+    src: string;
+    name: string;
+    color: string;
+  };
+} = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
 
-export const platformContexDefaultFormat = {
+export type TPlatformUserData = {
+  onboarded: boolean;
+  platforms: {
+    [x: string]: {
+      registered: boolean;
+      active: boolean;
+      access_token: string | null;
+      access_token_bis: string | null;
+      vendor_ids: number[] | string[];
+      email: string;
+    }[];
+  };
+};
+
+export const platformContexDefaultFormat: TPlatformUserData = {
   onboarded: false,
   platforms: platformList.reduce(
     (acc, { name }) => ({
@@ -34,6 +56,7 @@ export const platformContexDefaultFormat = {
           active: false,
           access_token: null,
           access_token_bis: null,
+          vendor_ids: [],
         },
       ],
     }),
