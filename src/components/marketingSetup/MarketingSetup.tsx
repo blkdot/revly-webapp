@@ -676,7 +676,7 @@ const MarketingSetup: React.FC<{
         setDisabled(!(branch && platform.length));
         return;
       }
-      
+
       setDisabled(false);
       return;
     }

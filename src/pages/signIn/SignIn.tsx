@@ -21,7 +21,7 @@ const SignIn = () => {
   const { setVendors } = useVendors(true);
   const { setVendors: setVendorsReq } = useVendors(true);
 
-  const { signIn, googleSignIn, user, logOut, verifyCodeEmail } = useUserAuth();
+  const { signIn, user, logOut, verifyCodeEmail } = useUserAuth();
 
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
@@ -105,29 +105,6 @@ const SignIn = () => {
     }
   }, [email, logOut, navigate, password, remember, signIn, triggerAlertWithMessageError]);
 
-  const handleGoogleSubmit = useCallback(async () => {
-    setProcessing(true);
-    try {
-      await googleSignIn();
-      navigate('/dashboard');
-    } catch (error) {
-      const message = firebaseCodeError[error.code]
-        ? firebaseCodeError[error.code].message
-        : error.message;
-
-      if (firebaseCodeError[error.code].field) {
-        if (firebaseCodeError[error.code].field === 'email') {
-          setEmailError(true);
-        } else if (firebaseCodeError[error.code].field === 'password') {
-          setPasswordError(true);
-        }
-      }
-
-      triggerAlertWithMessageError(message);
-      setProcessing(false);
-    }
-  }, [googleSignIn, navigate, triggerAlertWithMessageError]);
-
   const onEmailBlur = useCallback(() => setEmailError(!email), [email]);
   const onPasswordBlur = useCallback(() => setPasswordError(!password), [password]);
 
@@ -144,7 +121,6 @@ const SignIn = () => {
       remember={remember}
       setRemember={setRemember}
       onSubmit={handleSubmit}
-      onGoogleSubmit={handleGoogleSubmit}
       disabled={!email || !password || processing}
     />
   );

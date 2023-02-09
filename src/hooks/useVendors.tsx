@@ -122,7 +122,6 @@ const useVendors = (isSign = false) => {
     let vendorsSelectedTemp: TVendorsArr[] = [];
     let vendorsTemp: TVendorsArr[] = [];
 
-
     platformList
       .filter((p) => {
         if (!newData[p.name]) delete newData[p.name];
