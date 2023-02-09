@@ -31,7 +31,7 @@ export const platformObject: {
   };
 } = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
 
-export const platformContexDefaultFormat: {
+export type TPlatformUserData = {
   onboarded: boolean;
   platforms: {
     [x: string]: {
@@ -39,10 +39,13 @@ export const platformContexDefaultFormat: {
       active: boolean;
       access_token: string | null;
       access_token_bis: string | null;
-      vendor_ids: number[];
+      vendor_ids: number[] | string[];
+      email: string;
     }[];
   };
-} = {
+};
+
+export const platformContexDefaultFormat: TPlatformUserData = {
   onboarded: false,
   platforms: platformList.reduce(
     (acc, { name }) => ({

@@ -120,24 +120,25 @@ const useVendors = (isSign = false) => {
       })
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
-          const userPlatform =
-            userPlatformData.platforms[p.name].find((obj) =>
-              obj.vendor_ids.some((id) => id === v.vendor_id)
-            ) || '';
+          const userPlatform = userPlatformData.platforms[p.name].find((obj) =>
+            obj.vendor_ids.some((id) => id === v.vendor_id)
+          );
+
           vendorsTemp.push({
             ...v,
             platform: p.name,
-            email: userPlatform.email, // TODO: check compatibilty
-            access_token: userPlatform.access_token, // TODO: check compatibilty
-            access_token_bis: userPlatform.access_token_bis, // TODO: check compatibilty
+            email: userPlatform?.email,
+            access_token: userPlatform?.access_token,
+            access_token_bis: userPlatform?.access_token_bis,
           });
+
           if (v.metadata.is_active === 'True' || v.metadata.is_active === true) {
             vendorsSelectedTemp.push({
               ...v,
               platform: p.name,
-              email: userPlatform.email, // TODO: check compatibilty
-              access_token: userPlatform.access_token, // TODO: check compatibilty
-              access_token_bis: userPlatform.access_token_bis, // TODO: check compatibilty
+              email: userPlatform?.email,
+              access_token: userPlatform?.access_token,
+              access_token_bis: userPlatform?.access_token_bis,
             });
           }
         })
@@ -155,16 +156,15 @@ const useVendors = (isSign = false) => {
       Object.keys(display[chainName]).forEach((vendorName) => {
         Object.keys(display[chainName][vendorName].platforms).forEach((platform) => {
           const platformObj = display[chainName][vendorName].platforms[platform];
-          const userPlatform =
-            userPlatformData.platforms[platform].find((obj) =>
-              obj.vendor_ids.some((id: number) => id === platformObj.vendor_id)
-            ) || {};
-          display[chainName][vendorName].email = userPlatform.email; // TODO: check compatibilty
-          display[chainName][vendorName].platforms[platform].email = userPlatform.email; // TODO: check compatibilty
+          const userPlatform = userPlatformData.platforms[platform].find((obj) =>
+            obj.vendor_ids.some((id: number | string) => Number(id) === Number(platformObj.vendor_id))
+          );
+          display[chainName][vendorName].email = userPlatform?.email;
+          display[chainName][vendorName].platforms[platform].email = userPlatform?.email;
           display[chainName][vendorName].platforms[platform].access_token =
-            userPlatform.access_token; // TODO: check compatibilty
+            userPlatform?.access_token;
           display[chainName][vendorName].platforms[platform].access_token_bis =
-            userPlatform.access_token_bis; // TODO: check compatibilty
+            userPlatform?.access_token_bis;
           if (
             platformObj.metadata.is_active === 'True' ||
             platformObj.metadata.is_active === true
@@ -186,16 +186,21 @@ const useVendors = (isSign = false) => {
       display,
       chainObj: { ...display },
     };
+
     setVendors(dataV);
     setVendorsAtom(dataV);
+
     Object.keys(display).forEach((key) => {
       delete display[key];
     });
+
     vendorsTemp = [];
     vendorsSelectedTemp = [];
   }, [data]);
+
   const selectedVendors = (name: string, plat?: string) => {
     const arr = [];
+
     Object.keys(vendors.display).forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
         if (vendors.display[cName][vName].checked) {
@@ -211,6 +216,7 @@ const useVendors = (isSign = false) => {
     });
     return arr;
   };
+
   return { vendors, setVendors, selectedVendors };
 };
 
