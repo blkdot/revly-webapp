@@ -203,27 +203,7 @@ const useVendors = (isSign = false) => {
     vendorsSelectedTemp = [];
   }, [data]);
 
-  const selectedVendors = (name: string, plat?: string) => {
-    const arr = [];
-
-    Object.keys(vendors.display).forEach((cName) => {
-      Object.keys(vendors.display[cName]).forEach((vName) => {
-        if (vendors.display[cName][vName].checked) {
-          if (name === 'name') {
-            arr.push(vName);
-          } else if (name === 'full') {
-            arr.push(vendors.display[cName][vName].platforms[plat]);
-          } else {
-            arr.push(vendors.display[cName][vName]);
-          }
-        }
-      });
-    });
-
-    return arr;
-  };
-
-  return { vendors, setVendors, selectedVendors };
+  return { vendors, setVendors };
 };
 
 export default useVendors;

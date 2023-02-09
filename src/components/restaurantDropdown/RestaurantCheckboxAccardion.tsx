@@ -1,9 +1,10 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ButtonKit, CheckboxKit, InputLabelKit, MenuItemKit, RadioKit, TooltipKit } from 'kits';
 import { useEffect, useState, FC } from 'react';
+import { platformList } from 'data/platformList';
 import selectIcon from '../../assets/images/ic_select.png';
-import deliveroo from '../../assets/images/deliveroo-favicon.webp';
-import talabat from '../../assets/images/talabat-favicon.png';
+// import deliveroo from '../../assets/images/deliveroo-favicon.webp';
+// import talabat from '../../assets/images/talabat-favicon.png';
 
 const RestaurantCheckboxAccordion: FC<{
   info: object;
@@ -50,18 +51,30 @@ const RestaurantCheckboxAccordion: FC<{
 
   const [hoverStatusChain, setHoverChain] = useState(false);
   const [hoverStatusVendor, setHoverVendor] = useState([]);
-  const getHoverStatusVendor = (vName) => hoverStatusVendor.find((v) => v === vName);
+  const getHoverStatusVendor = (vName: string) => hoverStatusVendor.find((v) => v === vName);
   // function for vendor button "Only"
-  const handleClickVendor = (e, vendorName) => {
+  const handleClickVendor = (e: any, vendorName: string) => {
     e.stopPropagation();
     const displayTemp = JSON.parse(JSON.stringify(display));
+    const vendorsObjTemp = {};
     Object.keys(displayTemp).forEach((cName) => {
       Object.keys(displayTemp[cName]).forEach((vName) => {
         displayTemp[cName][vName].checked = false;
       });
     });
     displayTemp[chainName][vendorName].checked = true;
-    setVendors({ ...vendors, display: displayTemp });
+    Object.keys(displayTemp[chainName][vendorName].platforms).forEach((platform) => {
+      if ((vendorsObjTemp[platform] || []).length === 0) {
+        vendorsObjTemp[platform] = [displayTemp[chainName][vendorName].platforms[platform]];
+      } else {
+        vendorsObjTemp[platform].push(displayTemp[chainName][vendorName].platforms[platform]);
+      }
+    });
+    setVendors({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp });
+  };
+  const getIcon = (vendorName: string) => {
+    const platform = Object.keys(info[vendorName].platforms)[0];
+    return platformList.find((obj) => obj.name === platform).srcFavicon;
   };
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
@@ -113,7 +126,11 @@ const RestaurantCheckboxAccordion: FC<{
           return (
             <div className='vendors-only' key={vendorName}>
               <MenuItemKit disabled={!info[vendorName].active}>
-                <img className='restaurant-img' src={talabat} alt='talabat' />
+                <img
+                  className='restaurant-img'
+                  src={getIcon(vendorName)}
+                  alt={Object.keys(info[vendorName].platforms)[0]}
+                />
                 {pageType === 'listing' ? (
                   <RadioKit
                     value={vendorName}

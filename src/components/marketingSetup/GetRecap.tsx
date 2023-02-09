@@ -1,4 +1,5 @@
 import RemoveIcon from '@mui/icons-material/Remove';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { format } from 'date-fns';
 import { BoxKit, ButtonKit, TextfieldKit, TypographyKit } from 'kits';
 import {
@@ -354,19 +355,6 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
       </div>
     );
   }
-
-  const selectedVendors = () => {
-    const arr = [];
-    Object.keys(branch.display).forEach((cName) => {
-      Object.keys(branch.display[cName]).forEach((vName) => {
-        if (branch.display[cName][vName].checked) {
-          arr.push(vName);
-        }
-      });
-    });
-    return arr;
-  };
-
   if (recap) {
     const recapChainObj = JSON.parse(JSON.stringify(branch.chainObj));
     Object.keys(recapChainObj).forEach((cName) => {
@@ -393,7 +381,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
         <BoxKit className='left-part-radio recap-left-part recap-left-part-inside'>
           <div>
             <img width={35} height={35} src={selectIcon} alt='select' />
-            {selectedVendors().join(', ')}
+            {selectedVendors('name', branch.display).join(', ')}
           </div>
           <div>
             <p>Platforms:</p>
@@ -502,6 +490,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
               <div>
                 <span>
                   <img
+                    className='menu-icon'
                     src={menu === 'Offer on An Item from the Menu' ? ItemMenuIcon : menuIcon}
                     alt={menu}
                   />

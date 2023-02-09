@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
 import { useAlert, useApi, usePlatform, useMarketingSetup, useVendors } from 'hooks';
@@ -158,7 +159,7 @@ const MarketingSetup: React.FC<{
 
   const [checked, setChecked] = useAtom(checkedAtom);
   const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
-  const { vendors, selectedVendors } = useVendors();
+  const { vendors } = useVendors();
   const { vendorsObj } = vendors;
 
   useEffect(() => {
@@ -207,7 +208,7 @@ const MarketingSetup: React.FC<{
     setTimes([
       {
         startTime: setStartTimeFormat(new Date(), 2),
-        endTime: setEndTimeFormat(new Date()),
+        endTime: setEndTimeFormat(times[0].endTime),
         pos: 1,
       },
     ]);
@@ -227,6 +228,7 @@ const MarketingSetup: React.FC<{
         pos: 1,
       },
     ]);
+
     setHeatmapData(clearTimeSelected(heatmapData));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration]);
@@ -331,11 +333,11 @@ const MarketingSetup: React.FC<{
         setTriggerLoading(true);
         const res = await triggerOffers(platform[0], {
           ...dataReq,
-          vendors: selectedVendors('full', platform[0]),
-          chain_id: String(selectedVendors('full', platform[0])[0].chain_id),
+          vendors: selectedVendors('full', branch.display, platform[0]),
+          chain_id: String(selectedVendors('full', branch.display, platform[0])[0].chain_id),
           platform_token:
-            selectedVendors('full', platform[0])[0].access_token ??
-            selectedVendors('full', platform[0])[0].access_token_bis,
+            selectedVendors('full', branch.display, platform[0])[0].access_token ??
+            selectedVendors('full', branch.display, platform[0])[0].access_token_bis,
         });
 
         if (res instanceof Error) {
@@ -355,8 +357,8 @@ const MarketingSetup: React.FC<{
             vendors: selectedVendors('full', p),
             chain_id: String(selectedVendors('full', p)[0].chain_id),
             platform_token:
-              selectedVendors('full', p)[0].access_token ??
-              selectedVendors('full', p)[0].access_token_bis,
+              selectedVendors('full', branch.display, p)[0].access_token ??
+              selectedVendors('full', branch.display, p)[0].access_token_bis,
           });
         });
 
@@ -674,7 +676,7 @@ const MarketingSetup: React.FC<{
         setDisabled(!(branch && platform.length));
         return;
       }
-
+      
       setDisabled(false);
       return;
     }
@@ -790,14 +792,6 @@ const MarketingSetup: React.FC<{
     setItemMenu('Flash Deal');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menu]);
-
-  useEffect(() => {
-    setHeatmapData(clearTimeSelected(heatmapData));
-    if (selected >= 3) {
-      timeSelected();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [times, startingDate, endingDate, selected, typeSchedule]);
 
   useEffect(() => {
     setFreshStartingDate();
