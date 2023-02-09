@@ -45,6 +45,7 @@ export type TVendorsArr = {
 export type TChainVendor = {
   [x: string]: {
     [x: string]: {
+      is_matched: unknown;
       deleted: boolean;
       platforms: any;
       email: string;
@@ -185,24 +186,8 @@ const useVendors = (isSign = false) => {
     vendorsTemp = [];
     vendorsSelectedTemp = [];
   }, [data]);
-  const selectedVendors = (name: string, plat?: string) => {
-    const arr = [];
-    Object.keys(vendors.display).forEach((cName) => {
-      Object.keys(vendors.display[cName]).forEach((vName) => {
-        if (vendors.display[cName][vName].checked) {
-          if (name === 'name') {
-            arr.push(vName);
-          } else if (name === 'full') {
-            arr.push(vendors.display[cName][vName].platforms[plat]);
-          } else {
-            arr.push(vendors.display[cName][vName]);
-          }
-        }
-      });
-    });
-    return arr;
-  };
-  return { vendors, setVendors, selectedVendors };
+
+  return { vendors, setVendors };
 };
 
 export default useVendors;

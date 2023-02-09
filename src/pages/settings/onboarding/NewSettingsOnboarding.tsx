@@ -25,9 +25,26 @@ const NewSettingsOnboarding = () => {
     return arr;
   };
   const [accounts, setAccounts] = useState(getAccounts() || []);
+  const getSortedDisplay = () =>
+    Object.keys(vendors.display).sort((a, b) => {
+      const displayA = Object.keys(vendors.display[a]).some(
+        (vName) => vendors.display[a][vName].is_matched
+      );
+      const displayB = Object.keys(vendors.display[b]).some(
+        (vName) => vendors.display[b][vName].is_matched
+      );
+      if (displayA === displayB) {
+        return 0;
+      }
+      if (displayA) {
+        return -1;
+      }
+      return 1;
+    });
   const getBranchData = () => {
     const arr = [];
-    Object.keys(vendors.display).forEach((cName) => {
+
+    getSortedDisplay().forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
         arr.push({ name: vName, data: vendors.display[cName][vName] });
       });

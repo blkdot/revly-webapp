@@ -1,4 +1,4 @@
-import { usePlatform, useVendors } from 'hooks';
+import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
 import { FC, useEffect } from 'react';
@@ -6,6 +6,7 @@ import selectIcon from '../../assets/images/ic_select.png';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import './RestaurantDropdown.scss';
+import selectedVendors from './selectedVendors';
 
 const ITEM_HEIGHT = 200;
 const ITEM_PADDING_TOP = 10;
@@ -32,7 +33,7 @@ const RestaurantDropdown: FC<{
   className?: string;
 }> = ({ setState, state, pageType, className }) => {
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq, selectedVendors } = useVendors(undefined);
+  const { vendors: vendorsReq } = useVendors(undefined);
   useEffect(() => {
     if (Object.keys(vendorsReq.display).length > 0) {
       setVendors(vendorsReq);
@@ -46,7 +47,7 @@ const RestaurantDropdown: FC<{
     const { value, checked } = target;
     const displayTemp = JSON.parse(JSON.stringify(display));
     const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj));
-    if (selectedVendors('name').length > 1) {
+    if (selectedVendors('name', display).length > 1) {
       if (!checked) {
         displayTemp[chainName][value].checked = false;
         Object.keys(displayTemp[chainName][value].platforms).forEach((platform) => {
@@ -81,13 +82,17 @@ const RestaurantDropdown: FC<{
       }
       if (pageType === 'branch') {
         if (
-          selectedVendors('vendors').every(
+          selectedVendors('vendors', display).every(
             (obj: any) => obj.email === displayTemp[chainName][value].email
           )
         ) {
           displayTemp[chainName][value].checked = true;
           Object.keys(displayTemp[chainName][value].platforms).forEach((platform) => {
-            vendorsObjTemp[platform].push(displayTemp[chainName][value].platforms[platform]);
+            if ((vendorsObjTemp[platform] || []).length === 0) {
+              vendorsObjTemp[platform] = [displayTemp[chainName][value].platforms[platform]];
+            } else {
+              vendorsObjTemp[platform].push(displayTemp[chainName][value].platforms[platform]);
+            }
           });
         } else {
           Object.keys(displayTemp).forEach((cName) => {
@@ -105,7 +110,11 @@ const RestaurantDropdown: FC<{
       }
       displayTemp[chainName][value].checked = true;
       Object.keys(displayTemp[chainName][value].platforms).forEach((platform) => {
-        vendorsObjTemp[platform].push(displayTemp[chainName][value].platforms[platform]);
+        if ((vendorsObjTemp[platform] || []).length === 0) {
+          vendorsObjTemp[platform] = [displayTemp[chainName][value].platforms[platform]];
+        } else {
+          vendorsObjTemp[platform].push(displayTemp[chainName][value].platforms[platform]);
+        }
       });
       if (state) {
         setState({ ...state, display: displayTemp, vendorsObj: vendorsObjTemp });
@@ -116,17 +125,39 @@ const RestaurantDropdown: FC<{
   };
   const selectAll = () => {
     const displayTemp = JSON.parse(JSON.stringify(display));
+    const vendorsObjTemp = {};
     Object.keys(displayTemp).forEach((cName) => {
       Object.keys(displayTemp[cName]).forEach((vName) => {
         displayTemp[cName][vName].checked = true;
+        Object.keys(displayTemp[cName][vName].platforms).forEach((platform) => {
+          if ((vendorsObjTemp[platform] || []).length === 0) {
+            vendorsObjTemp[platform] = [displayTemp[cName][vName].platforms[platform]];
+          } else {
+            vendorsObjTemp[platform].push(displayTemp[cName][vName].platforms[platform]);
+          }
+        });
       });
     });
     if (state) {
-      setState({ ...state, display: displayTemp });
+      setState({ ...state, display: displayTemp, vendorsObj: vendorsObjTemp });
       return;
     }
-    setVendors({ ...vendorsContext, display: displayTemp });
+    setVendors({ ...vendorsContext, display: displayTemp, vendorsObj: vendorsObjTemp });
   };
+
+  const getSortedDisplay = () =>
+    Object.keys(display).sort((a, b) => {
+      const displayA = Object.keys(display[a]).some((vName) => display[a][vName].is_matched);
+      const displayB = Object.keys(display[b]).some((vName) => display[b][vName].is_matched);
+      if (displayA === displayB) {
+        return 0;
+      }
+      if (displayA) {
+        return -1;
+      }
+      return 1;
+    });
+
   return (
     <div
       className={`restaurant-dropdown_wrapper ${
@@ -150,14 +181,14 @@ const RestaurantDropdown: FC<{
           renderValue={() => (
             <div className='selected-dropdown'>
               <img className='select_icon' src={selectIcon} alt='Select Icon' />
-              <p>{selectedVendors('name').join(', ')}</p>
+              <p>{selectedVendors('name', display).join(', ')}</p>
             </div>
           )}
         >
           <div className={`dropdown-paper ${pageType === 'cost' ? 'cost' : ''}`}>
             {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
               <div className='selected-chains'>
-                <p>Selected: {selectedVendors('name').length}</p>
+                <p>Selected: {selectedVendors('name', display).length}</p>
                 <ButtonKit disabled={false} onClick={selectAll} variant='contained'>
                   Select All
                 </ButtonKit>
@@ -165,7 +196,7 @@ const RestaurantDropdown: FC<{
             ) : (
               ''
             )}
-            {Object.keys(display).map((el, index) => (
+            {getSortedDisplay().map((el, index) => (
               <RestaurantCheckboxAccordion
                 key={el}
                 info={display[el]}

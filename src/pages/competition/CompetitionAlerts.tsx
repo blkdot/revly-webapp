@@ -100,7 +100,14 @@ const CompetitionAlerts = () => {
     },
   ];
 
-  const { renderPercent, renderStatus, renderSimpleRow, renderIsoDateOnly, renderIsoStartTimeOnlyFromDate, renderIsoEndTimeOnlyFromDate } = useTableContentFormatter();
+  const {
+    renderPercent,
+    renderStatus,
+    renderSimpleRow,
+    renderIsoDateOnly,
+    renderIsoStartTimeOnlyFromDate,
+    renderIsoEndTimeOnlyFromDate,
+  } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,

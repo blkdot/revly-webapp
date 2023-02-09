@@ -28,22 +28,25 @@ const Dashboard = () => {
   const { chainObj, display, vendorsSelected, vendorsArr } = vendors;
   const [table, setTable] = useState('revenue');
 
-  const getTitle = (title) => {
+  const getTitle = (title: string) => {
     if (title === 'n_orders') {
-      return 'orders';
+      return 'Orders';
     }
     if (title === 'average_basket') {
-      return 'Avg.basket';
+      return 'Avg. Basket';
     }
     if (title === 'accrued_discounts') {
-      return 'Discount offered';
+      return 'Accrued Discount';
     }
     if (title === 'profit') {
-      return 'net revenue';
+      return 'Net Revenue';
+    }
+    if (title === 'roi') {
+      return 'Marketing ROI';
     }
     return title;
   };
-  const getIcon = (title) => {
+  const getIcon = (title: string) => {
     if (title === 'revenue') {
       return RevenueIcon;
     }

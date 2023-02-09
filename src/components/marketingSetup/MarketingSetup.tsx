@@ -1,8 +1,9 @@
 import { Tooltip } from '@mui/material';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { useUserAuth } from 'contexts';
 import { addDays, addHours, addMinutes, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
+import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -78,7 +79,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const { getHeatmap, triggerOffers } = useApi();
   const { user } = useUserAuth();
   const [vendors] = useAtom(vendorsAtom);
-  const { selectedVendors } = useVendors(undefined);
   const [categoryDataList, setCategoryDataList] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
@@ -374,11 +374,11 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         setTriggerLoading(true);
         const res = await triggerOffers(platform[0], {
           ...dataReq,
-          vendors: selectedVendors('full', platform[0]),
-          chain_id: String(selectedVendors('full', platform[0])[0].chain_id),
+          vendors: selectedVendors('full', branch.display, platform[0]),
+          chain_id: String(selectedVendors('full', branch.display, platform[0])[0].chain_id),
           platform_token:
-            selectedVendors('full', platform[0])[0].access_token ??
-            selectedVendors('full', platform[0])[0].access_token_bis,
+            selectedVendors('full', branch.display, platform[0])[0].access_token ??
+            selectedVendors('full', branch.display, platform[0])[0].access_token_bis,
         });
 
         if (res instanceof Error) {
@@ -398,8 +398,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
             vendors: selectedVendors('full', p),
             chain_id: String(selectedVendors('full', p)[0].chain_id),
             platform_token:
-              selectedVendors('full', p)[0].access_token ??
-              selectedVendors('full', p)[0].access_token_bis,
+              selectedVendors('full', branch.display, p)[0].access_token ??
+              selectedVendors('full', branch.display, p)[0].access_token_bis,
           });
         });
 
