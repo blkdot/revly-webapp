@@ -118,12 +118,12 @@
 
   > div:nth-of-type(5).active ~ .indicator {
     left: calc(150px * 4);
-    width: 180px;
+    width: 195px;
   }
 
   > div:nth-of-type(6).active ~ .indicator {
     left: calc(160px * 5);
-    width: 100px;
+    width: 180px;
   }
 }
 

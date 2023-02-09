@@ -1193,7 +1193,9 @@
   justify-content: flex-start !important;
   align-items: center !important;
   flex-direction: row !important;
-
+  .menu-icon {
+    filter: invert(43%) sepia(59%) saturate(718%) hue-rotate(214deg) brightness(102%) contrast(103%) !important;
+  }
   > div {
     display: flex;
     align-items: center;

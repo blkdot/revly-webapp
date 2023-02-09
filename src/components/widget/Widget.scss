@@ -76,15 +76,19 @@
 
   &.active {
     background: $color-third;
-    color: #4d2681;
+    color: #906bff;
 
     .card-week {
-      color: #4d2681 !important;
+      color: #906bff !important;
     }
   }
 
   .card-typography {
     font-weight: 600;
+    font-size: 14px !important;
+    &.MuiTypography-h3 {
+      font-size: 3rem !important;
+    }
   }
 
   .card-procent {
