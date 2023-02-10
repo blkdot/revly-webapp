@@ -9,7 +9,6 @@ import {
   TypographyKit,
 } from 'kits';
 import { FC, useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import './SignInForm.scss';
 
@@ -25,7 +24,6 @@ const SignInForm: FC<{
   remember: boolean;
   setRemember: (v: boolean) => void;
   onSubmit: () => Promise<unknown>;
-  onGoogleSubmit: () => Promise<unknown>;
   disabled: boolean;
 }> = ({
   email,
@@ -39,7 +37,6 @@ const SignInForm: FC<{
   remember,
   setRemember,
   onSubmit,
-  onGoogleSubmit,
   disabled,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -61,21 +58,6 @@ const SignInForm: FC<{
             Enter your details below
           </TypographyKit>
         </div>
-        <div className='__block-google'>
-          <ButtonKit
-            variant='outlined'
-            size='large'
-            className='__block-google__button'
-            onClick={onGoogleSubmit}
-          >
-            <FcGoogle className='__block-google__icon' />
-          </ButtonKit>
-        </div>
-        <DividerKit className='__block-divider'>
-          <TypographyKit variant='body2' className='__block-divider__text'>
-            OR
-          </TypographyKit>
-        </DividerKit>
         <div className='__block-field'>
           <TextfieldKit
             value={email}
