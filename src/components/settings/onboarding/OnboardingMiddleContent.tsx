@@ -6,23 +6,20 @@ import SettingsIcon from '../../../assets/images/ic_settings.png';
 
 const OnboardingMiddleContent: FC<{
   openCloseModal: any;
+  accounts: any;
   setConnectAccount: any;
   vendors: any;
-}> = ({ openCloseModal, setConnectAccount, vendors }) => {
-  const [kitchen, setKitchen] = useState('');
+}> = ({ openCloseModal, accounts, setConnectAccount, vendors }) => {
   const filteredChains = () => {
     const arr = [];
     Object.keys(vendors.display).forEach((cName) => {
-      if (
-        Object.keys(vendors.display[cName]).every(
-          (vName) => vendors.display[cName][vName].is_matched
-        )
-      ) {
-        arr.push(cName);
+      if(Object.keys(vendors.display[cName]).every((vName) => vendors.display[cName][vName].is_matched)){
+        arr.push(cName)
       }
-    });
+    })
     return arr;
-  };
+  }
+  const [kitchen, setKitchen] = useState(filteredChains());
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
@@ -32,16 +29,16 @@ const OnboardingMiddleContent: FC<{
         </span>
       </div>
       <div className='settings-onboarding-btn_wrapper'>
-        {filteredChains().length > 0 ? (
+        {accounts.length > 0 ? (
           <OnboardingDropdown
             rows={filteredChains()}
-            state={kitchen || filteredChains()[0] || ''}
+            state={kitchen || filteredChains()}
             setState={setKitchen}
           />
         ) : (
           ''
         )}
-        {filteredChains().length > 0 ? (
+        {accounts.length > 0 ? (
           <ButtonKit
             onClick={() => {
               openCloseModal();

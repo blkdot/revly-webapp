@@ -123,6 +123,7 @@ const NewSettingsOnboarding = () => {
       <OnboardingMiddleContent
         vendors={vendors}
         openCloseModal={openCloseModal}
+        accounts={accounts}
         setConnectAccount={setConnectAccount}
       />
       <OnboardingTable
