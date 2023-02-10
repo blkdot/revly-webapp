@@ -155,7 +155,6 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
-  console.log(offerDetailMaster);
   return (
     <>
       <CancelOfferModal

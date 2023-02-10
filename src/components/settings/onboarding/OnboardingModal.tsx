@@ -1,12 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { saveUser } from 'api/userApi';
+import { BaseIcon } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { useAlert, useApi } from 'hooks';
+import { ButtonKit } from 'kits';
+import LodaingButtonKit from 'kits/loadingButton/LoadingButtonKit';
 import { useState } from 'react';
 import ConnectAccount from './onboardingModal/ConnectAccount';
 import ConnectPlatform from './onboardingModal/ConnectPlatform';
 import ManageAccount from './onboardingModal/ManageAccount';
 import ManageBranch from './onboardingModal/ManageBranch';
+import SwitchDeleteModal from './onboardingModal/SwitchDeleteModal';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
@@ -133,11 +137,18 @@ const OnboardingModal = ({ propsVariables }: any) => {
       })
     );
   };
+  
+  const [openedSwitchDeleteModal, setOpenedSwitchDeleteModal] = useState(false);
+  const openSwitchDeleteModal = (e) => {
+    e.stopPropagation()
+    setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
+  }
+  
   const connectAccountModalObject = {
     manageAccount: (
       <ManageAccount propsVariables={{ ...propsVariables, deleteAccount, changeStatusAccount }} />
     ),
-    manageBranch: <ManageBranch propsVariables={{ ...propsVariables }} />,
+    manageBranch: <ManageBranch propsVariables={{ ...propsVariables, openSwitchDeleteModal, openedSwitchDeleteModal, setOpenedSwitchDeleteModal }} />,
     completed: <UploadingCompleted propsVariables={propsVariables} />,
     active: (
       <UploadingActive
@@ -168,14 +179,17 @@ const OnboardingModal = ({ propsVariables }: any) => {
       <ConnectAccount propsVariables={{ ...propsVariables, deleteAccount, changeStatusAccount }} />
     ),
   };
+  
   return (
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''}`}
+      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${openedSwitchDeleteModal ? 'activeDelete' : ''}`}
       onClick={openCloseModal}
     >
-      {connectAccountModalObject[connectAccount]}
+      <div className='main-modal'>
+        {connectAccountModalObject[connectAccount]}
+      </div>
     </div>
   );
 };
