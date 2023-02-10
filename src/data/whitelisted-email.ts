@@ -1,5 +1,3 @@
-const emailWhitelisted = [
-  'amine@revly.ae'
-];
+const emailWhitelisted = ['amine@revly.ae'];
 
 export default emailWhitelisted;
