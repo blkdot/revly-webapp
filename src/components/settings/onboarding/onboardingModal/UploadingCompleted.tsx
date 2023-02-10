@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { ButtonKit } from 'kits';
-import CloseIcon from '../../../../assets/images/ic_close.png';
+import CloseIcon from '../../../../assets/images/ic_close.svg';
 import Congrats from '../../../../assets/images/congrats.gif';
 
 const UploadingCompleted: FC<{

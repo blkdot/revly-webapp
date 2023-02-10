@@ -1,13 +1,14 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { saveUser } from 'api/userApi';
 import { useUserAuth } from 'contexts/AuthContext';
-import { TypographyKit, ButtonKit } from 'kits';
+import { TypographyKit, ButtonKit, ModalKit } from 'kits';
 import { platformList } from 'data/platformList';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
-import CloseIcon from '../../../../assets/images/ic_close.png';
+import CloseIcon from '../../../../assets/images/ic_close.svg';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
 import ResumeIcon from '../../../../assets/images/ic_resume.png';
 import Arrow from '../../../../assets/images/arrow.png';
+import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{
   propsVariables: {
@@ -16,10 +17,28 @@ const ManageBranch: FC<{
     setBranchData: any;
     branchData: any;
     vendors: any;
+    openSwitchDeleteModal: any;
+    setOpenedSwitchDeleteModal: any;
+    openedSwitchDeleteModal: any;
+    setLoading: any;
+    loading: any;
+    setConnectAccount: any;
   };
 }> = ({ propsVariables }) => {
-  const { openCloseModal, clickedBranch, setBranchData, branchData, vendors } = propsVariables;
-  const getPlatform = (plat) => platformList.find((obj) => obj.name === plat);
+  const {
+    openCloseModal,
+    clickedBranch,
+    loading,
+    setBranchData,
+    branchData,
+    vendors,
+    openSwitchDeleteModal,
+    setOpenedSwitchDeleteModal,
+    openedSwitchDeleteModal,
+    setLoading,
+    setConnectAccount,
+  } = propsVariables;
+  const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
   const { user } = useUserAuth();
 
   const vendorsBranch = () => {
@@ -29,7 +48,7 @@ const ManageBranch: FC<{
         Object.keys(vendors.display[cName][vName].platforms).forEach((plat) => {
           if (
             clickedBranch.accounts.find(
-              (email) => email === vendors.display[cName][vName].platforms[plat].email
+              (email: string) => email === vendors.display[cName][vName].platforms[plat].email
             )
           ) {
             object[plat] = [vendors.display[cName][vName].platforms[plat]];
@@ -40,6 +59,7 @@ const ManageBranch: FC<{
     return object;
   };
   const deleteBranch = async () => {
+    setLoading(true);
     await saveUser({
       access_token: user.accessToken,
       vendors: vendorsBranch(),
@@ -51,6 +71,8 @@ const ManageBranch: FC<{
     );
     openCloseModal();
     setBranchData([...branchData]);
+    setLoading(false);
+    setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
   const changeStatusBranch = async () => {
     await saveUser({
@@ -78,6 +100,14 @@ const ManageBranch: FC<{
       role='presentation'
       onClick={(e) => e.stopPropagation()}
     >
+      <SwitchDeleteModal
+        loading={loading}
+        title='Are you sure you want to delete this branch ?'
+        button='Delete this Branch'
+        onClick={deleteBranch}
+        openSwitchDeleteModal={openSwitchDeleteModal}
+        openedSwitchDeleteModal={openedSwitchDeleteModal}
+      />
       <img
         className='onboarding-close_icon modal'
         tabIndex={-1}
@@ -104,8 +134,14 @@ const ManageBranch: FC<{
           </div>
         </div>
         <div className='manage-branch-accounts_wrapper'>
-          {clickedBranch.linked_platforms.map((obj, index) => (
-            <div className='manage-branch-accounts' key={obj.platform}>
+          {clickedBranch.linked_platforms.map((obj: any, index: number) => (
+            <div
+              tabIndex={-1}
+              role='presentation'
+              onClick={() => setConnectAccount('manageAccount')}
+              className='manage-branch-accounts'
+              key={obj.platform}
+            >
               <div>
                 <TypographyKit
                   components='span'
@@ -140,7 +176,7 @@ const ManageBranch: FC<{
             <img src={ResumeIcon} alt='resume' /> Resume activity from this branch
           </ButtonKit>
         )}
-        <ButtonKit onClick={deleteBranch} className='delete' variant='outlined'>
+        <ButtonKit onClick={openSwitchDeleteModal} className='delete' variant='outlined'>
           <img src={TrashIcon} alt='trash' /> Delete this branch from Revly
         </ButtonKit>
       </div>

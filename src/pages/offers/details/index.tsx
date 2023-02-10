@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
-import { useApi, usePlatform, useVendors } from 'hooks';
+import { useApi, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { getPlanningOfferDetails } from '../../../api/userApi';
@@ -25,14 +25,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
   const [offerDetailMaster, setofferDetailMaster] = useState<any>({});
-  const {
-    userPlatformData: { platforms },
-  } = usePlatform();
+
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
   const { vendors } = useVendors(undefined);
-  const { vendorsObj } = vendors;
+  const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
       cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
@@ -93,16 +91,24 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     status,
     chain_name,
     vendor_ids,
-    offer_ids,
     type_schedule,
     discount_rate,
     type_offer,
     chain_id,
   } = offerDetailMaster?.master_offer || {};
-
-  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
-    vendor_ids?.includes(v.vendor_id)
-  );
+  const getToken = () => {
+    const token = [];
+    Object.keys(display).forEach((cName) => {
+      Object.keys(display[cName]).forEach((vName) => {
+        Object.keys(display[cName][vName].platforms).forEach((plat) => {
+          if (display[cName][vName].platforms[plat].chain_id === chain_id) {
+            token.push(display[cName][vName].platforms[plat].access_token);
+          }
+        });
+      });
+    });
+    return token[0];
+  };
 
   const openCancelModal = () => setIsOpen(true);
 
@@ -110,12 +116,11 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     cancelOfferMaster(
       {
         master_email: user.email,
-        access_token: user?.access_token || '',
+        access_token: user?.accessToken || '',
         // TODO: check this
-        platform_token: platforms[platform.toLowerCase()][0].access_token,
-        vendors: [vendor],
-        offer_id: offer_ids || null,
-        chain_id,
+        platform_token: getToken(),
+        offer_id: null,
+        chain_id: String(chain_id),
         master_offer_id,
       },
       platform.toLowerCase()
@@ -156,7 +161,6 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
-  console.log(offerDetailMaster);
   return (
     <>
       <CancelOfferModal

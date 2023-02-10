@@ -55,6 +55,7 @@ import {
   type THeatmapData,
   type TOfferDataResponse,
 } from 'store/marketingSetupAtom';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
@@ -251,7 +252,7 @@ const MarketingSetup: React.FC<{
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
-    Object.keys(displayTemp).forEach((chainName) => {
+    sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
         displayTemp[chainName][vendorName].checked = false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
@@ -266,7 +267,7 @@ const MarketingSetup: React.FC<{
       });
     });
 
-    Object.keys(displayTemp)
+    sortedVendors(displayTemp)
       .filter((cName) =>
         Object.keys(displayTemp[cName]).every(
           (vName) => !(displayTemp[cName][vName].deleted || false)
@@ -334,7 +335,7 @@ const MarketingSetup: React.FC<{
         const res = await triggerOffers(platform[0], {
           ...dataReq,
           vendors: selectedVendors('full', branch.display, platform[0]),
-          chain_id: String(selectedVendors('full', branch.display, platform[0])[0].chain_id),
+          chain_id: selectedVendors('full', branch.display, platform[0])[0].chain_id,
           platform_token:
             selectedVendors('full', branch.display, platform[0])[0].access_token ??
             selectedVendors('full', branch.display, platform[0])[0].access_token_bis,
@@ -355,7 +356,7 @@ const MarketingSetup: React.FC<{
           return triggerOffers(p, {
             ...dataReq,
             vendors: selectedVendors('full', p),
-            chain_id: String(selectedVendors('full', p)[0].chain_id),
+            chain_id: selectedVendors('full', p)[0].chain_id,
             platform_token:
               selectedVendors('full', branch.display, p)[0].access_token ??
               selectedVendors('full', branch.display, p)[0].access_token_bis,
