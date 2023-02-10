@@ -1,5 +1,6 @@
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import { TVendors } from 'hooks/useVendors';
 import { platformList } from 'data/platformList';
 import { usePlatform } from 'hooks';
 import { RadioGroupKit, TypographyKit } from 'kits';
@@ -9,17 +10,15 @@ import { Subtitle } from './components/Subtitle';
 // eslint-disable-next-line import/prefer-default-export
 export const PlatformStep: FC<{
   index: number;
-  branch: {
-    display: any;
-    chainObj: any;
-    vendorsSelected: any;
-    vendorsArr: any;
-  };
+  branch: TVendors | Record<string, never>;
   getPlatform: any;
   setBranch: any;
   platform: any;
 }> = ({ index, branch, getPlatform, setBranch, platform }) => {
   const { userPlatformData } = usePlatform();
+
+  if (!branch || Object.keys(branch).length < 1) return null;
+
   return (
     <div className='left-part-middle'>
       <TypographyKit variant='h6'>{index}. Select platform and branches</TypographyKit>

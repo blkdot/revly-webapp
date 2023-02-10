@@ -1,6 +1,36 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { addDays, isAfter, isSameDay } from 'date-fns';
+import { useMarketingSetup } from 'hooks';
+import {
+  platformAtom,
+  selectedAtom,
+  linkAtom,
+  menuAtom,
+  discountPercentageAtom,
+  minOrderPercentageAtom,
+  durationAtom,
+  categoryDataListAtom,
+  branchAtom,
+  categoryDataAtom,
+  startingDateAtom,
+  endingDateAtom,
+  typeScheduleAtom,
+  customisedDayAtom,
+  timesAtom,
+  everyWeekAtom,
+  itemMenuAtom,
+  categoryAtom,
+  filteredCategoryDataAtom,
+  targetAudienceAtom,
+  checkedAtom,
+  categoryLoadingAtom,
+  smRuleAtom,
+  categorySearchAtom,
+  disabledDateAtom,
+  heatmapDataAtom,
+} from 'store/marketingSetupAtom';
 import { useAtom } from 'jotai';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, ChangeEvent } from 'react';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import { AudienceStep } from './getProgress/steps/AudienceStep';
 import { DiscountedItemsStep } from './getProgress/steps/DiscountedItemsStep';
@@ -10,65 +40,74 @@ import { RecurrenceStep } from './getProgress/steps/RecurrenceStep';
 import { TypeStep } from './getProgress/steps/TypeStep';
 import './MarketingSetup.scss';
 
-const GetProgress: FC<{
-  progressData: any;
-}> = ({ progressData }) => {
-  const {
-    selected,
-    getPlatform,
-    platform,
-    handleCategoryDataChange,
-    setBranch,
-    branch,
-    menu,
-    setMenu,
-    setDiscountPercentage,
-    discountPercentage,
-    setMinOrder,
-    minOrder,
-    itemMenu,
-    setItemMenu,
-    getDiscountMovType,
-    categoryData,
-    categoryDataList,
-    filteredCategoryData,
-    setFilteredCategoryData,
-    category,
-    setChecked,
-    checked,
-    duration,
-    setDuration,
-    endingDate,
-    onChange,
-    setEndingDate,
-    times,
-    setTimes,
-    typeSchedule,
-    setTypeSchedule,
-    targetAudience,
-    setTargetAudience,
-    setEveryWeek,
-    everyWeek,
-    days,
-    setCustomisedDay,
-    customisedDay,
-    disableWeekends,
-    startingDate,
-    setStartingDate,
-    setSmRule,
-    setHeatmapData,
-    heatmapData,
-    links,
-    categoryLoading,
-    setCategorySearch,
-    categorySearch,
-  } = progressData;
+const GetProgress: FC = () => {
+  const [platform, setPlatform] = useAtom(platformAtom);
+  const [selected] = useAtom(selectedAtom);
+  const [links] = useAtom(linkAtom);
+  const [menu, setMenu] = useAtom(menuAtom);
+  const [discountPercentage, setDiscountPercentage] = useAtom(discountPercentageAtom);
+  const [minOrder, setMinOrder] = useAtom(minOrderPercentageAtom);
+  const [duration, setDuration] = useAtom(durationAtom);
+  const [categoryDataList] = useAtom(categoryDataListAtom);
+  const [categoryData, setCategoryData] = useAtom(categoryDataAtom);
+  const [startingDate, setStartingDate] = useAtom(startingDateAtom);
+  const [endingDate, setEndingDate] = useAtom(endingDateAtom);
+  const [typeSchedule, setTypeSchedule] = useAtom(typeScheduleAtom);
+  const [branch, setBranch] = useAtom(branchAtom);
+  const [customisedDay, setCustomisedDay] = useAtom(customisedDayAtom);
+  const [everyWeek, setEveryWeek] = useAtom(everyWeekAtom);
+  const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
+  const [category] = useAtom(categoryAtom);
+  const [filteredCategoryData, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
+  const [targetAudience, setTargetAudience] = useAtom(targetAudienceAtom);
+  const [times, setTimes] = useAtom(timesAtom);
+  const [categorySearch, setCategorySearch] = useAtom(categorySearchAtom);
+  const [, setDisabledDate] = useAtom(disabledDateAtom);
+  const [heatmapData, setHeatmapData] = useAtom(heatmapDataAtom);
+
+  const [, setSmRule] = useAtom(smRuleAtom);
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  const [checked, setChecked] = useAtom(checkedAtom);
+  const [categoryLoading] = useAtom(categoryLoadingAtom);
+
+  const [vendors] = useAtom(vendorsAtom);
+  const { display } = vendors;
+
+  const { getDiscountMovType, disableWeekends } = useMarketingSetup();
+
+  const [menuChanged, setMenuChanged] = useState('');
 
   useEffect(() => {
     if (!isAfter(endingDate, startingDate) && !isSameDay(endingDate, startingDate)) {
       setEndingDate(new Date(addDays(startingDate, 1)));
     }
   }, [startingDate, endingDate]);
+
+  const getPlatform = (e, radio) => {
+    const { value } = e.target;
+
+    if (radio) {
+      if (e.target.checked) {
+        setPlatform([value]);
+        return;
+      }
+    }
+
+    if (e.target.checked) {
+      setPlatform([...platform, value]);
+      return;
+    }
+
+    if (!e.target.checked) {
+      platform.splice(
+        platform.findIndex((el) => el === value),
+        1
+      );
+    }
+
+    setPlatform([...platform]);
+  };
 
   const getWorkWeek = () => {
     if (typeSchedule === 'Work Week') {
@@ -92,8 +131,26 @@ const GetProgress: FC<{
 
     return typeSchedule !== 'Continues Offer' && duration === 'Program the offer duration';
   };
-  const [vendors] = useAtom(vendorsAtom);
-  const { display } = vendors;
+
+  const handleCategoryDataChange = (e: ChangeEvent<HTMLFormElement>) => {
+    const { value } = e.target;
+    if (value.length > 0) {
+      const arr = value
+        .map((v) => category.filter((k) => k.category_name === v || k.category === v))
+        .flat();
+      if (categorySearch) {
+        const filtered = arr.filter((obj) =>
+          (obj.name || obj.item_name).toLowerCase().includes(categorySearch.toLowerCase())
+        );
+        setFilteredCategoryData(filtered);
+      } else {
+        setFilteredCategoryData(arr);
+      }
+    } else {
+      setFilteredCategoryData([]);
+    }
+    setCategoryData(value);
+  };
 
   const getMenuActive = () => {
     if (category === null) {
@@ -108,7 +165,13 @@ const GetProgress: FC<{
     return false;
   };
 
-  const [menuChanged, setMenuChanged] = useState('');
+  const onChange = (newValue, setDate) => {
+    setDate(newValue);
+    const date = document.querySelectorAll('.date-error');
+    const arr = [];
+    date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
+    setDisabledDate(arr.every((bool) => bool === false));
+  };
 
   useEffect(() => {
     if (selected === 2) {
@@ -118,7 +181,7 @@ const GetProgress: FC<{
     setMenuChanged(menu);
   }, [menu, itemMenu]);
 
-  if (selected === 1) {
+  if (selected === 1 && branch) {
     return (
       <PlatformStep
         index={selected}

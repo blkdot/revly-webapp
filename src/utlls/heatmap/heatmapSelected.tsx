@@ -1,5 +1,6 @@
 import { addDays, differenceInDays, format, getDay, getHours, isSameDay } from 'date-fns';
 import _ from 'lodash';
+import { type THeatmapData } from 'store/marketingSetupAtom';
 import { daysOrder, maxHour, minHour, rangeHoursOpenedDay } from './heatmapSelectedData';
 
 const getHour = (h) => {
@@ -313,7 +314,7 @@ const heatmapSelected = (
   customisedDay = [],
   isEveryWeek = false,
   everyWeek = ''
-) => {
+): THeatmapData['revenue' | 'orders'] | [] => {
   if (!times) {
     return [];
   }

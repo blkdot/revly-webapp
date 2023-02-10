@@ -10,3 +10,4 @@ export { default as usePlanningOffers } from './usePlanningOffers';
 export { default as usePlatform } from './usePlatform';
 export { default as useQueryState } from './useQueryState';
 export { default as useVendors } from './useVendors';
+export { default as useMarketingSetup } from './useMarketingSetup';

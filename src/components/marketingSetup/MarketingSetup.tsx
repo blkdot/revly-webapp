@@ -1,9 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { useUserAuth } from 'contexts';
-import { addDays, addHours, addMinutes, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
-import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform } from 'hooks';
+import { format } from 'date-fns';
+import { useAlert, useApi, usePlatform, useMarketingSetup, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -14,162 +14,191 @@ import {
   SpinnerKit,
   TypographyKit,
 } from 'kits';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState, type createRef } from 'react';
+import {
+  platformAtom,
+  selectedAtom,
+  linkAtom,
+  menuAtom,
+  discountPercentageAtom,
+  minOrderPercentageAtom,
+  durationAtom,
+  disabledAtom,
+  triggerLoadingAtom,
+  beforePeriodBtnAtom,
+  categoryDataListAtom,
+  branchAtom,
+  categoryDataAtom,
+  startingDateAtom,
+  endingDateAtom,
+  typeScheduleAtom,
+  disabledDateAtom,
+  customisedDayAtom,
+  timesAtom,
+  everyWeekAtom,
+  itemMenuAtom,
+  categoryAtom,
+  filteredCategoryDataAtom,
+  targetAudienceAtom,
+  createdAtom,
+  recapAtom,
+  stepsAtom,
+  checkedAtom,
+  categoryLoadingAtom,
+  smRuleAtom,
+  heatmapDataAtom,
+  defaultHeatmapState,
+  type TCategoryAtom,
+  type THeatmapData,
+  type TOfferDataResponse,
+} from 'store/marketingSetupAtom';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
 import { maxHour, minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
 import Dates from '../dates/Dates';
 import GetRecap from './GetRecap';
 import './MarketingSetup.scss';
 
-const defaultHeatmapState = {
-  0: {},
-  1: {},
-  2: {},
-  3: {},
-  4: {},
-  5: {},
-  6: {},
-};
-
 const defaultRangeColorIndices = [0, 0, 0, 0];
 
-const ItemHeatmap = React.forwardRef((props: any, ref: any) => <div {...props} ref={ref} />);
+const ItemHeatmap = React.forwardRef((props: { children: ReactNode }, ref: typeof createRef) => (
+  <div {...props} ref={ref} />
+));
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const MarketingSetup = ({ active, setActive, ads }: any) => {
-  const { userPlatformData } = usePlatform();
-  const getActivePlatform = () => {
-    let activePlatform = '';
-    Object.keys(userPlatformData.platforms).forEach((pl) => {
-      if (userPlatformData.platforms[pl].length > 0) {
-        if (userPlatformData.platforms[pl].find((obj) => obj.active)) {
-          activePlatform = pl;
-        }
+const getMenuItem = (
+  category: TCategoryAtom[],
+  checked: string[]
+): { id: string | number; drn_id: string | number }[] => {
+  const arr = [];
+  category.forEach((obj) =>
+    checked.forEach((c) => {
+      if (!obj.name && obj.item_name !== c) return;
+      arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
+    })
+  );
+  return arr;
+};
+
+const getItemMenuNamePrice = (
+  checked: string[],
+  category: TCategoryAtom[]
+): { name: string; price: number }[] => {
+  const arr = [];
+  checked.forEach((c) => {
+    category.forEach((obj) => {
+      if (obj.name !== c && obj.item_name !== c) return;
+      arr.push({ name: obj.name || obj.item_name, price: obj.price || obj.unit_price });
+    });
+  });
+  return arr;
+};
+
+const clearTimeSelected = (heatmapData: THeatmapData): THeatmapData => {
+  const clonedheatmapData = { ...heatmapData };
+
+  days.forEach((__, index) => {
+    if (!clonedheatmapData.revenue?.[index]) return;
+
+    _.range(minHour, maxHour + 1).forEach((num: number) => {
+      if (clonedheatmapData.revenue?.[index] && clonedheatmapData.revenue[index]?.[num]) {
+        delete clonedheatmapData.revenue[index][num]?.active;
+      }
+
+      if (clonedheatmapData.orders?.[index] && clonedheatmapData.orders[index]?.[num]) {
+        delete clonedheatmapData.orders[index][num]?.active;
       }
     });
-    return activePlatform;
-  };
-  const [platform, setPlatform] = useState([getActivePlatform()]);
-  const [selected, setSelected] = useState(1);
-  const [links, setLinks] = useState('revenue');
-  const [menu, setMenu] = useState('Offer on the whole Menu');
-  const [discountPercentage, setDiscountPercentage] = useState('');
-  const [minOrder, setMinOrder] = useState('');
-  const [duration, setDuration] = useState('Starting Now');
-  const [disabled, setDisabled] = useState(false);
+  });
+
+  return { ...heatmapData, ...clonedheatmapData };
+};
+
+const MarketingSetup: React.FC<{
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  // eslint-disable-next-line react/require-default-props
+  ads?: boolean;
+}> = ({ active, setActive, ads }) => {
+  const { getActivePlatform } = usePlatform();
+
+  const [platform, setPlatform] = useAtom(platformAtom);
+  const [selected, setSelected] = useAtom(selectedAtom);
+  const [links, setLinks] = useAtom(linkAtom);
+  const [menu, setMenu] = useAtom(menuAtom);
+  const [discountPercentage] = useAtom(discountPercentageAtom);
+  const [minOrder] = useAtom(minOrderPercentageAtom);
+  const [duration] = useAtom(durationAtom);
+  const [disabled, setDisabled] = useAtom(disabledAtom);
+  const [triggerLoading, setTriggerLoading] = useAtom(triggerLoadingAtom);
+  const [beforePeriodBtn, setBeforePeriodBtn] = useAtom(beforePeriodBtnAtom);
+  const [, setCategoryDataList] = useAtom(categoryDataListAtom);
+  const [, setCategoryData] = useAtom(categoryDataAtom);
+  const [startingDate, setStartingDate] = useAtom(startingDateAtom);
+  const [endingDate] = useAtom(endingDateAtom);
+  const [typeSchedule, setTypeSchedule] = useAtom(typeScheduleAtom);
+  const [disabledDate] = useAtom(disabledDateAtom);
+  const [branch, setBranch] = useAtom(branchAtom);
+  const [customisedDay, setCustomisedDay] = useAtom(customisedDayAtom);
+  const [everyWeek] = useAtom(everyWeekAtom);
+  const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
+  const [category, setCategory] = useAtom(categoryAtom);
+  const [, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
+  const [targetAudience] = useAtom(targetAudienceAtom);
+  const [created, setCreated] = useAtom(createdAtom);
+  const [recap, setRecap] = useAtom(recapAtom);
+  const [times, setTimes] = useAtom(timesAtom);
+
+  const [smRule, setSmRule] = useAtom(smRuleAtom);
+  const [steps, setSteps] = useAtom(stepsAtom);
+
+  const [checked, setChecked] = useAtom(checkedAtom);
+  const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
+  const { vendors } = useVendors();
+  const { vendorsObj } = vendors;
+
+  useEffect(() => {
+    setPlatform([getActivePlatform()]);
+    setBranch({ ...vendors });
+  }, [vendors]);
+
+  const { getHeatmap, triggerOffers, getMenu } = useApi();
+  const { user } = useUserAuth();
+  const { triggerAlertWithMessageError } = useAlert();
+  const {
+    setStartTimeFormat,
+    setEndTimeFormat,
+    getHourArr,
+    isValidDate,
+    getDiscountMovType,
+    getTargetAudience,
+    getTypeSchedule,
+  } = useMarketingSetup();
+
+  const [heatmapData, setHeatmapData] = useAtom(heatmapDataAtom);
   const [heatmapLoading, setHeatmapLoading] = useState(false);
-  const [triggerLoading, setTriggerLoading] = useState(false);
-  const [beforePeriodBtn, setBeforePeriodBtn] = useState({
-    startDate: startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
-    endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
-  });
-  const [heatmapData, setHeatmapData] = useState({
-    revenue: defaultHeatmapState,
-    orders: defaultHeatmapState,
-  });
   const [rangeColorIndices, setRangeColorIndices] = useState({
     revenue: defaultRangeColorIndices,
     orders: defaultRangeColorIndices,
   });
-  const { getHeatmap, triggerOffers } = useApi();
-  const { user } = useUserAuth();
-  const [vendors] = useAtom(vendorsAtom);
-  const [categoryDataList, setCategoryDataList] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
-  const { triggerAlertWithMessageError } = useAlert();
-  const { getMenu } = useApi();
-  const { vendorsObj } = vendors as any;
-  const [branch, setBranch] = useState(JSON.parse(JSON.stringify(vendors)));
-  const [startingDate, setStartingDate] = useState(new Date());
-  const [endingDate, setEndingDate] = useState(new Date(addDays(new Date(startingDate), 1)));
-  const [typeSchedule, setTypeSchedule] = useState('Continues Offer');
-  const [disabledDate, setDisabledDate] = useState(true);
-  const [customisedDay, setCustomisedDay] = useState([]);
-  const [times, setTimes] = useState([
-    {
-      startTime: new Date(
-        null,
-        null,
-        null,
-        Number(format(new Date(), 'HH')),
-        Number(format(new Date(addMinutes(new Date(), 2)), 'mm')),
-        null,
-        null
-      ),
-      endTime: new Date(null, null, null, Number(format(addHours(new Date(), 1), 'HH')), 0),
-      pos: 1,
-    },
-  ]);
-  const [everyWeek, setEveryWeek] = useState('');
-  const [itemMenu, setItemMenu] = useState('');
-  const [category, setCategory] = useState([]);
-  const [filteredCategoryData, setFilteredCategoryData] = useState([]);
-  const [targetAudience, setTargetAudience] = useState('All customers');
-  const [created, setCreated] = useState(false);
-  const [recap, setRecap] = useState(false);
-  const [revenueData, setRevenueData] = useState(null);
-  const [ordersData, setOrdersData] = useState(null);
 
-  const [launchOrder, setLaunchOrder] = useState([
-    { order: '# of orders', arrow: '<', number: '', id: 1, reletion: 'And' },
-  ]);
-  const [stopOrder, setStopOrder] = useState([
-    { order: '# of orders', arrow: '>', number: '', id: 1, reletion: 'And' },
-  ]);
-
-  const [smRule, setSmRule] = useState(false);
-  const [steps, setSteps] = useState([0, 1, 2, 3, 4]);
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-  const [checked, setChecked] = useState([]);
-  const [categoryLoading, setCategoryLoading] = useState(true);
-  const itemMenuObj = {
-    'Flash Deal': {
-      discount: ['50%'],
-      mov: ['0 AED', '10 AED'],
-      type: 'flash-deals',
-    },
-    'Order more , save more': {
-      discount: ['30%', '50%'],
-      mov: ['60 AED'],
-      type: 'groups',
-    },
-    'Restaurant Pick': {
-      discount: ['20%', '25%', '30%', '35%', '40%', '45%', '50%'],
-      mov: ['0 AED', '15 AED', '30 AED'],
-      type: 'restaurant-picks',
-    },
-    'Free Items': {
-      discount: ['100%'],
-      mov: ['15 AED', '30 AED', '60 AED'],
-      type: 'free-items',
-    },
-  };
-  const getDiscountMovType = (type) => itemMenuObj[itemMenu][type];
-
-  function isValidDate(d) {
-    return d instanceof Date && !Number.isNaN(d);
-  }
-
-  const getHourArr = (hour, fromZero = true) => {
-    const arr = [];
-    times.forEach((obj) => {
-      if (
-        isValidDate(obj[hour]) &&
-        obj[hour] !== null &&
-        !Number.isNaN(new Date(obj[hour]).getTime())
-      ) {
-        arr.push(format(obj[hour], fromZero ? 'HH:00' : 'HH:mm'));
-      }
-    });
-
-    return arr;
-  };
+  const [revenueData, setRevenueData] = useState<{
+    [x: string]: {
+      heatmap: { [x: number]: { [x: number]: TOfferDataResponse } };
+      ranges: number[];
+    };
+  } | null>(null);
+  const [ordersData, setOrdersData] = useState<{
+    [x: string]: {
+      heatmap: { [x: number]: { [x: number]: TOfferDataResponse } };
+      ranges: number[];
+    };
+  } | null>(null);
 
   const setFreshStartingDate = () => {
     if (duration !== 'Starting Now') return;
@@ -178,118 +207,46 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     setTypeSchedule('now');
     setTimes([
       {
-        startTime: new Date(
-          null,
-          null,
-          null,
-          Number(format(new Date(), 'HH')),
-          Number(format(new Date(addMinutes(new Date(), 2)), 'mm')),
-          null,
-          null
-        ),
-        endTime: new Date(
-          null,
-          null,
-          null,
-          Number(format(new Date(addHours(new Date(), 1)), 'HH')),
-          0
-        ),
+        startTime: setStartTimeFormat(new Date(), 2),
+        endTime: setEndTimeFormat(times[0].endTime),
         pos: 1,
       },
     ]);
   };
 
-  const clearTimeSelected = () => {
-    const clonedheatmapData = { ...heatmapData };
-
-    days.forEach((day, index) => {
-      if (!clonedheatmapData.revenue?.[index]) return;
-
-      _.range(minHour, maxHour + 1).forEach((num) => {
-        if (!clonedheatmapData.revenue[index]?.[num]) return;
-
-        delete clonedheatmapData.revenue[index][num]?.active;
-      });
-    });
-
-    days.forEach((__, index) => {
-      if (!clonedheatmapData.orders?.[index]) return;
-
-      _.range(minHour, maxHour + 1).forEach((num) => {
-        if (!clonedheatmapData.orders[index]?.[num]) return;
-
-        delete clonedheatmapData.orders[index][num]?.active;
-      });
-    });
-
-    setHeatmapData({ ...heatmapData, ...clonedheatmapData });
-  };
-
   useEffect(() => {
     if (duration === 'Starting Now') {
       setFreshStartingDate();
-    } else {
-      setTypeSchedule('Continues Offer');
-      setTimes([
-        {
-          startTime: new Date(null, null, null, Number(format(new Date(), 'HH')), 0),
-          endTime: new Date(null, null, null, Number(format(new Date(), 'HH')), 0),
-          pos: 1,
-        },
-      ]);
-      clearTimeSelected();
+      return;
     }
+
+    setTypeSchedule('Continues Offer');
+    setTimes([
+      {
+        startTime: setStartTimeFormat(new Date(), 2),
+        endTime: setStartTimeFormat(new Date(), 0),
+        pos: 1,
+      },
+    ]);
+
+    setHeatmapData(clearTimeSelected(heatmapData));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration]);
 
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
       setCustomisedDay([]);
     }
+
     setTimes([
       {
-        startTime: new Date(
-          null,
-          null,
-          null,
-          Number(format(new Date(), 'HH')),
-          null,
-          Number(format(new Date(addMinutes(new Date(), 2)), 'mm')),
-          null
-        ),
-        endTime: new Date(null, null, null, Number(format(addHours(new Date(), 1), 'HH')), 0),
+        startTime: setStartTimeFormat(new Date(), 2),
+        endTime: setEndTimeFormat(new Date()),
         pos: 1,
       },
     ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeSchedule]);
-  const typeScheduleObj = {
-    'Continues Offer': 'once',
-    'Every Day': 'everyday',
-    'Work Week': 'workweek',
-    'Same day every week': everyWeek.toLowerCase().replace('every', '').split(' ').join(''),
-    'Customised Days': customisedDay.toString().toLowerCase().replace(/,/g, '.'),
-  };
-
-  const getTypeSchedule = () => typeScheduleObj[typeSchedule] || 'now';
-
-  const targetAudienceObj = {
-    'New customer': 'new_customers',
-    'Deliveroo plus': 'subscribers',
-    'Inactive customers': 'lapsed_customers',
-  };
-
-  const getTargetAudience = () => targetAudienceObj[targetAudience] || 'orders';
-
-  const getMenuItem = () => {
-    const arr = [];
-    category.forEach((obj) => {
-      checked.forEach((c) => {
-        if (obj.name || obj.item_name === c) {
-          arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
-        }
-      });
-    });
-    return arr;
-  };
 
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
@@ -339,7 +296,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       vendorsObj: vendorsObjTemp,
     });
     setMenu('Offer on the whole Menu');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, vendors]);
+
   const handleSchedule = async () => {
     let isStartingFromZero = true;
     if (duration === 'Starting Now') {
@@ -350,7 +309,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     const menuType =
       menu === 'Offer on the whole Menu'
         ? null
-        : { menu_items: getMenuItem(), theme: getDiscountMovType('type') };
+        : { menu_items: getMenuItem(category, checked), theme: getDiscountMovType('type') };
 
     const dataReq = {
       start_date: format(startingDate, 'yyyy-MM-dd'),
@@ -473,7 +432,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
 
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
-  }, [JSON.stringify(platform), revenueData, ordersData, heatmapLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [platform, revenueData, ordersData, heatmapLoading]);
 
   const getHeatmapData = () => {
     setHeatmapLoading(true);
@@ -528,35 +488,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (!active) return;
 
     getHeatmapData();
-  }, [JSON.stringify(beforePeriodBtn), JSON.stringify(vendorsObj), active]);
-
-  const getPlatform = (e) => {
-    const { value } = e.target;
-    if (platform.length > 1) {
-      if (!e.target.checked) {
-        platform.splice(
-          platform.findIndex((el) => el === value),
-          1
-        );
-      }
-    }
-    if (e.target.checked) {
-      setPlatform([...platform, value]);
-      return;
-    }
-
-    setPlatform([...platform]);
-  };
-
-  const disableWeekends = (date) => date.getDay() === 0 || date.getDay() === 6;
-
-  const onChange = (newValue, setDate) => {
-    setDate(newValue);
-    const date = document.querySelectorAll('.date-error');
-    const arr = [];
-    date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
-    setDisabledDate(arr.every((bool) => bool === false));
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [beforePeriodBtn, vendorsObj, active]);
 
   const getMenuData = async (vendor, platforms) => {
     try {
@@ -598,28 +531,8 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         getMenuData(vendorDisplay, platform[0]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, selected]);
-
-  const [categorySearch, setCategorySearch] = useState('');
-  const handleCategoryDataChange = (e) => {
-    const { value } = e.target;
-    if (value.length > 0) {
-      const arr = value
-        .map((v) => category.filter((k) => k.category_name === v || k.category === v))
-        .flat();
-      if (categorySearch) {
-        const filtered = arr.filter((obj) =>
-          (obj.name || obj.item_name).toLowerCase().includes(categorySearch.toLowerCase())
-        );
-        setFilteredCategoryData(filtered);
-      } else {
-        setFilteredCategoryData(arr);
-      }
-    } else {
-      setFilteredCategoryData([]);
-    }
-    setCategoryData(value);
-  };
 
   const timeSelected = () => {
     if (duration !== 'Starting Now' && selected === 3) return;
@@ -644,7 +557,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     setHeatmapData({ ...heatmapData, [links]: response });
   };
 
-  const getSteps = (stepsArr) => {
+  const getSteps = (stepsArr: number[]) => {
     if (platform.length < 2) {
       if (platform[0] === 'talabat') {
         setSteps(stepsArr);
@@ -656,9 +569,9 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     }
   };
 
-  const durationDisable = (n, stepsRange) => {
+  const durationDisable = (n: number, stepsRange: number[]) => {
     if (selected === n) {
-      clearTimeSelected();
+      setHeatmapData(clearTimeSelected(heatmapData));
       timeSelected();
       if (duration === 'Program the offer duration') {
         getSteps([...stepsRange, stepsRange.length]);
@@ -763,12 +676,12 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
         setDisabled(!(branch && platform.length));
         return;
       }
-
+      
       setDisabled(false);
       return;
     }
     if (selected === 2) {
-      clearTimeSelected();
+      setHeatmapData(clearTimeSelected(heatmapData));
       if (menu === 'Offer on An Item from the Menu') {
         getSteps([0, 1, 2, 3, 4]);
         if (platform[0] === 'talabat') {
@@ -792,6 +705,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     if (menu === 'Offer on the whole Menu') {
       durationDisable(3, [0, 1, 2, 3]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     menu,
     minOrder,
@@ -807,7 +721,6 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
     everyWeek,
     customisedDay,
     itemMenu,
-    checked,
     vendors,
     targetAudience,
   ]);
@@ -829,7 +742,7 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       </>
     );
   };
-  // eslint-disable-next-line
+
   const renderTooltipContent = (data, num) => (
     <div className='heatmap-tooltip'>
       <div className='heatmap-tooltip__item'>
@@ -872,119 +785,18 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   useEffect(() => {
     setSelected(1);
     setRecap(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   useEffect(() => {
     setItemMenu('Flash Deal');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menu]);
 
   useEffect(() => {
-    clearTimeSelected();
-    if (selected >= 3) {
-      timeSelected();
-    }
-  }, [times, startingDate, endingDate, selected, typeSchedule]);
-
-  useEffect(() => {
     setFreshStartingDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recap]);
-
-  const getItemMenuNamePrice = () => {
-    const arr = [];
-    checked.forEach((c) => {
-      category.forEach((obj) =>
-        obj.name === c || obj.item_name === c
-          ? arr.push({ name: obj.name || obj.item_name, price: obj.price || obj.unit_price })
-          : false
-      );
-    });
-    return arr;
-  };
-
-  const progressData = {
-    selected,
-    getPlatform,
-    platform,
-    handleCategoryDataChange,
-    vendorsObj,
-    setBranch,
-    branch,
-    menu,
-    setMenu,
-    setDiscountPercentage,
-    discountPercentage,
-    setMinOrder,
-    minOrder,
-    itemMenu,
-    setItemMenu,
-    getDiscountMovType,
-    categoryData,
-    categoryDataList,
-    filteredCategoryData,
-    setFilteredCategoryData,
-    category,
-    setChecked,
-    checked,
-    duration,
-    setDuration,
-    endingDate,
-    onChange,
-    setEndingDate,
-    times,
-    setTimes,
-    typeSchedule,
-    setTypeSchedule,
-    targetAudience,
-    setTargetAudience,
-    setSteps,
-    setSelected,
-    setEveryWeek,
-    everyWeek,
-    days,
-    setCustomisedDay,
-    customisedDay,
-    disableWeekends,
-    startingDate,
-    setStartingDate,
-    setSmRule,
-    setHeatmapData,
-    heatmapData,
-    links,
-    categoryLoading,
-    categorySearch,
-    setCategorySearch,
-  };
-
-  const recapData = {
-    progressData,
-    smRule,
-    launchOrder,
-    setLaunchOrder,
-    setStopOrder,
-    stopOrder,
-    created,
-    closeSetup,
-    ads,
-    minOrder,
-    discountPercentage,
-    menu,
-    itemMenu,
-    recap,
-    steps,
-    selected,
-    getItemMenuNamePrice,
-    branch,
-    platform,
-    duration,
-    typeSchedule,
-    customisedDay,
-    everyWeek,
-    startingDate,
-    endingDate,
-    times,
-    targetAudience,
-    vendors,
-  };
 
   const getRecapBtn = () => {
     if (recap) {
@@ -999,11 +811,15 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
   const handleBack = () => {
     if (recap) {
       setRecap(false);
-    } else if (smRule) {
-      setSmRule(false);
-    } else {
-      setSelected(selected - 1);
+      return;
     }
+
+    if (smRule) {
+      setSmRule(false);
+      return;
+    }
+
+    setSelected(selected - 1);
   };
 
   const getStyleHashureActive = (el) => {
@@ -1154,7 +970,13 @@ const MarketingSetup = ({ active, setActive, ads }: any) => {
       <PaperKit id='marketing-setup' className='marketing-paper'>
         <ContainerKit className='setup-container'>
           <div className='left-part'>
-            {triggerLoading ? null : <GetRecap recapData={recapData} />}
+            {triggerLoading ? null : (
+              <GetRecap
+                getItemMenuNamePrice={() => getItemMenuNamePrice(checked, category)}
+                closeSetup={closeSetup}
+                ads={ads}
+              />
+            )}
             {created ? (
               <div className='left-part-bottom'>
                 <ButtonKit onClick={() => closeSetup()} variant='outlined'>

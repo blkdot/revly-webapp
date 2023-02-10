@@ -1,6 +1,13 @@
 import { useContext } from 'react';
-import { PlatformContext } from '../contexts/PlatformContext';
+import { type TPlatformUserData } from 'data/platformList';
+import { PlatformContext } from 'contexts/PlatformContext';
 
-export const usePlatform = () => useContext(PlatformContext) as any;
+export const usePlatform = () =>
+  useContext<{
+    getActivePlatform: () => string | null;
+    userPlatformData: TPlatformUserData;
+    setUserPlatformData: React.Dispatch<React.SetStateAction<TPlatformUserData>>;
+    cleanPlatformData: () => void;
+  }>(PlatformContext);
 
 export default usePlatform;
