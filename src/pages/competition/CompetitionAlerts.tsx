@@ -197,11 +197,7 @@ const CompetitionAlerts = () => {
   }, [platform, vendors, beforePeriodBtn]);
 
   useEffect(() => {
-    const arr = vendorsArr.filter(
-      (v) =>
-        v.platform === platform &&
-        (v.metadata.is_active === true)
-    );
+    const arr = vendorsArr.filter((v) => v.platform === platform && v.metadata.is_active === true);
 
     // TODO: fix the type here
     setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });

@@ -7,6 +7,7 @@ import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import './RestaurantDropdown.scss';
 import selectedVendors from './selectedVendors';
+import sortedVendors from './soretedVendors';
 
 const ITEM_HEIGHT = 200;
 const ITEM_PADDING_TOP = 10;
@@ -145,19 +146,6 @@ const RestaurantDropdown: FC<{
     setVendors({ ...vendorsContext, display: displayTemp, vendorsObj: vendorsObjTemp });
   };
 
-  const getSortedDisplay = () =>
-    Object.keys(display).sort((a, b) => {
-      const displayA = Object.keys(display[a]).some((vName) => display[a][vName].is_matched);
-      const displayB = Object.keys(display[b]).some((vName) => display[b][vName].is_matched);
-      if (displayA === displayB) {
-        return 0;
-      }
-      if (displayA) {
-        return -1;
-      }
-      return 1;
-    });
-
   return (
     <div
       className={`restaurant-dropdown_wrapper ${
@@ -196,7 +184,7 @@ const RestaurantDropdown: FC<{
             ) : (
               ''
             )}
-            {getSortedDisplay().map((el, index) => (
+            {sortedVendors(display).map((el, index) => (
               <RestaurantCheckboxAccordion
                 key={el}
                 info={display[el]}
