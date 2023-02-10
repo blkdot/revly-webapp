@@ -1,6 +1,7 @@
 import { useUserAuth } from 'contexts';
 import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
 import { useAlert, useApi } from 'hooks';
+import emailWhitelisted from 'data/whitelisted-email';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { verifyEmail } from '../../api/userApi';
@@ -23,7 +24,9 @@ const SignUp = () => {
   const { settingsSave } = useApi();
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
-  const [errorData, setErrorData] = useState<any>({
+  const [errorData, setErrorData] = useState<{
+    [x: string]: boolean;
+  }>({
     email: false,
     password: false,
     fname: false,
@@ -36,6 +39,11 @@ const SignUp = () => {
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!emailWhitelisted.includes(value.email.toLocaleLowerCase().trim())) {
+      triggerAlertWithMessageError('Unauthorized email address');
+      return;
+    }
+
     setProcessing(true);
     try {
       const credential = await signUp(value.email, value.password);

@@ -2,6 +2,7 @@ import { useUserAuth } from 'contexts';
 import { useAlert, useVendors } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import emailWhitelisted from 'data/whitelisted-email';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import SignInForm from './form/SignInForm';
 import './SignIn.scss';
@@ -74,6 +75,11 @@ const SignIn = () => {
   }, [oobCode, mode]);
 
   const handleSubmit = useCallback(async () => {
+    if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
+      triggerAlertWithMessageError('Unauthorized email address');
+      return;
+    }
+
     setProcessing(true);
     try {
       const res = await signIn(email, password, remember);

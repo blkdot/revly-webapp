@@ -250,6 +250,13 @@ const MarketingSetup: React.FC<{
   }, [typeSchedule]);
 
   useEffect(() => {
+    setHeatmapData(clearTimeSelected(heatmapData));
+    if (selected >= 3) {
+      timeSelected();
+    }
+  }, [times, startingDate, endingDate, selected, typeSchedule]);
+
+  useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
     sortedVendors(displayTemp).forEach((chainName) => {
