@@ -97,21 +97,21 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     chain_id,
   } = offerDetailMaster?.master_offer || {};
   const getToken = () => {
-    const token = [];
+    let token = '';
     Object.keys(display).forEach((cName) => {
       Object.keys(display[cName]).forEach((vName) => {
-        Object.keys(display[cName][vName].platforms).forEach((plat) => {
-          if (display[cName][vName].platforms[plat].chain_id === chain_id) {
-            token.push(display[cName][vName].platforms[plat].access_token);
-          }
-        });
+        if (vendor_ids.includes(Number(display[cName][vName].platforms[platform.toLowerCase()]?.vendor_id || 0))) {
+          token = display[cName][vName].platforms[platform.toLowerCase()].access_token;
+        }
       });
     });
-    return token[0];
+    return token;
   };
 
   const openCancelModal = () => setIsOpen(true);
-
+  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
+      vendor_ids?.includes(Number(v.vendor_id))
+ );
   const handleCancelOfferMaster = () => {
     cancelOfferMaster(
       {
@@ -122,6 +122,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         offer_id: null,
         chain_id: String(chain_id),
         master_offer_id,
+        vendors: vendor,
       },
       platform.toLowerCase()
     ).then(() => {
