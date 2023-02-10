@@ -276,14 +276,24 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {
-    const getPlatform = (plat) => platformList.find((obj) => obj.name === plat.toLowerCase());
+    const getPlatform = (plat: string) =>
+      platformList.find((obj) => obj.name === plat.toLowerCase());
+    const sortPlatform = (a: any, b: any) => {
+      if (b.platform < a.platform) {
+        return -1;
+      }
+      if (b.platform > a.platform) {
+        return 1;
+      }
+      return 0;
+    };
     return (
       <TableCellKit
         style={{ paddingLeft: 0, cursor: 'pointer', textAlign: 'left' }}
         id={`${h.id}_${i}`}
         key={`${h.id}_${r.id}`}
       >
-        {r[h.id].map((obj) => (
+        {r[h.id].sort(sortPlatform).map((obj) => (
           <span
             key={obj.platform.toLowerCase()}
             style={{ '--color': getPlatform(obj.platform).color } as any}

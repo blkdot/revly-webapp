@@ -1,6 +1,8 @@
+import sortedVendors from './soretedVendors';
+
 const selectedVendors = (name: string, display: any, plat?: string) => {
   const arr = [];
-  Object.keys(display).forEach((cName) => {
+  sortedVendors(display).forEach((cName) => {
     Object.keys(display[cName]).forEach((vName) => {
       if (display[cName][vName].checked) {
         if (name === 'name') {

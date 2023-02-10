@@ -84,26 +84,21 @@ const GetProgress: FC = () => {
     }
   }, [startingDate, endingDate]);
 
-  const getPlatform = (e, radio) => {
+  const getPlatform = (e) => {
     const { value } = e.target;
 
-    if (radio) {
-      if (e.target.checked) {
-        setPlatform([value]);
-        return;
+    if (platform.length > 1) {
+      if (!e.target.checked) {
+        platform.splice(
+          platform.findIndex((el) => el === value),
+          1
+        );
       }
     }
 
     if (e.target.checked) {
       setPlatform([...platform, value]);
       return;
-    }
-
-    if (!e.target.checked) {
-      platform.splice(
-        platform.findIndex((el) => el === value),
-        1
-      );
     }
 
     setPlatform([...platform]);
