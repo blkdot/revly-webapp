@@ -1,5 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useUserAuth } from 'contexts';
+import { usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   AccordionDetailsKit,
@@ -17,7 +18,6 @@ import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
 import { accordionLink, settingsLink, simpleLink } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
-import { usePlatform } from '../../hooks/usePlatform';
 import Navlink from '../navlink/Navlink';
 import './Navbar.scss';
 

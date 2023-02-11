@@ -1,13 +1,7 @@
-import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
-import type { TVendorsArr } from 'hooks/useVendors';
-
 import { useUserAuth } from 'contexts';
-
-import { useAlert } from 'hooks/useAlert';
-import useApi from 'hooks/useApi';
-import { usePlatform } from 'hooks/usePlatform';
-
+import { useAlert, useApi, usePlatform } from 'hooks';
+import useVendors, { type TVendorsArr } from 'hooks/useVendors';
+import { useEffect, useState } from 'react';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
@@ -16,7 +10,6 @@ import ictalabat from '../../../assets/images/talabat-favicon.png';
 import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
 import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
-import { vendorsAtom } from '../../../store/vendorsAtom';
 import './Menu.scss';
 import MenuDropdown from './menuDropdown/MenuDropdown';
 import MenuTable from './menuTable/MenuTable';
@@ -33,7 +26,7 @@ const Menu = () => {
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert();
   const { getMenu } = useApi();
-  const [vendors] = useAtom(vendorsAtom);
+  const { vendors } = useVendors();
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState<string | TVendorsArr>('');
   const { user } = useUserAuth();

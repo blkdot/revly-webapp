@@ -1,8 +1,15 @@
+import { FC } from 'react';
 import { ButtonKit } from 'kits';
-import CloseIcon from '../../../../assets/images/ic_close.png';
+import CloseIcon from '../../../../assets/images/ic_close.svg';
 import Congrats from '../../../../assets/images/congrats.gif';
 
-const UploadingCompleted = ({ propsVariables }) => {
+const UploadingCompleted: FC<{
+  propsVariables: {
+    openCloseModal: any;
+    setConnectAccount: any;
+    connect: any;
+  };
+}> = ({ propsVariables }) => {
   const { openCloseModal, setConnectAccount, connect } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   return (

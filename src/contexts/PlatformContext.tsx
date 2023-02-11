@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useMemo, useState } from 'react';
 import { platformContexDefaultFormat } from '../data/platformList';
 
@@ -14,11 +15,24 @@ export const PlatformProvider = ({ children }) => {
     setUserPlatformData(platformContexDefaultFormat);
   };
 
+  const getActivePlatform = (): string | null => {
+    let activePlatform: string | null = null;
+
+    Object.keys(userPlatformData.platforms).forEach((pl) => {
+      if (userPlatformData.platforms[pl].find((obj) => obj.active)) {
+        activePlatform = pl;
+      }
+    });
+
+    return activePlatform;
+  };
+
   const PlatformWrapper = useMemo(
     () => ({
       userPlatformData,
       setUserPlatformData,
       cleanPlatformData,
+      getActivePlatform,
     }),
     [userPlatformData]
   );

@@ -1,29 +1,24 @@
 /* eslint-disable no-unused-vars */
 import { Layers, Tag, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
-import { endOfMonth, endOfWeek } from 'date-fns';
-import { useAtom } from 'jotai';
-import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
-import RestaurantDropdownNew from 'components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from 'components/restaurantDropdown/RestaurantDropdownOld';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from 'components/tableRevly/TableRevly';
-import useDate from 'hooks/useDate';
-import usePlanningOffers from 'hooks/usePlanningOffers';
-import useQueryState from 'hooks/useQueryState';
+import { endOfMonth, endOfWeek } from 'date-fns';
+import { useDate, usePlanningOffers, useQueryState } from 'hooks';
+import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import { platformObject } from '../../data/platformList';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
@@ -31,8 +26,6 @@ import { defaultFilterStateFormat } from './marketingOfferData';
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { date: dateContext } = useDate();
-  const [vendors] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (dateContext.typeDate === 'month') {
       return endOfMonth(new Date(dateContext.beforePeriod.endDate));
@@ -42,11 +35,9 @@ const MarketingOffer = () => {
     }
     return dateContext.beforePeriod.endDate;
   };
-  const [dateSaved, setDateSaved] = useQueryState('date') as any;
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: dateContext.beforePeriod.startDate,
     endDate: getOfferDate(),
-    ...JSON.parse((dateSaved || '{}') as any),
   });
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
 
@@ -82,10 +73,6 @@ const MarketingOffer = () => {
   });
 
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
-
-  useEffect(() => {
-    setDateSaved(beforePeriodBtn);
-  }, [JSON.stringify(beforePeriodBtn)]);
 
   useEffect(() => {
     setFiltersSaved(filters);
@@ -492,15 +479,7 @@ const MarketingOffer = () => {
   return (
     <div className='wrapper marketing-wrapper'>
       <div className='top-inputs'>
-        {Object.keys(display).length > 0 ? (
-          <RestaurantDropdownNew chainObj={chainObj} />
-        ) : (
-          <RestaurantDropdownOld
-            vendorsSelected={vendorsSelected}
-            vendors={vendorsArr}
-            vendorsPlatform={Object.keys(vendorsObj)}
-          />
-        )}
+        <RestaurantDropdown />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className='marketing-top'>

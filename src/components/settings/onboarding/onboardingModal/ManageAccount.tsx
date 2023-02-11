@@ -1,10 +1,31 @@
+import { FC, useState } from 'react';
 import { TypographyKit, SwitchKit } from 'kits';
+import { platformList } from 'data/platformList';
+import SwitchDeleteModal from './SwitchDeleteModal';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
-import CloseIcon from '../../../../assets/images/ic_close.png';
-import { platformList } from '../../../../data/platformList';
+import CloseIcon from '../../../../assets/images/ic_close.svg';
 
-const ManageAccount = ({ propsVariables }) => {
-  const { openCloseModal, accounts, deleteAccount } = propsVariables;
+const ManageAccount: FC<{
+  propsVariables: {
+    openCloseModal: any;
+    accounts: any;
+    deleteAccount: any;
+    changeStatusAccount: any;
+    openSwitchDeleteModal: any;
+    openedSwitchDeleteModal: any;
+    loading: any;
+  };
+}> = ({ propsVariables }) => {
+  const {
+    openCloseModal,
+    accounts,
+    deleteAccount,
+    changeStatusAccount,
+    openSwitchDeleteModal,
+    openedSwitchDeleteModal,
+    loading,
+  } = propsVariables;
+  const [selected, setSelected] = useState('');
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
       <img
@@ -51,14 +72,47 @@ const ManageAccount = ({ propsVariables }) => {
               <span
                 tabIndex={-1}
                 role='presentation'
-                onClick={() => deleteAccount(obj.platform, obj.email)}
+                onClick={(e) => {
+                  openSwitchDeleteModal(e);
+                  setSelected('delete');
+                }}
                 className='onboarding-account_trash-icon'
               >
                 <img src={TrashIcon} alt='trash' />
+                {selected === 'delete' ? (
+                  <SwitchDeleteModal
+                    loading={loading}
+                    title='Are you sure you want to delete this account ?'
+                    button='Delete this Account'
+                    onClick={() => deleteAccount(obj.platform, obj.email)}
+                    openSwitchDeleteModal={openSwitchDeleteModal}
+                    openedSwitchDeleteModal={openedSwitchDeleteModal}
+                  />
+                ) : (
+                  ''
+                )}
               </span>
               <div className='onboarding-account_switch'>
                 <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
-                <SwitchKit checked={obj.active} />
+                <SwitchKit
+                  onChange={(e) => {
+                    openSwitchDeleteModal(e);
+                    setSelected('switch');
+                  }}
+                  checked={obj.active}
+                />
+                {selected === 'switch' ? (
+                  <SwitchDeleteModal
+                    loading={loading}
+                    title='Are you sure you want to change status this account ?'
+                    button='Change Status'
+                    onClick={() => changeStatusAccount(obj)}
+                    openSwitchDeleteModal={openSwitchDeleteModal}
+                    openedSwitchDeleteModal={openedSwitchDeleteModal}
+                  />
+                ) : (
+                  ''
+                )}
               </div>
             </div>
           </div>

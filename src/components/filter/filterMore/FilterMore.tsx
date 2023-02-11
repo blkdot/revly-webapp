@@ -1,5 +1,5 @@
 import { ButtonKit, PaperKit, TypographyKit } from 'kits';
-import CloseIcon from '../../../assets/images/ic_close.png';
+import CloseIcon from '../../../assets/images/ic_close.svg';
 import filterOffersData from '../../../data/filterOffersData';
 import FilterDropdown from '../filterDropdown/FilterDropdown';
 import './FilterMore.scss';

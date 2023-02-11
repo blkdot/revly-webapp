@@ -1,9 +1,23 @@
+import { FC } from 'react';
 import { Arrow } from 'assets/icons';
+import { platformList } from 'data/platformList';
 import { ButtonKit, ButtonLoadingKit, TextfieldKit } from 'kits';
-import CloseIcon from '../../../../assets/images/ic_close.png';
-import { platformList } from '../../../../data/platformList';
+import CloseIcon from '../../../../assets/images/ic_close.svg';
 
-const ConnectPlatform = ({ propsVariables }) => {
+const ConnectPlatform: FC<{
+  propsVariables: {
+    openCloseModal: any;
+    connect: any;
+    setEmail: any;
+    setPassword: any;
+    email: string;
+    password: string;
+    setConnect: any;
+    setConnectAccount: any;
+    handleSubmitLogin: any;
+    isLoading: boolean;
+  };
+}> = ({ propsVariables }) => {
   const {
     openCloseModal,
     connect,

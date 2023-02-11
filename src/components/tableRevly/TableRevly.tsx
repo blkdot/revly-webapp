@@ -14,7 +14,8 @@ import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 
 const TableRevly = (props: any) => {
-  const { headers, rows, isLoading, mainFieldOrdered, onClickRow, renderNoData } = props;
+  const { headers, rows, isLoading, mainFieldOrdered, onClickRow, noEmptyMessage, renderNoData } =
+    props;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
@@ -34,25 +35,6 @@ const TableRevly = (props: any) => {
       </TableRowKit>
     ));
 
-  const renderRows = () => {
-    if (isLoading) return renderSkeleton();
-
-    if (!rows || rows.length < 1) {
-      if (renderNoData) {
-        return renderNoData;
-      }
-      return (
-        <TableRowKit className='no-data'>
-          <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
-            <span>No data retrieved</span>
-          </TableCellKit>
-        </TableRowKit>
-      );
-    }
-
-    return renderRowsContent();
-  };
-
   const handleRowClick = (id) => () => {
     if (!onClickRow) return;
 
@@ -69,6 +51,30 @@ const TableRevly = (props: any) => {
         {headers.map((h) => r[h.id])}
       </TableRowKit>
     ));
+  const renderRows = () => {
+    if (isLoading) return renderSkeleton();
+
+    if (!rows || rows.length < 1) {
+      if (renderNoData) {
+        return renderNoData;
+      }
+
+      if (noEmptyMessage) {
+        return null;
+      }
+
+      return (
+        <TableRowKit className='no-data'>
+          <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
+            <span>No data retrieved</span>
+          </TableCellKit>
+        </TableRowKit>
+      );
+    }
+
+    return renderRowsContent();
+  };
+
   return (
     <BoxKit className='competition-box' sx={{ width: '100%' }}>
       <PaperKit className='competition-table-paper' sx={{ width: '100%', mb: 2 }}>

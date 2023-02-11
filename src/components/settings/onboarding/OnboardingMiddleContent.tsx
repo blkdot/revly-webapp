@@ -1,11 +1,25 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import { ButtonKit } from 'kits';
 import OnboardingDropdown from './OnboardingDropdown';
 import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
 
-const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
-  const [kitchen, setKitchen] = useState('');
+const OnboardingMiddleContent: FC<{
+  openCloseModal: any;
+  accounts: any;
+  setConnectAccount: any;
+  vendors: any;
+}> = ({ openCloseModal, accounts, setConnectAccount, vendors }) => {
+  const filteredChains = () => {
+    const arr = [];
+    Object.keys(vendors.display).forEach((cName) => {
+      if(Object.keys(vendors.display[cName]).every((vName) => vendors.display[cName][vName].is_matched)){
+        arr.push(cName)
+      }
+    })
+    return arr;
+  }
+  const [kitchen, setKitchen] = useState(filteredChains());
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
@@ -17,10 +31,8 @@ const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConn
       <div className='settings-onboarding-btn_wrapper'>
         {accounts.length > 0 ? (
           <OnboardingDropdown
-            rows={branchData
-              .filter((obj) => obj.branch_status !== 'in process')
-              .map((obj) => obj.branch_name.title)}
-            state={kitchen || branchData[0]?.branch_name?.title || ''}
+            rows={filteredChains()}
+            state={kitchen || filteredChains()}
             setState={setKitchen}
           />
         ) : (
@@ -41,7 +53,11 @@ const OnboardingMiddleContent = ({ branchData, openCloseModal, accounts, setConn
         ) : (
           ''
         )}
-        <ButtonKit onClick={openCloseModal} className='settings-onboarding-btn' variant='contained'>
+        <ButtonKit
+          onClick={(e) => openCloseModal(e)}
+          className='settings-onboarding-btn'
+          variant='contained'
+        >
           <img src={plus} alt='plus' />
           add new account
         </ButtonKit>

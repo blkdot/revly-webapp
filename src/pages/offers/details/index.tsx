@@ -1,23 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable camelcase */ import {
-  Arrow,
-  Calendar,
-  ExpandIcon,
-  FastFood,
-  Timer,
-  Warning,
-} from 'assets/icons';
+/* eslint-disable camelcase */
+import { useQuery } from '@tanstack/react-query';
+import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
+import { useApi, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
 import { getPlanningOfferDetails } from '../../../api/userApi';
 import CancelOfferModal from '../../../components/modals/cancelOfferModal';
 import { platformObject } from '../../../data/platformList';
-import useApi from '../../../hooks/useApi';
-import { usePlatform } from '../../../hooks/usePlatform';
-import useVendors from '../../../hooks/useVendors';
 import MenuItem from './MenuItem';
 import './OfferDetails.scss';
 
@@ -33,14 +25,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
   const [offerDetailMaster, setofferDetailMaster] = useState<any>({});
-  const {
-    userPlatformData: { platforms },
-  } = usePlatform();
+
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
   const { vendors } = useVendors(undefined);
-  const { vendorsObj } = vendors;
+  const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
       cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
@@ -101,29 +91,38 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     status,
     chain_name,
     vendor_ids,
-    offer_ids,
     type_schedule,
     discount_rate,
     type_offer,
     chain_id,
   } = offerDetailMaster?.master_offer || {};
-
-  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
-    vendor_ids?.includes(v.vendor_id)
-  );
+  const getToken = () => {
+    let token = '';
+    Object.keys(display).forEach((cName) => {
+      Object.keys(display[cName]).forEach((vName) => {
+        if (vendor_ids.includes(Number(display[cName][vName].platforms[platform.toLowerCase()]?.vendor_id || 0))) {
+          token = display[cName][vName].platforms[platform.toLowerCase()].access_token;
+        }
+      });
+    });
+    return token;
+  };
 
   const openCancelModal = () => setIsOpen(true);
-
+  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
+      vendor_ids?.includes(Number(v.vendor_id))
+ );
   const handleCancelOfferMaster = () => {
     cancelOfferMaster(
       {
         master_email: user.email,
-        access_token: user?.access_token || '',
-        platform_token: platforms[platform.toLowerCase()].access_token,
-        vendors: [vendor],
-        offer_id: offer_ids || null,
-        chain_id,
+        access_token: user?.accessToken || '',
+        // TODO: check this
+        platform_token: getToken(),
+        offer_id: null,
+        chain_id: String(chain_id),
         master_offer_id,
+        vendors: vendor,
       },
       platform.toLowerCase()
     ).then(() => {
@@ -163,7 +162,6 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
-  console.log(offerDetailMaster);
   return (
     <>
       <CancelOfferModal

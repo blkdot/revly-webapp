@@ -1,9 +1,9 @@
 import { useUserAuth } from 'contexts';
+import { useAlert, useVendors } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import emailWhitelisted from 'data/whitelisted-email';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
-import { useAlert } from '../../hooks/useAlert';
-import useVendors from '../../hooks/useVendors';
 import SignInForm from './form/SignInForm';
 import './SignIn.scss';
 
@@ -22,7 +22,7 @@ const SignIn = () => {
   const { setVendors } = useVendors(true);
   const { setVendors: setVendorsReq } = useVendors(true);
 
-  const { signIn, googleSignIn, user, logOut, verifyCodeEmail } = useUserAuth();
+  const { signIn, user, logOut, verifyCodeEmail } = useUserAuth();
 
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
@@ -75,6 +75,11 @@ const SignIn = () => {
   }, [oobCode, mode]);
 
   const handleSubmit = useCallback(async () => {
+    if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
+      triggerAlertWithMessageError('Unauthorized email address');
+      return;
+    }
+
     setProcessing(true);
     try {
       const res = await signIn(email, password, remember);
@@ -106,29 +111,6 @@ const SignIn = () => {
     }
   }, [email, logOut, navigate, password, remember, signIn, triggerAlertWithMessageError]);
 
-  const handleGoogleSubmit = useCallback(async () => {
-    setProcessing(true);
-    try {
-      await googleSignIn();
-      navigate('/dashboard');
-    } catch (error) {
-      const message = firebaseCodeError[error.code]
-        ? firebaseCodeError[error.code].message
-        : error.message;
-
-      if (firebaseCodeError[error.code].field) {
-        if (firebaseCodeError[error.code].field === 'email') {
-          setEmailError(true);
-        } else if (firebaseCodeError[error.code].field === 'password') {
-          setPasswordError(true);
-        }
-      }
-
-      triggerAlertWithMessageError(message);
-      setProcessing(false);
-    }
-  }, [googleSignIn, navigate, triggerAlertWithMessageError]);
-
   const onEmailBlur = useCallback(() => setEmailError(!email), [email]);
   const onPasswordBlur = useCallback(() => setPasswordError(!password), [password]);
 
@@ -145,7 +127,6 @@ const SignIn = () => {
       remember={remember}
       setRemember={setRemember}
       onSubmit={handleSubmit}
-      onGoogleSubmit={handleGoogleSubmit}
       disabled={!email || !password || processing}
     />
   );

@@ -1,7 +1,8 @@
 import { Layers, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { endOfMonth, endOfWeek } from 'date-fns';
-import { useAtom } from 'jotai';
+import { useDate, usePlanningAds } from 'hooks';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
@@ -13,13 +14,9 @@ import Dates from '../../components/dates/Dates';
 import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
-import RestaurantDropdownNew from '../../components/restaurantDropdown/RestaurantDropdownNew';
-import RestaurantDropdownOld from '../../components/restaurantDropdown/RestaurantDropdownOld';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
-import useDate from '../../hooks/useDate';
-import usePlanningAds from '../../hooks/usePlanningAds';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
@@ -27,8 +24,6 @@ import { defaultFilterStateFormat } from './marketingOfferData';
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { date } = useDate();
-  const [vendors] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));
@@ -274,15 +269,7 @@ const MarketingAds = () => {
   return (
     <div className='wrapper marketing-wrapper'>
       <div className='top-inputs'>
-        {Object.keys(display).length > 0 ? (
-          <RestaurantDropdownNew chainObj={chainObj} />
-        ) : (
-          <RestaurantDropdownOld
-            vendorsSelected={vendorsSelected}
-            vendors={vendorsArr}
-            vendorsPlatform={Object.keys(vendorsObj)}
-          />
-        )}
+        <RestaurantDropdown />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <div className='marketing-top'>

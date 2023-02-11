@@ -1,72 +1,90 @@
+import { useAtom } from 'jotai';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useQuery } from '@tanstack/react-query';
 import { useUserAuth } from 'contexts';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
 
-type TVendorsObj = {
+export type TVendorsObj = {
   [x: string]: {
-    chain_id: string;
-    vendor_id: string;
-    metadata: {
-      is_active: string | boolean;
-      is_deleted: string | boolean;
-      prefix_vendor_id: string;
-      access_token: string;
-      access_token_bis: string;
-      email: string;
-    };
+    chain_id: number;
+    vendor_id: string | number;
     data: {
       chain_name: string;
       vendor_name: string;
     };
+    metadata: {
+      drn_id?: string;
+      prefix_vendor_id?: string;
+      is_active: boolean;
+      is_deleted: boolean;
+      ord_id?: string;
+    };
   }[];
 };
 
+export type TDisplayVendor =
+  | {
+      [x: string]: {
+        is_matched: boolean;
+        platforms: {
+          [x: string]: {
+            chain_id: number;
+            vendor_id: string | number;
+            data: {
+              chain_name: string;
+              vendor_name: string;
+            };
+            metadata: {
+              drn_id?: string;
+              prefix_vendor_id?: string;
+              is_active: boolean;
+              is_deleted: boolean;
+              ord_id?: string;
+            };
+          };
+        };
+      };
+    }
+  | Record<string, never>;
+
+type TResponseVendorsApi = TVendorsObj & {
+  display: TDisplayVendor;
+};
+
 export type TVendorsArr = {
-  chain_id: string;
-  vendor_id: string;
-  metadata: {
-    is_active: string | boolean;
-    is_deleted: string | boolean;
-    prefix_vendor_id: string;
-    access_token: string;
-    access_token_bis: string;
-    email: string;
-  };
+  chain_id: number;
+  vendor_id: string | number;
   data: {
     chain_name: string;
     vendor_name: string;
   };
-  platform: string;
-};
-
-export type TChainVendor = {
-  [x: string]: {
-    [x: string]: {
-      meta: { prefix_vendor_id: string };
-      vendor_id: string;
-      chain_id: string;
-      data: {
-        chain_name: string;
-        vendor_name: string;
-      };
-      active: boolean;
-    };
+  metadata: {
+    drn_id?: string;
+    prefix_vendor_id?: string;
+    is_active: boolean;
+    is_deleted: boolean;
+    ord_id?: string;
   };
+  platform: string;
+  email: string;
+  access_token: string;
+  access_token_bis: string;
 };
 
 export type TVendors = {
   vendorsSelected: TVendorsArr[];
   vendorsObj: TVendorsObj;
   vendorsArr: TVendorsArr[];
-  display: TChainVendor | Record<string, never>;
-  chainObj: TChainVendor | Record<string, never>;
+  display: TDisplayVendor;
+  chainObj: TDisplayVendor;
 };
 
 const useVendors = (isSign = false) => {
   const { getVendors } = useApi();
+  const [, setVendorsAtom] = useAtom(vendorsAtom);
 
   const [vendors, setVendors] = useState<TVendors>({
     vendorsSelected: [],
@@ -97,11 +115,13 @@ const useVendors = (isSign = false) => {
   useEffect(() => {
     if (isLoading || isError || isSign) return;
 
-    const newData = data as any;
+    const newData = data as TResponseVendorsApi;
 
     delete newData?.master_email;
-    let vendorsSelectedTemp = [];
-    let vendorsTemp = [];
+
+    let vendorsSelectedTemp: TVendorsArr[] = [];
+    let vendorsTemp: TVendorsArr[] = [];
+
     platformList
       .filter((p) => {
         if (!newData[p.name]) delete newData[p.name];
@@ -109,77 +129,75 @@ const useVendors = (isSign = false) => {
       })
       .flatMap((p) =>
         newData[p.name].forEach((v) => {
-          const userPlatform =
-            userPlatformData.platforms[p.name].find((obj) =>
-              obj.vendor_ids.some((id) => id === v.vendor_id)
-            ) || '';
+          const userPlatform = userPlatformData.platforms[p.name].find((obj) =>
+            obj.vendor_ids.some((id: string | number) => Number(id) === Number(v.vendor_id))
+          );
+
           vendorsTemp.push({
             ...v,
             platform: p.name,
-            email: userPlatform.email,
-            access_token: userPlatform.access_token,
-            access_token_bis: userPlatform.access_token_bis,
+            email: userPlatform?.email,
+            access_token: userPlatform?.access_token,
+            access_token_bis: userPlatform?.access_token_bis,
           });
-          if (v.metadata.is_active === 'True' || v.metadata.is_active === true) {
+
+          if (v.metadata.is_active === true) {
             vendorsSelectedTemp.push({
               ...v,
               platform: p.name,
-              email: userPlatform.email,
-              access_token: userPlatform.access_token,
-              access_token_bis: userPlatform.access_token_bis,
+              email: userPlatform?.email,
+              access_token: userPlatform?.access_token,
+              access_token_bis: userPlatform?.access_token_bis,
             });
           }
         })
       );
-    const { ...rest } = newData;
-    const display = newData.display ? newData.display : {};
-    delete rest.display;
-    const vendorsObj = {};
-    const chainObj = JSON.parse(JSON.stringify(display));
-    Object.keys(chainObj).forEach((chainName) => {
-      Object.keys(chainObj[chainName]).forEach((vendorName) => {
-        Object.keys(chainObj[chainName][vendorName]).forEach((platform) => {
-          chainObj[chainName][vendorName][platform] = {
-            ...chainObj[chainName][vendorName][platform],
-            active: userPlatformData.platforms[platform].length,
-          };
-          if (
-            chainObj[chainName][vendorName][platform] === null ||
-            !chainObj[chainName][vendorName][platform].vendor_id
-          ) {
-            delete chainObj[chainName][vendorName][platform];
-          }
-          if (chainObj[chainName][vendorName][platform] !== null) {
-            if ((vendorsObj[platform] || []).length === 0) {
-              if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
-                vendorsObj[platform] = [chainObj[chainName][vendorName][platform]];
-              }
-            } else if (userPlatformData.platforms[platform].some((obj) => obj.active)) {
-              vendorsObj[platform] = [
-                ...vendorsObj[platform],
-                chainObj[chainName][vendorName][platform],
-              ];
-            }
+
+    const { display, ...rest } = newData;
+
+    Object.keys(rest).forEach((platform) => {
+      if (!userPlatformData.platforms[platform]?.some((obj) => obj.active)) {
+        delete rest[platform];
+      }
+    });
+
+    Object.keys(display).forEach((chainName) => {
+      Object.keys(display[chainName]).forEach((vendorName) => {
+        Object.keys(display[chainName][vendorName].platforms).forEach((platform) => {
+          const platformObj = display[chainName][vendorName].platforms[platform];
+          const userPlatform = userPlatformData.platforms[platform].find((obj) =>
+            obj.vendor_ids.some(
+              (id: number | string) => Number(id) === Number(platformObj.vendor_id)
+            )
+          );
+          display[chainName][vendorName].email = userPlatform?.email;
+          display[chainName][vendorName].platforms[platform].email = userPlatform?.email;
+          display[chainName][vendorName].platforms[platform].access_token =
+            userPlatform?.access_token;
+          display[chainName][vendorName].platforms[platform].access_token_bis =
+            userPlatform?.access_token_bis;
+          if (platformObj.metadata.is_active === true) {
+            display[chainName][vendorName].checked = true;
+            display[chainName][vendorName].active = true;
+          } else {
+            display[chainName][vendorName].checked = false;
+            display[chainName][vendorName].active = false;
           }
         });
       });
     });
-    Object.keys(rest).forEach((platform) => {
-      if (!userPlatformData.platforms[platform].some((obj) => obj.active)) {
-        delete rest[platform];
-      }
-    });
+
     const dataV = {
       vendorsSelected: vendorsSelectedTemp,
       vendorsArr: vendorsTemp,
-      vendorsObj: Object.keys(display).length > 0 ? vendorsObj : rest,
-      display: chainObj,
-      chainObj,
+      vendorsObj: rest,
+      display,
+      chainObj: { ...display },
     };
+
     setVendors(dataV);
-    Object.keys(display).forEach((key) => {
-      delete display[key];
-    });
+    setVendorsAtom(dataV);
+
     vendorsTemp = [];
     vendorsSelectedTemp = [];
   }, [data]);

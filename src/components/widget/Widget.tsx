@@ -3,8 +3,8 @@ import MovingIcon from '@mui/icons-material/Moving';
 import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { useDate } from 'hooks';
 import { CardContentKit, CardKit, PaperKit, SkeletonKit, TypographyKit } from 'kits';
-import useDate from '../../hooks/useDate';
 import './Widget.scss';
 
 const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading }) => {
@@ -29,7 +29,24 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
     }
     return 0;
   };
-  const getTitle = (): any => {};
+  const getTitle = (): any => {
+    if (title === 'n_orders') {
+      return 'Orders';
+    }
+    if (title === 'average_basket') {
+      return 'Avg. Basket';
+    }
+    if (title === 'accrued_discounts') {
+      return 'Accrued Discount';
+    }
+    if (title === 'profit') {
+      return 'Net Revenue';
+    }
+    if (title === 'roi') {
+      return 'Marketing ROI';
+    }
+    return title;
+  };
   const getafterPeriod = () => {
     if (titleafterPeriod === 'custom') {
       if (startLocal === endLocal) {

@@ -1,8 +1,7 @@
 import { useUserAuth } from 'contexts';
+import { useApi, usePlatform } from 'hooks';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useApi from '../../hooks/useApi';
-import { usePlatform } from '../../hooks/usePlatform';
 
 const Check = () => {
   const { settingsOnboarded } = useApi();

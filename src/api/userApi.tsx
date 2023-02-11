@@ -34,8 +34,6 @@ export const getPlanningOfferDetails = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
-export const _ = () => null;
-
 export const forgotPassword = (email) =>
   axios
     .post(`${firebaseApiUrl}/forgotPassword?email=${email}`)

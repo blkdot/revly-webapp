@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   AuthContextProvider,
   GlobalFunctionalitiesContextProvider,
@@ -11,6 +12,7 @@ import {
   CompetitionAlerts,
   CompetitionListing,
   Dashboard,
+  DashboardOnboard,
   ForgotPassword,
   MarketingAds,
   MarketingOffer,
@@ -25,9 +27,7 @@ import {
   SignIn,
   SignUp,
   VerifyCode,
-  DashboardOnboard,
 } from 'pages';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedOnboardRoutes, ProtectedRoutes, ProtectedSettingsRoutes } from 'routes';
 import './App.scss';
@@ -49,6 +49,7 @@ const theme = createTheme({
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: false,
       refetchOnWindowFocus: false,
     },
   },

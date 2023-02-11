@@ -1,8 +1,18 @@
-import { FormControlKit, MenuItemKit, SelectKit } from 'kits';
+import { FC } from 'react';
+import { CheckboxKit, FormControlKit, ListItemTextKit, MenuItemKit, SelectKit } from 'kits';
 
-const OnboardingDropdown = ({ state, setState, rows }) => {
+const OnboardingDropdown: FC<{
+  state: any;
+  setState: any;
+  rows: any;
+}> = ({ state, setState, rows }) => {
   const handleChange = (event) => {
-    setState(event.target.value);
+    const {
+      target: { value },
+    } = event;
+    setState(
+      typeof value === 'string' ? value.split(',') : value,
+    );
   };
 
   return (
@@ -13,13 +23,16 @@ const OnboardingDropdown = ({ state, setState, rows }) => {
       <SelectKit
         value={state}
         onChange={handleChange}
-        displayEmpty
-        inputProps={{ 'aria-label': 'Without label' }}
+        multiple
+        labelId="demo-multiple-checkbox-label"
+        id="demo-multiple-checkbox"
         disabled={!(rows.length > 0)}
+        renderValue={(selected) => selected.join(', ')}
       >
-        {rows.map((r) => (
+        {rows.map((r: string) => (
           <MenuItemKit value={r} key={r}>
-            {r}
+            <CheckboxKit checked={rows.indexOf(r) > -1}/>
+            <ListItemTextKit primary={r} />
           </MenuItemKit>
         ))}
       </SelectKit>
