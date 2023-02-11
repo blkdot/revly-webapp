@@ -138,7 +138,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         master_offer: { offer_status: 'Cancelled' },
       });
       setIsOpen(false);
-      client.invalidateQueries(['planning']);
+      client.invalidateQueries(['planning', 'offersv3']);
     });
   };
 
