@@ -71,9 +71,16 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
 
   const renderMetrics = () => {
     if (metricsbeforePeriod.all?.[title]) {
-      return getTitle() === 'roi'
-        ? Math.round(metricsbeforePeriod.all[title] * 100)
-        : parseFloat(metricsbeforePeriod.all[title].toFixed(1)).toLocaleString('en-US');
+      const value = parseFloat(metricsbeforePeriod.all[title].toFixed(1)).toLocaleString('en-US');
+      switch (title) {
+        case 'average_basket':
+        case 'accrued_discounts':
+        case 'revenue':
+        case 'profit':
+          return `AED ${value}`;
+        default:
+          return value;
+      }
     }
 
     return '-';
