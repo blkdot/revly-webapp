@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { QueryKey, useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
+import { QueryKey, UseQueryOptions } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import config from 'setup/config';
 
@@ -44,43 +44,3 @@ export const fetcher = async <T>(url: string, payload: Record<string, unknown>):
     throw errorToApiError(error);
   }
 };
-
-export const useOffers = <T>(
-  payload: Record<string, unknown>,
-  options?: Options<T>
-): UseQueryResult<T, ApiError> =>
-  useQuery<T, ApiError, T>(
-    ['planning', 'offers', 'v3'],
-    () => fetcher('/planning/offersv3', payload),
-    options
-  );
-
-export const useAds = <T>(
-  payload: Record<string, unknown>,
-  options?: Options<T>
-): UseQueryResult<T, ApiError> =>
-  useQuery<T, ApiError, T>(
-    ['planning', 'ads', 'v3'],
-    () => fetcher('/planning/adsv3', payload),
-    options
-  );
-
-export const useRevenueHeatmap = (
-  payload: Record<string, unknown>,
-  options?: Options<unknown>
-): UseQueryResult<unknown, ApiError> =>
-  useQuery<unknown, ApiError, unknown>(
-    ['user', 'heatmapv2', 'revenue'],
-    () => fetcher('/user/heatmapv2/revenue', payload),
-    options
-  );
-
-export const useOrdersHeatmap = (
-  payload: Record<string, unknown>,
-  options?: Options<unknown>
-): UseQueryResult<unknown, ApiError> =>
-  useQuery<unknown, ApiError, unknown>(
-    ['user', 'heatmapv2', 'orders'],
-    () => fetcher('/user/heatmapv2/orders', payload),
-    options
-  );
