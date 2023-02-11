@@ -41,7 +41,6 @@ export const settingsLink = [
     src: settingsIcon,
     subs: [
       { title: 'General', path: '/settings/general' },
-      { title: 'Billing', path: '/settings/billing' },
       { title: 'Onboarding', path: '/settings/onboarding' },
       { title: 'Change Password', path: '/settings/change-password' },
       { title: 'Menu Settings', path: '/settings/menu' },
