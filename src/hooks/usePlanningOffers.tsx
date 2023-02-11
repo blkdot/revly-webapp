@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { ApiError, fetcher } from 'api/hooks';
 import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
@@ -39,3 +41,28 @@ function usePlanningOffers({ dateRange }) {
 }
 
 export default usePlanningOffers;
+
+type DateRange = {
+  startDate: any;
+  endDate: any;
+};
+
+export const usePlanningOffersNew = (range: DateRange) => {
+  const [vendors] = useAtom(vendorsAtom);
+  const { vendorsObj } = vendors;
+  const { user } = useUserAuth();
+
+  return useQuery<any, ApiError, any>(
+    ['planning', 'offersv3', range, vendorsObj],
+    async () =>
+      fetcher('/planning/offersv3', {
+        master_email: user.email,
+        vendors: vendorsObj,
+        start_date: dayjs(range.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(range.endDate).format('YYYY-MM-DD'),
+      }),
+    {
+      enabled: Object.keys(vendorsObj).length > 0,
+    }
+  );
+};
