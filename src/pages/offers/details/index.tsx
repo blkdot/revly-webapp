@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
@@ -100,7 +100,11 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     let token = '';
     Object.keys(display).forEach((cName) => {
       Object.keys(display[cName]).forEach((vName) => {
-        if (vendor_ids.includes(Number(display[cName][vName].platforms[platform.toLowerCase()]?.vendor_id || 0))) {
+        if (
+          vendor_ids.includes(
+            Number(display[cName][vName].platforms[platform.toLowerCase()]?.vendor_id || 0)
+          )
+        ) {
           token = display[cName][vName].platforms[platform.toLowerCase()].access_token;
         }
       });
@@ -108,10 +112,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     return token;
   };
 
+  const client = useQueryClient();
+
   const openCancelModal = () => setIsOpen(true);
   const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
-      vendor_ids?.includes(Number(v.vendor_id))
- );
+    vendor_ids?.includes(Number(v.vendor_id))
+  );
   const handleCancelOfferMaster = () => {
     cancelOfferMaster(
       {
@@ -132,6 +138,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         master_offer: { offer_status: 'Cancelled' },
       });
       setIsOpen(false);
+      client.invalidateQueries(['planning']);
     });
   };
 

@@ -10,7 +10,8 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from 'components/tableRevly/TableRevly';
 import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate, usePlanningOffers, useQueryState } from 'hooks';
+import { useDate, useQueryState } from 'hooks';
+import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -39,12 +40,13 @@ const MarketingOffer = () => {
     startDate: dateContext.beforePeriod.startDate,
     endDate: getOfferDate(),
   });
-  const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
+
+  const { data, isLoading: isLoadingOffers } = usePlanningOffersNew(beforePeriodBtn);
 
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(offers);
+  const [row, setRow] = useState(data?.offers || []);
   const [scrollActive, setScrollActive] = useState('less');
   const handleScroll = () => {
     const cont = document.querySelector('#tableContainer');
@@ -63,7 +65,7 @@ const MarketingOffer = () => {
       cont.scrollLeft = 0;
     }
   };
-  const [offersData, setOffersData] = useState(offers);
+  const [offersData, setOffersData] = useState(data?.offers || []);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
   const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
@@ -79,9 +81,9 @@ const MarketingOffer = () => {
   }, [JSON.stringify(filters)]);
 
   useEffect(() => {
-    setOffersData(offers);
-    setRow(offers);
-  }, [offers]);
+    setOffersData(data?.offers || []);
+    setRow(data?.offers || []);
+  }, [data]);
 
   const {
     renderPlatform,
@@ -393,7 +395,7 @@ const MarketingOffer = () => {
       return (
         <OfferDetailComponent
           // eslint-disable-next-line eqeqeq
-          data={offers.find((o) => o.master_offer_id == clickedId)}
+          data={data?.offers.find((o) => o.master_offer_id == clickedId)}
           setOpened={setOpenedOffer}
         />
       );
