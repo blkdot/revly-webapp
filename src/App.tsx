@@ -18,7 +18,6 @@ import {
   MarketingOffer,
   Planning,
   ResetPassword,
-  SettingsBilling,
   SettingsChangePassword,
   SettingsCost,
   SettingsGeneral,
@@ -87,7 +86,6 @@ const App = () => (
                   <Route element={<ProtectedSettingsRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
                       <Route path='/settings/general' element={<SettingsGeneral />} />
-                      <Route path='/settings/billing' element={<SettingsBilling />} />
                       <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
                       <Route path='/settings/menu' element={<SettingsMenu />} />
                       <Route path='/settings/cost' element={<SettingsCost />} />
