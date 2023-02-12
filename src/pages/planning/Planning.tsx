@@ -78,8 +78,8 @@ const Planning = () => {
   } = useTableContentFormatter();
 
   const headersOffers = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
+    { id: 'chain_name', disablePadding: true, label: 'Chain Name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
@@ -93,8 +93,8 @@ const Planning = () => {
   ];
 
   const headersAds = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
+    { id: 'chain_name', disablePadding: true, label: 'Chain Name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'valid_from', disablePadding: true, label: 'Start date' },
     { id: 'valid_to', disablePadding: true, label: 'End date' },
