@@ -17,7 +17,6 @@ import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
@@ -54,8 +53,8 @@ const MarketingAds = () => {
   } = useTableContentFormatter();
 
   const headersAds = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
+    { id: 'chain_name', disablePadding: true, label: 'Chain Name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'ad_serving_count', disablePadding: true, label: 'Impressions' },
     { id: 'valid_from', disablePadding: true, label: 'Start date' },
