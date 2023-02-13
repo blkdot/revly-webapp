@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai';
 import { parseISO, format } from 'date-fns';
 import { TableCellKit, TooltipKit } from 'kits';
-import arrow from '../../../assets/images/arrow.png';
+import arrow from '../../../assets/images/arrow.svg';
 import { platformList, platformObject } from '../../../data/platformList';
 import { vendorsAtom } from '../../../store/vendorsAtom';
 

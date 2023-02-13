@@ -27,6 +27,7 @@ import {
   SignUp,
   VerifyCode,
 } from 'pages';
+import Adverts from 'pages/adverts/Adverts';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedOnboardRoutes, ProtectedRoutes, ProtectedSettingsRoutes } from 'routes';
 import './App.scss';
@@ -79,6 +80,7 @@ const App = () => (
                       <Route path='/competition/alerts' element={<CompetitionAlerts />} />
                       <Route path='/marketing/offer' element={<MarketingOffer />} />
                       <Route path='/marketing/ads' element={<MarketingAds />} />
+                      <Route path='/adverts' element={<Adverts />} />
                       <Route path='/verify-code' element={<VerifyCode />} />
                     </Route>
                     <Route path='/check' element={<Check />} />

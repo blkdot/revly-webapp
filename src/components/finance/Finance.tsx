@@ -1,3 +1,4 @@
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
@@ -9,10 +10,8 @@ import './Finance.scss';
 const Finance = ({
   metricsbeforePeriod,
   metricsafterPeriod,
-  chainObj,
   setTable,
   table,
-  vendorsSelected,
   display,
   vendors,
   loading,
@@ -39,33 +38,15 @@ const Finance = ({
 
     return `${titleDate}`;
   };
-  const getChain = () => {
-    const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
-    Object.keys(chainObjTemp).forEach((chainName) => {
-      if (Object.keys(chainObjTemp[chainName]).length === 0) {
-        delete chainObjTemp[chainName];
-      }
-    });
-    return Object.keys(chainObjTemp);
-  };
   const isDisplay = () => {
-    if (Object.keys(display).length > 0) {
-      if (getChain().length === Object.keys(display).length) {
-        return <p>All Points of sales</p>;
-      }
-      if (getChain().length > 2) {
-        return `${getChain().length} selected vendors`;
-      }
-      return getChain().join(', ');
-    }
-    if (vendorsSelected.length === vendors.length) {
+    if (selectedVendors('name', display).length === vendors.length) {
       return <p>All Points of sales</p>;
     }
-    if (vendorsSelected.length > 2) {
-      return `${vendorsSelected.length} selected vendors`;
+    if (selectedVendors('name', display).length > 2) {
+      return `${selectedVendors('name', display).length} selected vendors`;
     }
-    return <p> {vendorsSelected.map((obj) => obj.data.vendor_name).join(', ')}</p>;
-  };
+    return selectedVendors('name', display).join(', ');
+  }
   const financeLinks = ['revenue', 'n_orders', 'average_basket', 'profit'];
   return (
     <div className='block'>

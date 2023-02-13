@@ -3,8 +3,10 @@ import { pascalCase } from 'change-case';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useDate, usePlanningAds } from 'hooks';
+import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
@@ -130,10 +132,21 @@ const MarketingAds = () => {
     platform: [],
     status: [],
   });
+  const [vendors] = useAtom(vendorsAtom);
 
   useEffect(() => {
-    setAdsData(ads);
-    setRow(ads);
+    const arr = [];
+    Object.keys(vendors.vendorsObj).forEach((platform) => {
+      vendors.vendorsObj[platform]?.forEach((v) =>
+        ads.forEach((objAds) => {
+          if (objAds.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
+            arr.push(objAds)
+          }
+        })
+      );
+    })
+    setAdsData(arr);
+    setRow(arr);
   }, [ads]);
 
   useEffect(() => {
