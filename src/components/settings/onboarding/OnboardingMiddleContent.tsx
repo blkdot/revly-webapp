@@ -13,12 +13,16 @@ const OnboardingMiddleContent: FC<{
   const filteredChains = () => {
     const arr = [];
     Object.keys(vendors.display).forEach((cName) => {
-      if(Object.keys(vendors.display[cName]).every((vName) => vendors.display[cName][vName].is_matched)){
-        arr.push(cName)
+      if (
+        Object.keys(vendors.display[cName]).every(
+          (vName) => vendors.display[cName][vName].is_matched
+        )
+      ) {
+        arr.push(cName);
       }
-    })
+    });
     return arr;
-  }
+  };
   const [kitchen, setKitchen] = useState(filteredChains());
   return (
     <div className='settings-onboarding-middle_content'>
