@@ -29,7 +29,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { vendors } = useVendors(undefined);
+  const { vendors, getChainData } = useVendors(undefined);
   const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
@@ -89,13 +89,13 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     start_date,
     end_date,
     status,
-    chain_name,
     vendor_ids,
     type_schedule,
     discount_rate,
     type_offer,
     chain_id,
   } = offerDetailMaster?.master_offer || {};
+
   const getToken = () => {
     let token = '';
     Object.keys(display).forEach((cName) => {
@@ -115,10 +115,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const client = useQueryClient();
 
   const openCancelModal = () => setIsOpen(true);
-  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
-    vendor_ids?.includes(Number(v.vendor_id))
-  );
+
   const handleCancelOfferMaster = () => {
+    const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
+      vendor_ids?.includes(Number(v.vendor_id))
+    );
+
     cancelOfferMaster(
       {
         master_email: user.email,
@@ -143,7 +145,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   };
 
   useQuery(
-    ['getPlanningOfferDetails', { master_offer_id, ...offerDetail, ...vendorsObj }],
+    ['getPlanningOfferDetails', { master_offer_id, vendorsObj }],
     () => {
       if (JSON.stringify(vendorsObj) === JSON.stringify({})) return null;
 
@@ -155,9 +157,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
           platform: platform.toLowerCase(),
           master_offer_id,
         })
-          .then((res) => setofferDetailMaster(res.data))
+          .then((res) => {
+            setofferDetailMaster(res.data);
+            return res;
+          })
           //     // eslint-disable-next-line no-console
-          .catch((err) => console.log({ err }))
+          .catch((err) => {
+            console.error({ err });
+            return err;
+          })
       );
     },
     { enabled: !!vendorsObj }
@@ -202,7 +210,9 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                 <Calendar />
                 <div className='restau-infos'>
                   <div className='restau-name'>
-                    {chain_name || <SkeletonKit width={70} height={30} />}
+                    {getChainData(chain_id, vendor_ids)?.chain_name || (
+                      <SkeletonKit width={70} height={30} />
+                    )}
                   </div>
                 </div>
               </div>

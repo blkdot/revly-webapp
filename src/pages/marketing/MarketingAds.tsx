@@ -140,11 +140,11 @@ const MarketingAds = () => {
       vendors.vendorsObj[platform]?.forEach((v) =>
         ads.forEach((objAds) => {
           if (objAds.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
-            arr.push(objAds)
+            arr.push(objAds);
           }
         })
       );
-    })
+    });
     setAdsData(arr);
     setRow(arr);
   }, [ads]);

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import Dates from "components/dates/Dates";
-import RestaurantDropdown from "components/restaurantDropdown/RestaurantDropdown";
-import { endOfMonth, format, getYear, subDays } from "date-fns";
-import { ButtonKit, PaperKit, TypographyKit } from "kits";
+import Dates from 'components/dates/Dates';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import { endOfMonth, format, getYear, subDays } from 'date-fns';
+import { ButtonKit, PaperKit, TypographyKit } from 'kits';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import dayjs from 'dayjs';
 import { enUS } from 'date-fns/locale';
@@ -53,7 +53,7 @@ const Adverts = () => {
       return `${selectedVendors('name', display).length} selected vendors`;
     }
     return selectedVendors('name', display).join(', ');
-  }
+  };
   const headersList = [
     { id: 'brand_name', disablePadding: true, label: 'Brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
@@ -115,7 +115,10 @@ const Adverts = () => {
           for
           <span>{getbeforePeriod()}</span>
         </TypographyKit>
-        <p>Here you can quickly and easily create and manage effective advertisements for their businesses.</p>
+        <p>
+          Here you can quickly and easily create and manage effective advertisements for their
+          businesses.
+        </p>
       </div>
       <PaperKit className='competition-paper adverts'>
         <div className='paper-top-link'>
@@ -125,14 +128,26 @@ const Adverts = () => {
               <span>The list of your running adverts for Today</span>
             </div>
             <div>
-              <p className={link === 'performence' ? 'active' : ''}>
-                Adverts Performance
-              </p>
+              <p className={link === 'performence' ? 'active' : ''}>Adverts Performance</p>
               <span>Performance Metrics of you running adverts for Today</span>
             </div>
             <div className='arrows'>
-              <img tabIndex={-1} role="presentation" onClick={() => setLink('list')} className={link !== 'list' ? 'active' : ''} src={arrow} alt='left-arrow' />
-              <img tabIndex={-1} role="presentation" onClick={() => setLink('performence')} className={link !== 'performence' ? 'active' : ''} src={arrow} alt='right-arrow' />
+              <img
+                tabIndex={-1}
+                role='presentation'
+                onClick={() => setLink('list')}
+                className={link !== 'list' ? 'active' : ''}
+                src={arrow}
+                alt='left-arrow'
+              />
+              <img
+                tabIndex={-1}
+                role='presentation'
+                onClick={() => setLink('performence')}
+                className={link !== 'performence' ? 'active' : ''}
+                src={arrow}
+                alt='right-arrow'
+              />
             </div>
           </div>
           <ButtonKit>
@@ -140,14 +155,10 @@ const Adverts = () => {
             <img src={arrow} alt='right-arrow' />
           </ButtonKit>
         </div>
-        <TableRevly
-          isLoading
-          headers={headersList}
-          rows={[].map(renderRowsByHeaderList)}
-        />
+        <TableRevly isLoading headers={headersList} rows={[].map(renderRowsByHeaderList)} />
       </PaperKit>
     </div>
-  )
-}
+  );
+};
 
-export default Adverts
+export default Adverts;
