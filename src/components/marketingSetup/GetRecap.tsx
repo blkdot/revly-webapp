@@ -27,7 +27,7 @@ import {
 } from 'store/marketingSetupAtom';
 import { useAtom } from 'jotai';
 import { FC, type ChangeEvent } from 'react';
-import ArrowIcon from '../../assets/images/arrow.png';
+import ArrowIcon from '../../assets/images/arrow.svg';
 import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
 import CalendarCheckGrayIcon from '../../assets/images/ic_calendar-check-gray.png';

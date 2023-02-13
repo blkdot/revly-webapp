@@ -16,7 +16,7 @@ import lines from '../../assets/images/lines.png';
 import logo from '../../assets/images/logo.png';
 import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
-import { accordionLink, settingsLink, simpleLink } from '../../data/navbarData';
+import { accordionLink, settingsLink, simpleLink, simpleLinkAfterAccordion } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import Navlink from '../navlink/Navlink';
 import './Navbar.scss';
@@ -57,8 +57,8 @@ const Navbar = () => {
     </Navlink>
   );
 
-  const renderSimpleLink = () =>
-    simpleLink.map((s) => (
+  const renderSimpleLink = (link) =>
+    link.map((s) => (
       <Navlink
         className={
           !userPlatformData.onboarded && s.path !== '/dashboardOnboard' ? 'navlink-disabled' : ''
@@ -169,8 +169,9 @@ const Navbar = () => {
               <img src={arrow} alt='Arrow' />
             </div>
           </li>
-          {renderSimpleLink()}
+          {renderSimpleLink(simpleLink)}
           {renderAccordionLink()}
+          {renderSimpleLink(simpleLinkAfterAccordion)}
         </ul>
         <img className='nav-lines' src={lines} alt='Gradient lines' />
         <ul className='Navbar-footer'>

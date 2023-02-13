@@ -9,14 +9,12 @@ import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from
 import { useEffect, useState } from 'react';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import AreaIcon from '../../assets/images/ic_area.png';
-import selectIcon from '../../assets/images/ic_select.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import Competitor from '../../components/competitor/Competitor';
 import Dates from '../../components/dates/Dates';
-import MarketingCheckmarksDropdown from '../../components/marketingSetup/MarketingChecmarksDropdown';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from '../../components/tableRevly/TableRevly';
 import { vendorsAtom } from '../../store/vendorsAtom';
@@ -26,7 +24,7 @@ let fnDelays = null;
 let fnDelaysAreas = null;
 const CompetitionListing = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsSelected, display, chainObj } = vendors;
+  const { display } = vendors;
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');

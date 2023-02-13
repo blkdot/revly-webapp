@@ -7,12 +7,15 @@ import offerIcon from '../assets/images/ic_offers.png';
 import planningIcon from '../assets/images/ic_planning.png';
 import rankingIcon from '../assets/images/ic_ranking.png';
 import settingsIcon from '../assets/images/ic_settings.png';
+import bellRingIcon from '../assets/images/bell-ring_ic.svg';
 
 export const simpleLink = [
   { title: 'Dashboard', path: '/dashboard', src: dashboardIcon },
   { title: 'Planning', path: '/planning', src: planningIcon },
 ];
-
+export const simpleLinkAfterAccordion = [
+  { title: 'Adverts', path: '/adverts', src: bellRingIcon },
+];
 export const accordionLink = [
   {
     id: 'marketing',

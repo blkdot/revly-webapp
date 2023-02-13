@@ -7,7 +7,7 @@ import TrashIcon from '../../../../assets/images/ic_trash.png';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
 import ResumeIcon from '../../../../assets/images/ic_resume.png';
-import Arrow from '../../../../assets/images/arrow.png';
+import Arrow from '../../../../assets/images/arrow.svg';
 import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{

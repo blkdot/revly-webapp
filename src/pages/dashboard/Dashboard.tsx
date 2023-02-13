@@ -132,13 +132,11 @@ const Dashboard = () => {
       !loading &&
       userPlatformData.onboarded ? (
         <Finance
-          chainObj={chainObj}
           setTable={setTable}
           table={table}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
           display={display}
-          vendorsSelected={vendorsSelected}
           vendors={vendorsArr}
           loading={loading}
         />
