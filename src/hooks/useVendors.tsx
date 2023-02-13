@@ -156,7 +156,12 @@ const useVendors = (isSign = false) => {
     const { display, ...rest } = newData;
 
     Object.keys(rest).forEach((platform) => {
-      if (!userPlatformData.platforms[platform]?.some((obj) => obj.active)) {
+      // Do not delete, the code commented out is the real one, the one under it is just a fast fix.
+      // if (!userPlatformData.platforms[platform]?.some((obj) => obj.active)) {
+      //   delete rest[platform];
+      // }
+
+      if (userPlatformData.platforms[platform].length === 0) {
         delete rest[platform];
       }
     });

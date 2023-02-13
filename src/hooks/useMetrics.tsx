@@ -1,35 +1,39 @@
 import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
-import { useAtom } from 'jotai';
-import { useMemo, useState } from 'react';
-import { vendorsAtom } from '../store/vendorsAtom';
+import { useEffect, useState } from 'react';
+import { type TVendorsObj } from './useVendors';
 import useApi from './useApi';
 import useDate from './useDate';
 
 let fnDelays = null;
 
-function useMetrics() {
+function useMetrics(vendorsObj: TVendorsObj) {
   const { date: dateContext } = useDate();
-  const [vendors] = useAtom(vendorsAtom);
-  const { vendorsObj } = vendors;
   const { beforePeriod, afterPeriod } = dateContext;
   const { getMetrics } = useApi();
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
+  
 
-  const clonedVendor: any = { ...vendorsObj };
-  delete clonedVendor.display;
+  const clonedVendor = { ...vendorsObj };
+
   Object.keys(clonedVendor).forEach((plat) => {
-    if (clonedVendor[plat].length === 0) {
+    if (clonedVendor[plat].length === 0 || plat === 'display') {
       delete clonedVendor[plat];
     }
   });
+
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState(0);
 
   const handleRequest = (date, setMetrics, stack) => {
     setLoading(true);
+
+    if (Object.keys(clonedVendor).length === 0) {
+      setLoading(false);
+      return;
+    }
 
     getMetrics({
       master_email: user.email,
@@ -44,20 +48,18 @@ function useMetrics() {
     });
   };
 
-  useMemo(() => {
+  useEffect(() => {
     clearTimeout(fnDelays);
-    if (Object.keys(vendorsObj).length > 0) {
-      fnDelays = setTimeout(() => {
-        if (loading) {
-          setQueue((prev) => prev + 1);
-          return;
-        }
-
-        handleRequest(afterPeriod, setMetricsafterPeriod, queue);
-        handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
-      }, 750 + queue);
-    }
-  }, [afterPeriod, beforePeriod, vendors, queue]);
+    fnDelays = setTimeout(() => {
+      if (loading) {
+        setQueue((prev) => prev + 1);
+        return;
+      }
+      
+      handleRequest(afterPeriod, setMetricsafterPeriod, queue);
+      handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
+    }, 750 + queue);
+  }, [afterPeriod, beforePeriod, vendorsObj, queue]);
 
   return { metricsbeforePeriod, metricsafterPeriod, loading };
 }
