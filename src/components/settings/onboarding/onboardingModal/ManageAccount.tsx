@@ -99,7 +99,7 @@ const ManageAccount: FC<{
                   onChange={(e) => {
                     openSwitchDeleteModal(e);
                     setSelected('switch');
-                    setOpened(index)
+                    setOpened(index);
                   }}
                   checked={obj.active}
                 />

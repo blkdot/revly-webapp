@@ -7,7 +7,8 @@ import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const useTableContentFormatter = () => {
   const [vendorsState] = useAtom(vendorsAtom);
-  const { vendorsArr } = vendorsState;
+  const { vendorsArr, chainData } = vendorsState;
+
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
@@ -151,6 +152,35 @@ const useTableContentFormatter = () => {
       </TooltipKit>
     </TableCellKit>
   );
+
+  const renderChainId = (r, h, i) => {
+    let vendorData = chainData.find((ch) => {
+      if (
+        r.vendor_ids.includes(Number(ch.vendor_id)) ||
+        r.vendor_ids.includes(String(ch.vendor_id))
+      ) {
+        return Number(ch.chain_id) === Number(r.chain_id);
+      }
+
+      return false;
+    });
+
+    if (!vendorData) {
+      vendorData = chainData.find((ch) => Number(ch.chain_id) === Number(r.chain_id));
+    }
+
+    return (
+      <TableCellKit
+        id={`${h.id}_${i}`}
+        key={`${h.id}_${r.id}`}
+        style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}
+      >
+        <span style={{ textAlign: 'justify' }} key={h.id}>
+          {vendorData.chain_name}
+        </span>
+      </TableCellKit>
+    );
+  };
 
   const renderPlatform = (r, h, i = 0) => (
     <TableCellKit
@@ -361,6 +391,7 @@ const useTableContentFormatter = () => {
     renderIsoDateOnly,
     renderIsoStartTimeOnlyFromDate,
     renderIsoEndTimeOnlyFromDate,
+    renderChainId,
   };
 };
 

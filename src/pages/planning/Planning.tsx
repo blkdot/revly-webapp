@@ -8,14 +8,12 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevly from 'components/tableRevly/TableRevly';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
-import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import shortid from 'shortid';
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
 import { platformObject } from '../../data/platformList';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
 
@@ -31,7 +29,6 @@ const Planning = () => {
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const [active, setActive] = useState(0);
   const { date } = useDate();
-  const [vendors] = useAtom(vendorsAtom);
 
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
@@ -47,7 +44,7 @@ const Planning = () => {
     endDate: getOfferDate(),
     ...JSON.parse(dateSaved || '{}'),
   });
-  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
+
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
@@ -68,7 +65,7 @@ const Planning = () => {
     renderPercent,
     renderCurrency,
     renderStatus,
-    renderSimpleRowNotCentered,
+    renderChainId,
     renderTarget,
     renderScheduleType,
     renderSimpleRow,
@@ -78,7 +75,7 @@ const Planning = () => {
   } = useTableContentFormatter();
 
   const headersOffers = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain Name' },
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
@@ -93,7 +90,7 @@ const Planning = () => {
   ];
 
   const headersAds = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain Name' },
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'valid_from', disablePadding: true, label: 'Start date' },
@@ -103,7 +100,7 @@ const Planning = () => {
   ];
 
   const cellTemplatesObject = {
-    chain_name: renderSimpleRowNotCentered,
+    chain_id: renderChainId,
     platform: renderPlatform,
     vendor_ids: renderVendorId,
     start_date: renderSimpleRow,

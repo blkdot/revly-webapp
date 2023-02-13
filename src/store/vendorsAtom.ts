@@ -7,6 +7,7 @@ export const vendorsAtom = atom<TVendors>({
   vendorsArr: [],
   display: {},
   chainObj: {},
+  chainData: [],
 });
 
 export default vendorsAtom;
