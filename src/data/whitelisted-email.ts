@@ -6,6 +6,7 @@ const emailWhitelisted = [
   'latiks1908@gmail.com',
   'amanbekasylbekov0@gmail.com',
   'amanbekasylbekov2@gmail.com',
+  'tchi.devica@gmail.com',
 ];
 
 export default emailWhitelisted;

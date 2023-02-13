@@ -11,6 +11,7 @@ import Arrow from '../../../../assets/images/arrow.svg';
 import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{
+  unremovable: boolean;
   propsVariables: {
     openCloseModal: any;
     clickedBranch: any;
@@ -24,7 +25,7 @@ const ManageBranch: FC<{
     loading: any;
     setConnectAccount: any;
   };
-}> = ({ propsVariables }) => {
+}> = ({ propsVariables, unremovable }) => {
   const {
     openCloseModal,
     clickedBranch,
@@ -168,7 +169,7 @@ const ManageBranch: FC<{
       </div>
       <div className='manage-branch-buttons'>
         {clickedBranch.branch_status === 'active' ? (
-          <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained'>
+          <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained' disabled={unremovable}>
             <img src={PauseIcon} alt='pause' /> Suspend activity from this branch
           </ButtonKit>
         ) : (
@@ -176,7 +177,7 @@ const ManageBranch: FC<{
             <img src={ResumeIcon} alt='resume' /> Resume activity from this branch
           </ButtonKit>
         )}
-        <ButtonKit onClick={openSwitchDeleteModal} className='delete' variant='outlined'>
+        <ButtonKit onClick={openSwitchDeleteModal} className='delete' variant='outlined' disabled={unremovable}>
           <img src={TrashIcon} alt='trash' /> Delete this branch from Revly
         </ButtonKit>
       </div>

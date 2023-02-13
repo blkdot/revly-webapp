@@ -14,6 +14,8 @@ import SwitchDeleteModal from './onboardingModal/SwitchDeleteModal';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
+const isUnRemovableBranch = (branchData: any[]): boolean => branchData.length < 2;
+
 const OnboardingModal = ({ propsVariables }: any) => {
   const {
     openCloseModal,
@@ -175,6 +177,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
           openedSwitchDeleteModal,
           loading,
         }}
+        unremovable={isUnRemovableBranch(branchData)}
       />
     ),
     completed: <UploadingCompleted propsVariables={propsVariables} />,

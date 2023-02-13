@@ -19,7 +19,7 @@ export const PlatformProvider = ({ children }) => {
     let activePlatform: string | null = null;
 
     Object.keys(userPlatformData.platforms).forEach((pl) => {
-      if (userPlatformData.platforms[pl].find((obj) => obj.active)) {
+      if (userPlatformData.platforms[pl].some((obj) => obj.active)) {
         activePlatform = pl;
       }
     });
