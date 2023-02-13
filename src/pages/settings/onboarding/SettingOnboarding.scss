@@ -663,12 +663,34 @@
       &:hover {
         background-color: #ff4842;
       }
+
+      &:disabled {
+        background-color: #637381;
+        color: #ffedec;
+        border-color: #637381 !important;
+        cursor: not-allowed;
+
+        img {
+          filter: none;
+        }
+      }
     }
 
     &.delete {
       color: #ff4842;
       background-color: #ffedec;
       border-color: #ff4842 !important;
+
+      &:disabled {
+        background-color: #637381;
+        color: #ffedec;
+        border-color: #637381 !important;
+        cursor: not-allowed;
+
+        img {
+          filter: none;
+        }
+      }
 
       img {
         filter: invert(53%) sepia(100%) saturate(5446%) hue-rotate(341deg) brightness(129%)
