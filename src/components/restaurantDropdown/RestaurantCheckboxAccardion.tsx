@@ -72,7 +72,8 @@ const RestaurantCheckboxAccordion: FC<{
     });
     setVendors({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp });
   };
-  const getIcon = (platform: string) =>  platformList.find((obj) => obj.name === platform).srcFavicon;
+  const getIcon = (platform: string) =>
+    platformList.find((obj) => obj.name === platform).srcFavicon;
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       {Object.values(info).every((objV: any) => !objV.is_matched) ? (
@@ -199,11 +200,9 @@ const RestaurantCheckboxAccordion: FC<{
                 <p className='vendor-name'>{vendorName}</p>
               </TooltipKit>
               <div className='restaurant-platforms'>
-                {Object.keys(info[vendorName].platforms).map((plat) => <img
-                  className='restaurant-img'
-                  src={getIcon(plat)}
-                  alt={plat}
-                />)}
+                {Object.keys(info[vendorName].platforms).map((plat) => (
+                  <img className='restaurant-img' src={getIcon(plat)} alt={plat} />
+                ))}
               </div>
               <div className='only-button vendor'>
                 <ButtonKit

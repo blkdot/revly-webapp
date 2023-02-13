@@ -93,11 +93,12 @@ const MarketingOffer = () => {
     renderTarget,
     renderSimpleRow,
     renderVendorId,
+    renderChainId,
   } = useTableContentFormatter();
 
   const headersOffers = [
     {
-      id: 'chain_name',
+      id: 'chain_id',
       numeric: false,
       disablePadding: false,
       label: 'Chain Name',
@@ -183,7 +184,7 @@ const MarketingOffer = () => {
   ];
 
   const cellTemplatesObject = {
-    chain_name: renderSimpleRow,
+    chain_id: renderChainId,
     vendor_ids: renderVendorId,
     platform: renderPlatform,
     start_date: renderSimpleRow,
