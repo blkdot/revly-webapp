@@ -176,6 +176,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
           openSwitchDeleteModal,
           openedSwitchDeleteModal,
           loading,
+          setLoading
         }}
         unremovable={isUnRemovableBranch(branchData)}
       />
