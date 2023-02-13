@@ -169,7 +169,12 @@ const ManageBranch: FC<{
       </div>
       <div className='manage-branch-buttons'>
         {clickedBranch.branch_status === 'active' ? (
-          <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained' disabled={unremovable}>
+          <ButtonKit
+            onClick={changeStatusBranch}
+            className='pause'
+            variant='contained'
+            disabled={unremovable}
+          >
             <img src={PauseIcon} alt='pause' /> Suspend activity from this branch
           </ButtonKit>
         ) : (
@@ -177,7 +182,12 @@ const ManageBranch: FC<{
             <img src={ResumeIcon} alt='resume' /> Resume activity from this branch
           </ButtonKit>
         )}
-        <ButtonKit onClick={openSwitchDeleteModal} className='delete' variant='outlined' disabled={unremovable}>
+        <ButtonKit
+          onClick={openSwitchDeleteModal}
+          className='delete'
+          variant='outlined'
+          disabled={unremovable}
+        >
           <img src={TrashIcon} alt='trash' /> Delete this branch from Revly
         </ButtonKit>
       </div>

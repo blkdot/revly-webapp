@@ -46,7 +46,7 @@ const Finance = ({
       return `${selectedVendors('name', display).length} selected vendors`;
     }
     return selectedVendors('name', display).join(', ');
-  }
+  };
   const financeLinks = ['revenue', 'n_orders', 'average_basket', 'profit'];
   return (
     <div className='block'>

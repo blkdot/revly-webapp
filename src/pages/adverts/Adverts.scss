@@ -35,22 +35,23 @@
   align-items: center;
   justify-content: space-between;
   button {
-    background-color: #906BFF;
+    background-color: #906bff;
     color: #fff;
     text-transform: none;
     padding: 10px 30px;
     font-weight: 600;
     font-size: 16px;
     line-height: 26px;
-    &:hover{
-      background-color: #906BFF;
+    &:hover {
+      background-color: #906bff;
     }
     img {
       margin-left: 15px;
       width: 17px;
       height: 17px;
       object-fit: contain;
-      filter: invert(98%) sepia(5%) saturate(198%) hue-rotate(224deg) brightness(340%) contrast(100%);
+      filter: invert(98%) sepia(5%) saturate(198%) hue-rotate(224deg) brightness(340%)
+        contrast(100%);
     }
   }
 
@@ -67,45 +68,42 @@
         object-fit: contain;
         margin: 0 5px;
         pointer-events: none;
-        transition: .3s;
+        transition: 0.3s;
 
         &.active {
           cursor: pointer;
-          filter: invert(16%) sepia(14%) saturate(934%) hue-rotate(171deg) brightness(30%) contrast(98%);
+          filter: invert(16%) sepia(14%) saturate(934%) hue-rotate(171deg) brightness(30%)
+            contrast(98%);
           pointer-events: all;
         }
       }
 
-      >img:nth-of-type(1) {
+      > img:nth-of-type(1) {
         transform: rotate(180deg);
       }
     }
 
-    >div {
+    > div {
       &:nth-of-type(1) {
         padding-right: 20px;
-        border-right: 1px solid #919EAB3D;
+        border-right: 1px solid #919eab3d;
       }
 
       &:nth-of-type(2) {
         padding-left: 20px;
       }
 
-
-
       p {
         display: block;
         font-weight: 600;
         font-size: 16px;
         line-height: 22px;
-        transition: .3s;
+        transition: 0.3s;
 
         &.active {
-          color: #7B61FF;
+          color: #7b61ff;
         }
       }
     }
   }
-
-
 }

@@ -88,11 +88,11 @@ const MarketingOffer = () => {
       vendors.vendorsObj[platform]?.forEach((v) =>
         data?.offers.forEach((objOffers) => {
           if (objOffers.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
-            arr.push(objOffers)
+            arr.push(objOffers);
           }
         })
       );
-    })
+    });
     setOffersData(arr || []);
     setRow(arr || []);
   }, [data]);
@@ -426,8 +426,9 @@ const MarketingOffer = () => {
         <div className='right-part'>
           <div className='right-part-header marketing-links'>
             <TypographyKit
-              className={`right-part-header_link marketing ${scrollActive === 'more' ? 'active' : ''
-                }`}
+              className={`right-part-header_link marketing ${
+                scrollActive === 'more' ? 'active' : ''
+              }`}
               variant='div'
             >
               <div tabIndex={-1} role='presentation' onClick={() => handleScrollActive('less')}>

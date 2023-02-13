@@ -115,7 +115,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const client = useQueryClient();
 
   const openCancelModal = () => setIsOpen(true);
-  
+
   const handleCancelOfferMaster = () => {
     const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
       vendor_ids?.includes(Number(v.vendor_id))
@@ -163,7 +163,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
           })
           //     // eslint-disable-next-line no-console
           .catch((err) => {
-            console.error({ err })
+            console.error({ err });
             return err;
           })
       );
@@ -210,7 +210,9 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                 <Calendar />
                 <div className='restau-infos'>
                   <div className='restau-name'>
-                    {getChainData(chain_id, vendor_ids)?.chain_name || <SkeletonKit width={70} height={30} />}
+                    {getChainData(chain_id, vendor_ids)?.chain_name || (
+                      <SkeletonKit width={70} height={30} />
+                    )}
                   </div>
                 </div>
               </div>

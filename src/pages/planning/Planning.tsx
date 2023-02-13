@@ -57,7 +57,7 @@ const Planning = () => {
   const [dataFiltered, setDataFiltered] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
   const [vendors] = useAtom(vendorsAtom);
- 
+
   useEffect(() => {
     setDateSaved(dateRange);
     setFiltersSaved(filters);
@@ -310,11 +310,11 @@ const Planning = () => {
       vendors.vendorsObj[platform]?.forEach((v) =>
         filteredData.forEach((obj) => {
           if (obj.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
-            arr.push(obj)
+            arr.push(obj);
           }
         })
       );
-    })
+    });
     setDataFiltered(arr);
   }, [JSON.stringify(filters), ads, offers, active, JSON.stringify(dateRange)]);
 

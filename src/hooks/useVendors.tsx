@@ -238,7 +238,11 @@ const useVendors = (isSign = false) => {
       const vendorIdString = String(ch.vendor_id);
       const vendorIdNumber = Number(ch.vendor_id);
 
-      if (vendorIds && vendorIds.length > 0 && ([...vendorIds].includes(vendorIdString) || [...vendorIds].includes(vendorIdNumber))) {
+      if (
+        vendorIds &&
+        vendorIds.length > 0 &&
+        ([...vendorIds].includes(vendorIdString) || [...vendorIds].includes(vendorIdNumber))
+      ) {
         return Number(ch.chain_id) === Number(chainId);
       }
 
