@@ -8,9 +8,11 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevly from 'components/tableRevly/TableRevly';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
+import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import shortid from 'shortid';
+import { vendorsAtom } from 'store/vendorsAtom';
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
 import { platformObject } from '../../data/platformList';
@@ -54,7 +56,8 @@ const Planning = () => {
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
-
+  const [vendors] = useAtom(vendorsAtom);
+ 
   useEffect(() => {
     setDateSaved(dateRange);
     setFiltersSaved(filters);
@@ -302,8 +305,17 @@ const Planning = () => {
         filters.status.includes(active ? f.ad_status : f.status)
       );
     }
-
-    setDataFiltered(filteredData);
+    const arr = [];
+    Object.keys(vendors.vendorsObj).forEach((platform) => {
+      vendors.vendorsObj[platform]?.forEach((v) =>
+        filteredData.forEach((obj) => {
+          if (obj.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
+            arr.push(obj)
+          }
+        })
+      );
+    })
+    setDataFiltered(arr);
   }, [JSON.stringify(filters), ads, offers, active, JSON.stringify(dateRange)]);
 
   const renderLayout = () => {
