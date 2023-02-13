@@ -97,9 +97,10 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setLoading(true);
     const vendorsBranch = () => {
       const arr = [];
+
       Object.keys(vendors.display).forEach((cName) => {
         Object.keys(vendors.display[cName]).forEach((vName) => {
-          if (vendors.display[cName][vName].platforms[obj.platform]?.email === obj.email) {
+          if (vendors.display[cName][vName].email === obj.email) {
             arr.push(vendors.display[cName][vName].platforms[obj.platform]);
           }
         });

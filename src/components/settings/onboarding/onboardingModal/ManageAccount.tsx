@@ -26,6 +26,7 @@ const ManageAccount: FC<{
     loading,
   } = propsVariables;
   const [selected, setSelected] = useState('');
+  const [opened, setOpened] = useState(0);
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
       <img
@@ -48,7 +49,7 @@ const ManageAccount: FC<{
         ''
       )}
       <div className='onboarding-accounts_wrapper'>
-        {accounts.map((obj) => (
+        {accounts.map((obj, index) => (
           <div key={obj.email} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
               <TypographyKit
@@ -98,6 +99,7 @@ const ManageAccount: FC<{
                   onChange={(e) => {
                     openSwitchDeleteModal(e);
                     setSelected('switch');
+                    setOpened(index);
                   }}
                   checked={obj.active}
                 />
@@ -108,7 +110,7 @@ const ManageAccount: FC<{
                     button='Change Status'
                     onClick={() => changeStatusAccount(obj)}
                     openSwitchDeleteModal={openSwitchDeleteModal}
-                    openedSwitchDeleteModal={openedSwitchDeleteModal}
+                    openedSwitchDeleteModal={openedSwitchDeleteModal && opened === index}
                   />
                 ) : (
                   ''

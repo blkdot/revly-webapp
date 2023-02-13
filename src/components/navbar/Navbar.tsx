@@ -32,17 +32,19 @@ const Navbar = () => {
   const [, setVendors] = useAtom(vendorsAtom);
 
   const handleLogout = async () => {
-    setVendors({
-      vendorsSelected: [],
-      vendorsObj: {},
-      vendorsArr: [],
-      display: {},
-      chainObj: {},
-    });
     try {
       await logOut();
+      setVendors({
+        vendorsSelected: [],
+        vendorsObj: {},
+        vendorsArr: [],
+        display: {},
+        chainObj: {},
+        chainData: [],
+      });
       navigate('/');
     } catch (e) {
+      navigate('/');
       /* */
     }
   };

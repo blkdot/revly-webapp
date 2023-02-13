@@ -2,6 +2,14 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
+import Dates from 'components/dates/Dates';
+import Finance from 'components/finance/Finance';
+import FinanceEmpty from 'components/finance/FinanceEmpty';
+import Marketing from 'components/marketing/Marketing';
+import MarketingEmpty from 'components/marketing/MarketingEmpty';
+import Table from 'components/table/Table';
+import TableEmpty from 'components/table/TableEmpty';
+import { vendorsAtom } from 'store/vendorsAtom';
 import { useMetrics, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { PaperKit } from 'kits';
@@ -12,20 +20,12 @@ import RevenueIcon from '../../assets/images/ic_offers-mn.png';
 import ProfitIcon from '../../assets/images/ic_offers-pr.png';
 import OrdersIcon from '../../assets/images/ic_orders.png';
 import RoiIcon from '../../assets/images/ic_roi.png';
-import Dates from '../../components/dates/Dates';
-import Finance from '../../components/finance/Finance';
-import FinanceEmpty from '../../components/finance/FinanceEmpty';
-import Marketing from '../../components/marketing/Marketing';
-import MarketingEmpty from '../../components/marketing/MarketingEmpty';
-import Table from '../../components/table/Table';
-import TableEmpty from '../../components/table/TableEmpty';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import './Dashboard.scss';
 
 const Dashboard = () => {
-  const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
   const [vendors] = useAtom(vendorsAtom);
-  const { chainObj, display, vendorsSelected, vendorsArr } = vendors;
+  const { chainObj, display, vendorsSelected, vendorsArr, vendorsObj } = vendors;
+  const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics(vendorsObj);
   const [table, setTable] = useState('revenue');
 
   const getTitle = (title: string) => {
