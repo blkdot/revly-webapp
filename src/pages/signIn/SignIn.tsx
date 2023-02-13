@@ -35,6 +35,7 @@ const SignIn = () => {
       vendorsArr: [],
       display: {},
       chainObj: {},
+      chainData: [],
     };
     localStorage.clear();
     setVendorsReq(defaultState);

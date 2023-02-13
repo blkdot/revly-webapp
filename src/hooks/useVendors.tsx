@@ -74,12 +74,20 @@ export type TVendorsArr = {
   access_token_bis: string;
 };
 
+export type TChainData = {
+  chain_id: number;
+  chain_name: string;
+  vendor_id: string | number;
+  vendor_name: string;
+};
+
 export type TVendors = {
   vendorsSelected: TVendorsArr[];
   vendorsObj: TVendorsObj;
   vendorsArr: TVendorsArr[];
   display: TDisplayVendor;
   chainObj: TDisplayVendor;
+  chainData: TChainData[];
 };
 
 const useVendors = (isSign = false) => {
@@ -92,6 +100,7 @@ const useVendors = (isSign = false) => {
     vendorsArr: [],
     display: {},
     chainObj: {},
+    chainData: [],
   });
 
   const { user } = useUserAuth();
@@ -155,6 +164,8 @@ const useVendors = (isSign = false) => {
 
     const { display, ...rest } = newData;
 
+    const chainData = [];
+
     Object.keys(rest).forEach((platform) => {
       // Do not delete, the code commented out is the real one, the one under it is just a fast fix.
       // if (!userPlatformData.platforms[platform]?.some((obj) => obj.active)) {
@@ -188,6 +199,15 @@ const useVendors = (isSign = false) => {
             display[chainName][vendorName].checked = false;
             display[chainName][vendorName].active = false;
           }
+
+          const l = {
+            chain_name: chainName,
+            chain_id: display[chainName][vendorName].platforms[platform].chain_id,
+            vendor_id: display[chainName][vendorName].platforms[platform].vendor_id,
+            vendor_name: vendorName,
+          };
+
+          chainData.push(l);
         });
       });
     });
@@ -198,6 +218,7 @@ const useVendors = (isSign = false) => {
       vendorsObj: rest,
       display,
       chainObj: { ...display },
+      chainData,
     };
 
     setVendors(dataV);
