@@ -10,9 +10,7 @@ const OnboardingDropdown: FC<{
     const {
       target: { value },
     } = event;
-    setState(
-      typeof value === 'string' ? value.split(',') : value,
-    );
+    setState(typeof value === 'string' ? value.split(',') : value);
   };
 
   return (
@@ -24,14 +22,14 @@ const OnboardingDropdown: FC<{
         value={state}
         onChange={handleChange}
         multiple
-        labelId="demo-multiple-checkbox-label"
-        id="demo-multiple-checkbox"
+        labelId='demo-multiple-checkbox-label'
+        id='demo-multiple-checkbox'
         disabled={!(rows.length > 0)}
         renderValue={(selected) => selected.join(', ')}
       >
         {rows.map((r: string) => (
           <MenuItemKit value={r} key={r}>
-            <CheckboxKit checked={rows.indexOf(r) > -1}/>
+            <CheckboxKit checked={rows.indexOf(r) > -1} />
             <ListItemTextKit primary={r} />
           </MenuItemKit>
         ))}

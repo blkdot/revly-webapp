@@ -27,7 +27,7 @@ const Dashboard = () => {
   const { chainObj, display, vendorsSelected, vendorsArr, vendorsObj } = vendors;
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics(vendorsObj);
   const [table, setTable] = useState('revenue');
-  console.log('vendorsObj => ', display);
+
   const getTitle = (title: string) => {
     if (title === 'n_orders') {
       return 'Orders';

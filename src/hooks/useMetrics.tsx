@@ -14,7 +14,6 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
-  
 
   const clonedVendor = { ...vendorsObj };
 
@@ -55,7 +54,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
         setQueue((prev) => prev + 1);
         return;
       }
-      
+
       handleRequest(afterPeriod, setMetricsafterPeriod, queue);
       handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
     }, 750 + queue);
