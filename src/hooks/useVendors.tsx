@@ -181,7 +181,7 @@ const useVendors = (isSign = false) => {
       Object.keys(display[chainName]).forEach((vendorName) => {
         Object.keys(display[chainName][vendorName].platforms).forEach((platform) => {
           const platformObj = display[chainName][vendorName].platforms[platform];
-          const platformArr = Object.keys(display[chainName][vendorName].platforms)
+          const platformArr = Object.keys(display[chainName][vendorName].platforms);
           const userPlatform = userPlatformData.platforms[platform].find((obj) =>
             obj.vendor_ids.some(
               (id: number | string) => Number(id) === Number(platformObj.vendor_id)
@@ -193,7 +193,11 @@ const useVendors = (isSign = false) => {
             userPlatform?.access_token;
           display[chainName][vendorName].platforms[platform].access_token_bis =
             userPlatform?.access_token_bis;
-          if (platformArr.some((plat) => display[chainName][vendorName].platforms[plat].metadata.is_active)) {
+          if (
+            platformArr.some(
+              (plat) => display[chainName][vendorName].platforms[plat].metadata.is_active
+            )
+          ) {
             display[chainName][vendorName].checked = true;
             display[chainName][vendorName].active = true;
           } else {
@@ -229,7 +233,26 @@ const useVendors = (isSign = false) => {
     vendorsSelectedTemp = [];
   }, [data]);
 
-  return { vendors, setVendors };
+  const getChainData = (chainId: number, vendorIds: number[] | string[] = []): TChainData => {
+    let vendorData = vendors.chainData.find((ch) => {
+      const vendorIdString = String(ch.vendor_id);
+      const vendorIdNumber = Number(ch.vendor_id);
+
+      if (vendorIds && vendorIds.length > 0 && ([...vendorIds].includes(vendorIdString) || [...vendorIds].includes(vendorIdNumber))) {
+        return Number(ch.chain_id) === Number(chainId);
+      }
+
+      return false;
+    });
+
+    if (!vendorData) {
+      vendorData = vendors.chainData.find((ch) => Number(ch.chain_id) === Number(chainId));
+    }
+
+    return vendorData;
+  };
+
+  return { vendors, setVendors, getChainData };
 };
 
 export default useVendors;
