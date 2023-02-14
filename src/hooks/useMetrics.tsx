@@ -14,12 +14,14 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
+  const newVendorsObj = {};
+  Object.keys(vendorsObj).forEach((plat) => {
+    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active)
+  })
 
-  const clonedVendor = { ...vendorsObj };
-
-  Object.keys(clonedVendor).forEach((plat) => {
-    if (clonedVendor[plat].length === 0 || plat === 'display') {
-      delete clonedVendor[plat];
+  Object.keys(newVendorsObj).forEach((plat) => {
+    if (newVendorsObj[plat].length === 0 || plat === 'display') {
+      delete newVendorsObj[plat];
     }
   });
 
@@ -29,7 +31,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const handleRequest = (date, setMetrics, stack) => {
     setLoading(true);
 
-    if (Object.keys(clonedVendor).length === 0) {
+    if (Object.keys(newVendorsObj).length === 0) {
       setLoading(false);
       return;
     }
@@ -37,7 +39,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
     getMetrics({
       master_email: user.email,
       access_token: user.accessToken,
-      vendors: clonedVendor,
+      vendors: newVendorsObj,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {

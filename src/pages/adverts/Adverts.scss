@@ -34,6 +34,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   button {
     background-color: #906bff;
     color: #fff;
@@ -45,6 +46,7 @@
     &:hover {
       background-color: #906bff;
     }
+
     img {
       margin-left: 15px;
       width: 17px;
@@ -104,6 +106,32 @@
           color: #7b61ff;
         }
       }
+    }
+  }
+}
+
+.adverts-table {
+  th {
+    text-align: left !important;
+  }
+  th:nth-of-type(1) {
+    padding: 0 !important;
+
+    > span {
+      margin-left: 0 !important;
+    }
+  }
+
+  tr {
+    &:hover {
+      background-color: #fff !important;
+    }
+    td {
+      min-width: 0 !important;
+      text-align: left !important;
+    }
+    > td:nth-of-type(1) {
+      padding-left: 0 !important;
     }
   }
 }
