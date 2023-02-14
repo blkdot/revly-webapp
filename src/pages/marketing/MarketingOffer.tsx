@@ -106,9 +106,16 @@ const MarketingOffer = () => {
     renderSimpleRow,
     renderVendorId,
     renderChainId,
+    renderOfferIds,
   } = useTableContentFormatter();
 
   const headersOffers = [
+    // {
+    //   id: 'offer_ids',
+    //   numeric: false,
+    //   disablePadding: false,
+    //   label: 'Offer ID Debug',
+    // }, // Debug Purpose Only
     {
       id: 'chain_id',
       numeric: false,
@@ -158,7 +165,7 @@ const MarketingOffer = () => {
       label: 'Min Order',
     },
     {
-      id: 'goal',
+      id: 'target',
       numeric: true,
       disablePadding: false,
       label: 'goal',
@@ -196,6 +203,7 @@ const MarketingOffer = () => {
   ];
 
   const cellTemplatesObject = {
+    offer_ids: renderOfferIds,
     chain_id: renderChainId,
     vendor_ids: renderVendorId,
     platform: renderPlatform,
@@ -219,7 +227,7 @@ const MarketingOffer = () => {
         [cur.id]: cellTemplatesObject[cur.id]
           ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
           : r[cur.id],
-        id: `${cur.id}_${r.offer_ids}`,
+        id: r.offer_ids.join(''),
         data: r,
       }),
       {}
