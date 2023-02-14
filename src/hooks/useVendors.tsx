@@ -233,7 +233,30 @@ const useVendors = (isSign = false) => {
     vendorsSelectedTemp = [];
   }, [data]);
 
-  return { vendors, setVendors };
+  const getChainData = (chainId: number, vendorIds: number[] | string[] = []): TChainData => {
+    let vendorData = vendors.chainData.find((ch) => {
+      const vendorIdString = String(ch.vendor_id);
+      const vendorIdNumber = Number(ch.vendor_id);
+
+      if (
+        vendorIds &&
+        vendorIds.length > 0 &&
+        ([...vendorIds].includes(vendorIdString) || [...vendorIds].includes(vendorIdNumber))
+      ) {
+        return Number(ch.chain_id) === Number(chainId);
+      }
+
+      return false;
+    });
+
+    if (!vendorData) {
+      vendorData = vendors.chainData.find((ch) => Number(ch.chain_id) === Number(chainId));
+    }
+
+    return vendorData;
+  };
+
+  return { vendors, setVendors, getChainData };
 };
 
 export default useVendors;

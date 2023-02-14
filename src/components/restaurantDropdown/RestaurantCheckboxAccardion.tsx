@@ -3,8 +3,6 @@ import { ButtonKit, CheckboxKit, InputLabelKit, MenuItemKit, RadioKit, TooltipKi
 import { useEffect, useState, FC } from 'react';
 import { platformList } from 'data/platformList';
 import selectIcon from '../../assets/images/ic_select.png';
-// import deliveroo from '../../assets/images/deliveroo-favicon.webp';
-// import talabat from '../../assets/images/talabat-favicon.png';
 
 const RestaurantCheckboxAccordion: FC<{
   info: object;

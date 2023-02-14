@@ -3,13 +3,15 @@ import { useAtom } from 'jotai';
 import { parseISO, format } from 'date-fns';
 import { TableCellKit, TooltipKit } from 'kits';
 import shortid from 'shortid';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useVendors } from 'hooks';
 import arrow from '../../../assets/images/arrow.svg';
 import { platformList, platformObject } from '../../../data/platformList';
-import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const useTableContentFormatter = () => {
+  const { getChainData } = useVendors();
   const [vendorsState] = useAtom(vendorsAtom);
-  const { vendorsArr, chainData } = vendorsState;
+  const { vendorsArr } = vendorsState;
 
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
@@ -169,20 +171,7 @@ const useTableContentFormatter = () => {
   );
 
   const renderChainId = (r, h, i) => {
-    let vendorData = chainData.find((ch) => {
-      if (
-        r.vendor_ids.includes(Number(ch.vendor_id)) ||
-        r.vendor_ids.includes(String(ch.vendor_id))
-      ) {
-        return Number(ch.chain_id) === Number(r.chain_id);
-      }
-
-      return false;
-    });
-
-    if (!vendorData) {
-      vendorData = chainData.find((ch) => Number(ch.chain_id) === Number(r.chain_id));
-    }
+    const vendorData = getChainData(r.chain_id, r.vendor_ids);
 
     return (
       <TableCellKit
