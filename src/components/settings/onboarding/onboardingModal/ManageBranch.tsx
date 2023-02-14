@@ -1,8 +1,9 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { saveUser } from 'api/userApi';
 import { useUserAuth } from 'contexts/AuthContext';
-import { TypographyKit, ButtonKit, ModalKit } from 'kits';
+import { TypographyKit, ButtonKit } from 'kits';
 import { platformList } from 'data/platformList';
+import { usePlatform } from 'hooks';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
@@ -24,6 +25,7 @@ const ManageBranch: FC<{
     setLoading: any;
     loading: any;
     setConnectAccount: any;
+    deleteAccount: any;
   };
 }> = ({ propsVariables, unremovable }) => {
   const {
@@ -38,6 +40,7 @@ const ManageBranch: FC<{
     openedSwitchDeleteModal,
     setLoading,
     setConnectAccount,
+    deleteAccount
   } = propsVariables;
   const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
   const { user } = useUserAuth();
@@ -59,6 +62,7 @@ const ManageBranch: FC<{
     });
     return object;
   };
+  const { userPlatformData } = usePlatform();
   const deleteBranch = async () => {
     setLoading(true);
     await saveUser({
@@ -70,6 +74,16 @@ const ManageBranch: FC<{
       branchData.findIndex((obj) => obj.id === clickedBranch.id),
       1
     );
+    await Object.keys(userPlatformData.platforms).forEach((plat) => {
+      userPlatformData.platforms[plat].forEach((objP) => {
+        if(clickedBranch.accounts.find((email) => email === objP.email)){
+          if(objP.vendor_ids.length === 1){
+            deleteAccount(plat,objP.email);
+          }
+        }
+      })
+    })
+
     openCloseModal();
     setBranchData([...branchData]);
     setLoading(false);

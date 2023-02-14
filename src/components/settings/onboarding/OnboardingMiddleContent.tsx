@@ -1,4 +1,4 @@
-import { useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 import { ButtonKit } from 'kits';
 import OnboardingDropdown from './OnboardingDropdown';
 import plus from '../../../assets/images/plus.png';
@@ -23,7 +23,10 @@ const OnboardingMiddleContent: FC<{
     });
     return arr;
   };
-  const [kitchen, setKitchen] = useState(filteredChains());
+  const [kitchen, setKitchen] = useState([]);
+  useEffect(() => {
+    setKitchen(filteredChains())
+  },[filteredChains().length])
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
@@ -36,7 +39,7 @@ const OnboardingMiddleContent: FC<{
         {accounts.length > 0 ? (
           <OnboardingDropdown
             rows={filteredChains()}
-            state={kitchen || filteredChains()}
+            state={kitchen}
             setState={setKitchen}
           />
         ) : (

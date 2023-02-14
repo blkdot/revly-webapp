@@ -5,6 +5,7 @@ import { endOfMonth, endOfWeek } from 'date-fns';
 import { useDate, usePlanningAds } from 'hooks';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
+import TableRevly from 'components/tableRevly/TableRevly';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
@@ -15,7 +16,6 @@ import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdow
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';

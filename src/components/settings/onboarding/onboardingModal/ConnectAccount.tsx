@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { platformList } from 'data/platformList';
+import { TypographyKit } from 'kits';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import SwitchKit from '../../../../kits/switch/SwitchKit';
 import ButtonKit from '../../../../kits/button/ButtonKit';
@@ -31,6 +32,7 @@ const ConnectAccount: FC<{
     loading,
   } = propsVariables;
   const [selected, setSelected] = useState('');
+  const [opened, setOpened] = useState(0);
 
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
@@ -75,15 +77,16 @@ const ConnectAccount: FC<{
         ''
       )}
       <div className='onboarding-accounts_wrapper'>
-        {accounts.map((obj) => (
+        {accounts.map((obj: any, index: number) => (
           <div key={`${obj.platform}-${obj.email}`} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
-              <span
+              <TypographyKit
+                components='span'
                 className='onboarding-account_platform-logo'
                 style={
                   {
                     '--color': platformList.find((objP) => objP.name === obj.platform).color,
-                  } as any
+                  }
                 }
               >
                 <img
@@ -93,7 +96,7 @@ const ConnectAccount: FC<{
                   }
                   alt={obj.platform}
                 />
-              </span>
+              </TypographyKit>
               <p>{obj.email}</p>
             </div>
             <div>
@@ -126,6 +129,7 @@ const ConnectAccount: FC<{
                   onChange={(e) => {
                     openSwitchDeleteModal(e);
                     setSelected('switch');
+                    setOpened(index);
                   }}
                   checked={obj.active}
                 />
@@ -136,7 +140,7 @@ const ConnectAccount: FC<{
                     button='Change Status'
                     onClick={() => changeStatusAccount(obj)}
                     openSwitchDeleteModal={openSwitchDeleteModal}
-                    openedSwitchDeleteModal={openedSwitchDeleteModal}
+                    openedSwitchDeleteModal={openedSwitchDeleteModal && opened === index}
                   />
                 ) : (
                   ''
