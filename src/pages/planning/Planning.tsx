@@ -26,6 +26,33 @@ const defaultFilterStateFormat = {
   status: [],
 };
 
+type TAds = {
+  ad_ids: string[];
+  ad_serving_count: number;
+  area: string | null;
+  attributed_order_value: number | null;
+  canceled_at: string | null;
+  chain_id: number;
+  chain_name: string;
+  clicks_count: number;
+  conversion_rate: number;
+  cost_per_click: number;
+  created_at: string | Date;
+  master_ad_id: string;
+  new_customers_count: number;
+  orders_count: number;
+  platform: string;
+  return_on_ad_spent: number;
+  source: string;
+  spend: number | null;
+  status: string;
+  total_budget: number | null;
+  valid_from: string | Date;
+  valid_to: string | Date;
+  vendor_ids: number[];
+  _metadata: null;
+};
+
 const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
@@ -55,8 +82,10 @@ const Planning = () => {
   });
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
+  const [dataFilteredAds, setDataFilteredAds] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
   const [vendors] = useAtom(vendorsAtom);
+  const { chainData } = vendors;
 
   useEffect(() => {
     setDateSaved(dateRange);
@@ -75,9 +104,12 @@ const Planning = () => {
     renderVendorId,
     renderTimeSlot,
     renderIsoDate,
+    renderOfferIds,
+    renderAdIds,
   } = useTableContentFormatter();
 
   const headersOffers = [
+    // { id: 'offer_ids', disablePadding: true, label: 'Offer ID Debug' }, // Debug Purpose
     { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
@@ -93,6 +125,7 @@ const Planning = () => {
   ];
 
   const headersAds = [
+    // { id: 'ad_ids', disablePadding: true, label: 'Ad ID Debug' }, // Debug Purpose
     { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
@@ -103,6 +136,8 @@ const Planning = () => {
   ];
 
   const cellTemplatesObject = {
+    offer_ids: renderOfferIds,
+    ad_ids: renderAdIds,
     chain_id: renderChainId,
     platform: renderPlatform,
     vendor_ids: renderVendorId,
@@ -120,23 +155,22 @@ const Planning = () => {
     total_budget: renderCurrency,
   };
 
-  const renderRowsByHeaderOffer = (r) =>
-    headersOffers.reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
-        id: `${cur.id}_${r.start_date}_${r.end_date}_offers_${shortid.generate()}`,
-        data: r,
-      }),
-      {}
-    );
+  const renderRowsByHeaderOffer = (r) => headersOffers.reduce(
+    (acc, cur) => ({
+      ...acc,
+      [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_ids.join('') }, cur),
+      id: `${r.offer_ids.join('')}_offers`,
+      data: r,
+    }),
+    {}
+  );
 
-  const renderRowsByHeaderAds = (r: Record<string, never>) =>
+  const renderRowsByHeaderAds = (r: TAds) =>
     headersAds.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
-        id: `${cur.id}_${r.ad_id}_ads_${shortid.generate()}`,
+        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.ad_ids.join('') }, cur),
+        id: `${r.ad_ids.join('')}_ads`,
         data: r,
       }),
       {}
@@ -156,11 +190,12 @@ const Planning = () => {
         <TableRevly
           isLoading={isLoadingAds}
           headers={headersAds}
-          rows={dataFiltered.map(renderRowsByHeaderAds)}
+          rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
         />
       );
     }
+
     return (
       <TableRevly
         isLoading={isLoadingOffers}
@@ -220,8 +255,7 @@ const Planning = () => {
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
-        if (!status.includes(active ? cur.ad_status : cur.status))
-          status.push(active ? cur.ad_status : cur.status);
+        if (!status.includes(cur.status)) status.push(cur.status);
 
         return { ...acc, platform, type_offer: discountType, discount_rate: procent, status };
       },
@@ -256,7 +290,7 @@ const Planning = () => {
     const preHeadTypeOffer = preHead.type_offer.map((s: string) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s: string) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s: string) => ({
-      value: s,
+      value: s.toLowerCase(),
       text: renderStatusFilter(s),
     }));
 
@@ -286,36 +320,33 @@ const Planning = () => {
   };
 
   useEffect(() => {
-    let filteredData = active ? ads : offers;
+    let filteredData = offers;
+    let filteredDataAds = ads;
 
     if (filters.platform.length > 0) {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
+      filteredDataAds = filteredDataAds.filter((f) => filters.platform.includes(f.platform));
     }
 
     if (filters.type_offer.length > 0) {
       filteredData = filteredData.filter((f) => filters.type_offer.includes(f.type_offer));
+      filteredDataAds = filteredDataAds.filter((f) => filters.type_offer.includes(f.type_offer));
     }
 
     if (filters.discount_rate.length > 0) {
       filteredData = filteredData.filter((f) => filters.discount_rate.includes(f.discount_rate));
+      filteredDataAds = filteredDataAds.filter((f) =>
+        filters.discount_rate.includes(f.discount_rate)
+      );
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) =>
-        filters.status.includes(active ? f.ad_status : f.status)
-      );
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredDataAds = filteredDataAds.filter((f) => filters.status.includes(f.status));
     }
-    const arr = [];
-    Object.keys(vendors.vendorsObj).forEach((platform) => {
-      vendors.vendorsObj[platform]?.forEach((v) =>
-        filteredData.forEach((obj) => {
-          if (obj.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
-            arr.push(obj);
-          }
-        })
-      );
-    });
-    setDataFiltered(arr);
+
+    setDataFiltered(filteredData);
+    setDataFilteredAds(filteredDataAds);
   }, [JSON.stringify(filters), ads, offers, active, JSON.stringify(dateRange)]);
 
   const renderLayout = () => {

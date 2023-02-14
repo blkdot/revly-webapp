@@ -418,8 +418,8 @@ const MarketingSetup: React.FC<{
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
-      const heatmaDataPlatform = { ...revenueData?.[platform[0]].heatmap };
-      const ordersDataPlatform = { ...ordersData?.[platform[0]].heatmap };
+      const heatmaDataPlatform = { ...revenueData?.[platform[0]]?.heatmap };
+      const ordersDataPlatform = { ...ordersData?.[platform[0]]?.heatmap };
 
       if (!heatmaDataPlatform || !ordersDataPlatform) {
         return {

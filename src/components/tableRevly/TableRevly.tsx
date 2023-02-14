@@ -53,8 +53,8 @@ const TableRevly = (props: any) => {
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
       <TableRowKit
         className='marketing-table-top'
-        onClick={handleRowClick(r.data.master_offer_id || r.data.id)}
-        key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
+        onClick={handleRowClick(r.id)}
+        key={r.id}
       >
         {headers.map((h) => r[h.id])}
       </TableRowKit>

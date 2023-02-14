@@ -38,6 +38,30 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
+  const renderOfferIds = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r.offer_ids.join('')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderAdIds = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r.ad_ids.join('')}
+      </span>
+    </TableCellKit>
+  );
+
   const renderIsoDate = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
@@ -45,7 +69,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r[h.id] === null ? '-' : r[h.id]?.replace('T', ' ')?.toLocaleString('en-US')}
+        {r[h.id] === null ? '-' : <>{format(parseISO(r[h.id]), 'Y-MM-dd')}</>}
       </span>
     </TableCellKit>
   );
@@ -405,6 +429,8 @@ const useTableContentFormatter = () => {
     renderIsoEndTimeOnlyFromDate,
     renderChainId,
     renderSimpleIconRow,
+    renderOfferIds,
+    renderAdIds,
   };
 };
 
