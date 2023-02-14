@@ -12,11 +12,9 @@ import TableRevly from 'components/tableRevly/TableRevly';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useDate, useQueryState } from 'hooks';
 import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
-import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { vendorsAtom } from 'store/vendorsAtom';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
@@ -81,20 +79,10 @@ const MarketingOffer = () => {
   useEffect(() => {
     setFiltersSaved(filters);
   }, [JSON.stringify(filters)]);
-  const [vendors] = useAtom(vendorsAtom);
+
   useEffect(() => {
-    const arr = [];
-    Object.keys(vendors.vendorsObj).forEach((platform) => {
-      vendors.vendorsObj[platform]?.forEach((v) =>
-        data?.offers.forEach((objOffers) => {
-          if (objOffers.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
-            arr.push(objOffers);
-          }
-        })
-      );
-    });
-    setOffersData(arr || []);
-    setRow(arr || []);
+    setOffersData(data?.offers || []);
+    setRow(data?.offers || []);
   }, [data]);
 
   const {
