@@ -50,7 +50,7 @@ const OnboardingTable: FC<{
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id](r, cur),
-        id: `${cur.id}_${r.id}`,
+        id: `${r.id}_branch`,
         data: r,
       }),
       {}
@@ -76,7 +76,9 @@ const OnboardingTable: FC<{
     </TableRowKit>
   );
   const onClickRow = (id: any) => {
-    const { data } = branchData.map(renderRowsByHeader).find((obj) => +obj.data.id === +id);
+    const { data } = branchData
+      .map(renderRowsByHeader)
+      .find((obj) => `${obj.data.id}_branch` === id);
     if (data.branch_status !== 'in process') {
       setConnectAccount('manageBranch');
       openCloseModal();

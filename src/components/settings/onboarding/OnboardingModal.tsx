@@ -119,15 +119,20 @@ const OnboardingModal = ({ propsVariables }: any) => {
       },
       obj.platform
     );
-    accounts.find((objAcc) => objAcc.email === obj.email).active = !obj.active;
+    accounts.find(
+      (objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
+    ).active = !obj.active;
     setAccounts([...accounts]);
     setBranchData(
       branchData.map((objB) => {
         const linked_platforms = [...objB.linked_platforms];
         if (objB.accounts.find((emailAcc: string) => emailAcc === obj.email)) {
           if (!obj.active) {
-            (linked_platforms.find((objLink) => objLink.platform === obj.platform) || {status: ''}).status =
-              'suspended';
+            (
+              linked_platforms.find((objLink) => objLink.platform === obj.platform) || {
+                status: '',
+              }
+            ).status = 'suspended';
             if (objB.linked_platforms.every((objLink) => objLink.status !== 'active')) {
               return { ...objB, branch_status: 'suspended', linked_platforms };
             }
@@ -136,7 +141,9 @@ const OnboardingModal = ({ propsVariables }: any) => {
             }
             return { ...objB, linked_platforms };
           }
-          (linked_platforms.find((objLink) => objLink.platform === obj.platform) || {status: ''}).status = 'active';
+          (
+            linked_platforms.find((objLink) => objLink.platform === obj.platform) || { status: '' }
+          ).status = 'active';
           if (objB.linked_platforms.length > 1) {
             return { ...objB, branch_status: 'active', linked_platforms };
           }

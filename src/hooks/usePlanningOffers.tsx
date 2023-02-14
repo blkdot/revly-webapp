@@ -17,8 +17,8 @@ function usePlanningOffers({ dateRange }) {
   const { user } = useUserAuth();
   const newVendorsObj = {};
   Object.keys(vendorsObj).forEach((plat) => {
-    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active)
-  })
+    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
+  });
   useEffect(() => {
     if (Object.keys(newVendorsObj).length < 1) return;
     setIsLoading(true);

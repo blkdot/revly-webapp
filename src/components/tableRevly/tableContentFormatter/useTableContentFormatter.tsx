@@ -142,7 +142,7 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-              <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
+                <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
                   {vendor}
                 </span>
               ))
@@ -331,10 +331,10 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-        <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
-          <p className='__title'>{r[h.id].title}</p>
-          <span className='__subtitle'>{r[h.id].address}</span>
-        </div>
+      <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
+        <p className='__title'>{r[h.id].title}</p>
+        <span className='__subtitle'>{r[h.id].address}</span>
+      </div>
     </TableCellKit>
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {

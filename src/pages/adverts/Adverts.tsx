@@ -71,18 +71,7 @@ const Adverts = () => {
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
   const [adsData, setAdsData] = useState([]);
   useEffect(() => {
-    const arr = [];
-    Object.keys(vendors.vendorsObj).forEach((platform) => {
-      vendors.vendorsObj[platform]?.forEach((v) =>
-        ads.forEach((objAds) => {
-          if (objAds.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
-            arr.push(objAds);
-          }
-        })
-      );
-    });
-
-    const newArr = arr.map((obj) => ({
+    const newArr = ads.map((obj) => ({
       ...obj,
       start_end_date: `${dayjs(obj.valid_from).format('DD/MM')} - ${dayjs(obj.valid_to).format(
         'DD/MM'
@@ -153,7 +142,7 @@ const Adverts = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.master_ad_id }, cur),
-        id: `${r.ad_ids.join('')}_ads_${r.master_ad_id}_${r.platform}`,
+        id: `${r.ad_ids.join('')}_ads`,
         data: r,
       }),
       {}
@@ -173,74 +162,77 @@ const Adverts = () => {
       </TableRowKit>
     ));
 
-  const [details, setDetails] = useState(false);
+  const [opened, setOpened] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
   const renderLayout = () => {
-    if (details) {
-      return <AdvertsDetails />
+    if (opened) {
+      return <AdvertsDetails data={clickedRow} setOpened={setOpened} />;
     }
-    return <div>
-      <div className='adverts_top-titles'>
-        <TypographyKit className='adverts-title' variant='subtitle'>
-          Manage Advertisements for
-          <span>{isDisplay()}</span>
-          for
-          <span>{getbeforePeriod()}</span>
-        </TypographyKit>
-        <p>
-          Here you can quickly and easily create and manage effective advertisements for their
-          businesses.
-        </p>
-      </div>
-      <PaperKit className='competition-paper adverts'>
-        <div className='paper-top-link'>
-          <div className='links'>
-            <div>
-              <p className={link === 'list' ? 'active' : ''}>Adverts List</p>
-              <span>The list of your running adverts for Today</span>
+    return (
+      <div>
+        <div className='adverts_top-titles'>
+          <TypographyKit className='adverts-title' variant='subtitle'>
+            Manage Advertisements for
+            <span>{isDisplay()}</span>
+            for
+            <span>{getbeforePeriod()}</span>
+          </TypographyKit>
+          <p>
+            Here you can quickly and easily create and manage effective advertisements for their
+            businesses.
+          </p>
+        </div>
+        <PaperKit className='competition-paper adverts'>
+          <div className='paper-top-link'>
+            <div className='links'>
+              <div>
+                <p className={link === 'list' ? 'active' : ''}>Adverts List</p>
+                <span>The list of your running adverts for Today</span>
+              </div>
+              <div>
+                <p className={link === 'performence' ? 'active' : ''}>Adverts Performance</p>
+                <span>Performance Metrics of you running adverts for Today</span>
+              </div>
+              <div className='arrows'>
+                <img
+                  tabIndex={-1}
+                  role='presentation'
+                  onClick={() => setLink('list')}
+                  className={link !== 'list' ? 'active' : ''}
+                  src={arrow}
+                  alt='left-arrow'
+                />
+                <img
+                  tabIndex={-1}
+                  role='presentation'
+                  onClick={() => setLink('performence')}
+                  className={link !== 'performence' ? 'active' : ''}
+                  src={arrow}
+                  alt='right-arrow'
+                />
+              </div>
             </div>
-            <div>
-              <p className={link === 'performence' ? 'active' : ''}>Adverts Performance</p>
-              <span>Performance Metrics of you running adverts for Today</span>
-            </div>
-            <div className='arrows'>
-              <img
-                tabIndex={-1}
-                role='presentation'
-                onClick={() => setLink('list')}
-                className={link !== 'list' ? 'active' : ''}
-                src={arrow}
-                alt='left-arrow'
-              />
-              <img
-                tabIndex={-1}
-                role='presentation'
-                onClick={() => setLink('performence')}
-                className={link !== 'performence' ? 'active' : ''}
-                src={arrow}
-                alt='right-arrow'
-              />
-            </div>
+            <ButtonKit>
+              Create new campaign
+              <img src={arrow} alt='right-arrow' />
+            </ButtonKit>
           </div>
-          <ButtonKit>
-            Create new campaign
-            <img src={arrow} alt='right-arrow' />
-          </ButtonKit>
-        </div>
-        <div className='adverts-table'>
-          <TableRevly
-            onClickRow={(id) => {
-              setDetails(true)
-            }}
-            renderCustomSkelton={renderSkeleton}
-            isLoading={isLoadingAds}
-            headers={link === 'list' ? headersList : headersPerformance}
-            rows={adsData.map(renderRowsByHeaderList)}
-          />
-        </div>
-      </PaperKit>
-    </div>
-  }
+          <div className='adverts-table'>
+            <TableRevly
+              onClickRow={(id: string) => {
+                setOpened(true);
+                setClickedRow(adsData.find((r) => `${r.ad_ids.join('')}_ads` === id));
+              }}
+              renderCustomSkelton={renderSkeleton}
+              isLoading={isLoadingAds}
+              headers={link === 'list' ? headersList : headersPerformance}
+              rows={adsData.map(renderRowsByHeaderList)}
+            />
+          </div>
+        </PaperKit>
+      </div>
+    );
+  };
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
