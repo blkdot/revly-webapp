@@ -11,7 +11,6 @@ import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks
 import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
-import shortid from 'shortid';
 import { vendorsAtom } from 'store/vendorsAtom';
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';

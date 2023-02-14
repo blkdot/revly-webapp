@@ -10,7 +10,6 @@ import { useDate, usePlanningAds } from 'hooks';
 import { useAtom } from 'jotai';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Adverts.scss';
-import shortid from 'shortid';
 import arrow from 'assets/images/arrow.svg';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from 'components/tableRevly/TableRevly';
@@ -71,7 +70,6 @@ const Adverts = () => {
   };
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
   const [adsData, setAdsData] = useState([]);
-  const [row, setRow] = useState([]);
   useEffect(() => {
     const arr = [];
     Object.keys(vendors.vendorsObj).forEach((platform) => {
@@ -98,7 +96,6 @@ const Adverts = () => {
       customers: { title: obj.new_customers_count, src: SmileIcon },
     }));
     setAdsData(newArr);
-    setRow(newArr);
   }, [ads]);
   const headersList = [
     { id: 'chain_id', disablePadding: true, label: 'Brand name' },
@@ -156,7 +153,7 @@ const Adverts = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.master_ad_id }, cur),
-        id: `${cur.id}_${r.ad_id}_ads_${shortid.generate()}`,
+        id: `${r.ad_ids.join('')}_ads_${r.master_ad_id}_${r.platform}`,
         data: r,
       }),
       {}
