@@ -591,6 +591,9 @@
       background-color: #fff;
       padding: 14.5px 18px !important;
       padding-right: 38px !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 150px;
     }
   }
 

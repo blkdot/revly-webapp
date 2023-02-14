@@ -160,7 +160,7 @@ const useTableContentFormatter = () => {
         }
         disableHoverListener={r[h.id]?.length === 0}
         id='category-tooltip'
-        placement='right'
+        placement='right-start'
         arrow
       >
         <span className='render-row-tooltip' key={h.id}>
@@ -307,14 +307,10 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      {r.branch_status === 'in process' ? (
-        <span className='render-branch-row_skeleton' />
-      ) : (
         <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
           <p className='__title'>{r[h.id].title}</p>
           <span className='__subtitle'>{r[h.id].address}</span>
         </div>
-      )}
     </TableCellKit>
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {

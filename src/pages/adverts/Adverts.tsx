@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Dates from 'components/dates/Dates';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { endOfMonth, format, getYear, subDays } from 'date-fns';
+import { endOfMonth, endOfWeek, format, getYear, subDays } from 'date-fns';
 import { ButtonKit, PaperKit, SkeletonKit, TableCellKit, TableRowKit, TypographyKit } from 'kits';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import dayjs from 'dayjs';
@@ -18,15 +18,25 @@ import EyeIcon from 'assets/images/eye.svg';
 import ShoppingBagIcon from 'assets/images/shopping-bag.svg';
 import GraphIcon from 'assets/images/graph.svg';
 import SmileIcon from 'assets/images/smile.svg';
+import AdvertsDetails from './details/AdvertsDetails';
 
 const Adverts = () => {
   const { date } = useDate();
   const [vendors] = useAtom(vendorsAtom);
   const { display, vendorsArr } = vendors;
   const { beforePeriod, titleDate } = date;
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
+  };
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: beforePeriod.startDate,
-    endDate: beforePeriod.endDate,
+    endDate: getOfferDate(),
   });
   const [link, setLink] = useState('list');
   const startDate = new Date(beforePeriodBtn.startDate);
@@ -166,12 +176,13 @@ const Adverts = () => {
       </TableRowKit>
     ));
 
-  return (
-    <div className='wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-      </div>
+  const [details, setDetails] = useState(false);
+  const [clickedRow, setClickedRow] = useState({});
+  const renderLayout = () => {
+    if (details) {
+      return <AdvertsDetails />
+    }
+    return <div>
       <div className='adverts_top-titles'>
         <TypographyKit className='adverts-title' variant='subtitle'>
           Manage Advertisements for
@@ -221,6 +232,9 @@ const Adverts = () => {
         </div>
         <div className='adverts-table'>
           <TableRevly
+            onClickRow={(id) => {
+              setDetails(true)
+            }}
             renderCustomSkelton={renderSkeleton}
             isLoading={isLoadingAds}
             headers={link === 'list' ? headersList : headersPerformance}
@@ -228,6 +242,15 @@ const Adverts = () => {
           />
         </div>
       </PaperKit>
+    </div>
+  }
+  return (
+    <div className='wrapper'>
+      <div className='top-inputs'>
+        <RestaurantDropdown />
+        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+      </div>
+      {renderLayout()}
     </div>
   );
 };

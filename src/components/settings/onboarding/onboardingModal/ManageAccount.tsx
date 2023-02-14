@@ -50,7 +50,7 @@ const ManageAccount: FC<{
       )}
       <div className='onboarding-accounts_wrapper'>
         {accounts.map((obj, index) => (
-          <div key={`${obj.platform}-${obj.email}`} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
+          <div key={obj.email} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
               <TypographyKit
                 components='span'
