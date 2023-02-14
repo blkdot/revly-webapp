@@ -13,9 +13,7 @@ export const simpleLink = [
   { title: 'Dashboard', path: '/dashboard', src: dashboardIcon },
   { title: 'Planning', path: '/planning', src: planningIcon },
 ];
-export const simpleLinkAfterAccordion = [
-  { title: 'Adverts', path: '/adverts', src: bellRingIcon },
-];
+export const simpleLinkAfterAccordion = [{ title: 'Adverts', path: '/adverts', src: bellRingIcon }];
 export const accordionLink = [
   {
     id: 'marketing',

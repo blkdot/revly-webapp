@@ -14,8 +14,16 @@ import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 
 const TableRevly = (props: any) => {
-  const { headers, rows, isLoading, mainFieldOrdered, onClickRow, noEmptyMessage, renderNoData } =
-    props;
+  const {
+    headers,
+    rows,
+    isLoading,
+    mainFieldOrdered,
+    onClickRow,
+    noEmptyMessage,
+    renderNoData,
+    renderCustomSkelton,
+  } = props;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
@@ -52,7 +60,7 @@ const TableRevly = (props: any) => {
       </TableRowKit>
     ));
   const renderRows = () => {
-    if (isLoading) return renderSkeleton();
+    if (isLoading) return renderCustomSkelton ? renderCustomSkelton() : renderSkeleton();
 
     if (!rows || rows.length < 1) {
       if (renderNoData) {

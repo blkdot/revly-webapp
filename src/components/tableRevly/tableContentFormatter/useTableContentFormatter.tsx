@@ -1,6 +1,8 @@
+import { CSSProperties } from 'react';
 import { useAtom } from 'jotai';
 import { parseISO, format } from 'date-fns';
 import { TableCellKit, TooltipKit } from 'kits';
+import shortid from 'shortid';
 import arrow from '../../../assets/images/arrow.svg';
 import { platformList, platformObject } from '../../../data/platformList';
 import { vendorsAtom } from '../../../store/vendorsAtom';
@@ -17,6 +19,19 @@ const useTableContentFormatter = () => {
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderSimpleIconRow = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span className='icon-row' style={{ textAlign: 'justify' }} key={h.id}>
+        {r[h.id] === null ? '' : <img src={r[h.id].src} alt={r[h.id].title} />}
+        {r[h.id] === null ? '-' : r[h.id]?.title?.toLocaleString('en-US')}
       </span>
     </TableCellKit>
   );
@@ -101,7 +116,7 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={vendor} className='render-row-tooltip column'>
+              <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
                   {vendor}
                 </span>
               ))
@@ -190,8 +205,16 @@ const useTableContentFormatter = () => {
     >
       <img
         className='planning-platform'
-        style={{ marginRight: '1.5rem' }}
-        src={platformObject[r.platform.toLowerCase()].src}
+        style={
+          {
+            marginRight: '1.5rem',
+            '--color': platformObject[r.platform.toLowerCase()].color,
+          } as CSSProperties
+        }
+        src={
+          platformObject[r.platform.toLowerCase()].srcFaviconWhite ||
+          platformObject[r.platform.toLowerCase()].srcFavicon
+        }
         alt={platformObject[r.platform.toLowerCase()].name}
       />
     </TableCellKit>
@@ -392,6 +415,7 @@ const useTableContentFormatter = () => {
     renderIsoStartTimeOnlyFromDate,
     renderIsoEndTimeOnlyFromDate,
     renderChainId,
+    renderSimpleIconRow,
   };
 };
 

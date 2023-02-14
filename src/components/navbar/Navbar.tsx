@@ -16,7 +16,12 @@ import lines from '../../assets/images/lines.png';
 import logo from '../../assets/images/logo.png';
 import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
-import { accordionLink, settingsLink, simpleLink, simpleLinkAfterAccordion } from '../../data/navbarData';
+import {
+  accordionLink,
+  settingsLink,
+  simpleLink,
+  simpleLinkAfterAccordion,
+} from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import Navlink from '../navlink/Navlink';
 import './Navbar.scss';

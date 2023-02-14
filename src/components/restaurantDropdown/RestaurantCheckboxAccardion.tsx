@@ -200,9 +200,11 @@ const RestaurantCheckboxAccordion: FC<{
                 <p className='vendor-name'>{vendorName}</p>
               </TooltipKit>
               <div className='restaurant-platforms'>
-                {Object.keys(info[vendorName].platforms).filter((plat) => info[vendorName].platforms[plat].metadata.is_active).map((plat) => (
-                  <img className='restaurant-img' src={getIcon(plat)} alt={plat} />
-                ))}
+                {Object.keys(info[vendorName].platforms)
+                  .filter((plat) => info[vendorName].platforms[plat].metadata.is_active)
+                  .map((plat) => (
+                    <img className='restaurant-img' src={getIcon(plat)} alt={plat} />
+                  ))}
               </div>
               <div className='only-button vendor'>
                 <ButtonKit

@@ -181,7 +181,7 @@ const useVendors = (isSign = false) => {
       Object.keys(display[chainName]).forEach((vendorName) => {
         Object.keys(display[chainName][vendorName].platforms).forEach((platform) => {
           const platformObj = display[chainName][vendorName].platforms[platform];
-          const platformArr = Object.keys(display[chainName][vendorName].platforms)
+          const platformArr = Object.keys(display[chainName][vendorName].platforms);
           const userPlatform = userPlatformData.platforms[platform].find((obj) =>
             obj.vendor_ids.some(
               (id: number | string) => Number(id) === Number(platformObj.vendor_id)
@@ -193,7 +193,11 @@ const useVendors = (isSign = false) => {
             userPlatform?.access_token;
           display[chainName][vendorName].platforms[platform].access_token_bis =
             userPlatform?.access_token_bis;
-          if (platformArr.some((plat) => display[chainName][vendorName].platforms[plat].metadata.is_active)) {
+          if (
+            platformArr.some(
+              (plat) => display[chainName][vendorName].platforms[plat].metadata.is_active
+            )
+          ) {
             display[chainName][vendorName].checked = true;
             display[chainName][vendorName].active = true;
           } else {

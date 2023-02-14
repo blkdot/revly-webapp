@@ -991,15 +991,15 @@
 }
 
 #category-tooltip .MuiTooltip-tooltip {
-  background-color: #212b36;
+  background-color: #7b61ff;
   width: fit-content;
   pointer-events: none;
-  padding: 1rem;
-  font-size: 10px;
+  padding: 10px 15px;
+  color: #fff;
 
   > span {
     &::before {
-      background-color: #212b36 !important;
+      background-color: #7b61ff !important;
     }
   }
 }
@@ -1193,9 +1193,11 @@
   justify-content: flex-start !important;
   align-items: center !important;
   flex-direction: row !important;
+
   .menu-icon {
     filter: invert(43%) sepia(59%) saturate(718%) hue-rotate(214deg) brightness(102%) contrast(103%) !important;
   }
+
   > div {
     display: flex;
     align-items: center;
