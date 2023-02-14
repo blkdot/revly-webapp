@@ -3,8 +3,6 @@ import { ButtonKit, CheckboxKit, InputLabelKit, MenuItemKit, RadioKit, TooltipKi
 import { useEffect, useState, FC } from 'react';
 import { platformList } from 'data/platformList';
 import selectIcon from '../../assets/images/ic_select.png';
-// import deliveroo from '../../assets/images/deliveroo-favicon.webp';
-// import talabat from '../../assets/images/talabat-favicon.png';
 
 const RestaurantCheckboxAccordion: FC<{
   info: object;
@@ -203,7 +201,7 @@ const RestaurantCheckboxAccordion: FC<{
                 {Object.keys(info[vendorName].platforms)
                   .filter((plat) => info[vendorName].platforms[plat].metadata.is_active)
                   .map((plat) => (
-                    <img className='restaurant-img' src={getIcon(plat)} alt={plat} />
+                    <img key={plat} className='restaurant-img' src={getIcon(plat)} alt={plat} />
                   ))}
               </div>
               <div className='only-button vendor'>

@@ -41,7 +41,7 @@ const NewSettingsOnboarding = () => {
     const vendorPlatform = (obj: any) =>
       Object.keys(obj.data.platforms).map((plat) => ({
         platform: plat,
-        status: accounts.find((objAcc) => objAcc.email === obj.data.platforms[plat].email).active
+        status: accounts.find((objAcc) => objAcc.email === obj.data.platforms[plat].email && objAcc.platform === plat).active
           ? 'active'
           : 'suspended',
       }));
