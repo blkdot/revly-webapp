@@ -76,7 +76,7 @@ const ConnectAccount: FC<{
       )}
       <div className='onboarding-accounts_wrapper'>
         {accounts.map((obj) => (
-          <div key={obj.email} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
+          <div key={`${obj.platform}-${obj.email}`} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
             <div>
               <span
                 className='onboarding-account_platform-logo'

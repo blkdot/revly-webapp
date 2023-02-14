@@ -203,7 +203,7 @@ const RestaurantCheckboxAccordion: FC<{
                 {Object.keys(info[vendorName].platforms)
                   .filter((plat) => info[vendorName].platforms[plat].metadata.is_active)
                   .map((plat) => (
-                    <img className='restaurant-img' src={getIcon(plat)} alt={plat} />
+                    <img key={plat} className='restaurant-img' src={getIcon(plat)} alt={plat} />
                   ))}
               </div>
               <div className='only-button vendor'>

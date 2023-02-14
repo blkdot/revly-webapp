@@ -12,9 +12,12 @@ function usePlanningAds({ dateRange }) {
   const [ads, setAds] = useState([]);
   const { user } = useUserAuth();
   const [isLoading, setIsLoading] = useState(true);
-
+  const newVendorsObj = {};
+  Object.keys(vendorsObj).forEach((plat) => {
+    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active)
+  })
   useEffect(() => {
-    if (Object.keys(vendorsObj).length < 1) return;
+    if (Object.keys(newVendorsObj).length < 1) return;
     setIsLoading(true);
 
     clearTimeout(fnDelays);
@@ -23,7 +26,7 @@ function usePlanningAds({ dateRange }) {
       getAds({
         master_email: user.email,
         access_token: '',
-        vendors: vendorsObj,
+        vendors: newVendorsObj,
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
       }).then((res) => {
