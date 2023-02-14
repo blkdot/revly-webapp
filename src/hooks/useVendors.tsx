@@ -79,6 +79,7 @@ export type TChainData = {
   chain_name: string;
   vendor_id: string | number;
   vendor_name: string;
+  is_active: boolean;
 };
 
 export type TVendors = {
@@ -210,6 +211,7 @@ const useVendors = (isSign = false) => {
             chain_id: display[chainName][vendorName].platforms[platform].chain_id,
             vendor_id: display[chainName][vendorName].platforms[platform].vendor_id,
             vendor_name: vendorName,
+            is_active: display[chainName][vendorName].platforms[platform].metadata.is_active
           };
 
           chainData.push(l);
