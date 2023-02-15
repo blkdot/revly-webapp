@@ -737,6 +737,7 @@ const MarketingSetup: React.FC<{
     itemMenu,
     vendors,
     targetAudience,
+    checked,
   ]);
 
   const renderGradientValue = (v, i) => {

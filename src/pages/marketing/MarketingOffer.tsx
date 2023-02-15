@@ -153,10 +153,10 @@ const MarketingOffer = () => {
       label: 'Min Order',
     },
     {
-      id: 'target',
+      id: 'goal',
       numeric: true,
       disablePadding: false,
-      label: 'goal',
+      label: 'Target',
     },
     {
       id: 'status',
@@ -215,7 +215,7 @@ const MarketingOffer = () => {
         [cur.id]: cellTemplatesObject[cur.id]
           ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
           : r[cur.id],
-        id: r.offer_ids.join(''),
+        id: r.master_offer_id,
         data: r,
       }),
       {}
