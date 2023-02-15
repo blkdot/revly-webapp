@@ -154,23 +154,22 @@ const Planning = () => {
     total_budget: renderCurrency,
   };
 
-  const renderRowsByHeaderOffer = (r) =>
-    headersOffers.reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_ids.join('') }, cur),
-        id: `${r.offer_ids.join('')}_offers`,
-        data: r,
-      }),
-      {}
-    );
+  const renderRowsByHeaderOffer = (r) => headersOffers.reduce(
+    (acc, cur) => ({
+      ...acc,
+      [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_ids.join('') }, cur),
+      id: r.master_offer_id,
+      data: r,
+    }),
+    {}
+  );
 
   const renderRowsByHeaderAds = (r: TAds) =>
     headersAds.reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.ad_ids.join('') }, cur),
-        id: `${r.ad_ids.join('')}_ads`,
+        id: r.master_ad_id,
         data: r,
       }),
       {}
