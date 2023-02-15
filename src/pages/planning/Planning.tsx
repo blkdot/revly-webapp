@@ -158,7 +158,7 @@ const Planning = () => {
     (acc, cur) => ({
       ...acc,
       [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_ids.join('') }, cur),
-      id: `${r.offer_ids.join('')}_offers`,
+      id: r.master_offer_id,
       data: r,
     }),
     {}
@@ -169,7 +169,7 @@ const Planning = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.ad_ids.join('') }, cur),
-        id: `${r.ad_ids.join('')}_ads`,
+        id: r.master_ad_id,
         data: r,
       }),
       {}
