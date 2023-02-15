@@ -209,7 +209,7 @@ const MarketingSetup: React.FC<{
     setTimes([
       {
         startTime: setStartTimeFormat(new Date(), 2),
-        endTime: setEndTimeFormat(times[0].endTime),
+        endTime: setEndTimeFormat(times[0].endTime, false),
         pos: 1,
       },
     ]);
@@ -242,7 +242,7 @@ const MarketingSetup: React.FC<{
     setTimes([
       {
         startTime: setStartTimeFormat(new Date(), 2),
-        endTime: setEndTimeFormat(new Date()),
+        endTime: setEndTimeFormat(new Date(), true),
         pos: 1,
       },
     ]);
@@ -398,14 +398,8 @@ const MarketingSetup: React.FC<{
 
   const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
-      const heatmaRangePlatform =
-        revenueData?.[platform[0]]?.ranges || platform.length > 1
-          ? revenueData?.[platform[1]]?.ranges
-          : null;
-      const ordersRangePlatform =
-        ordersData?.[platform[0]]?.ranges || platform.length > 1
-          ? ordersData?.[platform[1]]?.ranges
-          : null;
+      const heatmaRangePlatform = revenueData?.[platform[0]]?.ranges;
+      const ordersRangePlatform = ordersData?.[platform[0]]?.ranges;
 
       if (!heatmaRangePlatform || !ordersRangePlatform) {
         return {
@@ -425,14 +419,8 @@ const MarketingSetup: React.FC<{
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
-      const heatmaDataPlatform =
-        revenueData?.[platform[0]]?.heatmap || platform.length > 1
-          ? revenueData?.[platform[1]]?.heatmap
-          : null;
-      const ordersDataPlatform =
-        ordersData?.[platform[0]]?.heatmap || platform.length > 1
-          ? ordersData?.[platform[1]]?.heatmap
-          : null;
+      const heatmaDataPlatform = revenueData?.[platform[0]]?.heatmap;
+      const ordersDataPlatform = ordersData?.[platform[0]]?.heatmap;
 
       if (!heatmaDataPlatform || !ordersDataPlatform) {
         return {
@@ -454,7 +442,7 @@ const MarketingSetup: React.FC<{
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [platform, revenueData, ordersData, heatmapLoading]);
+  }, [heatmapLoading]);
 
   const getHeatmapData = () => {
     setHeatmapLoading(true);
@@ -470,13 +458,13 @@ const MarketingSetup: React.FC<{
       vendors: {
         ...(selectedVendorsDeliveroo &&
         selectedVendorsDeliveroo.length > 0 &&
-        selectedVendorsDeliveroo[0]
-          ? { deliveroo: selectedVendorsDeliveroo }
+        selectedVendorsDeliveroo.some((d) => d)
+          ? { deliveroo: selectedVendorsDeliveroo.filter((d) => d) }
           : {}),
         ...(selectedVendorsDataTalabat &&
         selectedVendorsDataTalabat.length > 0 &&
-        selectedVendorsDataTalabat[0]
-          ? { talabat: selectedVendorsDataTalabat }
+        selectedVendorsDataTalabat.some((d) => d)
+          ? { talabat: selectedVendorsDataTalabat.filter((d) => d) }
           : {}),
       },
     };
