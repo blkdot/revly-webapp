@@ -398,8 +398,14 @@ const MarketingSetup: React.FC<{
 
   const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
-      const heatmaRangePlatform = revenueData?.[platform[0]]?.ranges || platform.length > 1 ? revenueData?.[platform[1]]?.ranges : null;
-      const ordersRangePlatform = ordersData?.[platform[0]]?.ranges  || platform.length > 1 ? ordersData?.[platform[1]]?.ranges : null;
+      const heatmaRangePlatform =
+        revenueData?.[platform[0]]?.ranges || platform.length > 1
+          ? revenueData?.[platform[1]]?.ranges
+          : null;
+      const ordersRangePlatform =
+        ordersData?.[platform[0]]?.ranges || platform.length > 1
+          ? ordersData?.[platform[1]]?.ranges
+          : null;
 
       if (!heatmaRangePlatform || !ordersRangePlatform) {
         return {
@@ -419,8 +425,14 @@ const MarketingSetup: React.FC<{
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
-      const heatmaDataPlatform = revenueData?.[platform[0]]?.heatmap  || platform.length > 1 ? revenueData?.[platform[1]]?.heatmap : null;
-      const ordersDataPlatform = ordersData?.[platform[0]]?.heatmap   || platform.length > 1 ? ordersData?.[platform[1]]?.heatmap : null;
+      const heatmaDataPlatform =
+        revenueData?.[platform[0]]?.heatmap || platform.length > 1
+          ? revenueData?.[platform[1]]?.heatmap
+          : null;
+      const ordersDataPlatform =
+        ordersData?.[platform[0]]?.heatmap || platform.length > 1
+          ? ordersData?.[platform[1]]?.heatmap
+          : null;
 
       if (!heatmaDataPlatform || !ordersDataPlatform) {
         return {
@@ -456,8 +468,16 @@ const MarketingSetup: React.FC<{
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
       vendors: {
-        ...(selectedVendorsDeliveroo && selectedVendorsDeliveroo.length > 0 && selectedVendorsDeliveroo[0] ? { deliveroo: selectedVendorsDeliveroo } : {}),
-        ...(selectedVendorsDataTalabat && selectedVendorsDataTalabat.length > 0 && selectedVendorsDataTalabat[0] ? { talabat: selectedVendorsDataTalabat } : {}),
+        ...(selectedVendorsDeliveroo &&
+        selectedVendorsDeliveroo.length > 0 &&
+        selectedVendorsDeliveroo[0]
+          ? { deliveroo: selectedVendorsDeliveroo }
+          : {}),
+        ...(selectedVendorsDataTalabat &&
+        selectedVendorsDataTalabat.length > 0 &&
+        selectedVendorsDataTalabat[0]
+          ? { talabat: selectedVendorsDataTalabat }
+          : {}),
       },
     };
 

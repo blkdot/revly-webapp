@@ -77,7 +77,7 @@ const OnboardingTable: FC<{
   );
   const onClickRow = (id: any) => {
     const data = branchData.find((obj) => String(`branch_status_${obj.id}`) === String(id));
-    console.log(data, branchData, id);
+
     if (data.branch_status !== 'in process') {
       setConnectAccount('manageBranch');
       openCloseModal();

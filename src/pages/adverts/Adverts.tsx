@@ -177,70 +177,72 @@ const Adverts = () => {
   const [clickedRow, setClickedRow] = useState({});
   const renderLayout = () => {
     if (details) {
-      return <AdvertsDetails />
+      return <AdvertsDetails />;
     }
-    return <div>
-      <div className='adverts_top-titles'>
-        <TypographyKit className='adverts-title' variant='subtitle'>
-          Manage Advertisements for
-          <span>{isDisplay()}</span>
-          for
-          <span>{getbeforePeriod()}</span>
-        </TypographyKit>
-        <p>
-          Here you can quickly and easily create and manage effective advertisements for their
-          businesses.
-        </p>
-      </div>
-      <PaperKit className='competition-paper adverts'>
-        <div className='paper-top-link'>
-          <div className='links'>
-            <div>
-              <p className={link === 'list' ? 'active' : ''}>Adverts List</p>
-              <span>The list of your running adverts for Today</span>
+    return (
+      <div>
+        <div className='adverts_top-titles'>
+          <TypographyKit className='adverts-title' variant='subtitle'>
+            Manage Advertisements for
+            <span>{isDisplay()}</span>
+            for
+            <span>{getbeforePeriod()}</span>
+          </TypographyKit>
+          <p>
+            Here you can quickly and easily create and manage effective advertisements for their
+            businesses.
+          </p>
+        </div>
+        <PaperKit className='competition-paper adverts'>
+          <div className='paper-top-link'>
+            <div className='links'>
+              <div>
+                <p className={link === 'list' ? 'active' : ''}>Adverts List</p>
+                <span>The list of your running adverts for Today</span>
+              </div>
+              <div>
+                <p className={link === 'performence' ? 'active' : ''}>Adverts Performance</p>
+                <span>Performance Metrics of you running adverts for Today</span>
+              </div>
+              <div className='arrows'>
+                <img
+                  tabIndex={-1}
+                  role='presentation'
+                  onClick={() => setLink('list')}
+                  className={link !== 'list' ? 'active' : ''}
+                  src={arrow}
+                  alt='left-arrow'
+                />
+                <img
+                  tabIndex={-1}
+                  role='presentation'
+                  onClick={() => setLink('performence')}
+                  className={link !== 'performence' ? 'active' : ''}
+                  src={arrow}
+                  alt='right-arrow'
+                />
+              </div>
             </div>
-            <div>
-              <p className={link === 'performence' ? 'active' : ''}>Adverts Performance</p>
-              <span>Performance Metrics of you running adverts for Today</span>
-            </div>
-            <div className='arrows'>
-              <img
-                tabIndex={-1}
-                role='presentation'
-                onClick={() => setLink('list')}
-                className={link !== 'list' ? 'active' : ''}
-                src={arrow}
-                alt='left-arrow'
-              />
-              <img
-                tabIndex={-1}
-                role='presentation'
-                onClick={() => setLink('performence')}
-                className={link !== 'performence' ? 'active' : ''}
-                src={arrow}
-                alt='right-arrow'
-              />
-            </div>
+            <ButtonKit>
+              Create new campaign
+              <img src={arrow} alt='right-arrow' />
+            </ButtonKit>
           </div>
-          <ButtonKit>
-            Create new campaign
-            <img src={arrow} alt='right-arrow' />
-          </ButtonKit>
-        </div>
-        <div className='adverts-table'>
-          <TableRevly
-            onClickRow={(id) => {
-              setDetails(true)
-            }}
-            renderCustomSkelton={renderSkeleton}
-            isLoading={isLoadingAds}
-            headers={link === 'list' ? headersList : headersPerformance}
-            rows={adsData.map(renderRowsByHeaderList)}
-          />
-        </div>
-      </PaperKit>
-    </div>
-  }
+          <div className='adverts-table'>
+            <TableRevly
+              onClickRow={(id) => {
+                setDetails(true);
+              }}
+              renderCustomSkelton={renderSkeleton}
+              isLoading={isLoadingAds}
+              headers={link === 'list' ? headersList : headersPerformance}
+              rows={adsData.map(renderRowsByHeaderList)}
+            />
+          </div>
+        </PaperKit>
+      </div>
+    );
+  };
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
