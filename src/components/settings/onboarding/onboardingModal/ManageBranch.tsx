@@ -40,7 +40,7 @@ const ManageBranch: FC<{
     openedSwitchDeleteModal,
     setLoading,
     setConnectAccount,
-    deleteAccount
+    deleteAccount,
   } = propsVariables;
   const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
   const { user } = useUserAuth();
@@ -76,13 +76,13 @@ const ManageBranch: FC<{
     );
     await Object.keys(userPlatformData.platforms).forEach((plat) => {
       userPlatformData.platforms[plat].forEach((objP) => {
-        if(clickedBranch.accounts.find((email) => email === objP.email)){
-          if(objP.vendor_ids.length === 1){
-            deleteAccount(plat,objP.email);
+        if (clickedBranch.accounts.find((email) => email === objP.email)) {
+          if (objP.vendor_ids.length === 1) {
+            deleteAccount(plat, objP.email);
           }
         }
-      })
-    })
+      });
+    });
 
     openCloseModal();
     setBranchData([...branchData]);

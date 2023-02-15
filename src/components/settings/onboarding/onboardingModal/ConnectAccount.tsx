@@ -78,16 +78,17 @@ const ConnectAccount: FC<{
       )}
       <div className='onboarding-accounts_wrapper'>
         {accounts.map((obj: any, index: number) => (
-          <div key={`${obj.platform}-${obj.email}`} className={`onboarding-account ${obj.active ? 'connected' : ''}`}>
+          <div
+            key={`${obj.platform}-${obj.email}`}
+            className={`onboarding-account ${obj.active ? 'connected' : ''}`}
+          >
             <div>
               <TypographyKit
                 components='span'
                 className='onboarding-account_platform-logo'
-                style={
-                  {
-                    '--color': platformList.find((objP) => objP.name === obj.platform).color,
-                  }
-                }
+                style={{
+                  '--color': platformList.find((objP) => objP.name === obj.platform).color,
+                }}
               >
                 <img
                   src={
