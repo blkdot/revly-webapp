@@ -153,10 +153,10 @@ const MarketingOffer = () => {
       label: 'Min Order',
     },
     {
-      id: 'target',
+      id: 'goal',
       numeric: true,
       disablePadding: false,
-      label: 'goal',
+      label: 'Target',
     },
     {
       id: 'status',
