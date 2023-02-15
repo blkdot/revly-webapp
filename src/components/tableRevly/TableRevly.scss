@@ -107,7 +107,11 @@
   align-items: center;
   justify-content: center;
   color: #7b61ff;
-
+  &.small{
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+  }
   &.column {
     color: #fff;
     font-size: 14px;

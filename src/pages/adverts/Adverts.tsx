@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Dates from 'components/dates/Dates';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { endOfMonth, endOfWeek, format, getYear, subDays } from 'date-fns';
+import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { ButtonKit, PaperKit, SkeletonKit, TableCellKit, TableRowKit, TypographyKit } from 'kits';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import dayjs from 'dayjs';
