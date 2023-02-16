@@ -18,6 +18,7 @@ import ShoppingBagIcon from 'assets/images/shopping-bag.svg';
 import GraphIcon from 'assets/images/graph.svg';
 import SmileIcon from 'assets/images/smile.svg';
 import AdvertsDetails from './details/AdvertsDetails';
+import AdvertsCreateNewCampaign from './createNewCampaign/AdvertsCreateNewCampaign';
 
 const Adverts = () => {
   const { date } = useDate();
@@ -161,10 +162,13 @@ const Adverts = () => {
         ))}
       </TableRowKit>
     ));
-
+  const [openedCampaign, setOpenedCampaign] = useState(false);
   const [opened, setOpened] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
   const renderLayout = () => {
+    if (openedCampaign){
+      return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign}/>
+    }
     if (opened) {
       return <AdvertsDetails data={clickedRow} setOpened={setOpened} />;
     }
@@ -212,7 +216,7 @@ const Adverts = () => {
                 />
               </div>
             </div>
-            <ButtonKit>
+            <ButtonKit onClick={() => setOpenedCampaign(true)}>
               Create new campaign
               <img src={arrow} alt='right-arrow' />
             </ButtonKit>
