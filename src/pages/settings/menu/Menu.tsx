@@ -96,7 +96,9 @@ const Menu = () => {
   const handleCategoryChange = (e) => {
     const { value } = e.target;
     if (value.length > 0) {
-      const arr = value.map((v) => data.filter((k) => k.category === v || k.category_name === v)).flat();
+      const arr = value
+        .map((v) => data.filter((k) => k.category === v || k.category_name === v))
+        .flat();
       setFilteredCategoryData(arr);
     } else {
       setFilteredCategoryData([]);

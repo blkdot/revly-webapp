@@ -13,14 +13,10 @@ const MarketingRadio: FC<{
 }> = ({ title, subtitle, icon, className, disabled, onChange, state, radio }) => {
   const getButton = () => {
     if (radio) {
-      return <FormControlLabelKit onChange={onChange} value={title} control={<RadioKit  />} />
+      return <FormControlLabelKit onChange={onChange} value={title} control={<RadioKit />} />;
     }
-    return <CheckboxKit
-      onChange={onChange}
-      value={title}
-      checked={state.indexOf(title) > -1}
-    />
-  }
+    return <CheckboxKit onChange={onChange} value={title} checked={state.indexOf(title) > -1} />;
+  };
   return (
     <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''} ${!icon ? 'reversed' : ''}`}>
       <div>
@@ -36,13 +32,9 @@ const MarketingRadio: FC<{
           {subtitle ? <p>{subtitle}</p> : ''}
         </div>
       </div>
-      {!disabled ? (
-        getButton()
-      ) : (
-        ''
-      )}
+      {!disabled ? getButton() : ''}
     </BoxKit>
-  )
+  );
 };
 MarketingRadio.defaultProps = {
   title: '',

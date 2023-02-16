@@ -211,7 +211,7 @@ const useVendors = (isSign = false) => {
             chain_id: display[chainName][vendorName].platforms[platform].chain_id,
             vendor_id: display[chainName][vendorName].platforms[platform].vendor_id,
             vendor_name: vendorName,
-            is_active: display[chainName][vendorName].platforms[platform].metadata.is_active
+            is_active: display[chainName][vendorName].platforms[platform].metadata.is_active,
           };
 
           chainData.push(l);

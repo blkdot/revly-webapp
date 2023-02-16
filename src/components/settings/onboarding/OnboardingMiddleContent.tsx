@@ -25,8 +25,8 @@ const OnboardingMiddleContent: FC<{
   };
   const [kitchen, setKitchen] = useState([]);
   useEffect(() => {
-    setKitchen(filteredChains())
-  },[filteredChains().length])
+    setKitchen(filteredChains());
+  }, [filteredChains().length]);
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
@@ -37,11 +37,7 @@ const OnboardingMiddleContent: FC<{
       </div>
       <div className='settings-onboarding-btn_wrapper'>
         {accounts.length > 0 ? (
-          <OnboardingDropdown
-            rows={filteredChains()}
-            state={kitchen}
-            setState={setKitchen}
-          />
+          <OnboardingDropdown rows={filteredChains()} state={kitchen} setState={setKitchen} />
         ) : (
           ''
         )}

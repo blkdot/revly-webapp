@@ -22,7 +22,7 @@ const OnboardingDropdown: FC<{
     } = event;
     setState(typeof value === 'string' ? value.split(',') : value);
   };
-  
+
   return (
     <FormControlKit
       className={`onboarding-dropdown ${rows.length === 0 ? 'onboarding-dropdown_skeleton' : ''}`}
@@ -32,8 +32,8 @@ const OnboardingDropdown: FC<{
         value={state}
         onChange={handleChange}
         multiple
-        labelId="demo-multiple-checkbox-label"
-        id="demo-multiple-checkbox"
+        labelId='demo-multiple-checkbox-label'
+        id='demo-multiple-checkbox'
         disabled={!(rows.length > 0)}
         renderValue={(selected) => selected.join(', ')}
         MenuProps={MenuProps}

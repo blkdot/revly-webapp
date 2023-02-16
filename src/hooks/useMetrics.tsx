@@ -16,8 +16,8 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const { user } = useUserAuth();
   const newVendorsObj = {};
   Object.keys(vendorsObj).forEach((plat) => {
-    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active)
-  })
+    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
+  });
 
   Object.keys(newVendorsObj).forEach((plat) => {
     if (newVendorsObj[plat].length === 0 || plat === 'display') {

@@ -64,51 +64,117 @@ export const TypeStep: FC<{
   getMenuActive,
   categoryLoading,
 }) => {
-    const getItemMenuActive = () => {
-      if (categoryLoading) {
-        return <SpinnerKit className='item-menu_laoding' />;
-      }
-      if (!getMenuActive()) {
-        return <FormControlLabelKit value='Offer on An Item from the Menu' control={<RadioKit />} />;
-      }
-      return '';
-    };
-    return (
-      <div className='left-part-middle'>
-        <TypographyKit variant='h6'>{index}. Select the Type of the offer</TypographyKit>
-        <Subtitle />
-        <RadioGroupKit
-          aria-labelledby='demo-radio-buttons-group-label'
-          value={menu}
-          onChange={(e) => setMenu(e.target.value)}
-          name='radio-buttons-group-menu'
+  const getItemMenuActive = () => {
+    if (categoryLoading) {
+      return <SpinnerKit className='item-menu_laoding' />;
+    }
+    if (!getMenuActive()) {
+      return <FormControlLabelKit value='Offer on An Item from the Menu' control={<RadioKit />} />;
+    }
+    return '';
+  };
+  return (
+    <div className='left-part-middle'>
+      <TypographyKit variant='h6'>{index}. Select the Type of the offer</TypographyKit>
+      <Subtitle />
+      <RadioGroupKit
+        aria-labelledby='demo-radio-buttons-group-label'
+        value={menu}
+        onChange={(e) => setMenu(e.target.value)}
+        name='radio-buttons-group-menu'
+      >
+        <BoxKit
+          className={`left-part-radio under-textfields radio-dates ${
+            menu === 'Offer on the whole Menu' ? 'active' : ''
+          }
+                  `}
         >
+          <div className='radio'>
+            <div>
+              <span>
+                <img src={menuIcon} alt='Menu Icon' />
+              </span>
+              <div>
+                <div>Offer on the whole Menu</div>
+                <p>Ex :&nbsp; -20% on the full menu</p>
+              </div>
+            </div>
+            <FormControlLabelKit value='Offer on the whole Menu' control={<RadioKit />} />
+          </div>
+          <div style={{ width: '100%', marginTop: '0px' }}>
+            <div style={{ width: '100%' }}>
+              {menuChanged === 'Offer on the whole Menu' ? (
+                <div className='dropdown-wrapper'>
+                  <TypographyKit className='min-max-textfields' variant='div'>
+                    <TypographyKit variant='div'>
+                      Percentage Discount
+                      <MarketingPlaceholderDropdown
+                        names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                        title='%'
+                        setPersonName={setDiscountPercentage}
+                        personName={discountPercentage}
+                      />
+                    </TypographyKit>
+                  </TypographyKit>
+                  <TypographyKit className='min-max-textfields' variant='div'>
+                    <TypographyKit variant='div'>
+                      Min. Order Value
+                      <MarketingPlaceholderDropdown
+                        names={['0 AED', '10 AED', '20 AED', '30 AED']}
+                        title='0 AED'
+                        setPersonName={setMinOrder}
+                        personName={minOrder}
+                      />
+                    </TypographyKit>
+                  </TypographyKit>
+                </div>
+              ) : (
+                ''
+              )}
+            </div>
+          </div>
+        </BoxKit>
+        {platform.length === 1 ? (
           <BoxKit
-            className={`left-part-radio under-textfields radio-dates ${menu === 'Offer on the whole Menu' ? 'active' : ''
-              }
+            className={`left-part-radio under-textfields radio-dates ${
+              getMenuActive() ? 'disabled' : ''
+            } ${menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''}
                   `}
           >
             <div className='radio'>
               <div>
                 <span>
-                  <img src={menuIcon} alt='Menu Icon' />
+                  <img src={ItemMenuIcon} alt='Item Menu Icon' />
                 </span>
                 <div>
-                  <div>Offer on the whole Menu</div>
-                  <p>Ex :&nbsp; -20% on the full menu</p>
+                  <div>Offer on An Item from the Menu</div>
+                  <p>Ex :&nbsp; -20% on an item</p>
                 </div>
               </div>
-              <FormControlLabelKit value='Offer on the whole Menu' control={<RadioKit />} />
+              {getItemMenuActive()}
             </div>
-            <div style={{ width: '100%', marginTop: '0px' }}>
-              <div style={{ width: '100%' }}>
-                {menuChanged === 'Offer on the whole Menu' ? (
+            <div>
+              <RadioGroupKit value={itemMenu} onChange={(e) => setItemMenu(e.target.value)}>
+                {(platform[0] === 'talabat' ? [] : MENU_ITEMS).map((obj) => (
+                  <MarketingRadio
+                    radio
+                    state={itemMenu}
+                    key={obj.title}
+                    title={obj.title}
+                    subtitle={obj.subtitle}
+                  />
+                ))}
+                {menuChanged === 'Offer on An Item from the Menu' ? (
                   <div className='dropdown-wrapper'>
                     <TypographyKit className='min-max-textfields' variant='div'>
                       <TypographyKit variant='div'>
                         Percentage Discount
                         <MarketingPlaceholderDropdown
-                          names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                          names={
+                            platform[0] === 'talabat'
+                              ? ['20%', '25%', '30%', '35%', '40%', '45%', '50%']
+                              : getDiscountMovType('discount')
+                          }
                           title='%'
                           setPersonName={setDiscountPercentage}
                           personName={discountPercentage}
@@ -117,95 +183,31 @@ export const TypeStep: FC<{
                     </TypographyKit>
                     <TypographyKit className='min-max-textfields' variant='div'>
                       <TypographyKit variant='div'>
-                        Min. Order Value
-                        <MarketingPlaceholderDropdown
-                          names={['0 AED', '10 AED', '20 AED', '30 AED']}
-                          title='0 AED'
-                          setPersonName={setMinOrder}
-                          personName={minOrder}
-                        />
+                        Min. Order Value{' '}
+                        {platform[0] === 'talabat' ? <span className='static'>i</span> : ''}
+                        {platform[0] === 'talabat' ? (
+                          <div className='get_progress_min_order'>20 AED</div>
+                        ) : (
+                          <MarketingPlaceholderDropdown
+                            names={getDiscountMovType('mov')}
+                            title='0 AED'
+                            setPersonName={setMinOrder}
+                            personName={minOrder}
+                          />
+                        )}
                       </TypographyKit>
                     </TypographyKit>
                   </div>
                 ) : (
                   ''
                 )}
-              </div>
+              </RadioGroupKit>
             </div>
           </BoxKit>
-          {platform.length === 1 ? (
-            <BoxKit
-              className={`left-part-radio under-textfields radio-dates ${getMenuActive() ? 'disabled' : ''
-                } ${menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''}
-                  `}
-            >
-              <div className='radio'>
-                <div>
-                  <span>
-                    <img src={ItemMenuIcon} alt='Item Menu Icon' />
-                  </span>
-                  <div>
-                    <div>Offer on An Item from the Menu</div>
-                    <p>Ex :&nbsp; -20% on an item</p>
-                  </div>
-                </div>
-                {getItemMenuActive()}
-              </div>
-              <div>
-                <RadioGroupKit value={itemMenu} onChange={(e) => setItemMenu(e.target.value)}>
-                  {(platform[0] === 'talabat' ? [] : MENU_ITEMS).map((obj) => (
-                    <MarketingRadio
-                      radio
-                      state={itemMenu}
-                      key={obj.title}
-                      title={obj.title}
-                      subtitle={obj.subtitle}
-                    />
-                  ))}
-                  {menuChanged === 'Offer on An Item from the Menu' ? (
-                    <div className='dropdown-wrapper'>
-                      <TypographyKit className='min-max-textfields' variant='div'>
-                        <TypographyKit variant='div'>
-                          Percentage Discount
-                          <MarketingPlaceholderDropdown
-                            names={
-                              platform[0] === 'talabat'
-                                ? ['20%', '25%', '30%', '35%', '40%', '45%', '50%']
-                                : getDiscountMovType('discount')
-                            }
-                            title='%'
-                            setPersonName={setDiscountPercentage}
-                            personName={discountPercentage}
-                          />
-                        </TypographyKit>
-                      </TypographyKit>
-                      <TypographyKit className='min-max-textfields' variant='div'>
-                        <TypographyKit variant='div'>
-                          Min. Order Value{' '}
-                          {platform[0] === 'talabat' ? <span className='static'>i</span> : ''}
-                          {platform[0] === 'talabat' ? (
-                            <div className='get_progress_min_order'>20 AED</div>
-                          ) : (
-                            <MarketingPlaceholderDropdown
-                              names={getDiscountMovType('mov')}
-                              title='0 AED'
-                              setPersonName={setMinOrder}
-                              personName={minOrder}
-                            />
-                          )}
-                        </TypographyKit>
-                      </TypographyKit>
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </RadioGroupKit>
-              </div>
-            </BoxKit>
-          ) : (
-            ''
-          )}
-        </RadioGroupKit>
-      </div>
-    );
-  };
+        ) : (
+          ''
+        )}
+      </RadioGroupKit>
+    </div>
+  );
+};
