@@ -81,7 +81,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const {
     profit,
     revenue,
-    accrued_discount,
+    // accrued_discount,
     roi,
     average_basket,
     n_orders,
@@ -237,14 +237,14 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                     </div>
                     <div className='offer-visibility-sub-title'>Caroussel</div>
                   </div>
-                  <div className='offer-visibility-block'>
+                  {/* <div className='offer-visibility-block'>
                     <div>
                       <span className='offer-visibility-title'>Visibility Rank</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
                     </div>
-                  </div>
+                  </div> */}
                   <div className='offer-visibility-block'>
                     <div>
                       <span className='offer-visibility-title'>#Orders</span>

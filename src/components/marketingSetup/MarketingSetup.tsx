@@ -264,7 +264,7 @@ const MarketingSetup: React.FC<{
 
     sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked = branch.display[chainName][vendorName]?.checked;
+        displayTemp[chainName][vendorName].checked = branch?.display?.[chainName]?.[vendorName]?.checked || false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
           displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
@@ -300,8 +300,8 @@ const MarketingSetup: React.FC<{
       });
     });
 
-    if (counter === 0) {
-      displayTemp[defaultSelection.chainName][defaultSelection.vendorName].checked = true;
+    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
+      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
     }
 
     setBranch({
