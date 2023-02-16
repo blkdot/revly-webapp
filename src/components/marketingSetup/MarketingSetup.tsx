@@ -236,7 +236,7 @@ const MarketingSetup: React.FC<{
 
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
-      setCustomisedDay([]);
+      setCustomisedDay([format(new Date(), 'EEEE')]);
     }
 
     setTimes([

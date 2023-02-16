@@ -41,7 +41,7 @@ export const typeScheduleAtom = atom('Continues Offer');
 
 export const disabledDateAtom = atom(true);
 
-export const customisedDayAtom = atom<string[]>([]);
+export const customisedDayAtom = atom<string[]>(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
 
 export const timesAtom = atom([
   {
@@ -59,7 +59,7 @@ export const timesAtom = atom([
   },
 ]);
 
-export const everyWeekAtom = atom('');
+export const everyWeekAtom = atom('Every Monday');
 
 export const itemMenuAtom = atom('');
 
