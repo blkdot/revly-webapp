@@ -20,7 +20,6 @@ import {
   accordionLink,
   settingsLink,
   simpleLink,
-  simpleLinkAfterAccordion,
 } from '../../data/navbarData';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import Navlink from '../navlink/Navlink';
@@ -178,7 +177,6 @@ const Navbar = () => {
           </li>
           {renderSimpleLink(simpleLink)}
           {renderAccordionLink()}
-          {renderSimpleLink(simpleLinkAfterAccordion)}
         </ul>
         <img className='nav-lines' src={lines} alt='Gradient lines' />
         <ul className='Navbar-footer'>

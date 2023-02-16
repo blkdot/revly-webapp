@@ -243,7 +243,6 @@ const CompetitionListing = () => {
       getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
     }
   }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
-  console.log(vendorsData);
 
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
