@@ -130,7 +130,7 @@ export const RecurrenceStep: FC<{
             style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
           >
             <div style={{ width: '100%' }}>
-              Start Time {obj.pos}
+              Start Time {i + 1}
               <TimePickerDropdown
                 startLimit={i === 0 ? null : times[i - 1].endTime}
                 value={obj.startTime}
@@ -141,7 +141,7 @@ export const RecurrenceStep: FC<{
               />
             </div>
             <div style={{ width: '100%' }}>
-              End Time {obj.pos}
+              End Time {i + 1}
               <TimePickerDropdown
                 startLimit={isEndingLimited() ? obj.startTime : null}
                 value={obj.endTime}

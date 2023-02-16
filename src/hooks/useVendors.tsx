@@ -80,6 +80,24 @@ export type TChainData = {
   vendor_id: string | number;
   vendor_name: string;
   is_active: boolean;
+  access_token: string;
+  access_token_bis: string;
+  platform: string;
+  data: {
+    chain_id: number;
+    vendor_id: string | number;
+    data: {
+      chain_name: string;
+      vendor_name: string;
+    };
+    metadata: {
+      drn_id?: string;
+      prefix_vendor_id?: string;
+      is_active: boolean;
+      is_deleted: boolean;
+      ord_id?: string;
+    };
+  };
 };
 
 export type TVendors = {
@@ -206,12 +224,22 @@ const useVendors = (isSign = false) => {
             display[chainName][vendorName].active = false;
           }
 
+          const clonedData = { ...display[chainName][vendorName].platforms[platform] };
+
+          delete clonedData.email;
+          delete clonedData.access_token;
+          delete clonedData.access_token_bis;
+
           const l = {
             chain_name: chainName,
             chain_id: display[chainName][vendorName].platforms[platform].chain_id,
             vendor_id: display[chainName][vendorName].platforms[platform].vendor_id,
             vendor_name: vendorName,
             is_active: display[chainName][vendorName].platforms[platform].metadata.is_active,
+            platform,
+            access_token: display[chainName][vendorName].platforms[platform].access_token,
+            access_token_bis: display[chainName][vendorName].platforms[platform].access_token_bis,
+            data: clonedData,
           };
 
           chainData.push(l);

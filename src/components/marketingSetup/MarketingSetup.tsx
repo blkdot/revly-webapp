@@ -209,7 +209,7 @@ const MarketingSetup: React.FC<{
     setTimes([
       {
         startTime: setStartTimeFormat(new Date(), 2),
-        endTime: setEndTimeFormat(times[0].endTime),
+        endTime: setEndTimeFormat(times[0].endTime, false),
         pos: 1,
       },
     ]);
@@ -242,7 +242,7 @@ const MarketingSetup: React.FC<{
     setTimes([
       {
         startTime: setStartTimeFormat(new Date(), 2),
-        endTime: setEndTimeFormat(new Date()),
+        endTime: setEndTimeFormat(new Date(), true),
         pos: 1,
       },
     ]);
@@ -339,13 +339,14 @@ const MarketingSetup: React.FC<{
     try {
       if (platform.length < 2) {
         setTriggerLoading(true);
+        const selectedVendorsData = selectedVendors('full', branch.display, platform[0]);
+
         const res = await triggerOffers(platform[0], {
           ...dataReq,
-          vendors: selectedVendors('full', branch.display, platform[0]),
-          chain_id: selectedVendors('full', branch.display, platform[0])[0].chain_id,
+          vendors: selectedVendorsData,
+          chain_id: selectedVendorsData[0].chain_id, // Get the first chain id
           platform_token:
-            selectedVendors('full', branch.display, platform[0])[0].access_token ??
-            selectedVendors('full', branch.display, platform[0])[0].access_token_bis,
+            selectedVendorsData[0].access_token ?? selectedVendorsData[0].access_token_bis, // Get the first access token
         });
 
         if (res instanceof Error) {
@@ -359,14 +360,14 @@ const MarketingSetup: React.FC<{
       } else {
         const crossPlatform = platform.map(async (p) => {
           setTriggerLoading(true);
+          const selectedVendorsData = selectedVendors('full', branch.display, p);
 
           return triggerOffers(p, {
             ...dataReq,
-            vendors: selectedVendors('full', p),
-            chain_id: selectedVendors('full', p)[0].chain_id,
+            vendors: selectedVendorsData,
+            chain_id: selectedVendorsData[0].chain_id,
             platform_token:
-              selectedVendors('full', branch.display, p)[0].access_token ??
-              selectedVendors('full', branch.display, p)[0].access_token_bis,
+              selectedVendorsData[0].access_token ?? selectedVendorsData[0].access_token_bis,
           });
         });
 
@@ -397,8 +398,8 @@ const MarketingSetup: React.FC<{
 
   const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
-      const heatmaRangePlatform = revenueData?.[platform[0]].ranges;
-      const ordersRangePlatform = ordersData?.[platform[0]].ranges;
+      const heatmaRangePlatform = revenueData?.[platform[0]]?.ranges;
+      const ordersRangePlatform = ordersData?.[platform[0]]?.ranges;
 
       if (!heatmaRangePlatform || !ordersRangePlatform) {
         return {
@@ -418,8 +419,8 @@ const MarketingSetup: React.FC<{
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
-      const heatmaDataPlatform = { ...revenueData?.[platform[0]]?.heatmap };
-      const ordersDataPlatform = { ...ordersData?.[platform[0]]?.heatmap };
+      const heatmaDataPlatform = revenueData?.[platform[0]]?.heatmap;
+      const ordersDataPlatform = ordersData?.[platform[0]]?.heatmap;
 
       if (!heatmaDataPlatform || !ordersDataPlatform) {
         return {
@@ -441,10 +442,12 @@ const MarketingSetup: React.FC<{
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [platform, revenueData, ordersData, heatmapLoading]);
+  }, [heatmapLoading]);
 
   const getHeatmapData = () => {
     setHeatmapLoading(true);
+    const selectedVendorsDeliveroo = selectedVendors('full', branch.display, 'deliveroo');
+    const selectedVendorsDataTalabat = selectedVendors('full', branch.display, 'talabat');
 
     const body = {
       master_email: user.email,
@@ -452,7 +455,18 @@ const MarketingSetup: React.FC<{
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
-      vendors: vendorsObj,
+      vendors: {
+        ...(selectedVendorsDeliveroo &&
+        selectedVendorsDeliveroo.length > 0 &&
+        selectedVendorsDeliveroo.some((d) => d)
+          ? { deliveroo: selectedVendorsDeliveroo.filter((d) => d) }
+          : {}),
+        ...(selectedVendorsDataTalabat &&
+        selectedVendorsDataTalabat.length > 0 &&
+        selectedVendorsDataTalabat.some((d) => d)
+          ? { talabat: selectedVendorsDataTalabat.filter((d) => d) }
+          : {}),
+      },
     };
 
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
@@ -497,7 +511,7 @@ const MarketingSetup: React.FC<{
 
     getHeatmapData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [beforePeriodBtn, vendorsObj, active]);
+  }, [beforePeriodBtn, vendorsObj, active, branch.display]);
 
   const getMenuData = async (vendor, platforms) => {
     try {
