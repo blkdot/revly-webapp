@@ -165,6 +165,15 @@ const RestaurantCheckboxAccordion: FC<{
             </div>
           );
         }
+        const sortPlatform = (a: any, b: any) => {
+          if (a < b) {
+            return -1;
+          }
+          if (a > b) {
+            return 1;
+          }
+          return 0;
+        };
         return (
           <InputLabelKit
             disabled={!info[vendorName].active}
@@ -200,6 +209,7 @@ const RestaurantCheckboxAccordion: FC<{
               <div className='restaurant-platforms'>
                 {Object.keys(info[vendorName].platforms)
                   .filter((plat) => info[vendorName].platforms[plat].metadata.is_active)
+                  .sort(sortPlatform)
                   .map((plat) => (
                     <img key={plat} className='restaurant-img' src={getIcon(plat)} alt={plat} />
                   ))}
