@@ -8,10 +8,10 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevly from 'components/tableRevly/TableRevly';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
-import { useAtom } from 'jotai';
+
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
-import { vendorsAtom } from 'store/vendorsAtom';
+
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
 import { platformObject } from '../../data/platformList';
@@ -83,8 +83,6 @@ const Planning = () => {
   const [dataFiltered, setDataFiltered] = useState([]);
   const [dataFilteredAds, setDataFilteredAds] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [vendors] = useAtom(vendorsAtom);
-  const { chainData } = vendors;
 
   useEffect(() => {
     setDateSaved(dateRange);
@@ -255,7 +253,7 @@ const Planning = () => {
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status)) status.push(cur.status);
+        if (!status.includes(cur.status.toLowerCase())) status.push(cur.status.toLowerCase());
 
         return { ...acc, platform, type_offer: discountType, discount_rate: procent, status };
       },

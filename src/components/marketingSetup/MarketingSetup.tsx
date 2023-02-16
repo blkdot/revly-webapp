@@ -259,16 +259,22 @@ const MarketingSetup: React.FC<{
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
+    let counter = 0;
+    let defaultSelection = null;
+
     sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked = false;
+        displayTemp[chainName][vendorName].checked =
+          branch?.display?.[chainName]?.[vendorName]?.checked || false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
           displayTemp[chainName][vendorName].deleted = true;
+          displayTemp[chainName][vendorName].checked = false;
         } else {
           const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
           platformsDisplay.forEach((platformV) => {
             if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
               displayTemp[chainName][vendorName].deleted = true;
+              displayTemp[chainName][vendorName].checked = false;
             }
           });
 
@@ -276,36 +282,29 @@ const MarketingSetup: React.FC<{
             platform.forEach((p) => {
               if (!platformsDisplay.includes(p)) {
                 displayTemp[chainName][vendorName].deleted = true;
+                displayTemp[chainName][vendorName].checked = false;
               }
             });
           }
 
+          if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
+            defaultSelection = {
+              chainName,
+              vendorName,
+            };
+          }
+
+          if (displayTemp[chainName][vendorName].checked) {
+            counter += 1;
+          }
         }
       });
     });
 
-    sortedVendors(displayTemp)
-      .filter((cName) =>
-        Object.keys(displayTemp[cName]).every(
-          (vName) => !(displayTemp[cName][vName].deleted || false)
-        )
-      )
-      .forEach((chainName, indexC) => {
-        Object.keys(displayTemp[chainName]).forEach((vendorName, indexV) => {
-          if (indexC === 0 && indexV === 0) {
-            displayTemp[chainName][vendorName].checked = true;
-            Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
-              if (platform.includes(plat)) {
-                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
-              } else {
-                delete vendorsObjTemp[plat];
-              }
-            });
-          } else {
-            displayTemp[chainName][vendorName].checked = false;
-          }
-        });
-      });
+    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
+      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
+    }
+
     setBranch({
       ...vendors,
       display: displayTemp,
@@ -406,7 +405,6 @@ const MarketingSetup: React.FC<{
 
   const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
-
       let heatmaRangePlatform = revenueData?.[platform[0]]?.ranges;
       let ordersRangePlatform = ordersData?.[platform[0]]?.ranges;
 
@@ -490,10 +488,11 @@ const MarketingSetup: React.FC<{
       },
     };
 
-    Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
-      ([resRevenue, resOrders]) => {
+    Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)])
+      .then(([resRevenue, resOrders]) => {
         setHeatmapLoading(false);
         if (resRevenue instanceof Error || resOrders instanceof Error) {
+          setHeatmapLoading(false);
           setHeatmapData({
             revenue: defaultHeatmapState,
             orders: defaultHeatmapState,
@@ -507,6 +506,7 @@ const MarketingSetup: React.FC<{
         }
 
         if (!resRevenue.data || !resOrders.data) {
+          setHeatmapLoading(false);
           setHeatmapData({
             revenue: defaultHeatmapState,
             orders: defaultHeatmapState,
@@ -519,10 +519,13 @@ const MarketingSetup: React.FC<{
           return;
         }
 
+        setHeatmapLoading(false);
         setOrdersData(resOrders.data);
         setRevenueData(resRevenue.data);
-      }
-    );
+      })
+      .catch((err) => {
+        setHeatmapLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -532,7 +535,7 @@ const MarketingSetup: React.FC<{
 
     getHeatmapData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [beforePeriodBtn, vendorsObj, active, branch.display]);
+  }, [beforePeriodBtn, vendors, active, branch.display]);
 
   const getMenuData = async (vendor, platforms) => {
     try {

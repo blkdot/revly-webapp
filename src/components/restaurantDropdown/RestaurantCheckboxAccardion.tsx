@@ -70,8 +70,10 @@ const RestaurantCheckboxAccordion: FC<{
     });
     setVendors({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp });
   };
+
   const getIcon = (platform: string) =>
     platformList.find((obj) => obj.name === platform).srcFavicon;
+
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       {Object.values(info).every((objV: any) => !objV.is_matched) ? (
@@ -81,7 +83,9 @@ const RestaurantCheckboxAccordion: FC<{
           tabIndex={-1}
           role='presentation'
           style={{ '--length': Object.keys(info).length } as React.CSSProperties}
-          className={`checkbox-accordion ${false ? 'disabled' : ''} ${active ? 'active' : ''}`}
+          className={`checkbox-accordion ${
+            Object.values(info).every((objV) => objV.deleted) ? 'disabled' : ''
+          } ${active ? 'active' : ''}`}
           onClick={() => setActive(!active)}
         >
           <div>

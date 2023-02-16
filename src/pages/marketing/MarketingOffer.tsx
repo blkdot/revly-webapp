@@ -265,7 +265,8 @@ const MarketingOffer = () => {
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status) && cur.status) status.push(cur.status);
+        if (!status.includes(cur.status.toLowerCase()) && cur.status)
+          status.push(cur.status.toLowerCase());
 
         if (!goal.includes(cur.goal) && !goal.includes(targetMapping[cur.goal]) && cur.goal)
           goal.push(targetMapping[cur.goal] || cur.goal);
@@ -314,7 +315,10 @@ const MarketingOffer = () => {
     const preHeadtypeOffer = preHead.type_offer.map((s) => ({ value: s, text: s }));
     const preHeadTarget = preHead.goal.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
+    const preHeadStatus = preHead.status.map((s) => ({
+      value: s.toLowerCase(),
+      text: renderStatusFilter(s),
+    }));
 
     setFiltersHead({
       platform: preHeadPlatform,
