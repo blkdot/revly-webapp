@@ -1,31 +1,36 @@
 import { Arrow } from 'assets/icons';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import { useAtom } from 'jotai';
 import { ButtonKit } from 'kits';
-import {FC} from 'react'
-import AdvertSelectBranches from '../AdvertSelectBranches';
+import { FC, useState } from 'react'
+import { vendorsAtom } from 'store/vendorsAtom';
 
 const LaunchStep: FC<{
   setStep: any;
   branchDetails: any;
   setBranchDetails: any;
 }> = ({ setStep, branchDetails, setBranchDetails }) => {
-  console.log('s');
+  const [vendors,] = useAtom(vendorsAtom);
+  const [branchVendors, setBranchVendors] = useState(vendors || {});
   return (
     <div className='adverts-step'>
-     <div className='top'>
+      <div className='top'>
         <p>1. Launch a New Adverts </p>
         <span>
           Stand out from the crowd with an advert, Advertise on your platforms and you&apos;ll appear in the Featured section of the app
         </span>
-        <AdvertSelectBranches state={branchDetails}/>
-     </div>
-     <div className='buttons'>
-      <ButtonKit className='cancel' variant='contained'>
+        <div className='advert-branches'>
+          <RestaurantDropdown pageType='branch' setState={setBranchVendors} state={branchVendors} />
+        </div>
+      </div>
+      <div className='buttons'>
+        <ButtonKit className='cancel' variant='contained'>
           Cancel
-      </ButtonKit>
+        </ButtonKit>
         <ButtonKit className='continue' variant='contained'>
           Continue <Arrow />
         </ButtonKit>
-     </div>
+      </div>
     </div>
   )
 }

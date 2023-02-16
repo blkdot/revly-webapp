@@ -2,10 +2,9 @@ import { Arrow, Warning } from 'assets/icons';
 import { platformObject } from 'data/platformList';
 import { useVendors } from 'hooks';
 import { ButtonKit, PaperKit, TooltipKit } from 'kits';
-import { useState, FC, CSSProperties } from 'react';
+import { FC, CSSProperties } from 'react';
 import AdvertsWidget from 'components/advertsWidget/AdvertsWidget';
 import AdvertsWidgetCustom from 'components/advertsWidget/AdvertsWidgetCustom';
-import dayjs from 'dayjs';
 import { differenceInDays } from 'date-fns';
 
 const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) => {
