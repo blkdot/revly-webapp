@@ -265,11 +265,21 @@ const MarketingSetup: React.FC<{
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
           displayTemp[chainName][vendorName].deleted = true;
         } else {
-          Object.keys(displayTemp[chainName][vendorName].platforms).forEach((platformV) => {
+          const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
+          platformsDisplay.forEach((platformV) => {
             if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
               displayTemp[chainName][vendorName].deleted = true;
             }
           });
+
+          if (platform.length === 1) {
+            platform.forEach((p) => {
+              if (!platformsDisplay.includes(p)) {
+                displayTemp[chainName][vendorName].deleted = true;
+              }
+            });
+          }
+
         }
       });
     });
@@ -285,9 +295,7 @@ const MarketingSetup: React.FC<{
           if (indexC === 0 && indexV === 0) {
             displayTemp[chainName][vendorName].checked = true;
             Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
-              if (platform.length > 1) {
-                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
-              } else if (platform[0] === plat) {
+              if (platform.includes(plat)) {
                 vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
               } else {
                 delete vendorsObjTemp[plat];
@@ -398,8 +406,14 @@ const MarketingSetup: React.FC<{
 
   const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
-      const heatmaRangePlatform = revenueData?.[platform[0]]?.ranges;
-      const ordersRangePlatform = ordersData?.[platform[0]]?.ranges;
+
+      let heatmaRangePlatform = revenueData?.[platform[0]]?.ranges;
+      let ordersRangePlatform = ordersData?.[platform[0]]?.ranges;
+
+      if (platform.length > 1 && (!heatmaRangePlatform || !ordersRangePlatform)) {
+        heatmaRangePlatform = revenueData?.[platform[1]]?.ranges;
+        ordersRangePlatform = ordersData?.[platform[1]]?.ranges;
+      }
 
       if (!heatmaRangePlatform || !ordersRangePlatform) {
         return {
@@ -419,8 +433,13 @@ const MarketingSetup: React.FC<{
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
-      const heatmaDataPlatform = revenueData?.[platform[0]]?.heatmap;
-      const ordersDataPlatform = ordersData?.[platform[0]]?.heatmap;
+      let heatmaDataPlatform = revenueData?.[platform[0]]?.heatmap;
+      let ordersDataPlatform = ordersData?.[platform[0]]?.heatmap;
+
+      if (platform.length > 1 && (!heatmaDataPlatform || !ordersDataPlatform)) {
+        heatmaDataPlatform = revenueData?.[platform[1]]?.heatmap;
+        ordersDataPlatform = ordersData?.[platform[1]]?.heatmap;
+      }
 
       if (!heatmaDataPlatform || !ordersDataPlatform) {
         return {
@@ -445,6 +464,8 @@ const MarketingSetup: React.FC<{
   }, [heatmapLoading]);
 
   const getHeatmapData = () => {
+    if (heatmapLoading) return;
+
     setHeatmapLoading(true);
     const selectedVendorsDeliveroo = selectedVendors('full', branch.display, 'deliveroo');
     const selectedVendorsDataTalabat = selectedVendors('full', branch.display, 'talabat');
