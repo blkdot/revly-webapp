@@ -114,7 +114,6 @@ const setAll = (data) =>
     data
   );
 
-
 const typeMono = (dateRange, times, data) => {
   const { startDate, endDate } = dateRange;
 
@@ -233,7 +232,8 @@ const typeMulti = (
   if (isEveryWeek) {
     const day = everyWeek.replace('Every ', '').trim();
 
-    const dayEveryWeekIndex = daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase()) || 0;
+    const dayEveryWeekIndex =
+      daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase()) || 0;
 
     const newData = clearTimeSelected(data);
 

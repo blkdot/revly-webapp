@@ -264,7 +264,8 @@ const MarketingSetup: React.FC<{
 
     sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked = branch?.display?.[chainName]?.[vendorName]?.checked || false;
+        displayTemp[chainName][vendorName].checked =
+          branch?.display?.[chainName]?.[vendorName]?.checked || false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
           displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
