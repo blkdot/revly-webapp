@@ -13,6 +13,14 @@ const getHour = (h) => {
   return hour;
 };
 
+const getMappedDay = (d: Date) => {
+  const dayIndex = getDay(d);
+
+  if (dayIndex === 0) return 6;
+
+  return dayIndex - 1;
+};
+
 const getHeatmapDataDayNewContent = (data, day, tms) =>
   tms.reduce((acc, cur) => {
     if (!data || !data[day] || !data[day][cur]) {
@@ -106,12 +114,13 @@ const setAll = (data) =>
     data
   );
 
+
 const typeMono = (dateRange, times, data) => {
   const { startDate, endDate } = dateRange;
 
   const sameDay = isSameDay(startDate, endDate);
 
-  const indexDayStart = getDay(new Date(startDate));
+  const indexDayStart = getMappedDay(new Date(startDate));
 
   if (sameDay) return setSameDayTimeRange(data, indexDayStart, times);
 
@@ -121,7 +130,7 @@ const typeMono = (dateRange, times, data) => {
     return setAll(data);
   }
 
-  const indexDayEnd = getDay(new Date(endDate));
+  const indexDayEnd = getMappedDay(new Date(endDate));
 
   if (diff === 0) return setSideBySideDayTimeRange(data, indexDayStart, indexDayEnd, times);
 
@@ -260,8 +269,8 @@ const typeMulti = (
 
   const { startDate, endDate } = dateRange;
 
-  const indexDayStart = getDay(new Date(startDate)) - 1;
-  const indexDayEnd = getDay(new Date(endDate)) - 1;
+  const indexDayStart = getMappedDay(new Date(startDate));
+  const indexDayEnd = getMappedDay(new Date(endDate));
 
   let daysSelectedOrder = _.range(indexDayStart, indexDayEnd + 1);
 
