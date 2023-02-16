@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { BoxKit, CheckboxKit } from 'kits';
+import { BoxKit, CheckboxKit, FormControlLabelKit, RadioKit } from 'kits';
 
 const MarketingRadio: FC<{
   title?: string;
@@ -9,34 +9,33 @@ const MarketingRadio: FC<{
   disabled?: boolean;
   onChange?: any;
   state?: any;
-}> = ({ title, subtitle, icon, className, disabled, onChange, state }) => (
-  <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''} ${!icon ? 'reversed' : ''}`}>
-    <div>
-      {icon ? (
-        <span className={className}>
-          <img src={icon} alt='Box Icon' />
-        </span>
-      ) : (
-        ''
-      )}
+  radio?: boolean;
+}> = ({ title, subtitle, icon, className, disabled, onChange, state, radio }) => {
+  const getButton = () => {
+    if (radio) {
+      return <FormControlLabelKit onChange={onChange} value={title} control={<RadioKit />} />;
+    }
+    return <CheckboxKit onChange={onChange} value={title} checked={state.indexOf(title) > -1} />;
+  };
+  return (
+    <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''} ${!icon ? 'reversed' : ''}`}>
       <div>
-        {title}
-        {subtitle ? <p>{subtitle}</p> : ''}
+        {icon ? (
+          <span className={className}>
+            <img src={icon} alt='Box Icon' />
+          </span>
+        ) : (
+          ''
+        )}
+        <div>
+          {title}
+          {subtitle ? <p>{subtitle}</p> : ''}
+        </div>
       </div>
-    </div>
-    {!disabled ? (
-      <CheckboxKit
-        onChange={(e) => {
-          onChange(e);
-        }}
-        value={title}
-        checked={state.indexOf(title) > -1}
-      />
-    ) : (
-      ''
-    )}
-  </BoxKit>
-);
+      {!disabled ? getButton() : ''}
+    </BoxKit>
+  );
+};
 MarketingRadio.defaultProps = {
   title: '',
   subtitle: '',
@@ -45,5 +44,6 @@ MarketingRadio.defaultProps = {
   disabled: false,
   onChange: null,
   state: null,
+  radio: false,
 };
 export default MarketingRadio;
