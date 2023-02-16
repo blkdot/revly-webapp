@@ -236,7 +236,7 @@ const MarketingSetup: React.FC<{
 
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
-      setCustomisedDay([]);
+      setCustomisedDay([format(new Date(), 'EEEE')]);
     }
 
     setTimes([
@@ -597,7 +597,12 @@ const MarketingSetup: React.FC<{
       everyWeek
     );
 
-    setHeatmapData({ ...heatmapData, [links]: response });
+    if (
+      (menu === 'Offer on An Item from the Menu' && selected >= 4) ||
+      (menu === 'Offer on the whole Menu' && selected >= 3)
+    ) {
+      setHeatmapData({ ...heatmapData, [links]: response });
+    }
   };
 
   const getSteps = (stepsArr: number[]) => {

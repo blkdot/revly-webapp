@@ -224,7 +224,7 @@ const typeMulti = (
   if (isEveryWeek) {
     const day = everyWeek.replace('Every ', '').trim();
 
-    const dayEveryWeekIndex = daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase());
+    const dayEveryWeekIndex = daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase()) || 0;
 
     const newData = clearTimeSelected(data);
 
@@ -238,6 +238,8 @@ const typeMulti = (
         ),
       };
     }
+
+    return newData;
   }
 
   if (isCustomdays) {

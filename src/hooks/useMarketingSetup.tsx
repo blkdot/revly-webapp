@@ -58,7 +58,13 @@ const useMarketingSetup = () => {
     );
 
   const setEndTimeFormat = (value: Date, increment = false) =>
-    new Date(null, null, null, Number(format(new Date(addHours(value, increment ? 1 : 0)), 'HH')), 0);
+    new Date(
+      null,
+      null,
+      null,
+      Number(format(new Date(addHours(value, increment ? 1 : 0)), 'HH')),
+      0
+    );
 
   const isValidDate = (d: Date) => d instanceof Date && !Number.isNaN(d);
 
