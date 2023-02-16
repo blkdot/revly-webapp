@@ -170,7 +170,7 @@ const getWorkweek = (data, isWorkweek) => {
     cData.splice(indexSaturday, 1);
   }
 
-  const indexSunday = cData.findIndex((n) => n === 0);
+  const indexSunday = cData.findIndex((n) => n === 5);
 
   if (indexSunday > -1) {
     cData.splice(indexSunday, 1);
@@ -260,8 +260,8 @@ const typeMulti = (
 
   const { startDate, endDate } = dateRange;
 
-  const indexDayStart = getDay(new Date(startDate));
-  const indexDayEnd = getDay(new Date(endDate));
+  const indexDayStart = getDay(new Date(startDate)) - 1;
+  const indexDayEnd = getDay(new Date(endDate)) - 1;
 
   let daysSelectedOrder = _.range(indexDayStart, indexDayEnd + 1);
 
