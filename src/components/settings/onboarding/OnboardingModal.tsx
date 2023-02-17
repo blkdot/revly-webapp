@@ -31,7 +31,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
   const { user } = useUserAuth();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
+  const { triggerAlertWithMessageError } = useAlert();
 
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
@@ -80,7 +80,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
       data: { is_deleted: true },
     });
     accounts.splice(
-      accounts.findIndex((obj) => obj.email === clickedEmail),
+      accounts.findIndex((obj) => obj.email === clickedEmail && obj.platform === platform),
       1
     );
     setBranchData(
