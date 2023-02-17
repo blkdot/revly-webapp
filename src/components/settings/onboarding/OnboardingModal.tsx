@@ -119,7 +119,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
       },
       obj.platform
     );
-    accounts.find((objAcc) => objAcc.email === obj.email).active = !obj.active;
+    accounts.find((objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
+    ).active = !obj.active;
     setAccounts([...accounts]);
     setBranchData(
       branchData.map((objB) => {
@@ -227,9 +228,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${
-        openedSwitchDeleteModal ? 'activeDelete' : ''
-      }`}
+      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${openedSwitchDeleteModal ? 'activeDelete' : ''
+        }`}
       onClick={openCloseModal}
     >
       <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>

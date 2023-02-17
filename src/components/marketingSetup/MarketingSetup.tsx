@@ -150,7 +150,7 @@ const MarketingSetup: React.FC<{
   const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
   const [category, setCategory] = useAtom(categoryAtom);
   const [, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
-  const [targetAudience] = useAtom(targetAudienceAtom);
+  const [targetAudience,setTargetAudience] = useAtom(targetAudienceAtom);
   const [created, setCreated] = useAtom(createdAtom);
   const [recap, setRecap] = useAtom(recapAtom);
   const [times, setTimes] = useAtom(timesAtom);
@@ -375,6 +375,7 @@ const MarketingSetup: React.FC<{
             chain_id: selectedVendorsData[0].chain_id,
             platform_token:
               selectedVendorsData[0].access_token ?? selectedVendorsData[0].access_token_bis,
+            goal: p === 'talabat' ? 'orders' : getTargetAudience(),
           });
         });
 
@@ -723,6 +724,7 @@ const MarketingSetup: React.FC<{
       setChecked([]);
       setCategoryData([]);
       setMenu('Offer on the whole Menu');
+      setTargetAudience('All customers')
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         return;
