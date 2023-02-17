@@ -25,7 +25,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
     }
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [queue, setQueue] = useState(0);
 
   const handleRequest = (date, setMetrics, stack) => {
@@ -52,7 +52,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   useEffect(() => {
     clearTimeout(fnDelays);
     fnDelays = setTimeout(() => {
-      if (loading) {
+      if (!loading) {
         setQueue((prev) => prev + 1);
         return;
       }

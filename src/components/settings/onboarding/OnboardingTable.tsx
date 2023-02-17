@@ -1,28 +1,28 @@
 import { FC } from 'react';
-import { TableRowKit, TableCellKit } from 'kits';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from 'components/tableRevly/TableRevly';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 
 const OnboardingTable: FC<{
   branchData: any;
   openCloseModal: any;
   setConnectAccount: any;
   setClickedBranch: any;
-}> = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch }) => {
-  const { renderAccountsRow, renderBranchStatusRow, renderBranchRow, renderLinkedPlatformsRow } =
+  loading: boolean,
+}> = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch, loading }) => {
+  const { renderAccountsRow, renderBranchStatusRow, renderBranchRow, renderLinkedPlatformsRow, renderSimpleRowSkeleton, renderPlatformSkeleton, renderPercentSkeleton } =
     useTableContentFormatter();
   const headersOnBoarding = [
     {
       id: 'branch_name',
       numeric: false,
       disablePadding: false,
-      label: 'Branch Name',
+      label: 'Branches',
     },
     {
       id: 'accounts',
       numeric: false,
       disablePadding: false,
-      label: 'Accounts',
+      label: 'Logged Account',
     },
     {
       id: 'linked_platforms',
@@ -34,7 +34,7 @@ const OnboardingTable: FC<{
       id: 'branch_status',
       numeric: false,
       disablePadding: false,
-      label: 'Branch Status',
+      label: 'Status',
     },
   ];
 
@@ -55,26 +55,21 @@ const OnboardingTable: FC<{
       }),
       {}
     );
-  const renderNoData = () => (
-    <TableRowKit>
-      <TableCellKit colSpan={7}>
-        <div className='onboarding-no-data'>
-          <div className='onboarding-no-data_skeleton'>
-            {[0, 1, 2].map((n) => (
-              <div key={n}>
-                <span />
-              </div>
-            ))}
-          </div>
-          <p className='__title'>Get Started by connecting one of your accounts </p>
-          <span className='__subtitle'>
-            click on “ add new account “ button to connect to allow access to your delivery platform
-            Information
-          </span>
-        </div>
-      </TableCellKit>
-    </TableRowKit>
-  );
+  const cellTemplatesObjectLoading = {
+    branch_name: renderSimpleRowSkeleton,
+    accounts: renderSimpleRowSkeleton,
+    linked_platforms: renderPlatformSkeleton,
+    branch_status: renderPercentSkeleton,
+  };
+  const renderRowsByHeaderLoading = (r) =>
+    headersOnBoarding.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
   const onClickRow = (id: any) => {
     const data = branchData.find((obj) => String(`branch_status_${obj.id}`) === String(id));
 
@@ -86,14 +81,14 @@ const OnboardingTable: FC<{
   };
 
   return (
-    <div className='settings-onboarding bg onboarding-table'>
-      <TableRevly
-        renderNoData={renderNoData()}
-        headers={headersOnBoarding}
-        rows={branchData.map(renderRowsByHeader)}
-        onClickRow={onClickRow}
-      />
-    </div>
+    <TableRevlyNew
+      renderCustomSkelton={[0, 1, 2, 3].map(renderRowsByHeaderLoading)}
+      isLoading={loading}
+      headers={headersOnBoarding}
+      rows={branchData.map(renderRowsByHeader)}
+      onClickRow={onClickRow}
+      className='onboarding-table'
+    />
   );
 };
 

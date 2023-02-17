@@ -1,3 +1,5 @@
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUserAuth } from 'contexts';
 import { useAlert, useApi, usePlatform } from 'hooks';
 import useVendors, { type TVendorsArr } from 'hooks/useVendors';
@@ -45,7 +47,12 @@ const Menu = () => {
         .flat();
 
       setCategoryList(res.data.categories || []);
-      setData(resp);
+      setData(resp.map((obj) => ({
+        ...obj,
+        item_name: obj.name || obj.item_name,
+        item_category: obj.category || obj.category_name,
+        item_price: obj.price || obj.unit_price,
+      })));
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -105,6 +112,59 @@ const Menu = () => {
     }
     setCategory(value);
   };
+  const { renderSimpleRow, renderSimpleRowSkeleton, renderCurrency } =
+    useTableContentFormatter();
+  const headers = [
+    {
+      id: 'item_name',
+      numeric: false,
+      disablePadding: false,
+      label: 'Item name',
+    },
+    {
+      id: 'item_category',
+      numeric: false,
+      disablePadding: false,
+      label: 'Item category ',
+    },
+    {
+      id: 'item_price',
+      numeric: false,
+      disablePadding: false,
+      label: 'Item price',
+    },
+  ];
+
+  const /* A map of functions that will be used to render the cells. */
+    cellTemplatesObject = {
+      item_name: renderSimpleRow,
+      item_category: renderSimpleRow,
+      item_price: renderCurrency,
+    };
+  const renderRowsByHeader = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id](r, cur),
+        id: r.item_id || r.id,
+        data: r,
+      }),
+      {}
+    );
+  const cellTemplatesObjectLoading = {
+    item_name: renderSimpleRowSkeleton,
+    item_category: renderSimpleRowSkeleton,
+    item_price: renderSimpleRowSkeleton,
+  };
+  const renderRowsByHeaderLoading = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
 
   return (
     <div className='menu'>
@@ -189,9 +249,12 @@ const Menu = () => {
         </div>
       </div>
       <div className='__table-block'>
-        <MenuTable
-          data={filteredCategoryData.length > 0 ? filteredCategoryData : data}
-          loading={loading}
+        <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2, 3, 4, 5].map(renderRowsByHeaderLoading)}
+          isLoading={loading}
+          headers={headers}
+          rows={(filteredCategoryData.length > 0 ? filteredCategoryData : data).map(renderRowsByHeader)}
+          className='onboarding-table'
         />
       </div>
     </div>

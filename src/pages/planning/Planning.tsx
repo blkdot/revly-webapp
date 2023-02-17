@@ -1,22 +1,21 @@
-import { Layers, Tag, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from 'components/tableRevly/TableRevly';
-import { endOfMonth, endOfWeek } from 'date-fns/esm';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { endOfMonth, endOfWeek } from 'date-fns';
+import dayjs from 'dayjs';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
 
-import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 
-import adsIcon from '../../assets/images/ic_ads.png';
-import offerIcon from '../../assets/images/ic_offers.png';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
+import Calendar from '../../assets/images/calendar.svg';
+import Clock from '../../assets/images/clock.svg';
+import User from '../../assets/images/user.svg';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -55,7 +54,6 @@ type TAds = {
 const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
-  const [active, setActive] = useState(0);
   const { date } = useDate();
 
   const getOfferDate = () => {
@@ -96,60 +94,49 @@ const Planning = () => {
     renderStatus,
     renderChainId,
     renderTarget,
-    renderScheduleType,
     renderSimpleRow,
     renderVendorId,
-    renderTimeSlot,
-    renderIsoDate,
-    renderOfferIds,
-    renderAdIds,
+    renderSimpleRowSkeleton,
+    renderPlatformSkeleton,
+    renderSimpleIconRow,
+    renderPercentSkeleton,
   } = useTableContentFormatter();
 
   const headersOffers = [
-    // { id: 'offer_ids', disablePadding: true, label: 'Offer ID Debug' }, // Debug Purpose
-    { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
+    { id: 'start_end_date', disablePadding: true, label: 'Start - end date' },
+    { id: 'slot', disablePadding: true, label: 'Slot', tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
-    { id: 'start_date', disablePadding: true, label: 'Start date' },
-    { id: 'end_date', disablePadding: true, label: 'End date' },
-    { id: 'type_schedule', disablePadding: true, label: 'Schedule type' },
-    { id: 'start_hour', disablePadding: true, label: 'Slot Schedule' },
     { id: 'type_offer', disablePadding: true, label: 'Discount type' },
     { id: 'discount_rate', disablePadding: true, label: 'Discount rate' },
-    { id: 'minimum_order_value', disablePadding: true, label: 'Minimum order value' },
     { id: 'goal', disablePadding: true, label: 'Target' },
     { id: 'status', disablePadding: true, label: 'Status' },
   ];
 
   const headersAds = [
-    // { id: 'ad_ids', disablePadding: true, label: 'Ad ID Debug' }, // Debug Purpose
-    { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Brnaches' },
+    { id: 'start_end_date', disablePadding: true, label: 'Start - end date' },
+    { id: 'slot', disablePadding: true, label: 'Slot', tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
-    { id: 'valid_from', disablePadding: true, label: 'Start date' },
-    { id: 'valid_to', disablePadding: true, label: 'End date' },
-    { id: 'total_budget', disablePadding: true, label: 'Budget' },
+    { id: 'total_budget', disablePadding: true, label: 'Budget', tooltip: 'Ads campaign budget' },
+    { id: 'cost_per_click', disablePadding: true, label: 'Cost Per Click', tooltip: 'Commonly referred to as CPC. You can either set the CPC manually or let the aggregator set a dynamic CPC, only available on Deliveroo.' },
     { id: 'status', disablePadding: true, label: 'Status' },
   ];
 
   const cellTemplatesObject = {
-    offer_ids: renderOfferIds,
-    ad_ids: renderAdIds,
     chain_id: renderChainId,
-    platform: renderPlatform,
     vendor_ids: renderVendorId,
-    start_date: renderSimpleRow,
-    end_date: renderSimpleRow,
-    valid_from: renderIsoDate,
-    valid_to: renderIsoDate,
-    type_schedule: renderScheduleType,
-    start_hour: renderTimeSlot,
+    slot: renderSimpleIconRow,
+    start_end_date: renderSimpleIconRow,
+    platform: renderPlatform,
     type_offer: renderSimpleRow,
     discount_rate: renderPercent,
-    minimum_order_value: renderCurrency,
     goal: renderTarget,
     status: renderStatus,
     total_budget: renderCurrency,
+    cost_per_click: renderCurrency,
   };
 
   const renderRowsByHeaderOffer = (r) =>
@@ -174,6 +161,39 @@ const Planning = () => {
       {}
     );
 
+  const cellTemplatesObjectLoading = {
+    chain_id: renderSimpleRowSkeleton,
+    vendor_ids: renderPlatformSkeleton,
+    start_end_date: renderSimpleRowSkeleton,
+    slot: renderSimpleRowSkeleton,
+    platform: renderPlatformSkeleton,
+    type_offer: renderSimpleRowSkeleton,
+    discount_rate: renderPercentSkeleton,
+    goal: renderSimpleRowSkeleton,
+    status: renderPercentSkeleton,
+    total_budget: renderSimpleRowSkeleton,
+    cost_per_click: renderSimpleRowSkeleton,
+  };
+
+  const renderRowsByHeaderOfferLoading = (r) =>
+    headersOffers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
+
+  const renderRowsByHeaderAdsLoading = (r) =>
+    headersAds.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
   const [opened, setOpened] = useState(false);
   const [clickedId, setClickedId] = useState('');
 
@@ -181,26 +201,37 @@ const Planning = () => {
     setOpened(true);
     setClickedId(id);
   };
-
+  const [link, setLink] = useState('Offers planning');
+  const links = ['Offers planning', 'Ads planning']
   const renderTable = () => {
-    if (active) {
+    if (link === 'Ads planning') {
       return (
-        <TableRevly
+        <TableRevlyNew
+          links={links}
+          setLink={setLink}
+          link={link}
+          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderAdsLoading)}
           isLoading={isLoadingAds}
           headers={headersAds}
           rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
+          setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
         />
       );
     }
 
     return (
-      <TableRevly
+      <TableRevlyNew
+        links={links}
+        setLink={setLink}
+        link={link}
+        renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderOfferLoading)}
         isLoading={isLoadingOffers}
         headers={headersOffers}
         rows={dataFiltered.map(renderRowsByHeaderOffer)}
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
+        setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
       />
     );
   };
@@ -216,7 +247,7 @@ const Planning = () => {
   };
 
   const isEmptyList = () => {
-    const source = active ? ads : offers;
+    const source = link === 'Ads planning' ? ads : offers;
 
     return source.length < 1;
   };
@@ -239,7 +270,7 @@ const Planning = () => {
   );
 
   useEffect(() => {
-    const source = active ? ads : offers;
+    const source = link === 'Ads planning' ? ads : offers;
     const preHead = source.reduce(
       (acc, cur) => {
         const { platform, type_offer: discountType, discount_rate: procent, status } = acc;
@@ -294,11 +325,11 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
-      type_offer: active ? [] : preHeadTypeOffer,
-      discount_rate: active ? [] : preHeadProcent,
+      type_offer: link === 'Ads planning' ? [] : preHeadTypeOffer,
+      discount_rate: link === 'Ads planning' ? [] : preHeadProcent,
       status: preHeadStatus,
     });
-  }, [ads, offers, active, JSON.stringify(dateRange)]);
+  }, [ads, offers, link, JSON.stringify(dateRange)]);
 
   const handleChangeMultipleFilter = (k: string) => (v: string) => {
     const propertyFilter = filters[k];
@@ -343,89 +374,22 @@ const Planning = () => {
       filteredDataAds = filteredDataAds.filter((f) => filters.status.includes(f.status));
     }
 
-    setDataFiltered(filteredData);
+    setDataFiltered(filteredData.map((obj) => ({
+      ...obj, start_end_date: {
+        title: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(new Date(obj.valid_to)).format('DD/MM')}`,
+        src: Calendar
+      },
+      slot: {
+        title: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(new Date(obj.valid_to)).format('hh:mm')}`,
+        src: Clock,
+      },
+      goal: {
+        title: obj.goal,
+        src: User,
+      }
+    })));
     setDataFilteredAds(filteredDataAds);
-  }, [JSON.stringify(filters), ads, offers, active, JSON.stringify(dateRange)]);
-
-  const renderLayout = () => {
-    if (opened) {
-      return (
-        <OfferDetailComponent
-          data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
-          setOpened={setOpened}
-        />
-      );
-    }
-    return (
-      <PaperKit className='marketing-paper offer-paper'>
-        <div className='right-part'>
-          <div className='right-part-header planning-links'>
-            <TypographyKit
-              className={`right-part-header_link planning ${active ? 'active' : ''}`}
-              variant='div'
-            >
-              <BoxKit className={!active ? 'active' : ''} onClick={() => setActive(0)}>
-                <img src={offerIcon} alt='Offers managment icon' />
-                Planning Offers
-              </BoxKit>
-              <BoxKit className={active ? 'active' : ''} onClick={() => setActive(1)}>
-                <img src={adsIcon} alt='Offer Performence icon' />
-                Planning Ads
-              </BoxKit>
-            </TypographyKit>
-          </div>
-        </div>
-        <TypographyKit variant='div' className='marketing-paper-top-btns'>
-          <div className='marketing-filters'>
-            <div>
-              <FilterDropdown
-                items={filtersHead.platform}
-                values={filters.platform}
-                onChange={handleChangeMultipleFilter('platform')}
-                label='Platform'
-                icon={<Layers />}
-                internalIconOnActive={platformObject}
-                maxShowned={1}
-              />
-              {active ? null : (
-                <FilterDropdown
-                  items={filtersHead.type_offer}
-                  values={filters.type_offer}
-                  onChange={handleChangeMultipleFilter('type_offer')}
-                  label='Discount Type'
-                  icon={<Tag />}
-                  maxShowned={1}
-                />
-              )}
-              {active ? null : (
-                <FilterDropdown
-                  items={filtersHead.discount_rate}
-                  values={filters.discount_rate}
-                  onChange={handleChangeMultipleFilter('discount_rate')}
-                  label='Discount Amount'
-                  icon={<Tag />}
-                  customTag='%'
-                  maxShowned={5}
-                />
-              )}
-            </div>
-            <div>
-              <ButtonKit
-                className='more-filter'
-                variant='outlined'
-                onClick={() => setOpenedFilter(true)}
-                disabled={isEmptyList()}
-              >
-                <Vector />
-                More Filters
-              </ButtonKit>
-            </div>
-          </div>
-        </TypographyKit>
-        {renderTable()}
-      </PaperKit>
-    );
-  };
+  }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
   return (
     <div className='wrapper'>
@@ -433,7 +397,10 @@ const Planning = () => {
         <RestaurantDropdown />
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
-      {renderLayout()}
+      {opened ? <OfferDetailComponent
+        data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
+        setOpened={setOpened}
+      /> : renderTable()}
       <MarketingOfferFilter
         CloseFilterPopup={CloseFilterPopup}
         openedFilter={openedFilter}

@@ -15,6 +15,7 @@ const NewSettingsOnboarding = () => {
   const [branchDataUploading, setBranchDataUploading] = useState([]);
   const [, setVendors] = useAtom(vendorsAtom);
   const { vendors } = useVendors(undefined);
+  const [loading, setLoading] = useState(true);
   const { userPlatformData } = usePlatform();
   const getAccounts = () => {
     const arr = [];
@@ -28,8 +29,8 @@ const NewSettingsOnboarding = () => {
   const [accounts, setAccounts] = useState(getAccounts() || []);
 
   const getBranchData = () => {
+    setLoading(true);
     const arr = [];
-
     sortedVendors(vendors.display).forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
         arr.push({ name: vName, data: vendors.display[cName][vName] });
@@ -63,6 +64,7 @@ const NewSettingsOnboarding = () => {
       }
       return 'suspended';
     };
+    setLoading(false)
     return arr.map((obj) => ({
       branch_name: { title: obj.name, address: '' },
       accounts: vendorsAccounts(obj),
@@ -113,6 +115,8 @@ const NewSettingsOnboarding = () => {
     connectAccount,
     setConnectAccount,
     vendors,
+    setLoading,
+    loading
   };
   return (
     <div>
@@ -129,6 +133,7 @@ const NewSettingsOnboarding = () => {
         setConnectAccount={setConnectAccount}
       />
       <OnboardingTable
+        loading={loading}
         branchData={branchData}
         openCloseModal={openCloseModal}
         setClickedBranch={setClickedBranch}

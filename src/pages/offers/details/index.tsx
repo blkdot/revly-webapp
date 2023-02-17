@@ -94,6 +94,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     discount_rate,
     type_offer,
     chain_id,
+    accrued_discount,
   } = offerDetailMaster?.master_offer || {};
 
   const getToken = () => {
@@ -247,7 +248,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div> */}
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>#Orders</span>
+                      <span className='offer-visibility-title'>Orders</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {n_orders === 0 || n_orders ? n_orders : '-'}
@@ -255,7 +256,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Avg Basket</span>
+                      <span className='offer-visibility-title'>Avg. Basket</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {average_basket === 0 || average_basket ? average_basket : '-'}
@@ -263,7 +264,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Roi</span>
+                      <span className='offer-visibility-title'>Accrued Discount</span>
+                    </div>
+                    <div className='offer-visibility-sub-title'>
+                      {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
+                    </div>
+                  </div>
+                  <div className='offer-visibility-block'>
+                    <div>
+                      <span className='offer-visibility-title'>ROI</span>
                     </div>
                     <div className='offer-visibility-sub-title'>{roi === 0 || roi ? roi : '-'}</div>
                   </div>
@@ -277,7 +286,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Profits</span>
+                      <span className='offer-visibility-title'>Net Revenue</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {profit === 0 || profit ? profit : '-'}
