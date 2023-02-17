@@ -12,7 +12,7 @@ import TableEmpty from 'components/table/TableEmpty';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { useMetrics, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
-import { PaperKit } from 'kits';
+import { PaperKit, SkeletonKit } from 'kits';
 import { useState } from 'react';
 import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
 import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
@@ -24,7 +24,7 @@ import './Dashboard.scss';
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const { chainObj, display, vendorsSelected, vendorsArr, vendorsObj } = vendors;
+  const { display, vendorsArr, vendorsObj } = vendors;
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics(vendorsObj);
   const [table, setTable] = useState('revenue');
 
@@ -192,7 +192,10 @@ const Dashboard = () => {
           )}
         </PaperKit>
       ) : (
-        <TableEmpty />
+        <div style={{ padding: '10px' }}>
+          <SkeletonKit height={50} />
+          <TableEmpty />
+        </div>
       )}
     </div>
   );

@@ -599,7 +599,7 @@ const TimeSlot = ({ data }) => (
           {new Date(data.start_date).toLocaleDateString() ===
           new Date(data.end_date).toLocaleDateString()
             ? data.start_date
-            : `${data.start_date} - ${data.end_date}`}
+            : `${data.start_date} - ${data?.end_date || <SkeletonKit />}`}
         </span>
       </div>
 
@@ -646,7 +646,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
+            {data.start_hour ? (
+              format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
         <div
@@ -680,7 +684,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
+            {data.end_hour ? (
+              format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
       </div>

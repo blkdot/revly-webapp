@@ -146,11 +146,11 @@ const MarketingSetup: React.FC<{
   const [disabledDate] = useAtom(disabledDateAtom);
   const [branch, setBranch] = useAtom(branchAtom);
   const [customisedDay, setCustomisedDay] = useAtom(customisedDayAtom);
-  const [everyWeek] = useAtom(everyWeekAtom);
+  const [everyWeek, setEveryWeek] = useAtom(everyWeekAtom);
   const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
   const [category, setCategory] = useAtom(categoryAtom);
   const [, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
-  const [targetAudience,setTargetAudience] = useAtom(targetAudienceAtom);
+  const [targetAudience, setTargetAudience] = useAtom(targetAudienceAtom);
   const [created, setCreated] = useAtom(createdAtom);
   const [recap, setRecap] = useAtom(recapAtom);
   const [times, setTimes] = useAtom(timesAtom);
@@ -652,6 +652,7 @@ const MarketingSetup: React.FC<{
       if (selected === n + 1) {
         timeSelected();
         if (typeSchedule === 'Same day every week') {
+          setEveryWeek((prev) => (!prev ? 'Every Monday' : prev));
           setDisabled(
             !(
               startingDate !== null &&
@@ -672,6 +673,7 @@ const MarketingSetup: React.FC<{
           return;
         }
         if (typeSchedule === 'Customised Days') {
+          setEveryWeek('');
           setDisabled(
             !(
               startingDate !== null &&
@@ -692,6 +694,7 @@ const MarketingSetup: React.FC<{
           return;
         }
         if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
+          setEveryWeek('');
           setDisabled(
             !(
               startingDate !== null &&
@@ -724,7 +727,7 @@ const MarketingSetup: React.FC<{
       setChecked([]);
       setCategoryData([]);
       setMenu('Offer on the whole Menu');
-      setTargetAudience('All customers')
+      setTargetAudience('All customers');
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         return;

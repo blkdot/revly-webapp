@@ -31,7 +31,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
   const { user } = useUserAuth();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
+  const { triggerAlertWithMessageError } = useAlert();
 
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
@@ -80,7 +80,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
       data: { is_deleted: true },
     });
     accounts.splice(
-      accounts.findIndex((obj) => obj.email === clickedEmail),
+      accounts.findIndex((obj) => obj.email === clickedEmail && obj.platform === platform),
       1
     );
     setBranchData(
@@ -119,7 +119,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
       },
       obj.platform
     );
-    accounts.find((objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
+    accounts.find(
+      (objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
     ).active = !obj.active;
     setAccounts([...accounts]);
     setBranchData(
@@ -228,8 +229,9 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${openedSwitchDeleteModal ? 'activeDelete' : ''
-        }`}
+      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${
+        openedSwitchDeleteModal ? 'activeDelete' : ''
+      }`}
       onClick={openCloseModal}
     >
       <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>
