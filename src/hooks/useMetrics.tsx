@@ -1,6 +1,6 @@
 import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { type TVendorsObj } from './useVendors';
 import useApi from './useApi';
 import useDate from './useDate';
@@ -49,7 +49,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
     });
   };
 
-  useEffect(() => {
+  useMemo(() => {
     clearTimeout(fnDelays);
     fnDelays = setTimeout(() => {
       if (loading) {
@@ -60,7 +60,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
       handleRequest(afterPeriod, setMetricsafterPeriod, queue);
       handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
     }, 750 + queue);
-  }, [afterPeriod, beforePeriod, vendorsObj, queue]);
+  }, [afterPeriod, beforePeriod, JSON.stringify(vendorsObj), queue]);
 
   return { metricsbeforePeriod, metricsafterPeriod, loading };
 }
