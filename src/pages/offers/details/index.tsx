@@ -646,7 +646,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {data.start_hour ? format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa') : <SkeletonKit />}
+            {data.start_hour ? (
+              format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
         <div
@@ -680,7 +684,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {data.end_hour ? format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa') : <SkeletonKit />}
+            {data.end_hour ? (
+              format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
       </div>

@@ -150,7 +150,7 @@ const MarketingSetup: React.FC<{
   const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
   const [category, setCategory] = useAtom(categoryAtom);
   const [, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
-  const [targetAudience,setTargetAudience] = useAtom(targetAudienceAtom);
+  const [targetAudience, setTargetAudience] = useAtom(targetAudienceAtom);
   const [created, setCreated] = useAtom(createdAtom);
   const [recap, setRecap] = useAtom(recapAtom);
   const [times, setTimes] = useAtom(timesAtom);
@@ -652,7 +652,7 @@ const MarketingSetup: React.FC<{
       if (selected === n + 1) {
         timeSelected();
         if (typeSchedule === 'Same day every week') {
-          setEveryWeek((prev) => !prev ? 'Every Monday' : prev);
+          setEveryWeek((prev) => (!prev ? 'Every Monday' : prev));
           setDisabled(
             !(
               startingDate !== null &&
@@ -727,7 +727,7 @@ const MarketingSetup: React.FC<{
       setChecked([]);
       setCategoryData([]);
       setMenu('Offer on the whole Menu');
-      setTargetAudience('All customers')
+      setTargetAudience('All customers');
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         return;

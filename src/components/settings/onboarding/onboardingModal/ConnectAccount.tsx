@@ -68,7 +68,6 @@ const ConnectAccount: FC<{
     setSelected('delete');
     setDeleteObj(obj);
   };
-  
 
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
