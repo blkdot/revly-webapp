@@ -237,7 +237,7 @@ const typeMulti = (
 
     const newData = clearTimeSelected(data);
 
-    if (dayEveryWeekIndex > -1) {
+    if (dayEveryWeekIndex > -1 && daysOrder[dayEveryWeekIndex]) {
       return {
         ...newData,
         [dayEveryWeekIndex]: getHeatmapDataDayNewContent(
