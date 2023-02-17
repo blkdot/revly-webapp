@@ -1,3 +1,4 @@
+import { SkeletonKit } from 'kits';
 import { FC } from 'react'
 
 const AdvertsWidgetCustom: FC<{
@@ -9,9 +10,11 @@ const AdvertsWidgetCustom: FC<{
     <div className='adverts-widget-custom_content'>
       {content.map((obj) => <div key={obj.title}>
         <p>{obj.title}</p>
-        <span>
-          {obj.value}
-        </span>
+        {
+          !obj.value ? <SkeletonKit /> : <span>
+            {obj.value}
+          </span>
+        }
       </div>)}
     </div>
   </div>

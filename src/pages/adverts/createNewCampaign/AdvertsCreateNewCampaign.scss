@@ -6,7 +6,7 @@
   z-index: 1000;
   background-color: #F8F9FD;
   top: 0;
-
+  display: flex;
   .adverts-step {
     background-color: #fff;
     width: 60%;
@@ -114,5 +114,18 @@
 
   .restaurant-dropdown_wrapper .MuiSvgIcon-root {
     right: 20px;
+  }
+}
+.adverts_create_new_campaign_widgets{
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  padding-top: 74px;
+  align-items: flex-start;
+  >div{
+    width: 80%;
+  }
+  .MuiSkeleton-text{
+    border-radius: 2px;
   }
 }
