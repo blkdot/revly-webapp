@@ -7,11 +7,9 @@ import { vendorsAtom } from 'store/vendorsAtom';
 
 const LaunchStep: FC<{
   setStep: any;
-  branchDetails: any;
-  setBranchDetails: any;
   setOpened: any;
   step: string;
-}> = ({ setStep, branchDetails, setBranchDetails, setOpened, step }) => {
+}> = ({ setStep, setOpened, step }) => {
   const [vendors,] = useAtom(vendorsAtom);
   const [branchVendors, setBranchVendors] = useState(vendors || {});
   return (

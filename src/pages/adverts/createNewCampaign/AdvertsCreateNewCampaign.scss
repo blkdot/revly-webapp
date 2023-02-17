@@ -7,6 +7,7 @@
   background-color: #F8F9FD;
   top: 0;
   display: flex;
+
   .adverts-step {
     background-color: #fff;
     width: 60%;
@@ -16,26 +17,33 @@
     flex-direction: column;
     justify-content: space-between;
     position: relative;
+    transition: .7s;
 
     &::before {
       content: '';
       background-color: #7B61FF;
       height: 4px;
       width: 0;
-      transition: .4s;
+      transition: .7s;
       position: absolute;
       left: 0;
       top: 0;
     }
 
     &.launch {
+      transition: .7s;
+
       &::before {
         width: 20%;
+        transition: .7s;
       }
     }
 
     &.recurency {
+      transition: .7s;
+
       &::before {
+        transition: .7s;
         width: 40%;
       }
     }
@@ -116,16 +124,25 @@
     right: 20px;
   }
 }
-.adverts_create_new_campaign_widgets{
+
+.adverts_create_new_campaign_widgets {
   width: 40%;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  grid-gap: 17px;
   padding-top: 74px;
-  align-items: flex-start;
-  >div{
+  flex-direction: column;
+
+  >div {
     width: 80%;
+    background: #FFFFFF;
+    border: 1px solid rgba(145, 158, 171, 0.08);
+    border-radius: 9px;
   }
-  .MuiSkeleton-text{
+
+  .MuiSkeleton-text {
     border-radius: 2px;
+    height: 20px;
   }
 }

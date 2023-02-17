@@ -1,20 +1,18 @@
 import { Arrow } from 'assets/icons';
-import { RecurrenceStep } from 'components/marketingSetup/getProgress/steps/RecurrenceStep';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { useAtom } from 'jotai';
 import { ButtonKit } from 'kits';
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { vendorsAtom } from 'store/vendorsAtom';
+import CalendarCheckGrayIcon from '../../../../assets/images/ic_calendar-check-gray.svg';
 
 const RecurencyStep: FC<{
   setStep: any;
-  branchDetails: any;
-  setBranchDetails: any;
+  state: any;
+  setState: any;
   setOpened: any;
   step: string;
-}> = ({ setStep, branchDetails, setBranchDetails, setOpened, step }) => {
+}> = ({ setStep, state, setState, setOpened, step }) => {
   const [vendors,] = useAtom(vendorsAtom);
-  const [branchVendors, setBranchVendors] = useState(vendors || {});
   return (
     <div className={`adverts-step ${step || ''}`}>
       <div className='top'>
@@ -22,8 +20,11 @@ const RecurencyStep: FC<{
         <span>
           Stand out from the crowd with an advert, Advertise on your platforms and you&apos;ll appear in the Featured section of the app
         </span>
-        <div className='advert-branches'>
-          <RestaurantDropdown pageType='branch' setState={setBranchVendors} state={branchVendors} />
+        <div className='adver-schedule'>
+         <div>
+            <img src={CalendarCheckGrayIcon} alt='CalendarCheckIcon' />
+            <p>Your Advert Schedule </p>
+         </div>
         </div>
       </div>
       <div className='buttons'>

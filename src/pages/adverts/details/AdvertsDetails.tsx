@@ -67,7 +67,7 @@ const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) 
       content: [
         { title: 'Total budget', value: data.total_budget === null ? '-' : `${data.total_budget} AED` },
         { title: 'Biding per Advert', value: '-' },
-        { title: 'Days', value: differenceInDays(new Date(data.valid_from), new Date(data.valid_to)) + 2},
+        { title: 'Days', value: `${differenceInDays(new Date(data.valid_from), new Date(data.valid_to)) + 2} Days ${data.start_end_date}`},
         { title: 'Start/Ending Hour', value: data.start_end_hour },
         { title: 'Reccurence', value: 'Every day' }
       ],
