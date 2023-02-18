@@ -1,5 +1,5 @@
 export * from './auth/AuthLayout';
+export * from './MainLayout';
 export * from './ProtectedOnboardRoutes';
 export * from './ProtectedRoutes';
-export * from './ProtectedRoutesNew';
-export * from './ProtectedSettingsRoutes';
+export * from './SettingsLayout';

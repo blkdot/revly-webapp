@@ -3,7 +3,7 @@ import { usePlatform } from 'hooks';
 import { SpinnerKit } from 'kits';
 import { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useUser } from './ProtectedRoutesNew';
+import { useUser } from './ProtectedRoutes';
 
 export const ProtectedOnboardRoutes = () => {
   const user = useUser();

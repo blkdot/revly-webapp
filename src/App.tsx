@@ -29,7 +29,7 @@ import {
 } from 'routes';
 import './App.scss';
 
-const App = () => (
+export const App = () => (
   <BrowserRouter>
     <Routes>
       <Route element={<AuthLayout />}>
@@ -41,6 +41,7 @@ const App = () => (
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route element={<ProtectedRoutes />}>
         <Route path='/check' element={<Check />} />
+        <Route path='/verify-code' element={<VerifyCode />} />
         <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
         <Route element={<ProtectedOnboardRoutes />}>
           <Route element={<MainLayout />}>
@@ -51,7 +52,6 @@ const App = () => (
             <Route path='/marketing/offer' element={<MarketingOffer />} />
             <Route path='/marketing/ads' element={<MarketingAds />} />
             <Route path='/adverts' element={<Adverts />} />
-            <Route path='/verify-code' element={<VerifyCode />} />
           </Route>
           <Route element={<SettingsLayout />}>
             <Route path='/settings/general' element={<SettingsGeneral />} />
@@ -65,5 +65,3 @@ const App = () => (
     </Routes>
   </BrowserRouter>
 );
-
-export default App;
