@@ -9,7 +9,12 @@
 }
 
 .planning-platform {
-  width: 50px;
+  background-color: var(--color);
+  border-radius: 50%;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .planning-box__paper {
@@ -94,15 +99,27 @@
 }
 
 .render-row-tooltip {
-  padding-right: 15px;
-  color: rgb(53, 212, 159);
+  background-color: #f1efff;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7b61ff;
 
   &.column {
-    padding: 0;
     color: #fff;
-    font-size: 11px;
+    font-size: 14px;
     display: block;
     margin-bottom: 5px;
+    width: fit-content;
+    background: none;
+    height: fit-content;
+    border-radius: 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -238,5 +255,16 @@
     background-color: #ff48421a;
     color: #ff4842;
     opacity: 1;
+  }
+}
+
+.icon-row {
+  display: flex;
+  align-items: center;
+  grid-gap: 5px;
+
+  img {
+    width: 15px;
+    height: 15px;
   }
 }

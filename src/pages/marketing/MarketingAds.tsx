@@ -5,6 +5,7 @@ import { endOfMonth, endOfWeek } from 'date-fns';
 import { useDate, usePlanningAds } from 'hooks';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
+import TableRevly from 'components/tableRevly/TableRevly';
 import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
 import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
@@ -15,9 +16,7 @@ import FilterDropdown from '../../components/filter/filterDropdown/FilterDropdow
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
 import { platformObject } from '../../data/platformList';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
@@ -51,11 +50,13 @@ const MarketingAds = () => {
     renderCalculatedPercent,
     renderSimpleRowNotCentered,
     renderIsoDate,
+    renderAdIds,
   } = useTableContentFormatter();
 
   const headersAds = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
+    // { id: 'ad_ids', disablePadding: true, label: 'Ad ID Debug' }, // Debug purposes only
+    { id: 'chain_name', disablePadding: true, label: 'Chain Name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'ad_serving_count', disablePadding: true, label: 'Impressions' },
     { id: 'valid_from', disablePadding: true, label: 'Start date' },
@@ -73,6 +74,7 @@ const MarketingAds = () => {
   ];
 
   const cellTemplatesObject = {
+    ad_ids: renderAdIds,
     chain_name: renderSimpleRowNotCentered,
     vendor_ids: renderVendorId,
     platform: renderPlatform,
@@ -223,7 +225,7 @@ const MarketingAds = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id](r, cur),
-        id: r.ad_id,
+        id: r.ad_ids.join(''),
         data: r,
       }),
       {}

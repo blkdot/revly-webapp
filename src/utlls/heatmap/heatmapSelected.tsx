@@ -13,6 +13,14 @@ const getHour = (h) => {
   return hour;
 };
 
+const getMappedDay = (d: Date) => {
+  const dayIndex = getDay(d);
+
+  if (dayIndex === 0) return 6;
+
+  return dayIndex - 1;
+};
+
 const getHeatmapDataDayNewContent = (data, day, tms) =>
   tms.reduce((acc, cur) => {
     if (!data || !data[day] || !data[day][cur]) {
@@ -111,7 +119,7 @@ const typeMono = (dateRange, times, data) => {
 
   const sameDay = isSameDay(startDate, endDate);
 
-  const indexDayStart = getDay(new Date(startDate));
+  const indexDayStart = getMappedDay(new Date(startDate));
 
   if (sameDay) return setSameDayTimeRange(data, indexDayStart, times);
 
@@ -121,7 +129,7 @@ const typeMono = (dateRange, times, data) => {
     return setAll(data);
   }
 
-  const indexDayEnd = getDay(new Date(endDate));
+  const indexDayEnd = getMappedDay(new Date(endDate));
 
   if (diff === 0) return setSideBySideDayTimeRange(data, indexDayStart, indexDayEnd, times);
 
@@ -170,7 +178,7 @@ const getWorkweek = (data, isWorkweek) => {
     cData.splice(indexSaturday, 1);
   }
 
-  const indexSunday = cData.findIndex((n) => n === 0);
+  const indexSunday = cData.findIndex((n) => n === 5);
 
   if (indexSunday > -1) {
     cData.splice(indexSunday, 1);
@@ -224,11 +232,12 @@ const typeMulti = (
   if (isEveryWeek) {
     const day = everyWeek.replace('Every ', '').trim();
 
-    const dayEveryWeekIndex = daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase());
+    const dayEveryWeekIndex =
+      daysOrder.findIndex((v) => v.toLowerCase() === day.toLowerCase()) || 0;
 
     const newData = clearTimeSelected(data);
 
-    if (dayEveryWeekIndex > -1) {
+    if (dayEveryWeekIndex > -1 && daysOrder[dayEveryWeekIndex]) {
       return {
         ...newData,
         [dayEveryWeekIndex]: getHeatmapDataDayNewContent(
@@ -238,6 +247,8 @@ const typeMulti = (
         ),
       };
     }
+
+    return newData;
   }
 
   if (isCustomdays) {
@@ -258,8 +269,8 @@ const typeMulti = (
 
   const { startDate, endDate } = dateRange;
 
-  const indexDayStart = getDay(new Date(startDate));
-  const indexDayEnd = getDay(new Date(endDate));
+  const indexDayStart = getMappedDay(new Date(startDate));
+  const indexDayEnd = getMappedDay(new Date(endDate));
 
   let daysSelectedOrder = _.range(indexDayStart, indexDayEnd + 1);
 

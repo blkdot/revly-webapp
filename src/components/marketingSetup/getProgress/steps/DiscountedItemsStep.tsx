@@ -125,6 +125,13 @@ export const DiscountedItemsStep: FC<{
   };
   const clearItems = () => {
     if (filteredCategoryData.length > 0) {
+      const checkedTemp = checked.filter((c) =>
+        filteredCategoryData.find((obj) => (obj.name || obj.item_name) === c)
+      );
+      if (checkedTemp.length === 0) {
+        setChecked([]);
+        return;
+      }
       filteredCategoryData.forEach((obj) => {
         checked.splice(
           checked.findIndex((c) => c === obj.name || c === obj.item_name),
@@ -132,23 +139,19 @@ export const DiscountedItemsStep: FC<{
         );
       });
       setChecked([...checked]);
-    } else {
-      setChecked([]);
+      return;
     }
+    setChecked([]);
   };
   const selectAllItems = () => {
     if (filteredCategoryData.length > 0) {
-      checked.forEach((c, indexC) => {
-        filteredCategoryData.forEach((obj) => {
-          if ((obj.name || obj.item_name) === c) {
-            checked.splice(indexC, 1);
-          }
-        });
-      });
-      setChecked([...checked, ...filteredCategoryData.map((obj) => obj.name || obj.item_name)]);
-    } else {
-      setChecked([...category.map((obj) => obj.name || obj.item_name)]);
+      const checkedTemp = checked.filter(
+        (c) => !filteredCategoryData.find((obj) => (obj.name || obj.item_name) === c)
+      );
+      setChecked([...checkedTemp, ...filteredCategoryData.map((obj) => obj.name || obj.item_name)]);
+      return;
     }
+    setChecked([...category.map((obj) => obj.name || obj.item_name)]);
   };
   return (
     <div className='left-part-middle'>
@@ -212,25 +215,23 @@ export const DiscountedItemsStep: FC<{
             <div>
               Selected ({checked.length}/{getMaximumItem()})
             </div>
-            {platform[0] === 'talabat' ? (
-              <div className='max-amount-btns'>
-                <ButtonKit
-                  disabled={
-                    (filteredCategoryData.length > 0 ? filteredCategoryData : category).length ===
-                    checked.length
-                  }
-                  onClick={selectAllItems}
-                  variant='outlined'
-                >
-                  Select all
-                </ButtonKit>
-                <ButtonKit disabled={checked.length <= 0} onClick={clearItems} variant='text'>
-                  Clear
-                </ButtonKit>
-              </div>
-            ) : (
-              ''
-            )}
+            <div className='max-amount-btns'>
+              <ButtonKit
+                disabled={
+                  (filteredCategoryData.length > 0 ? filteredCategoryData : category).length ===
+                  checked.filter((c) =>
+                    filteredCategoryData.find((obj) => (obj.name || obj.item_name) === c)
+                  ).length
+                }
+                onClick={selectAllItems}
+                variant='outlined'
+              >
+                Select all
+              </ButtonKit>
+              <ButtonKit disabled={checked.length <= 0} onClick={clearItems} variant='text'>
+                Clear
+              </ButtonKit>
+            </div>
           </div>
         </div>
         <FormControlKit className='category-list'>

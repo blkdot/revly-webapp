@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Arrow } from 'assets/icons';
 import { platformList } from 'data/platformList';
 import { ButtonKit, ButtonLoadingKit, TextfieldKit } from 'kits';
-import CloseIcon from '../../../../assets/images/ic_close.png';
+import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const ConnectPlatform: FC<{
   propsVariables: {

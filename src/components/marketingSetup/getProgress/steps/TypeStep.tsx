@@ -154,11 +154,11 @@ export const TypeStep: FC<{
               {getItemMenuActive()}
             </div>
             <div>
-              <div>
+              <RadioGroupKit value={itemMenu} onChange={(e) => setItemMenu(e.target.value)}>
                 {(platform[0] === 'talabat' ? [] : MENU_ITEMS).map((obj) => (
                   <MarketingRadio
+                    radio
                     state={itemMenu}
-                    onChange={(e) => setItemMenu(e.target.value)}
                     key={obj.title}
                     title={obj.title}
                     subtitle={obj.subtitle}
@@ -201,7 +201,7 @@ export const TypeStep: FC<{
                 ) : (
                   ''
                 )}
-              </div>
+              </RadioGroupKit>
             </div>
           </BoxKit>
         ) : (

@@ -65,10 +65,10 @@ const DashboardOnboard = () => {
   };
   const navigate = useNavigate();
   useEffect(() => {
-    onboard();
     if (userPlatformData.onboarded) {
       navigate('/dashboard');
     }
+    onboard();
   }, [branchData]);
   return (
     <div className='wrapper'>

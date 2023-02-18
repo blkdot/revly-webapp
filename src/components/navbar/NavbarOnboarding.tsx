@@ -84,6 +84,7 @@ const NavbarOnboarding = () => {
       vendorsArr: [],
       display: {},
       chainObj: {},
+      chainData: [],
     });
     try {
       await logOut();

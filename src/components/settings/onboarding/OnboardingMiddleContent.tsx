@@ -1,16 +1,32 @@
-import { useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 import { ButtonKit } from 'kits';
 import OnboardingDropdown from './OnboardingDropdown';
 import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
 
 const OnboardingMiddleContent: FC<{
-  branchData: any;
   openCloseModal: any;
   accounts: any;
   setConnectAccount: any;
-}> = ({ branchData, openCloseModal, accounts, setConnectAccount }) => {
-  const [kitchen, setKitchen] = useState('');
+  vendors: any;
+}> = ({ openCloseModal, accounts, setConnectAccount, vendors }) => {
+  const filteredChains = () => {
+    const arr = [];
+    Object.keys(vendors.display).forEach((cName) => {
+      if (
+        Object.keys(vendors.display[cName]).every(
+          (vName) => vendors.display[cName][vName].is_matched
+        )
+      ) {
+        arr.push(cName);
+      }
+    });
+    return arr;
+  };
+  const [kitchen, setKitchen] = useState([]);
+  useEffect(() => {
+    setKitchen(filteredChains());
+  }, [filteredChains().length]);
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
@@ -21,13 +37,7 @@ const OnboardingMiddleContent: FC<{
       </div>
       <div className='settings-onboarding-btn_wrapper'>
         {accounts.length > 0 ? (
-          <OnboardingDropdown
-            rows={branchData
-              .filter((obj) => obj.branch_status !== 'in process')
-              .map((obj) => obj.branch_name.title)}
-            state={kitchen || branchData[0]?.branch_name?.title || ''}
-            setState={setKitchen}
-          />
+          <OnboardingDropdown rows={filteredChains()} state={kitchen} setState={setKitchen} />
         ) : (
           ''
         )}

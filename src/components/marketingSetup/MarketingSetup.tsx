@@ -55,6 +55,7 @@ import {
   type THeatmapData,
   type TOfferDataResponse,
 } from 'store/marketingSetupAtom';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
@@ -145,11 +146,11 @@ const MarketingSetup: React.FC<{
   const [disabledDate] = useAtom(disabledDateAtom);
   const [branch, setBranch] = useAtom(branchAtom);
   const [customisedDay, setCustomisedDay] = useAtom(customisedDayAtom);
-  const [everyWeek] = useAtom(everyWeekAtom);
+  const [everyWeek, setEveryWeek] = useAtom(everyWeekAtom);
   const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
   const [category, setCategory] = useAtom(categoryAtom);
   const [, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
-  const [targetAudience] = useAtom(targetAudienceAtom);
+  const [targetAudience, setTargetAudience] = useAtom(targetAudienceAtom);
   const [created, setCreated] = useAtom(createdAtom);
   const [recap, setRecap] = useAtom(recapAtom);
   const [times, setTimes] = useAtom(timesAtom);
@@ -208,7 +209,7 @@ const MarketingSetup: React.FC<{
     setTimes([
       {
         startTime: setStartTimeFormat(new Date(), 2),
-        endTime: setEndTimeFormat(times[0].endTime),
+        endTime: setEndTimeFormat(times[0].endTime, false),
         pos: 1,
       },
     ]);
@@ -235,13 +236,13 @@ const MarketingSetup: React.FC<{
 
   useEffect(() => {
     if (typeSchedule !== 'customised Days') {
-      setCustomisedDay([]);
+      setCustomisedDay([format(new Date(), 'EEEE')]);
     }
 
     setTimes([
       {
         startTime: setStartTimeFormat(new Date(), 2),
-        endTime: setEndTimeFormat(new Date()),
+        endTime: setEndTimeFormat(new Date(), true),
         pos: 1,
       },
     ]);
@@ -249,47 +250,61 @@ const MarketingSetup: React.FC<{
   }, [typeSchedule]);
 
   useEffect(() => {
+    setHeatmapData(clearTimeSelected(heatmapData));
+    if (selected >= 3) {
+      timeSelected();
+    }
+  }, [times, startingDate, endingDate, selected, typeSchedule]);
+
+  useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
-    Object.keys(displayTemp).forEach((chainName) => {
+    let counter = 0;
+    let defaultSelection = null;
+
+    sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked = false;
+        displayTemp[chainName][vendorName].checked =
+          branch?.display?.[chainName]?.[vendorName]?.checked || false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
           displayTemp[chainName][vendorName].deleted = true;
+          displayTemp[chainName][vendorName].checked = false;
         } else {
-          Object.keys(displayTemp[chainName][vendorName].platforms).forEach((platformV) => {
+          const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
+          platformsDisplay.forEach((platformV) => {
             if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
               displayTemp[chainName][vendorName].deleted = true;
+              displayTemp[chainName][vendorName].checked = false;
             }
           });
+
+          if (platform.length === 1) {
+            platform.forEach((p) => {
+              if (!platformsDisplay.includes(p)) {
+                displayTemp[chainName][vendorName].deleted = true;
+                displayTemp[chainName][vendorName].checked = false;
+              }
+            });
+          }
+
+          if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
+            defaultSelection = {
+              chainName,
+              vendorName,
+            };
+          }
+
+          if (displayTemp[chainName][vendorName].checked) {
+            counter += 1;
+          }
         }
       });
     });
 
-    Object.keys(displayTemp)
-      .filter((cName) =>
-        Object.keys(displayTemp[cName]).every(
-          (vName) => !(displayTemp[cName][vName].deleted || false)
-        )
-      )
-      .forEach((chainName, indexC) => {
-        Object.keys(displayTemp[chainName]).forEach((vendorName, indexV) => {
-          if (indexC === 0 && indexV === 0) {
-            displayTemp[chainName][vendorName].checked = true;
-            Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
-              if (platform.length > 1) {
-                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
-              } else if (platform[0] === plat) {
-                vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
-              } else {
-                delete vendorsObjTemp[plat];
-              }
-            });
-          } else {
-            displayTemp[chainName][vendorName].checked = false;
-          }
-        });
-      });
+    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
+      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
+    }
+
     setBranch({
       ...vendors,
       display: displayTemp,
@@ -331,13 +346,14 @@ const MarketingSetup: React.FC<{
     try {
       if (platform.length < 2) {
         setTriggerLoading(true);
+        const selectedVendorsData = selectedVendors('full', branch.display, platform[0]);
+
         const res = await triggerOffers(platform[0], {
           ...dataReq,
-          vendors: selectedVendors('full', branch.display, platform[0]),
-          chain_id: String(selectedVendors('full', branch.display, platform[0])[0].chain_id),
+          vendors: selectedVendorsData,
+          chain_id: selectedVendorsData[0].chain_id, // Get the first chain id
           platform_token:
-            selectedVendors('full', branch.display, platform[0])[0].access_token ??
-            selectedVendors('full', branch.display, platform[0])[0].access_token_bis,
+            selectedVendorsData[0].access_token ?? selectedVendorsData[0].access_token_bis, // Get the first access token
         });
 
         if (res instanceof Error) {
@@ -351,14 +367,15 @@ const MarketingSetup: React.FC<{
       } else {
         const crossPlatform = platform.map(async (p) => {
           setTriggerLoading(true);
+          const selectedVendorsData = selectedVendors('full', branch.display, p);
 
           return triggerOffers(p, {
             ...dataReq,
-            vendors: selectedVendors('full', p),
-            chain_id: String(selectedVendors('full', p)[0].chain_id),
+            vendors: selectedVendorsData,
+            chain_id: selectedVendorsData[0].chain_id,
             platform_token:
-              selectedVendors('full', branch.display, p)[0].access_token ??
-              selectedVendors('full', branch.display, p)[0].access_token_bis,
+              selectedVendorsData[0].access_token ?? selectedVendorsData[0].access_token_bis,
+            goal: p === 'talabat' ? 'orders' : getTargetAudience(),
           });
         });
 
@@ -389,8 +406,13 @@ const MarketingSetup: React.FC<{
 
   const setHeatmapRangeFromState = () => {
     setRangeColorIndices(() => {
-      const heatmaRangePlatform = revenueData?.[platform[0]].ranges;
-      const ordersRangePlatform = ordersData?.[platform[0]].ranges;
+      let heatmaRangePlatform = revenueData?.[platform[0]]?.ranges;
+      let ordersRangePlatform = ordersData?.[platform[0]]?.ranges;
+
+      if (platform.length > 1 && (!heatmaRangePlatform || !ordersRangePlatform)) {
+        heatmaRangePlatform = revenueData?.[platform[1]]?.ranges;
+        ordersRangePlatform = ordersData?.[platform[1]]?.ranges;
+      }
 
       if (!heatmaRangePlatform || !ordersRangePlatform) {
         return {
@@ -410,8 +432,13 @@ const MarketingSetup: React.FC<{
     setHeatmapData(() => {
       if (!revenueData || !ordersData) return null;
 
-      const heatmaDataPlatform = { ...revenueData?.[platform[0]].heatmap };
-      const ordersDataPlatform = { ...ordersData?.[platform[0]].heatmap };
+      let heatmaDataPlatform = revenueData?.[platform[0]]?.heatmap;
+      let ordersDataPlatform = ordersData?.[platform[0]]?.heatmap;
+
+      if (platform.length > 1 && (!heatmaDataPlatform || !ordersDataPlatform)) {
+        heatmaDataPlatform = revenueData?.[platform[1]]?.heatmap;
+        ordersDataPlatform = ordersData?.[platform[1]]?.heatmap;
+      }
 
       if (!heatmaDataPlatform || !ordersDataPlatform) {
         return {
@@ -433,10 +460,14 @@ const MarketingSetup: React.FC<{
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [platform, revenueData, ordersData, heatmapLoading]);
+  }, [heatmapLoading]);
 
   const getHeatmapData = () => {
+    if (heatmapLoading) return;
+
     setHeatmapLoading(true);
+    const selectedVendorsDeliveroo = selectedVendors('full', branch.display, 'deliveroo');
+    const selectedVendorsDataTalabat = selectedVendors('full', branch.display, 'talabat');
 
     const body = {
       master_email: user.email,
@@ -444,13 +475,25 @@ const MarketingSetup: React.FC<{
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
-      vendors: vendorsObj,
+      vendors: {
+        ...(selectedVendorsDeliveroo &&
+        selectedVendorsDeliveroo.length > 0 &&
+        selectedVendorsDeliveroo.some((d) => d)
+          ? { deliveroo: selectedVendorsDeliveroo.filter((d) => d) }
+          : {}),
+        ...(selectedVendorsDataTalabat &&
+        selectedVendorsDataTalabat.length > 0 &&
+        selectedVendorsDataTalabat.some((d) => d)
+          ? { talabat: selectedVendorsDataTalabat.filter((d) => d) }
+          : {}),
+      },
     };
 
-    Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)]).then(
-      ([resRevenue, resOrders]) => {
+    Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)])
+      .then(([resRevenue, resOrders]) => {
         setHeatmapLoading(false);
         if (resRevenue instanceof Error || resOrders instanceof Error) {
+          setHeatmapLoading(false);
           setHeatmapData({
             revenue: defaultHeatmapState,
             orders: defaultHeatmapState,
@@ -464,6 +507,7 @@ const MarketingSetup: React.FC<{
         }
 
         if (!resRevenue.data || !resOrders.data) {
+          setHeatmapLoading(false);
           setHeatmapData({
             revenue: defaultHeatmapState,
             orders: defaultHeatmapState,
@@ -476,10 +520,13 @@ const MarketingSetup: React.FC<{
           return;
         }
 
+        setHeatmapLoading(false);
         setOrdersData(resOrders.data);
         setRevenueData(resRevenue.data);
-      }
-    );
+      })
+      .catch((err) => {
+        setHeatmapLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -489,7 +536,7 @@ const MarketingSetup: React.FC<{
 
     getHeatmapData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [beforePeriodBtn, vendorsObj, active]);
+  }, [beforePeriodBtn, vendors, active, branch.display]);
 
   const getMenuData = async (vendor, platforms) => {
     try {
@@ -554,7 +601,12 @@ const MarketingSetup: React.FC<{
       everyWeek
     );
 
-    setHeatmapData({ ...heatmapData, [links]: response });
+    if (
+      (menu === 'Offer on An Item from the Menu' && selected >= 4) ||
+      (menu === 'Offer on the whole Menu' && selected >= 3)
+    ) {
+      setHeatmapData({ ...heatmapData, [links]: response });
+    }
   };
 
   const getSteps = (stepsArr: number[]) => {
@@ -600,6 +652,7 @@ const MarketingSetup: React.FC<{
       if (selected === n + 1) {
         timeSelected();
         if (typeSchedule === 'Same day every week') {
+          setEveryWeek((prev) => (!prev ? 'Every Monday' : prev));
           setDisabled(
             !(
               startingDate !== null &&
@@ -620,6 +673,7 @@ const MarketingSetup: React.FC<{
           return;
         }
         if (typeSchedule === 'Customised Days') {
+          setEveryWeek('');
           setDisabled(
             !(
               startingDate !== null &&
@@ -640,6 +694,7 @@ const MarketingSetup: React.FC<{
           return;
         }
         if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
+          setEveryWeek('');
           setDisabled(
             !(
               startingDate !== null &&
@@ -672,11 +727,12 @@ const MarketingSetup: React.FC<{
       setChecked([]);
       setCategoryData([]);
       setMenu('Offer on the whole Menu');
+      setTargetAudience('All customers');
       if (Object.keys(vendors.display).length > 0) {
         setDisabled(!(branch && platform.length));
         return;
       }
-      
+
       setDisabled(false);
       return;
     }
@@ -723,6 +779,7 @@ const MarketingSetup: React.FC<{
     itemMenu,
     vendors,
     targetAudience,
+    checked,
   ]);
 
   const renderGradientValue = (v, i) => {

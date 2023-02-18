@@ -10,6 +10,8 @@ import ManageBranch from './onboardingModal/ManageBranch';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
+const isUnRemovableBranch = (branchData: any[]): boolean => branchData.length < 2;
+
 const OnboardingModal = ({ propsVariables }: any) => {
   const {
     openCloseModal,
@@ -29,7 +31,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
   const { user } = useUserAuth();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
+  const { triggerAlertWithMessageError } = useAlert();
 
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
@@ -62,7 +64,15 @@ const OnboardingModal = ({ propsVariables }: any) => {
       }))
     );
   };
-  const deleteAccount = async (platform, clickedEmail) => {
+  const [openedSwitchDeleteModal, setOpenedSwitchDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const openSwitchDeleteModal = (e) => {
+    e.stopPropagation();
+    setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
+  };
+
+  const deleteAccount = async (platform: string, clickedEmail: string) => {
+    setLoading(true);
     await settingsSave({
       master_email: user.email,
       platform,
@@ -70,16 +80,19 @@ const OnboardingModal = ({ propsVariables }: any) => {
       data: { is_deleted: true },
     });
     accounts.splice(
-      accounts.findIndex((obj) => obj.email === clickedEmail),
+      accounts.findIndex((obj) => obj.email === clickedEmail && obj.platform === platform),
       1
     );
     setBranchData(
       branchData.filter((obj) => obj.accounts.some((objAcc) => objAcc !== clickedEmail))
     );
     setAccounts([...accounts]);
+    setLoading(false);
+    setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
 
   const changeStatusAccount = async (obj: any) => {
+    setLoading(true);
     const vendorsBranch = () => {
       const arr = [];
       Object.keys(vendors.display).forEach((cName) => {
@@ -106,15 +119,20 @@ const OnboardingModal = ({ propsVariables }: any) => {
       },
       obj.platform
     );
-    accounts.find((objAcc) => objAcc.email === obj.email).active = !obj.active;
+    accounts.find(
+      (objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
+    ).active = !obj.active;
     setAccounts([...accounts]);
     setBranchData(
       branchData.map((objB) => {
         const linked_platforms = [...objB.linked_platforms];
         if (objB.accounts.find((emailAcc: string) => emailAcc === obj.email)) {
           if (!obj.active) {
-            linked_platforms.find((objLink) => objLink.platform === obj.platform).status =
-              'suspended';
+            (
+              linked_platforms.find((objLink) => objLink.platform === obj.platform) || {
+                status: '',
+              }
+            ).status = 'suspended';
             if (objB.linked_platforms.every((objLink) => objLink.status !== 'active')) {
               return { ...objB, branch_status: 'suspended', linked_platforms };
             }
@@ -123,7 +141,9 @@ const OnboardingModal = ({ propsVariables }: any) => {
             }
             return { ...objB, linked_platforms };
           }
-          linked_platforms.find((objLink) => objLink.platform === obj.platform).status = 'active';
+          (
+            linked_platforms.find((objLink) => objLink.platform === obj.platform) || { status: '' }
+          ).status = 'active';
           if (objB.linked_platforms.length > 1) {
             return { ...objB, branch_status: 'active', linked_platforms };
           }
@@ -132,12 +152,38 @@ const OnboardingModal = ({ propsVariables }: any) => {
         return objB;
       })
     );
+    setLoading(false);
+    setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
+
   const connectAccountModalObject = {
     manageAccount: (
-      <ManageAccount propsVariables={{ ...propsVariables, deleteAccount, changeStatusAccount }} />
+      <ManageAccount
+        propsVariables={{
+          ...propsVariables,
+          deleteAccount,
+          changeStatusAccount,
+          openSwitchDeleteModal,
+          openedSwitchDeleteModal,
+          setLoading,
+          loading,
+        }}
+      />
     ),
-    manageBranch: <ManageBranch propsVariables={{ ...propsVariables }} />,
+    manageBranch: (
+      <ManageBranch
+        propsVariables={{
+          ...propsVariables,
+          openSwitchDeleteModal,
+          openedSwitchDeleteModal,
+          loading,
+          setLoading,
+          deleteAccount,
+          setOpenedSwitchDeleteModal,
+        }}
+        unremovable={isUnRemovableBranch(branchData)}
+      />
+    ),
     completed: <UploadingCompleted propsVariables={propsVariables} />,
     active: (
       <UploadingActive
@@ -165,17 +211,30 @@ const OnboardingModal = ({ propsVariables }: any) => {
       />
     ),
     account: (
-      <ConnectAccount propsVariables={{ ...propsVariables, deleteAccount, changeStatusAccount }} />
+      <ConnectAccount
+        propsVariables={{
+          ...propsVariables,
+          deleteAccount,
+          changeStatusAccount,
+          openSwitchDeleteModal,
+          openedSwitchDeleteModal,
+          setLoading,
+          loading,
+        }}
+      />
     ),
   };
+
   return (
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''}`}
+      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${
+        openedSwitchDeleteModal ? 'activeDelete' : ''
+      }`}
       onClick={openCloseModal}
     >
-      {connectAccountModalObject[connectAccount]}
+      <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>
     </div>
   );
 };

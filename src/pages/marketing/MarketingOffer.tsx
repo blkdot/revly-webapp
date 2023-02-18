@@ -10,7 +10,8 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevly from 'components/tableRevly/TableRevly';
 import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate, usePlanningOffers, useQueryState } from 'hooks';
+import { useDate, useQueryState } from 'hooks';
+import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -39,12 +40,13 @@ const MarketingOffer = () => {
     startDate: dateContext.beforePeriod.startDate,
     endDate: getOfferDate(),
   });
-  const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange: beforePeriodBtn });
+
+  const { data, isLoading: isLoadingOffers } = usePlanningOffersNew(beforePeriodBtn);
 
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [row, setRow] = useState(offers);
+  const [row, setRow] = useState(data?.offers || []);
   const [scrollActive, setScrollActive] = useState('less');
   const handleScroll = () => {
     const cont = document.querySelector('#tableContainer');
@@ -63,7 +65,7 @@ const MarketingOffer = () => {
       cont.scrollLeft = 0;
     }
   };
-  const [offersData, setOffersData] = useState(offers);
+  const [offersData, setOffersData] = useState(data?.offers || []);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
   const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
@@ -79,9 +81,9 @@ const MarketingOffer = () => {
   }, [JSON.stringify(filters)]);
 
   useEffect(() => {
-    setOffersData(offers);
-    setRow(offers);
-  }, [offers]);
+    setOffersData(data?.offers || []);
+    setRow(data?.offers || []);
+  }, [data]);
 
   const {
     renderPlatform,
@@ -90,14 +92,29 @@ const MarketingOffer = () => {
     renderStatus,
     renderTarget,
     renderSimpleRow,
+    renderVendorId,
+    renderChainId,
+    renderOfferIds,
   } = useTableContentFormatter();
 
   const headersOffers = [
+    // {
+    //   id: 'offer_ids',
+    //   numeric: false,
+    //   disablePadding: false,
+    //   label: 'Offer ID Debug',
+    // }, // Debug Purpose Only
     {
-      id: 'chain_name',
+      id: 'chain_id',
       numeric: false,
       disablePadding: false,
-      label: 'Branche',
+      label: 'Chain Name',
+    },
+    {
+      id: 'vendor_ids',
+      numeric: false,
+      disablePadding: false,
+      label: 'Vendor(s)',
     },
     {
       id: 'start_date',
@@ -139,7 +156,7 @@ const MarketingOffer = () => {
       id: 'goal',
       numeric: true,
       disablePadding: false,
-      label: 'goal',
+      label: 'Target',
     },
     {
       id: 'status',
@@ -174,7 +191,9 @@ const MarketingOffer = () => {
   ];
 
   const cellTemplatesObject = {
-    chain_name: renderSimpleRow,
+    offer_ids: renderOfferIds,
+    chain_id: renderChainId,
+    vendor_ids: renderVendorId,
     platform: renderPlatform,
     start_date: renderSimpleRow,
     end_date: renderSimpleRow,
@@ -196,7 +215,7 @@ const MarketingOffer = () => {
         [cur.id]: cellTemplatesObject[cur.id]
           ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
           : r[cur.id],
-        id: `${cur.id}_${r.offer_ids}`,
+        id: r.master_offer_id,
         data: r,
       }),
       {}
@@ -246,7 +265,8 @@ const MarketingOffer = () => {
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status) && cur.status) status.push(cur.status);
+        if (!status.includes(cur.status.toLowerCase()) && cur.status)
+          status.push(cur.status.toLowerCase());
 
         if (!goal.includes(cur.goal) && !goal.includes(targetMapping[cur.goal]) && cur.goal)
           goal.push(targetMapping[cur.goal] || cur.goal);
@@ -295,7 +315,10 @@ const MarketingOffer = () => {
     const preHeadtypeOffer = preHead.type_offer.map((s) => ({ value: s, text: s }));
     const preHeadTarget = preHead.goal.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
+    const preHeadStatus = preHead.status.map((s) => ({
+      value: s.toLowerCase(),
+      text: renderStatusFilter(s),
+    }));
 
     setFiltersHead({
       platform: preHeadPlatform,
@@ -393,7 +416,7 @@ const MarketingOffer = () => {
       return (
         <OfferDetailComponent
           // eslint-disable-next-line eqeqeq
-          data={offers.find((o) => o.master_offer_id == clickedId)}
+          data={data?.offers.find((o) => o.master_offer_id == clickedId)}
           setOpened={setOpenedOffer}
         />
       );

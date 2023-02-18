@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
-import { useApi, usePlatform, useVendors } from 'hooks';
+import { useApi, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { getPlanningOfferDetails } from '../../../api/userApi';
@@ -25,14 +25,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
   const [offerDetailMaster, setofferDetailMaster] = useState<any>({});
-  const {
-    userPlatformData: { platforms },
-  } = usePlatform();
+
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { vendors } = useVendors(undefined);
-  const { vendorsObj } = vendors;
+  const { vendors, getChainData } = useVendors(undefined);
+  const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
       cancelled: ['#ff4842', 'rgba(255, 72, 66, 0.08)'],
@@ -83,7 +81,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const {
     profit,
     revenue,
-    accrued_discount,
+    // accrued_discount,
     roi,
     average_basket,
     n_orders,
@@ -91,32 +89,48 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     start_date,
     end_date,
     status,
-    chain_name,
     vendor_ids,
-    offer_ids,
     type_schedule,
     discount_rate,
     type_offer,
     chain_id,
   } = offerDetailMaster?.master_offer || {};
 
-  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
-    vendor_ids?.includes(v.vendor_id)
-  );
+  const getToken = () => {
+    let token = '';
+    Object.keys(display).forEach((cName) => {
+      Object.keys(display[cName]).forEach((vName) => {
+        if (
+          vendor_ids.includes(
+            Number(display[cName][vName].platforms[platform.toLowerCase()]?.vendor_id || 0)
+          )
+        ) {
+          token = display[cName][vName].platforms[platform.toLowerCase()].access_token;
+        }
+      });
+    });
+    return token;
+  };
+
+  const client = useQueryClient();
 
   const openCancelModal = () => setIsOpen(true);
 
   const handleCancelOfferMaster = () => {
+    const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
+      vendor_ids?.includes(Number(v.vendor_id))
+    );
+
     cancelOfferMaster(
       {
         master_email: user.email,
-        access_token: user?.access_token || '',
+        access_token: user?.accessToken || '',
         // TODO: check this
-        platform_token: platforms[platform.toLowerCase()][0].access_token,
-        vendors: [vendor],
-        offer_id: offer_ids || null,
-        chain_id,
+        platform_token: getToken(),
+        offer_id: null,
+        chain_id: String(chain_id),
         master_offer_id,
+        vendors: vendor,
       },
       platform.toLowerCase()
     ).then(() => {
@@ -126,11 +140,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
         master_offer: { offer_status: 'Cancelled' },
       });
       setIsOpen(false);
+      client.invalidateQueries(['planning', 'offersv3']);
     });
   };
 
   useQuery(
-    ['getPlanningOfferDetails', { master_offer_id, ...offerDetail, ...vendorsObj }],
+    ['getPlanningOfferDetails', { master_offer_id, vendorsObj }],
     () => {
       if (JSON.stringify(vendorsObj) === JSON.stringify({})) return null;
 
@@ -142,9 +157,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
           platform: platform.toLowerCase(),
           master_offer_id,
         })
-          .then((res) => setofferDetailMaster(res.data))
+          .then((res) => {
+            setofferDetailMaster(res.data);
+            return res;
+          })
           //     // eslint-disable-next-line no-console
-          .catch((err) => console.log({ err }))
+          .catch((err) => {
+            console.error({ err });
+            return err;
+          })
       );
     },
     { enabled: !!vendorsObj }
@@ -156,7 +177,6 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
-  console.log(offerDetailMaster);
   return (
     <>
       <CancelOfferModal
@@ -190,7 +210,9 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                 <Calendar />
                 <div className='restau-infos'>
                   <div className='restau-name'>
-                    {chain_name || <SkeletonKit width={70} height={30} />}
+                    {getChainData(chain_id, vendor_ids)?.chain_name || (
+                      <SkeletonKit width={70} height={30} />
+                    )}
                   </div>
                 </div>
               </div>
@@ -215,14 +237,14 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                     </div>
                     <div className='offer-visibility-sub-title'>Caroussel</div>
                   </div>
-                  <div className='offer-visibility-block'>
+                  {/* <div className='offer-visibility-block'>
                     <div>
                       <span className='offer-visibility-title'>Visibility Rank</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
                     </div>
-                  </div>
+                  </div> */}
                   <div className='offer-visibility-block'>
                     <div>
                       <span className='offer-visibility-title'>#Orders</span>
@@ -577,7 +599,7 @@ const TimeSlot = ({ data }) => (
           {new Date(data.start_date).toLocaleDateString() ===
           new Date(data.end_date).toLocaleDateString()
             ? data.start_date
-            : `${data.start_date} - ${data.end_date}`}
+            : `${data.start_date} - ${data?.end_date || <SkeletonKit />}`}
         </span>
       </div>
 
@@ -624,7 +646,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
+            {data.start_hour ? (
+              format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
         <div
@@ -658,7 +684,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
+            {data.end_hour ? (
+              format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
       </div>

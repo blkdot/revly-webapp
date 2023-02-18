@@ -32,17 +32,19 @@ const Navbar = () => {
   const [, setVendors] = useAtom(vendorsAtom);
 
   const handleLogout = async () => {
-    setVendors({
-      vendorsSelected: [],
-      vendorsObj: {},
-      vendorsArr: [],
-      display: {},
-      chainObj: {},
-    });
     try {
       await logOut();
+      setVendors({
+        vendorsSelected: [],
+        vendorsObj: {},
+        vendorsArr: [],
+        display: {},
+        chainObj: {},
+        chainData: [],
+      });
       navigate('/');
     } catch (e) {
+      navigate('/');
       /* */
     }
   };
@@ -57,8 +59,8 @@ const Navbar = () => {
     </Navlink>
   );
 
-  const renderSimpleLink = () =>
-    simpleLink.map((s) => (
+  const renderSimpleLink = (link) =>
+    link.map((s) => (
       <Navlink
         className={
           !userPlatformData.onboarded && s.path !== '/dashboardOnboard' ? 'navlink-disabled' : ''
@@ -169,7 +171,7 @@ const Navbar = () => {
               <img src={arrow} alt='Arrow' />
             </div>
           </li>
-          {renderSimpleLink()}
+          {renderSimpleLink(simpleLink)}
           {renderAccordionLink()}
         </ul>
         <img className='nav-lines' src={lines} alt='Gradient lines' />

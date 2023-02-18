@@ -1,40 +1,45 @@
 import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
-import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
-import { vendorsAtom } from '../store/vendorsAtom';
+import { type TVendorsObj } from './useVendors';
 import useApi from './useApi';
 import useDate from './useDate';
 
 let fnDelays = null;
 
-function useMetrics() {
+function useMetrics(vendorsObj: TVendorsObj) {
   const { date: dateContext } = useDate();
-  const [vendors] = useAtom(vendorsAtom);
-  const { vendorsObj } = vendors;
   const { beforePeriod, afterPeriod } = dateContext;
   const { getMetrics } = useApi();
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
+  const newVendorsObj = {};
+  Object.keys(vendorsObj).forEach((plat) => {
+    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
+  });
 
-  const clonedVendor: any = { ...vendorsObj };
-  delete clonedVendor.display;
-  Object.keys(clonedVendor).forEach((plat) => {
-    if (clonedVendor[plat].length === 0) {
-      delete clonedVendor[plat];
+  Object.keys(newVendorsObj).forEach((plat) => {
+    if (newVendorsObj[plat].length === 0 || plat === 'display') {
+      delete newVendorsObj[plat];
     }
   });
+
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState(0);
 
   const handleRequest = (date, setMetrics, stack) => {
     setLoading(true);
 
+    if (Object.keys(newVendorsObj).length === 0) {
+      setLoading(false);
+      return;
+    }
+
     getMetrics({
       master_email: user.email,
       access_token: user.accessToken,
-      vendors: clonedVendor,
+      vendors: newVendorsObj,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
     }).then((data) => {
@@ -46,18 +51,16 @@ function useMetrics() {
 
   useMemo(() => {
     clearTimeout(fnDelays);
-    if (Object.keys(vendorsObj).length > 0) {
-      fnDelays = setTimeout(() => {
-        if (loading) {
-          setQueue((prev) => prev + 1);
-          return;
-        }
+    fnDelays = setTimeout(() => {
+      if (loading) {
+        setQueue((prev) => prev + 1);
+        return;
+      }
 
-        handleRequest(afterPeriod, setMetricsafterPeriod, queue);
-        handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
-      }, 750 + queue);
-    }
-  }, [afterPeriod, beforePeriod, vendors, queue]);
+      handleRequest(afterPeriod, setMetricsafterPeriod, queue);
+      handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
+    }, 750 + queue);
+  }, [afterPeriod, beforePeriod, JSON.stringify(vendorsObj), queue]);
 
   return { metricsbeforePeriod, metricsafterPeriod, loading };
 }
