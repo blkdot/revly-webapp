@@ -27,7 +27,6 @@ import {
   ProtectedRoutes,
   SettingsLayout,
 } from 'routes';
-import './App.scss';
 
 export const App = () => (
   <BrowserRouter>
