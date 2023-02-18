@@ -25,7 +25,7 @@ export const UserProvider: FC<{
 
 export const useUser = () => useContext(UserContext);
 
-export const ProtectedRoutesNew: FC = () => {
+export const ProtectedRoutes: FC = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<UserContextType>({

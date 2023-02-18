@@ -1,20 +1,38 @@
+import { createTheme } from '@mui/system';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ReactDOM from 'react-dom/client';
 import Modal from 'react-modal';
-import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
 
 Modal.setAppElement('#root');
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-);
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#906BFF',
+    },
+    grey: {
+      500: '#919eab3d',
+    },
+  },
+});
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals(console.log);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <QueryClientProvider client={queryClient}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <App />
+    </LocalizationProvider>
+  </QueryClientProvider>
+);
