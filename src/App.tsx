@@ -7,6 +7,7 @@ import {
   GlobalFunctionalitiesContextProvider,
   PlatformProvider,
 } from 'contexts';
+import { MainLayout, ProtectedOnboardRoutes, ProtectedRoutesNew, SettingsLayout } from 'layouts';
 import {
   Check,
   CompetitionAlerts,
@@ -29,7 +30,6 @@ import {
 } from 'pages';
 import Adverts from 'pages/adverts/Adverts';
 import { Route, Routes } from 'react-router-dom';
-import { MainLayout, ProtectedOnboardRoutes, ProtectedRoutesNew, SettingsLayout } from 'routes';
 import './App.scss';
 import AuthLayout from './components/layout/authLayout/AuthLayout';
 

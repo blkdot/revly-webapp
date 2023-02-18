@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUser } from './ProtectedRoutesNew';
 
-const ProtectedOnboardRoutes = () => {
+export const ProtectedOnboardRoutes = () => {
   const user = useUser();
   const { userPlatformData, setUserPlatformData } = usePlatform();
 
@@ -42,5 +42,3 @@ const ProtectedOnboardRoutes = () => {
 
   return <Outlet />;
 };
-
-export default ProtectedOnboardRoutes;

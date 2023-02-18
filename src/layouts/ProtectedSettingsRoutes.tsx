@@ -3,7 +3,7 @@ import { ContainerKit } from 'kits';
 import { Outlet, useLocation } from 'react-router-dom';
 import { settingsLink } from '../data/navbarData';
 
-const SettingsLayout = () => {
+export const SettingsLayout = () => {
   const location = useLocation();
 
   return (
@@ -12,7 +12,7 @@ const SettingsLayout = () => {
       <div>
         <div className='settings-header'>
           <ContainerKit>
-            Settings - {settingsLink[0].subs.find((obj) => obj.path === location.pathname).title}
+            Settings - {settingsLink[0].subs.find((v) => v.path === location.pathname).title}
           </ContainerKit>
         </div>
         <ContainerKit>
@@ -22,5 +22,3 @@ const SettingsLayout = () => {
     </div>
   );
 };
-
-export default SettingsLayout;
