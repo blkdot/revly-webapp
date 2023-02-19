@@ -1,3 +1,5 @@
-export { default as ProtectedOnboardRoutes } from './ProtectedOnboardRoutes';
-export { default as ProtectedRoutes } from './ProtectedRoutes';
-export { default as ProtectedSettingsRoutes } from './ProtectedSettingsRoutes';
+export * from './auth/AuthLayout';
+export * from './MainLayout';
+export * from './ProtectedOnboardRoutes';
+export * from './ProtectedRoutes';
+export * from './SettingsLayout';

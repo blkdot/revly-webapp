@@ -1,50 +1,38 @@
-import { useUserAuth } from 'contexts';
-import { useApi, usePlatform } from 'hooks';
+import { useSettingsOnboarded } from 'api/settingsApi';
+import { usePlatform } from 'hooks';
 import { SpinnerKit } from 'kits';
-import { useEffect, useState } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useUser } from './ProtectedRoutes';
 
-const ProtectedOnboardRoutes = () => {
-  const [allowed, setAllowed] = useState<any>(false);
-  const [preAllowed, setPreAllowed] = useState(false);
-  const { user } = useUserAuth();
-  const { settingsOnboarded } = useApi();
+export const ProtectedOnboardRoutes = () => {
+  const user = useUser();
   const { userPlatformData, setUserPlatformData } = usePlatform();
 
-  const navigate = useNavigate();
+  const response = useSettingsOnboarded({
+    master_email: user.email,
+    access_token: user.token,
+  });
 
-  const getPlatformData = async () => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
-
-    try {
-      const res = await settingsOnboarded({
-        master_email: user.email,
-        access_token: user.accessToken,
-      });
-
-      if (res instanceof Error || !res.onboarded || !res.platforms) throw new Error('');
-
+  // TODO: replace it with a better approach
+  // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
+  useEffect(() => {
+    if (response.data) {
       setUserPlatformData({
         onboarded: true,
-        platforms: { ...userPlatformData.platforms, ...res.platforms },
+        platforms: { ...userPlatformData.platforms, ...response.data.platforms },
       });
-
-      setPreAllowed(true);
-    } catch (error) {
-      setAllowed(error);
     }
-  };
+  }, [response.data, setUserPlatformData]);
 
-  useEffect(() => {
-    getPlatformData();
-  }, []);
+  if (
+    response.isError ||
+    (response.isSuccess && (!response.data.onboarded || !response.data.platforms))
+  ) {
+    return <Navigate to='/dashboardOnboard' />;
+  }
 
-  if ((allowed as any) instanceof Error) return <Navigate to='/dashboardOnboard' />;
-
-  if (!preAllowed) {
+  if (response.isLoading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
@@ -54,5 +42,3 @@ const ProtectedOnboardRoutes = () => {
 
   return <Outlet />;
 };
-
-export default ProtectedOnboardRoutes;
