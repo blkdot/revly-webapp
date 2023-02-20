@@ -10,7 +10,7 @@ let fnDelays = null;
 function useMetrics(vendorsObj: TVendorsObj) {
   const { date: dateContext } = useDate();
   const { beforePeriod, afterPeriod } = dateContext;
-  const { getMetrics } = useApi();
+  const { getMetrics } = useApi();  
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
@@ -25,7 +25,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
     }
   });
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState(0);
 
   const handleRequest = (date, setMetrics, stack) => {
@@ -52,7 +52,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   useEffect(() => {
     clearTimeout(fnDelays);
     fnDelays = setTimeout(() => {
-      if (!loading) {
+      if (loading) {
         setQueue((prev) => prev + 1);
         return;
       }

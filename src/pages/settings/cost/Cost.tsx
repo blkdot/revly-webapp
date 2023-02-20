@@ -1,17 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import DropdownSnackbar from 'components/dropdownSnackbar/DropdownSnackbar';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useCost, useVendors } from 'hooks';
-import { SpinnerKit } from 'kits';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { ButtonKit } from 'kits';
+import { useEffect, useState } from 'react';
+import costAtom from 'store/costAtom';
 import './Cost.scss';
-import Invoice from './invoice/Invoice';
 
 type TInvoice = {
+  chain_id: string;
+  vendor_ids: string[];
+  cost: number;
   id: string;
-  restaurant: string;
-  cost: string;
 };
 
 const Cost = () => {
@@ -42,9 +43,10 @@ const Cost = () => {
             const percent = parseFloat(currentCost) * 100;
 
             const res = {
+              chain_id: String(element.chain_id),
+              vendor_ids: Object.keys(data[platform]).filter((dId) => dId === element.vendor_id),
+              cost: percent,
               id,
-              restaurant: element.data.vendor_name,
-              cost: `${percent}%`,
             };
 
             newInvoice.push(res);
@@ -56,7 +58,39 @@ const Cost = () => {
     enabled: Object.keys(vendorsObj).length > 0,
     staleTime: Infinity,
   });
+  const getChainIds = () => {
+    const arr = []
+    Object.keys(vendorsObj).forEach((plat) => {
+      vendorsObj[plat].forEach((obj) => {
+        if(obj.data.chain_name){
+          arr.push(obj.chain_id)
+        }
+      })
+    })
+    return Array.from(new Set(arr))
+  }
+  const getVendorIds = (id) => {
+    const arr = []
+    Object.keys(vendorsObj).forEach((plat) => {
+      vendorsObj[plat].forEach((obj) => {
+        if (obj.chain_id === id && obj.metadata.is_active) {
+          arr.push(obj.vendor_id)
+        }
+      })
+    })
+    return arr
+  }
 
+  const data = getChainIds().map((chain_id) => ({
+    chain_id,
+    vendor_ids: getVendorIds(chain_id),
+    cost: 15,
+    changed: false,
+  }))
+  const [cost, setCost] = useAtom(costAtom);
+  useEffect(() => {
+    setCost(data)
+  }, [isLoading])
   const { isLoading: isLoadingMutation, mutateAsync } = useMutation({
     mutationFn: save,
     onSuccess: () => {
@@ -66,10 +100,6 @@ const Cost = () => {
 
   if (isError)
     return <div style={{ display: 'flex', justifyContent: 'center' }}>Error Occured</div>;
-
-  const handleAdd = async (cost, v) => {
-    await mutateAsync({ cost: parseFloat(cost), vendors: v });
-  };
 
   const headers = [
     {
@@ -91,12 +121,12 @@ const Cost = () => {
       label: 'Cost',
     },
   ];
-  const { renderChainId, renderVendorId, renderSimpleRow, renderSimpleRowSkeleton } =
+  const { renderChainId, renderVendorId, renderSimpleRow, renderSimpleRowSkeleton, renderCostRow } =
     useTableContentFormatter();
   const cellTemplatesObject = {
     chain_id: renderChainId,
     vendor_ids: renderVendorId,
-    cost: renderSimpleRow,
+    cost: renderCostRow,
   };
   const renderRowsByHeader = (r) =>
     headers.reduce(
@@ -109,9 +139,9 @@ const Cost = () => {
       {}
     );
   const cellTemplatesObjectLoding = {
-    platform: renderSimpleRowSkeleton,
-    beforePeriod: renderSimpleRowSkeleton,
-    evolution: renderSimpleRowSkeleton,
+    chain_id: renderSimpleRowSkeleton,
+    vendor_ids: renderSimpleRowSkeleton,
+    cost: renderSimpleRowSkeleton,
   };
   const renderRowsByHeaderLoading = (r) =>
     headers.reduce(
@@ -127,23 +157,23 @@ const Cost = () => {
     <div className='billing'>
       <div className='billing__invoice __card'>
         <div className='__flex'>
-          <div className='__head'>
-            <p className='billing__card-title'>Your Cost Information</p>
-            {/* <p className="billing__card-subtitle">- -</p> */}
+          <div className='__head cost'>
+            <div>
+              <p className='billing__card-title'>Your Cost Information</p>
+              <span>Insert and update the average cost of food per chain to calculate your net revenue in the dashboard</span>
+            </div>
+            <ButtonKit variant='contained' disabled={!cost.some((obj) => obj.changed)}>
+              Save changes
+            </ButtonKit>
           </div>
         </div>
-        <DropdownSnackbar
-          onAdd={handleAdd}
-          isUpdate={isUpdate}
-          setIsUpdate={setIsUpdate}
-          invoice={invoice}
-        />
-        {/* <TableRevlyNew
+        <TableRevlyNew
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={isLoading || isLoadingMutation}
           headers={headers}
-          rows={invoice.map(renderRowsByHeader)}
-        /> */}
+          rows={data.map(renderRowsByHeader)}
+          className='competition-alerts'
+        />
       </div>
     </div>
   );

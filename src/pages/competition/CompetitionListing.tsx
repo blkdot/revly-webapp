@@ -183,16 +183,6 @@ const CompetitionListing = () => {
           throw new Error('');
         }
 
-        // const filt = ranking.data.data.map((v) => ({
-        //   name: v.name,
-        //   r_offers: v.cuisine,
-        //   r_cuis: v.italian_only,
-        //   r_all: v.italian_basket_discount,
-        //   ov: v.no_filter,
-        //   platform,
-        //   id: v.id,
-        // }));
-
         setCompetitionListingData(ranking.data.data);
         setCuisine(ranking.data.cuisine);
         setLoading(false);
@@ -252,7 +242,6 @@ const CompetitionListing = () => {
       getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
     }
   }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
-  console.log(vendorsData);
 
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));

@@ -1,15 +1,19 @@
 import { CSSProperties } from 'react';
 import { useAtom } from 'jotai';
 import { parseISO, format } from 'date-fns';
-import { SkeletonKit, TableCellKit, TooltipKit } from 'kits';
+import { SkeletonKit, TableCellKit, TextfieldKit, TooltipKit } from 'kits';
 import shortid from 'shortid';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { useVendors } from 'hooks';
+import  costAtom from 'store/costAtom';
 import { platformList, platformObject } from '../../../data/platformList';
 import Calendar from '../../../assets/images/calendar.svg';
 import Clock from '../../../assets/images/clock.svg';
 import User from '../../../assets/images/user.svg';
 import ShoppingBag from '../../../assets/images/shopping-bag.svg';
+import Graph from '../../../assets/images/graph.svg';
+import Eye from '../../../assets/images/eye.svg';
+import Smile from '../../../assets/images/smile.svg';
 
 const useTableContentFormatter = () => {
   const { getChainData } = useVendors();
@@ -20,6 +24,9 @@ const useTableContentFormatter = () => {
     slot: Clock,
     goal: User,
     orders: ShoppingBag,
+    clicks: Graph,
+    impressions: Eye,
+    customers: Smile,
   }
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
@@ -178,7 +185,7 @@ const useTableContentFormatter = () => {
     return (
       <TableCellKit
         key={`${h.id}_${r.id}`}
-        style={{ marginTop: '0.5rem', minWidth: '10rem', textAlign: 'center' }}
+        style={{ marginTop: '0.5rem', minWidth: '10rem', textAlign: 'left' }}
       >
         {vendors.length === 1 ? (
           <span className='render-vendor-text' key={h.id}>
@@ -293,13 +300,23 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderStatus = (r, h, i = 0) => (
+  const renderStatus = (r, h, i = 0) => {
+    const render = () => {
+      if(r[h.id] === 'Upcoming'){
+        return 'Scheduled'
+      }
+      if (r[h.id] === 'Enabled'){
+        return 'Live'
+      }
+      return r[h.id]
+    }
+    return(
     <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'left' }}>
-      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id].replace(/\s/g, '') }`}>
-        {r[h.id] === 'Upcoming' ? 'Scheduled' : r[h.id]}
+      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${render().replace(/\s/g, '') }`}>
+        {render()}
       </span>
     </TableCellKit>
-  );
+  )};
 
   const renderScheduleType = (r, h, i = 0) => {
     const scheduleTypeMapping = {
@@ -409,6 +426,23 @@ const useTableContentFormatter = () => {
       </div>
     </TableCellKit>
   );
+  const [cost, setCost] = useAtom(costAtom);
+    
+  const renderCostRow = (r, h, i = 0) => {
+    const handleChange = (e) => {
+      cost[i].cost = Number(e.target.value);
+      cost[i].changed = true;
+      setCost([...cost]);
+    }
+    return(
+    <TableCellKit
+      style={{ paddingLeft: 0, textAlign: 'left' }}
+      id={`${h.id}_${i}`}
+      key={`${h.id}_${r.id}`}
+    >
+        <TextfieldKit sx={{width: '100%'}} type='number' defaultValue={r[h.id]} onChange={handleChange}/>
+    </TableCellKit>
+  )};
 
   // row skeleton
 
@@ -436,6 +470,7 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
   return {
+    renderCostRow,
     renderTarget,
     renderScheduleType,
     renderStatus,

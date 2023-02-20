@@ -62,6 +62,9 @@ const DashboardOnboard = () => {
       onboarded: res.onboarded,
       platforms: { ...userPlatformData.platforms, ...res.platforms },
     });
+    if(res.onboarded){
+      navigate('/dashboard');
+    }
   };
   const navigate = useNavigate();
   useEffect(() => {

@@ -87,10 +87,10 @@ const App = () => (
                   </Route>
                   <Route element={<ProtectedSettingsRoutes />}>
                     <Route element={<ProtectedOnboardRoutes />}>
+                      <Route path='/settings/cost' element={<SettingsCost />} />
                       <Route path='/settings/general' element={<SettingsGeneral />} />
                       <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
                       <Route path='/settings/menu' element={<SettingsMenu />} />
-                      <Route path='/settings/cost' element={<SettingsCost />} />
                       <Route
                         path='/settings/change-password'
                         element={<SettingsChangePassword />}

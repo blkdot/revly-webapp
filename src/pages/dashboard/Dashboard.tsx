@@ -186,16 +186,13 @@ const Dashboard = () => {
     if (Number.isNaN(procent) || procent === '-' || procent === null) {
       return '-';
     }
-    if (procent > 0) {
-      return `+ ${procent}%`;
-    }
     return `${procent}%`;
   };
-  useEffect(() => {
+  useEffect(() => {    
     const platforms = [
       ...Object.keys(userPlatformData.platforms).map(
-        (plat) => userPlatformData.platforms[plat].some((obj) => obj.active) && plat
-      ),
+        (plat) => userPlatformData.platforms[plat].some((obj) => obj.active) ? plat : null
+      ).filter((plat) => plat),
       'all',
     ];
     const data = platforms.map((plat) => ({

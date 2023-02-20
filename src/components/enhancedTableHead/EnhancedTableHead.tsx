@@ -35,7 +35,7 @@ const EnhancedTableHead = (props: any) => {
             >
               {headCell.label}
               {headCell.tooltip ? (
-                <TooltipKit interactive={1} id='category-tooltip' title={headCell.tooltip}>
+                <TooltipKit onClick={(e) => e.stopPropagation()} interactive={1} id='table-tooltip' placement='right' arrow title={headCell.tooltip}>
                   <img
                     className={`table-header-tooltip ${orderBy === headCell.id ? order : 'asc'}`}
                     src={TooltipIcon}

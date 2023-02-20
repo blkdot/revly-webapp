@@ -98,6 +98,36 @@
 
       .__head {
         width: 80%;
+
+        &.cost {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          >div {
+            display: flex;
+            flex-direction: column;
+
+            p {
+              font-weight: 700;
+              font-size: 22px;
+              line-height: 36px;
+            }
+
+            span {
+              font-weight: 400;
+              font-size: 14px;
+              color: #637381;
+            }
+          }
+          button{
+            height: 46px;
+            font-size: 14px;
+            padding: 0 30px;
+            text-transform: none;
+          }
+        }
       }
 
       .__btn {
@@ -132,10 +162,11 @@
     font-size: 14px;
     font-weight: 500;
   }
+
   .restaurant-dropdown_wrapper {
     width: 50% !important;
 
-    > div:nth-of-type(1) {
+    >div:nth-of-type(1) {
       border-radius: 5px;
       background-color: #fff;
     }

@@ -101,23 +101,25 @@ const TableRevlyNew: FC<{
 
     return renderRowsContent();
   };
+
   const getActiveLinkWidth = (index: number, type: string) => {
-    const tableLink = document.querySelectorAll('.table-link')[index];
+    const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
     if (type === 'scroll') {
-      return tableLink?.getBoundingClientRect().left;
+      return tableLink.offsetLeft - tableLink.scrollLeft;
     }
     return tableLink?.clientWidth;
   };
+  
   const changeLink = (name: string, index: number) => {
     setLink(name);
     const tableLinks = document.querySelector('.table-links') as HTMLElement;
     tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(index, 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(index, 'scroll') - 305}px`);
+    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(index, 'scroll')}px`);
   };
   useEffect(() => {
     const tableLinks = document.querySelector('.table-links') as HTMLElement;
     tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(0, 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(0, 'scroll') - 305}px`);
+    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(0, 'scroll')}px`);
   }, []);
   return (
     <BoxKit className={`competition-box ${className || ''}`} sx={{ width: '100%' }}>

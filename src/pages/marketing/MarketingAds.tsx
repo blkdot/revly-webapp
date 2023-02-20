@@ -16,13 +16,6 @@ import useTableContentFormatter from '../../components/tableRevly/tableContentFo
 import { platformObject } from '../../data/platformList';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
-import Calendar from '../../assets/images/calendar.svg';
-import Clock from '../../assets/images/clock.svg';
-import User from '../../assets/images/user.svg';
-import ShoppingBag from '../../assets/images/shopping-bag.svg';
-import Graph from '../../assets/images/graph.svg';
-import Eye from '../../assets/images/eye.svg';
-import Smile from '../../assets/images/smile.svg';
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
@@ -265,38 +258,16 @@ const MarketingAds = () => {
     setAdsFilteredData(
       filteredData.map((obj) => ({
         ...obj,
-        start_end_date: {
-          title: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
-            new Date(obj.valid_to)
-          ).format('DD/MM')}`,
-          src: Calendar,
-        },
-        slot: {
-          title: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
-            new Date(obj.valid_to)
-          ).format('hh:mm')}`,
-          src: Clock,
-        },
-        goal: {
-          title: obj.goal,
-          src: User,
-        },
-        orders: {
-          title: obj.orders_count,
-          src: ShoppingBag,
-        },
-        clicks: {
-          title: obj.clicks_count,
-          src: Graph,
-        },
-        impressions: {
-          title: null,
-          src: Eye,
-        },
-        customers: {
-          title: obj.new_customers_count,
-          src: Smile,
-        },
+        start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('DD/MM')}`,
+        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('hh:mm')}`,
+        orders: obj.orders_count,
+        clicks: obj.clicks_count,
+        impressions: obj.ad_serving_count,
+        customers: obj.new_customers_count,
         spend:
           obj.spend === null || obj.total_budget === null
             ? null
