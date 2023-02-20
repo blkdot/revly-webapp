@@ -366,7 +366,7 @@ const useTableContentFormatter = () => {
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {
     const getPlatform = (plat: string) =>
-      platformList.find((obj) => obj.name === plat.toLowerCase());
+      platformList.find((obj) => obj.name.toLowerCase() === plat.toLowerCase());
     const sortPlatform = (a: any, b: any) => {
       if (b.platform < a.platform) {
         return -1;
