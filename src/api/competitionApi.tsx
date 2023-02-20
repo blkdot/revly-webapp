@@ -28,6 +28,12 @@ export const getAreas = (body, platform) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const getCuisines = (body, platform) =>
+  axios
+    .post(`${apiUrl}/competition/cuisines/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+
 export const sendMail = (data) =>
   axios
     .post(

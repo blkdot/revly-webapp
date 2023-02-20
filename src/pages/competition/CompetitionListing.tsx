@@ -11,6 +11,7 @@ import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import AreaIcon from '../../assets/images/ic_area.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
+import Iccuisine from '../../assets/images/ic_cuisine.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import Competitor from '../../components/competitor/Competitor';
@@ -22,6 +23,7 @@ import './Competition.scss';
 
 let fnDelays = null;
 let fnDelaysAreas = null;
+let fnDelaysCuisine = null;
 
 const timeSlotObj = {
   'Throughout Day': 'Throughout Day',
@@ -69,6 +71,7 @@ const CompetitionListing = () => {
   const [timeSlot, setTimeSlot] = useState('Throughout Day');
   const [loading, setLoading] = useState(false);
   const [loadingAreas, setLoadingAreas] = useState(false);
+  const [loadingCuisines, setLoadingCuisines] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const [cuisine, setCuisine] = useState('');
   const { triggerAlertWithMessageError } = useAlert();
@@ -78,10 +81,12 @@ const CompetitionListing = () => {
   });
   const [queue, setQueue] = useState(0);
   const [queueAreas, setQueueAreas] = useState(0);
-  const { getRanking, getAreas } = useApi();
+  const [queueCuisines, setQueueCuisines] = useState(0);
+  const { getRanking, getAreas, getCuisines } = useApi();
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
+  const [cuisinesData, setCuisinesData] = useState([]);
   const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendors)));
 
   const Open = () => {
@@ -159,7 +164,7 @@ const CompetitionListing = () => {
           day_period: timeSlotObj[timeSlot] || 'All',
           filter_location: area,
           filter_offer: 'all_discounts',
-          filter_cuisine: 'Chicken',
+          filter_cuisine: cuisine || '',
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
@@ -171,7 +176,6 @@ const CompetitionListing = () => {
         }
 
         setCompetitionListingData(ranking.data?.data || []);
-        setCuisine(ranking.data?.cuisine || 'Italian');
         setLoading(false);
         if (stack === queue) setQueue(0);
       } catch (err) {
@@ -218,15 +222,54 @@ const CompetitionListing = () => {
       }
     }, 750);
   };
+
+  const getCuisineData = async (plat, vend, stack) => {
+    clearTimeout(fnDelaysCuisine);
+    if (loadingAreas) {
+      setQueueAreas((prev) => prev + 1);
+      return;
+    }
+
+    fnDelaysCuisine = setTimeout(async () => {
+      setLoadingAreas(true);
+      try {
+        const body = {
+          master_email: user.email,
+          access_token: user.accessToken,
+          vendors: vend || [],
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+        };
+
+        const cuisines = await getCuisines(body, plat);
+
+        if (!cuisines) {
+          throw new Error('');
+        }
+
+        // TODO: ajust this function when the API return some data
+        setCuisinesData(cuisines?.data?.cuisines || []);
+        setCuisine(cuisines?.data?.cuisines[0] || '');
+        setLoadingCuisines(false);
+        if (stack === queueCuisines) setQueueCuisines(0);
+      } catch (err) {
+        setCuisinesData([]);
+        setQueueCuisines(0);
+        setLoadingCuisines(false);
+        triggerAlertWithMessageError('Error while retrieving data');
+      }
+    }, 750);
+  };
   useEffect(() => {
     if (platform && area && timeSlot && vendorsData.vendorsObj[platform] !== null) {
       getData(platform, vendorsData.vendorsObj[platform], queue);
     }
-  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue]);
+  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue, cuisine]);
 
   useEffect(() => {
     if (platform && vendorsData.vendorsObj[platform] !== null) {
       getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
+      getCuisineData(platform, vendorsData.vendorsObj[platform], queueAreas);
     }
   }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
 
@@ -382,7 +425,7 @@ const CompetitionListing = () => {
               select={timeSlot}
             />
             <CompetitionDropdown
-              rows={['cuisine']}
+              rows={cuisinesData}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
@@ -397,12 +440,12 @@ const CompetitionListing = () => {
                   </div>
                 </MenuItemKit>
               )}
-              icon={TimeSlotIcon}
+              icon={Iccuisine}
               title='Cuisine'
               type='cuisine'
               className='top-competition not-platform'
-              setRow={() => null}
-              select='cuisine'
+              setRow={setCuisine}
+              select={cuisine || '—'}
             />
 
             <CompetitionDropdown
