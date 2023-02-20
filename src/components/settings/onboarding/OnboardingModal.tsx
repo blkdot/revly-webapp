@@ -10,7 +10,11 @@ import ManageBranch from './onboardingModal/ManageBranch';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
-const isUnRemovableBranch = (branchData: any[]): boolean => branchData.length < 2;
+const isUnRemovableBranch = (branchData: any[]): boolean => {
+  console.log(branchData);
+
+  return branchData.length < 2;
+};
 
 const OnboardingModal = ({ propsVariables }: any) => {
   const {
@@ -35,6 +39,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
 
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
+
     const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
@@ -46,13 +51,16 @@ const OnboardingModal = ({ propsVariables }: any) => {
       },
       currentPlatform
     );
+
     setIsLoading(false);
+
     if (res instanceof Error) {
       triggerAlertWithMessageError(
         `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
       );
       return;
     }
+
     setConnectAccount('active');
     setBranchDataUploading(
       res.vendors.map((obj) => ({
@@ -64,8 +72,10 @@ const OnboardingModal = ({ propsVariables }: any) => {
       }))
     );
   };
+
   const [openedSwitchDeleteModal, setOpenedSwitchDeleteModal] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const openSwitchDeleteModal = (e) => {
     e.stopPropagation();
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);

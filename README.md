@@ -4,7 +4,7 @@
 
 We have a file called `.env.example`.
 
-This file is the basic template of our `.env` file. 
+This file is the basic template of our `.env` file.
 
 You still need to create that file.
 

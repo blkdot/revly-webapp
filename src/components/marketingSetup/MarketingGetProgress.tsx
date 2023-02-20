@@ -89,7 +89,6 @@ const GetProgress: FC = () => {
 
     if (platform.length > 1) {
       if (!checkedRadio) {
-
         platform.splice(
           platform.findIndex((el) => el === value),
           1
