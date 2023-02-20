@@ -36,7 +36,6 @@ const ConnectAccount: FC<{
   const [switchObj, setSwitchObj] = useState(null);
 
   const renderModalBySelection = () => {
-    console.log(deleteObj);
     if (selected === 'delete')
       return (
         <SwitchDeleteModal

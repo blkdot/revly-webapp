@@ -94,7 +94,16 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r.start_date === null ? '-' : <>{format(Math.round(parseISO(r.start_date).getTime()  / stepsMinute) * stepsMinute, 'HH:mm')}</>}
+        {r.start_date === null ? (
+          '-'
+        ) : (
+          <>
+            {format(
+              Math.round(parseISO(r.start_date).getTime() / stepsMinute) * stepsMinute,
+              'HH:mm'
+            )}
+          </>
+        )}
       </span>
     </TableCellKit>
   );
@@ -105,7 +114,16 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r.end_date === null ? '-' : <>{format(Math.round(parseISO(r.end_date).getTime()  / stepsMinute) * stepsMinute, 'HH:mm')}</>}
+        {r.end_date === null ? (
+          '-'
+        ) : (
+          <>
+            {format(
+              Math.round(parseISO(r.end_date).getTime() / stepsMinute) * stepsMinute,
+              'HH:mm'
+            )}
+          </>
+        )}
       </span>
     </TableCellKit>
   );
@@ -329,7 +347,7 @@ const useTableContentFormatter = () => {
 
   const renderOrdinalSuffixV3 = (r, h) => (
     <TableCellKit>
-      {Number((ordinalSuffixOf(r[h.id]?.average_vertical_rank))) >= 100 && '> '}
+      {Number(ordinalSuffixOf(r[h.id]?.average_vertical_rank)) >= 100 && '> '}
       {ordinalSuffixOf(r[h.id]?.average_vertical_rank)}
     </TableCellKit>
   );
@@ -348,7 +366,7 @@ const useTableContentFormatter = () => {
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {
     const getPlatform = (plat: string) =>
-      platformList.find((obj) => obj.name === plat.toLowerCase());
+      platformList.find((obj) => obj.name.toLowerCase() === plat.toLowerCase());
     const sortPlatform = (a: any, b: any) => {
       if (b.platform < a.platform) {
         return -1;
