@@ -314,7 +314,7 @@ const useTableContentFormatter = () => {
     );
   };
 
-  const ordinalSuffixOf = (i) => {
+  const ordinalSuffixOf = (i: number): string => {
     if (!i) return '-';
     const r = Math.round(i);
     return r >= 100 ? '100' : `${r}`;
@@ -324,6 +324,13 @@ const useTableContentFormatter = () => {
     <TableCellKit>
       {(ordinalSuffixOf(r[h.id]) as any) >= 100 && '> '}
       {ordinalSuffixOf(r[h.id])}
+    </TableCellKit>
+  );
+
+  const renderOrdinalSuffixV3 = (r, h) => (
+    <TableCellKit>
+      {Number((ordinalSuffixOf(r[h.id]?.average_vertical_rank))) >= 100 && '> '}
+      {ordinalSuffixOf(r[h.id]?.average_vertical_rank)}
     </TableCellKit>
   );
 
@@ -429,6 +436,7 @@ const useTableContentFormatter = () => {
     renderSimpleIconRow,
     renderOfferIds,
     renderAdIds,
+    renderOrdinalSuffixV3,
   };
 };
 

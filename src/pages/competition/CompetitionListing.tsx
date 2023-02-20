@@ -117,16 +117,13 @@ const CompetitionListing = () => {
     }
   }, [userPlatformData]);
 
-  const { renderSimpleRow, renderOrdinalSuffix } = useTableContentFormatter();
+  const { renderSimpleRow, renderOrdinalSuffixV3 } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
-    cuisine: renderOrdinalSuffix,
-    discount_type: renderOrdinalSuffix,
-    cuisine_and_discount_type: renderOrdinalSuffix,
-    r_offers: renderOrdinalSuffix, // TODO: remove this on new API version
-    r_cuis: renderOrdinalSuffix, // TODO: remove this on new API version
-    r_all: renderOrdinalSuffix, // TODO: remove this on new API version
+    cuisine: renderOrdinalSuffixV3,
+    discount_type: renderOrdinalSuffixV3,
+    cuisine_and_discount_type: renderOrdinalSuffixV3,
   };
 
   const renderRowsByHeader = (r) =>
@@ -160,10 +157,9 @@ const CompetitionListing = () => {
           access_token: user.accessToken,
           vendors: vend || [],
           day_period: timeSlotObj[timeSlot] || 'All',
-          timeslot: timeSlotObj[timeSlot] || timeSlot,
-          filter_location: area === 'Everywhere' ? 'All' : area,
-          filter_offer: '',
-          filter_cuisine: '',
+          filter_location: area,
+          filter_offer: 'all_discounts',
+          filter_cuisine: 'Chicken',
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
@@ -233,7 +229,6 @@ const CompetitionListing = () => {
       getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
     }
   }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
-  console.log(vendorsData);
 
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
@@ -385,6 +380,29 @@ const CompetitionListing = () => {
               className='top-competition not-platform'
               setRow={setTimeSlot}
               select={timeSlot}
+            />
+            <CompetitionDropdown
+              rows={['cuisine']}
+              renderOptions={(v) => (
+                <MenuItemKit key={v} value={v}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    <ListItemTextKit primary={v} />
+                  </div>
+                </MenuItemKit>
+              )}
+              icon={TimeSlotIcon}
+              title='Cuisine'
+              type='cuisine'
+              className='top-competition not-platform'
+              setRow={() => null}
+              select='cuisine'
             />
 
             <CompetitionDropdown
