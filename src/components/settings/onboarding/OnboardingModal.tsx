@@ -10,11 +10,7 @@ import ManageBranch from './onboardingModal/ManageBranch';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
-const isUnRemovableBranch = (branchData: any[]): boolean => {
-  console.log(branchData);
-
-  return branchData.length < 2;
-};
+const isUnRemovableBranch = (branchData: any[]): boolean => branchData.length < 2; // TODO: allow reactivation
 
 const OnboardingModal = ({ propsVariables }: any) => {
   const {
