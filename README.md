@@ -1,5 +1,17 @@
 # Revly Project
 
+## Env variables
+
+We have a file called `.env.example`.
+
+This file is the basic template of our `.env` file. 
+
+You still need to create that file.
+
+There we specify the environment variable that should be used.
+
+The `.env.example` file contains the default configuration for the dev environment
+
 ## Start the project
 
 Use `yarn start` to start the project
