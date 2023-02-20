@@ -25,5 +25,9 @@ export const triggerOffers = (platform, body) =>
     .post(`${apiUrl}/marketingv2/offer/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
+// export const triggerOffers = (platform, body) => {
+//   console.log(body);
+//   return new Error;
+// };
 
 export const _ = () => null;
