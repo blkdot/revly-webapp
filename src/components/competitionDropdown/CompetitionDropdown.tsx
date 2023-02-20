@@ -29,6 +29,7 @@ const CompetitionDropdown = (props: any) => {
     type,
     widthPaper,
     heightPaper,
+    disabled,
   } = props;
   const ITEM_HEIGHT = heightPaper || 48;
   const ITEM_PADDING_TOP = 8;
@@ -100,6 +101,7 @@ const CompetitionDropdown = (props: any) => {
           value={select === undefined ? '' : select}
           onChange={onChange || handleChange}
           input={<OutlinedInputKit label={title} />}
+          disabled={rows.length === 0 || disabled}
           renderValue={(selected) =>
             renderValue ? (
               renderValue(selected)
