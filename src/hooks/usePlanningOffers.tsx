@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { ApiError, fetcher } from 'api/hooks';
 import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
@@ -13,9 +15,12 @@ function usePlanningOffers({ dateRange }) {
   const [offers, setOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUserAuth();
-
+  const newVendorsObj = {};
+  Object.keys(vendorsObj).forEach((plat) => {
+    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
+  });
   useEffect(() => {
-    if (Object.keys(vendorsObj).length < 1) return;
+    if (Object.keys(newVendorsObj).length < 1) return;
     setIsLoading(true);
     clearTimeout(fnDelays);
     setIsLoading(true);
@@ -23,7 +28,7 @@ function usePlanningOffers({ dateRange }) {
       getOffers({
         master_email: user.email,
         access_token: '',
-        vendors: vendorsObj,
+        vendors: newVendorsObj,
         start_date: dayjs(dateRange.startDate).format('YYYY-MM-DD'),
         end_date: dayjs(dateRange.endDate).format('YYYY-MM-DD'),
       }).then((res) => {
@@ -39,3 +44,28 @@ function usePlanningOffers({ dateRange }) {
 }
 
 export default usePlanningOffers;
+
+type DateRange = {
+  startDate: any;
+  endDate: any;
+};
+
+export const usePlanningOffersNew = (range: DateRange) => {
+  const [vendors] = useAtom(vendorsAtom);
+  const { vendorsObj } = vendors;
+  const { user } = useUserAuth();
+
+  return useQuery<any, ApiError, any>(
+    ['planning', 'offersv3', range, vendorsObj],
+    async () =>
+      fetcher('/planning/offersv3', {
+        master_email: user.email,
+        vendors: vendorsObj,
+        start_date: dayjs(range.startDate).format('YYYY-MM-DD'),
+        end_date: dayjs(range.endDate).format('YYYY-MM-DD'),
+      }),
+    {
+      enabled: Object.keys(vendorsObj).length > 0,
+    }
+  );
+};

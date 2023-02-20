@@ -1,3 +1,4 @@
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMiddleContent';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -25,26 +26,11 @@ const NewSettingsOnboarding = () => {
     return arr;
   };
   const [accounts, setAccounts] = useState(getAccounts() || []);
-  const getSortedDisplay = () =>
-    Object.keys(vendors.display).sort((a, b) => {
-      const displayA = Object.keys(vendors.display[a]).some(
-        (vName) => vendors.display[a][vName].is_matched
-      );
-      const displayB = Object.keys(vendors.display[b]).some(
-        (vName) => vendors.display[b][vName].is_matched
-      );
-      if (displayA === displayB) {
-        return 0;
-      }
-      if (displayA) {
-        return -1;
-      }
-      return 1;
-    });
+
   const getBranchData = () => {
     const arr = [];
 
-    getSortedDisplay().forEach((cName) => {
+    sortedVendors(vendors.display).forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
         arr.push({ name: vName, data: vendors.display[cName][vName] });
       });
@@ -55,7 +41,9 @@ const NewSettingsOnboarding = () => {
     const vendorPlatform = (obj: any) =>
       Object.keys(obj.data.platforms).map((plat) => ({
         platform: plat,
-        status: accounts.find((objAcc) => objAcc.email === obj.data.platforms[plat].email).active
+        status: accounts.find(
+          (objAcc) => objAcc.email === obj.data.platforms[plat].email && objAcc.platform === plat
+        ).active
           ? 'active'
           : 'suspended',
       }));
@@ -135,7 +123,7 @@ const NewSettingsOnboarding = () => {
         openCloseModal={openCloseModal}
       />
       <OnboardingMiddleContent
-        branchData={branchData}
+        vendors={vendors}
         openCloseModal={openCloseModal}
         accounts={accounts}
         setConnectAccount={setConnectAccount}

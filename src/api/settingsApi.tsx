@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import config from '../setup/config';
 import { handleResponse } from './baseApi';
@@ -27,3 +28,10 @@ export const settingsSave = (body) =>
 
 export const settingsLoad = (body) =>
   axios.post(`${apiUrl}/settingsv2/loadv2`, body).then(handleResponse).catch(handleResponse);
+
+export const useSettingsOnboarded = (body: Record<string, unknown>) =>
+  useQuery([], async () => {
+    const response = await axios.post(`${apiUrl}/settingsv2/onboarded`, body);
+
+    return response.data;
+  });

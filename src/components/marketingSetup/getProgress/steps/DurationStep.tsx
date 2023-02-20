@@ -1,4 +1,4 @@
-import ArrowIcon from 'assets/images/arrow.png';
+import ArrowIcon from 'assets/images/arrow.svg';
 import CalendarCheckedIcon from 'assets/images/ic_calendar-checked.png';
 import CalendarEventIcon from 'assets/images/ic_calendar-event.png';
 import TimePickerDropdown from 'components/timePicker/TimePickerDropdown';

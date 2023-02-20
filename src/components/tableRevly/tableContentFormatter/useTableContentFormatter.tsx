@@ -1,13 +1,18 @@
+import { CSSProperties } from 'react';
 import { useAtom } from 'jotai';
 import { parseISO, format } from 'date-fns';
 import { TableCellKit, TooltipKit } from 'kits';
-import arrow from '../../../assets/images/arrow.png';
+import shortid from 'shortid';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useVendors } from 'hooks';
+import arrow from '../../../assets/images/arrow.svg';
 import { platformList, platformObject } from '../../../data/platformList';
-import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const useTableContentFormatter = () => {
+  const { getChainData } = useVendors();
   const [vendorsState] = useAtom(vendorsAtom);
   const { vendorsArr } = vendorsState;
+
   const renderSimpleRow = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
@@ -20,6 +25,43 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
+  const renderSimpleIconRow = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span className='icon-row' style={{ textAlign: 'justify' }} key={h.id}>
+        {r[h.id] === null ? '' : <img src={r[h.id].src} alt={r[h.id].title} />}
+        {r[h.id] === null ? '-' : r[h.id]?.title?.toLocaleString('en-US')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderOfferIds = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r.offer_ids.join('')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderAdIds = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r.ad_ids.join('')}
+      </span>
+    </TableCellKit>
+  );
+
   const renderIsoDate = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
@@ -27,7 +69,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r[h.id] === null ? '-' : r[h.id]?.replace('T', ' ')?.toLocaleString('en-US')}
+        {r[h.id] === null ? '-' : <>{format(parseISO(r[h.id]), 'Y-MM-dd')}</>}
       </span>
     </TableCellKit>
   );
@@ -102,7 +144,7 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={vendor} className='render-row-tooltip column'>
+                <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
                   {vendor}
                 </span>
               ))
@@ -144,7 +186,7 @@ const useTableContentFormatter = () => {
         }
         disableHoverListener={r[h.id]?.length === 0}
         id='category-tooltip'
-        placement='right'
+        placement='right-start'
         arrow
       >
         <span className='render-row-tooltip' key={h.id}>
@@ -154,6 +196,22 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
+  const renderChainId = (r, h, i) => {
+    const vendorData = getChainData(r.chain_id, r.vendor_ids);
+
+    return (
+      <TableCellKit
+        id={`${h.id}_${i}`}
+        key={`${h.id}_${r.id}`}
+        style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center' }}
+      >
+        <span style={{ textAlign: 'justify' }} key={h.id}>
+          {vendorData.chain_name}
+        </span>
+      </TableCellKit>
+    );
+  };
+
   const renderPlatform = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
@@ -162,8 +220,16 @@ const useTableContentFormatter = () => {
     >
       <img
         className='planning-platform'
-        style={{ marginRight: '1.5rem' }}
-        src={platformObject[r.platform.toLowerCase()].src}
+        style={
+          {
+            marginRight: '1.5rem',
+            '--color': platformObject[r.platform.toLowerCase()].color,
+          } as CSSProperties
+        }
+        src={
+          platformObject[r.platform.toLowerCase()].srcFaviconWhite ||
+          platformObject[r.platform.toLowerCase()].srcFavicon
+        }
         alt={platformObject[r.platform.toLowerCase()].name}
       />
     </TableCellKit>
@@ -267,25 +333,31 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      {r.branch_status === 'in process' ? (
-        <span className='render-branch-row_skeleton' />
-      ) : (
-        <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
-          <p className='__title'>{r[h.id].title}</p>
-          <span className='__subtitle'>{r[h.id].address}</span>
-        </div>
-      )}
+      <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
+        <p className='__title'>{r[h.id].title}</p>
+        <span className='__subtitle'>{r[h.id].address}</span>
+      </div>
     </TableCellKit>
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {
-    const getPlatform = (plat) => platformList.find((obj) => obj.name === plat.toLowerCase());
+    const getPlatform = (plat: string) =>
+      platformList.find((obj) => obj.name === plat.toLowerCase());
+    const sortPlatform = (a: any, b: any) => {
+      if (b.platform < a.platform) {
+        return -1;
+      }
+      if (b.platform > a.platform) {
+        return 1;
+      }
+      return 0;
+    };
     return (
       <TableCellKit
         style={{ paddingLeft: 0, cursor: 'pointer', textAlign: 'left' }}
         id={`${h.id}_${i}`}
         key={`${h.id}_${r.id}`}
       >
-        {r[h.id].map((obj) => (
+        {r[h.id].sort(sortPlatform).map((obj) => (
           <span
             key={obj.platform.toLowerCase()}
             style={{ '--color': getPlatform(obj.platform).color } as any}
@@ -353,6 +425,10 @@ const useTableContentFormatter = () => {
     renderIsoDateOnly,
     renderIsoStartTimeOnlyFromDate,
     renderIsoEndTimeOnlyFromDate,
+    renderChainId,
+    renderSimpleIconRow,
+    renderOfferIds,
+    renderAdIds,
   };
 };
 

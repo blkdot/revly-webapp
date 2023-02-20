@@ -2,7 +2,7 @@ import { useAlert, useApi } from 'hooks';
 import { FC } from 'react';
 import { ButtonKit } from 'kits';
 import Arrow from '../../../../assets/icons/Arrow';
-import CloseIcon from '../../../../assets/images/ic_close.png';
+import CloseIcon from '../../../../assets/images/ic_close.svg';
 import { useUserAuth } from '../../../../contexts/AuthContext';
 
 const UploadingActive: FC<{

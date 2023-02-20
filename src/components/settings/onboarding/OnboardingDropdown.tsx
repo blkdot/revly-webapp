@@ -1,13 +1,26 @@
 import { FC } from 'react';
-import { FormControlKit, MenuItemKit, SelectKit } from 'kits';
+import { CheckboxKit, FormControlKit, ListItemTextKit, MenuItemKit, SelectKit } from 'kits';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 const OnboardingDropdown: FC<{
   state: any;
   setState: any;
   rows: any;
 }> = ({ state, setState, rows }) => {
   const handleChange = (event) => {
-    setState(event.target.value);
+    const {
+      target: { value },
+    } = event;
+    setState(typeof value === 'string' ? value.split(',') : value);
   };
 
   return (
@@ -18,13 +31,17 @@ const OnboardingDropdown: FC<{
       <SelectKit
         value={state}
         onChange={handleChange}
-        displayEmpty
-        inputProps={{ 'aria-label': 'Without label' }}
+        multiple
+        labelId='demo-multiple-checkbox-label'
+        id='demo-multiple-checkbox'
         disabled={!(rows.length > 0)}
+        renderValue={(selected) => selected.join(', ')}
+        MenuProps={MenuProps}
       >
-        {rows.map((r) => (
+        {rows.map((r: string) => (
           <MenuItemKit value={r} key={r}>
-            {r}
+            <CheckboxKit checked={state.indexOf(r) > -1} />
+            <ListItemTextKit primary={r} />
           </MenuItemKit>
         ))}
       </SelectKit>

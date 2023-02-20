@@ -2,9 +2,9 @@ import TimerIcon from 'assets/images/ic_timer.png';
 import trash from 'assets/images/ic_trash.png';
 import plus from 'assets/images/plus.png';
 import CompetitionDropdown from 'components/competitionDropdown/CompetitionDropdown';
-import MarketingCheckmarksDropdown from 'components/marketingSetup/MarketingChecmarksDropdown';
+import MarketingCheckmarkDropdownOld from 'components/marketingSetup/MarketingCheckmarkDropdownOld';
 import TimePickerDropdown from 'components/timePicker/TimePickerDropdown';
-import { getHours } from 'date-fns';
+import { getHours, format, addHours } from 'date-fns';
 import { BoxKit, ButtonKit, DatePickerDayKit, TextfieldKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { Subtitle } from './components/Subtitle';
@@ -86,7 +86,7 @@ export const RecurrenceStep: FC<{
         ''
       )}
       {typeSchedule === 'Customised Days' ? (
-        <MarketingCheckmarksDropdown
+        <MarketingCheckmarkDropdownOld
           names={days}
           setName={setCustomisedDay}
           personName={customisedDay}
@@ -130,7 +130,7 @@ export const RecurrenceStep: FC<{
             style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
           >
             <div style={{ width: '100%' }}>
-              Start Time {obj.pos}
+              Start Time {i + 1}
               <TimePickerDropdown
                 startLimit={i === 0 ? null : times[i - 1].endTime}
                 value={obj.startTime}
@@ -141,7 +141,7 @@ export const RecurrenceStep: FC<{
               />
             </div>
             <div style={{ width: '100%' }}>
-              End Time {obj.pos}
+              End Time {i + 1}
               <TimePickerDropdown
                 startLimit={isEndingLimited() ? obj.startTime : null}
                 value={obj.endTime}
@@ -219,18 +219,14 @@ export const RecurrenceStep: FC<{
                   null,
                   null,
                   null,
-                  // TODO: FIX IT
-                  // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
-                  null,
+                  Number(format(addHours(times[times.length - 1].endTime, 1), 'HH')),
                   0
                 ),
                 endTime: new Date(
                   null,
                   null,
                   null,
-                  // TODO: FIX IT
-                  // format(addHours(times[times.length - 1].endTime, 1), 'HH'),
-                  null,
+                  Number(format(addHours(times[times.length - 1].endTime, 1), 'HH')),
                   0
                 ),
                 pos: times[times.length - 1].pos + 1,

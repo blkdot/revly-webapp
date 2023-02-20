@@ -1,88 +1,38 @@
-import { useUserAuth } from 'contexts';
-import { useApi, usePlatform } from 'hooks';
+import { useSettingsOnboarded } from 'api/settingsApi';
+import { usePlatform } from 'hooks';
 import { SpinnerKit } from 'kits';
-import { useEffect, useState } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-// import config from '../setup/config';
+import { useEffect } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useUser } from './ProtectedRoutes';
 
-const ProtectedOnboardRoutes = () => {
-  const [allowed, setAllowed] = useState<any>(false);
-  const [preAllowed, setPreAllowed] = useState(false);
-  const { user } = useUserAuth();
-  const { settingsLogin, settingsOnboarded } = useApi();
-  const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
-  // const { timeRefreshToken } = config;
-  // const location = useLocation();
-  const navigate = useNavigate();
+export const ProtectedOnboardRoutes = () => {
+  const user = useUser();
+  const { userPlatformData, setUserPlatformData } = usePlatform();
 
-  const getPlatformData = async () => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
+  const response = useSettingsOnboarded({
+    master_email: user.email,
+    access_token: user.token,
+  });
 
-    try {
-      const res = await settingsOnboarded({
-        master_email: user.email,
-        access_token: user.accessToken,
-      });
-
-      if (res instanceof Error || !res.onboarded || !res.platforms) throw new Error('');
-
+  // TODO: replace it with a better approach
+  // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
+  useEffect(() => {
+    if (response.data) {
       setUserPlatformData({
         onboarded: true,
-        platforms: { ...userPlatformData.platforms, ...res.platforms },
+        platforms: { ...userPlatformData.platforms, ...response.data.platforms },
       });
-
-      setPreAllowed(true);
-    } catch (error) {
-      setAllowed(error);
     }
-  };
+  }, [response.data, setUserPlatformData]);
 
-  useEffect(() => {
-    getPlatformData();
-  }, []);
+  if (
+    response.isError ||
+    (response.isSuccess && (!response.data.onboarded || !response.data.platforms))
+  ) {
+    return <Navigate to='/dashboardOnboard' />;
+  }
 
-  // useEffect(() => {
-  //   if (!userPlatformData.onboarded) {
-  //     reccurentLogin();
-  //   }
-
-  //   setAllowed(true);
-  // }, [location]);
-
-  // const reccurentLogin = async () => {
-  //   const res = await settingsLogin({
-  //     master_email: user.email,
-  //     access_token: user.accessToken,
-  //   });
-
-  //   if (res instanceof Error || !res.onboarded) {
-  //     cleanPlatformData();
-  //     setAllowed(new Error(''));
-  //     return;
-  //   }
-
-  //   setUserPlatformData({
-  //     onboarded: true,
-  //     platforms: { ...userPlatformData.platforms, ...res.platforms },
-  //   });
-  //   setAllowed(true);
-  // };
-
-  // useEffect(() => {
-  //   const autoRefresh = setInterval(() => {
-  //     reccurentLogin();
-  //   }, timeRefreshToken);
-  //   return () => {
-  //     clearInterval(autoRefresh);
-  //   };
-  // });
-
-  if ((allowed as any) instanceof Error) return <Navigate to='/dashboardOnboard' />;
-
-  if (!preAllowed) {
+  if (response.isLoading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
@@ -92,5 +42,3 @@ const ProtectedOnboardRoutes = () => {
 
   return <Outlet />;
 };
-
-export default ProtectedOnboardRoutes;

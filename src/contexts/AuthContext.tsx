@@ -6,15 +6,12 @@
   confirmPasswordReset,
   createUserWithEmailAndPassword,
   EmailAuthProvider,
-  GoogleAuthProvider,
   onAuthStateChanged,
   PhoneAuthProvider,
   reauthenticateWithCredential,
-  reauthenticateWithPopup,
   RecaptchaVerifier,
   setPersistence,
   signInWithEmailAndPassword,
-  signInWithPopup,
   signOut,
   updatePhoneNumber,
   verifyPasswordResetCode,
@@ -92,16 +89,6 @@ export const AuthContextProvider = ({ children }) => {
     return updatePhoneNumber(user, phoneCredential);
   };
 
-  const googleSignIn = () => {
-    const googleAuthProvider = new GoogleAuthProvider();
-    return signInWithPopup(auth, googleAuthProvider);
-  };
-
-  const reAuthGoogle = () => {
-    const googleAuthProvider = new GoogleAuthProvider();
-    return reauthenticateWithPopup(user, googleAuthProvider);
-  };
-
   const reAuth = (password) => {
     const credentials = EmailAuthProvider.credential(user.email, password);
 
@@ -115,7 +102,6 @@ export const AuthContextProvider = ({ children }) => {
         signUp,
         signIn,
         logOut,
-        googleSignIn,
         reAuth,
         verifyPhone,
         resetPassword,
@@ -124,7 +110,6 @@ export const AuthContextProvider = ({ children }) => {
         isUpdatingPhone,
         setIsUpdatingPhone,
         verifyCodeEmail,
-        reAuthGoogle,
       }}
     >
       {children}

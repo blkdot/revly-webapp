@@ -8,14 +8,13 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevly from 'components/tableRevly/TableRevly';
 import { endOfMonth, endOfWeek } from 'date-fns/esm';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
-import { useAtom } from 'jotai';
+
 import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
-import shortid from 'shortid';
+
 import adsIcon from '../../assets/images/ic_ads.png';
 import offerIcon from '../../assets/images/ic_offers.png';
 import { platformObject } from '../../data/platformList';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
 
@@ -26,12 +25,38 @@ const defaultFilterStateFormat = {
   status: [],
 };
 
+type TAds = {
+  ad_ids: string[];
+  ad_serving_count: number;
+  area: string | null;
+  attributed_order_value: number | null;
+  canceled_at: string | null;
+  chain_id: number;
+  chain_name: string;
+  clicks_count: number;
+  conversion_rate: number;
+  cost_per_click: number;
+  created_at: string | Date;
+  master_ad_id: string;
+  new_customers_count: number;
+  orders_count: number;
+  platform: string;
+  return_on_ad_spent: number;
+  source: string;
+  spend: number | null;
+  status: string;
+  total_budget: number | null;
+  valid_from: string | Date;
+  valid_to: string | Date;
+  vendor_ids: number[];
+  _metadata: null;
+};
+
 const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const [active, setActive] = useState(0);
   const { date } = useDate();
-  const [vendors] = useAtom(vendorsAtom);
 
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
@@ -47,7 +72,7 @@ const Planning = () => {
     endDate: getOfferDate(),
     ...JSON.parse(dateSaved || '{}'),
   });
-  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
+
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
@@ -56,6 +81,7 @@ const Planning = () => {
   });
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
+  const [dataFilteredAds, setDataFilteredAds] = useState([]);
   const [openedFilter, setOpenedFilter] = useState(false);
 
   useEffect(() => {
@@ -68,18 +94,21 @@ const Planning = () => {
     renderPercent,
     renderCurrency,
     renderStatus,
-    renderSimpleRowNotCentered,
+    renderChainId,
     renderTarget,
     renderScheduleType,
     renderSimpleRow,
     renderVendorId,
     renderTimeSlot,
     renderIsoDate,
+    renderOfferIds,
+    renderAdIds,
   } = useTableContentFormatter();
 
   const headersOffers = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
+    // { id: 'offer_ids', disablePadding: true, label: 'Offer ID Debug' }, // Debug Purpose
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'start_date', disablePadding: true, label: 'Start date' },
     { id: 'end_date', disablePadding: true, label: 'End date' },
@@ -93,8 +122,9 @@ const Planning = () => {
   ];
 
   const headersAds = [
-    { id: 'chain_name', disablePadding: true, label: 'Chain name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Vendors' },
+    // { id: 'ad_ids', disablePadding: true, label: 'Ad ID Debug' }, // Debug Purpose
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Vendor(s)' },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'valid_from', disablePadding: true, label: 'Start date' },
     { id: 'valid_to', disablePadding: true, label: 'End date' },
@@ -103,7 +133,9 @@ const Planning = () => {
   ];
 
   const cellTemplatesObject = {
-    chain_name: renderSimpleRowNotCentered,
+    offer_ids: renderOfferIds,
+    ad_ids: renderAdIds,
+    chain_id: renderChainId,
     platform: renderPlatform,
     vendor_ids: renderVendorId,
     start_date: renderSimpleRow,
@@ -124,19 +156,19 @@ const Planning = () => {
     headersOffers.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
-        id: `${cur.id}_${r.start_date}_${r.end_date}_offers_${shortid.generate()}`,
+        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_ids.join('') }, cur),
+        id: r.master_offer_id,
         data: r,
       }),
       {}
     );
 
-  const renderRowsByHeaderAds = (r: Record<string, never>) =>
+  const renderRowsByHeaderAds = (r: TAds) =>
     headersAds.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_id }, cur),
-        id: `${cur.id}_${r.ad_id}_ads_${shortid.generate()}`,
+        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.ad_ids.join('') }, cur),
+        id: r.master_ad_id,
         data: r,
       }),
       {}
@@ -156,11 +188,12 @@ const Planning = () => {
         <TableRevly
           isLoading={isLoadingAds}
           headers={headersAds}
-          rows={dataFiltered.map(renderRowsByHeaderAds)}
+          rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
         />
       );
     }
+
     return (
       <TableRevly
         isLoading={isLoadingOffers}
@@ -220,8 +253,7 @@ const Planning = () => {
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
-        if (!status.includes(active ? cur.ad_status : cur.status))
-          status.push(active ? cur.ad_status : cur.status);
+        if (!status.includes(cur.status.toLowerCase())) status.push(cur.status.toLowerCase());
 
         return { ...acc, platform, type_offer: discountType, discount_rate: procent, status };
       },
@@ -256,7 +288,7 @@ const Planning = () => {
     const preHeadTypeOffer = preHead.type_offer.map((s: string) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s: string) => ({ value: s, text: `${s} %` }));
     const preHeadStatus = preHead.status.map((s: string) => ({
-      value: s,
+      value: s.toLowerCase(),
       text: renderStatusFilter(s),
     }));
 
@@ -286,27 +318,33 @@ const Planning = () => {
   };
 
   useEffect(() => {
-    let filteredData = active ? ads : offers;
+    let filteredData = offers;
+    let filteredDataAds = ads;
 
     if (filters.platform.length > 0) {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
+      filteredDataAds = filteredDataAds.filter((f) => filters.platform.includes(f.platform));
     }
 
     if (filters.type_offer.length > 0) {
       filteredData = filteredData.filter((f) => filters.type_offer.includes(f.type_offer));
+      filteredDataAds = filteredDataAds.filter((f) => filters.type_offer.includes(f.type_offer));
     }
 
     if (filters.discount_rate.length > 0) {
       filteredData = filteredData.filter((f) => filters.discount_rate.includes(f.discount_rate));
-    }
-
-    if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) =>
-        filters.status.includes(active ? f.ad_status : f.status)
+      filteredDataAds = filteredDataAds.filter((f) =>
+        filters.discount_rate.includes(f.discount_rate)
       );
     }
 
+    if (filters.status.length > 0) {
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredDataAds = filteredDataAds.filter((f) => filters.status.includes(f.status));
+    }
+
     setDataFiltered(filteredData);
+    setDataFilteredAds(filteredDataAds);
   }, [JSON.stringify(filters), ads, offers, active, JSON.stringify(dateRange)]);
 
   const renderLayout = () => {
