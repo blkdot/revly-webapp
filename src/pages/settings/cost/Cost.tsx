@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DropdownSnackbar from 'components/dropdownSnackbar/DropdownSnackbar';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useCost, useVendors } from 'hooks';
 import { SpinnerKit } from 'kits';
 import { useState } from 'react';
@@ -18,7 +20,7 @@ const Cost = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const { vendors } = useVendors(false);
 
-  const { vendorsObj, vendorsArr } = vendors;
+  const { vendorsObj } = vendors;
   const { load, save } = useCost(vendorsObj);
 
   const { isLoading, isError } = useQuery(['loadCost', { vendors }], load, {
@@ -69,32 +71,57 @@ const Cost = () => {
     await mutateAsync({ cost: parseFloat(cost), vendors: v });
   };
 
-  const deleteCost = (index, vendorId) => async () => {
-    const clonedInvoice = [...invoice];
-    clonedInvoice.splice(index, 1);
-
-    const element = vendorsArr.find((vobj) => String(vobj.vendor_id) === String(vendorId));
-
-    const { platform, ...rest } = element;
-
-    await mutateAsync({ cost: null, vendors: { [platform]: [{ ...rest }] } });
-
-    setInvoice(clonedInvoice);
+  const headers = [
+    {
+      id: 'chain_id',
+      numeric: false,
+      disablePadding: false,
+      label: 'Chain name',
+    },
+    {
+      id: 'vendor_ids',
+      numeric: false,
+      disablePadding: false,
+      label: 'Number of branches',
+    },
+    {
+      id: 'cost',
+      numeric: false,
+      disablePadding: true,
+      label: 'Cost',
+    },
+  ];
+  const { renderChainId, renderVendorId, renderSimpleRow, renderSimpleRowSkeleton } =
+    useTableContentFormatter();
+  const cellTemplatesObject = {
+    chain_id: renderChainId,
+    vendor_ids: renderVendorId,
+    cost: renderSimpleRow,
   };
-
-  const renderContent = () => {
-    if (isLoading || isLoadingMutation)
-      return <SpinnerKit style={{ display: 'flex', margin: 'auto', justifyContent: 'center' }} />;
-
-    return invoice?.map((obj, index) => (
-      <Invoice
-        key={obj.id}
-        onDelete={deleteCost(index, obj.id)}
-        restaurant={obj.restaurant}
-        cost={obj.cost}
-      />
-    ));
+  const renderRowsByHeader = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id](r, cur),
+        id: r.platform,
+        data: r,
+      }),
+      {}
+    );
+  const cellTemplatesObjectLoding = {
+    platform: renderSimpleRowSkeleton,
+    beforePeriod: renderSimpleRowSkeleton,
+    evolution: renderSimpleRowSkeleton,
   };
+  const renderRowsByHeaderLoading = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoding[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
 
   return (
     <div className='billing'>
@@ -111,7 +138,12 @@ const Cost = () => {
           setIsUpdate={setIsUpdate}
           invoice={invoice}
         />
-        {renderContent()}
+        {/* <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+          isLoading={isLoading || isLoadingMutation}
+          headers={headers}
+          rows={invoice.map(renderRowsByHeader)}
+        /> */}
       </div>
     </div>
   );

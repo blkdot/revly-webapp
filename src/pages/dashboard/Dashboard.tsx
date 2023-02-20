@@ -119,11 +119,12 @@ const Dashboard = () => {
     const title = table.toLocaleLowerCase();
     if (title === 'orders') return 'n_orders';
     if (title === 'avg. basket') return 'average_basket';
-    if (title === 'accrued discount') return 'accrued_discounts'
-    if (title === 'net revenue') return 'profit'
+    if (title === 'accrued discount') return 'accrued_discounts';
+    if (title === 'net revenue') return 'profit';
     return title;
-  }
-  const { renderPlatform, renderSimpleRow, renderPlatformSkeleton, renderSimpleRowSkeleton  } = useTableContentFormatter();
+  };
+  const { renderPlatform, renderSimpleRow, renderPlatformSkeleton, renderSimpleRowSkeleton } =
+    useTableContentFormatter();
   const cellTemplatesObject = {
     platform: renderPlatform,
     beforePeriod: renderSimpleRow,
@@ -167,7 +168,7 @@ const Dashboard = () => {
     }
     return '-';
   };
-  const [metrics, setMetrics] = useState([])
+  const [metrics, setMetrics] = useState([]);
 
   const getProcent = (metricsBefore, metricsAfter) => {
     if (metricsBefore && metricsAfter) {
@@ -176,15 +177,13 @@ const Dashboard = () => {
       }
 
       return Number(
-        parseFloat(
-          (metricsBefore[getType()] / (metricsAfter[getType()] / 100) - 100).toFixed(0)
-        )
+        parseFloat((metricsBefore[getType()] / (metricsAfter[getType()] / 100) - 100).toFixed(0))
       );
     }
     return '-';
   };
   const evolution = (procent) => {
-    if (Number.isNaN(procent)) {
+    if (Number.isNaN(procent) || procent === '-' || procent === null) {
       return '-';
     }
     if (procent > 0) {
@@ -193,14 +192,20 @@ const Dashboard = () => {
     return `${procent}%`;
   };
   useEffect(() => {
-    const data = Object.keys(metricsbeforePeriod).map((plat) => ({
+    const platforms = [
+      ...Object.keys(userPlatformData.platforms).map(
+        (plat) => userPlatformData.platforms[plat].some((obj) => obj.active) && plat
+      ),
+      'all',
+    ];
+    const data = platforms.map((plat) => ({
       platform: plat === 'all' ? 'Total' : plat,
       beforePeriod: getNum(metricsbeforePeriod[plat]),
       afterPeriod: getNum(metricsafterPeriod[plat]),
       evolution: evolution(getProcent(metricsbeforePeriod[plat], metricsafterPeriod[plat])),
-    }))
-    setMetrics(data)
-  }, [metricsbeforePeriod, metricsafterPeriod])
+    }));
+    setMetrics(data);
+  }, [metricsbeforePeriod, metricsafterPeriod]);
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
@@ -220,9 +225,9 @@ const Dashboard = () => {
         ''
       )}
       {metricsbeforePeriod.length !== 0 &&
-        metricsafterPeriod.length !== 0 &&
-        !loading &&
-        userPlatformData.onboarded ? (
+      metricsafterPeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <Finance
           setTable={setTable}
           table={getType()}
@@ -236,9 +241,9 @@ const Dashboard = () => {
         <FinanceEmpty />
       )}
       {metricsbeforePeriod.length !== 0 &&
-        metricsafterPeriod.length !== 0 &&
-        !loading &&
-        userPlatformData.onboarded ? (
+      metricsafterPeriod.length !== 0 &&
+      !loading &&
+      userPlatformData.onboarded ? (
         <Marketing
           setTable={setTable}
           table={getType()}

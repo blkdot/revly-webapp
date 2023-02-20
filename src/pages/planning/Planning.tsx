@@ -13,9 +13,6 @@ import { useEffect, useState } from 'react';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
-import Calendar from '../../assets/images/calendar.svg';
-import Clock from '../../assets/images/clock.svg';
-import User from '../../assets/images/user.svg';
 
 const defaultFilterStateFormat = {
   platform: [],
@@ -106,7 +103,12 @@ const Planning = () => {
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
     { id: 'start_end_date', disablePadding: true, label: 'Start - end date' },
-    { id: 'slot', disablePadding: true, label: 'Slot', tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'type_offer', disablePadding: true, label: 'Discount type' },
     { id: 'discount_rate', disablePadding: true, label: 'Discount rate' },
@@ -118,10 +120,21 @@ const Planning = () => {
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Brnaches' },
     { id: 'start_end_date', disablePadding: true, label: 'Start - end date' },
-    { id: 'slot', disablePadding: true, label: 'Slot', tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     { id: 'platform', disablePadding: true, label: 'Platform' },
     { id: 'total_budget', disablePadding: true, label: 'Budget', tooltip: 'Ads campaign budget' },
-    { id: 'cost_per_click', disablePadding: true, label: 'Cost Per Click', tooltip: 'Commonly referred to as CPC. You can either set the CPC manually or let the aggregator set a dynamic CPC, only available on Deliveroo.' },
+    {
+      id: 'cost_per_click',
+      disablePadding: true,
+      label: 'Cost Per Click',
+      tooltip:
+        'Commonly referred to as CPC. You can either set the CPC manually or let the aggregator set a dynamic CPC, only available on Deliveroo.',
+    },
     { id: 'status', disablePadding: true, label: 'Status' },
   ];
 
@@ -133,7 +146,7 @@ const Planning = () => {
     platform: renderPlatform,
     type_offer: renderSimpleRow,
     discount_rate: renderPercent,
-    goal: renderTarget,
+    goal: renderSimpleIconRow,
     status: renderStatus,
     total_budget: renderCurrency,
     cost_per_click: renderCurrency,
@@ -202,7 +215,7 @@ const Planning = () => {
     setClickedId(id);
   };
   const [link, setLink] = useState('Offers planning');
-  const links = ['Offers planning', 'Ads planning']
+  const links = ['Offers planning', 'Ads planning'];
   const renderTable = () => {
     if (link === 'Ads planning') {
       return (
@@ -374,20 +387,17 @@ const Planning = () => {
       filteredDataAds = filteredDataAds.filter((f) => filters.status.includes(f.status));
     }
 
-    setDataFiltered(filteredData.map((obj) => ({
-      ...obj, start_end_date: {
-        title: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(new Date(obj.valid_to)).format('DD/MM')}`,
-        src: Calendar
-      },
-      slot: {
-        title: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(new Date(obj.valid_to)).format('hh:mm')}`,
-        src: Clock,
-      },
-      goal: {
-        title: obj.goal,
-        src: User,
-      }
-    })));
+    setDataFiltered(
+      filteredData.map((obj) => ({
+        ...obj,
+        start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('DD/MM')}`,
+        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('hh:mm')}`,
+      }))
+    );
     setDataFilteredAds(filteredDataAds);
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
@@ -397,10 +407,14 @@ const Planning = () => {
         <RestaurantDropdown />
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
-      {opened ? <OfferDetailComponent
-        data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
-        setOpened={setOpened}
-      /> : renderTable()}
+      {opened ? (
+        <OfferDetailComponent
+          data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
+          setOpened={setOpened}
+        />
+      ) : (
+        renderTable()
+      )}
       <MarketingOfferFilter
         CloseFilterPopup={CloseFilterPopup}
         openedFilter={openedFilter}

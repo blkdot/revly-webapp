@@ -7,10 +7,17 @@ const OnboardingTable: FC<{
   openCloseModal: any;
   setConnectAccount: any;
   setClickedBranch: any;
-  loading: boolean,
+  loading: boolean;
 }> = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch, loading }) => {
-  const { renderAccountsRow, renderBranchStatusRow, renderBranchRow, renderLinkedPlatformsRow, renderSimpleRowSkeleton, renderPlatformSkeleton, renderPercentSkeleton } =
-    useTableContentFormatter();
+  const {
+    renderAccountsRow,
+    renderStatus,
+    renderBranchRow,
+    renderLinkedPlatformsRow,
+    renderSimpleRowSkeleton,
+    renderPlatformSkeleton,
+    renderPercentSkeleton,
+  } = useTableContentFormatter();
   const headersOnBoarding = [
     {
       id: 'branch_name',
@@ -43,7 +50,7 @@ const OnboardingTable: FC<{
       branch_name: renderBranchRow,
       accounts: renderAccountsRow,
       linked_platforms: renderLinkedPlatformsRow,
-      branch_status: renderBranchStatusRow,
+      branch_status: renderStatus,
     };
   const renderRowsByHeader = (r) =>
     headersOnBoarding.reduce(

@@ -12,8 +12,8 @@
   background-color: var(--color);
   border-radius: 50%;
   padding: 3px;
-    width: 27px;
-    height: 27px;
+  width: 27px;
+  height: 27px;
   object-fit: contain;
   display: flex;
   align-items: center;
@@ -41,7 +41,7 @@
   }
 
   tbody {
-    >tr:nth-of-type(1) {
+    > tr:nth-of-type(1) {
       // background: rgba(144, 107, 255, 0.08);
       padding-right: 5px;
 
@@ -49,12 +49,12 @@
         border-radius: 8px 0 0 8px;
       }
 
-      >td:last-of-type {
+      > td:last-of-type {
         border-radius: 0 8px 8px 0;
         padding: 20px 15px;
         grid-gap: 8px;
 
-        >div {
+        > div {
           width: 100px;
           padding-left: 14px;
           transform: scale(1.5);
@@ -78,7 +78,6 @@
   border-bottom: 1px solid #919eab3d;
 
   &.selected {
-
     th,
     td {
       background: #ff484214 !important;
@@ -89,7 +88,7 @@
   td {
     white-space: nowrap;
 
-    >span {
+    > span {
       white-space: nowrap;
       text-align: center;
     }
@@ -291,7 +290,7 @@
   background-color: none;
 
   .MuiTableSortLabel-iconDirectionAsc {
-    fill: #2F74FF;
+    fill: #2f74ff;
   }
 
   .MuiTableSortLabel-iconDirectionDesc {
@@ -327,24 +326,24 @@
     justify-content: space-between;
 
     .table-filter {
-      border-left: 1px solid #919EAB3D;
+      border-left: 1px solid #919eab3d;
       display: flex;
       align-items: center;
       padding: 0 35px;
       cursor: pointer;
 
-      >p {
+      > p {
         font-weight: 700;
         font-size: 13px;
         line-height: 22px;
       }
 
-      >span {
+      > span {
         width: 9px;
         height: 1.5px;
         position: relative;
         border-radius: 2px;
-        background-color: #212B36;
+        background-color: #212b36;
         left: -5px;
         margin-left: 10px;
         margin-right: 5px;
@@ -356,7 +355,7 @@
           position: absolute;
           bottom: -4px;
           border-radius: 2px;
-          background-color: #212B36;
+          background-color: #212b36;
           left: 3px;
         }
 
@@ -367,7 +366,7 @@
           position: absolute;
           top: -3.75px;
           border-radius: 2px;
-          background-color: #212B36;
+          background-color: #212b36;
           left: -2px;
         }
       }
@@ -398,7 +397,7 @@
         border-bottom: none !important;
 
         &:hover {
-          background-color: #F8F9FD !important;
+          background-color: #f8f9fd !important;
           border-radius: 8px !important;
         }
 
@@ -417,6 +416,18 @@
   align-items: center;
   position: relative;
   padding: 0 20px;
+  transition: 0.4s;
+
+  &::before {
+    content: '';
+    background-color: #906bff;
+    height: 2px;
+    position: absolute;
+    width: var(--length);
+    bottom: 0;
+    transition: 0.4s;
+    left: var(--left);
+  }
 
   .table-link {
     cursor: pointer;
@@ -431,16 +442,6 @@
 
     &.active {
       color: #906bff;
-
-      &::before {
-        content: '';
-        background-color: #906bff;
-        height: 2px;
-        position: absolute;
-        width: var(--length);
-        bottom: 0;
-        left: 0;
-      }
     }
 
     &:hover {
@@ -454,14 +455,14 @@
   display: flex;
   align-items: center;
   grid-gap: 30px;
-  border-left: 1px solid #919EAB3D;
+  border-left: 1px solid #919eab3d;
 
   img {
     cursor: pointer;
     pointer-events: none;
   }
 
-  >img:nth-of-type(1) {
+  > img:nth-of-type(1) {
     transform: scale(-1, 1);
   }
 
@@ -486,4 +487,10 @@
   &.desc {
     filter: invert(33%) sepia(99%) saturate(1277%) hue-rotate(192deg) brightness(83%) contrast(175%);
   }
+}
+.render-vendor-text{
+  background-color: #F1EFFF;
+  border-radius: 55px;
+  padding: 4px 6px;
+  color: #724AEB;
 }

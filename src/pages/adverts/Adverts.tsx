@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import Dates from 'components/dates/Dates';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { endOfMonth, endOfWeek, format, getYear, subDays } from 'date-fns';
-import { ButtonKit, PaperKit, SkeletonKit, TableCellKit, TableRowKit, TypographyKit } from 'kits';
+import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
+import { ButtonKit, TypographyKit } from 'kits';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import dayjs from 'dayjs';
 import { enUS } from 'date-fns/locale';
@@ -10,13 +10,13 @@ import { useDate, usePlanningAds } from 'hooks';
 import { useAtom } from 'jotai';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Adverts.scss';
-import arrow from 'assets/images/arrow.svg';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from 'components/tableRevly/TableRevly';
 import EyeIcon from 'assets/images/eye.svg';
 import ShoppingBagIcon from 'assets/images/shopping-bag.svg';
 import GraphIcon from 'assets/images/graph.svg';
 import SmileIcon from 'assets/images/smile.svg';
+import arrow from 'assets/images/arrow.svg';
 import AdvertsDetails from './details/AdvertsDetails';
 
 const Adverts = () => {
@@ -129,6 +129,9 @@ const Adverts = () => {
     renderPlatform,
     renderCalculatedPercent,
     renderSimpleIconRow,
+    renderSimpleRowSkeleton,
+    renderPlatformSkeleton,
+    renderPercentSkeleton,
   } = useTableContentFormatter();
   const cellTemplatesObject = {
     chain_id: renderChainId,
@@ -158,23 +161,36 @@ const Adverts = () => {
       }),
       {}
     );
-  const skeletons = (h) => {
-    if (h.id === 'vendor_ids' || h.id === 'platform') {
-      return <SkeletonKit variant='circular' width={40} height={40} />;
-    }
-    return <SkeletonKit />;
+  const cellTemplatesObjectLoading = {
+    chain_id: renderSimpleRowSkeleton,
+    vendor_ids: renderPlatformSkeleton,
+    start_end_date: renderSimpleRowSkeleton,
+    start_end_hour: renderSimpleRowSkeleton,
+    total_budget: renderSimpleRowSkeleton,
+    spend: renderSimpleRowSkeleton,
+    return_on_ad_spent: renderSimpleRowSkeleton,
+    platform: renderPlatformSkeleton,
+    impressions: renderSimpleRowSkeleton,
+    orders: renderSimpleRowSkeleton,
+    attributed_order_value: renderSimpleRowSkeleton,
+    clicks: renderSimpleRowSkeleton,
+    conversion_rate: renderSimpleRowSkeleton,
+    customers: renderSimpleRowSkeleton,
+    status: renderPercentSkeleton,
   };
-  const renderSkeleton = () =>
-    [1, 2, 3, 4, 5].map((n) => (
-      <TableRowKit key={n}>
-        {(link === 'list' ? headersList : headersPerformance).map((h) => (
-          <TableCellKit key={h.id}>{skeletons(h)}</TableCellKit>
-        ))}
-      </TableRowKit>
-    ));
 
+  const renderRowsByHeaderListLoading = (r) =>
+    (link === 'list' ? headersList : headersPerformance).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
   const [details, setDetails] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
+  const links = ['Ads management', 'Ads performance']
   const renderLayout = () => {
     if (details) {
       return <AdvertsDetails />;
@@ -182,64 +198,35 @@ const Adverts = () => {
     return (
       <div>
         <div className='adverts_top-titles'>
-          <TypographyKit className='adverts-title' variant='subtitle'>
-            Manage Advertisements for
-            <span>{isDisplay()}</span>
-            for
-            <span>{getbeforePeriod()}</span>
-          </TypographyKit>
-          <p>
-            Here you can quickly and easily create and manage effective advertisements for their
-            businesses.
-          </p>
+          <div>
+            <TypographyKit className='adverts-title' variant='subtitle'>
+              Manage Advertisements for
+              <span>{isDisplay()}</span>
+              for
+              <span>{getbeforePeriod()}</span>
+            </TypographyKit>
+            <p>
+              Here you can quickly and easily create and manage effective advertisements for their
+              businesses.
+            </p>
+          </div>
+          <ButtonKit>
+            Create new campaign
+            <img src={arrow} alt='right-arrow' />
+          </ButtonKit>
         </div>
-        <PaperKit className='competition-paper adverts'>
-          <div className='paper-top-link'>
-            <div className='links'>
-              <div>
-                <p className={link === 'list' ? 'active' : ''}>Adverts List</p>
-                <span>The list of your running adverts for Today</span>
-              </div>
-              <div>
-                <p className={link === 'performence' ? 'active' : ''}>Adverts Performance</p>
-                <span>Performance Metrics of you running adverts for Today</span>
-              </div>
-              <div className='arrows'>
-                <img
-                  tabIndex={-1}
-                  role='presentation'
-                  onClick={() => setLink('list')}
-                  className={link !== 'list' ? 'active' : ''}
-                  src={arrow}
-                  alt='left-arrow'
-                />
-                <img
-                  tabIndex={-1}
-                  role='presentation'
-                  onClick={() => setLink('performence')}
-                  className={link !== 'performence' ? 'active' : ''}
-                  src={arrow}
-                  alt='right-arrow'
-                />
-              </div>
-            </div>
-            <ButtonKit>
-              Create new campaign
-              <img src={arrow} alt='right-arrow' />
-            </ButtonKit>
-          </div>
-          <div className='adverts-table'>
-            <TableRevly
-              onClickRow={(id) => {
-                setDetails(true);
-              }}
-              renderCustomSkelton={renderSkeleton}
-              isLoading={isLoadingAds}
-              headers={link === 'list' ? headersList : headersPerformance}
-              rows={adsData.map(renderRowsByHeaderList)}
-            />
-          </div>
-        </PaperKit>
+        <TableRevlyNew
+          onClickRow={(id) => {
+            setDetails(true);
+          }}
+          link={link}
+          setLink={setLink}
+          links={links}
+          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderListLoading)}
+          isLoading={isLoadingAds}
+          headers={link === 'list' ? headersList : headersPerformance}
+          rows={adsData.map(renderRowsByHeaderList)}
+        />
       </div>
     );
   };

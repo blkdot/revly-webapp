@@ -47,12 +47,14 @@ const Menu = () => {
         .flat();
 
       setCategoryList(res.data.categories || []);
-      setData(resp.map((obj) => ({
-        ...obj,
-        item_name: obj.name || obj.item_name,
-        item_category: obj.category || obj.category_name,
-        item_price: obj.price || obj.unit_price,
-      })));
+      setData(
+        resp.map((obj) => ({
+          ...obj,
+          item_name: obj.name || obj.item_name,
+          item_category: obj.category || obj.category_name,
+          item_price: obj.price || obj.unit_price,
+        }))
+      );
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -112,8 +114,7 @@ const Menu = () => {
     }
     setCategory(value);
   };
-  const { renderSimpleRow, renderSimpleRowSkeleton, renderCurrency } =
-    useTableContentFormatter();
+  const { renderSimpleRow, renderSimpleRowSkeleton, renderCurrency } = useTableContentFormatter();
   const headers = [
     {
       id: 'item_name',
@@ -253,7 +254,9 @@ const Menu = () => {
           renderCustomSkelton={[0, 1, 2, 3, 4, 5].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headers}
-          rows={(filteredCategoryData.length > 0 ? filteredCategoryData : data).map(renderRowsByHeader)}
+          rows={(filteredCategoryData.length > 0 ? filteredCategoryData : data).map(
+            renderRowsByHeader
+          )}
           className='onboarding-table'
         />
       </div>

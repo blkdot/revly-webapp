@@ -64,7 +64,7 @@ const NewSettingsOnboarding = () => {
       }
       return 'suspended';
     };
-    setLoading(false)
+    setLoading(false);
     return arr.map((obj) => ({
       branch_name: { title: obj.name, address: '' },
       accounts: vendorsAccounts(obj),
@@ -116,7 +116,7 @@ const NewSettingsOnboarding = () => {
     setConnectAccount,
     vendors,
     setLoading,
-    loading
+    loading,
   };
   return (
     <div>
