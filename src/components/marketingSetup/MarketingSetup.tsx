@@ -346,7 +346,7 @@ const MarketingSetup: React.FC<{
     try {
       if (platform.length < 2) {
         setTriggerLoading(true);
-        const selectedVendorsData = selectedVendors('full', branch.display, platform[0]);
+        const selectedVendorsData = selectedVendors('full', branch.display, platform[0]).filter((d) => d);
 
         const res = await triggerOffers(platform[0], {
           ...dataReq,
@@ -367,8 +367,8 @@ const MarketingSetup: React.FC<{
       } else {
         const crossPlatform = platform.map(async (p) => {
           setTriggerLoading(true);
-          const selectedVendorsData = selectedVendors('full', branch.display, p);
-
+          const selectedVendorsData = selectedVendors('full', branch.display, p).filter((d) => d);
+  
           return triggerOffers(p, {
             ...dataReq,
             vendors: selectedVendorsData,
