@@ -346,6 +346,7 @@ const MarketingAds = () => {
           filters={!isEmptyList() ? filters : null}
           filtersHead={!isEmptyList() ? filtersHead : null}
           handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+          noDataText='No ads has been retrieved.'
         />
       );
     }
@@ -364,6 +365,7 @@ const MarketingAds = () => {
         filters={!isEmptyList() ? filters : null}
         filtersHead={!isEmptyList() ? filtersHead : null}
         handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+        noDataText='No ads has been retrieved.'
       />
     );
   };

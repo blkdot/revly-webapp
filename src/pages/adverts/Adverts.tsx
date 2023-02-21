@@ -229,6 +229,7 @@ const Adverts = () => {
           isLoading={isLoadingAds}
           headers={link === 'Ads management' ? headersList : headersPerformance}
           rows={adsData.map(renderRowsByHeaderList)}
+          noDataText='No ads has been retrieved.'
         />
       </div>
     );

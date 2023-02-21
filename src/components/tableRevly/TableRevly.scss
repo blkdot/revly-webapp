@@ -538,7 +538,7 @@
     color: #fff;
     font-size: 12px;
     font-weight: 400;
-
+    width: fit-content;
     > span {
       &::before {
         background-color: #2684fc !important;
@@ -549,7 +549,7 @@
 .table-filters {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  grid-gap: 20px;
   flex-wrap: wrap;
   padding: 0 20px;
   padding-bottom: 10px;

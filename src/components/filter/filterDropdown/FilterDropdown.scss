@@ -22,14 +22,6 @@
       justify-content: center;
       text-transform: capitalize;
 
-      &.active {
-        svg,
-        img {
-          width: 40px;
-          height: 20px;
-          object-fit: contain;
-        }
-      }
     }
 
     .comp-dropdown-arrow {
@@ -65,7 +57,7 @@
     img,
     svg {
       margin-right: 5px;
-      width: 20px;
+      width: 40px;
       height: 20px;
       object-fit: contain;
     }

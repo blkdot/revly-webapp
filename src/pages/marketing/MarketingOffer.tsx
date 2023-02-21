@@ -399,10 +399,11 @@ const MarketingOffer = () => {
           headers={headersPerformance}
           rows={offersDataFiltered.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
-          setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+          setOpenedFilter={setOpenedFilter}
           filters={!isEmptyList() ? filters : null}
-          filtersHead={!isEmptyList() ? filtersHead : null}
-          handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+          filtersHead={filtersHead}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          noDataText='No offer has been retrieved.'
         />
       );
     }
@@ -418,10 +419,11 @@ const MarketingOffer = () => {
         rows={offersDataFiltered.map(renderRowsByHeader)}
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
-        setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+        setOpenedFilter={setOpenedFilter}
         filters={!isEmptyList() ? filters : null}
-        filtersHead={!isEmptyList() ? filtersHead : null}
-        handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+        filtersHead={filtersHead}
+        handleChangeMultipleFilter={handleChangeMultipleFilter}
+        noDataText='No offer has been retrieved.'
       />
     );
   };

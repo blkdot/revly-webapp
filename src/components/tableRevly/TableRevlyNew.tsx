@@ -18,7 +18,7 @@ import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 import noData from '../../assets/images/no-result.svg';
 import FilterDropdown from '../filter/filterDropdown/FilterDropdown';
-import Clock from '../../assets/images/clock.svg';
+// import Clock from '../../assets/images/clock.svg';
 import Columns from '../../assets/images/columns.svg';
 
 const TableRevlyNew: FC<{
@@ -37,6 +37,7 @@ const TableRevlyNew: FC<{
   filters?: any;
   filtersHead?: any;
   handleChangeMultipleFilter?: any;
+  noDataText?: string,
 }> = ({
   headers,
   rows,
@@ -53,6 +54,7 @@ const TableRevlyNew: FC<{
   filters,
   filtersHead,
   handleChangeMultipleFilter,
+  noDataText,
 }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
@@ -104,7 +106,7 @@ const TableRevlyNew: FC<{
         <TableRowKit className='no-data'>
           <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
             <img src={noData} alt='no-data' />
-            <p>Files not found description here</p>
+            <p>{noDataText || 'Files not found description here'}</p>
           </TableCellKit>
         </TableRowKit>
       );
@@ -194,24 +196,6 @@ const TableRevlyNew: FC<{
     if (filters) {
       return (
         <div className='table-filters'>
-          <div className='left-filters'>
-            <FilterDropdown
-              items={filtersHead.start_hour}
-              values={filters.start_hour}
-              onChange={handleChangeMultipleFilter('start_hour')}
-              label='Starting hour'
-              icon={<img src={Clock} alt='Clock' />}
-              maxShowned={1}
-            />
-            <FilterDropdown
-              items={filtersHead.end_hour}
-              values={filters.end_hour}
-              onChange={handleChangeMultipleFilter('end_hour')}
-              label='Ending hour'
-              icon={<img src={Clock} alt='Clock' />}
-              maxShowned={1}
-            />
-          </div>
           <FilterDropdown
             items={filtersHead.platform}
             values={filters.platform}
@@ -274,6 +258,7 @@ TableRevlyNew.defaultProps = {
   filters: null,
   filtersHead: null,
   handleChangeMultipleFilter: null,
+  noDataText: '',
 };
 
 export default TableRevlyNew;

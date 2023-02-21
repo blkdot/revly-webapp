@@ -18,7 +18,7 @@ import Smile from '../../../assets/images/smile.svg';
 const useTableContentFormatter = () => {
   const { getChainData } = useVendors();
   const [vendorsState] = useAtom(vendorsAtom);
-  const { vendorsArr } = vendorsState;
+  const { chainData } = vendorsState;
   const Images = {
     start_end_date: Calendar,
     slot: Clock,
@@ -184,7 +184,7 @@ const useTableContentFormatter = () => {
         }
         disableHoverListener={r[h.id]?.length === 0}
         id='category-tooltip'
-        placement='right'
+        placement='right-start'
         arrow
       >
         <span className='render-row-tooltip' key={h.id}>
@@ -196,11 +196,11 @@ const useTableContentFormatter = () => {
 
   const renderVendorId = (r, h) => {
     const vendors = r[h.id].map((vendor) => {
-      const vendorData = vendorsArr.find((vObj) => String(vendor) === String(vObj.vendor_id));
+      const vendorData = chainData.find((objV) => String(objV.vendor_id) === String(vendor))
 
       if (!vendorData) return null;
 
-      return vendorData.data.vendor_name || vendor;
+      return vendorData.vendor_name || vendor;
     });
     return (
       <TableCellKit

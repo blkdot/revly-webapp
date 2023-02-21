@@ -251,6 +251,7 @@ const Planning = () => {
           filters={!isEmptyList() ? filters : null}
           filtersHead={filtersHead}
           handleChangeMultipleFilter={handleChangeMultipleFilter}
+          noDataText='No ads has been retrieved.'
         />
       );
     }
@@ -270,6 +271,7 @@ const Planning = () => {
         filters={!isEmptyList() ? filters : null}
         filtersHead={filtersHead}
         handleChangeMultipleFilter={handleChangeMultipleFilter}
+        noDataText='No offer has been retrieved.'
       />
     );
   };
@@ -410,7 +412,15 @@ const Planning = () => {
         ).format('hh:mm')}`,
       }))
     );
-    setDataFilteredAds(filteredDataAds);
+    setDataFilteredAds(filteredDataAds.map((obj) => ({
+      ...obj,
+      start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
+        new Date(obj.valid_to)
+      ).format('DD/MM')}`,
+      slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+        new Date(obj.valid_to)
+      ).format('hh:mm')}`,
+    })));
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
   return (
