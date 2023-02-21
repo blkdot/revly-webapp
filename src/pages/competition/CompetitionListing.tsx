@@ -225,13 +225,13 @@ const CompetitionListing = () => {
 
   const getCuisineData = async (plat, vend, stack) => {
     clearTimeout(fnDelaysCuisine);
-    if (loadingAreas) {
-      setQueueAreas((prev) => prev + 1);
+    if (loadingCuisines) {
+      setQueueCuisines((prev) => prev + 1);
       return;
     }
 
     fnDelaysCuisine = setTimeout(async () => {
-      setLoadingAreas(true);
+      setLoadingCuisines(true);
       try {
         const body = {
           master_email: user.email,

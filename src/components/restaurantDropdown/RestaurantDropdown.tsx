@@ -130,8 +130,15 @@ const RestaurantDropdown: FC<{
     const vendorsObjTemp = {};
     Object.keys(displayTemp).forEach((cName) => {
       Object.keys(displayTemp[cName]).forEach((vName) => {
-        displayTemp[cName][vName].checked = true;
-        Object.keys(displayTemp[cName][vName].platforms).forEach((platform) => {
+        const displayPlatform = Object.keys(displayTemp[cName][vName].platforms);
+
+        if (
+          displayPlatform.some((dp) => displayTemp[cName][vName].platforms[dp].metadata.is_active)
+        ) {
+          displayTemp[cName][vName].checked = true;
+        }
+
+        displayPlatform.forEach((platform) => {
           if ((vendorsObjTemp[platform] || []).length === 0) {
             vendorsObjTemp[platform] = [displayTemp[cName][vName].platforms[platform]];
           } else {

@@ -10,7 +10,7 @@ You still need to create that file.
 
 There we specify the environment variable that should be used.
 
-The `.env.example` file contains the default configuration for the production environment
+The `.env.example` file contains the default configuration for the development environment
 
 ## Start the project
 
