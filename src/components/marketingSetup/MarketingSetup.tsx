@@ -267,7 +267,6 @@ const MarketingSetup: React.FC<{
 
     sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-
         displayTemp[chainName][vendorName].checked =
           branch?.display?.[chainName]?.[vendorName]?.checked || false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
@@ -480,7 +479,11 @@ const MarketingSetup: React.FC<{
     const selectedVendorsDeliveroo = selectedVendors('full', branch.display, 'deliveroo');
     const selectedVendorsDataTalabat = selectedVendors('full', branch.display, 'talabat');
 
-    if ((!selectedVendorsDeliveroo || selectedVendorsDeliveroo.length === 0) && !selectedVendorsDataTalabat || selectedVendorsDataTalabat.length === 0) {
+    if (
+      ((!selectedVendorsDeliveroo || selectedVendorsDeliveroo.length === 0) &&
+        !selectedVendorsDataTalabat) ||
+      selectedVendorsDataTalabat.length === 0
+    ) {
       setHeatmapLoading(false);
       setHeatmapData({
         revenue: defaultHeatmapState,

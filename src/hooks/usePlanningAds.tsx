@@ -5,7 +5,6 @@ import { useAtom } from 'jotai';
 import { vendorsAtom } from 'store/vendorsAtom';
 import useApi from './useApi';
 
-
 let fnDelays = null;
 function usePlanningAds({ dateRange }) {
   const [vendors] = useAtom(vendorsAtom);

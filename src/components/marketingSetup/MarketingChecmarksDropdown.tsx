@@ -91,9 +91,11 @@ const MarketingCheckmarksDropdown = ({
       if (!getDisabled(name)) return false;
 
       if (type === 'vendor') {
-        return personName.vendorsSelected
-        .map((obj) => obj?.data?.vendor_name)
-        .indexOf(name?.data?.vendor_name) > -1;
+        return (
+          personName.vendorsSelected
+            .map((obj) => obj?.data?.vendor_name)
+            .indexOf(name?.data?.vendor_name) > -1
+        );
       }
 
       return personName.indexOf(name) > -1;

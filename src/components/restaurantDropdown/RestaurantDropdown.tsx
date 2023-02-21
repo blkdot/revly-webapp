@@ -132,7 +132,9 @@ const RestaurantDropdown: FC<{
       Object.keys(displayTemp[cName]).forEach((vName) => {
         const displayPlatform = Object.keys(displayTemp[cName][vName].platforms);
 
-        if (displayPlatform.some((dp) => displayTemp[cName][vName].platforms[dp].metadata.is_active)) {
+        if (
+          displayPlatform.some((dp) => displayTemp[cName][vName].platforms[dp].metadata.is_active)
+        ) {
           displayTemp[cName][vName].checked = true;
         }
 
