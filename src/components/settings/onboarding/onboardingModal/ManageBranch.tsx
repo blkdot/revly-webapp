@@ -190,12 +190,7 @@ const ManageBranch: FC<{
       </div>
       <div className='manage-branch-buttons'>
         {clickedBranch.branch_status === 'active' ? (
-          <ButtonKit
-            onClick={changeStatusBranch}
-            className='pause'
-            variant='contained'
-            disabled={unremovable}
-          >
+          <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained'>
             <img src={PauseIcon} alt='pause' /> Suspend activity from this branch
           </ButtonKit>
         ) : (

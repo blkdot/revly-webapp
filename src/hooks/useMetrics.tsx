@@ -15,6 +15,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
   const newVendorsObj = {};
+
   Object.keys(vendorsObj).forEach((plat) => {
     newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
   });
@@ -29,12 +30,12 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [queue, setQueue] = useState(0);
 
   const handleRequest = (date, setMetrics, stack) => {
-    setLoading(true);
-
     if (Object.keys(newVendorsObj).length === 0) {
       setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     getMetrics({
       master_email: user.email,

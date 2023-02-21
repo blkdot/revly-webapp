@@ -86,6 +86,19 @@ const MarketingCheckmarksDropdown = ({
       }
       return false;
     };
+
+    const isChecked = (name) => {
+      if (!getDisabled(name)) return false;
+
+      if (type === 'vendor') {
+        return personName.vendorsSelected
+        .map((obj) => obj?.data?.vendor_name)
+        .indexOf(name?.data?.vendor_name) > -1;
+      }
+
+      return personName.indexOf(name) > -1;
+    };
+
     return names.map((name) => (
       <MenuItemKit
         className={type === 'vendor' ? 'listing-vendors-child' : ''}
@@ -93,19 +106,12 @@ const MarketingCheckmarksDropdown = ({
         value={name}
         disabled={!getDisabled(name)}
       >
-        <RadioKit
-          checked={
-            type === 'vendor'
-              ? personName.vendorsSelected
-                  .map((obj) => obj?.data?.vendor_name)
-                  .indexOf(name?.data?.vendor_name) > -1
-              : personName.indexOf(name) > -1
-          }
-        />
+        <RadioKit checked={isChecked(name)} />
         <ListItemTextKit primary={name.data.vendor_name} />
       </MenuItemKit>
     ));
   };
+
   const getVendor = () => {
     const arr = [];
     Object.keys(chainObj).forEach((chainName) => {
@@ -117,6 +123,7 @@ const MarketingCheckmarksDropdown = ({
     });
     return arr;
   };
+
   const getValue = () => {
     if (type === 'vendor') {
       if (Object.keys(display).length > 0) {
@@ -126,6 +133,7 @@ const MarketingCheckmarksDropdown = ({
     }
     return personName;
   };
+
   const getRenderValue = (selected) => {
     if (type === 'vendor') {
       if (Object.keys(display).length > 0) {
@@ -135,6 +143,7 @@ const MarketingCheckmarksDropdown = ({
     }
     return selected.join(', ');
   };
+
   return (
     <div style={{ width: '100%' }}>
       <FormControlKit
@@ -164,4 +173,5 @@ const MarketingCheckmarksDropdown = ({
     </div>
   );
 };
+
 export default MarketingCheckmarksDropdown;

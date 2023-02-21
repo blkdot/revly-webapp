@@ -1,23 +1,37 @@
 import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
+import { useAtom } from 'jotai';
+import { vendorsAtom } from 'store/vendorsAtom';
 import useApi from './useApi';
-import useVendors from './useVendors';
+
 
 let fnDelays = null;
 function usePlanningAds({ dateRange }) {
-  const { vendors } = useVendors(undefined);
-  const { vendorsObj, display } = vendors;
+  const [vendors] = useAtom(vendorsAtom);
+  const { vendorsObj } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
   const { user } = useUserAuth();
   const [isLoading, setIsLoading] = useState(true);
   const newVendorsObj = {};
+
   Object.keys(vendorsObj).forEach((plat) => {
     newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
   });
+
+  Object.keys(newVendorsObj).forEach((plat) => {
+    if (newVendorsObj[plat].length === 0 || plat === 'display') {
+      delete newVendorsObj[plat];
+    }
+  });
+
   useEffect(() => {
-    if (Object.keys(newVendorsObj).length < 1) return;
+    if (Object.keys(newVendorsObj).length === 0) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
 
     clearTimeout(fnDelays);

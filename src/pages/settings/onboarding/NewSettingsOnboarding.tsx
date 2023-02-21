@@ -84,10 +84,13 @@ const NewSettingsOnboarding = () => {
     }));
   };
 
-  const userRequestData = useSettingsOnboarded({
-    master_email: user.email,
-    access_token: user.token,
-  }, JSON.stringify(branchData));
+  const userRequestData = useSettingsOnboarded(
+    {
+      master_email: user.email,
+      access_token: user.token,
+    },
+    JSON.stringify(branchData)
+  );
 
   useEffect(() => {
     setVendors(vendors);
@@ -96,7 +99,7 @@ const NewSettingsOnboarding = () => {
 
   useEffect(() => {
     setAccounts(getAccounts());
-  }, [JSON.stringify(userPlatformData.platforms)])
+  }, [JSON.stringify(userPlatformData.platforms)]);
 
   useEffect(() => {
     if (userRequestData.data) {

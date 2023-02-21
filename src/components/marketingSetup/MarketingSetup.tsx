@@ -267,6 +267,7 @@ const MarketingSetup: React.FC<{
 
     sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+
         displayTemp[chainName][vendorName].checked =
           branch?.display?.[chainName]?.[vendorName]?.checked || false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
@@ -276,6 +277,11 @@ const MarketingSetup: React.FC<{
           const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
           platformsDisplay.forEach((platformV) => {
             if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
+              displayTemp[chainName][vendorName].deleted = true;
+              displayTemp[chainName][vendorName].checked = false;
+            }
+
+            if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
               displayTemp[chainName][vendorName].deleted = true;
               displayTemp[chainName][vendorName].checked = false;
             }
@@ -473,6 +479,19 @@ const MarketingSetup: React.FC<{
     setHeatmapLoading(true);
     const selectedVendorsDeliveroo = selectedVendors('full', branch.display, 'deliveroo');
     const selectedVendorsDataTalabat = selectedVendors('full', branch.display, 'talabat');
+
+    if ((!selectedVendorsDeliveroo || selectedVendorsDeliveroo.length === 0) && !selectedVendorsDataTalabat || selectedVendorsDataTalabat.length === 0) {
+      setHeatmapLoading(false);
+      setHeatmapData({
+        revenue: defaultHeatmapState,
+        orders: defaultHeatmapState,
+      });
+      setRangeColorIndices({
+        revenue: defaultRangeColorIndices,
+        orders: defaultRangeColorIndices,
+      });
+      return;
+    }
 
     const body = {
       master_email: user.email,
