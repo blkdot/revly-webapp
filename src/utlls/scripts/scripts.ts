@@ -32,10 +32,12 @@ export const getComparator = (order, orderBy) =>
 // need to support IE11, you can use Array.prototype.sort() directly
 export const stableSort = (array, comparator) => {
   const stabilizedThis = array.map((el, index) => [el.data, index, el]);
-
+  
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
-
+    if(a[0]?.platform === 'Total'){
+      return 0
+    }
     if (order !== 0) {
       return order;
     }

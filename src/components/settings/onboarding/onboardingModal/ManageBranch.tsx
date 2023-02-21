@@ -114,7 +114,7 @@ const ManageBranch: FC<{
     setLoading(false);
     setBranchData([...clonedBranchData]);
     openCloseModal();
-  };
+  };  
   return (
     <div
       className='onboarding-connect-account'

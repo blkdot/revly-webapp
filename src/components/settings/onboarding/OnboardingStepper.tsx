@@ -102,7 +102,7 @@ const OnboardingStepper: FC<{
     }
   }, [activeStep]);
   return (
-    <div className={`settings-onboarding bg ${!active ? 'close' : ''}`}>
+    <div className={`settings-onboarding bg ${active ? 'close' : ''}`}>
       <StepperKit
         className='onboarding-stepper'
         alternativeLabel

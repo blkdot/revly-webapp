@@ -141,7 +141,7 @@ const Dashboard = () => {
       }),
       {}
     );
-  const cellTemplatesObjectLoding = {
+  const cellTemplatesObjectLoading = {
     platform: renderPlatformSkeleton,
     beforePeriod: renderSimpleRowSkeleton,
     afterPeriod: renderSimpleRowSkeleton,
@@ -151,7 +151,7 @@ const Dashboard = () => {
     headers.reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObjectLoding[cur.id](cur),
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
         id: r,
       }),
       {}

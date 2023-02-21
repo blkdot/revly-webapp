@@ -78,7 +78,9 @@ const OnboardingTable: FC<{
       {}
     );
   const onClickRow = (id: any) => {
-    const data = branchData.find((obj) => String(`branch_status_${obj.id}`) === String(id));
+    const { data } = branchData
+      .map(renderRowsByHeader)
+      .find((obj) => `${obj.data.id}_branch` === id);
     setConnectAccount('manageBranch');
     openCloseModal();
     setClickedBranch(data);
