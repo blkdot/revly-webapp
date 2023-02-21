@@ -66,7 +66,7 @@ export const timesAtom = atom([
   },
 ]);
 
-export const everyWeekAtom = atom('Every Monday');
+export const everyWeekAtom = atom('');
 
 export const itemMenuAtom = atom('');
 

@@ -146,7 +146,7 @@ const MarketingSetup: React.FC<{
   const [disabledDate] = useAtom(disabledDateAtom);
   const [branch, setBranch] = useAtom(branchAtom);
   const [customisedDay, setCustomisedDay] = useAtom(customisedDayAtom);
-  const [everyWeek] = useAtom(everyWeekAtom);
+  const [everyWeek, setEveryWeek] = useAtom(everyWeekAtom);
   const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
   const [category, setCategory] = useAtom(categoryAtom);
   const [, setFilteredCategoryData] = useAtom(filteredCategoryDataAtom);
@@ -165,6 +165,9 @@ const MarketingSetup: React.FC<{
 
   useEffect(() => {
     setPlatform([getActivePlatform()]);
+  }, []);
+
+  useEffect(() => {
     setBranch({ ...vendors });
   }, [vendors]);
 
@@ -276,6 +279,11 @@ const MarketingSetup: React.FC<{
               displayTemp[chainName][vendorName].deleted = true;
               displayTemp[chainName][vendorName].checked = false;
             }
+
+            if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
+              displayTemp[chainName][vendorName].deleted = true;
+              displayTemp[chainName][vendorName].checked = false;
+            }
           });
 
           if (platform.length === 1) {
@@ -346,7 +354,9 @@ const MarketingSetup: React.FC<{
     try {
       if (platform.length < 2) {
         setTriggerLoading(true);
-        const selectedVendorsData = selectedVendors('full', branch.display, platform[0]);
+        const selectedVendorsData = selectedVendors('full', branch.display, platform[0]).filter(
+          (d) => d
+        );
 
         const res = await triggerOffers(platform[0], {
           ...dataReq,
@@ -367,7 +377,7 @@ const MarketingSetup: React.FC<{
       } else {
         const crossPlatform = platform.map(async (p) => {
           setTriggerLoading(true);
-          const selectedVendorsData = selectedVendors('full', branch.display, p);
+          const selectedVendorsData = selectedVendors('full', branch.display, p).filter((d) => d);
 
           return triggerOffers(p, {
             ...dataReq,
@@ -468,6 +478,23 @@ const MarketingSetup: React.FC<{
     setHeatmapLoading(true);
     const selectedVendorsDeliveroo = selectedVendors('full', branch.display, 'deliveroo');
     const selectedVendorsDataTalabat = selectedVendors('full', branch.display, 'talabat');
+
+    if (
+      ((!selectedVendorsDeliveroo || selectedVendorsDeliveroo.length === 0) &&
+        !selectedVendorsDataTalabat) ||
+      selectedVendorsDataTalabat.length === 0
+    ) {
+      setHeatmapLoading(false);
+      setHeatmapData({
+        revenue: defaultHeatmapState,
+        orders: defaultHeatmapState,
+      });
+      setRangeColorIndices({
+        revenue: defaultRangeColorIndices,
+        orders: defaultRangeColorIndices,
+      });
+      return;
+    }
 
     const body = {
       master_email: user.email,
@@ -652,6 +679,7 @@ const MarketingSetup: React.FC<{
       if (selected === n + 1) {
         timeSelected();
         if (typeSchedule === 'Same day every week') {
+          setEveryWeek((prev) => (!prev ? 'Every Monday' : prev));
           setDisabled(
             !(
               startingDate !== null &&
@@ -672,6 +700,7 @@ const MarketingSetup: React.FC<{
           return;
         }
         if (typeSchedule === 'Customised Days') {
+          setEveryWeek('');
           setDisabled(
             !(
               startingDate !== null &&
@@ -692,6 +721,7 @@ const MarketingSetup: React.FC<{
           return;
         }
         if (typeSchedule !== 'Customised Day' && typeSchedule !== 'Same day every week') {
+          setEveryWeek('');
           setDisabled(
             !(
               startingDate !== null &&

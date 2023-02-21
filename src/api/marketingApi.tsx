@@ -1,5 +1,5 @@
 import axios from 'axios';
-import config from '../setup/config';
+import config from 'setup/config';
 import { handleResponse } from './baseApi';
 
 const { apiUrl } = config;
@@ -25,5 +25,9 @@ export const triggerOffers = (platform, body) =>
     .post(`${apiUrl}/marketingv2/offer/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
+// export const triggerOffers = (platform, body) => {
+//   console.log(body);
+//   return new Error;
+// };
 
 export const _ = () => null;

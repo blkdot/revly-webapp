@@ -1,6 +1,6 @@
 import { useUserAuth } from 'contexts';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { type TVendorsObj } from './useVendors';
 import useApi from './useApi';
 import useDate from './useDate';
@@ -15,6 +15,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();
   const newVendorsObj = {};
+
   Object.keys(vendorsObj).forEach((plat) => {
     newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
   });
@@ -29,12 +30,12 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [queue, setQueue] = useState(0);
 
   const handleRequest = (date, setMetrics, stack) => {
-    setLoading(true);
-
     if (Object.keys(newVendorsObj).length === 0) {
       setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     getMetrics({
       master_email: user.email,
@@ -49,7 +50,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
     });
   };
 
-  useEffect(() => {
+  useMemo(() => {
     clearTimeout(fnDelays);
     fnDelays = setTimeout(() => {
       if (loading) {
@@ -60,7 +61,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
       handleRequest(afterPeriod, setMetricsafterPeriod, queue);
       handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
     }, 750 + queue);
-  }, [afterPeriod, beforePeriod, vendorsObj, queue]);
+  }, [afterPeriod, beforePeriod, JSON.stringify(vendorsObj), queue]);
 
   return { metricsbeforePeriod, metricsafterPeriod, loading };
 }

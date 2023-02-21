@@ -62,6 +62,7 @@ const ManageBranch: FC<{
     });
     return object;
   };
+
   const { userPlatformData } = usePlatform();
   const deleteBranch = async () => {
     setLoading(true);
@@ -74,7 +75,7 @@ const ManageBranch: FC<{
       branchData.findIndex((obj) => obj.id === clickedBranch.id),
       1
     );
-    await Object.keys(userPlatformData.platforms).forEach((plat) => {
+    Object.keys(userPlatformData.platforms).forEach((plat) => {
       userPlatformData.platforms[plat].forEach((objP) => {
         if (clickedBranch.accounts.find((email) => email === objP.email)) {
           if (objP.vendor_ids.length === 1) {
@@ -89,7 +90,10 @@ const ManageBranch: FC<{
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
+
   const changeStatusBranch = async () => {
+    setLoading(true);
+    const clonedBranchData = [...branchData];
     await saveUser({
       access_token: user.accessToken,
       vendors: vendorsBranch(),
@@ -99,14 +103,17 @@ const ManageBranch: FC<{
         ),
       },
     });
+
     if (clickedBranch.branch_status === 'active' || clickedBranch.branch_status === 'in process') {
-      branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
+      clonedBranchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
         'suspended';
     } else {
-      branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
+      clonedBranchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
         'active';
     }
-    setBranchData([...branchData]);
+    setLoading(false);
+    setBranchData([...clonedBranchData]);
+    openCloseModal();
   };
   return (
     <div
@@ -182,12 +189,7 @@ const ManageBranch: FC<{
       </div>
       <div className='manage-branch-buttons'>
         {clickedBranch.branch_status === 'active' ? (
-          <ButtonKit
-            onClick={changeStatusBranch}
-            className='pause'
-            variant='contained'
-            disabled={unremovable}
-          >
+          <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained'>
             <img src={PauseIcon} alt='pause' /> Suspend activity from this branch
           </ButtonKit>
         ) : (

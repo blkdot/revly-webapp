@@ -1,3 +1,4 @@
+export { default as Adverts } from './adverts/Adverts';
 export { default as Check } from './check/Check';
 export { default as CompetitionAlerts } from './competition/CompetitionAlerts';
 export { default as CompetitionListing } from './competition/CompetitionListing';

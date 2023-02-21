@@ -85,10 +85,10 @@ const GetProgress: FC = () => {
   }, [startingDate, endingDate]);
 
   const getPlatform = (e) => {
-    const { value } = e.target;
+    const { value, checked: checkedRadio } = e.target;
 
     if (platform.length > 1) {
-      if (!e.target.checked) {
+      if (!checkedRadio) {
         platform.splice(
           platform.findIndex((el) => el === value),
           1
@@ -96,7 +96,7 @@ const GetProgress: FC = () => {
       }
     }
 
-    if (e.target.checked) {
+    if (checkedRadio) {
       setPlatform([...platform, value]);
       return;
     }
