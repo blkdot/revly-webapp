@@ -1,5 +1,7 @@
 import { useState, FC, useEffect } from 'react';
 import { ButtonKit } from 'kits';
+import { useAtom } from 'jotai';
+import { vendorsAtom } from 'store/vendorsAtom';
 import OnboardingDropdown from './OnboardingDropdown';
 import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
@@ -8,8 +10,8 @@ const OnboardingMiddleContent: FC<{
   openCloseModal: any;
   accounts: any;
   setConnectAccount: any;
-  vendors: any;
-}> = ({ openCloseModal, accounts, setConnectAccount, vendors }) => {
+}> = ({ openCloseModal, accounts, setConnectAccount }) => {
+  const [vendors] = useAtom(vendorsAtom);
   const filteredChains = () => {
     const arr = [];
     Object.keys(vendors.display).forEach((cName) => {

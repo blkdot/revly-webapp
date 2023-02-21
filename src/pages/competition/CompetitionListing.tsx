@@ -122,14 +122,14 @@ const CompetitionListing = () => {
     }
   }, [userPlatformData]);
 
-  const { renderSimpleRow, renderOrdinalSuffix, renderSimpleRowSkeleton } =
+  const { renderSimpleRow, renderOrdinalSuffixV3, renderSimpleRowSkeleton } =
     useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
-    cuisine: renderOrdinalSuffix,
-    discount_type: renderOrdinalSuffix,
-    cuisine_and_discount_type: renderOrdinalSuffix,
+    cuisine: renderOrdinalSuffixV3,
+    discount_type: renderOrdinalSuffixV3,
+    cuisine_and_discount_type: renderOrdinalSuffixV3,
   };
 
   const renderRowsByHeader = (r) =>

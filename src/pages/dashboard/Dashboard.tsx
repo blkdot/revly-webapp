@@ -20,7 +20,7 @@ import './Dashboard.scss';
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const { display, vendorsArr, vendorsObj } = vendors;
+  const { vendorsObj } = vendors;
   const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics(vendorsObj);
   const [table, setTable] = useState('Revenue');
 
@@ -230,8 +230,6 @@ const Dashboard = () => {
           table={getType()}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
-          display={display}
-          vendors={vendorsArr}
           loading={loading}
           links={links}
         />

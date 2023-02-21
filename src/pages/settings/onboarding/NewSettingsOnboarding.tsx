@@ -146,7 +146,6 @@ const NewSettingsOnboarding = () => {
     clickedBranch,
     connectAccount,
     setConnectAccount,
-    vendors,
     setLoading,
     loading,
   };
@@ -160,7 +159,6 @@ const NewSettingsOnboarding = () => {
         openCloseModal={openCloseModal}
       />
       <OnboardingMiddleContent
-        vendors={vendors}
         openCloseModal={openCloseModal}
         accounts={accounts}
         setConnectAccount={setConnectAccount}

@@ -26,7 +26,7 @@ const AdvertsCreateNewCampaign: FC<{
       }
     ]
   })
-  const [brnachDetailsDeWidget, setBranchDetailsWidget] = useState({
+  const [branchDetailsWidget, setBranchDetailsWidget] = useState({
     title: 'Branches details',
     content: [
       {
@@ -45,14 +45,14 @@ const AdvertsCreateNewCampaign: FC<{
   })
   const stepsObject = {
     'launch': <LaunchStep step={step} setStep={setStep} setOpened={setOpened} />,
-    'recurency': <RecurencyStep step={step} setStep={setStep} state={brnachDetailsDeWidget} setState={setBranchDetailsWidget} setOpened={setOpened} />
+    'recurency': <RecurencyStep step={step} setStep={setStep} state={branchDetailsWidget} setState={setBranchDetailsWidget} setOpened={setOpened} />
   }
   return (
     <div className='adverts_create_new_campaign-wrapper'>
       {stepsObject[step]}
       <div className='adverts_create_new_campaign_widgets'>
         <AdvertsWidgetCustom {...advertDetailsWidget} />
-        <AdvertsWidgetCustom {...brnachDetailsDeWidget} />
+        <AdvertsWidgetCustom {...branchDetailsWidget} />
       </div>
     </div>
   )
