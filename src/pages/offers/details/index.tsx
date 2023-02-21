@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { useApi, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
@@ -68,7 +69,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       <span className='offer-title'>Platform :</span>
       <span className='offer-sub-title'>
         <img
-          className='planning-platform'
+          className='planning-platform offer'
           style={{ marginRight: '1.5rem' }}
           src={platformObject[platform.toLowerCase()].src}
           alt={platformObject[platform.toLowerCase()].name}
@@ -94,6 +95,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     discount_rate,
     type_offer,
     chain_id,
+    accrued_discount,
   } = offerDetailMaster?.master_offer || {};
 
   const getToken = () => {
@@ -177,6 +179,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
+
   return (
     <>
       <CancelOfferModal
@@ -247,7 +250,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div> */}
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>#Orders</span>
+                      <span className='offer-visibility-title'>Orders</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {n_orders === 0 || n_orders ? n_orders : '-'}
@@ -255,7 +258,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Avg Basket</span>
+                      <span className='offer-visibility-title'>Avg. Basket</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {average_basket === 0 || average_basket ? average_basket : '-'}
@@ -263,7 +266,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Roi</span>
+                      <span className='offer-visibility-title'>Accrued Discount</span>
+                    </div>
+                    <div className='offer-visibility-sub-title'>
+                      {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
+                    </div>
+                  </div>
+                  <div className='offer-visibility-block'>
+                    <div>
+                      <span className='offer-visibility-title'>ROI</span>
                     </div>
                     <div className='offer-visibility-sub-title'>{roi === 0 || roi ? roi : '-'}</div>
                   </div>
@@ -277,7 +288,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Profits</span>
+                      <span className='offer-visibility-title'>Net Revenue</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {profit === 0 || profit ? profit : '-'}
@@ -405,9 +416,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       ''
                     ) : (
                       <div style={{ width: 'fit-content' }} className='offerdetails_time_slots'>
-                        {Object.keys(offerDetailMaster?.children_offers || {}).map((id) => (
-                          <TimeSlot key={id} data={offerDetailMaster.children_offers[id]} />
-                        ))}
+                        {offerDetailMaster?.children_offers
+                          .sort(
+                            (a, b) =>
+                              new Date(a.start_date).setHours(0, 0, 0, 0) -
+                              new Date(b.start_date).setHours(0, 0, 0, 0)
+                          )
+                          .map((obj) => (
+                            <TimeSlot key={obj.offer_id} data={obj} />
+                          ))}
                       </div>
                     )}
                   </div>
@@ -598,8 +615,8 @@ const TimeSlot = ({ data }) => (
         >
           {new Date(data.start_date).toLocaleDateString() ===
           new Date(data.end_date).toLocaleDateString()
-            ? data.start_date
-            : `${data.start_date} - ${data?.end_date || <SkeletonKit />}`}
+            ? dayjs(data.start_date).format('DD/MM')
+            : `${dayjs(data.start_date).format('DD/MM')} - ${dayjs(data.end_date).format('DD/MM')}`}
         </span>
       </div>
 

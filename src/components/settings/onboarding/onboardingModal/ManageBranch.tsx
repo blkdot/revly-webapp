@@ -4,6 +4,8 @@ import { useUserAuth } from 'contexts/AuthContext';
 import { TypographyKit, ButtonKit } from 'kits';
 import { platformList } from 'data/platformList';
 import { usePlatform } from 'hooks';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useAtom } from 'jotai';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
@@ -18,7 +20,6 @@ const ManageBranch: FC<{
     clickedBranch: any;
     setBranchData: any;
     branchData: any;
-    vendors: any;
     openSwitchDeleteModal: any;
     setOpenedSwitchDeleteModal: any;
     openedSwitchDeleteModal: any;
@@ -34,7 +35,6 @@ const ManageBranch: FC<{
     loading,
     setBranchData,
     branchData,
-    vendors,
     openSwitchDeleteModal,
     setOpenedSwitchDeleteModal,
     openedSwitchDeleteModal,
@@ -44,7 +44,7 @@ const ManageBranch: FC<{
   } = propsVariables;
   const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
   const { user } = useUserAuth();
-
+  const [vendors] = useAtom(vendorsAtom);
   const vendorsBranch = () => {
     const object = {};
     Object.keys(vendors.display).forEach((cName) => {
@@ -146,8 +146,7 @@ const ManageBranch: FC<{
         </span>
         <div className='manage-branch-status'>
           <div className='render-branch-row active'>
-            <p className='__title'>{clickedBranch.branch_name.title}</p>
-            <span className='__subtitle'>{clickedBranch.branch_name.address}</span>
+            <p className='__title'>{clickedBranch.branch_name}</p>
           </div>
           <div
             className={`render-branch_status-row ${clickedBranch.branch_status.replace(/\s/g, '')}`}
@@ -181,7 +180,7 @@ const ManageBranch: FC<{
                 <div className='render-accounts-row'>{clickedBranch.accounts[index]}</div>
               </div>
               <div>
-                {obj.status === 'active' ? 'Connected' : ''}
+                {obj.status === 'active' ? 'Connected' : 'Disconnected'}
                 <img src={Arrow} alt='arrow' />
               </div>
             </div>

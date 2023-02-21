@@ -155,7 +155,7 @@ const MarketingOfferFilter = (props: any) => {
                   fontWeight: 'bold',
                   marginRight: '1rem',
                   marginTop: '1rem',
-                  width: '80%',
+                  width: '42%',
                 }}
               >
                 <CheckboxKit
@@ -190,25 +190,27 @@ const MarketingOfferFilter = (props: any) => {
             <Tag /> Discount Amount %
           </span>
           <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
-            {filtersHead.discount_rate.map((item) => (
-              <div
-                key={item.value}
-                style={{
-                  display: 'flex',
-                  alignSelf: 'center',
-                  fontWeight: 'bold',
-                  marginRight: '1rem',
-                  marginTop: '1rem',
-                  width: '18%',
-                }}
-              >
-                <CheckboxKit
-                  checked={filters.discount_rate.includes(item.value)}
-                  onChange={() => handleChangeMultipleFilter('discount_rate')(item.value)}
-                />
-                <span style={{ display: 'flex', alignItems: 'center' }}>{item.text}</span>
-              </div>
-            ))}
+            {filtersHead.discount_rate
+              .sort((a, b) => a.value - b.value)
+              .map((item) => (
+                <div
+                  key={item.value}
+                  style={{
+                    display: 'flex',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                    marginRight: '1rem',
+                    marginTop: '1rem',
+                    width: '18%',
+                  }}
+                >
+                  <CheckboxKit
+                    checked={filters.discount_rate.includes(item.value)}
+                    onChange={() => handleChangeMultipleFilter('discount_rate')(item.value)}
+                  />
+                  <span style={{ display: 'flex', alignItems: 'center' }}>{item.text}</span>
+                </div>
+              ))}
           </div>
         </div>
         <hr />

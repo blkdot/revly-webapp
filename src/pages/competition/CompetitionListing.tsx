@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUserAuth } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
@@ -17,7 +18,6 @@ import CompetitionDropdown from '../../components/competitionDropdown/Competitio
 import Competitor from '../../components/competitor/Competitor';
 import Dates from '../../components/dates/Dates';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 
@@ -39,25 +39,25 @@ const headersAlert = (cuisine: string) => [
     id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Name',
+    label: 'Competitor',
   },
   {
     id: 'discount_type',
     numeric: false,
     disablePadding: true,
-    label: 'Listing in offers',
+    label: 'Listing in "Offers"',
   },
   {
     id: 'cuisine',
     numeric: false,
     disablePadding: true,
-    label: `Listing in ${cuisine} cuisine`,
+    label: `Listing in "${cuisine ? `${cuisine} Cuisine` : 'Cuisine'}"`,
   },
   {
     id: 'cuisine_and_discount_type',
     numeric: false,
     disablePadding: true,
-    label: 'Listing in offers and cuisine',
+    label: `Listing in "Offers"x"${cuisine ? `${cuisine} Cuisine` : 'Cuisine'}"`,
   },
 ];
 
@@ -122,7 +122,8 @@ const CompetitionListing = () => {
     }
   }, [userPlatformData]);
 
-  const { renderSimpleRow, renderOrdinalSuffixV3 } = useTableContentFormatter();
+  const { renderSimpleRow, renderOrdinalSuffixV3, renderSimpleRowSkeleton } =
+    useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
@@ -142,6 +143,22 @@ const CompetitionListing = () => {
       {}
     );
 
+  const cellTemplatesObjectLoading = {
+    name: renderSimpleRowSkeleton,
+    cuisine: renderSimpleRowSkeleton,
+    discount_type: renderSimpleRowSkeleton,
+    cuisine_and_discount_type: renderSimpleRowSkeleton,
+  };
+
+  const renderRowsByHeaderLoading = (r) =>
+    headersAlert(cuisine).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
   useEffect(() => {
     setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
   }, [area]);
@@ -175,7 +192,8 @@ const CompetitionListing = () => {
           throw new Error('');
         }
 
-        setCompetitionListingData(ranking.data?.data || []);
+        setCompetitionListingData(ranking.data.data);
+        setCuisine(ranking.data.cuisine);
         setLoading(false);
         if (stack === queue) setQueue(0);
       } catch (err) {
@@ -478,11 +496,13 @@ const CompetitionListing = () => {
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
-        <TableRevly
+        <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headersAlert(cuisine)}
           rows={competitionListingData.map(renderRowsByHeader)}
           noEmptyMessage
+          className='competition-alerts'
         />
         {loading
           ? null

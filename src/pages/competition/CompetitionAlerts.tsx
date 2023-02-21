@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -13,15 +14,16 @@ import CompetitionDropdown from '../../components/competitionDropdown/Competitio
 import Competitor from '../../components/competitor/Competitor';
 import Dates from '../../components/dates/Dates';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from '../../components/tableRevly/TableRevly';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
+import Calendar from '../../assets/images/calendar.svg';
+import Clock from '../../assets/images/clock.svg';
 
 let fnDelays = null;
 
 const CompetitionAlerts = () => {
   const [vendors, setVendors] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsSelected, vendorsObj, display, chainObj } = vendors;
+  const { vendorsArr, vendorsObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
   const { user } = useUserAuth();
   const [opened, setOpened] = useState(false);
@@ -54,49 +56,32 @@ const CompetitionAlerts = () => {
       id: 'name',
       numeric: false,
       disablePadding: true,
-      label: 'Name',
+      label: 'Competitor',
     },
     {
       id: 'type',
       numeric: false,
       disablePadding: true,
-      label: 'Type',
+      label: 'Discount type',
     },
     {
       id: 'alert',
       numeric: false,
       disablePadding: true,
-      label: '%',
+      label: 'Alert',
     },
     {
-      id: 'minimum_order_value',
+      id: 'start_end_date',
       numeric: false,
       disablePadding: true,
-      label: 'Min. Order value',
+      label: 'Start - end date',
     },
     {
-      id: 'start_date',
+      id: 'slot',
       numeric: false,
       disablePadding: true,
-      label: 'Start Date',
-    },
-    {
-      id: 'end_date',
-      numeric: false,
-      disablePadding: true,
-      label: 'End Date',
-    },
-    {
-      id: 'start_hour',
-      numeric: false,
-      disablePadding: true,
-      label: 'Start Hour',
-    },
-    {
-      id: 'end_hour',
-      numeric: false,
-      disablePadding: true,
-      label: 'End Hour',
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
     },
     {
       id: 'status',
@@ -107,26 +92,49 @@ const CompetitionAlerts = () => {
   ];
 
   const {
-    renderPercent,
     renderStatus,
     renderSimpleRow,
-    renderIsoDateOnly,
-    renderIsoStartTimeOnlyFromDate,
-    renderIsoEndTimeOnlyFromDate,
+    renderSimpleIconRow,
+    renderSimpleRowSkeleton,
+    renderPercentSkeleton,
   } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
     type: renderSimpleRow,
-    alert: renderPercent,
-    minimum_order_value: renderSimpleRow,
-    start_date: renderIsoDateOnly,
-    end_date: renderIsoDateOnly,
-    start_hour: renderIsoStartTimeOnlyFromDate,
-    end_hour: renderIsoEndTimeOnlyFromDate,
+    alert: renderSimpleRow,
+    start_end_date: renderSimpleIconRow,
+    slot: renderSimpleIconRow,
     status: renderStatus,
   };
+  const renderRowsByHeader = (r) =>
+    headersAlert.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
+        id: `${cur.id}_${r.id}`,
+        data: r,
+      }),
+      {}
+    );
 
+  const cellTemplatesObjectLoading = {
+    name: renderSimpleRowSkeleton,
+    type: renderSimpleRowSkeleton,
+    alert: renderSimpleRowSkeleton,
+    start_end_date: renderSimpleRowSkeleton,
+    slot: renderSimpleRowSkeleton,
+    status: renderPercentSkeleton,
+  };
+  const renderRowsByHeaderLoading = (r) =>
+    headersAlert.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
   useEffect(() => {
     if (userPlatformData) {
       const pl = userPlatformData.platforms;
@@ -171,6 +179,12 @@ const CompetitionAlerts = () => {
             end_hour: v.end_hour,
             status: v.status,
             id: v.alert_id,
+            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${dayjs(
+              new Date(v.end_date)
+            ).format('DD/MM')}`,
+            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${dayjs(
+              new Date(v.end_date)
+            ).format('hh:mm')}`,
           }))
           .sort((a, b) => a.status - b.status);
         setCompetitionAlertsData(filt || []);
@@ -223,17 +237,6 @@ const CompetitionAlerts = () => {
     }
     setCompetitor(value);
   };
-
-  const renderRowsByHeader = (r) =>
-    headersAlert.reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
-        id: `${cur.id}_${r.id}`,
-        data: r,
-      }),
-      {}
-    );
 
   return (
     <div className='wrapper'>
@@ -314,12 +317,14 @@ const CompetitionAlerts = () => {
           You can select up to 5 competitors to be monitored. Competitors can be changed every 3
           months.
         </TypographyKit>
-        <TableRevly
+        <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headersAlert}
           rows={(filteredData.length > 0 ? filteredData : competitionAlertsData).map(
             renderRowsByHeader
           )}
+          className='competition-alerts'
         />
       </PaperKit>
     </div>

@@ -2,7 +2,9 @@
 import { saveUser } from 'api/userApi';
 import { useUserAuth } from 'contexts';
 import { useAlert, useApi } from 'hooks';
+import { useAtom } from 'jotai';
 import { useState } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
 import ConnectAccount from './onboardingModal/ConnectAccount';
 import ConnectPlatform from './onboardingModal/ConnectPlatform';
 import ManageAccount from './onboardingModal/ManageAccount';
@@ -24,7 +26,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setAccounts,
     branchData,
     setBranchData,
-    vendors,
+    setLoading,
+    loading,
   } = propsVariables;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,7 +35,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
   const { user } = useUserAuth();
   const { triggerAlertWithMessageError } = useAlert();
-
+  const [vendors] = useAtom(vendorsAtom);
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
 
@@ -60,7 +63,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setConnectAccount('active');
     setBranchDataUploading(
       res.vendors.map((obj) => ({
-        branch_name: { title: obj.vendor_name, address: '' },
+        branch_name: obj.vendor_name,
         accounts: [email],
         linked_platforms: [{ platform: connect, status: 'active' }],
         branch_status: 'in process',
@@ -70,8 +73,6 @@ const OnboardingModal = ({ propsVariables }: any) => {
   };
 
   const [openedSwitchDeleteModal, setOpenedSwitchDeleteModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-
   const openSwitchDeleteModal = (e) => {
     e.stopPropagation();
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
@@ -235,9 +236,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${
-        openedSwitchDeleteModal ? 'activeDelete' : ''
-      }`}
+      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${openedSwitchDeleteModal ? 'activeDelete' : ''
+        }`}
       onClick={openCloseModal}
     >
       <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>

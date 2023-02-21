@@ -3,26 +3,55 @@
   position: relative;
 
   button {
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 30px;
-    background: #ffffff;
+    border: none;
+    border-radius: 10px;
+    background: #f8f9fb;
     padding: 11px 18px;
-    color: black;
-    font-weight: bold;
+    color: #212b36;
+    max-width: 280px;
     width: 100%;
     min-width: 12rem;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-transform: none;
+
+    .comp-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: capitalize;
+
+      &.active {
+        svg,
+        img {
+          width: 40px;
+          height: 20px;
+          object-fit: contain;
+        }
+      }
+    }
+
+    .comp-dropdown-arrow {
+      svg {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    &:hover {
+      border: none;
+      background: #f8f9fb;
+    }
 
     &.__active {
-      background: rgba(144, 107, 255, 0.08);
-      /* 09 Transparent/08 Black/08% */
-
-      border: 1px solid rgba(0, 0, 0, 0.08);
       color: #906bff;
-      font-weight: 700;
-      font-size: 13px;
     }
 
     i {
+      display: flex;
+      align-items: center;
+
       &.__active {
         * {
           &:not(img) {
@@ -33,17 +62,12 @@
       }
     }
 
-    &:hover {
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 30px;
-      background: #ffffff;
-      padding: 11px 18px;
-      color: black;
-      font-weight: bold;
-    }
-
-    img {
-      margin-right: 10px;
+    img,
+    svg {
+      margin-right: 5px;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
     }
   }
 
@@ -71,13 +95,16 @@
 
     > div {
       scroll-behavior: smooth;
+
       &::-webkit-scrollbar {
         height: 6px;
       }
+
       &::-webkit-scrollbar-track {
         background-color: #f3f3f3;
         border-radius: 31px;
       }
+
       &::-webkit-scrollbar-thumb {
         background: #637381;
         border-radius: 31px;

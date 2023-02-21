@@ -5,9 +5,18 @@ import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useDate } from 'hooks';
 import { CardContentKit, CardKit, PaperKit, SkeletonKit, TypographyKit } from 'kits';
+import { FC } from 'react';
 import './Widget.scss';
 
-const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading }) => {
+const Widget: FC<{
+  title: any;
+  setTable: any;
+  table: any;
+  metricsbeforePeriod: any;
+  metricsafterPeriod: any;
+  loading: any;
+  links: any;
+}> = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading, links }) => {
   const { date } = useDate();
   const { afterPeriod, titleafterPeriod } = date;
   const startDate = parseISO(afterPeriod.startDate);
@@ -34,16 +43,16 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
       return 'Orders';
     }
     if (title === 'average_basket') {
-      return 'Avg. Basket';
+      return 'Avg. basket';
     }
     if (title === 'accrued_discounts') {
-      return 'Accrued Discount';
+      return 'Accrued discount';
     }
     if (title === 'profit') {
-      return 'Net Revenue';
+      return 'Net revenue';
     }
     if (title === 'roi') {
-      return 'Marketing ROI';
+      return 'ROI';
     }
     return title;
   };
@@ -85,12 +94,35 @@ const Widget = ({ title, setTable, table, metricsbeforePeriod, metricsafterPerio
 
     return '-';
   };
+  const getActiveLinkWidth = (index: number, type: string) => {
+    const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
 
+    if (type === 'scroll') {
+      return tableLink.offsetLeft - tableLink.scrollLeft;
+    }
+    return tableLink?.clientWidth;
+  };
+
+  const changeLink = () => {
+    setTable(getTitle());
+    const tableLinks = document.querySelector('.table-links') as HTMLElement;
+    tableLinks?.style.setProperty(
+      '--length',
+      `${getActiveLinkWidth(
+        links.findIndex((t) => t === getTitle()),
+        'width'
+      )}px`
+    );
+    tableLinks?.style.setProperty(
+      '--left',
+      `${getActiveLinkWidth(
+        links.findIndex((t) => t === getTitle()),
+        'scroll'
+      )}px`
+    );
+  };
   return (
-    <CardKit
-      className={`card_wrapper ${table === title ? 'active' : ''}`}
-      onClick={() => setTable(title)}
-    >
+    <CardKit className={`card_wrapper ${table === title ? 'active' : ''}`} onClick={changeLink}>
       <CardContentKit>
         <TypographyKit
           component='div'

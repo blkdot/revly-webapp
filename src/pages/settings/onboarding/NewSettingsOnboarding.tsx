@@ -15,8 +15,8 @@ const NewSettingsOnboarding = () => {
   const user = useUser();
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const [, setVendors] = useAtom(vendorsAtom);
-  const { vendors } = useVendors();
-
+  const { vendors } = useVendors(undefined);
+  const [loading, setLoading] = useState(true);
   const getAccounts = () => {
     const arr = [];
 
@@ -39,8 +39,8 @@ const NewSettingsOnboarding = () => {
   const [accounts, setAccounts] = useState([]);
 
   const getBranchData = () => {
+    setLoading(true);
     const arr = [];
-
     sortedVendors(vendors.display).forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
         arr.push({ name: vName, data: vendors.display[cName][vName] });
@@ -74,9 +74,9 @@ const NewSettingsOnboarding = () => {
 
       return 'active';
     };
-
+    setLoading(false);
     return arr.map((obj) => ({
-      branch_name: { title: obj.name, address: '' },
+      branch_name: obj.name,
       accounts: vendorsAccounts(obj),
       linked_platforms: vendorPlatform(obj),
       branch_status: vendorsStatus(obj),
@@ -146,7 +146,8 @@ const NewSettingsOnboarding = () => {
     clickedBranch,
     connectAccount,
     setConnectAccount,
-    vendors,
+    setLoading,
+    loading,
   };
 
   return (
@@ -158,12 +159,12 @@ const NewSettingsOnboarding = () => {
         openCloseModal={openCloseModal}
       />
       <OnboardingMiddleContent
-        vendors={vendors}
         openCloseModal={openCloseModal}
         accounts={accounts}
         setConnectAccount={setConnectAccount}
       />
       <OnboardingTable
+        loading={loading}
         branchData={branchData}
         openCloseModal={openCloseModal}
         setClickedBranch={setClickedBranch}

@@ -28,7 +28,7 @@ import {
   SettingsLayout,
 } from 'routes';
 
-export const App = () => (
+const App = () => (
   <BrowserRouter>
     <Routes>
       <Route element={<AuthLayout />}>
@@ -64,3 +64,5 @@ export const App = () => (
     </Routes>
   </BrowserRouter>
 );
+
+export default App;

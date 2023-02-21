@@ -1,7 +1,14 @@
 import Widget from '../widget/Widget';
 import './Marketing.scss';
 
-const Marketing = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table, loading }) => {
+const Marketing = ({
+  metricsbeforePeriod,
+  metricsafterPeriod,
+  setTable,
+  table,
+  loading,
+  links,
+}) => {
   const marketingLinks = ['accrued_discounts', 'roi'];
   return (
     <div className='block'>
@@ -15,6 +22,7 @@ const Marketing = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table, l
             metricsbeforePeriod={metricsbeforePeriod}
             metricsafterPeriod={metricsafterPeriod}
             loading={loading}
+            links={links}
           />
         ))}
       </div>
