@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
@@ -7,7 +8,16 @@ import { TypographyKit } from 'kits';
 import Widget from '../widget/Widget';
 import './Finance.scss';
 
-const Finance = ({
+const Finance: FC<{
+  metricsbeforePeriod: any;
+  metricsafterPeriod: any;
+  setTable: any;
+  table: any;
+  display: any;
+  vendors: any;
+  loading: any;
+  links: any;
+}> = ({
   metricsbeforePeriod,
   metricsafterPeriod,
   setTable,
@@ -15,6 +25,7 @@ const Finance = ({
   display,
   vendors,
   loading,
+  links,
 }) => {
   const { date } = useDate();
   const { beforePeriod, titleDate } = date;
@@ -65,6 +76,7 @@ const Finance = ({
             metricsbeforePeriod={metricsbeforePeriod}
             metricsafterPeriod={metricsafterPeriod}
             loading={loading}
+            links={links}
           />
         ))}
       </div>

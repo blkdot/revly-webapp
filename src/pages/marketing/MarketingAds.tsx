@@ -193,10 +193,14 @@ const MarketingAds = () => {
   const [filters, setFilters] = useState({
     platform: [],
     status: [],
+    start_hour: [],
+    end_hour: [],
   });
   const [filtersHead, setFiltersHead] = useState({
     platform: [],
     status: [],
+    start_hour: [],
+    end_hour: [],
   });
 
   useEffect(() => {
@@ -242,6 +246,8 @@ const MarketingAds = () => {
     setFiltersHead({
       platform: preHeadPlatform,
       status: preHeadStatus,
+      start_hour: [],
+      end_hour: [],
     });
   }, [JSON.stringify(adsData)]);
 
@@ -337,6 +343,9 @@ const MarketingAds = () => {
           rows={adsFilteredData.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+          filters={!isEmptyList() ? filters : null}
+          filtersHead={!isEmptyList() ? filtersHead : null}
+          handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
         />
       );
     }
@@ -352,6 +361,9 @@ const MarketingAds = () => {
         rows={adsFilteredData.map(renderRowsByHeader)}
         mainFieldOrdered='start_date'
         setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+        filters={!isEmptyList() ? filters : null}
+        filtersHead={!isEmptyList() ? filtersHead : null}
+        handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
       />
     );
   };

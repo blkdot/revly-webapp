@@ -10,7 +10,7 @@ let fnDelays = null;
 function useMetrics(vendorsObj: TVendorsObj) {
   const { date: dateContext } = useDate();
   const { beforePeriod, afterPeriod } = dateContext;
-  const { getMetrics } = useApi();  
+  const { getMetrics } = useApi();
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const { user } = useUserAuth();

@@ -139,8 +139,7 @@ const ManageBranch: FC<{
         </span>
         <div className='manage-branch-status'>
           <div className='render-branch-row active'>
-            <p className='__title'>{clickedBranch.branch_name.title}</p>
-            <span className='__subtitle'>{clickedBranch.branch_name.address}</span>
+            <p className='__title'>{clickedBranch.branch_name}</p>
           </div>
           <div
             className={`render-branch_status-row ${clickedBranch.branch_status.replace(/\s/g, '')}`}

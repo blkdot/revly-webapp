@@ -188,11 +188,11 @@ const Dashboard = () => {
     }
     return `${procent}%`;
   };
-  useEffect(() => {    
+  useEffect(() => {
     const platforms = [
-      ...Object.keys(userPlatformData.platforms).map(
-        (plat) => userPlatformData.platforms[plat].some((obj) => obj.active) ? plat : null
-      ).filter((plat) => plat),
+      ...Object.keys(userPlatformData.platforms)
+        .map((plat) => (userPlatformData.platforms[plat].some((obj) => obj.active) ? plat : null))
+        .filter((plat) => plat),
       'all',
     ];
     const data = platforms.map((plat) => ({
@@ -202,7 +202,7 @@ const Dashboard = () => {
       evolution: evolution(getProcent(metricsbeforePeriod[plat], metricsafterPeriod[plat])),
     }));
     setMetrics(data);
-  }, [metricsbeforePeriod, metricsafterPeriod]);
+  }, [metricsbeforePeriod, metricsafterPeriod, table]);
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
@@ -233,6 +233,7 @@ const Dashboard = () => {
           display={display}
           vendors={vendorsArr}
           loading={loading}
+          links={links}
         />
       ) : (
         <FinanceEmpty />
@@ -247,6 +248,7 @@ const Dashboard = () => {
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
           loading={loading}
+          links={links}
         />
       ) : (
         <MarketingEmpty />

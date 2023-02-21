@@ -83,16 +83,13 @@ const Adverts = () => {
       start_end_date: `${dayjs(obj.valid_from).format('DD/MM')} - ${dayjs(obj.valid_to).format(
         'DD/MM'
       )}`,
-      slot: `${dayjs(obj.valid_from).format('HH:mm')} - ${dayjs(obj.valid_to).format(
-        'HH:mm'
-      )}`,
+      slot: `${dayjs(obj.valid_from).format('HH:mm')} - ${dayjs(obj.valid_to).format('HH:mm')}`,
       impressions: obj.ad_serving_count,
       orders: obj.orders_count,
       clicks: obj.clicks_count,
       customers: obj.new_customers_count,
-      spent_total: obj.spend === null || obj.total_budget === null
-        ? null
-        : `${obj.spend}/${obj.total_budget}`
+      spent_total:
+        obj.spend === null || obj.total_budget === null ? null : `${obj.spend}/${obj.total_budget}`,
     }));
     setAdsData(newArr);
   }, [ads]);
@@ -100,10 +97,26 @@ const Adverts = () => {
     { id: 'chain_id', disablePadding: true, label: 'Brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
     { id: 'start_end_date', disablePadding: true, label: 'Start - end date' },
-    { id: 'slot', disablePadding: true, label: 'Slot', tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     { id: 'platform', disablePadding: true, label: 'Platform' },
-    { id: 'spent_total', disablePadding: true, label: 'Budget spent - total', tooltip: 'Used budget compared to the defined budget' },
-    { id: 'cost_per_click', disablePadding: true, label: 'Cost Per Click', tooltip: 'Commonly referred to as CPC. You can either set the CPC manually or let the aggregator set a dynamic CPC, only available on Deliveroo.' },
+    {
+      id: 'spent_total',
+      disablePadding: true,
+      label: 'Budget spent - total',
+      tooltip: 'Used budget compared to the defined budget',
+    },
+    {
+      id: 'cost_per_click',
+      disablePadding: true,
+      label: 'Cost Per Click',
+      tooltip:
+        'Commonly referred to as CPC. You can either set the CPC manually or let the aggregator set a dynamic CPC, only available on Deliveroo.',
+    },
     { id: 'status', disablePadding: true, label: 'Status' },
   ];
   const headersPerformance = [
@@ -186,7 +199,7 @@ const Adverts = () => {
     );
   const [details, setDetails] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
-  const links = ['Ads management', 'Ads performance']
+  const links = ['Ads management', 'Ads performance'];
   const renderLayout = () => {
     if (details) {
       return <AdvertsDetails />;

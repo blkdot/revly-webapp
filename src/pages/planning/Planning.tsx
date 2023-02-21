@@ -19,6 +19,8 @@ const defaultFilterStateFormat = {
   type_offer: [],
   discount_rate: [],
   status: [],
+  start_hour: [],
+  end_hour: [],
 };
 
 type TAds = {
@@ -118,7 +120,7 @@ const Planning = () => {
 
   const headersAds = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
-    { id: 'vendor_ids', disablePadding: true, label: 'Brnaches' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
     { id: 'start_end_date', disablePadding: true, label: 'Start - end date' },
     {
       id: 'slot',
@@ -216,6 +218,23 @@ const Planning = () => {
   };
   const [link, setLink] = useState('Offers planning');
   const links = ['Offers planning', 'Ads planning'];
+  const handleChangeMultipleFilter = (k: string) => (v: string) => {
+    const propertyFilter = filters[k];
+
+    const index = propertyFilter.findIndex((p: string) => p === v);
+
+    if (index < 0) {
+      setFilters({ ...filters, [k]: [...propertyFilter, v] });
+      return;
+    }
+
+    const mutablePropertyFilter = [...propertyFilter];
+
+    mutablePropertyFilter.splice(index, 1);
+
+    setFilters({ ...filters, [k]: mutablePropertyFilter });
+  };
+
   const renderTable = () => {
     if (link === 'Ads planning') {
       return (
@@ -228,7 +247,10 @@ const Planning = () => {
           headers={headersAds}
           rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
-          setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+          setOpenedFilter={setOpenedFilter}
+          filters={!isEmptyList() ? filters : null}
+          filtersHead={filtersHead}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
         />
       );
     }
@@ -244,7 +266,10 @@ const Planning = () => {
         rows={dataFiltered.map(renderRowsByHeaderOffer)}
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
-        setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+        setOpenedFilter={setOpenedFilter}
+        filters={!isEmptyList() ? filters : null}
+        filtersHead={filtersHead}
+        handleChangeMultipleFilter={handleChangeMultipleFilter}
       />
     );
   };
@@ -322,6 +347,8 @@ const Planning = () => {
       if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
     });
 
+    // clonedFilters.discount_rate = clonedFilters.discount_rate.sort((a,b) => a - b);
+
     setFilters(clonedFilters);
 
     const preHeadPlatform = preHead.platform.map((s: string) => ({
@@ -341,25 +368,10 @@ const Planning = () => {
       type_offer: link === 'Ads planning' ? [] : preHeadTypeOffer,
       discount_rate: link === 'Ads planning' ? [] : preHeadProcent,
       status: preHeadStatus,
+      start_hour: [],
+      end_hour: [],
     });
   }, [ads, offers, link, JSON.stringify(dateRange)]);
-
-  const handleChangeMultipleFilter = (k: string) => (v: string) => {
-    const propertyFilter = filters[k];
-
-    const index = propertyFilter.findIndex((p: string) => p === v);
-
-    if (index < 0) {
-      setFilters({ ...filters, [k]: [...propertyFilter, v] });
-      return;
-    }
-
-    const mutablePropertyFilter = [...propertyFilter];
-
-    mutablePropertyFilter.splice(index, 1);
-
-    setFilters({ ...filters, [k]: mutablePropertyFilter });
-  };
 
   useEffect(() => {
     let filteredData = offers;

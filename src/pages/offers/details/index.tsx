@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { useApi, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
@@ -68,7 +69,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       <span className='offer-title'>Platform :</span>
       <span className='offer-sub-title'>
         <img
-          className='planning-platform'
+          className='planning-platform offer'
           style={{ marginRight: '1.5rem' }}
           src={platformObject[platform.toLowerCase()].src}
           alt={platformObject[platform.toLowerCase()].name}
@@ -178,6 +179,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
+
   return (
     <>
       <CancelOfferModal
@@ -414,9 +416,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       ''
                     ) : (
                       <div style={{ width: 'fit-content' }} className='offerdetails_time_slots'>
-                        {Object.keys(offerDetailMaster?.children_offers || {}).map((id) => (
-                          <TimeSlot key={id} data={offerDetailMaster.children_offers[id]} />
-                        ))}
+                        {offerDetailMaster?.children_offers
+                          .sort(
+                            (a, b) =>
+                              new Date(a.start_date).setHours(0, 0, 0, 0) -
+                              new Date(b.start_date).setHours(0, 0, 0, 0)
+                          )
+                          .map((obj) => (
+                            <TimeSlot key={obj.offer_id} data={obj} />
+                          ))}
                       </div>
                     )}
                   </div>
@@ -607,8 +615,8 @@ const TimeSlot = ({ data }) => (
         >
           {new Date(data.start_date).toLocaleDateString() ===
           new Date(data.end_date).toLocaleDateString()
-            ? data.start_date
-            : `${data.start_date} - ${data.end_date}`}
+            ? dayjs(data.start_date).format('DD/MM')
+            : `${dayjs(data.start_date).format('DD/MM')} - ${dayjs(data.end_date).format('DD/MM')}`}
         </span>
       </div>
 

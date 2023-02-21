@@ -66,7 +66,7 @@ const NewSettingsOnboarding = () => {
     };
     setLoading(false);
     return arr.map((obj) => ({
-      branch_name: { title: obj.name, address: '' },
+      branch_name: obj.name,
       accounts: vendorsAccounts(obj),
       linked_platforms: vendorPlatform(obj),
       branch_status: vendorsStatus(obj),

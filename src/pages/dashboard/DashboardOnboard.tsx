@@ -62,7 +62,7 @@ const DashboardOnboard = () => {
       onboarded: res.onboarded,
       platforms: { ...userPlatformData.platforms, ...res.platforms },
     });
-    if(res.onboarded){
+    if (res.onboarded) {
       navigate('/dashboard');
     }
   };

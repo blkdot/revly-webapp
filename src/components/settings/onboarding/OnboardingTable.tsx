@@ -12,7 +12,7 @@ const OnboardingTable: FC<{
   const {
     renderAccountsRow,
     renderStatus,
-    renderBranchRow,
+    renderSimpleRow,
     renderLinkedPlatformsRow,
     renderSimpleRowSkeleton,
     renderPlatformSkeleton,
@@ -47,7 +47,7 @@ const OnboardingTable: FC<{
 
   const /* A map of functions that will be used to render the cells. */
     cellTemplatesObject = {
-      branch_name: renderBranchRow,
+      branch_name: renderSimpleRow,
       accounts: renderAccountsRow,
       linked_platforms: renderLinkedPlatformsRow,
       branch_status: renderStatus,
@@ -79,12 +79,9 @@ const OnboardingTable: FC<{
     );
   const onClickRow = (id: any) => {
     const data = branchData.find((obj) => String(`branch_status_${obj.id}`) === String(id));
-
-    if (data.branch_status !== 'in process') {
-      setConnectAccount('manageBranch');
-      openCloseModal();
-      setClickedBranch(data);
-    }
+    setConnectAccount('manageBranch');
+    openCloseModal();
+    setClickedBranch(data);
   };
 
   return (

@@ -289,6 +289,8 @@ const MarketingOffer = () => {
       discount_rate: preHeadProcent,
       status: preHeadStatus,
       goal: preHeadTarget,
+      start_hour: [],
+      end_hour: [],
     });
   }, [JSON.stringify(offersData)]);
 
@@ -398,6 +400,9 @@ const MarketingOffer = () => {
           rows={offersDataFiltered.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+          filters={!isEmptyList() ? filters : null}
+          filtersHead={!isEmptyList() ? filtersHead : null}
+          handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
         />
       );
     }
@@ -414,6 +419,9 @@ const MarketingOffer = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+        filters={!isEmptyList() ? filters : null}
+        filtersHead={!isEmptyList() ? filtersHead : null}
+        handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
       />
     );
   };

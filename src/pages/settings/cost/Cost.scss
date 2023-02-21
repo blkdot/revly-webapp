@@ -105,7 +105,7 @@
           align-items: center;
           justify-content: space-between;
 
-          >div {
+          > div {
             display: flex;
             flex-direction: column;
 
@@ -121,7 +121,7 @@
               color: #637381;
             }
           }
-          button{
+          button {
             height: 46px;
             font-size: 14px;
             padding: 0 30px;
@@ -166,7 +166,7 @@
   .restaurant-dropdown_wrapper {
     width: 50% !important;
 
-    >div:nth-of-type(1) {
+    > div:nth-of-type(1) {
       border-radius: 5px;
       background-color: #fff;
     }

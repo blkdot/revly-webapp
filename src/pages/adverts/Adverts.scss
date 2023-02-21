@@ -4,7 +4,7 @@
   align-items: center;
   margin-top: 30px;
   margin-bottom: 40px;
-  >div{
+  > div {
     display: flex;
     flex-direction: column;
   }
@@ -47,7 +47,8 @@
       width: 17px;
       height: 17px;
       object-fit: contain;
-      filter: invert(98%) sepia(5%) saturate(198%) hue-rotate(224deg) brightness(340%) contrast(100%);
+      filter: invert(98%) sepia(5%) saturate(198%) hue-rotate(224deg) brightness(340%)
+        contrast(100%);
     }
   }
 }
@@ -55,7 +56,6 @@
 .competition-paper.adverts {
   padding-top: 20px;
 }
-
 
 .adverts-table {
   margin-top: 20px !important;
@@ -74,7 +74,7 @@
   th:nth-of-type(1) {
     padding: 0 !important;
 
-    >span {
+    > span {
       margin-left: 0 !important;
     }
   }
@@ -91,7 +91,7 @@
       text-align: left !important;
     }
 
-    >td:nth-of-type(1) {
+    > td:nth-of-type(1) {
       padding-left: 0 !important;
     }
   }

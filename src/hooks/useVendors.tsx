@@ -96,6 +96,7 @@ export type TChainData = {
       is_active: boolean;
       is_deleted: boolean;
       ord_id?: string;
+      cost?: string | number;
     };
   };
 };
@@ -286,7 +287,7 @@ const useVendors = (isSign = false) => {
     return vendorData;
   };
 
-  return { vendors, setVendors, getChainData };
+  return { vendors, setVendors, getChainData, isLoading };
 };
 
 export default useVendors;

@@ -58,7 +58,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setConnectAccount('active');
     setBranchDataUploading(
       res.vendors.map((obj) => ({
-        branch_name: { title: obj.vendor_name, address: '' },
+        branch_name: obj.vendor_name,
         accounts: [email],
         linked_platforms: [{ platform: connect, status: 'active' }],
         branch_status: 'in process',
