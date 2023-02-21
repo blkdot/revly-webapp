@@ -315,7 +315,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
       <span className='competition-table-alert' style={{ whiteSpace: 'nowrap' }}>
-        {r[h.id] * 100}%
+        {parseFloat((r[h.id] * 100).toFixed(2))}%
       </span>
     </TableCellKit>
   );

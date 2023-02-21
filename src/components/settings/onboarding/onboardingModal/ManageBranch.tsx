@@ -180,7 +180,7 @@ const ManageBranch: FC<{
                 <div className='render-accounts-row'>{clickedBranch.accounts[index]}</div>
               </div>
               <div>
-                {obj.status === 'active' ? 'Connected' : ''}
+                {obj.status === 'active' ? 'Connected' : 'Disconnected'}
                 <img src={Arrow} alt='arrow' />
               </div>
             </div>

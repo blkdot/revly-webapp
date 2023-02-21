@@ -14,6 +14,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import arrow from 'assets/images/arrow.svg';
 import AdvertsDetails from './details/AdvertsDetails';
+import AdvertsCreateNewCampaign from './createNewCampaign/AdvertsCreateNewCampaign';
 
 const Adverts = () => {
   const { date } = useDate();
@@ -33,7 +34,7 @@ const Adverts = () => {
     startDate: beforePeriod.startDate,
     endDate: getOfferDate(),
   });
-  const [link, setLink] = useState('list');
+  const [link, setLink] = useState('Ads management');
   const startDate = new Date(beforePeriodBtn.startDate);
   const endDate = new Date(beforePeriodBtn.endDate);
   const startLocal = startDate.toLocaleDateString();
@@ -67,18 +68,7 @@ const Adverts = () => {
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
   const [adsData, setAdsData] = useState([]);
   useEffect(() => {
-    const arr = [];
-    Object.keys(vendors.vendorsObj).forEach((platform) => {
-      vendors.vendorsObj[platform]?.forEach((v) =>
-        ads.forEach((objAds) => {
-          if (objAds.vendor_ids?.includes(Number(v.vendor_id)) && v.metadata.is_active) {
-            arr.push(objAds);
-          }
-        })
-      );
-    });
-
-    const newArr = arr.map((obj) => ({
+    const newArr = ads.map((obj) => ({
       ...obj,
       start_end_date: `${dayjs(obj.valid_from).format('DD/MM')} - ${dayjs(obj.valid_to).format(
         'DD/MM'
@@ -135,7 +125,6 @@ const Adverts = () => {
     renderCurrency,
     renderStatus,
     renderChainId,
-    renderSimpleRow,
     renderVendorId,
     renderPlatform,
     renderCalculatedPercent,
@@ -162,11 +151,11 @@ const Adverts = () => {
   };
 
   const renderRowsByHeaderList = (r) =>
-    (link === 'list' ? headersList : headersPerformance).reduce(
+    (link === 'Ads management' ? headersList : headersPerformance).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.master_ad_id }, cur),
-        id: `${r.ad_ids.join('')}_ads_${r.master_ad_id}_${r.platform}`,
+        id: `${r.ad_ids.join('')}_ads`,
         data: r,
       }),
       {}
@@ -189,7 +178,7 @@ const Adverts = () => {
   };
 
   const renderRowsByHeaderListLoading = (r) =>
-    (link === 'list' ? headersList : headersPerformance).reduce(
+    (link === 'Ads management' ? headersList : headersPerformance).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
@@ -198,11 +187,16 @@ const Adverts = () => {
       {}
     );
   const [details, setDetails] = useState(false);
+  const [openedCampaign, setOpenedCampaign] = useState(false);
+  const [opened, setOpened] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
   const links = ['Ads management', 'Ads performance'];
   const renderLayout = () => {
-    if (details) {
-      return <AdvertsDetails />;
+    if (openedCampaign){
+      return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign}/>
+    }
+    if (opened) {
+      return <AdvertsDetails data={clickedRow} setOpened={setOpened} />;
     }
     return (
       <div>
@@ -219,7 +213,7 @@ const Adverts = () => {
               businesses.
             </p>
           </div>
-          <ButtonKit>
+          <ButtonKit onClick={() => setOpenedCampaign(true)}>
             Create new campaign
             <img src={arrow} alt='right-arrow' />
           </ButtonKit>
@@ -233,7 +227,7 @@ const Adverts = () => {
           links={links}
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderListLoading)}
           isLoading={isLoadingAds}
-          headers={link === 'list' ? headersList : headersPerformance}
+          headers={link === 'Ads management' ? headersList : headersPerformance}
           rows={adsData.map(renderRowsByHeaderList)}
         />
       </div>

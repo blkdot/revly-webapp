@@ -57,7 +57,7 @@ const OnboardingTable: FC<{
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id](r, cur),
-        id: `${cur.id}_${r.id}`,
+        id: `${r.id}_branch`,
         data: r,
       }),
       {}
