@@ -164,7 +164,7 @@ const MarketingAds = () => {
 
         if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!status.includes(cur.status) && cur.status) status.push(cur.status);
+        if (!status.includes(cur.status.toLowerCase()) && cur.status) status.push(cur.status.toLowerCase());
 
         return {
           ...acc,
@@ -180,7 +180,7 @@ const MarketingAds = () => {
       text: renderPlatformInsideFilter(s.toLowerCase()),
     }));
 
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
+    const preHeadStatus = preHead.status.map((s) => ({ value: s.toLowerCase(), text: renderStatusFilter(s) }));
 
     setFiltersHead({
       platform: preHeadPlatform,
@@ -196,7 +196,7 @@ const MarketingAds = () => {
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status.toLowerCase()));
     }
     setAdsFilteredData(filteredData);
   }, [JSON.stringify(filters), adsData]);

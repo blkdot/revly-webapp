@@ -339,8 +339,8 @@ const Planning = () => {
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
-      filteredDataAds = filteredDataAds.filter((f) => filters.status.includes(f.status));
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status.toLowerCase()));
+      filteredDataAds = filteredDataAds.filter((f) => filters.status.includes(f.status.toLowerCase()));
     }
 
     setDataFiltered(filteredData);

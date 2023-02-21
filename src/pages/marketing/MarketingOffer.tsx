@@ -372,7 +372,7 @@ const MarketingOffer = () => {
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status.toLowerCase()));
     }
 
     if (filters.goal.length > 0) {
