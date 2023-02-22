@@ -10,9 +10,9 @@ export const getAlerts = (body, platform) =>
     .then((res) => res)
     .catch(handleResponse);
 
-export const getCompetitors = (body, platform) =>
+export const getCompetitors = (body) =>
   axios
-    .post(`${apiUrl}/competition/competitors/${platform}`, body)
+    .post(`${apiUrl}/competition/competitors`, body)
     .then((res) => res)
     .catch(handleResponse);
 

@@ -101,7 +101,7 @@ const CompetitionDropdown = (props: any) => {
           value={select === undefined ? '' : select}
           onChange={onChange || handleChange}
           input={<OutlinedInputKit label={title} />}
-          disabled={rows.length === 0 || disabled}
+          disabled={rows?.length === 0 || disabled}
           renderValue={(selected) =>
             renderValue ? (
               renderValue(selected)
