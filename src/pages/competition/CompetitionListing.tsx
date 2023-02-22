@@ -8,6 +8,8 @@ import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import AreaIcon from '../../assets/images/ic_area.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -165,7 +167,6 @@ const CompetitionListing = () => {
 
   const getData = (plat, vend, stack) => {
     clearTimeout(fnDelays);
-
     if (loading) {
       setQueue((prev) => prev + 1);
       return;
@@ -193,12 +194,10 @@ const CompetitionListing = () => {
         }
 
         setCompetitionListingData(ranking.data.data);
-        setCuisine(ranking.data.cuisine);
         setLoading(false);
         if (stack === queue) setQueue(0);
       } catch (err) {
         setCompetitionListingData([]);
-        setCuisine('');
         setLoading(false);
         setQueue(0);
         triggerAlertWithMessageError('Error while retrieving data');
@@ -267,7 +266,6 @@ const CompetitionListing = () => {
 
         // TODO: ajust this function when the API return some data
         setCuisinesData(cuisines?.data?.cuisines || []);
-        setCuisine(cuisines?.data?.cuisines[0] || '');
         setLoadingCuisines(false);
         if (stack === queueCuisines) setQueueCuisines(0);
       } catch (err) {
@@ -279,12 +277,6 @@ const CompetitionListing = () => {
     }, 750);
   };
   useEffect(() => {
-    if (platform && area && timeSlot && vendorsData.vendorsObj[platform] !== null) {
-      getData(platform, vendorsData.vendorsObj[platform], queue);
-    }
-  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue, cuisine]);
-
-  useEffect(() => {
     if (platform && vendorsData.vendorsObj[platform] !== null) {
       getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
       getCuisineData(platform, vendorsData.vendorsObj[platform], queueAreas);
@@ -293,73 +285,67 @@ const CompetitionListing = () => {
 
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
-    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
-    if (Object.keys(display).length > 0) {
-      Object.keys(displayTemp).forEach((chainName) => {
-        Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+    let counter = 0;
+    let defaultSelection = null;
+
+    sortedVendors(displayTemp).forEach((chainName) => {
+      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+        displayTemp[chainName][vendorName].checked =
+          vendorsData?.display?.[chainName]?.[vendorName]?.checked || false;
+
+        const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
+        platformsDisplay.forEach((platformV) => {
+          if (platform !== platformV && !displayTemp[chainName][vendorName].is_matched) {
+            displayTemp[chainName][vendorName].deleted = true;
+            displayTemp[chainName][vendorName].checked = false;
+          }
+
+          if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
+            displayTemp[chainName][vendorName].deleted = true;
+            displayTemp[chainName][vendorName].checked = false;
+          }
+          if (platform !== platformV) {
+            displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
+          }
+        });
+        if (!platformsDisplay.includes(platform)) {
+          displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
-          Object.keys(displayTemp[chainName][vendorName].platforms).forEach((platformV) => {
-            if (platform !== platformV && !displayTemp[chainName][vendorName].is_matched) {
-              displayTemp[chainName][vendorName].deleted = true;
-            }
-          });
-        });
-      });
-      const chainRandom = Math.floor(
-        Math.random() *
-          Object.keys(displayTemp).filter((cName) =>
-            Object.keys(displayTemp[cName]).every(
-              (vName) => !(displayTemp[cName][vName].deleted || false)
-            )
-          ).length
-      );
+        }
 
-      const vendorRandom = Math.floor(
-        Math.random() *
-          Object.keys(
-            displayTemp[
-              Object.keys(displayTemp).filter((cName) =>
-                Object.keys(displayTemp[cName]).every(
-                  (vName) => !(displayTemp[cName][vName].deleted || false)
-                )
-              )[chainRandom]
-            ]
-          ).length
-      );
+        if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
+          defaultSelection = {
+            chainName,
+            vendorName,
+          };
+        }
 
-      Object.keys(displayTemp)
-        .filter((cName) =>
-          Object.keys(displayTemp[cName]).every(
-            (vName) => !(displayTemp[cName][vName].deleted || false)
-          )
-        )
-        .forEach((chainName, indexC) => {
-          Object.keys(displayTemp[chainName]).forEach((vendorName, indexV) => {
-            if (indexC === chainRandom && indexV === vendorRandom) {
-              displayTemp[chainName][vendorName].checked = true;
-              Object.keys(displayTemp[chainName][vendorName].platforms).forEach((plat) => {
-                if (platform === plat) {
-                  vendorsObjTemp[plat] = [displayTemp[chainName][vendorName].platforms[plat]];
-                } else {
-                  delete vendorsObjTemp[plat];
-                }
-              });
-            } else {
-              displayTemp[chainName][vendorName].checked = false;
-            }
-          });
-        });
-      setVendorsData({
-        ...vendors,
-        display: displayTemp,
-        vendorsObj: vendorsObjTemp,
+        if (displayTemp[chainName][vendorName].checked) {
+          counter += 1;
+        }
       });
+    });
+
+    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
+      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
     }
+
+    setVendorsData({
+      ...vendors,
+      display: displayTemp,
+      vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
+    });
   }, [platform, vendors]);
+  useEffect(() => {
+    if (platform && area.length > 0 && timeSlot && vendorsData.vendorsObj[platform] !== null && queue === 0) {
+      getData(platform, vendorsData.vendorsObj[platform], queue);
+    }
+  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue, cuisine]);
+
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        <RestaurantDropdown setState='' state='' pageType='' className='' />
+        <RestaurantDropdown />
         <Dates
           isListing
           beforePeriodBtn={beforePeriodBtn}
@@ -507,16 +493,16 @@ const CompetitionListing = () => {
         {loading
           ? null
           : getNumArr().map((num) => (
-              <ButtonKit
-                onClick={() => Open()}
-                key={num}
-                variant='contained'
-                className='competition-add competiton-table-btn'
-              >
-                <AddIcon />
-                Add a Competitor
-              </ButtonKit>
-            ))}
+            <ButtonKit
+              onClick={() => Open()}
+              key={num}
+              variant='contained'
+              className='competition-add competiton-table-btn'
+            >
+              <AddIcon />
+              Add a Competitor
+            </ButtonKit>
+          ))}
       </PaperKit>
     </div>
   );

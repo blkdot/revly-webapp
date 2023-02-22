@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useCost, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ButtonKit } from 'kits';
 import LodaingButtonKit from 'kits/loadingButton/LoadingButtonKit';
 import { useEffect } from 'react';
 import costAtom from 'store/costAtom';
@@ -28,13 +27,14 @@ const Cost = () => {
       });
     return dataVendorsObj;
   };
+  
   const data = Object.keys(display).map((chainName) => ({
     chain_name: chainName,
     vendor_names: Object.keys(display[chainName]),
-    cost: chainData.find((obj) => obj.chain_name === chainName).data.metadata.cost || 15,
+    cost: (Number(chainData.find((obj) => obj.chain_name === chainName).data.metadata.cost) * 100) || 15,
     changed: false,
     vendors: getDataVendors(chainName),
-  }));
+  })).filter((obj) => Object.keys(display[obj.chain_name]).some((vName) => display[obj.chain_name][vName].active));
   useEffect(() => {
     setCost(data);
   }, [vendors]);
@@ -48,7 +48,7 @@ const Cost = () => {
     await cost
       .filter((obj) => obj.changed)
       .forEach((obj) => {
-        mutateAsync({ cost: obj.cost, vendors: obj.vendors });
+        mutateAsync({ cost: Number(obj.cost) / 100, vendors: obj.vendors });
       });
     setCost(cost.map((obj) => ({ ...obj, changed: false })));
   };

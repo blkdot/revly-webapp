@@ -7,8 +7,9 @@
   z-index: 1;
   box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12);
   border-radius: 16px;
+  border: 1px solid #fff;
 
-  > div {
+  >div {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -34,7 +35,7 @@
       background-color: $color-icon !important;
     }
 
-    > svg {
+    >svg {
       width: 70%;
       height: 70%;
       object-fit: cover;
@@ -51,6 +52,7 @@
   }
 
   .card-icon {
+
     svg,
     img {
       filter: invert(58%) sepia(0%) saturate(671%) hue-rotate(147deg) brightness(87%) contrast(84%);
@@ -63,39 +65,79 @@
   }
 
   &:hover {
-    background: $color-third;
+    background: #F6F3FF;
     transition: 0.3s;
-    color: #4d2681;
+    border-color: #906BFF;
 
     svg {
       filter: none;
     }
 
-    img {
-      filter: invert(13%) sepia(33%) saturate(5910%) hue-rotate(257deg) brightness(96%)
-        contrast(91%);
-    }
 
-    .card-week {
-      color: $color-gray;
+    .card-typography {
+      &.MuiTypography-h3 {
+        color: #906BFF;
+      }
     }
   }
 
   &.active {
-    background: $color-third;
-    color: #906bff;
+    background: #F6F3FF;
+    border-color: #906BFF;
 
-    .card-week {
-      color: #906bff !important;
+    .card-typography {
+      &.MuiTypography-h3 {
+        color: #906BFF;
+
+        p {
+          color: #906BFF;
+
+          span {
+            color: #906BFF;
+          }
+        }
+      }
     }
   }
 
   .card-typography {
     font-weight: 600;
-    font-size: 14px !important;
+    font-size: 16px !important;
+    color: #212B36;
 
     &.MuiTypography-h3 {
-      font-size: 3rem !important;
+      font-weight: 700 !important;
+      font-size: 32px !important;
+      line-height: 48px;
+
+      p {
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px;
+        color: #637381;
+      }
+
+      span {
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 48px;
+        color: #212B36;
+      }
+
+      &.card-roi {
+        >p {
+          color: #212B36;
+          line-height: 0;
+          margin-bottom: 10px;
+
+          >span:nth-of-type(2) {
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 0;
+          }
+        }
+
+      }
     }
   }
 
@@ -118,7 +160,7 @@
 
   .card-week {
     font-size: 14px;
-    color: $color-arrow;
+    color: #212B36;
     text-transform: lowercase;
   }
 
@@ -127,20 +169,20 @@
   }
 }
 
-@media (max-width: 2560px) {
-  .card_wrapper.card_wrapper {
-    width: 23%;
-  }
-}
+// @media (max-width: 2560px) {
+//   .card_wrapper.card_wrapper {
+//     width: 23%;
+//   }
+// }
 
-@media (max-width: 1260px) {
-  .card_wrapper.card_wrapper {
-    width: 48%;
-  }
-}
+// @media (max-width: 1260px) {
+//   .card_wrapper.card_wrapper {
+//     width: 48%;
+//   }
+// }
 
-@media (max-width: 995px) {
-  .card_wrapper.card_wrapper {
-    width: 100%;
-  }
-}
+// @media (max-width: 995px) {
+//   .card_wrapper.card_wrapper {
+//     width: 100%;
+//   }
+// }

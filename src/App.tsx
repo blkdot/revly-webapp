@@ -41,7 +41,9 @@ const App = () => (
       <Route element={<ProtectedRoutes />}>
         <Route path='/check' element={<Check />} />
         <Route path='/verify-code' element={<VerifyCode />} />
-        <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
+        <Route element={<MainLayout />} >
+          <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
+        </Route>
         <Route element={<ProtectedOnboardRoutes />}>
           <Route element={<MainLayout />}>
             <Route path='/dashboard' element={<Dashboard />} />

@@ -15,7 +15,7 @@ export const SettingsLayout = () => {
             Settings - {settingsLink[0].subs.find((v) => v.path === location.pathname).title}
           </ContainerKit>
         </div>
-        <ContainerKit>
+        <ContainerKit style={{maxWidth: 'none'}}>
           <Outlet />
         </ContainerKit>
       </div>

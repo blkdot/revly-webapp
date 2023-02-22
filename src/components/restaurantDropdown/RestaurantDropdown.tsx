@@ -96,11 +96,11 @@ const RestaurantDropdown: FC<{
             }
           });
         } else {
-          // Object.keys(displayTemp).forEach((cName) => {
-          //   Object.keys(displayTemp[cName]).forEach((vName) => {
-          //     displayTemp[cName][vName].checked = false;
-          //   });
-          // });
+          Object.keys(displayTemp).forEach((cName) => {
+            Object.keys(displayTemp[cName]).forEach((vName) => {
+              displayTemp[cName][vName].checked = false;
+            });
+          });
           Object.keys(displayTemp[chainName][value].platforms).forEach((platform) => {
             vendorsObjTemp[platform] = [displayTemp[chainName][value].platforms[platform]];
           });
@@ -192,16 +192,16 @@ const RestaurantDropdown: FC<{
             ) : (
               ''
             )}
-            {sortedVendors(display).map((el, index) => (
+            {sortedVendors(state?.display || display).map((el, index) => (
               <RestaurantCheckboxAccordion
                 key={el}
-                info={display[el]}
+                info={(state?.display || display)[el]}
                 chainName={el}
                 handleChangeVendor={handleChangeVendor}
                 index={index}
                 setVendors={state ? setState : setVendors}
-                vendors={vendorsContext}
-                display={display}
+                vendors={state || vendorsContext}
+                display={state?.display || display}
                 pageType={pageType}
               />
             ))}

@@ -97,12 +97,13 @@ const CompetitionAlerts = () => {
     renderSimpleIconRow,
     renderSimpleRowSkeleton,
     renderPercentSkeleton,
+    renderPercent
   } = useTableContentFormatter();
 
   const cellTemplatesObject = {
     name: renderSimpleRow,
     type: renderSimpleRow,
-    alert: renderSimpleRow,
+    alert: renderPercent,
     start_end_date: renderSimpleIconRow,
     slot: renderSimpleIconRow,
     status: renderStatus,
@@ -121,7 +122,7 @@ const CompetitionAlerts = () => {
   const cellTemplatesObjectLoading = {
     name: renderSimpleRowSkeleton,
     type: renderSimpleRowSkeleton,
-    alert: renderSimpleRowSkeleton,
+    alert: renderPercentSkeleton,
     start_end_date: renderSimpleRowSkeleton,
     slot: renderSimpleRowSkeleton,
     status: renderPercentSkeleton,
