@@ -228,14 +228,17 @@ const CompetitionAlerts = () => {
 
   const handleCompetitorChange = (e) => {
     const { value } = e.target;
-    if (value.length > 1) {
+
+    if (value.length > 0) {
       const arr = value
         .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
         .flat();
+
       setFilteredData(arr);
     } else {
       setFilteredData([]);
     }
+
     setCompetitor(value);
   };
 
@@ -322,7 +325,7 @@ const CompetitionAlerts = () => {
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headersAlert}
-          rows={(filteredData.length > 0 ? filteredData : competitionAlertsData).map(
+          rows={(filteredData).map(
             renderRowsByHeader
           )}
           className='competition-alerts'

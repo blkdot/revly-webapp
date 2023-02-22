@@ -86,13 +86,16 @@ const OnboardingModal = ({ propsVariables }: any) => {
       email: clickedEmail,
       data: { is_deleted: true },
     });
+
     accounts.splice(
       accounts.findIndex((obj) => obj.email === clickedEmail && obj.platform === platform),
       1
     );
+
     setBranchData(
       branchData.filter((obj) => obj.accounts.some((objAcc) => objAcc !== clickedEmail))
     );
+
     setAccounts([...accounts]);
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
@@ -132,29 +135,29 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setAccounts([...accounts]);
     setBranchData(
       branchData.map((objB) => {
-        const linked_platforms = [...objB.linked_platforms];
+        const linkedPlatform = [...objB.linked_platforms];
         if (objB.accounts.find((emailAcc: string) => emailAcc === obj.email)) {
           if (!obj.active) {
             (
-              linked_platforms.find((objLink) => objLink.platform === obj.platform) || {
+              linkedPlatform.find((objLink) => objLink.platform === obj.platform) || {
                 status: '',
               }
             ).status = 'suspended';
             if (objB.linked_platforms.every((objLink) => objLink.status !== 'active')) {
-              return { ...objB, branch_status: 'suspended', linked_platforms };
+              return { ...objB, branch_status: 'suspended', linkedPlatform };
             }
             if (objB.linked_platforms.length === 1) {
-              return { ...objB, branch_status: 'suspended', linked_platforms };
+              return { ...objB, branch_status: 'suspended', linkedPlatform };
             }
-            return { ...objB, linked_platforms };
+            return { ...objB, linkedPlatform };
           }
           (
-            linked_platforms.find((objLink) => objLink.platform === obj.platform) || { status: '' }
+            linkedPlatform.find((objLink) => objLink.platform === obj.platform) || { status: '' }
           ).status = 'active';
           if (objB.linked_platforms.length > 1) {
-            return { ...objB, branch_status: 'active', linked_platforms };
+            return { ...objB, branch_status: 'active', linkedPlatform };
           }
-          return { ...objB, branch_status: 'in process', linked_platforms };
+          return { ...objB, branch_status: 'in process', linkedPlatform };
         }
         return objB;
       })
@@ -236,8 +239,9 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${openedSwitchDeleteModal ? 'activeDelete' : ''
-        }`}
+      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${
+        openedSwitchDeleteModal ? 'activeDelete' : ''
+      }`}
       onClick={openCloseModal}
     >
       <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>

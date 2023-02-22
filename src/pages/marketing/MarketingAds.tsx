@@ -226,7 +226,8 @@ const MarketingAds = () => {
 
         if (!platform.includes(cur.platform) && cur.platform) platform.push(cur.platform);
 
-        if (!status.includes(cur.status.toLowerCase()) && cur.status) status.push(cur.status.toLowerCase());
+        if (!status.includes(cur.status.toLowerCase()) && cur.status)
+          status.push(cur.status.toLowerCase());
 
         return {
           ...acc,
@@ -242,7 +243,10 @@ const MarketingAds = () => {
       text: renderPlatformInsideFilter(s.toLowerCase()),
     }));
 
-    const preHeadStatus = preHead.status.map((s) => ({ value: s.toLowerCase(), text: renderStatusFilter(s) }));
+    const preHeadStatus = preHead.status.map((s) => ({
+      value: s.toLowerCase(),
+      text: renderStatusFilter(s),
+    }));
 
     setFiltersHead({
       platform: preHeadPlatform,

@@ -39,7 +39,7 @@ export type TPlatformUserData = {
       active: boolean;
       access_token: string | null;
       access_token_bis: string | null;
-      vendor_ids: number[] | string[];
+      vendor_ids: string[];
       email: string;
     }[];
   };

@@ -180,6 +180,7 @@ const RestaurantCheckboxAccordion: FC<{
           }
           return 0;
         };
+
         return (
           <InputLabelKit
             disabled={!info[vendorName].active}
@@ -197,8 +198,8 @@ const RestaurantCheckboxAccordion: FC<{
                 />
               ) : (
                 <CheckboxKit
-                  disabled={!info[vendorName].active}
-                  checked={info[vendorName].checked}
+                  disabled={!info[vendorName].active || info[vendorName]?.deactivated}
+                  checked={info[vendorName]?.deactivated ? false : info[vendorName].checked}
                   onChange={({ target }) => handleChangeVendor(target, chainName)}
                   value={vendorName}
                   onClick={(e) => e.stopPropagation()}
@@ -210,7 +211,9 @@ const RestaurantCheckboxAccordion: FC<{
                 disableHoverListener={!getHoverStatusVendor(vendorName)}
                 title={vendorName}
               >
-                <p className='vendor-name'>{vendorName}</p>
+                <p className={`vendor-name ${info[vendorName]?.deactivated ? 'disabled' : ''}`}>
+                  {vendorName}
+                </p>
               </TooltipKit>
               <div className='restaurant-platforms'>
                 {Object.keys(info[vendorName].platforms)

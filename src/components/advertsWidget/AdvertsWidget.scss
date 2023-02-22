@@ -7,7 +7,7 @@
   grid-gap: 15px;
   flex: 1 1 18%;
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
     grid-gap: 10px;
@@ -20,7 +20,7 @@
 
     p {
       font-weight: 600;
-      color: #212B36;
+      color: #212b36;
       line-height: 22px;
     }
   }
@@ -29,7 +29,7 @@
     font-weight: 700;
     font-size: 32px;
     line-height: 48px;
-    color: #212B36;
+    color: #212b36;
   }
 }
 
@@ -58,19 +58,19 @@
 }
 
 .adverts-widget-custom_wrapper {
-  background: #F9FAFB;
-  border: 1px solid #919EAB29;
+  background: #f9fafb;
+  border: 1px solid #919eab29;
   border-radius: 8px;
   padding: 20px 0;
 
-  >p {
-    border-bottom: 1px solid #919EAB29;
+  > p {
+    border-bottom: 1px solid #919eab29;
     padding: 0 20px;
     padding-bottom: 10px;
     display: block;
     font-weight: 600;
     line-height: 22px;
-    color: #212B36;
+    color: #212b36;
   }
 }
 
@@ -80,7 +80,7 @@
   justify-content: space-between;
   margin-top: 10px;
 
-  >div {
+  > div {
     display: flex;
     flex-direction: column;
     grid-gap: 5px;

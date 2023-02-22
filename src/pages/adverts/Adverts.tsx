@@ -192,8 +192,8 @@ const Adverts = () => {
   const [clickedRow, setClickedRow] = useState({});
   const links = ['Ads management', 'Ads performance'];
   const renderLayout = () => {
-    if (openedCampaign){
-      return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign}/>
+    if (openedCampaign) {
+      return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign} />;
     }
     if (opened) {
       return <AdvertsDetails data={clickedRow} setOpened={setOpened} />;

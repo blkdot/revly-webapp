@@ -196,9 +196,11 @@ const useTableContentFormatter = () => {
   );
 
   const renderVendorId = (r, h) => {
+    const vendorsContent = r[h.id].filter((value, index, self) => self.indexOf(value) === index);
+
     const vendors = r[h.id].map((vendor) => {
       const vendorData = chainData.find((objV) => String(objV.vendor_id) === String(vendor))
-
+      
       if (!vendorData) return null;
 
       return vendorData.vendor_name || vendor;
@@ -215,7 +217,7 @@ const useTableContentFormatter = () => {
         ) : (
           <TooltipKit
             title={
-              r[h.id] === null || !r[h.id]
+              vendorsContent === null || !vendorsContent
                 ? '-'
                 : vendors.map((vendor) => (
                   <span
@@ -226,13 +228,13 @@ const useTableContentFormatter = () => {
                   </span>
                 ))
             }
-            disableHoverListener={r[h.id]?.length === 0}
+            disableHoverListener={vendorsContent?.length === 0}
             id='category-tooltip'
             placement='right-start'
             arrow
           >
             <span className='render-row-tooltip' key={h.id}>
-              {r[h.id] === null || !r[h.id] ? '-' : (r[h.id]?.length || 0)?.toLocaleString('en-US')}
+              {vendorsContent === null || !vendorsContent ? '-' : (vendorsContent?.length || 0)?.toLocaleString('en-US')}
             </span>
           </TooltipKit>
         )}
