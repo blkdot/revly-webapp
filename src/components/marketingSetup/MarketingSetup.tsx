@@ -280,8 +280,8 @@ const MarketingSetup: React.FC<{
             displayTemp[chainName][vendorName].deactivated = false;
 
             if (
-              platformV.toLocaleLowerCase() === 'deliveroo' &&
-              ((platform.length === 1 && platform[0].toLocaleLowerCase() === 'deliveroo') ||
+              platformV?.toLocaleLowerCase() === 'deliveroo' &&
+              ((platform.length === 1 && platform[0]?.toLocaleLowerCase() === 'deliveroo') ||
                 platform.length === 2)
             ) {
               const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
