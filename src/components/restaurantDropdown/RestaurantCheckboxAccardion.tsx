@@ -3,8 +3,6 @@ import { ButtonKit, CheckboxKit, InputLabelKit, MenuItemKit, RadioKit, TooltipKi
 import { useEffect, useState, FC } from 'react';
 import { platformList } from 'data/platformList';
 import selectIcon from '../../assets/images/ic_select.png';
-// import deliveroo from '../../assets/images/deliveroo-favicon.webp';
-// import talabat from '../../assets/images/talabat-favicon.png';
 
 const RestaurantCheckboxAccordion: FC<{
   info: object;
@@ -72,10 +70,10 @@ const RestaurantCheckboxAccordion: FC<{
     });
     setVendors({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp });
   };
-  const getIcon = (vendorName: string) => {
-    const platform = Object.keys(info[vendorName].platforms)[0];
-    return platformList.find((obj) => obj.name === platform).srcFavicon;
-  };
+
+  const getIcon = (platform: string) =>
+    platformList.find((obj) => obj.name === platform).srcFavicon;
+
   return (
     <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
       {Object.values(info).every((objV: any) => !objV.is_matched) ? (
@@ -85,7 +83,9 @@ const RestaurantCheckboxAccordion: FC<{
           tabIndex={-1}
           role='presentation'
           style={{ '--length': Object.keys(info).length } as React.CSSProperties}
-          className={`checkbox-accordion ${false ? 'disabled' : ''} ${active ? 'active' : ''}`}
+          className={`checkbox-accordion ${
+            Object.values(info).every((objV) => objV.deleted) ? 'disabled' : ''
+          } ${active ? 'active' : ''}`}
           onClick={() => setActive(!active)}
         >
           <div>
@@ -128,7 +128,7 @@ const RestaurantCheckboxAccordion: FC<{
               <MenuItemKit disabled={!info[vendorName].active}>
                 <img
                   className='restaurant-img'
-                  src={getIcon(vendorName)}
+                  src={getIcon(Object.keys(info[vendorName].platforms)[0])}
                   alt={Object.keys(info[vendorName].platforms)[0]}
                 />
                 {pageType === 'listing' ? (
@@ -169,6 +169,16 @@ const RestaurantCheckboxAccordion: FC<{
             </div>
           );
         }
+        const sortPlatform = (a: any, b: any) => {
+          if (a < b) {
+            return -1;
+          }
+          if (a > b) {
+            return 1;
+          }
+          return 0;
+        };
+
         return (
           <InputLabelKit
             disabled={!info[vendorName].active}
@@ -186,8 +196,8 @@ const RestaurantCheckboxAccordion: FC<{
                 />
               ) : (
                 <CheckboxKit
-                  disabled={!info[vendorName].active}
-                  checked={info[vendorName].checked}
+                  disabled={!info[vendorName].active || info[vendorName]?.deactivated}
+                  checked={info[vendorName]?.deactivated ? false : info[vendorName].checked}
                   onChange={({ target }) => handleChangeVendor(target, chainName)}
                   value={vendorName}
                   onClick={(e) => e.stopPropagation()}
@@ -199,11 +209,21 @@ const RestaurantCheckboxAccordion: FC<{
                 disableHoverListener={!getHoverStatusVendor(vendorName)}
                 title={vendorName}
               >
-                <p className='vendor-name'>{vendorName}</p>
+                <p className={`vendor-name ${info[vendorName]?.deactivated ? 'disabled' : ''}`}>
+                  {vendorName}
+                </p>
               </TooltipKit>
+              <div className='restaurant-platforms'>
+                {Object.keys(info[vendorName].platforms)
+                  .filter((plat) => info[vendorName].platforms[plat].metadata.is_active)
+                  .sort(sortPlatform)
+                  .map((plat) => (
+                    <img key={plat} className='restaurant-img' src={getIcon(plat)} alt={plat} />
+                  ))}
+              </div>
               <div className='only-button vendor'>
                 <ButtonKit
-                  disabled={!info[vendorName].active}
+                  disabled={!info[vendorName].active || info[vendorName]?.deactivated}
                   onClick={(e) => handleClickVendor(e, vendorName)}
                   variant='contained'
                 >

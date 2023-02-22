@@ -32,8 +32,8 @@ export const PlatformStep: FC<{
           {platformList
             .filter((pf) =>
               userPlatformData.platforms[pf.name].length > 0
-                ? userPlatformData.platforms[pf.name].filter((obj) => obj.active)
-                : ''
+                ? userPlatformData.platforms[pf.name].some((obj) => obj.active)
+                : false
             )
             .map((p) => (
               <MarketingRadio

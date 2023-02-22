@@ -137,6 +137,11 @@
       > div {
         width: 100% !important;
       }
+
+      &.disabled {
+        color: gray;
+        cursor: not-allowed;
+      }
     }
 
     > div:nth-of-type(1) {
@@ -149,6 +154,13 @@
         align-items: center;
       }
     }
+  }
+}
+
+.checkbox-accordion {
+  &.disabled {
+    color: gray !important;
+    cursor: not-allowed;
   }
 }
 
@@ -173,6 +185,9 @@
   object-fit: contain;
   margin-right: 8px;
   margin-left: 2px;
+  &.disabled {
+    opacity: 0.7;
+  }
 }
 
 .select_icon {
@@ -457,8 +472,11 @@
       text-overflow: ellipsis;
       display: inline-block;
       vertical-align: middle;
-      width: 65%;
       cursor: pointer;
+
+      &.disabled {
+        color: gray;
+      }
     }
 
     .only-button {
@@ -594,4 +612,10 @@
       width: 100% !important;
     }
   }
+}
+
+.restaurant-platforms {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }

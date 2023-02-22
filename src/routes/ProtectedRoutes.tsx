@@ -1,66 +1,67 @@
-import { useUserAuth } from 'contexts';
-import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
-import { useDate } from 'hooks';
-import { ContainerKit, SpinnerKit } from 'kits';
-import { useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import Navbar from '../components/navbar/Navbar';
+import { auth } from 'firebase-config';
+import { onAuthStateChanged } from 'firebase/auth';
+import { SpinnerKit } from 'kits';
+import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
-const ProtectedRoutes = () => {
-  const { user } = useUserAuth();
-  const { setDate } = useDate();
-  const defaultDate = {
-    beforePeriod: {
-      startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-      endDate: new Date(),
-    },
-    afterPeriod: {
-      startDate: startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
-      endDate: endOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 }),
-    },
-    titleDate: 'current week',
-    titleafterPeriod: 'last week',
-    typeDate: 'week',
-  };
-  const clear = () => {
-    localStorage.setItem('date', JSON.stringify(defaultDate));
-    setDate(defaultDate);
-  };
-  const checkLeaveTime = () => {
-    const leaveTime = JSON.parse(localStorage.getItem('leaveTime'));
-    if (new Date(leaveTime).toLocaleDateString() < new Date().toLocaleDateString()) {
-      clear();
-    } else if (new Date(leaveTime).getHours() <= new Date().getHours() - 3) {
-      clear();
-    }
-  };
-  useEffect(() => {
-    (window as any).load = checkLeaveTime();
-    window.onbeforeunload = (e) => {
-      localStorage.setItem('leaveTime', JSON.stringify(new Date()));
-      e.target.hidden = true;
-      return '';
-    };
-  }, []);
-
-  if (typeof user === 'boolean' && user) {
-    return (
-      <div style={{ marginTop: '20rem', marginLeft: '45%' }}>
-        <SpinnerKit />
-      </div>
-    );
-  }
-
-  const renderLayout = () => (
-    <div className='user-page'>
-      <Navbar />
-      <ContainerKit>
-        <Outlet />
-      </ContainerKit>
-    </div>
-  );
-
-  return user ? renderLayout() : <Navigate to='/' />;
+type UserContextType = {
+  email: string;
+  token: string;
+  displayName: string;
+  phoneNumber: string;
 };
 
-export default ProtectedRoutes;
+const UserContext = createContext<UserContextType>({
+  email: '',
+  token: '',
+  displayName: '',
+  phoneNumber: '',
+});
+
+export const UserProvider: FC<{
+  value: UserContextType;
+  children: ReactNode;
+}> = ({ value, children }) => <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+
+export const useUser = () => useContext(UserContext);
+
+export const ProtectedRoutes: FC = () => {
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState<UserContextType>({
+    email: '',
+    token: '',
+    displayName: '',
+    phoneNumber: '',
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+
+    return onAuthStateChanged(auth, (u) => {
+      setLoading(false);
+
+      if (u) {
+        setUser({
+          email: u.email,
+          token: (u as any).accessToken,
+          displayName: u.displayName,
+          phoneNumber: u.phoneNumber,
+        });
+      } else {
+        navigate('/');
+      }
+    });
+  }, [navigate]);
+
+  if (loading) {
+    return <SpinnerKit />;
+  }
+
+  return (
+    <UserProvider value={user}>
+      <Outlet />
+    </UserProvider>
+  );
+};

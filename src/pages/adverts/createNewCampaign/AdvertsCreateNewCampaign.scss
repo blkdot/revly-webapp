@@ -1,0 +1,148 @@
+.adverts_create_new_campaign-wrapper {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  z-index: 1000;
+  background-color: #f8f9fd;
+  top: 0;
+  display: flex;
+
+  .adverts-step {
+    background-color: #fff;
+    width: 60%;
+    height: 100%;
+    padding: 50px 60px 50px 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: 0.7s;
+
+    &::before {
+      content: '';
+      background-color: #7b61ff;
+      height: 4px;
+      width: 0;
+      transition: 0.7s;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    &.launch {
+      transition: 0.7s;
+
+      &::before {
+        width: 20%;
+        transition: 0.7s;
+      }
+    }
+
+    &.recurency {
+      transition: 0.7s;
+
+      &::before {
+        transition: 0.7s;
+        width: 40%;
+      }
+    }
+
+    .top {
+      > p {
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 22px;
+        color: #212b36;
+        margin-bottom: 5px;
+      }
+
+      > span {
+        font-weight: 400;
+        line-height: 20px;
+        color: #637381;
+        margin-bottom: 30px;
+        display: block;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        font-size: 16px;
+        height: 46px;
+        width: 48%;
+        box-shadow: none;
+        text-transform: none;
+      }
+
+      .cancel {
+        background-color: #f9fafb;
+        color: #1a1a1c;
+      }
+
+      .continue {
+        background-color: #7b61ff;
+        color: #fff;
+
+        svg {
+          margin-left: 10px;
+          transform: scale(-1, 1);
+
+          path {
+            fill: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.advert-branches {
+  > div {
+    width: 100%;
+    border-radius: 8px;
+    height: 70px;
+    box-shadow: 0px 8px 16px rgba(145, 158, 171, 0.16);
+    border: 1px solid rgba(145, 158, 171, 0.08);
+
+    > div {
+      border: none;
+      height: 70px;
+      padding: 0;
+      border-radius: 8px;
+
+      > div > div {
+        padding: 15px 20px !important;
+      }
+    }
+  }
+
+  .restaurant-dropdown_wrapper .MuiSvgIcon-root {
+    right: 20px;
+  }
+}
+
+.adverts_create_new_campaign_widgets {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  grid-gap: 17px;
+  padding-top: 74px;
+  flex-direction: column;
+
+  > div {
+    width: 80%;
+    background: #ffffff;
+    border: 1px solid rgba(145, 158, 171, 0.08);
+    border-radius: 9px;
+  }
+
+  .MuiSkeleton-text {
+    border-radius: 2px;
+    height: 20px;
+  }
+}

@@ -92,8 +92,7 @@ const UploadingActive: FC<{
         {branchDataUploading.map((obj) => (
           <div key={obj.id}>
             <div>
-              <p className='__title'>{obj.branch_name.title}</p>
-              <span className='__subtitle'>{obj.branch_name.address}</span>
+              <p className='__title'>{obj.branch_name}</p>
             </div>
             <ButtonKit variant='contained'>Added</ButtonKit>
           </div>

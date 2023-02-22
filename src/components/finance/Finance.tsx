@@ -1,22 +1,23 @@
+import { FC } from 'react';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { endOfMonth, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useDate } from 'hooks';
 import { TypographyKit } from 'kits';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useAtom } from 'jotai';
 import Widget from '../widget/Widget';
 import './Finance.scss';
 
-const Finance = ({
-  metricsbeforePeriod,
-  metricsafterPeriod,
-  chainObj,
-  setTable,
-  table,
-  vendorsSelected,
-  display,
-  vendors,
-  loading,
-}) => {
+const Finance: FC<{
+  metricsbeforePeriod: any;
+  metricsafterPeriod: any;
+  setTable: any;
+  table: any;
+  loading: any;
+  links: any;
+}> = ({ metricsbeforePeriod, metricsafterPeriod, setTable, table, loading, links }) => {
   const { date } = useDate();
   const { beforePeriod, titleDate } = date;
   const startDate = new Date(beforePeriod.startDate);
@@ -25,6 +26,8 @@ const Finance = ({
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
+  const [vendors] = useAtom(vendorsAtom);
+  const { display, chainData } = vendors;
   const getbeforePeriod = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
@@ -39,32 +42,14 @@ const Finance = ({
 
     return `${titleDate}`;
   };
-  const getChain = () => {
-    const chainObjTemp = JSON.parse(JSON.stringify(chainObj));
-    Object.keys(chainObjTemp).forEach((chainName) => {
-      if (Object.keys(chainObjTemp[chainName]).length === 0) {
-        delete chainObjTemp[chainName];
-      }
-    });
-    return Object.keys(chainObjTemp);
-  };
   const isDisplay = () => {
-    if (Object.keys(display).length > 0) {
-      if (getChain().length === Object.keys(display).length) {
-        return <p>All Points of sales</p>;
-      }
-      if (getChain().length > 2) {
-        return `${getChain().length} selected vendors`;
-      }
-      return getChain().join(', ');
-    }
-    if (vendorsSelected.length === vendors.length) {
+    if (selectedVendors('name', display).length === chainData.length) {
       return <p>All Points of sales</p>;
     }
-    if (vendorsSelected.length > 2) {
-      return `${vendorsSelected.length} selected vendors`;
+    if (selectedVendors('name', display).length > 2) {
+      return `${selectedVendors('name', display).length} selected vendors`;
     }
-    return <p> {vendorsSelected.map((obj) => obj.data.vendor_name).join(', ')}</p>;
+    return selectedVendors('name', display).join(', ');
   };
   const financeLinks = ['revenue', 'n_orders', 'average_basket', 'profit'];
   return (
@@ -84,6 +69,7 @@ const Finance = ({
             metricsbeforePeriod={metricsbeforePeriod}
             metricsafterPeriod={metricsafterPeriod}
             loading={loading}
+            links={links}
           />
         ))}
       </div>

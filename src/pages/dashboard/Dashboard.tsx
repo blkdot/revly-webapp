@@ -2,69 +2,29 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
-import { useMetrics, usePlatform } from 'hooks';
+import Dates from 'components/dates/Dates';
+import Finance from 'components/finance/Finance';
+import FinanceEmpty from 'components/finance/FinanceEmpty';
+import Marketing from 'components/marketing/Marketing';
+import MarketingEmpty from 'components/marketing/MarketingEmpty';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import dayjs from 'dayjs';
+import { format, getYear } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useDate, useMetrics, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
-import { PaperKit } from 'kits';
-import { useState } from 'react';
-import AvgBasketIcon from '../../assets/images/ic_avg-basket.png';
-import DiscountOfferedIcon from '../../assets/images/ic_marketing.png';
-import RevenueIcon from '../../assets/images/ic_offers-mn.png';
-import ProfitIcon from '../../assets/images/ic_offers-pr.png';
-import OrdersIcon from '../../assets/images/ic_orders.png';
-import RoiIcon from '../../assets/images/ic_roi.png';
-import Dates from '../../components/dates/Dates';
-import Finance from '../../components/finance/Finance';
-import FinanceEmpty from '../../components/finance/FinanceEmpty';
-import Marketing from '../../components/marketing/Marketing';
-import MarketingEmpty from '../../components/marketing/MarketingEmpty';
-import Table from '../../components/table/Table';
-import TableEmpty from '../../components/table/TableEmpty';
-import { vendorsAtom } from '../../store/vendorsAtom';
+import { useEffect, useState } from 'react';
 import './Dashboard.scss';
 
 const Dashboard = () => {
-  const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics();
   const [vendors] = useAtom(vendorsAtom);
-  const { chainObj, display, vendorsSelected, vendorsArr } = vendors;
-  const [table, setTable] = useState('revenue');
+  const { vendorsObj } = vendors;
+  const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics(vendorsObj);
+  const [table, setTable] = useState('Revenue');
 
-  const getTitle = (title: string) => {
-    if (title === 'n_orders') {
-      return 'Orders';
-    }
-    if (title === 'average_basket') {
-      return 'Avg. Basket';
-    }
-    if (title === 'accrued_discounts') {
-      return 'Accrued Discount';
-    }
-    if (title === 'profit') {
-      return 'Net Revenue';
-    }
-    if (title === 'roi') {
-      return 'Marketing ROI';
-    }
-    return title;
-  };
-  const getIcon = (title: string) => {
-    if (title === 'revenue') {
-      return RevenueIcon;
-    }
-    if (title === 'n_orders') {
-      return OrdersIcon;
-    }
-    if (title === 'profit') {
-      return ProfitIcon;
-    }
-    if (title === 'average_basket') {
-      return AvgBasketIcon;
-    }
-    if (title === 'accrued_discounts') {
-      return DiscountOfferedIcon;
-    }
-    return RoiIcon;
-  };
-  const links = ['revenue', 'n_orders', 'average_basket', 'profit', 'accrued_discounts', 'roi'];
+  const links = ['Revenue', 'Orders', 'Avg. basket', 'Net revenue', 'Accrued discount', 'ROI'];
   const [openedModal, setOpenedModal] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [branchDataUploading, setBranchDataUploading] = useState([]);
@@ -109,6 +69,140 @@ const Dashboard = () => {
     }
     return <RestaurantDropdown />;
   };
+  const { date } = useDate();
+  const { typeDate } = date;
+  const getPeriod = (title, period) => {
+    if (title === 'custom') {
+      if (typeDate === 'day') {
+        return `${dayjs(period.startDate).format('DD/MM')}`;
+      }
+      if (typeDate === 'month') {
+        return `${format(new Date(period.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
+          new Date(period.startDate)
+        )}`;
+      }
+
+      return `${dayjs(period.startDate).format('DD/MM')} - ${dayjs(period.endDate).format(
+        'DD/MM'
+      )}`;
+    }
+
+    return title;
+  };
+  const headers = [
+    {
+      id: 'platform',
+      numeric: false,
+      disablePadding: false,
+      label: 'Platform',
+    },
+    {
+      id: 'beforePeriod',
+      numeric: false,
+      disablePadding: false,
+      label: getPeriod(date.titleDate, date.beforePeriod),
+    },
+    {
+      id: 'afterPeriod',
+      numeric: false,
+      disablePadding: true,
+      label: getPeriod(date.titleafterPeriod, date.afterPeriod),
+    },
+    {
+      id: 'evolution',
+      numeric: false,
+      disablePadding: true,
+      label: 'Evolution',
+    },
+  ];
+  const getType = () => {
+    const title = table.toLocaleLowerCase();
+    if (title === 'orders') return 'n_orders';
+    if (title === 'avg. basket') return 'average_basket';
+    if (title === 'accrued discount') return 'accrued_discounts';
+    if (title === 'net revenue') return 'profit';
+    return title;
+  };
+  const { renderPlatform, renderSimpleRow, renderPlatformSkeleton, renderSimpleRowSkeleton } =
+    useTableContentFormatter();
+  const cellTemplatesObject = {
+    platform: renderPlatform,
+    beforePeriod: renderSimpleRow,
+    afterPeriod: renderSimpleRow,
+    evolution: renderSimpleRow,
+  };
+  const renderRowsByHeader = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id](r, cur),
+        id: r.platform,
+        data: r,
+      }),
+      {}
+    );
+  const cellTemplatesObjectLoading = {
+    platform: renderPlatformSkeleton,
+    beforePeriod: renderSimpleRowSkeleton,
+    afterPeriod: renderSimpleRowSkeleton,
+    evolution: renderSimpleRowSkeleton,
+  };
+  const renderRowsByHeaderLoading = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
+  const getNum = (metrics) => {
+    if (metrics) {
+      if (Number.isNaN(metrics[getType()]) || metrics[getType()] === null) {
+        return '-';
+      }
+      if (getType() === 'roi') {
+        return `${Math.round(metrics[getType()] * 100)} %`;
+      }
+      return parseFloat(Number(metrics[getType()]).toFixed(1)).toLocaleString('en-US');
+    }
+    return '-';
+  };
+  const [metrics, setMetrics] = useState([]);
+
+  const getProcent = (metricsBefore, metricsAfter) => {
+    if (metricsBefore && metricsAfter) {
+      if (Number(metricsAfter) === 0) {
+        return 0;
+      }
+
+      return Number(
+        parseFloat((metricsBefore[getType()] / (metricsAfter[getType()] / 100) - 100).toFixed(0))
+      );
+    }
+    return '-';
+  };
+  const evolution = (procent) => {
+    if (Number.isNaN(procent) || procent === '-' || procent === null) {
+      return '-';
+    }
+    return `${procent}%`;
+  };
+  useEffect(() => {
+    const platforms = [
+      ...Object.keys(userPlatformData.platforms)
+        .map((plat) => (userPlatformData.platforms[plat].some((obj) => obj.active) ? plat : null))
+        .filter((plat) => plat),
+      'all',
+    ];
+    const data = platforms.map((plat) => ({
+      platform: plat === 'all' ? 'Total' : plat,
+      beforePeriod: getNum(metricsbeforePeriod[plat]),
+      afterPeriod: getNum(metricsafterPeriod[plat]),
+      evolution: evolution(getProcent(metricsbeforePeriod[plat], metricsafterPeriod[plat])),
+    }));
+    setMetrics(data);
+  }, [metricsbeforePeriod, metricsafterPeriod, table]);
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
@@ -132,15 +226,12 @@ const Dashboard = () => {
       !loading &&
       userPlatformData.onboarded ? (
         <Finance
-          chainObj={chainObj}
           setTable={setTable}
-          table={table}
+          table={getType()}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
-          display={display}
-          vendorsSelected={vendorsSelected}
-          vendors={vendorsArr}
           loading={loading}
+          links={links}
         />
       ) : (
         <FinanceEmpty />
@@ -151,51 +242,24 @@ const Dashboard = () => {
       userPlatformData.onboarded ? (
         <Marketing
           setTable={setTable}
-          table={table}
+          table={getType()}
           metricsbeforePeriod={metricsbeforePeriod}
           metricsafterPeriod={metricsafterPeriod}
           loading={loading}
+          links={links}
         />
       ) : (
         <MarketingEmpty />
       )}
-      {metricsafterPeriod.length !== 0 &&
-      metricsbeforePeriod.length !== 0 &&
-      !loading &&
-      userPlatformData.onboarded ? (
-        <PaperKit className='dashboard-paper-wrapper'>
-          <div className='dashboard-links'>
-            {links.map((title) => (
-              <div
-                role='presentation'
-                tabIndex={-1}
-                onClick={() => setTable(title)}
-                className={title === table ? 'active' : ''}
-                key={title}
-              >
-                <img src={getIcon(title)} alt={title} />
-                {getTitle(title)}
-              </div>
-            ))}
-            <div className='indicator' />
-          </div>
-          {links.map((info) =>
-            info === table ? (
-              <Table
-                key={info}
-                title={info}
-                metricsafterPeriod={metricsafterPeriod}
-                metricsbeforePeriod={metricsbeforePeriod}
-                loading={loading}
-              />
-            ) : (
-              ''
-            )
-          )}
-        </PaperKit>
-      ) : (
-        <TableEmpty />
-      )}
+      <TableRevlyNew
+        renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
+        isLoading={loading}
+        link={table}
+        setLink={setTable}
+        links={links}
+        headers={headers}
+        rows={metrics.map(renderRowsByHeader)}
+      />
     </div>
   );
 };

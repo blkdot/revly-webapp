@@ -1,46 +1,50 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { saveUser } from 'api/userApi';
 import { useUserAuth } from 'contexts/AuthContext';
-import { TypographyKit, ButtonKit, ModalKit } from 'kits';
+import { TypographyKit, ButtonKit } from 'kits';
 import { platformList } from 'data/platformList';
+import { usePlatform } from 'hooks';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useAtom } from 'jotai';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
 import ResumeIcon from '../../../../assets/images/ic_resume.png';
-import Arrow from '../../../../assets/images/arrow.png';
+import Arrow from '../../../../assets/images/arrow.svg';
 import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{
+  unremovable: boolean;
   propsVariables: {
     openCloseModal: any;
     clickedBranch: any;
     setBranchData: any;
     branchData: any;
-    vendors: any;
     openSwitchDeleteModal: any;
     setOpenedSwitchDeleteModal: any;
     openedSwitchDeleteModal: any;
     setLoading: any;
     loading: any;
     setConnectAccount: any;
+    deleteAccount: any;
   };
-}> = ({ propsVariables }) => {
+}> = ({ propsVariables, unremovable }) => {
   const {
     openCloseModal,
     clickedBranch,
     loading,
     setBranchData,
     branchData,
-    vendors,
     openSwitchDeleteModal,
     setOpenedSwitchDeleteModal,
     openedSwitchDeleteModal,
     setLoading,
     setConnectAccount,
+    deleteAccount,
   } = propsVariables;
   const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
   const { user } = useUserAuth();
-
+  const [vendors] = useAtom(vendorsAtom);
   const vendorsBranch = () => {
     const object = {};
     Object.keys(vendors.display).forEach((cName) => {
@@ -58,6 +62,8 @@ const ManageBranch: FC<{
     });
     return object;
   };
+
+  const { userPlatformData } = usePlatform();
   const deleteBranch = async () => {
     setLoading(true);
     await saveUser({
@@ -69,12 +75,25 @@ const ManageBranch: FC<{
       branchData.findIndex((obj) => obj.id === clickedBranch.id),
       1
     );
+    Object.keys(userPlatformData.platforms).forEach((plat) => {
+      userPlatformData.platforms[plat].forEach((objP) => {
+        if (clickedBranch.accounts.find((email) => email === objP.email)) {
+          if (objP.vendor_ids.length === 1) {
+            deleteAccount(plat, objP.email);
+          }
+        }
+      });
+    });
+
     openCloseModal();
     setBranchData([...branchData]);
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
+
   const changeStatusBranch = async () => {
+    setLoading(true);
+    const clonedBranchData = [...branchData];
     await saveUser({
       access_token: user.accessToken,
       vendors: vendorsBranch(),
@@ -84,14 +103,17 @@ const ManageBranch: FC<{
         ),
       },
     });
+
     if (clickedBranch.branch_status === 'active' || clickedBranch.branch_status === 'in process') {
-      branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
+      clonedBranchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
         'suspended';
     } else {
-      branchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
+      clonedBranchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
         'active';
     }
-    setBranchData([...branchData]);
+    setLoading(false);
+    setBranchData([...clonedBranchData]);
+    openCloseModal();
   };
   return (
     <div
@@ -124,8 +146,7 @@ const ManageBranch: FC<{
         </span>
         <div className='manage-branch-status'>
           <div className='render-branch-row active'>
-            <p className='__title'>{clickedBranch.branch_name.title}</p>
-            <span className='__subtitle'>{clickedBranch.branch_name.address}</span>
+            <p className='__title'>{clickedBranch.branch_name}</p>
           </div>
           <div
             className={`render-branch_status-row ${clickedBranch.branch_status.replace(/\s/g, '')}`}
@@ -159,7 +180,7 @@ const ManageBranch: FC<{
                 <div className='render-accounts-row'>{clickedBranch.accounts[index]}</div>
               </div>
               <div>
-                {obj.status === 'active' ? 'Connected' : ''}
+                {obj.status === 'active' ? 'Connected' : 'Disconnected'}
                 <img src={Arrow} alt='arrow' />
               </div>
             </div>
@@ -176,7 +197,12 @@ const ManageBranch: FC<{
             <img src={ResumeIcon} alt='resume' /> Resume activity from this branch
           </ButtonKit>
         )}
-        <ButtonKit onClick={openSwitchDeleteModal} className='delete' variant='outlined'>
+        <ButtonKit
+          onClick={openSwitchDeleteModal}
+          className='delete'
+          variant='outlined'
+          disabled={unremovable}
+        >
           <img src={TrashIcon} alt='trash' /> Delete this branch from Revly
         </ButtonKit>
       </div>

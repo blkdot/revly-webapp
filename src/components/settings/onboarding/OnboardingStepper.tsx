@@ -4,7 +4,7 @@ import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kit
 import { useEffect, useState, FC } from 'react';
 import { Link } from 'react-router-dom';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.svg';
-import ClockIcon from '../../../assets/images/clock-settings_ic.svg';
+import ClockIcon from '../../../assets/images/clock.svg';
 import CloseIcon from '../../../assets/images/ic_close.svg';
 import ShieldIcon from '../../../assets/images/shield-settings_ic.svg';
 
@@ -49,7 +49,10 @@ const OnboardingStepper: FC<{
   accounts: any;
 }> = ({ openCloseModal, activeStep, accounts }) => {
   const { userPlatformData } = usePlatform();
-  const [active, setActive] = useState(!userPlatformData.onboarded);
+  const [active, setActive] = useState(userPlatformData.onboarded);
+  useEffect(() => {
+    setActive(userPlatformData.onboarded);
+  }, [userPlatformData.onboarded]);
   const steps = [
     {
       label: 'Connect your Accounts',
@@ -102,7 +105,7 @@ const OnboardingStepper: FC<{
     }
   }, [activeStep]);
   return (
-    <div className={`settings-onboarding bg ${!active ? 'close' : ''}`}>
+    <div className={`settings-onboarding bg ${active ? 'close' : ''}`}>
       <StepperKit
         className='onboarding-stepper'
         alternativeLabel

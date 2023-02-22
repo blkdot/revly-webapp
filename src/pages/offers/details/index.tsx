@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { useApi, useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
@@ -29,7 +30,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const { cancelOfferMaster } = useApi();
 
   const { user } = useUserAuth();
-  const { vendors } = useVendors(undefined);
+  const { vendors, getChainData } = useVendors(undefined);
   const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
     const statusColor = {
@@ -68,7 +69,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       <span className='offer-title'>Platform :</span>
       <span className='offer-sub-title'>
         <img
-          className='planning-platform'
+          className='planning-platform offer'
           style={{ marginRight: '1.5rem' }}
           src={platformObject[platform.toLowerCase()].src}
           alt={platformObject[platform.toLowerCase()].name}
@@ -81,7 +82,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const {
     profit,
     revenue,
-    accrued_discount,
+    // accrued_discount,
     roi,
     average_basket,
     n_orders,
@@ -89,13 +90,14 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     start_date,
     end_date,
     status,
-    chain_name,
     vendor_ids,
     type_schedule,
     discount_rate,
     type_offer,
     chain_id,
+    accrued_discount,
   } = offerDetailMaster?.master_offer || {};
+
   const getToken = () => {
     let token = '';
     Object.keys(display).forEach((cName) => {
@@ -115,10 +117,12 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   const client = useQueryClient();
 
   const openCancelModal = () => setIsOpen(true);
-  const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
-    vendor_ids?.includes(Number(v.vendor_id))
-  );
+
   const handleCancelOfferMaster = () => {
+    const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
+      vendor_ids?.includes(Number(v.vendor_id))
+    );
+
     cancelOfferMaster(
       {
         master_email: user.email,
@@ -143,7 +147,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
   };
 
   useQuery(
-    ['getPlanningOfferDetails', { master_offer_id, ...offerDetail, ...vendorsObj }],
+    ['getPlanningOfferDetails', { master_offer_id, vendorsObj }],
     () => {
       if (JSON.stringify(vendorsObj) === JSON.stringify({})) return null;
 
@@ -155,9 +159,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
           platform: platform.toLowerCase(),
           master_offer_id,
         })
-          .then((res) => setofferDetailMaster(res.data))
+          .then((res) => {
+            setofferDetailMaster(res.data);
+            return res;
+          })
           //     // eslint-disable-next-line no-console
-          .catch((err) => console.log({ err }))
+          .catch((err) => {
+            console.error({ err });
+            return err;
+          })
       );
     },
     { enabled: !!vendorsObj }
@@ -169,6 +179,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     }
     return 'Offer on the whole menu';
   };
+
   return (
     <>
       <CancelOfferModal
@@ -202,7 +213,9 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                 <Calendar />
                 <div className='restau-infos'>
                   <div className='restau-name'>
-                    {chain_name || <SkeletonKit width={70} height={30} />}
+                    {getChainData(chain_id, vendor_ids)?.chain_name || (
+                      <SkeletonKit width={70} height={30} />
+                    )}
                   </div>
                 </div>
               </div>
@@ -227,17 +240,17 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                     </div>
                     <div className='offer-visibility-sub-title'>Caroussel</div>
                   </div>
-                  <div className='offer-visibility-block'>
+                  {/* <div className='offer-visibility-block'>
                     <div>
                       <span className='offer-visibility-title'>Visibility Rank</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
                     </div>
-                  </div>
+                  </div> */}
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>#Orders</span>
+                      <span className='offer-visibility-title'>Orders</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {n_orders === 0 || n_orders ? n_orders : '-'}
@@ -245,7 +258,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Avg Basket</span>
+                      <span className='offer-visibility-title'>Avg. Basket</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {average_basket === 0 || average_basket ? average_basket : '-'}
@@ -253,7 +266,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Roi</span>
+                      <span className='offer-visibility-title'>Accrued Discount</span>
+                    </div>
+                    <div className='offer-visibility-sub-title'>
+                      {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
+                    </div>
+                  </div>
+                  <div className='offer-visibility-block'>
+                    <div>
+                      <span className='offer-visibility-title'>ROI</span>
                     </div>
                     <div className='offer-visibility-sub-title'>{roi === 0 || roi ? roi : '-'}</div>
                   </div>
@@ -267,7 +288,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   </div>
                   <div className='offer-visibility-block'>
                     <div>
-                      <span className='offer-visibility-title'>Profits</span>
+                      <span className='offer-visibility-title'>Net Revenue</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
                       {profit === 0 || profit ? profit : '-'}
@@ -395,9 +416,15 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       ''
                     ) : (
                       <div style={{ width: 'fit-content' }} className='offerdetails_time_slots'>
-                        {Object.keys(offerDetailMaster?.children_offers || {}).map((id) => (
-                          <TimeSlot key={id} data={offerDetailMaster.children_offers[id]} />
-                        ))}
+                        {offerDetailMaster?.children_offers
+                          .sort(
+                            (a, b) =>
+                              new Date(a.start_date).setHours(0, 0, 0, 0) -
+                              new Date(b.start_date).setHours(0, 0, 0, 0)
+                          )
+                          .map((obj) => (
+                            <TimeSlot key={obj.offer_id} data={obj} />
+                          ))}
                       </div>
                     )}
                   </div>
@@ -588,8 +615,8 @@ const TimeSlot = ({ data }) => (
         >
           {new Date(data.start_date).toLocaleDateString() ===
           new Date(data.end_date).toLocaleDateString()
-            ? data.start_date
-            : `${data.start_date} - ${data.end_date}`}
+            ? dayjs(data.start_date).format('DD/MM')
+            : `${dayjs(data.start_date).format('DD/MM')} - ${dayjs(data.end_date).format('DD/MM')}`}
         </span>
       </div>
 
@@ -636,7 +663,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')}
+            {data.start_hour ? (
+              format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
         <div
@@ -670,7 +701,11 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')}
+            {data.end_hour ? (
+              format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')
+            ) : (
+              <SkeletonKit />
+            )}
           </span>
         </div>
       </div>

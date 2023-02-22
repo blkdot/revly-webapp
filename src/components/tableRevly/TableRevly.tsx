@@ -14,8 +14,16 @@ import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 
 const TableRevly = (props: any) => {
-  const { headers, rows, isLoading, mainFieldOrdered, onClickRow, noEmptyMessage, renderNoData } =
-    props;
+  const {
+    headers,
+    rows,
+    isLoading,
+    mainFieldOrdered,
+    onClickRow,
+    noEmptyMessage,
+    renderNoData,
+    renderCustomSkelton,
+  } = props;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
@@ -43,16 +51,12 @@ const TableRevly = (props: any) => {
 
   const renderRowsContent = () =>
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit
-        className='marketing-table-top'
-        onClick={handleRowClick(r.data.master_offer_id || r.data.id)}
-        key={r.data.master_offer_id ? r.data.master_offer_id : r.id}
-      >
+      <TableRowKit className='marketing-table-top' onClick={handleRowClick(r.id)} key={r.id}>
         {headers.map((h) => r[h.id])}
       </TableRowKit>
     ));
   const renderRows = () => {
-    if (isLoading) return renderSkeleton();
+    if (isLoading) return renderCustomSkelton ? renderCustomSkelton() : renderSkeleton();
 
     if (!rows || rows.length < 1) {
       if (renderNoData) {

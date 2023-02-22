@@ -27,10 +27,10 @@ import {
 } from 'store/marketingSetupAtom';
 import { useAtom } from 'jotai';
 import { FC, type ChangeEvent } from 'react';
-import ArrowIcon from '../../assets/images/arrow.png';
+import ArrowIcon from '../../assets/images/arrow.svg';
 import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
-import CalendarCheckGrayIcon from '../../assets/images/ic_calendar-check-gray.png';
+import CalendarCheckGrayIcon from '../../assets/images/ic_calendar-check-gray.svg';
 import CalendarCloseGrayIcon from '../../assets/images/ic_calendar-close-gray.png';
 import CloseIcon from '../../assets/images/ic_close.svg';
 import CreatedIcon from '../../assets/images/ic_created.png';

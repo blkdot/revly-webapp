@@ -1,21 +1,78 @@
+import { CSSProperties } from 'react';
 import { useAtom } from 'jotai';
 import { parseISO, format } from 'date-fns';
-import { TableCellKit, TooltipKit } from 'kits';
-import arrow from '../../../assets/images/arrow.png';
+import { SkeletonKit, TableCellKit, TextfieldKit, TooltipKit } from 'kits';
+import shortid from 'shortid';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useVendors } from 'hooks';
+import costAtom from 'store/costAtom';
 import { platformList, platformObject } from '../../../data/platformList';
-import { vendorsAtom } from '../../../store/vendorsAtom';
+import Calendar from '../../../assets/images/calendar.svg';
+import Clock from '../../../assets/images/clock.svg';
+import User from '../../../assets/images/user.svg';
+import ShoppingBag from '../../../assets/images/shopping-bag.svg';
+import Graph from '../../../assets/images/graph.svg';
+import Eye from '../../../assets/images/eye.svg';
+import Smile from '../../../assets/images/smile.svg';
 
 const useTableContentFormatter = () => {
+  const { getChainData } = useVendors();
   const [vendorsState] = useAtom(vendorsAtom);
   const { vendorsArr } = vendorsState;
+  const Images = {
+    start_end_date: Calendar,
+    slot: Clock,
+    goal: User,
+    orders: ShoppingBag,
+    clicks: Graph,
+    impressions: Eye,
+    customers: Smile,
+  };
   const renderSimpleRow = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'left', cursor: 'pointer' }}
+    >
+      <span className='table-text' style={{ textAlign: 'justify' }} key={h.id}>
+        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderSimpleIconRow = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span className='icon-row' style={{ textAlign: 'justify' }} key={h.id}>
+        {r[h.id] === null ? '' : <img src={Images[h.id]} alt={r[h.id]} />}
+        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderOfferIds = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
       key={h.id}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
-        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
+        {r.offer_ids.join('')}
+      </span>
+    </TableCellKit>
+  );
+
+  const renderAdIds = (r, h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
+    >
+      <span style={{ textAlign: 'justify' }} key={h.id}>
+        {r.ad_ids.join('')}
       </span>
     </TableCellKit>
   );
@@ -27,7 +84,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r[h.id] === null ? '-' : r[h.id]?.replace('T', ' ')?.toLocaleString('en-US')}
+        {r[h.id] === null ? '-' : <>{format(parseISO(r[h.id]), 'Y-MM-dd')}</>}
       </span>
     </TableCellKit>
   );
@@ -44,24 +101,44 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderIsoStartTimeOnlyFromDate = (r, h, i = 0) => (
+  const stepsMinute = 1000 * 60 * 30;
+
+  const renderIsoStartTimeOnlyFromDate = (r) => (
     <TableCellKit
       key={`start_hour_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r.start_date === null ? '-' : <>{format(parseISO(r.start_date), 'HH:mm')}</>}
+        {r.start_date === null ? (
+          '-'
+        ) : (
+          <>
+            {format(
+              Math.round(parseISO(r.start_date).getTime() / stepsMinute) * stepsMinute,
+              'HH:mm'
+            )}
+          </>
+        )}
       </span>
     </TableCellKit>
   );
 
-  const renderIsoEndTimeOnlyFromDate = (r, h, i = 0) => (
+  const renderIsoEndTimeOnlyFromDate = (r) => (
     <TableCellKit
       key={`end_hour_${r.id}`}
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'center', cursor: 'pointer' }}
     >
       <span style={{ textAlign: 'justify' }}>
-        {r.end_date === null ? '-' : <>{format(parseISO(r.end_date), 'HH:mm')}</>}
+        {r.end_date === null ? (
+          '-'
+        ) : (
+          <>
+            {format(
+              Math.round(parseISO(r.end_date).getTime() / stepsMinute) * stepsMinute,
+              'HH:mm'
+            )}
+          </>
+        )}
       </span>
     </TableCellKit>
   );
@@ -100,7 +177,7 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={vendor} className='render-row-tooltip column'>
+                <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
                   {vendor}
                 </span>
               ))
@@ -117,53 +194,92 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
-  const renderVendorId = (r, h) => (
-    <TableCellKit
-      key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '10rem', textAlign: 'center' }}
-    >
-      <TooltipKit
-        title={
-          r[h.id] === null || !r[h.id]
-            ? '-'
-            : r[h.id].map((vendor) => {
-                const vendorData = vendorsArr.find(
-                  (vObj) => String(vendor) === String(vObj.vendor_id)
-                );
+  const renderVendorId = (r, h) => {
+    const vendorsContent = r[h.id].filter((value, index, self) => self.indexOf(value) === index);
 
-                if (!vendorData) return null;
+    const vendors = vendorsContent.map((vendor) => {
+      const vendorData = vendorsArr.find((vObj) => String(vendor) === String(vObj.vendor_id));
 
-                return (
-                  <span key={vendor} className='render-row-tooltip column'>
-                    {vendorData.data.vendor_name || vendor}
-                  </span>
-                );
-              })
-        }
-        disableHoverListener={r[h.id]?.length === 0}
-        id='category-tooltip'
-        placement='right'
-        arrow
+      if (!vendorData) return null;
+
+      return vendorData.data.vendor_name || vendor;
+    });
+    return (
+      <TableCellKit
+        key={`${h.id}_${r.id}`}
+        style={{ marginTop: '0.5rem', minWidth: '10rem', textAlign: 'left' }}
       >
-        <span className='render-row-tooltip' key={h.id}>
-          {r[h.id] === null || !r[h.id] ? '-' : (r[h.id]?.length || 0)?.toLocaleString('en-US')}
+        {vendors.length === 1 ? (
+          <span className='render-vendor-text' key={h.id}>
+            {vendors[0]}
+          </span>
+        ) : (
+          <TooltipKit
+            title={
+              vendorsContent === null || !vendorsContent
+                ? '-'
+                : vendors.map((vendor) => (
+                    <span
+                      key={`${vendor}${shortid.generate()}`}
+                      className='render-row-tooltip column'
+                    >
+                      {vendor}
+                    </span>
+                  ))
+            }
+            disableHoverListener={vendorsContent?.length === 0}
+            id='category-tooltip'
+            placement='right-start'
+            arrow
+          >
+            <span className='render-row-tooltip' key={h.id}>
+              {vendorsContent === null || !vendorsContent ? '-' : (vendorsContent?.length || 0)?.toLocaleString('en-US')}
+            </span>
+          </TooltipKit>
+        )}
+      </TableCellKit>
+    );
+  };
+
+  const renderChainId = (r, h, i) => {
+    const vendorData = getChainData(r.chain_id, r.vendor_ids);
+
+    return (
+      <TableCellKit
+        id={`${h.id}_${i}`}
+        key={`${h.id}_${r.id}`}
+        style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'left' }}
+      >
+        <span style={{ textAlign: 'justify' }} key={h.id}>
+          {vendorData.chain_name}
         </span>
-      </TooltipKit>
-    </TableCellKit>
-  );
+      </TableCellKit>
+    );
+  };
 
   const renderPlatform = (r, h, i = 0) => (
     <TableCellKit
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'center' }}
+      style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'left' }}
     >
-      <img
-        className='planning-platform'
-        style={{ marginRight: '1.5rem' }}
-        src={platformObject[r.platform.toLowerCase()].src}
-        alt={platformObject[r.platform.toLowerCase()].name}
-      />
+      {platformObject[r[h.id].toLowerCase()] ? (
+        <img
+          className='planning-platform'
+          style={
+            {
+              '--color': platformObject[r[h.id].toLowerCase()].color,
+            } as CSSProperties
+          }
+          src={
+            platformObject[r[h.id].toLowerCase()].srcFaviconWhite ||
+            platformObject[r[h.id].toLowerCase()].srcFavicon
+          }
+          alt={platformObject[r[h.id].toLowerCase()].name}
+        />
+      ) : (
+        <span className='table-text'>{r[h.id]}</span>
+      )}
     </TableCellKit>
   );
 
@@ -171,7 +287,7 @@ const useTableContentFormatter = () => {
     <TableCellKit
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', textAlign: 'center' }}
+      style={{ marginTop: '0.5rem', textAlign: 'left' }}
     >
       <span
         className={r[h.id] !== null ? 'competition-table-alert' : ''}
@@ -186,10 +302,10 @@ const useTableContentFormatter = () => {
     <TableCellKit
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
-      style={{ marginTop: '0.5rem', textAlign: 'center' }}
+      style={{ marginTop: '0.5rem', textAlign: 'left' }}
     >
       <span style={{ whiteSpace: 'nowrap' }}>
-        {!r[h.id] ? '0' : r[h.id].toLocaleString('en-US')}&nbsp;AED
+        {!r[h.id] ? '-' : `${r[h.id].toLocaleString('en-US')} AED`}
       </span>
     </TableCellKit>
   );
@@ -201,18 +317,32 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', textAlign: 'center' }}
     >
       <span className='competition-table-alert' style={{ whiteSpace: 'nowrap' }}>
-        {r[h.id] * 100}%
+        {parseFloat((r[h.id] * 100).toFixed(2))}%
       </span>
     </TableCellKit>
   );
 
-  const renderStatus = (r, h, i = 0) => (
-    <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
-      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
-        {r[h.id] === 'Upcoming' ? 'Scheduled' : r[h.id]}
-      </span>
-    </TableCellKit>
-  );
+  const renderStatus = (r, h, i = 0) => {
+    const render = () => {
+      if (r[h.id] === 'Upcoming') {
+        return 'Scheduled';
+      }
+      if (r[h.id] === 'Enabled') {
+        return 'Live';
+      }
+      return r[h.id];
+    };
+    return (
+      <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'left' }}>
+        <span
+          style={{ whiteSpace: 'nowrap' }}
+          className={`competition-status ${render().replace(/\s/g, '')}`}
+        >
+          {render()}
+        </span>
+      </TableCellKit>
+    );
+  };
 
   const renderScheduleType = (r, h, i = 0) => {
     const scheduleTypeMapping = {
@@ -222,7 +352,7 @@ const useTableContentFormatter = () => {
       everyday: 'Everyday',
     };
     return (
-      <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
+      <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'left' }}>
         <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
           {scheduleTypeMapping[r[h.id]] || r[h.id] || '-'}
         </span>
@@ -238,15 +368,16 @@ const useTableContentFormatter = () => {
     };
 
     return (
-      <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'center' }}>
-        <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${r[h.id]}`}>
-          {targetMapping[r[h.id]] || r[h.id] || '-'}
+      <TableCellKit id={`${h.id}_${i}`} key={`${h.id}_${r.id}`} style={{ textAlign: 'left' }}>
+        <span className='icon-row' style={{ whiteSpace: 'nowrap' }}>
+          {r[h.id] === null ? '' : <img src={r[h.id].src} alt={r[h.id].title} />}
+          {r[h.id] === null ? '-' : targetMapping[r[h.id.title]] || r[h.id].title}
         </span>
       </TableCellKit>
     );
   };
 
-  const ordinalSuffixOf = (i) => {
+  const ordinalSuffixOf = (i: number): string => {
     if (!i) return '-';
     const r = Math.round(i);
     return r >= 100 ? '100' : `${r}`;
@@ -259,25 +390,28 @@ const useTableContentFormatter = () => {
     </TableCellKit>
   );
 
+  const renderOrdinalSuffixV3 = (r, h) => (
+    <TableCellKit>
+      {Number(ordinalSuffixOf(r[h.id]?.average_vertical_rank)) >= 100 && '> '}
+      {ordinalSuffixOf(r[h.id]?.average_vertical_rank)}
+    </TableCellKit>
+  );
+
   const renderBranchRow = (r, h, i = 0) => (
     <TableCellKit
       style={{ paddingLeft: 0, cursor: 'pointer' }}
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      {r.branch_status === 'in process' ? (
-        <span className='render-branch-row_skeleton' />
-      ) : (
-        <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
-          <p className='__title'>{r[h.id].title}</p>
-          <span className='__subtitle'>{r[h.id].address}</span>
-        </div>
-      )}
+      <div className={`render-branch-row ${r.branch_status.replace(/\s/g, '')}`}>
+        <p className='__title'>{r[h.id].title}</p>
+        <span className='__subtitle'>{r[h.id].address}</span>
+      </div>
     </TableCellKit>
   );
   const renderLinkedPlatformsRow = (r, h, i = 0) => {
     const getPlatform = (plat: string) =>
-      platformList.find((obj) => obj.name === plat.toLowerCase());
+      platformList.find((obj) => obj.name.toLowerCase() === plat.toLowerCase());
     const sortPlatform = (a: any, b: any) => {
       if (b.platform < a.platform) {
         return -1;
@@ -325,21 +459,58 @@ const useTableContentFormatter = () => {
       </div>
     </TableCellKit>
   );
+  const [cost, setCost] = useAtom(costAtom);
 
-  const renderBranchStatusRow = (r, h, i = 0) => (
+  const renderCostRow = (r, h, i = 0) => {
+    const handleChange = (e) => {
+      const finded = cost.find((obj) => obj.chain_name === r.chain_name);
+      finded.cost = Number(e.target.value);
+      finded.changed = true;
+      setCost([...cost]);
+    };
+    return (
+      <TableCellKit
+        style={{ paddingLeft: 0, textAlign: 'left' }}
+        id={`${h.id}_${i}`}
+        key={`${h.id}_${r.id}`}
+      >
+        <TextfieldKit
+          sx={{ width: '100%' }}
+          type='number'
+          defaultValue={r[h.id]}
+          onChange={handleChange}
+        />
+      </TableCellKit>
+    );
+  };
+
+  // row skeleton
+
+  const renderSimpleRowSkeleton = (h, i = 0) => (
     <TableCellKit
-      style={{ paddingLeft: 0, textAlign: 'left', cursor: 'pointer' }}
       id={`${h.id}_${i}`}
-      key={`${h.id}_${r.id}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'left', cursor: 'pointer' }}
     >
-      <div className='render-branch_status-row_wrapper'>
-        <div className={`render-branch_status-row ${r[h.id].replace(/\s/g, '')}`}>{r[h.id]}</div>
-        {r[h.id] !== 'in process' ? <img className='arrow' src={arrow} alt='arrow' /> : ''}
-      </div>
+      <SkeletonKit width='50%' height={14} />
     </TableCellKit>
   );
-
+  const renderPlatformSkeleton = (h, i = 0) => (
+    <TableCellKit
+      id={`${h.id}_${i}`}
+      key={h.id}
+      style={{ marginTop: '0.5rem', minWidth: '8rem', textAlign: 'left' }}
+    >
+      <SkeletonKit variant='circular' width={22} height={22} />
+    </TableCellKit>
+  );
+  const renderPercentSkeleton = (h, i = 0) => (
+    <TableCellKit id={`${h.id}_${i}`} key={h.id} style={{ marginTop: '0.5rem', textAlign: 'left' }}>
+      <SkeletonKit height={22} width={48} />
+    </TableCellKit>
+  );
   return {
+    renderCostRow,
     renderTarget,
     renderScheduleType,
     renderStatus,
@@ -354,13 +525,20 @@ const useTableContentFormatter = () => {
     renderBranchRow,
     renderLinkedPlatformsRow,
     renderAccountsRow,
-    renderBranchStatusRow,
     renderVendorId,
     renderTimeSlot,
     renderIsoDate,
     renderIsoDateOnly,
     renderIsoStartTimeOnlyFromDate,
     renderIsoEndTimeOnlyFromDate,
+    renderChainId,
+    renderSimpleIconRow,
+    renderOfferIds,
+    renderAdIds,
+    renderPlatformSkeleton,
+    renderSimpleRowSkeleton,
+    renderPercentSkeleton,
+    renderOrdinalSuffixV3,
   };
 };
 

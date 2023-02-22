@@ -1,88 +1,82 @@
-import { useUserAuth } from 'contexts';
-import { useApi, usePlatform } from 'hooks';
+import { useSettingsOnboarded } from 'api/settingsApi';
+import { usePlatform } from 'hooks';
 import { SpinnerKit } from 'kits';
-import { useEffect, useState } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-// import config from '../setup/config';
+import { useEffect, useCallback } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { getElligibilityDeliveroo } from 'api/elligibilityDeliverooApi';
+import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useAtom } from 'jotai';
+import { useUser } from './ProtectedRoutes';
 
-const ProtectedOnboardRoutes = () => {
-  const [allowed, setAllowed] = useState<any>(false);
-  const [preAllowed, setPreAllowed] = useState(false);
-  const { user } = useUserAuth();
-  const { settingsLogin, settingsOnboarded } = useApi();
-  const { userPlatformData, cleanPlatformData, setUserPlatformData } = usePlatform();
-  // const { timeRefreshToken } = config;
-  // const location = useLocation();
-  const navigate = useNavigate();
+export const ProtectedOnboardRoutes = () => {
+  const user = useUser();
+  const { userPlatformData, setUserPlatformData } = usePlatform();
+  const [vendors] = useAtom(vendorsAtom);
+  const { chainData } = vendors;
+  const [, setEligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
 
-  const getPlatformData = async () => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
+  const response = useSettingsOnboarded({
+    master_email: user.email,
+    access_token: user.token,
+  });
 
-    try {
-      const res = await settingsOnboarded({
+  const requestEligibilityDeliveroo = useCallback(() => {
+    const reqEligibilities = userPlatformData.platforms.deliveroo.map((platformData) => {
+      const vendorIds = platformData.vendor_ids;
+
+      const firstVendorData = chainData.find(
+        (chain) =>
+          vendorIds.includes(String(chain.vendor_id)) &&
+          chain.platform.toLocaleLowerCase() === 'deliveroo'
+      );
+
+      if (!vendorIds) return null;
+
+      return getElligibilityDeliveroo({
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
+        chain_id: '',
+        vendors: [firstVendorData?.data],
       });
+    });
 
-      if (res instanceof Error || !res.onboarded || !res.platforms) throw new Error('');
-
-      setUserPlatformData({
-        onboarded: true,
-        platforms: { ...userPlatformData.platforms, ...res.platforms },
+    Promise.all(reqEligibilities).then((responses) => {
+      responses.forEach((res) => {
+        setEligibilityDeliverooState((prev) => ({ ...prev, ...res.data }));
       });
-
-      setPreAllowed(true);
-    } catch (error) {
-      setAllowed(error);
-    }
-  };
+    });
+  }, [JSON.stringify(vendors), JSON.stringify(userPlatformData.platforms.deliveroo)]);
 
   useEffect(() => {
-    getPlatformData();
-  }, []);
+    if (
+      vendors.chainData.length > 0 &&
+      userPlatformData.platforms.deliveroo.length > 0 &&
+      !response.isLoading
+    ) {
+      requestEligibilityDeliveroo();
+    }
+  }, [JSON.stringify(vendors), JSON.stringify(userPlatformData.platforms.deliveroo)]);
 
-  // useEffect(() => {
-  //   if (!userPlatformData.onboarded) {
-  //     reccurentLogin();
-  //   }
+  // TODO: replace it with a better approach
+  // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
+  useEffect(() => {
+    if (response.data) {
+      setUserPlatformData({
+        onboarded: true,
+        platforms: { ...userPlatformData.platforms, ...response.data.platforms },
+      });
+    }
+  }, [response.data, setUserPlatformData]);
 
-  //   setAllowed(true);
-  // }, [location]);
+  if (
+    response.isError ||
+    (response.isSuccess && (!response.data.onboarded || !response.data.platforms))
+  ) {
+    return <Navigate to='/dashboardOnboard' />;
+  }
 
-  // const reccurentLogin = async () => {
-  //   const res = await settingsLogin({
-  //     master_email: user.email,
-  //     access_token: user.accessToken,
-  //   });
-
-  //   if (res instanceof Error || !res.onboarded) {
-  //     cleanPlatformData();
-  //     setAllowed(new Error(''));
-  //     return;
-  //   }
-
-  //   setUserPlatformData({
-  //     onboarded: true,
-  //     platforms: { ...userPlatformData.platforms, ...res.platforms },
-  //   });
-  //   setAllowed(true);
-  // };
-
-  // useEffect(() => {
-  //   const autoRefresh = setInterval(() => {
-  //     reccurentLogin();
-  //   }, timeRefreshToken);
-  //   return () => {
-  //     clearInterval(autoRefresh);
-  //   };
-  // });
-
-  if ((allowed as any) instanceof Error) return <Navigate to='/dashboardOnboard' />;
-
-  if (!preAllowed) {
+  if (response.isLoading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
@@ -92,5 +86,3 @@ const ProtectedOnboardRoutes = () => {
 
   return <Outlet />;
 };
-
-export default ProtectedOnboardRoutes;

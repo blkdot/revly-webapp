@@ -35,7 +35,9 @@ export const stableSort = (array, comparator) => {
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
-
+    if (a[0]?.platform === 'Total') {
+      return 0;
+    }
     if (order !== 0) {
       return order;
     }

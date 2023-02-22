@@ -1,117 +1,139 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import DropdownSnackbar from 'components/dropdownSnackbar/DropdownSnackbar';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useCost, useVendors } from 'hooks';
-import { SpinnerKit } from 'kits';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { ButtonKit } from 'kits';
+import LodaingButtonKit from 'kits/loadingButton/LoadingButtonKit';
+import { useEffect } from 'react';
+import costAtom from 'store/costAtom';
 import './Cost.scss';
-import Invoice from './invoice/Invoice';
-
-type TInvoice = {
-  id: string;
-  restaurant: string;
-  cost: string;
-};
 
 const Cost = () => {
   const queryClient = useQueryClient();
-  const [invoice, setInvoice] = useState<TInvoice[]>([]);
-  const [isUpdate, setIsUpdate] = useState(false);
-  const { vendors } = useVendors(false);
-
-  const { vendorsObj, vendorsArr } = vendors;
-  const { load, save } = useCost(vendorsObj);
-
-  const { isLoading, isError } = useQuery(['loadCost', { vendors }], load, {
-    onSuccess: (data) => {
-      const newInvoice: TInvoice[] = [];
-      Object.keys(data).forEach((platform) => {
-        Object.keys(data[platform]).forEach((id) => {
-          if (data[platform][id]) {
-            const element = vendorsObj[platform].find(
-              (vobj) => String(vobj.vendor_id) === String(id)
-            );
-
-            if (!element) return;
-
-            const currentCost = data[platform][id]?.cost || null;
-
-            if (!currentCost) return;
-
-            const percent = parseFloat(currentCost) * 100;
-
-            const res = {
-              id,
-              restaurant: element.data.vendor_name,
-              cost: `${percent}%`,
-            };
-
-            newInvoice.push(res);
-          }
-        });
+  const { vendors, isLoading } = useVendors(false);
+  const [cost, setCost] = useAtom(costAtom);
+  const { vendorsObj, display, chainData } = vendors;
+  const { save } = useCost(vendorsObj);
+  const getDataVendors = (chainName: string) => {
+    const dataVendorsObj = {};
+    chainData
+      .filter((obj) => obj.chain_name === chainName)
+      .forEach((obj) => {
+        if (dataVendorsObj[obj.platform]) {
+          dataVendorsObj[obj.platform] = [...dataVendorsObj[obj.platform], obj.data];
+        } else {
+          dataVendorsObj[obj.platform] = [obj.data];
+        }
       });
-      setInvoice(newInvoice);
-    },
-    enabled: Object.keys(vendorsObj).length > 0,
-    staleTime: Infinity,
-  });
-
+    return dataVendorsObj;
+  };
+  const data = Object.keys(display).map((chainName) => ({
+    chain_name: chainName,
+    vendor_names: Object.keys(display[chainName]),
+    cost: chainData.find((obj) => obj.chain_name === chainName).data.metadata.cost || 15,
+    changed: false,
+    vendors: getDataVendors(chainName),
+  }));
+  useEffect(() => {
+    setCost(data);
+  }, [vendors]);
   const { isLoading: isLoadingMutation, mutateAsync } = useMutation({
     mutationFn: save,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['loadCost', { vendors }] });
     },
   });
-
-  if (isError)
-    return <div style={{ display: 'flex', justifyContent: 'center' }}>Error Occured</div>;
-
-  const handleAdd = async (cost, v) => {
-    await mutateAsync({ cost: parseFloat(cost), vendors: v });
+  const handleChange = async () => {
+    await cost
+      .filter((obj) => obj.changed)
+      .forEach((obj) => {
+        mutateAsync({ cost: obj.cost, vendors: obj.vendors });
+      });
+    setCost(cost.map((obj) => ({ ...obj, changed: false })));
   };
-
-  const deleteCost = (index, vendorId) => async () => {
-    const clonedInvoice = [...invoice];
-    clonedInvoice.splice(index, 1);
-
-    const element = vendorsArr.find((vobj) => String(vobj.vendor_id) === String(vendorId));
-
-    const { platform, ...rest } = element;
-
-    await mutateAsync({ cost: null, vendors: { [platform]: [{ ...rest }] } });
-
-    setInvoice(clonedInvoice);
+  const headers = [
+    {
+      id: 'chain_name',
+      numeric: false,
+      disablePadding: false,
+      label: 'Chain name',
+      tooltip: 'Your brand name',
+    },
+    {
+      id: 'vendor_names',
+      numeric: false,
+      disablePadding: false,
+      label: 'Branches',
+    },
+    {
+      id: 'cost',
+      numeric: false,
+      disablePadding: true,
+      label: 'Cost',
+    },
+  ];
+  const { renderRowTooltip, renderSimpleRowSkeleton, renderSimpleRow, renderCostRow } =
+    useTableContentFormatter();
+  const cellTemplatesObject = {
+    chain_name: renderSimpleRow,
+    vendor_names: renderRowTooltip,
+    cost: renderCostRow,
   };
-
-  const renderContent = () => {
-    if (isLoading || isLoadingMutation)
-      return <SpinnerKit style={{ display: 'flex', margin: 'auto', justifyContent: 'center' }} />;
-
-    return invoice?.map((obj, index) => (
-      <Invoice
-        key={obj.id}
-        onDelete={deleteCost(index, obj.id)}
-        restaurant={obj.restaurant}
-        cost={obj.cost}
-      />
-    ));
+  const renderRowsByHeader = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObject[cur.id](r, cur),
+        id: r.chain_name,
+        data: r,
+      }),
+      {}
+    );
+  const cellTemplatesObjectLoding = {
+    chain_name: renderSimpleRowSkeleton,
+    vendor_names: renderSimpleRowSkeleton,
+    cost: renderSimpleRowSkeleton,
   };
+  const renderRowsByHeaderLoading = (r) =>
+    headers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoding[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
 
   return (
     <div className='billing'>
       <div className='billing__invoice __card'>
         <div className='__flex'>
-          <div className='__head'>
-            <p className='billing__card-title'>Your Cost Information</p>
-            {/* <p className="billing__card-subtitle">- -</p> */}
+          <div className='__head cost'>
+            <div>
+              <p className='billing__card-title'>Your Cost Information</p>
+              <span>
+                Insert and update the average cost of food per chain to calculate your net revenue
+                in the dashboard
+              </span>
+            </div>
+            <LodaingButtonKit
+              loading={isLoadingMutation}
+              onClick={handleChange}
+              variant='contained'
+              disabled={!cost.some((obj) => obj.changed)}
+            >
+              Save changes
+            </LodaingButtonKit>
           </div>
         </div>
-        <DropdownSnackbar
-          onAdd={handleAdd}
-          isUpdate={isUpdate}
-          setIsUpdate={setIsUpdate}
-          invoice={invoice}
+        <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+          isLoading={isLoading}
+          headers={headers}
+          rows={cost.map(renderRowsByHeader)}
+          className='competition-alerts'
         />
-        {renderContent()}
       </div>
     </div>
   );

@@ -1,18 +1,18 @@
 /* eslint-disable no-unused-vars */
 import { saveUser } from 'api/userApi';
-import { BaseIcon } from 'assets/icons';
 import { useUserAuth } from 'contexts';
 import { useAlert, useApi } from 'hooks';
-import { ButtonKit } from 'kits';
-import LodaingButtonKit from 'kits/loadingButton/LoadingButtonKit';
+import { useAtom } from 'jotai';
 import { useState } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
 import ConnectAccount from './onboardingModal/ConnectAccount';
 import ConnectPlatform from './onboardingModal/ConnectPlatform';
 import ManageAccount from './onboardingModal/ManageAccount';
 import ManageBranch from './onboardingModal/ManageBranch';
-import SwitchDeleteModal from './onboardingModal/SwitchDeleteModal';
 import UploadingActive from './onboardingModal/UploadingActive';
 import UploadingCompleted from './onboardingModal/UploadingCompleted';
+
+const isUnRemovableBranch = (branchData: any[]): boolean => branchData.length < 2; // TODO: allow reactivation
 
 const OnboardingModal = ({ propsVariables }: any) => {
   const {
@@ -26,17 +26,19 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setAccounts,
     branchData,
     setBranchData,
-    vendors,
+    setLoading,
+    loading,
   } = propsVariables;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
   const { user } = useUserAuth();
-  const { triggerAlertWithMessageSuccess, triggerAlertWithMessageError } = useAlert();
-
+  const { triggerAlertWithMessageError } = useAlert();
+  const [vendors] = useAtom(vendorsAtom);
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
+
     const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
@@ -48,17 +50,20 @@ const OnboardingModal = ({ propsVariables }: any) => {
       },
       currentPlatform
     );
+
     setIsLoading(false);
+
     if (res instanceof Error) {
       triggerAlertWithMessageError(
         `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
       );
       return;
     }
+
     setConnectAccount('active');
     setBranchDataUploading(
       res.vendors.map((obj) => ({
-        branch_name: { title: obj.vendor_name, address: '' },
+        branch_name: obj.vendor_name,
         accounts: [email],
         linked_platforms: [{ platform: connect, status: 'active' }],
         branch_status: 'in process',
@@ -66,8 +71,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
       }))
     );
   };
+
   const [openedSwitchDeleteModal, setOpenedSwitchDeleteModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const openSwitchDeleteModal = (e) => {
     e.stopPropagation();
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
@@ -81,13 +86,16 @@ const OnboardingModal = ({ propsVariables }: any) => {
       email: clickedEmail,
       data: { is_deleted: true },
     });
+
     accounts.splice(
-      accounts.findIndex((obj) => obj.email === clickedEmail),
+      accounts.findIndex((obj) => obj.email === clickedEmail && obj.platform === platform),
       1
     );
+
     setBranchData(
       branchData.filter((obj) => obj.accounts.some((objAcc) => objAcc !== clickedEmail))
     );
+
     setAccounts([...accounts]);
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
@@ -121,28 +129,35 @@ const OnboardingModal = ({ propsVariables }: any) => {
       },
       obj.platform
     );
-    accounts.find((objAcc) => objAcc.email === obj.email).active = !obj.active;
+    accounts.find(
+      (objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
+    ).active = !obj.active;
     setAccounts([...accounts]);
     setBranchData(
       branchData.map((objB) => {
-        const linked_platforms = [...objB.linked_platforms];
+        const linkedPlatform = [...objB.linked_platforms];
         if (objB.accounts.find((emailAcc: string) => emailAcc === obj.email)) {
           if (!obj.active) {
-            linked_platforms.find((objLink) => objLink.platform === obj.platform).status =
-              'suspended';
+            (
+              linkedPlatform.find((objLink) => objLink.platform === obj.platform) || {
+                status: '',
+              }
+            ).status = 'suspended';
             if (objB.linked_platforms.every((objLink) => objLink.status !== 'active')) {
-              return { ...objB, branch_status: 'suspended', linked_platforms };
+              return { ...objB, branch_status: 'suspended', linkedPlatform };
             }
             if (objB.linked_platforms.length === 1) {
-              return { ...objB, branch_status: 'suspended', linked_platforms };
+              return { ...objB, branch_status: 'suspended', linkedPlatform };
             }
-            return { ...objB, linked_platforms };
+            return { ...objB, linkedPlatform };
           }
-          linked_platforms.find((objLink) => objLink.platform === obj.platform).status = 'active';
+          (
+            linkedPlatform.find((objLink) => objLink.platform === obj.platform) || { status: '' }
+          ).status = 'active';
           if (objB.linked_platforms.length > 1) {
-            return { ...objB, branch_status: 'active', linked_platforms };
+            return { ...objB, branch_status: 'active', linkedPlatform };
           }
-          return { ...objB, branch_status: 'in process', linked_platforms };
+          return { ...objB, branch_status: 'in process', linkedPlatform };
         }
         return objB;
       })
@@ -172,7 +187,11 @@ const OnboardingModal = ({ propsVariables }: any) => {
           openSwitchDeleteModal,
           openedSwitchDeleteModal,
           loading,
+          setLoading,
+          deleteAccount,
+          setOpenedSwitchDeleteModal,
         }}
+        unremovable={isUnRemovableBranch(branchData)}
       />
     ),
     completed: <UploadingCompleted propsVariables={propsVariables} />,

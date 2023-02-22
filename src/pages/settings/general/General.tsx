@@ -154,6 +154,7 @@ const General = () => {
         role: data.role || '',
         country: country.find((v) => v.name === data.country) || { name: '', code: '' },
       };
+
       setDial(data.dial);
       setInputValue({
         ...inputValue,

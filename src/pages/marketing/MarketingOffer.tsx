@@ -1,22 +1,19 @@
 /* eslint-disable no-unused-vars */
-import { Layers, Tag, Vector } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import TableRevly from 'components/tableRevly/TableRevly';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useDate, useQueryState } from 'hooks';
 import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
-import { BoxKit, ButtonKit, PaperKit, TypographyKit } from 'kits';
+import { ButtonKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import OffersManagmentIcon from '../../assets/images/ic_offers-mn.png';
-import OffersPerformenceIcon from '../../assets/images/ic_offers-pr.png';
+import dayjs from 'dayjs';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import { platformObject } from '../../data/platformList';
@@ -47,24 +44,6 @@ const MarketingOffer = () => {
   const [opened, setOpened] = useState(false);
   const [openedFilter, setOpenedFilter] = useState(false);
   const [row, setRow] = useState(data?.offers || []);
-  const [scrollActive, setScrollActive] = useState('less');
-  const handleScroll = () => {
-    const cont = document.querySelector('#tableContainer');
-    const position = +cont.scrollLeft.toFixed(0);
-    if (position < cont.clientWidth / 2) {
-      setScrollActive('less');
-    } else if (position > cont.clientWidth / 2) {
-      setScrollActive('more');
-    }
-  };
-  const handleScrollActive = (type) => {
-    const cont = document.querySelector('#tableContainer');
-    if (type === 'more') {
-      cont.scrollLeft = cont.scrollWidth;
-    } else {
-      cont.scrollLeft = 0;
-    }
-  };
   const [offersData, setOffersData] = useState(data?.offers || []);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
@@ -88,130 +67,131 @@ const MarketingOffer = () => {
   const {
     renderPlatform,
     renderPercent,
-    renderCurrency,
     renderStatus,
+    renderChainId,
     renderTarget,
     renderSimpleRow,
     renderVendorId,
+    renderSimpleRowSkeleton,
+    renderPlatformSkeleton,
+    renderSimpleIconRow,
+    renderPercentSkeleton,
+    renderCurrency,
   } = useTableContentFormatter();
 
-  const headersOffers = [
+  const [link, setLink] = useState('Offers management');
+  const links = ['Offers management', 'Offers performance'];
+  const headersManagment = [
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
+    { id: 'start_end_date', disablePadding: true, label: 'Start - end date' },
     {
-      id: 'chain_name',
-      numeric: false,
-      disablePadding: false,
-      label: 'Chain Name',
-    },
-    {
-      id: 'vendor_ids',
-      numeric: false,
-      disablePadding: false,
-      label: 'Vendor(s)',
-    },
-    {
-      id: 'start_date',
-      numeric: false,
+      id: 'slot',
       disablePadding: true,
-      label: 'Start date',
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
     },
-    {
-      id: 'end_date',
-      numeric: false,
-      disablePadding: true,
-      label: 'End date',
-    },
-    {
-      id: 'platform',
-      numeric: true,
-      disablePadding: false,
-      label: 'Platfrom',
-    },
-    {
-      id: 'type_offer',
-      numeric: true,
-      disablePadding: false,
-      label: 'Discount Type',
-    },
-    {
-      id: 'discount_rate',
-      numeric: true,
-      disablePadding: false,
-      label: '%',
-    },
-    {
-      id: 'minimum_order_value',
-      numeric: true,
-      disablePadding: false,
-      label: 'Min Order',
-    },
-    {
-      id: 'goal',
-      numeric: true,
-      disablePadding: false,
-      label: 'goal',
-    },
-    {
-      id: 'status',
-      numeric: true,
-      disablePadding: false,
-      label: 'Status',
-    },
-    {
-      id: 'n_orders',
-      numeric: true,
-      disablePadding: false,
-      label: '#Orders',
-    },
-    {
-      id: 'average_basket',
-      numeric: true,
-      disablePadding: false,
-      label: 'Avg Basket',
-    },
-    {
-      id: 'roi',
-      numeric: true,
-      disablePadding: false,
-      label: 'ROI',
-    },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
+    { id: 'type_offer', disablePadding: true, label: 'Discount type' },
+    { id: 'discount_rate', disablePadding: true, label: 'Discount rate' },
+    { id: 'goal', disablePadding: true, label: 'Target' },
+    { id: 'status', disablePadding: true, label: 'Status' },
+  ];
+  const headersPerformance = [
+    { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
+    { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
     {
       id: 'revenue',
-      numeric: true,
-      disablePadding: false,
+      disablePadding: true,
       label: 'Revenue',
+      tooltip: 'Revenue generated by the offer',
     },
+    {
+      id: 'max_discount',
+      disablePadding: true,
+      label: 'Discounts',
+      tooltip: 'Total amount of discounts given for this offer',
+    },
+    {
+      id: 'profit',
+      disablePadding: true,
+      label: 'Profits',
+      tooltip:
+        'Revenue generated by the offer minus aggregator$apos;s commission, discounts amount, ads CPC and food cost.',
+    },
+    {
+      id: 'orders',
+      disablePadding: true,
+      label: 'Orders',
+      tooltip: '# of orders generated by the offer',
+    },
+    { id: 'discount_rate', disablePadding: true, label: 'Month Before' },
+    {
+      id: 'roi',
+      disablePadding: true,
+      label: 'ROI',
+      tooltip:
+        '# AED generated in Profits for every 1 AED spent on discount. Profits are revenue minus aggregator&apos;s commission, order discount, ads CPC and food cost.',
+    },
+    { id: 'status', disablePadding: true, label: 'Status' },
   ];
 
   const cellTemplatesObject = {
-    chain_name: renderSimpleRow,
+    chain_id: renderChainId,
     vendor_ids: renderVendorId,
+    slot: renderSimpleIconRow,
+    start_end_date: renderSimpleIconRow,
     platform: renderPlatform,
-    start_date: renderSimpleRow,
-    end_date: renderSimpleRow,
     type_offer: renderSimpleRow,
     discount_rate: renderPercent,
-    goal: renderTarget,
-    minimum_order_value: renderSimpleRow,
+    goal: renderSimpleIconRow,
     status: renderStatus,
-    n_orders: renderSimpleRow,
-    average_basket: renderSimpleRow,
-    roi: renderSimpleRow,
     revenue: renderCurrency,
+    profit: renderCurrency,
+    orders: renderSimpleIconRow,
+    max_discount: renderCurrency,
+    roi: renderCurrency,
   };
 
-  const renderRowsByHeader = (r, i) =>
-    headersOffers.reduce(
+  const renderRowsByHeader = (r) =>
+    (link === 'Offers management' ? headersManagment : headersPerformance).reduce(
       (acc, cur) => ({
         ...acc,
-        [cur.id]: cellTemplatesObject[cur.id]
-          ? cellTemplatesObject[cur.id]({ ...r, [cur.id]: _.get(r, cur.id) }, cur, i)
-          : r[cur.id],
-        id: `${cur.id}_${r.offer_ids}`,
+        [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.offer_ids.join('') }, cur),
+        id: r.master_offer_id,
         data: r,
       }),
       {}
     );
 
+  const cellTemplatesObjectLoading = {
+    chain_id: renderSimpleRowSkeleton,
+    vendor_ids: renderPlatformSkeleton,
+    start_end_date: renderSimpleRowSkeleton,
+    slot: renderSimpleRowSkeleton,
+    platform: renderPlatformSkeleton,
+    type_offer: renderSimpleRowSkeleton,
+    discount_rate: renderPercentSkeleton,
+    goal: renderSimpleRowSkeleton,
+    status: renderPercentSkeleton,
+    total_budget: renderSimpleRowSkeleton,
+    cost_per_click: renderSimpleRowSkeleton,
+    revenue: renderSimpleRowSkeleton,
+    profit: renderSimpleRowSkeleton,
+    orders: renderSimpleRowSkeleton,
+    max_discount: renderSimpleRowSkeleton,
+    roi: renderSimpleRowSkeleton,
+  };
+
+  const renderRowsByHeaderLoading = (r) =>
+    (link === 'Offers management' ? headersManagment : headersPerformance).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
+        id: r,
+      }),
+      {}
+    );
   const renderStatusFilter = (s) => {
     if (!s) return null;
 
@@ -221,14 +201,6 @@ const MarketingOffer = () => {
       </span>
     );
   };
-
-  useEffect(() => {
-    const cont = document.querySelector('#tableContainer');
-    cont?.addEventListener('scroll', handleScroll);
-    return () => {
-      cont?.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   const targetMapping = {
     orders: 'Everyone',
@@ -256,7 +228,8 @@ const MarketingOffer = () => {
         if (!procent.includes(cur.discount_rate) && cur.discount_rate)
           procent.push(cur.discount_rate);
 
-        if (!status.includes(cur.status) && cur.status) status.push(cur.status);
+        if (!status.includes(cur.status.toLowerCase()) && cur.status)
+          status.push(cur.status.toLowerCase());
 
         if (!goal.includes(cur.goal) && !goal.includes(targetMapping[cur.goal]) && cur.goal)
           goal.push(targetMapping[cur.goal] || cur.goal);
@@ -305,7 +278,10 @@ const MarketingOffer = () => {
     const preHeadtypeOffer = preHead.type_offer.map((s) => ({ value: s, text: s }));
     const preHeadTarget = preHead.goal.map((s) => ({ value: s, text: s }));
     const preHeadProcent = preHead.discount_rate.map((s) => ({ value: s, text: `${s} %` }));
-    const preHeadStatus = preHead.status.map((s) => ({ value: s, text: renderStatusFilter(s) }));
+    const preHeadStatus = preHead.status.map((s) => ({
+      value: s.toLowerCase(),
+      text: renderStatusFilter(s),
+    }));
 
     setFiltersHead({
       platform: preHeadPlatform,
@@ -313,6 +289,8 @@ const MarketingOffer = () => {
       discount_rate: preHeadProcent,
       status: preHeadStatus,
       goal: preHeadTarget,
+      start_hour: [],
+      end_hour: [],
     });
   }, [JSON.stringify(offersData)]);
 
@@ -359,14 +337,25 @@ const MarketingOffer = () => {
     }
 
     if (filters.status.length > 0) {
-      filteredData = filteredData.filter((f) => filters.status.includes(f.status));
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status.toLowerCase()));
     }
 
     if (filters.goal.length > 0) {
       filteredData = filteredData.filter((f) => filters.goal.includes(f.goal));
     }
 
-    setOffersDataFiltered(filteredData);
+    setOffersDataFiltered(
+      filteredData.map((obj) => ({
+        ...obj,
+        start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('DD/MM')}`,
+        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('hh:mm')}`,
+        orders: obj.n_orders,
+      }))
+    );
   }, [JSON.stringify(filters), offersData]);
 
   const handleChangeMultipleFilter = (k) => (v) => {
@@ -398,92 +387,42 @@ const MarketingOffer = () => {
     setOpenedOffer(true);
     setClickedId(id);
   };
-  const renderLayout = () => {
-    if (openedOffer) {
+  const renderTable = () => {
+    if (link === 'Offers performance') {
       return (
-        <OfferDetailComponent
-          // eslint-disable-next-line eqeqeq
-          data={data?.offers.find((o) => o.master_offer_id == clickedId)}
-          setOpened={setOpenedOffer}
+        <TableRevlyNew
+          links={links}
+          setLink={setLink}
+          link={link}
+          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+          isLoading={isLoadingOffers}
+          headers={headersPerformance}
+          rows={offersDataFiltered.map(renderRowsByHeader)}
+          mainFieldOrdered='start_date'
+          setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+          filters={!isEmptyList() ? filters : null}
+          filtersHead={!isEmptyList() ? filtersHead : null}
+          handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
         />
       );
     }
+
     return (
-      <PaperKit className='marketing-paper offer-paper'>
-        <div className='right-part'>
-          <div className='right-part-header marketing-links'>
-            <TypographyKit
-              className={`right-part-header_link marketing ${
-                scrollActive === 'more' ? 'active' : ''
-              }`}
-              variant='div'
-            >
-              <div tabIndex={-1} role='presentation' onClick={() => handleScrollActive('less')}>
-                <BoxKit className={scrollActive === 'less' ? 'active' : ''}>
-                  <img src={OffersManagmentIcon} alt='Offers managment icon' />
-                  Offers Management
-                </BoxKit>
-              </div>
-              <div tabIndex={-1} role='presentation' onClick={() => handleScrollActive('more')}>
-                <BoxKit className={scrollActive === 'more' ? 'active' : ''}>
-                  <img src={OffersPerformenceIcon} alt='Offer Performence icon' />
-                  Offers Performance
-                </BoxKit>
-              </div>
-            </TypographyKit>
-          </div>
-        </div>
-        <TypographyKit variant='div' className='marketing-paper-top-btns'>
-          <div className='marketing-filters'>
-            <div>
-              <FilterDropdown
-                items={filtersHead.platform}
-                values={filters.platform}
-                onChange={handleChangeMultipleFilter('platform')}
-                label='Platform'
-                icon={<Layers />}
-                internalIconOnActive={platformObject}
-                maxShowned={1}
-              />
-              <FilterDropdown
-                items={filtersHead.type_offer}
-                values={filters.type_offer}
-                onChange={handleChangeMultipleFilter('type_offer')}
-                label='Discount Type'
-                icon={<Tag />}
-                maxShowned={1}
-              />
-              <FilterDropdown
-                items={filtersHead.discount_rate}
-                values={filters.discount_rate}
-                onChange={handleChangeMultipleFilter('discount_rate')}
-                label='Discount Amount'
-                icon={<Tag />}
-                customTag='%'
-                maxShowned={5}
-              />
-            </div>
-            <div>
-              <ButtonKit
-                className='more-filter'
-                variant='outlined'
-                onClick={() => setOpenedFilter(true)}
-                disabled={isEmptyList()}
-              >
-                <Vector />
-                More Filters
-              </ButtonKit>
-            </div>
-          </div>
-        </TypographyKit>
-        <TableRevly
-          isLoading={isLoadingOffers}
-          headers={headersOffers}
-          rows={offersDataFiltered.map(renderRowsByHeader)}
-          onClickRow={handleRowClick}
-          mainFieldOrdered='start_date'
-        />
-      </PaperKit>
+      <TableRevlyNew
+        links={links}
+        setLink={setLink}
+        link={link}
+        renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+        isLoading={isLoadingOffers}
+        headers={headersManagment}
+        rows={offersDataFiltered.map(renderRowsByHeader)}
+        mainFieldOrdered='start_date'
+        onClickRow={handleRowClick}
+        setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
+        filters={!isEmptyList() ? filters : null}
+        filtersHead={!isEmptyList() ? filtersHead : null}
+        handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+      />
     );
   };
   return (
@@ -511,7 +450,15 @@ const MarketingOffer = () => {
           </ButtonKit>
         </div>
       </div>
-      {renderLayout()}
+      {openedOffer ? (
+        <OfferDetailComponent
+          // eslint-disable-next-line eqeqeq
+          data={data?.offers.find((o) => o.master_offer_id == clickedId)}
+          setOpened={setOpenedOffer}
+        />
+      ) : (
+        renderTable()
+      )}
       <MarketingSetup active={active} setActive={setActive} />
       <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
       <MarketingOfferFilter

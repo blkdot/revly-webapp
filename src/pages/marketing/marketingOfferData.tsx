@@ -21,4 +21,6 @@ export const defaultFilterStateFormat = {
   discount_rate: [],
   status: [],
   goal: [],
+  start_hour: [],
+  end_hour: [],
 };

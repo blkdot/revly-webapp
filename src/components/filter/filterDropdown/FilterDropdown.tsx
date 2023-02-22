@@ -93,19 +93,24 @@ const FilterDropdown = (props: any) => {
     <div className='comp-dropdown'>
       <ButtonKit
         variant='outlined'
-        onClick={() => setIsOpen(!isOpen)}
-        onKeyPress={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
         role='button'
-        style={{ display: 'flex', justifyContent: 'flex-start' }}
+        style={{ display: 'flex', justifyContent: 'space-between' }}
         className={`${values.length > 0 ? '__active' : ''}`}
         tabIndex={0}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className={`comp-content ${values.length > 0 ? 'active' : ''}`}>
           {renderIcon()}
           {getCurrentValue()}
         </div>
-        <div style={{ display: 'flex', marginLeft: '1rem', alignItems: 'center' }}>
-          {isOpen ? <FaChevronDown /> : <FaChevronRight />}
+        <div
+          className='comp-dropdown-arrow'
+          style={{ display: 'flex', marginLeft: '1rem', alignItems: 'center' }}
+        >
+          {isOpen ? <FaChevronRight /> : <FaChevronDown />}
         </div>
       </ButtonKit>
       {renderItems()}
