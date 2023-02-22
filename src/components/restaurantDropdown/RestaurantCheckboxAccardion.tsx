@@ -155,16 +155,18 @@ const RestaurantCheckboxAccordion: FC<{
                     {vendorName}
                   </div>
                 </TooltipKit>
-                <div
-                  role='presentation'
-                  tabIndex={-1}
-                  onClick={(e) => e.stopPropagation()}
-                  className='only-button'
-                >
-                  <ButtonKit onClick={(e) => handleClickVendor(e, vendorName)} variant='contained'>
-                    Only
-                  </ButtonKit>
-                </div>
+                {
+                  pageType !== 'listing' ? <div
+                    role='presentation'
+                    tabIndex={-1}
+                    onClick={(e) => e.stopPropagation()}
+                    className='only-button'
+                  >
+                    <ButtonKit onClick={(e) => handleClickVendor(e, vendorName)} variant='contained'>
+                      Only
+                    </ButtonKit>
+                  </div> : ''
+                }
               </MenuItemKit>
             </div>
           );
@@ -218,15 +220,17 @@ const RestaurantCheckboxAccordion: FC<{
                     <img key={plat} className='restaurant-img' src={getIcon(plat)} alt={plat} />
                   ))}
               </div>
-              <div className='only-button vendor'>
-                <ButtonKit
-                  disabled={!info[vendorName].active}
-                  onClick={(e) => handleClickVendor(e, vendorName)}
-                  variant='contained'
-                >
-                  Only
-                </ButtonKit>
-              </div>
+              {
+                pageType !== 'listing' ? <div className='only-button vendor'>
+                  <ButtonKit
+                    disabled={!info[vendorName].active}
+                    onClick={(e) => handleClickVendor(e, vendorName)}
+                    variant='contained'
+                  >
+                    Only
+                  </ButtonKit>
+                </div> : ''
+              }
             </div>
           </InputLabelKit>
         );

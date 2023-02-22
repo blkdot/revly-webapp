@@ -4,19 +4,22 @@ import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useDate } from 'hooks';
-import { CardContentKit, CardKit, PaperKit, SkeletonKit, TypographyKit } from 'kits';
+import { CardContentKit, CardKit, PaperKit, SkeletonKit, TooltipKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import './Widget.scss';
+import TooltipIcon from '../../assets/images/tooltip-ic.svg';
 
 const Widget: FC<{
   title: any;
   setTable: any;
   table: any;
+  link: string,
   metricsbeforePeriod: any;
   metricsafterPeriod: any;
   loading: any;
   links: any;
-}> = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading, links }) => {
+  tooltip?: string;
+}> = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading, links, link, tooltip }) => {
   const { date } = useDate();
   const { afterPeriod, titleafterPeriod } = date;
   const startDate = parseISO(afterPeriod.startDate);
@@ -28,34 +31,17 @@ const Widget: FC<{
 
   const procent = () => {
     if (metricsbeforePeriod && metricsafterPeriod) {
-      if (Number(metricsafterPeriod.all[title]) === 0) {
+      if (Number(metricsafterPeriod.all?.[link]) === 0) {
         return 0;
       }
 
       return parseFloat(
-        (metricsbeforePeriod.all[title] / (metricsafterPeriod.all[title] / 100) - 100).toFixed(0)
+        (metricsbeforePeriod.all?.[link] || 0 / (metricsafterPeriod.all?.[link] || 0 / 100) - 100).toFixed(0)
       );
     }
     return 0;
   };
-  const getTitle = (): any => {
-    if (title === 'n_orders') {
-      return 'Orders';
-    }
-    if (title === 'average_basket') {
-      return 'Avg. basket';
-    }
-    if (title === 'accrued_discounts') {
-      return 'Accrued discount';
-    }
-    if (title === 'profit') {
-      return 'Net revenue';
-    }
-    if (title === 'roi') {
-      return 'ROI';
-    }
-    return title;
-  };
+
   const getafterPeriod = () => {
     if (titleafterPeriod === 'custom') {
       if (startLocal === endLocal) {
@@ -79,14 +65,16 @@ const Widget: FC<{
   };
 
   const renderMetrics = () => {
-    if (metricsbeforePeriod.all?.[title]) {
-      const value = parseFloat(metricsbeforePeriod.all[title].toFixed(1)).toLocaleString('en-US');
-      switch (title) {
+    if (metricsbeforePeriod.all?.[link]) {
+      const value = parseFloat(metricsbeforePeriod.all?.[link].toFixed(1)).toLocaleString('en-US');
+      switch (link) {
         case 'average_basket':
         case 'accrued_discounts':
         case 'revenue':
         case 'profit':
-          return `AED ${value}`;
+          return <p>AED <span>{value}</span></p>;
+        case 'roi':
+          return <p><span>{value}</span> AED <span>for every 1 AED spent on Discounts and Ads</span></p>
         default:
           return value;
       }
@@ -104,26 +92,40 @@ const Widget: FC<{
   };
 
   const changeLink = () => {
-    setTable(getTitle());
+    setTable(link);
     const tableLinks = document.querySelector('.table-links') as HTMLElement;
     tableLinks?.style.setProperty(
       '--length',
       `${getActiveLinkWidth(
-        links.findIndex((t) => t === getTitle()),
+        links.findIndex((obj: { title: string, link: string }) => obj.title === title),
         'width'
       )}px`
     );
     tableLinks?.style.setProperty(
       '--left',
       `${getActiveLinkWidth(
-        links.findIndex((t) => t === getTitle()),
+        links.findIndex((obj: { title: string, link: string }) => obj.title === title),
         'scroll'
       )}px`
     );
   };
   return (
-    <CardKit className={`card_wrapper ${table === title ? 'active' : ''}`} onClick={changeLink}>
+    <CardKit className={`card_wrapper ${table === link ? 'active' : ''}`} onClick={changeLink}>
       <CardContentKit>
+        {tooltip ? <TooltipKit
+          onClick={(e) => e.stopPropagation()}
+          interactive={1}
+          id='table-tooltip'
+          placement='right'
+          arrow
+          title={tooltip}
+        >
+          <img
+            className='table-header-tooltip dashboard-tooltip'
+            src={TooltipIcon}
+            alt='tooltip icon'
+          />
+        </TooltipKit> : ''}
         <TypographyKit
           component='div'
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -135,7 +137,7 @@ const Widget: FC<{
               className='card-typography'
               component='div'
             >
-              {getTitle()}
+              {title}
             </TypographyKit>
             {loading ? (
               <SkeletonKit
@@ -144,9 +146,8 @@ const Widget: FC<{
                 style={{ margin: '10px 0 0 0', transform: 'scale(1)' }}
               />
             ) : (
-              <TypographyKit variant='h3' className='card-typography'>
+              <TypographyKit variant='h3' className={`card-typography ${link === 'roi' ? 'card-roi' : ''}`}>
                 {renderMetrics()}
-                {getTitle() === 'roi' && metricsbeforePeriod.all[title] && ' %'}
               </TypographyKit>
             )}
           </div>
@@ -157,9 +158,8 @@ const Widget: FC<{
           ) : (
             <div style={{ margin: 0 }} className='card_bottom'>
               <PaperKit
-                className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
-                  procent() < 0 ? 'decreased' : ''
-                }`}
+                className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${procent() < 0 ? 'decreased' : ''
+                  }`}
               >
                 {procent() === 0 ? (
                   <ArrowRightAltIcon />
@@ -169,9 +169,8 @@ const Widget: FC<{
               </PaperKit>
               <TypographyKit
                 sx={{ lineHeight: 0 }}
-                className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
-                  procent() < 0 ? 'decreased' : ''
-                }`}
+                className={`card-procent ${procent() > 0 ? 'increased' : ''} ${procent() < 0 ? 'decreased' : ''
+                  }`}
                 variant='body2'
               >
                 {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
@@ -186,5 +185,7 @@ const Widget: FC<{
     </CardKit>
   );
 };
-
+Widget.defaultProps = {
+  tooltip: '',
+}
 export default Widget;

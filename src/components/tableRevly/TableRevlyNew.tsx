@@ -140,13 +140,13 @@ const TableRevlyNew: FC<{
         <div className='table-paper-top'>
           <div style={{ display: 'flex' }}>
             <BoxKit className='table-links'>
-              {links.map((name: string, index: number) => (
+              {links.map((obj: {title: string, link: string}, index: number) => (
                 <TypographyKit
-                  key={name}
-                  className={`table-link ${link === name ? 'active' : ''}`}
-                  onClick={() => changeLink(name, index)}
+                  key={obj.link}
+                  className={`table-link ${link === obj.link ? 'active' : ''}`}
+                  onClick={() => changeLink(obj.link, index)}
                 >
-                  {name}
+                  {obj.title}
                 </TypographyKit>
               ))}
             </BoxKit>
@@ -154,11 +154,11 @@ const TableRevlyNew: FC<{
               <img
                 tabIndex={-1}
                 role='presentation'
-                className={links.findIndex((n) => link === n) > 0 ? 'active' : ''}
+                className={links.findIndex((obj: { title: string, link: string }) => link === obj.link) > 0 ? 'active' : ''}
                 onClick={() =>
                   changeLink(
-                    links[links.findIndex((n) => link === n) - 1],
-                    links.findIndex((n) => link === n) - 1
+                    links[links.findIndex((obj: { title: string, link: string }) => link === obj.link) - 1].link,
+                    links.findIndex((obj: { title: string, link: string }) => link === obj.link) - 1
                   )
                 }
                 src={Arrow}
@@ -167,11 +167,11 @@ const TableRevlyNew: FC<{
               <img
                 tabIndex={-1}
                 role='presentation'
-                className={links.findIndex((n) => link === n) < links.length - 1 ? 'active' : ''}
+                className={links.findIndex((obj: { title: string, link: string }) => link === obj.link) < links.length - 1 ? 'active' : ''}
                 onClick={() =>
                   changeLink(
-                    links[links.findIndex((n) => link === n) + 1],
-                    links.findIndex((n) => link === n) + 1
+                    links[links.findIndex((obj: { title: string, link: string }) => link === obj.link) + 1].link,
+                    links.findIndex((obj: { title: string, link: string }) => link === obj.link) + 1
                   )
                 }
                 src={Arrow}

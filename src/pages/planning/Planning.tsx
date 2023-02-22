@@ -216,8 +216,11 @@ const Planning = () => {
     setOpened(true);
     setClickedId(id);
   };
-  const [link, setLink] = useState('Offers planning');
-  const links = ['Offers planning', 'Ads planning'];
+  const [link, setLink] = useState('offers_planning');
+  const links = [
+    {title: 'Offers planning',link: 'offers_planning'},
+    { title: 'Ads planning', link: 'ads_planning' },
+  ]
   const handleChangeMultipleFilter = (k: string) => (v: string) => {
     const propertyFilter = filters[k];
 
@@ -236,7 +239,7 @@ const Planning = () => {
   };
 
   const renderTable = () => {
-    if (link === 'Ads planning') {
+    if (link === 'ads_planning') {
       return (
         <TableRevlyNew
           links={links}
@@ -287,7 +290,7 @@ const Planning = () => {
   };
 
   const isEmptyList = () => {
-    const source = link === 'Ads planning' ? ads : offers;
+    const source = link === 'ads_planning' ? ads : offers;
 
     return source.length < 1;
   };
@@ -310,7 +313,7 @@ const Planning = () => {
   );
 
   useEffect(() => {
-    const source = link === 'Ads planning' ? ads : offers;
+    const source = link === 'ads_planning' ? ads : offers;
     const preHead = source.reduce(
       (acc, cur) => {
         const { platform, type_offer: discountType, discount_rate: procent, status } = acc;
@@ -367,8 +370,8 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
-      type_offer: link === 'Ads planning' ? [] : preHeadTypeOffer,
-      discount_rate: link === 'Ads planning' ? [] : preHeadProcent,
+      type_offer: link === 'ads_planning' ? [] : preHeadTypeOffer,
+      discount_rate: link === 'ads_planning' ? [] : preHeadProcent,
       status: preHeadStatus,
       start_hour: [],
       end_hour: [],

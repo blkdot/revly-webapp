@@ -1,11 +1,12 @@
 import { CSSProperties } from 'react';
 import { useAtom } from 'jotai';
 import { parseISO, format } from 'date-fns';
-import { SkeletonKit, TableCellKit, TextfieldKit, TooltipKit } from 'kits';
+import { OutlinedInputKit, SkeletonKit, TableCellKit, TextfieldKit, TooltipKit } from 'kits';
 import shortid from 'shortid';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { useVendors } from 'hooks';
 import costAtom from 'store/costAtom';
+import InputAdornmentKit from 'kits/inputAdornment/InputAdornmentKit';
 import { platformList, platformObject } from '../../../data/platformList';
 import Calendar from '../../../assets/images/calendar.svg';
 import Clock from '../../../assets/images/clock.svg';
@@ -177,10 +178,10 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
-                  {vendor}
-                </span>
-              ))
+              <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
+                {vendor}
+              </span>
+            ))
         }
         disableHoverListener={r[h.id]?.length === 0}
         id='category-tooltip'
@@ -217,13 +218,13 @@ const useTableContentFormatter = () => {
               r[h.id] === null || !r[h.id]
                 ? '-'
                 : vendors.map((vendor) => (
-                    <span
-                      key={`${vendor}${shortid.generate()}`}
-                      className='render-row-tooltip column'
-                    >
-                      {vendor}
-                    </span>
-                  ))
+                  <span
+                    key={`${vendor}${shortid.generate()}`}
+                    className='render-row-tooltip column'
+                  >
+                    {vendor}
+                  </span>
+                ))
             }
             disableHoverListener={r[h.id]?.length === 0}
             id='category-tooltip'
@@ -389,7 +390,7 @@ const useTableContentFormatter = () => {
   );
 
   const renderOrdinalSuffixV3 = (r, h) => (
-    <TableCellKit>
+    <TableCellKit style={{ textAlign: 'left' }}>
       {Number(ordinalSuffixOf(r[h.id]?.average_vertical_rank)) >= 100 && '> '}
       {ordinalSuffixOf(r[h.id]?.average_vertical_rank)}
     </TableCellKit>
@@ -472,11 +473,12 @@ const useTableContentFormatter = () => {
         id={`${h.id}_${i}`}
         key={`${h.id}_${r.id}`}
       >
-        <TextfieldKit
+        <OutlinedInputKit
           sx={{ width: '100%' }}
           type='number'
           defaultValue={r[h.id]}
           onChange={handleChange}
+          endAdornment={<InputAdornmentKit position="end">%</InputAdornmentKit>}
         />
       </TableCellKit>
     );

@@ -48,8 +48,9 @@ const MarketingAds = () => {
     renderCurrency,
   } = useTableContentFormatter();
 
-  const [link, setLink] = useState('Ads management');
-  const links = ['Ads management', 'Ads performance'];
+  const [link, setLink] = useState('ads_managment');
+  const links = [{ title: 'Ads management', link: 'ads_managment' }, { title: 'Ads performance', link: 'ads_performance' }];
+
   const headersManagment = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
@@ -144,7 +145,7 @@ const MarketingAds = () => {
   };
 
   const renderRowsByHeader = (r) =>
-    (link === 'Ads management' ? headersManagment : headersPerformance).reduce(
+    (link === 'ads_managment' ? headersManagment : headersPerformance).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.ad_ids.join('') }, cur),
@@ -173,7 +174,7 @@ const MarketingAds = () => {
   };
 
   const renderRowsByHeaderLoading = (r) =>
-    (link === 'Ads management' ? headersManagment : headersPerformance).reduce(
+    (link === 'ads_managment' ? headersManagment : headersPerformance).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
@@ -331,7 +332,7 @@ const MarketingAds = () => {
   const isEmptyList = () => adsData.length < 1;
 
   const renderTable = () => {
-    if (link === 'Ads performance') {
+    if (link === 'ads_performance') {
       return (
         <TableRevlyNew
           links={links}

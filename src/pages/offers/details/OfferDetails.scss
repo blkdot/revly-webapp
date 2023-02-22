@@ -437,7 +437,7 @@
 
 .offer-visibility-container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding: 20px 20px;
   background: #f9fafb;
@@ -462,7 +462,7 @@
   font-family: 'Public Sans';
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
   color: #212b36;
 }
@@ -470,10 +470,13 @@
 .offer-visibility-sub-title {
   font-family: 'Public Sans';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   line-height: 22px;
   color: #212b36;
+  p{
+    font-weight: 400;
+  }
 }
 
 .with-icon {
