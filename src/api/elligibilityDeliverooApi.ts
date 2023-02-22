@@ -9,4 +9,3 @@ export const getElligibilityDeliveroo = (body) =>
     .post(`${apiUrl}/marketingv2/eligibility/deliveroo`, body)
     .then((res) => res)
     .catch(handleResponse);
-    

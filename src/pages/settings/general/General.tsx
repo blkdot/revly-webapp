@@ -19,7 +19,7 @@ const General = () => {
     if (!user.phoneNumber) return '';
 
     const num = user.phoneNumber.substring(user.phoneNumber.length - 9);
-    
+
     return num;
   };
 
@@ -154,7 +154,7 @@ const General = () => {
         role: data.role || '',
         country: country.find((v) => v.name === data.country) || { name: '', code: '' },
       };
-      
+
       setDial(data.dial);
       setInputValue({
         ...inputValue,

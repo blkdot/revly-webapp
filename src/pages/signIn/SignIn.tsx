@@ -23,7 +23,7 @@ const SignIn = () => {
   const [params] = useSearchParams();
   const { setVendors } = useVendors(true);
   const { setVendors: setVendorsReq } = useVendors(true);
-  const [,setEligibilityDeliveroo] = useAtom(elligibilityDeliverooAtom);
+  const [, setEligibilityDeliveroo] = useAtom(elligibilityDeliverooAtom);
 
   const { signIn, user, logOut, verifyCodeEmail } = useUserAuth();
 

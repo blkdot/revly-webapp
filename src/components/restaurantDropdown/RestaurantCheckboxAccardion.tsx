@@ -209,7 +209,9 @@ const RestaurantCheckboxAccordion: FC<{
                 disableHoverListener={!getHoverStatusVendor(vendorName)}
                 title={vendorName}
               >
-                <p className={`vendor-name ${info[vendorName]?.deactivated ? 'disabled' : ''}`}>{vendorName}</p>
+                <p className={`vendor-name ${info[vendorName]?.deactivated ? 'disabled' : ''}`}>
+                  {vendorName}
+                </p>
               </TooltipKit>
               <div className='restaurant-platforms'>
                 {Object.keys(info[vendorName].platforms)
