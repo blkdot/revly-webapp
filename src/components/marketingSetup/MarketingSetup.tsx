@@ -279,7 +279,7 @@ const MarketingSetup: React.FC<{
           platformsDisplay.forEach((platformV) => {
             displayTemp[chainName][vendorName].deactivated = false;
 
-            if (platformV.toLocaleLowerCase() === 'deliveroo') {
+            if (platformV.toLocaleLowerCase() === 'deliveroo' && ((platform.length === 1 && platform[0].toLocaleLowerCase() === 'deliveroo') || (platform.length === 2)) ) {
               const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
 
               const exists = elligibilityDeliverooState?.[vId];
