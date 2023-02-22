@@ -4,7 +4,7 @@
   left: 0;
   height: 100%;
   z-index: 1000;
-  background-color: #F8F9FD;
+  background-color: #f8f9fd;
   top: 0;
   display: flex;
 
@@ -17,47 +17,47 @@
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    transition: .7s;
+    transition: 0.7s;
 
     &::before {
       content: '';
-      background-color: #7B61FF;
+      background-color: #7b61ff;
       height: 4px;
       width: 0;
-      transition: .7s;
+      transition: 0.7s;
       position: absolute;
       left: 0;
       top: 0;
     }
 
     &.launch {
-      transition: .7s;
+      transition: 0.7s;
 
       &::before {
         width: 20%;
-        transition: .7s;
+        transition: 0.7s;
       }
     }
 
     &.recurency {
-      transition: .7s;
+      transition: 0.7s;
 
       &::before {
-        transition: .7s;
+        transition: 0.7s;
         width: 40%;
       }
     }
 
     .top {
-      >p {
+      > p {
         font-weight: 600;
         font-size: 20px;
         line-height: 22px;
-        color: #212B36;
+        color: #212b36;
         margin-bottom: 5px;
       }
 
-      >span {
+      > span {
         font-weight: 400;
         line-height: 20px;
         color: #637381;
@@ -79,12 +79,12 @@
       }
 
       .cancel {
-        background-color: #F9FAFB;
-        color: #1A1A1C;
+        background-color: #f9fafb;
+        color: #1a1a1c;
       }
 
       .continue {
-        background-color: #7B61FF;
+        background-color: #7b61ff;
         color: #fff;
 
         svg {
@@ -101,20 +101,20 @@
 }
 
 .advert-branches {
-  >div {
+  > div {
     width: 100%;
     border-radius: 8px;
     height: 70px;
     box-shadow: 0px 8px 16px rgba(145, 158, 171, 0.16);
     border: 1px solid rgba(145, 158, 171, 0.08);
 
-    >div {
+    > div {
       border: none;
       height: 70px;
       padding: 0;
       border-radius: 8px;
 
-      >div>div {
+      > div > div {
         padding: 15px 20px !important;
       }
     }
@@ -134,9 +134,9 @@
   padding-top: 74px;
   flex-direction: column;
 
-  >div {
+  > div {
     width: 80%;
-    background: #FFFFFF;
+    background: #ffffff;
     border: 1px solid rgba(145, 158, 171, 0.08);
     border-radius: 9px;
   }

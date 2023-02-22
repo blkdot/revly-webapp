@@ -117,8 +117,9 @@ const OnboardingStepper: FC<{
               <TypographyKit
                 components='span'
                 style={{ '--activeStep': `${getActiveStep(index)}%` }}
-                className={`${index !== 2 ? 'onboarding-stepper_line' : ''} ${Number(String(activeStep / 100)[0]) >= index + 1 ? 'active' : ''
-                  }`}
+                className={`${index !== 2 ? 'onboarding-stepper_line' : ''} ${
+                  Number(String(activeStep / 100)[0]) >= index + 1 ? 'active' : ''
+                }`}
               />
               <p className='__title'>{`${index + 1}. ${obj.label}`}</p>
               <div className='__subtitle'>{obj.subtitle}</div>

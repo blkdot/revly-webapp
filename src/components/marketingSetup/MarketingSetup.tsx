@@ -55,6 +55,7 @@ import {
   type THeatmapData,
   type TOfferDataResponse,
 } from 'store/marketingSetupAtom';
+import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -128,6 +129,7 @@ const MarketingSetup: React.FC<{
 }> = ({ active, setActive, ads }) => {
   const { getActivePlatform } = usePlatform();
 
+  const [elligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
   const [platform, setPlatform] = useAtom(platformAtom);
   const [selected, setSelected] = useAtom(selectedAtom);
   const [links, setLinks] = useAtom(linkAtom);
@@ -275,6 +277,24 @@ const MarketingSetup: React.FC<{
         } else {
           const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
           platformsDisplay.forEach((platformV) => {
+            displayTemp[chainName][vendorName].deactivated = false;
+
+            if (
+              platformV.toLocaleLowerCase() === 'deliveroo' &&
+              ((platform.length === 1 && platform[0].toLocaleLowerCase() === 'deliveroo') ||
+                platform.length === 2)
+            ) {
+              const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
+
+              const exists = elligibilityDeliverooState?.[vId];
+
+              if (!exists) {
+                displayTemp[chainName][vendorName].deactivated = true;
+                displayTemp[chainName][vendorName].checked = false;
+                return;
+              }
+            }
+
             if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
               displayTemp[chainName][vendorName].deleted = true;
               displayTemp[chainName][vendorName].checked = false;
