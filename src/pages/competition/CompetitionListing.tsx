@@ -4,7 +4,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUserAuth } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform } from 'hooks';
+import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -65,7 +65,7 @@ const headersAlert = (cuisine: string) => [
 
 const CompetitionListing = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const { display } = vendors;
+  const {vendors: vendorsDatas} = useVendors();
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
@@ -89,7 +89,7 @@ const CompetitionListing = () => {
   const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
-  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendors)));
+  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendorsDatas)));
 
   const Open = () => {
     setOpened(!opened);
