@@ -337,7 +337,13 @@ const CompetitionListing = () => {
     });
   }, [platform, vendors]);
   useEffect(() => {
-    if (platform && area.length > 0 && timeSlot && vendorsData.vendorsObj[platform] !== null && queue === 0) {
+    if (
+      platform &&
+      area.length > 0 &&
+      timeSlot &&
+      vendorsData.vendorsObj[platform] !== null &&
+      queue === 0
+    ) {
       getData(platform, vendorsData.vendorsObj[platform], queue);
     }
   }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue, cuisine]);
@@ -493,16 +499,16 @@ const CompetitionListing = () => {
         {loading
           ? null
           : getNumArr().map((num) => (
-            <ButtonKit
-              onClick={() => Open()}
-              key={num}
-              variant='contained'
-              className='competition-add competiton-table-btn'
-            >
-              <AddIcon />
-              Add a Competitor
-            </ButtonKit>
-          ))}
+              <ButtonKit
+                onClick={() => Open()}
+                key={num}
+                variant='contained'
+                className='competition-add competiton-table-btn'
+              >
+                <AddIcon />
+                Add a Competitor
+              </ButtonKit>
+            ))}
       </PaperKit>
     </div>
   );

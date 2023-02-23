@@ -41,7 +41,7 @@ const App = () => (
       <Route element={<ProtectedRoutes />}>
         <Route path='/check' element={<Check />} />
         <Route path='/verify-code' element={<VerifyCode />} />
-        <Route element={<MainLayout />} >
+        <Route element={<MainLayout />}>
           <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
         </Route>
         <Route element={<ProtectedOnboardRoutes />}>

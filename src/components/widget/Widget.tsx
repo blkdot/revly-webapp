@@ -10,16 +10,26 @@ import './Widget.scss';
 import TooltipIcon from '../../assets/images/tooltip-ic.svg';
 
 const Widget: FC<{
-  title: any;
-  setTable: any;
-  table: any;
-  link: string,
+  title: string;
+  setTable(value: string): void;
+  table: string;
+  link: string;
   metricsbeforePeriod: any;
   metricsafterPeriod: any;
-  loading: any;
-  links: any;
+  loading: boolean;
+  links: { title: string; link: string; tooltip?: string }[];
   tooltip?: string;
-}> = ({ title, setTable, table, metricsbeforePeriod, metricsafterPeriod, loading, links, link, tooltip }) => {
+}> = ({
+  title,
+  setTable,
+  table,
+  metricsbeforePeriod,
+  metricsafterPeriod,
+  loading,
+  links,
+  link,
+  tooltip,
+}) => {
   const { date } = useDate();
   const { afterPeriod, titleafterPeriod } = date;
   const startDate = parseISO(afterPeriod.startDate);
@@ -31,12 +41,12 @@ const Widget: FC<{
 
   const procent = () => {
     if (metricsbeforePeriod && metricsafterPeriod) {
-      if (Number(metricsafterPeriod.all?.[link]) === 0) {
+      if (Number(metricsafterPeriod.all[link]) === 0) {
         return 0;
       }
 
       return parseFloat(
-        (metricsbeforePeriod.all?.[link] || 0 / (metricsafterPeriod.all?.[link] || 0 / 100) - 100).toFixed(0)
+        (metricsbeforePeriod.all[link] / (metricsafterPeriod.all[link] / 100) - 100).toFixed(0)
       );
     }
     return 0;
@@ -72,9 +82,17 @@ const Widget: FC<{
         case 'accrued_discounts':
         case 'revenue':
         case 'profit':
-          return <p>AED <span>{value}</span></p>;
+          return (
+            <p>
+              AED <span>{value}</span>
+            </p>
+          );
         case 'roi':
-          return <p><span>{value}</span> AED <span>for every 1 AED spent on Discounts and Ads</span></p>
+          return (
+            <p>
+              <span>{value}</span> AED <span>for every 1 AED spent on Discounts and Ads</span>
+            </p>
+          );
         default:
           return value;
       }
@@ -97,14 +115,14 @@ const Widget: FC<{
     tableLinks?.style.setProperty(
       '--length',
       `${getActiveLinkWidth(
-        links.findIndex((obj: { title: string, link: string }) => obj.title === title),
+        links.findIndex((obj: { title: string; link: string }) => obj.title === title),
         'width'
       )}px`
     );
     tableLinks?.style.setProperty(
       '--left',
       `${getActiveLinkWidth(
-        links.findIndex((obj: { title: string, link: string }) => obj.title === title),
+        links.findIndex((obj: { title: string; link: string }) => obj.title === title),
         'scroll'
       )}px`
     );
@@ -112,20 +130,24 @@ const Widget: FC<{
   return (
     <CardKit className={`card_wrapper ${table === link ? 'active' : ''}`} onClick={changeLink}>
       <CardContentKit>
-        {tooltip ? <TooltipKit
-          onClick={(e) => e.stopPropagation()}
-          interactive={1}
-          id='table-tooltip'
-          placement='right'
-          arrow
-          title={tooltip}
-        >
-          <img
-            className='table-header-tooltip dashboard-tooltip'
-            src={TooltipIcon}
-            alt='tooltip icon'
-          />
-        </TooltipKit> : ''}
+        {tooltip ? (
+          <TooltipKit
+            onClick={(e) => e.stopPropagation()}
+            interactive={1}
+            id='table-tooltip'
+            placement='right'
+            arrow
+            title={tooltip}
+          >
+            <img
+              className='table-header-tooltip dashboard-tooltip'
+              src={TooltipIcon}
+              alt='tooltip icon'
+            />
+          </TooltipKit>
+        ) : (
+          ''
+        )}
         <TypographyKit
           component='div'
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -146,7 +168,10 @@ const Widget: FC<{
                 style={{ margin: '10px 0 0 0', transform: 'scale(1)' }}
               />
             ) : (
-              <TypographyKit variant='h3' className={`card-typography ${link === 'roi' ? 'card-roi' : ''}`}>
+              <TypographyKit
+                variant='h3'
+                className={`card-typography ${link === 'roi' ? 'card-roi' : ''}`}
+              >
                 {renderMetrics()}
               </TypographyKit>
             )}
@@ -158,8 +183,9 @@ const Widget: FC<{
           ) : (
             <div style={{ margin: 0 }} className='card_bottom'>
               <PaperKit
-                className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${procent() < 0 ? 'decreased' : ''
-                  }`}
+                className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
+                  procent() < 0 ? 'decreased' : ''
+                }`}
               >
                 {procent() === 0 ? (
                   <ArrowRightAltIcon />
@@ -169,8 +195,9 @@ const Widget: FC<{
               </PaperKit>
               <TypographyKit
                 sx={{ lineHeight: 0 }}
-                className={`card-procent ${procent() > 0 ? 'increased' : ''} ${procent() < 0 ? 'decreased' : ''
-                  }`}
+                className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
+                  procent() < 0 ? 'decreased' : ''
+                }`}
                 variant='body2'
               >
                 {procent() > 0 ? `+${procent()}%` : `${procent()}%`}
@@ -187,5 +214,5 @@ const Widget: FC<{
 };
 Widget.defaultProps = {
   tooltip: '',
-}
+};
 export default Widget;

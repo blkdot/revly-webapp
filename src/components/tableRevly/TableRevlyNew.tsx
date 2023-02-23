@@ -7,37 +7,46 @@ import {
   TableContainerKit,
   TableKit,
   TableRowKit,
-  TypographyKit,
 } from 'kits';
-import { useState, FC, useEffect } from 'react';
-import { platformObject } from 'data/platformList';
-import { Switch } from 'assets/icons';
-import Arrow from '../../assets/images/arrow.svg';
+import { useState, FC } from 'react';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 import noData from '../../assets/images/no-result.svg';
-import FilterDropdown from '../filter/filterDropdown/FilterDropdown';
-// import Clock from '../../assets/images/clock.svg';
-import Columns from '../../assets/images/columns.svg';
+import TableLink from './tableLink/TableLink';
+import TableFilters from './tableFilters/TableFilters';
 
 const TableRevlyNew: FC<{
-  headers: any;
-  rows: any;
-  isLoading?: any;
-  mainFieldOrdered?: any;
-  onClickRow?: any;
-  noEmptyMessage?: any;
-  renderCustomSkelton?: any;
-  links?: any;
-  setLink?: any;
-  link?: any;
-  setOpenedFilter?: any;
+  headers: any[];
+  rows: any[];
+  isLoading?: boolean;
+  mainFieldOrdered?: string;
+  onClickRow?(id: string | number): void;
+  noEmptyMessage?: boolean;
+  renderCustomSkelton?: any[];
+  links?: { link: string; title: string; tooltip?: string }[];
+  setLink?(value: string): void;
+  link?: string;
+  setOpenedFilter?(bool: boolean): void;
   className?: string;
-  filters?: any;
-  filtersHead?: any;
-  handleChangeMultipleFilter?: any;
-  noDataText?: string,
+  filters?: {
+    discount_rate?: any[];
+    end_hour?: any[];
+    platform?: any[];
+    start_hour?: any[];
+    status?: any[];
+    type_offer?: any[];
+  };
+  filtersHead?: {
+    discount_rate?: any[];
+    end_hour?: any[];
+    platform?: any[];
+    start_hour?: any[];
+    status?: any[];
+    type_offer?: any[];
+  };
+  handleChangeMultipleFilter?(k: string): void;
+  noDataText?: string;
 }> = ({
   headers,
   rows,
@@ -115,79 +124,16 @@ const TableRevlyNew: FC<{
     return renderRowsContent();
   };
 
-  const getActiveLinkWidth = (index: number, type: string) => {
-    const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
-    if (type === 'scroll') {
-      return tableLink.offsetLeft - tableLink.scrollLeft;
-    }
-    return tableLink?.clientWidth;
-  };
-
-  const changeLink = (name: string, index: number) => {
-    setLink(name);
-    const tableLinks = document.querySelector('.table-links') as HTMLElement;
-    tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(index, 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(index, 'scroll')}px`);
-  };
-  useEffect(() => {
-    const tableLinks = document.querySelector('.table-links') as HTMLElement;
-    tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(0, 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(0, 'scroll')}px`);
-  }, []);
   const renderTop = () => {
     if (links) {
       return (
-        <div className='table-paper-top'>
-          <div style={{ display: 'flex' }}>
-            <BoxKit className='table-links'>
-              {links.map((obj: {title: string, link: string}, index: number) => (
-                <TypographyKit
-                  key={obj.link}
-                  className={`table-link ${link === obj.link ? 'active' : ''}`}
-                  onClick={() => changeLink(obj.link, index)}
-                >
-                  {obj.title}
-                </TypographyKit>
-              ))}
-            </BoxKit>
-            <BoxKit className='table-arrow-links'>
-              <img
-                tabIndex={-1}
-                role='presentation'
-                className={links.findIndex((obj: { title: string, link: string }) => link === obj.link) > 0 ? 'active' : ''}
-                onClick={() =>
-                  changeLink(
-                    links[links.findIndex((obj: { title: string, link: string }) => link === obj.link) - 1].link,
-                    links.findIndex((obj: { title: string, link: string }) => link === obj.link) - 1
-                  )
-                }
-                src={Arrow}
-                alt='left-arrow'
-              />
-              <img
-                tabIndex={-1}
-                role='presentation'
-                className={links.findIndex((obj: { title: string, link: string }) => link === obj.link) < links.length - 1 ? 'active' : ''}
-                onClick={() =>
-                  changeLink(
-                    links[links.findIndex((obj: { title: string, link: string }) => link === obj.link) + 1].link,
-                    links.findIndex((obj: { title: string, link: string }) => link === obj.link) + 1
-                  )
-                }
-                src={Arrow}
-                alt='right-arrow'
-              />
-            </BoxKit>
-          </div>
-          {filters ? (
-            <BoxKit onClick={() => setOpenedFilter(true)} className='table-filter'>
-              <span />
-              <p>Filters</p>
-            </BoxKit>
-          ) : (
-            ''
-          )}
-        </div>
+        <TableLink
+          links={links}
+          setLink={setLink}
+          link={link}
+          filters={filters}
+          setOpenedFilter={setOpenedFilter}
+        />
       );
     }
     return '';
@@ -195,29 +141,16 @@ const TableRevlyNew: FC<{
   const renderFilters = () => {
     if (filters) {
       return (
-        <div className='table-filters'>
-          <FilterDropdown
-            items={filtersHead.platform}
-            values={filters.platform}
-            onChange={handleChangeMultipleFilter('platform')}
-            label='Platforms'
-            icon={<img src={Columns} alt='Clock' />}
-            internalIconOnActive={platformObject}
-            maxShowned={1}
-          />
-          <FilterDropdown
-            items={filtersHead.status}
-            values={filters.status}
-            onChange={handleChangeMultipleFilter('status')}
-            label='Statuses'
-            icon={<Switch />}
-            maxShowned={1}
-          />
-        </div>
+        <TableFilters
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          filters={filters}
+          filtersHead={filtersHead}
+        />
       );
     }
     return '';
   };
+
   return (
     <BoxKit className={`competition-box ${className || ''}`} sx={{ width: '100%' }}>
       <PaperKit className='table-paper' sx={{ width: '100%', mb: 2 }}>

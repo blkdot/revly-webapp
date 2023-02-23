@@ -97,7 +97,7 @@ const CompetitionAlerts = () => {
     renderSimpleIconRow,
     renderSimpleRowSkeleton,
     renderPercentSkeleton,
-    renderPercent
+    renderPercent,
   } = useTableContentFormatter();
 
   const cellTemplatesObject = {
@@ -325,9 +325,7 @@ const CompetitionAlerts = () => {
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headersAlert}
-          rows={(filteredData).map(
-            renderRowsByHeader
-          )}
+          rows={filteredData.map(renderRowsByHeader)}
           className='competition-alerts'
         />
       </PaperKit>

@@ -218,9 +218,9 @@ const Planning = () => {
   };
   const [link, setLink] = useState('offers_planning');
   const links = [
-    {title: 'Offers planning',link: 'offers_planning'},
+    { title: 'Offers planning', link: 'offers_planning' },
     { title: 'Ads planning', link: 'ads_planning' },
-  ]
+  ];
   const handleChangeMultipleFilter = (k: string) => (v: string) => {
     const propertyFilter = filters[k];
 
@@ -417,15 +417,17 @@ const Planning = () => {
         ).format('hh:mm')}`,
       }))
     );
-    setDataFilteredAds(filteredDataAds.map((obj) => ({
-      ...obj,
-      start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
-        new Date(obj.valid_to)
-      ).format('DD/MM')}`,
-      slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
-        new Date(obj.valid_to)
-      ).format('hh:mm')}`,
-    })));
+    setDataFilteredAds(
+      filteredDataAds.map((obj) => ({
+        ...obj,
+        start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('DD/MM')}`,
+        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('hh:mm')}`,
+      }))
+    );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
   return (

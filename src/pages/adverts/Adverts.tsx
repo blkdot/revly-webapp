@@ -34,7 +34,7 @@ const Adverts = () => {
     startDate: beforePeriod.startDate,
     endDate: getOfferDate(),
   });
-  const [link, setLink] = useState('Ads management');
+  const [link, setLink] = useState('ads_management');
   const startDate = new Date(beforePeriodBtn.startDate);
   const endDate = new Date(beforePeriodBtn.endDate);
   const startLocal = startDate.toLocaleDateString();
@@ -151,7 +151,7 @@ const Adverts = () => {
   };
 
   const renderRowsByHeaderList = (r) =>
-    (link === 'Ads management' ? headersList : headersPerformance).reduce(
+    (link === 'ads_management' ? headersList : headersPerformance).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id]({ ...r, id: r.master_ad_id }, cur),
@@ -178,7 +178,7 @@ const Adverts = () => {
   };
 
   const renderRowsByHeaderListLoading = (r) =>
-    (link === 'Ads management' ? headersList : headersPerformance).reduce(
+    (link === 'ads_management' ? headersList : headersPerformance).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
@@ -186,11 +186,13 @@ const Adverts = () => {
       }),
       {}
     );
-  const [details, setDetails] = useState(false);
   const [openedCampaign, setOpenedCampaign] = useState(false);
   const [opened, setOpened] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
-  const links = ['Ads management', 'Ads performance'];
+  const links = [
+    { title: 'Ads management', link: 'ads_management' },
+    { title: 'Ads performance', link: 'ads_performance' },
+  ];
   const renderLayout = () => {
     if (openedCampaign) {
       return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign} />;
@@ -220,14 +222,15 @@ const Adverts = () => {
         </div>
         <TableRevlyNew
           onClickRow={(id) => {
-            setDetails(true);
+            setClickedRow(adsData.find((obj) => `${obj.ad_ids.join('')}_ads` === id));
+            setOpened(true);
           }}
           link={link}
           setLink={setLink}
           links={links}
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderListLoading)}
           isLoading={isLoadingAds}
-          headers={link === 'Ads management' ? headersList : headersPerformance}
+          headers={link === 'ads_management' ? headersList : headersPerformance}
           rows={adsData.map(renderRowsByHeaderList)}
           noDataText='No ads has been retrieved.'
         />

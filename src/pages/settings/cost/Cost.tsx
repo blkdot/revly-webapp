@@ -27,14 +27,20 @@ const Cost = () => {
       });
     return dataVendorsObj;
   };
-  
-  const data = Object.keys(display).map((chainName) => ({
-    chain_name: chainName,
-    vendor_names: Object.keys(display[chainName]),
-    cost: (Number(chainData.find((obj) => obj.chain_name === chainName).data.metadata.cost) * 100) || 15,
-    changed: false,
-    vendors: getDataVendors(chainName),
-  })).filter((obj) => Object.keys(display[obj.chain_name]).some((vName) => display[obj.chain_name][vName].active));
+
+  const data = Object.keys(display)
+    .map((chainName) => ({
+      chain_name: chainName,
+      vendor_names: Object.keys(display[chainName]),
+      cost:
+        Number(chainData.find((obj) => obj.chain_name === chainName).data.metadata.cost) * 100 ||
+        15,
+      changed: false,
+      vendors: getDataVendors(chainName),
+    }))
+    .filter((obj) =>
+      Object.keys(display[obj.chain_name]).some((vName) => display[obj.chain_name][vName].active)
+    );
   useEffect(() => {
     setCost(data);
   }, [vendors]);
