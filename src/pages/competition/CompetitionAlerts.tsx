@@ -212,12 +212,12 @@ const CompetitionAlerts = () => {
             end_hour: v.end_hour,
             status: v.status,
             id: v.alert_id,
-            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${v.end_date ? dayjs(
-              new Date(v.end_date)
-            ).format('DD/MM'): 'undetermined'}`,
-            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${v.end_date ? dayjs(
-              new Date(v.end_date)
-            ).format('hh:mm') : 'undetermined'}`,
+            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${
+              v.end_date ? dayjs(new Date(v.end_date)).format('DD/MM') : 'undetermined'
+            }`,
+            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${
+              v.end_date ? dayjs(new Date(v.end_date)).format('hh:mm') : 'undetermined'
+            }`,
           }))
           .sort((a, b) => a.status - b.status);
         setCompetitionAlertsData(filt || []);

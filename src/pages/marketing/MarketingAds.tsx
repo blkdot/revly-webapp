@@ -49,7 +49,10 @@ const MarketingAds = () => {
   } = useTableContentFormatter();
 
   const [link, setLink] = useState('ads_managment');
-  const links = [{ title: 'Ads management', link: 'ads_managment' }, { title: 'Ads performance', link: 'ads_performance' }];
+  const links = [
+    { title: 'Ads management', link: 'ads_managment' },
+    { title: 'Ads performance', link: 'ads_performance' },
+  ];
 
   const headersManagment = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },

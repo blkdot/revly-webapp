@@ -1,33 +1,43 @@
 import { Arrow, Warning } from 'assets/icons';
-import { platformObject } from 'data/platformList';
-import { useVendors } from 'hooks';
-import { ButtonKit, PaperKit, TooltipKit } from 'kits';
-import { FC, CSSProperties } from 'react';
 import AdvertsWidget from 'components/advertsWidget/AdvertsWidget';
 import AdvertsWidgetCustom from 'components/advertsWidget/AdvertsWidgetCustom';
-import { differenceInDays } from 'date-fns';
+import { platformObject } from 'data/platformList';
+import { useVendors } from 'hooks';
+import { ButtonKit, PaperKit } from 'kits';
+import { CSSProperties, FC } from 'react';
+// import { differenceInDays } from 'date-fns';
+// import Calendar from '../../../assets/images/calendar.svg';
+// import Clock from '../../../assets/images/clock.svg';
+// import User from '../../../assets/images/user.svg';
+import Eye from '../../../assets/images/eye.svg';
+import Graph from '../../../assets/images/graph.svg';
+import ShoppingBag from '../../../assets/images/shopping-bag.svg';
+import Smile from '../../../assets/images/smile.svg';
 
-const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) => {
+const AdvertsDetails: FC<{
+  data: any;
+  setOpened: (value: boolean) => void;
+}> = ({ data, setOpened }) => {
   const { getChainData } = useVendors();
   const vendorData = getChainData(data.chain_id, data.vendor_ids);
 
   const advertDetails = [
     {
       name: 'Impressions',
-      ...data.impressions,
-      title: data.impressions.title === null ? '-' : data.impressions.title,
+      title: data.impressions === null ? '-' : data.impressions,
+      src: Eye,
     },
-    { name: 'Orders', ...data.orders, title: data.orders.title === null ? '-' : data.orders.title },
+    { name: 'Orders', title: data.orders === null ? '-' : data.orders, src: ShoppingBag },
     {
       name: 'Clicks',
-      ...data.clicks,
-      title: data.clicks.title === null ? '-' : `${data.clicks.title} AED`,
+      title: data.clicks === null ? '-' : `${data.clicks} AED`,
+      src: Graph,
     },
     { name: 'Conversion Rate', title: `${parseFloat((data.conversion_rate * 100).toFixed(2))}%` },
     {
       name: 'New Customers',
-      ...data.customers,
-      title: data.customers.title === null ? '-' : data.customers.title,
+      title: data.customers === null ? '-' : data.customers,
+      src: Smile,
     },
     { name: 'Budget Spent', title: data.spend === null ? '-' : `${data.spend} AED` },
     {
@@ -39,40 +49,40 @@ const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) 
       title: data.attributed_order_value === null ? '-' : `${data.attributed_order_value} AED`,
     },
   ];
-  const getAdvertsRanking = () => (
-    <TooltipKit title='ranking' id='category-tooltip' placement='right-start' arrow>
-      <span className='render-row-tooltip small'>0</span>
-    </TooltipKit>
-  );
-  const advertVisibility = [
-    {
-      title: 'Your Swimlane ranking',
-      content: [
-        { title: 'Swimlane name', value: 'Name' },
-        { title: 'Ranking', value: getAdvertsRanking() },
-        { title: 'Duration ', value: '-' },
-        { title: 'Promo Area', value: 'Dubai Marina' },
-      ],
-    },
-    {
-      title: 'Your Keyword ranking',
-      content: [
-        { title: 'Key word', value: 'Name' },
-        { title: 'Ranking', value: getAdvertsRanking() },
-        { title: 'Duration ', value: '-' },
-        { title: 'Promo Area', value: 'Dubai Marina' },
-      ],
-    },
-    {
-      title: 'Your Filters ranking',
-      content: [
-        { title: 'Filter name', value: 'Name' },
-        { title: 'Ranking', value: getAdvertsRanking() },
-        { title: 'Duration ', value: '-' },
-        { title: 'Promo Area', value: 'Dubai Marina' },
-      ],
-    },
-  ];
+  // const getAdvertsRanking = () => (
+  //   <TooltipKit title='ranking' id='category-tooltip' placement='right-start' arrow>
+  //     <span className='render-row-tooltip small'>0</span>
+  //   </TooltipKit>
+  // );
+  // const advertVisibility = [
+  //   {
+  //     title: 'Your Swimlane ranking',
+  //     content: [
+  //       { title: 'Swimlane name', value: 'Name' },
+  //       { title: 'Ranking', value: getAdvertsRanking() },
+  //       { title: 'Duration ', value: '-' },
+  //       { title: 'Promo Area', value: 'Dubai Marina' },
+  //     ],
+  //   },
+  //   {
+  //     title: 'Your Keyword ranking',
+  //     content: [
+  //       { title: 'Key word', value: 'Name' },
+  //       { title: 'Ranking', value: getAdvertsRanking() },
+  //       { title: 'Duration ', value: '-' },
+  //       { title: 'Promo Area', value: 'Dubai Marina' },
+  //     ],
+  //   },
+  //   {
+  //     title: 'Your Filters ranking',
+  //     content: [
+  //       { title: 'Filter name', value: 'Name' },
+  //       { title: 'Ranking', value: getAdvertsRanking() },
+  //       { title: 'Duration ', value: '-' },
+  //       { title: 'Promo Area', value: 'Dubai Marina' },
+  //     ],
+  //   },
+  // ];
 
   const advertSettings = [
     {
@@ -85,15 +95,22 @@ const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) 
         { title: 'Biding per Advert', value: '-' },
         {
           title: 'Days',
-          value: `${
-            differenceInDays(new Date(data.valid_from), new Date(data.valid_to)) + 2
-          } Days ${data.start_end_date}`,
+          value: data.start_end_date,
         },
-        { title: 'Start/Ending Hour', value: data.start_end_hour },
+        { title: 'Start/Ending Hour', value: data.slot },
         { title: 'Reccurence', value: 'Every day' },
       ],
     },
   ];
+  const getStatus = () => {
+    if (data.status === 'Upcoming') {
+      return 'Scheduled';
+    }
+    if (data.status === 'Enabled') {
+      return 'Live';
+    }
+    return data.status;
+  };
   return (
     <PaperKit className='competition-paper adverts'>
       <button onClick={() => setOpened(false)} type='button' className='back-icon'>
@@ -108,8 +125,8 @@ const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) 
         <div>
           <p>
             Offer Status :{' '}
-            <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${data.status}`}>
-              {data.status === 'Upcoming' ? 'Scheduled' : data.status}
+            <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${getStatus()}`}>
+              {getStatus()}
             </span>
           </p>
           <p>
@@ -140,7 +157,8 @@ const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) 
           <AdvertsWidget key={obj.name} {...obj} />
         ))}
       </div>
-      <div className='adverts-details_middle-text'>
+      {/* disabled */}
+      {/* <div className='adverts-details_middle-text'>
         <span>Your Advert visibility</span>
         <p>A detailed breakdown of your campaign performance</p>
       </div>
@@ -148,7 +166,7 @@ const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) 
         {advertVisibility.map((obj) => (
           <AdvertsWidgetCustom key={obj.title} {...obj} />
         ))}
-      </div>
+      </div> */}
       <div className='adverts-details_middle-text'>
         <span>Your Advert Settings</span>
         <p>Here are the details of the advert</p>
@@ -158,9 +176,18 @@ const AdvertsDetails: FC<{ data: any; setOpened: any }> = ({ data, setOpened }) 
           <AdvertsWidgetCustom key={obj.title} {...obj} />
         ))}
       </div>
-      <ButtonKit className='advert-cancel' color='error' variant='outlined' startIcon={<Warning />}>
-        Cancel this Advert
-      </ButtonKit>
+      {getStatus() === 'Live' || getStatus() === 'Scheduled' ? (
+        <ButtonKit
+          className='advert-cancel'
+          color='error'
+          variant='outlined'
+          startIcon={<Warning />}
+        >
+          Cancel this Advert
+        </ButtonKit>
+      ) : (
+        ''
+      )}
     </PaperKit>
   );
 };

@@ -1,3 +1,5 @@
+@import '../../library.scss';
+
 .planning-box {
   // box-sizing: border-box;
   padding: 15px;
@@ -114,11 +116,13 @@
   align-items: center;
   justify-content: center;
   color: #7b61ff;
+
   &.small {
     width: 25px;
     height: 25px;
     font-size: 10px;
   }
+
   &.column {
     color: #fff;
     font-size: 14px;
@@ -296,17 +300,20 @@
 }
 
 .table_head {
-  >tr{
-    &::after{
+  > tr {
+    &::after {
       content: '';
       background-color: #fff;
       position: absolute;
       width: 100%;
-      height: 15px;
-      bottom: -15px;
+      height: 75px;
+      top: -17px;
       left: 0;
+      z-index: -1;
+      display: block;
     }
   }
+
   .MuiTableSortLabel-iconDirectionAsc {
     fill: #2f74ff;
   }
@@ -372,7 +379,7 @@
         &::before {
           content: '';
           width: 3px;
-          height: 2px;
+          height: 1px;
           position: absolute;
           bottom: -4px;
           border-radius: 2px;
@@ -417,7 +424,7 @@
     thead {
       tr {
         position: sticky;
-        top: -1px;
+        top: 15px;
         background: #fff;
         z-index: 90;
       }
@@ -549,6 +556,7 @@
     font-size: 12px;
     font-weight: 400;
     width: fit-content;
+
     > span {
       &::before {
         background-color: #2684fc !important;
@@ -556,6 +564,7 @@
     }
   }
 }
+
 .table-filters {
   display: flex;
   align-items: flex-start;
@@ -564,17 +573,40 @@
   padding: 0 20px;
   padding-bottom: 10px;
   background-color: #fff;
+
   > div {
     width: 280px;
   }
+
   .left-filters {
     width: fit-content;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     grid-gap: 10px;
+
     > div > button {
       max-width: 200px;
     }
   }
+}
+.table_evolution {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 6px;
+  border-radius: 6px;
+  color: gray;
+  background: $color-light-grey;
+}
+
+.table_increased {
+  color: $color-green;
+  background: $color-evolution-green;
+}
+
+.table_decreased {
+  color: $color-red;
+  background: $color-evolution-red;
 }

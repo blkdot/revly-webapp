@@ -79,7 +79,10 @@ const MarketingOffer = () => {
   } = useTableContentFormatter();
 
   const [link, setLink] = useState('offers_managment');
-  const links = [{ title: 'Offers management', link: 'offers_managment' }, { title: 'Offers performance', link: 'offers_performance'}];
+  const links = [
+    { title: 'Offers management', link: 'offers_managment' },
+    { title: 'Offers performance', link: 'offers_performance' },
+  ];
   const headersManagment = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
@@ -128,8 +131,7 @@ const MarketingOffer = () => {
       id: 'roi',
       disablePadding: true,
       label: 'ROI',
-      tooltip:
-        `# AED generated in Profits for every 1 AED spent on discount. Profits are revenue minus aggregator's commission, order discount, ads CPC and food cost.`,
+      tooltip: `# AED generated in Profits for every 1 AED spent on discount. Profits are revenue minus aggregator's commission, order discount, ads CPC and food cost.`,
     },
     { id: 'status', disablePadding: true, label: 'Status' },
   ];

@@ -527,13 +527,13 @@ const MarketingSetup: React.FC<{
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
       vendors: {
         ...(selectedVendorsDeliveroo &&
-          selectedVendorsDeliveroo.length > 0 &&
-          selectedVendorsDeliveroo.some((d) => d)
+        selectedVendorsDeliveroo.length > 0 &&
+        selectedVendorsDeliveroo.some((d) => d)
           ? { deliveroo: selectedVendorsDeliveroo.filter((d) => d) }
           : {}),
         ...(selectedVendorsDataTalabat &&
-          selectedVendorsDataTalabat.length > 0 &&
-          selectedVendorsDataTalabat.some((d) => d)
+        selectedVendorsDataTalabat.length > 0 &&
+        selectedVendorsDataTalabat.some((d) => d)
           ? { talabat: selectedVendorsDataTalabat.filter((d) => d) }
           : {}),
       },
