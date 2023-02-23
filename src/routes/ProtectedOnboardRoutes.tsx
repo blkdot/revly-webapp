@@ -43,7 +43,7 @@ export const ProtectedOnboardRoutes = () => {
 
     Promise.all(reqEligibilities).then((responses) => {
       responses.forEach((res) => {
-        setEligibilityDeliverooState((prev) => ({ ...prev, ...res.data }));
+        setEligibilityDeliverooState((prev) => ({ ...prev, ...res?.data }));
       });
     });
   }, [JSON.stringify(vendors.chainData), JSON.stringify(userPlatformData.platforms.deliveroo)]);
