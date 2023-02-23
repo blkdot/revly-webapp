@@ -51,9 +51,7 @@ const ManageBranch: FC<{
       Object.keys(vendors.display[cName]).forEach((vName) => {
         Object.keys(vendors.display[cName][vName].platforms).forEach((plat) => {
           if (
-            clickedBranch.accounts.find(
-              (email: string) => email === vendors.display[cName][vName].platforms[plat].email
-            )
+            Number(clickedBranch.id) === Number(vendors.display[cName][vName].platforms[plat].vendor_id)
           ) {
             object[plat] = [vendors.display[cName][vName].platforms[plat]];
           }

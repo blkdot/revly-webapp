@@ -3,7 +3,7 @@ import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { CardContentKit, CardKit, PaperKit, SkeletonKit, TypographyKit } from 'kits';
 import './Widget.scss';
 
-const Widget = () => (
+const WidgetEmpty = () => (
   <CardKit className='card_wrapper'>
     <CardContentKit>
       <TypographyKit
@@ -46,4 +46,4 @@ const Widget = () => (
   </CardKit>
 );
 
-export default Widget;
+export default WidgetEmpty;

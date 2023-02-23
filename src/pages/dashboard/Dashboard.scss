@@ -9,7 +9,7 @@
     border-radius: 8px;
     top: 0;
     position: sticky;
-    z-index: 5;
+    z-index: 91;
     box-shadow: 0px 0px 2px rgb(145 158 171 / 20%), 0px 12px 24px -4px rgb(145 158 171 / 12%);
   }
 }
@@ -50,7 +50,7 @@
     border-radius: 31px;
   }
 
-  > div {
+  >div {
     white-space: nowrap;
     text-transform: capitalize;
     padding: 8px 20px;
@@ -72,8 +72,7 @@
       color: #906bff;
 
       img {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
-          contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
       }
     }
 
@@ -81,8 +80,7 @@
       color: #906bff;
 
       img {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
-          contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
       }
     }
 
@@ -103,25 +101,25 @@
     left: 0px;
   }
 
-  > div:nth-of-type(2).active ~ .indicator {
+  >div:nth-of-type(2).active~.indicator {
     left: calc(135px * 1);
   }
 
-  > div:nth-of-type(3).active ~ .indicator {
+  >div:nth-of-type(3).active~.indicator {
     left: calc(140px * 2);
   }
 
-  > div:nth-of-type(4).active ~ .indicator {
+  >div:nth-of-type(4).active~.indicator {
     left: calc(142px * 3);
     width: 175px;
   }
 
-  > div:nth-of-type(5).active ~ .indicator {
+  >div:nth-of-type(5).active~.indicator {
     left: calc(150px * 4);
     width: 195px;
   }
 
-  > div:nth-of-type(6).active ~ .indicator {
+  >div:nth-of-type(6).active~.indicator {
     left: calc(160px * 5);
     width: 180px;
   }
@@ -135,4 +133,37 @@
   .top-inputs {
     padding: 1.5em 0.7em !important;
   }
+}
+
+.dashboard-title {
+  font-weight: 700 !important;
+  font-size: 24px !important;
+  line-height: 36px !important;
+  color: #212B36 !important;
+}
+
+.dashboard-subtitle {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #637381;
+}
+.dashboard-wrapper{
+  margin-top: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  grid-gap: 20px;
+  >div{
+    flex: 1 1 20%;
+    min-width: 300px;
+  }
+}
+.dashboard-tooltip{
+  position: absolute;
+  right: 13px;
+  top: 12px;
+}
+.block{
+  margin-top: 20px;
 }

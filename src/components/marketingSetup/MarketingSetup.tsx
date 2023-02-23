@@ -167,7 +167,7 @@ const MarketingSetup: React.FC<{
 
   useEffect(() => {
     setPlatform([getActivePlatform()]);
-  }, []);
+  }, [getActivePlatform()]);
 
   useEffect(() => {
     setBranch({ ...vendors });
@@ -303,6 +303,9 @@ const MarketingSetup: React.FC<{
             if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
               displayTemp[chainName][vendorName].deleted = true;
               displayTemp[chainName][vendorName].checked = false;
+            }
+            if (platform[0] !== platformV) {
+              displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
             }
           });
 
@@ -524,13 +527,13 @@ const MarketingSetup: React.FC<{
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
       vendors: {
         ...(selectedVendorsDeliveroo &&
-        selectedVendorsDeliveroo.length > 0 &&
-        selectedVendorsDeliveroo.some((d) => d)
+          selectedVendorsDeliveroo.length > 0 &&
+          selectedVendorsDeliveroo.some((d) => d)
           ? { deliveroo: selectedVendorsDeliveroo.filter((d) => d) }
           : {}),
         ...(selectedVendorsDataTalabat &&
-        selectedVendorsDataTalabat.length > 0 &&
-        selectedVendorsDataTalabat.some((d) => d)
+          selectedVendorsDataTalabat.length > 0 &&
+          selectedVendorsDataTalabat.some((d) => d)
           ? { talabat: selectedVendorsDataTalabat.filter((d) => d) }
           : {}),
       },
