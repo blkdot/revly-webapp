@@ -16,8 +16,6 @@ import Dates from '../../components/dates/Dates';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
-import Calendar from '../../assets/images/calendar.svg';
-import Clock from '../../assets/images/clock.svg';
 
 let fnDelays = null;
 
@@ -136,6 +134,42 @@ const CompetitionAlerts = () => {
       }),
       {}
     );
+
+  const getCompetitorsDropdownContent = async () => {
+    const body = {
+      master_email: user.email,
+      access_token: user.accessToken,
+      vendors: vendorsObj,
+      start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+    };
+
+    const comp = await getCompetitors(body);
+
+    setCompetitorList(comp.data ? comp.data.data : []);
+    setCompetitor(comp.data ? comp.data.data : []);
+  };
+
+  const filterData = () => {
+    if (competitor.length > 0) {
+      const arr = competitor
+        .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
+        .flat();
+
+      setFilteredData(arr);
+    } else {
+      setFilteredData([]);
+    }
+  };
+
+  useEffect(() => {
+    getCompetitorsDropdownContent();
+  }, []);
+
+  useEffect(() => {
+    filterData();
+  }, [competitor]);
+
   useEffect(() => {
     if (userPlatformData) {
       const pl = userPlatformData.platforms;
@@ -166,8 +200,6 @@ const CompetitionAlerts = () => {
         };
         const alerts = await getAlerts(body, plat);
 
-        const comp = await getCompetitors(body, plat);
-
         const filt = alerts.data?.data
           .map((v) => ({
             name: v.vendor_name,
@@ -180,23 +212,16 @@ const CompetitionAlerts = () => {
             end_hour: v.end_hour,
             status: v.status,
             id: v.alert_id,
-            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${dayjs(
+            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${v.end_date ? dayjs(
               new Date(v.end_date)
-            ).format('DD/MM')}`,
-            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${dayjs(
+            ).format('DD/MM'): 'undetermined'}`,
+            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${v.end_date ? dayjs(
               new Date(v.end_date)
-            ).format('hh:mm')}`,
+            ).format('hh:mm') : 'undetermined'}`,
           }))
           .sort((a, b) => a.status - b.status);
         setCompetitionAlertsData(filt || []);
-
-        setCompetitorList(comp.data ? comp.data.data : []);
-        setCompetitor(comp.data ? comp.data.data : []);
-        setFilteredData(
-          (comp.data ? comp.data.data : [])
-            .map((v) => filt.filter((k) => k.name === v.vendor_name))
-            .flat()
-        );
+        setFilteredData(filt || []);
         setLoading(false);
       } catch (err) {
         setCompetitionAlertsData([]);
@@ -215,6 +240,7 @@ const CompetitionAlerts = () => {
 
       const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsObj[arr] }), {});
 
+      setCompetitor([]);
       getData(platform, red);
     }
   }, [platform, vendors, beforePeriodBtn]);
@@ -222,22 +248,11 @@ const CompetitionAlerts = () => {
   useEffect(() => {
     const arr = vendorsArr.filter((v) => v.platform === platform && v.metadata.is_active === true);
 
-    // TODO: fix the type here
     setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });
   }, [platform]);
 
   const handleCompetitorChange = (e) => {
     const { value } = e.target;
-
-    if (value.length > 0) {
-      const arr = value
-        .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
-        .flat();
-
-      setFilteredData(arr);
-    } else {
-      setFilteredData([]);
-    }
 
     setCompetitor(value);
   };
@@ -296,7 +311,9 @@ const CompetitionAlerts = () => {
             <CompetitionDropdown
               widthPaper={400}
               heightPaper={80}
-              rows={competitorList}
+              rows={competitorList?.filter(
+                (compet) => compet.platform.toLowerCase() === platform.toLowerCase()
+              )}
               multiple
               icon={competitorIcon}
               onChange={handleCompetitorChange}
@@ -325,7 +342,11 @@ const CompetitionAlerts = () => {
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headersAlert}
-          rows={filteredData.map(renderRowsByHeader)}
+          rows={
+            competitor?.length > 0
+              ? filteredData.map(renderRowsByHeader)
+              : competitionAlertsData.map(renderRowsByHeader)
+          }
           className='competition-alerts'
         />
       </PaperKit>

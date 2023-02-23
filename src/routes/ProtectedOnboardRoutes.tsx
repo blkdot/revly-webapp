@@ -31,7 +31,7 @@ export const ProtectedOnboardRoutes = () => {
           chain.platform.toLocaleLowerCase() === 'deliveroo'
       );
 
-      if (!vendorIds) return null;
+      if (!firstVendorData) return null;
 
       return getElligibilityDeliveroo({
         master_email: user.email,
@@ -43,20 +43,21 @@ export const ProtectedOnboardRoutes = () => {
 
     Promise.all(reqEligibilities).then((responses) => {
       responses.forEach((res) => {
-        setEligibilityDeliverooState((prev) => ({ ...prev, ...res.data }));
+        setEligibilityDeliverooState((prev) => ({ ...prev, ...res?.data }));
       });
     });
-  }, [JSON.stringify(vendors), JSON.stringify(userPlatformData.platforms.deliveroo)]);
+  }, [JSON.stringify(vendors.chainData), JSON.stringify(userPlatformData.platforms.deliveroo)]);
 
   useEffect(() => {
     if (
       vendors.chainData.length > 0 &&
       userPlatformData.platforms.deliveroo.length > 0 &&
-      !response.isLoading
+      !response.isLoading &&
+      user
     ) {
       requestEligibilityDeliveroo();
     }
-  }, [JSON.stringify(vendors), JSON.stringify(userPlatformData.platforms.deliveroo)]);
+  }, [requestEligibilityDeliveroo]);
 
   // TODO: replace it with a better approach
   // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess

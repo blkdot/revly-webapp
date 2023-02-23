@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import emailWhitelisted from 'data/whitelisted-email';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import { useAtom } from 'jotai';
+import { vendorsAtom } from 'store/vendorsAtom';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import SignInForm from './form/SignInForm';
 import './SignIn.scss';
@@ -22,7 +23,7 @@ const SignIn = () => {
   const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
   const [params] = useSearchParams();
   const { setVendors } = useVendors(true);
-  const { setVendors: setVendorsReq } = useVendors(true);
+  const [, setVendorsAtom] = useAtom(vendorsAtom);
   const [, setEligibilityDeliveroo] = useAtom(elligibilityDeliverooAtom);
 
   const { signIn, user, logOut, verifyCodeEmail } = useUserAuth();
@@ -41,8 +42,8 @@ const SignIn = () => {
       chainData: [],
     };
     localStorage.clear();
-    setVendorsReq(defaultState);
     setVendors(defaultState);
+    setVendorsAtom(defaultState);
     setEligibilityDeliveroo({});
   }, []);
 
