@@ -4,7 +4,6 @@ import Arrow from '../../../assets/images/arrow.svg';
 
 const TableLink: FC<{
   links: { link: string; title: string; tooltip?: string }[];
-  setLink(value: string): void;
   link: string;
   filters: {
     discount_rate?: any[];
@@ -14,7 +13,8 @@ const TableLink: FC<{
     status?: any[];
     type_offer?: any[];
   };
-  setOpenedFilter(value: boolean): void;
+  setLink: (v: string) => void;
+  setOpenedFilter: (v: boolean) => void;
 }> = ({ links, setLink, link, filters, setOpenedFilter }) => {
   const getActiveLinkWidth = (index: number, type: string) => {
     const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;

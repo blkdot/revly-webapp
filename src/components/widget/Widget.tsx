@@ -6,12 +6,12 @@ import dayjs from 'dayjs';
 import { useDate } from 'hooks';
 import { CardContentKit, CardKit, PaperKit, SkeletonKit, TooltipKit, TypographyKit } from 'kits';
 import { FC } from 'react';
-import './Widget.scss';
 import TooltipIcon from '../../assets/images/tooltip-ic.svg';
+import './Widget.scss';
 
 const Widget: FC<{
   title: string;
-  setTable(value: string): void;
+  setTable: (value: string) => void;
   table: string;
   link: string;
   metricsbeforePeriod: any;

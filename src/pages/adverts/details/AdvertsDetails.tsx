@@ -1,23 +1,23 @@
 import { Arrow, Warning } from 'assets/icons';
-import { platformObject } from 'data/platformList';
-import { useVendors } from 'hooks';
-import { ButtonKit, PaperKit, TooltipKit } from 'kits';
-import { FC, CSSProperties } from 'react';
 import AdvertsWidget from 'components/advertsWidget/AdvertsWidget';
 import AdvertsWidgetCustom from 'components/advertsWidget/AdvertsWidgetCustom';
+import { platformObject } from 'data/platformList';
+import { useVendors } from 'hooks';
+import { ButtonKit, PaperKit } from 'kits';
+import { CSSProperties, FC } from 'react';
 // import { differenceInDays } from 'date-fns';
 // import Calendar from '../../../assets/images/calendar.svg';
 // import Clock from '../../../assets/images/clock.svg';
 // import User from '../../../assets/images/user.svg';
-import ShoppingBag from '../../../assets/images/shopping-bag.svg';
-import Graph from '../../../assets/images/graph.svg';
 import Eye from '../../../assets/images/eye.svg';
+import Graph from '../../../assets/images/graph.svg';
+import ShoppingBag from '../../../assets/images/shopping-bag.svg';
 import Smile from '../../../assets/images/smile.svg';
 
-const AdvertsDetails: FC<{ data: any; setOpened(value: boolean): void }> = ({
-  data,
-  setOpened,
-}) => {
+const AdvertsDetails: FC<{
+  data: any;
+  setOpened: (value: boolean) => void;
+}> = ({ data, setOpened }) => {
   const { getChainData } = useVendors();
   const vendorData = getChainData(data.chain_id, data.vendor_ids);
 

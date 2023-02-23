@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react';
+import arrow from 'assets/images/arrow.svg';
 import Dates from 'components/dates/Dates';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
-import { ButtonKit, TypographyKit } from 'kits';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import dayjs from 'dayjs';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
 import { useDate, usePlanningAds } from 'hooks';
 import { useAtom } from 'jotai';
+import { ButtonKit, TypographyKit } from 'kits';
+import { useEffect, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Adverts.scss';
-import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import arrow from 'assets/images/arrow.svg';
-import AdvertsDetails from './details/AdvertsDetails';
 import AdvertsCreateNewCampaign from './createNewCampaign/AdvertsCreateNewCampaign';
+import AdvertsDetails from './details/AdvertsDetails';
 
 const Adverts = () => {
   const { date } = useDate();

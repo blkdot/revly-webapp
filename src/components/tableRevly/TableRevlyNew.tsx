@@ -8,26 +8,26 @@ import {
   TableKit,
   TableRowKit,
 } from 'kits';
-import { useState, FC } from 'react';
+import { FC, useState } from 'react';
+import noData from '../../assets/images/no-result.svg';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
-import './TableRevly.scss';
-import noData from '../../assets/images/no-result.svg';
-import TableLink from './tableLink/TableLink';
 import TableFilters from './tableFilters/TableFilters';
+import TableLink from './tableLink/TableLink';
+import './TableRevly.scss';
 
 const TableRevlyNew: FC<{
   headers: any[];
   rows: any[];
   isLoading?: boolean;
   mainFieldOrdered?: string;
-  onClickRow?(id: string | number): void;
+  onClickRow?: (id: string | number) => void;
   noEmptyMessage?: boolean;
   renderCustomSkelton?: any[];
   links?: { link: string; title: string; tooltip?: string }[];
-  setLink?(value: string): void;
+  setLink?: (v: string) => void;
   link?: string;
-  setOpenedFilter?(bool: boolean): void;
+  setOpenedFilter?: (v: boolean) => void;
   className?: string;
   filters?: {
     discount_rate?: any[];
@@ -45,7 +45,7 @@ const TableRevlyNew: FC<{
     status?: any[];
     type_offer?: any[];
   };
-  handleChangeMultipleFilter?(k: string): void;
+  handleChangeMultipleFilter?: (k: string) => void;
   noDataText?: string;
 }> = ({
   headers,
