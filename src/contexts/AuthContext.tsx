@@ -29,8 +29,6 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      // eslint-disable-next-line no-console
-      console.log('User: ', currentUser);
       setUser(currentUser);
     });
 

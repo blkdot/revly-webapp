@@ -29,19 +29,10 @@ const Navbar = () => {
   const { logOut } = useUserAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [, setVendors] = useAtom(vendorsAtom);
 
   const handleLogout = async () => {
     try {
       await logOut();
-      setVendors({
-        vendorsSelected: [],
-        vendorsObj: {},
-        vendorsArr: [],
-        display: {},
-        chainObj: {},
-        chainData: [],
-      });
       navigate('/');
     } catch (e) {
       navigate('/');
