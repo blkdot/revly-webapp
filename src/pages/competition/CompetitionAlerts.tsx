@@ -212,12 +212,12 @@ const CompetitionAlerts = () => {
             end_hour: v.end_hour,
             status: v.status,
             id: v.alert_id,
-            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${dayjs(
+            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${v.end_date ? dayjs(
               new Date(v.end_date)
-            ).format('DD/MM')}`,
-            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${dayjs(
+            ).format('DD/MM'): 'undetermined'}`,
+            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${v.end_date ? dayjs(
               new Date(v.end_date)
-            ).format('hh:mm')}`,
+            ).format('hh:mm') : 'undetermined'}`,
           }))
           .sort((a, b) => a.status - b.status);
         setCompetitionAlertsData(filt || []);
@@ -342,7 +342,11 @@ const CompetitionAlerts = () => {
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headersAlert}
-          rows={competitor?.length > 0 ? filteredData.map(renderRowsByHeader) : competitionAlertsData.map(renderRowsByHeader)}
+          rows={
+            competitor?.length > 0
+              ? filteredData.map(renderRowsByHeader)
+              : competitionAlertsData.map(renderRowsByHeader)
+          }
           className='competition-alerts'
         />
       </PaperKit>
