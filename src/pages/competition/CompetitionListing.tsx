@@ -65,7 +65,7 @@ const headersAlert = (cuisine: string) => [
 
 const CompetitionListing = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const {vendors: vendorsDatas} = useVendors();
+  const { vendors: vendorsDatas } = useVendors();
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
