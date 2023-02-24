@@ -200,7 +200,7 @@ const CompetitionListing = () => {
 
   const handleAreasDataResponse = (areas) => {
     setAreasData(areas.data.locations);
-    // setTimeSlot('Throughout Day');
+    setTimeSlot('Throughout Day');
     if (!areas) {
       setArea('Everywhere');
       return 'Everywhere';
@@ -269,6 +269,7 @@ const CompetitionListing = () => {
       vendorsData.vendorsObj[platform] &&
       cuisinesData.length > 0
     ) {
+      setLoading(true);
       getData(platform, vendorsData.vendorsObj[platform], cuisine, area);
     }
   }, [cuisine, area, timeSlot, beforePeriodBtn]);
