@@ -21,6 +21,8 @@ const TableRevlyNew: FC<{
   rows: any[];
   isLoading?: boolean;
   mainFieldOrdered?: string;
+  // eslint-disable-next-line react/require-default-props
+  mainOrder?: 'asc' | 'desc';
   onClickRow?: (id: string | number) => void;
   noEmptyMessage?: boolean;
   renderCustomSkelton?: any[];
@@ -52,6 +54,7 @@ const TableRevlyNew: FC<{
   rows,
   isLoading,
   mainFieldOrdered,
+  mainOrder,
   onClickRow,
   noEmptyMessage,
   renderCustomSkelton,
@@ -65,7 +68,7 @@ const TableRevlyNew: FC<{
   handleChangeMultipleFilter,
   noDataText,
 }) => {
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState(mainOrder || 'asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
   const handleRequestSort = (property) => {

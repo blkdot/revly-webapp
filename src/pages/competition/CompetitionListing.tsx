@@ -161,6 +161,7 @@ const CompetitionListing = () => {
       }),
       {}
     );
+
   useEffect(() => {
     setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
   }, [area]);
@@ -226,9 +227,13 @@ const CompetitionListing = () => {
         const areas = await getAreas(body, plat);
 
         if (!areas) {
+          setArea('Everywhere');
+          setTimeSlot('Throughout Day');
           throw new Error('');
         }
         setAreasData(areas.data.locations);
+        setArea(areas.data.locations[0] || 'Everywhere');
+        setTimeSlot('Throughout Day');
         setLoadingAreas(false);
         if (stack === queueAreas) setQueueAreas(0);
       } catch (err) {
@@ -261,11 +266,12 @@ const CompetitionListing = () => {
         const cuisines = await getCuisines(body, plat);
 
         if (!cuisines) {
+          setCuisine('');
           throw new Error('');
         }
 
-        // TODO: ajust this function when the API return some data
         setCuisinesData(cuisines?.data?.cuisines || []);
+        setCuisine(cuisines?.data?.cuisines[0] || '');
         setLoadingCuisines(false);
         if (stack === queueCuisines) setQueueCuisines(0);
       } catch (err) {
@@ -412,7 +418,7 @@ const CompetitionListing = () => {
               />
             </div>
             <CompetitionDropdown
-              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
+              rows={areasData.length > 0 ? areasData : ['Everywhere']}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
@@ -427,12 +433,12 @@ const CompetitionListing = () => {
                   </div>
                 </MenuItemKit>
               )}
-              icon={TimeSlotIcon}
-              title='Select Timeslot'
-              type='timeslot'
+              icon={AreaIcon}
+              title='Select Area'
+              type='area'
               className='top-competition not-platform'
-              setRow={setTimeSlot}
-              select={timeSlot}
+              setRow={setArea}
+              select={area}
             />
             <CompetitionDropdown
               rows={cuisinesData}
@@ -457,9 +463,8 @@ const CompetitionListing = () => {
               setRow={setCuisine}
               select={cuisine || '—'}
             />
-
             <CompetitionDropdown
-              rows={areasData.length > 0 ? areasData : ['Everywhere']}
+              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
@@ -474,12 +479,12 @@ const CompetitionListing = () => {
                   </div>
                 </MenuItemKit>
               )}
-              icon={AreaIcon}
-              title='Select Area'
-              type='area'
+              icon={TimeSlotIcon}
+              title='Select Timeslot'
+              type='timeslot'
               className='top-competition not-platform'
-              setRow={setArea}
-              select={area}
+              setRow={setTimeSlot}
+              select={timeSlot}
             />
           </div>
           <Competitor platformList={platformList} open={Open} opened={opened} />
@@ -495,6 +500,8 @@ const CompetitionListing = () => {
           rows={competitionListingData.map(renderRowsByHeader)}
           noEmptyMessage
           className='competition-alerts'
+          mainFieldOrdered='name'
+          mainOrder='desc'
         />
         {loading
           ? null
