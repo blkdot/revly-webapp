@@ -334,10 +334,6 @@ const CompetitionAlerts = () => {
           </div>
           <Competitor open={Open} opened={opened} platformList={platformList} />
         </div>
-        <TypographyKit variant='subtitle'>
-          You can select up to 5 competitors to be monitored. Competitors can be changed every 3
-          months.
-        </TypographyKit>
         <TableRevlyNew
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}

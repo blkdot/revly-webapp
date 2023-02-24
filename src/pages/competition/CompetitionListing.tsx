@@ -1,4 +1,3 @@
-import AddIcon from '@mui/icons-material/Add';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUserAuth } from 'contexts';
@@ -6,8 +5,8 @@ import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ButtonKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
+import { useEffect, useState, useCallback } from 'react';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
@@ -24,16 +23,15 @@ import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 
 let fnDelays = null;
-let fnDelaysAreas = null;
-let fnDelaysCuisine = null;
+let fnDelaysDropdown = null;
 
 const timeSlotObj = {
-  'Throughout Day': 'Throughout Day',
   'Breakfast (04:00 - 11:00)': 'Breakfast',
   'Lunch (11:00 - 14:00)': 'Lunch',
   'Interpeak (14:00 - 17:00)': 'Interpeak',
   'Dinner (17:00 - 00:00)': 'Dinner',
   'Late night (00:00 - 04:00)': 'Late Night',
+  'Throughout Day': 'Throughout Day',
 };
 
 const headersAlert = (cuisine: string) => [
@@ -72,8 +70,6 @@ const CompetitionListing = () => {
   const [area, setArea] = useState('Everywhere');
   const [timeSlot, setTimeSlot] = useState('Throughout Day');
   const [loading, setLoading] = useState(false);
-  const [loadingAreas, setLoadingAreas] = useState(false);
-  const [loadingCuisines, setLoadingCuisines] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const [cuisine, setCuisine] = useState('');
   const { triggerAlertWithMessageError } = useAlert();
@@ -81,9 +77,7 @@ const CompetitionListing = () => {
     startDate: subDays(new Date(), 1),
     endDate: subDays(new Date(), 1),
   });
-  const [queue, setQueue] = useState(0);
-  const [queueAreas, setQueueAreas] = useState(0);
-  const [queueCuisines, setQueueCuisines] = useState(0);
+  const [queueDropdown, setQueueDropdown] = useState(0);
   const { getRanking, getAreas, getCuisines } = useApi();
   const { user } = useUserAuth();
   const { userPlatformData } = usePlatform();
@@ -99,14 +93,6 @@ const CompetitionListing = () => {
     } else {
       body.style.overflowY = 'hidden';
     }
-  };
-
-  const getNumArr = () => {
-    const numArr = [];
-    for (let i = 0; i < 5 - competitionListingData.length; i++) {
-      numArr.push(i);
-    }
-    return numArr;
   };
 
   useEffect(() => {
@@ -161,28 +147,24 @@ const CompetitionListing = () => {
       }),
       {}
     );
+
   useEffect(() => {
-    setTimeSlot(area === 'Everywhere' ? 'Throughout Day' : Object.keys(timeSlotObj)[0]);
+    setTimeSlot((prev) => (area === 'Everywhere' ? 'Throughout Day' : prev));
   }, [area]);
 
-  const getData = (plat, vend, stack) => {
+  const getData = (plat, vend, newCuisine, newArea) => {
     clearTimeout(fnDelays);
-    if (loading) {
-      setQueue((prev) => prev + 1);
-      return;
-    }
 
     fnDelays = setTimeout(async () => {
-      setLoading(true);
       try {
         const body = {
           master_email: user.email,
           access_token: user.accessToken,
           vendors: vend || [],
           day_period: timeSlotObj[timeSlot] || 'All',
-          filter_location: area,
+          filter_location: newArea,
           filter_offer: 'all_discounts',
-          filter_cuisine: cuisine || '',
+          filter_cuisine: newCuisine || '',
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
@@ -195,26 +177,55 @@ const CompetitionListing = () => {
 
         setCompetitionListingData(ranking.data.data);
         setLoading(false);
-        if (stack === queue) setQueue(0);
       } catch (err) {
         setCompetitionListingData([]);
         setLoading(false);
-        setQueue(0);
         triggerAlertWithMessageError('Error while retrieving data');
       }
-    }, 750);
+    }, 250);
   };
 
-  const getAreasData = async (plat, vend, stack) => {
-    clearTimeout(fnDelaysAreas);
-    if (loadingAreas) {
-      setQueueAreas((prev) => prev + 1);
-      return;
+  const handleCuisineDataResponse = (cuisines) => {
+    if (!cuisines) {
+      setCuisine('');
+      setCuisinesData([]);
+      return '';
     }
 
-    fnDelaysAreas = setTimeout(async () => {
-      setLoadingAreas(true);
-      try {
+    setCuisinesData(cuisines?.data?.cuisines || []);
+    setCuisine(cuisines?.data?.cuisines[0] || '');
+
+    return cuisines?.data?.cuisines[0] || '';
+  };
+
+  const handleAreasDataResponse = (areas) => {
+    setAreasData(areas.data.locations);
+    setTimeSlot('Throughout Day');
+    if (!areas) {
+      setArea('Everywhere');
+      return 'Everywhere';
+    }
+
+    setArea(areas.data.locations[0] || 'Everywhere');
+    return areas.data.locations[0] || 'Everywhere';
+  };
+
+  const getCuisineAndAreas = useCallback(
+    async (plat, vend, stack) => {
+      clearTimeout(fnDelaysDropdown);
+
+      if (vend && vend?.length === 0) {
+        return;
+      }
+
+      if (loading) {
+        setQueueDropdown((prev) => prev + 1);
+        return;
+      }
+
+      fnDelaysDropdown = setTimeout(async () => {
+        setLoading(true);
+
         const body = {
           master_email: user.email,
           access_token: user.accessToken,
@@ -223,65 +234,51 @@ const CompetitionListing = () => {
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
 
-        const areas = await getAreas(body, plat);
+        Promise.all([getCuisines(body, plat), getAreas(body, plat)])
+          .then(([cuisineResult, areaResult]) => {
+            const newCuisine = handleCuisineDataResponse(cuisineResult);
+            const newArea = handleAreasDataResponse(areaResult);
 
-        if (!areas) {
-          throw new Error('');
-        }
-        setAreasData(areas.data.locations);
-        setLoadingAreas(false);
-        if (stack === queueAreas) setQueueAreas(0);
-      } catch (err) {
-        setAreasData([]);
-        setQueueAreas(0);
-        setLoadingAreas(false);
-        triggerAlertWithMessageError('Error while retrieving data');
-      }
-    }, 750);
-  };
+            if (stack === queueDropdown) setQueueDropdown(0);
 
-  const getCuisineData = async (plat, vend, stack) => {
-    clearTimeout(fnDelaysCuisine);
-    if (loadingCuisines) {
-      setQueueCuisines((prev) => prev + 1);
-      return;
+            return { newCuisine, newArea };
+          })
+          .then(({ newCuisine, newArea }) => {
+            getData(platform, vendorsData.vendorsObj[platform], newCuisine, newArea);
+          })
+          .catch((err) => {
+            setLoading(false);
+            triggerAlertWithMessageError(err.message);
+            setAreasData([]);
+            setCuisine('');
+            setCuisinesData([]);
+            setTimeSlot('Throughout Day');
+            setArea('Everywhere');
+          });
+      }, 750);
+    },
+    [platform, vendorsData]
+  );
+
+  useEffect(() => {
+    if (
+      platform &&
+      area &&
+      timeSlot &&
+      cuisine &&
+      vendorsData.vendorsObj[platform] &&
+      cuisinesData.length > 0
+    ) {
+      setLoading(true);
+      getData(platform, vendorsData.vendorsObj[platform], cuisine, area);
     }
+  }, [cuisine, area, timeSlot, beforePeriodBtn]);
 
-    fnDelaysCuisine = setTimeout(async () => {
-      setLoadingCuisines(true);
-      try {
-        const body = {
-          master_email: user.email,
-          access_token: user.accessToken,
-          vendors: vend || [],
-          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
-        };
-
-        const cuisines = await getCuisines(body, plat);
-
-        if (!cuisines) {
-          throw new Error('');
-        }
-
-        // TODO: ajust this function when the API return some data
-        setCuisinesData(cuisines?.data?.cuisines || []);
-        setLoadingCuisines(false);
-        if (stack === queueCuisines) setQueueCuisines(0);
-      } catch (err) {
-        setCuisinesData([]);
-        setQueueCuisines(0);
-        setLoadingCuisines(false);
-        triggerAlertWithMessageError('Error while retrieving data');
-      }
-    }, 750);
-  };
   useEffect(() => {
     if (platform && vendorsData.vendorsObj[platform] !== null) {
-      getAreasData(platform, vendorsData.vendorsObj[platform], queueAreas);
-      getCuisineData(platform, vendorsData.vendorsObj[platform], queueAreas);
+      getCuisineAndAreas(platform, vendorsData.vendorsObj[platform], queueDropdown);
     }
-  }, [platform, vendorsData, beforePeriodBtn, queueAreas]);
+  }, [platform, vendorsData, queueDropdown]);
 
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
@@ -336,17 +333,6 @@ const CompetitionListing = () => {
       vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
     });
   }, [platform, vendors]);
-  useEffect(() => {
-    if (
-      platform &&
-      area.length > 0 &&
-      timeSlot &&
-      vendorsData.vendorsObj[platform] !== null &&
-      queue === 0
-    ) {
-      getData(platform, vendorsData.vendorsObj[platform], queue);
-    }
-  }, [platform, vendorsData, beforePeriodBtn, timeSlot, area, queue, cuisine]);
 
   return (
     <div className='wrapper'>
@@ -412,30 +398,7 @@ const CompetitionListing = () => {
               />
             </div>
             <CompetitionDropdown
-              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={TimeSlotIcon}
-              title='Select Timeslot'
-              type='timeslot'
-              className='top-competition not-platform'
-              setRow={setTimeSlot}
-              select={timeSlot}
-            />
-            <CompetitionDropdown
-              rows={cuisinesData}
+              rows={cuisinesData.length > 0 ? cuisinesData : ['—']}
               renderOptions={(v) => (
                 <MenuItemKit key={v} value={v}>
                   <div
@@ -455,9 +418,9 @@ const CompetitionListing = () => {
               type='cuisine'
               className='top-competition not-platform'
               setRow={setCuisine}
+              disabled={cuisinesData.length < 1}
               select={cuisine || '—'}
             />
-
             <CompetitionDropdown
               rows={areasData.length > 0 ? areasData : ['Everywhere']}
               renderOptions={(v) => (
@@ -481,34 +444,42 @@ const CompetitionListing = () => {
               setRow={setArea}
               select={area}
             />
+            <CompetitionDropdown
+              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
+              renderOptions={(v) => (
+                <MenuItemKit key={v} value={v}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    <ListItemTextKit primary={v} />
+                  </div>
+                </MenuItemKit>
+              )}
+              icon={TimeSlotIcon}
+              title='Select Timeslot'
+              type='timeslot'
+              className='top-competition not-platform'
+              setRow={setTimeSlot}
+              select={timeSlot}
+              tooltipMessage='Select Area First'
+            />
           </div>
           <Competitor platformList={platformList} open={Open} opened={opened} />
         </div>
-        <TypographyKit variant='subtitle'>
-          You can select up to 5 competitors to be monitored. Competitors can be changed every 3
-          months.
-        </TypographyKit>
         <TableRevlyNew
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
           isLoading={loading}
           headers={headersAlert(cuisine)}
           rows={competitionListingData.map(renderRowsByHeader)}
-          noEmptyMessage
           className='competition-alerts'
+          mainFieldOrdered='name'
+          mainOrder='desc'
         />
-        {loading
-          ? null
-          : getNumArr().map((num) => (
-              <ButtonKit
-                onClick={() => Open()}
-                key={num}
-                variant='contained'
-                className='competition-add competiton-table-btn'
-              >
-                <AddIcon />
-                Add a Competitor
-              </ButtonKit>
-            ))}
       </PaperKit>
     </div>
   );
