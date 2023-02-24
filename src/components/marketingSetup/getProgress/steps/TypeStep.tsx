@@ -120,7 +120,12 @@ export const TypeStep: FC<{
                     <TypographyKit variant='div'>
                       Min. Order Value
                       <MarketingPlaceholderDropdown
-                        names={[
+                        names={platform.includes('talabat') ? [
+                          '0 AED',
+                          '10 AED',
+                          '20 AED',
+                          '30 AED',
+                        ] : [
                           '0 AED',
                           '10 AED',
                           '20 AED',
