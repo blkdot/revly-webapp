@@ -5,12 +5,14 @@ import {
   MenuItemKit,
   OutlinedInputKit,
   SelectKit,
+  TooltipKit,
 } from 'kits';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import Kuwait from '../../assets/images/Kuwait.png';
 import Qatar from '../../assets/images/Qatar.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import UAE from '../../assets/images/UAE.png';
+import TooltipIcon from '../../assets/images/tooltip-ic.svg';
 import './CompetitionDropdown.scss';
 
 const CompetitionDropdown = (props: any) => {
@@ -30,6 +32,7 @@ const CompetitionDropdown = (props: any) => {
     widthPaper,
     heightPaper,
     disabled,
+    tooltipMessage,
   } = props;
   const ITEM_HEIGHT = heightPaper || 48;
   const ITEM_PADDING_TOP = 8;
@@ -92,6 +95,18 @@ const CompetitionDropdown = (props: any) => {
         >
           {icon ? <img src={icon} alt='Select Icon' /> : ''}
           {title}
+          {tooltipMessage ? (
+            <TooltipKit
+              onClick={(e) => e.stopPropagation()}
+              interactive={1}
+              id='table-tooltip'
+              placement='right'
+              arrow
+              title={tooltipMessage}
+            >
+              <img className='table-header-tooltip' src={TooltipIcon} alt='tooltip icon' />
+            </TooltipKit>
+          ) : null}
         </InputLabelKit>
         <SelectKit
           required
