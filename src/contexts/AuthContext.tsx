@@ -33,6 +33,7 @@ const UserAuthContext = createContext<{
   isUpdatingPhone: any;
   setIsUpdatingPhone: any;
   verifyCodeEmail: any;
+  reAuthGoogle: any;
 }>(undefined);
 
 export const AuthContextProvider = ({ children }) => {
@@ -121,6 +122,7 @@ export const AuthContextProvider = ({ children }) => {
         isUpdatingPhone,
         setIsUpdatingPhone,
         verifyCodeEmail,
+        reAuthGoogle: () => {},
       }}
     >
       {children}
@@ -128,4 +130,4 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-export const useUserAuth = () => useContext(UserAuthContext) as any;
+export const useUserAuth = () => useContext(UserAuthContext);

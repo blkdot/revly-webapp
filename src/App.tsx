@@ -1,3 +1,4 @@
+import { FirebaseUserProvider } from 'contexts';
 import { auth } from 'firebase-config';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { SpinnerKit } from 'kits';
@@ -22,7 +23,7 @@ import {
   SignUp,
   VerifyCode,
 } from 'pages';
-import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import {
   AuthLayout,
@@ -31,17 +32,6 @@ import {
   ProtectedRoutes,
   SettingsLayout,
 } from 'routes';
-
-const FirebaseUserContext = createContext<User>(undefined);
-
-export const FirebaseUserProvider: FC<{
-  value: User;
-  children: ReactNode;
-}> = ({ value, children }) => (
-  <FirebaseUserContext.Provider value={value}>{children}</FirebaseUserContext.Provider>
-);
-
-export const useFirebaseUser = () => useContext(FirebaseUserContext);
 
 const App = () => {
   const navigate = useNavigate();

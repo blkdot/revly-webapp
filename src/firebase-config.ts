@@ -87,3 +87,5 @@ export const verifyPhone = async (phone: string) => {
   createRecaptcha();
   return new PhoneAuthProvider(auth).verifyPhoneNumber(phone, (window as any).applicationVerifier);
 };
+
+export const reAuthGoogle = async () => {};
