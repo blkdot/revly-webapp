@@ -1,20 +1,21 @@
-import { CSSProperties } from 'react';
-import { useAtom } from 'jotai';
-import { parseISO, format } from 'date-fns';
-import { OutlinedInputKit, SkeletonKit, TableCellKit, TextfieldKit, TooltipKit } from 'kits';
-import shortid from 'shortid';
-import { vendorsAtom } from 'store/vendorsAtom';
+import { format, parseISO } from 'date-fns';
 import { useVendors } from 'hooks';
-import costAtom from 'store/costAtom';
+import { useAtom } from 'jotai';
+import { OutlinedInputKit, SkeletonKit, TableCellKit, TooltipKit } from 'kits';
 import InputAdornmentKit from 'kits/inputAdornment/InputAdornmentKit';
-import { platformList, platformObject } from '../../../data/platformList';
+import { CSSProperties } from 'react';
+import shortid from 'shortid';
+import costAtom from 'store/costAtom';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { isInfinity } from 'utlls/scripts/scripts';
 import Calendar from '../../../assets/images/calendar.svg';
 import Clock from '../../../assets/images/clock.svg';
-import User from '../../../assets/images/user.svg';
-import ShoppingBag from '../../../assets/images/shopping-bag.svg';
-import Graph from '../../../assets/images/graph.svg';
 import Eye from '../../../assets/images/eye.svg';
+import Graph from '../../../assets/images/graph.svg';
+import ShoppingBag from '../../../assets/images/shopping-bag.svg';
 import Smile from '../../../assets/images/smile.svg';
+import User from '../../../assets/images/user.svg';
+import { platformList, platformObject } from '../../../data/platformList';
 
 const useTableContentFormatter = () => {
   const { getChainData } = useVendors();
@@ -489,10 +490,10 @@ const useTableContentFormatter = () => {
   };
   const renderEvolution = (r, h, i = 0) => {
     const evolution = (procent) => {
-      if (Number.isNaN(procent) || procent === '-' || procent === null) {
+      if (Number.isNaN(procent) || procent === '-' || procent === null || isInfinity(procent)) {
         return '-';
       }
-      return `${procent} %`;
+      return `${procent}%`;
     };
     return (
       <TableCellKit

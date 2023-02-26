@@ -46,3 +46,5 @@ export const stableSort = (array, comparator) => {
 
   return stabilizedThis.map((el) => el[2]);
 };
+
+export const isInfinity = (v: number) => v === Infinity || v === -Infinity;
