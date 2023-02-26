@@ -1,5 +1,4 @@
-import { useFirebaseUser } from 'contexts';
-import { reAuth, reAuthGoogle } from 'firebase-config';
+import { auth, reAuth, reAuthGoogle } from 'firebase-config';
 import { updatePassword } from 'firebase/auth';
 import { useAlert } from 'hooks';
 import { ButtonLoadingKit, TextfieldKit } from 'kits';
@@ -16,7 +15,6 @@ const defaultValues = {
 };
 
 const ChangePassword = () => {
-  const user = useFirebaseUser();
   const [values, setValues] = useState(defaultValues);
 
   const [errors, setErrors] = useState({ password: false, confirm: false });
@@ -50,7 +48,8 @@ const ChangePassword = () => {
     setValues({ ...values, [k]: e.target.value });
   };
 
-  const isOnlyGoogle = () => !user.providerData.some((v) => v.providerId === 'password');
+  const isOnlyGoogle = () =>
+    !auth.currentUser.providerData.some((v) => v.providerId === 'password');
 
   const handleClickSubmit = async () => {
     setIsLoading(true);
@@ -59,10 +58,10 @@ const ChangePassword = () => {
       if (isOnlyGoogle()) {
         await reAuthGoogle();
       } else {
-        await reAuth(user, values.password);
+        await reAuth(values.password);
       }
 
-      await updatePassword(user, values.newPassword);
+      await updatePassword(auth.currentUser, values.newPassword);
 
       setValues(defaultValues);
 

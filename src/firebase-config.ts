@@ -16,7 +16,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updatePhoneNumber,
-  User,
   verifyPasswordResetCode,
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -56,11 +55,14 @@ export const verifyCodeEmail = async (code: string) => applyActionCode(auth, cod
 export const resetPassword = async (code: string, password: string) =>
   confirmPasswordReset(auth, code, password);
 
-export const reAuth = async (user: User, password: string) =>
-  reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
+export const reAuth = async (password: string) =>
+  reauthenticateWithCredential(
+    auth.currentUser,
+    EmailAuthProvider.credential(auth.currentUser.email, password)
+  );
 
-export const updatePhone = async (user: User, vId: string, code: string) =>
-  updatePhoneNumber(user, PhoneAuthProvider.credential(vId, code));
+export const updatePhone = async (vId: string, code: string) =>
+  updatePhoneNumber(auth.currentUser, PhoneAuthProvider.credential(vId, code));
 
 export const createRecaptcha = () => {
   const existDiv = document.getElementById('recaptcha');

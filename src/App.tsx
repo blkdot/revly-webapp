@@ -1,4 +1,3 @@
-import { FirebaseUserProvider } from 'contexts';
 import { auth } from 'firebase-config';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { SpinnerKit } from 'kits';
@@ -36,7 +35,7 @@ import {
 const App = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User>(undefined);
+  const [user, setUser] = useState<User>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -57,42 +56,40 @@ const App = () => {
   }
 
   return (
-    <FirebaseUserProvider value={user}>
-      <Routes>
-        <Route element={<AuthLayout />}>
-          <Route path='/' element={<SignIn />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/verify-code-signup' element={<VerifyCode />} />
-          <Route path='/reset-password' element={<ResetPassword />} />
+    <Routes>
+      <Route element={<AuthLayout />}>
+        <Route path='/' element={<SignIn />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/verify-code-signup' element={<VerifyCode />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
+      </Route>
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route element={<ProtectedRoutes user={user} />}>
+        <Route path='/check' element={<Check />} />
+        <Route path='/verify-code' element={<VerifyCode />} />
+        <Route element={<MainLayout />}>
+          <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
         </Route>
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route element={<ProtectedRoutes user={user} />}>
-          <Route path='/check' element={<Check />} />
-          <Route path='/verify-code' element={<VerifyCode />} />
+        <Route element={<ProtectedOnboardRoutes />}>
           <Route element={<MainLayout />}>
-            <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/planning' element={<Planning />} />
+            <Route path='/competition/listing' element={<CompetitionListing />} />
+            <Route path='/competition/alerts' element={<CompetitionAlerts />} />
+            <Route path='/marketing/offer' element={<MarketingOffer />} />
+            <Route path='/marketing/ads' element={<MarketingAds />} />
+            <Route path='/adverts' element={<Adverts />} />
           </Route>
-          <Route element={<ProtectedOnboardRoutes />}>
-            <Route element={<MainLayout />}>
-              <Route path='/dashboard' element={<Dashboard />} />
-              <Route path='/planning' element={<Planning />} />
-              <Route path='/competition/listing' element={<CompetitionListing />} />
-              <Route path='/competition/alerts' element={<CompetitionAlerts />} />
-              <Route path='/marketing/offer' element={<MarketingOffer />} />
-              <Route path='/marketing/ads' element={<MarketingAds />} />
-              <Route path='/adverts' element={<Adverts />} />
-            </Route>
-            <Route element={<SettingsLayout />}>
-              <Route path='/settings/general' element={<SettingsGeneral />} />
-              <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
-              <Route path='/settings/menu' element={<SettingsMenu />} />
-              <Route path='/settings/cost' element={<SettingsCost />} />
-              <Route path='/settings/change-password' element={<SettingsChangePassword />} />
-            </Route>
+          <Route element={<SettingsLayout />}>
+            <Route path='/settings/general' element={<SettingsGeneral />} />
+            <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
+            <Route path='/settings/menu' element={<SettingsMenu />} />
+            <Route path='/settings/cost' element={<SettingsCost />} />
+            <Route path='/settings/change-password' element={<SettingsChangePassword />} />
           </Route>
         </Route>
-      </Routes>
-    </FirebaseUserProvider>
+      </Route>
+    </Routes>
   );
 };
 

@@ -5,15 +5,15 @@ import { FC, useMemo } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 export const ProtectedRoutes: FC<{
-  user: User;
+  user: User | null;
 }> = ({ user }) => {
   const value = useMemo(
     () => ({
-      email: user.email,
-      token: (user as any).accessToken,
-      displayName: user.displayName,
-      phoneNumber: user.phoneNumber,
-      emailVerified: user.emailVerified,
+      email: user?.email,
+      token: (user as any)?.accessToken,
+      displayName: user?.displayName,
+      phoneNumber: user?.phoneNumber,
+      emailVerified: user?.emailVerified,
     }),
     [user]
   );

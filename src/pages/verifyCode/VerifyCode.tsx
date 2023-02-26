@@ -1,5 +1,5 @@
 import { ArrowBack } from '@mui/icons-material';
-import { useFirebaseUser, useUserAuth } from 'contexts';
+import { useUserAuth } from 'contexts';
 import { logout, updatePhone, verifyPhone } from 'firebase-config';
 import { getAuth } from 'firebase/auth';
 import { useAlert, useApi } from 'hooks';
@@ -12,7 +12,6 @@ import Timer from '../../components/timer/Timer';
 import './VerifyCode.scss';
 
 const VerifyCode = () => {
-  const user = useFirebaseUser();
   const { isUpdatingPhone, setIsUpdatingPhone } = useUserAuth();
   const { settingsSave } = useApi();
   const [values, setValues] = useState({
@@ -70,7 +69,7 @@ const VerifyCode = () => {
       const code = Object.keys(values)
         .map((v) => values[v])
         .join('');
-      await updatePhone(user, vId, code);
+      await updatePhone(vId, code);
       if (prevPath === '/signup') {
         await settingsSave({
           master_email: data.email,
