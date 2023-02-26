@@ -1,8 +1,8 @@
-import { useAtom } from 'jotai';
-import { vendorsAtom } from 'store/vendorsAtom';
 import { useQuery } from '@tanstack/react-query';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
 import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
@@ -123,11 +123,11 @@ const useVendors = (isSign = false) => {
     chainData: [],
   });
 
-  const { user } = useUserAuth();
+  const user = useUser();
   const { userPlatformData } = usePlatform();
   const requestVendorsDefaultParam = {
-    master_email: user?.email || '',
-    access_token: user?.accessToken || '',
+    master_email: user.email,
+    access_token: user.token,
   };
 
   const { data, isLoading, isError } = useQuery(

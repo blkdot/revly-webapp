@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, fetcher } from 'api/hooks';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
@@ -14,7 +14,7 @@ function usePlanningOffers({ dateRange }) {
   const { getOffers } = useApi();
   const [offers, setOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useUserAuth();
+  const user = useUser();
   const newVendorsObj = {};
   Object.keys(vendorsObj).forEach((plat) => {
     newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
@@ -63,7 +63,7 @@ type DateRange = {
 export const usePlanningOffersNew = (range: DateRange) => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
-  const { user } = useUserAuth();
+  const user = useUser();
   const newVendorsObj = {};
   Object.keys(vendorsObj).forEach((plat) => {
     newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);

@@ -1,7 +1,7 @@
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import dayjs from 'dayjs';
-import { useEffect, useMemo, useState } from 'react';
 import { useAtom } from 'jotai';
+import { useEffect, useMemo, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import useApi from './useApi';
 
@@ -11,7 +11,7 @@ function usePlanningAds({ dateRange }) {
   const { vendorsObj } = vendors;
   const { getAds } = useApi();
   const [ads, setAds] = useState([]);
-  const { user } = useUserAuth();
+  const user = useUser();
   const [isLoading, setIsLoading] = useState(true);
   const newVendorsObj = {};
 

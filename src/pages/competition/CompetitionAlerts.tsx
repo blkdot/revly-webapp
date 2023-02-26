@@ -1,11 +1,11 @@
-import { useUserAuth } from 'contexts';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { useUser } from 'contexts';
 import dayjs from 'dayjs';
 import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
@@ -23,7 +23,7 @@ const CompetitionAlerts = () => {
   const [vendors, setVendors] = useAtom(vendorsAtom);
   const { vendorsArr, vendorsObj } = vendors;
   const [platformList, setPlatformList] = useState([]);
-  const { user } = useUserAuth();
+  const user = useUser();
   const [opened, setOpened] = useState(false);
   const [platform, setPlatform] = useState('deliveroo');
   const [competitionAlertsData, setCompetitionAlertsData] = useState([]);
@@ -138,7 +138,7 @@ const CompetitionAlerts = () => {
   const getCompetitorsDropdownContent = async () => {
     const body = {
       master_email: user.email,
-      access_token: user.accessToken,
+      access_token: user.token,
       vendors: vendorsObj,
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
@@ -193,7 +193,7 @@ const CompetitionAlerts = () => {
       try {
         const body = {
           master_email: user.email,
-          access_token: user.accessToken,
+          access_token: user.token,
           vendors: vend || {},
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),

@@ -1,24 +1,24 @@
+import { settingsOnboarded } from 'api/settingsApi';
+import Dates from 'components/dates/Dates';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
-import Dates from 'components/dates/Dates';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import dayjs from 'dayjs';
+import Widget from 'components/widget/Widget';
+import { useUser } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { vendorsAtom } from 'store/vendorsAtom';
+import dayjs from 'dayjs';
 import { useDate, useMetrics, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
-import './Dashboard.scss';
 import { TypographyKit } from 'kits';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import Widget from 'components/widget/Widget';
-import { settingsOnboarded } from 'api/settingsApi';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserAuth } from 'contexts';
+import { vendorsAtom } from 'store/vendorsAtom';
+import './Dashboard.scss';
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
@@ -176,11 +176,11 @@ const Dashboard = () => {
     }
     return selectedVendors('name', display).join(', ');
   };
-  const { user } = useUserAuth();
+  const user = useUser();
   const onboard = async () => {
     const res = await settingsOnboarded({
       master_email: user.email,
-      access_token: user.accessToken,
+      access_token: user.token,
     });
 
     setUserPlatformData({

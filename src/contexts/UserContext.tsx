@@ -5,6 +5,7 @@ type UserContextType = {
   token: string;
   displayName: string;
   phoneNumber: string;
+  emailVerified: boolean;
 };
 
 const UserContext = createContext<UserContextType>({
@@ -12,6 +13,7 @@ const UserContext = createContext<UserContextType>({
   token: '',
   displayName: '',
   phoneNumber: '',
+  emailVerified: false,
 });
 
 export const UserProvider: FC<{

@@ -1,16 +1,16 @@
 import axios from 'axios';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { handleResponse } from '../api/baseApi';
 import config from '../setup/config';
 
 const { apiUrl } = config;
 
 const useCost = (vendorsObj) => {
-  const { user } = useUserAuth();
+  const user = useUser();
 
   const requestVendorsDefaultParam = {
     master_email: user.email,
-    access_token: user.accessToken,
+    access_token: user.token,
   };
 
   const defaulltBody = { vendors: vendorsObj, ...requestVendorsDefaultParam };

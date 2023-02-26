@@ -145,7 +145,7 @@ const General = () => {
     try {
       const data = await settingsLoad({
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
       });
       const obj = {
         restoName: data.restoname || '',

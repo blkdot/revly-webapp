@@ -1,7 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useUserAuth } from 'contexts';
+import { logout } from 'firebase-config';
 import { usePlatform } from 'hooks';
-import { useAtom } from 'jotai';
 import {
   AccordionDetailsKit,
   AccordionKit,
@@ -17,7 +16,6 @@ import logo from '../../assets/images/logo.png';
 import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
 import { accordionLink, settingsLink, simpleLink } from '../../data/navbarData';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import Navlink from '../navlink/Navlink';
 import './Navbar.scss';
 
@@ -26,13 +24,12 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  const { logOut } = useUserAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const handleLogout = async () => {
     try {
-      await logOut();
+      await logout();
       navigate('/');
     } catch (e) {
       navigate('/');

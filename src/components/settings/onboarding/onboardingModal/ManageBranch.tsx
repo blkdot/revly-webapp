@@ -1,16 +1,16 @@
-import { FC } from 'react';
 import { saveUser } from 'api/userApi';
-import { useUserAuth } from 'contexts/AuthContext';
-import { TypographyKit, ButtonKit } from 'kits';
+import { useUser } from 'contexts';
 import { platformList } from 'data/platformList';
 import { usePlatform } from 'hooks';
-import { vendorsAtom } from 'store/vendorsAtom';
 import { useAtom } from 'jotai';
-import TrashIcon from '../../../../assets/images/ic_trash.png';
+import { ButtonKit, TypographyKit } from 'kits';
+import { FC } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
+import Arrow from '../../../../assets/images/arrow.svg';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 import PauseIcon from '../../../../assets/images/ic_pause.png';
 import ResumeIcon from '../../../../assets/images/ic_resume.png';
-import Arrow from '../../../../assets/images/arrow.svg';
+import TrashIcon from '../../../../assets/images/ic_trash.png';
 import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{
@@ -43,7 +43,7 @@ const ManageBranch: FC<{
     deleteAccount,
   } = propsVariables;
   const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
-  const { user } = useUserAuth();
+  const user = useUser();
   const [vendors] = useAtom(vendorsAtom);
   const vendorsBranch = () => {
     const object = {};
@@ -66,7 +66,7 @@ const ManageBranch: FC<{
   const deleteBranch = async () => {
     setLoading(true);
     await saveUser({
-      access_token: user.accessToken,
+      access_token: user.token,
       vendors: vendorsBranch(),
       data: { is_deleted: true },
     });
@@ -94,7 +94,7 @@ const ManageBranch: FC<{
     setLoading(true);
     const clonedBranchData = [...branchData];
     await saveUser({
-      access_token: user.accessToken,
+      access_token: user.token,
       vendors: vendorsBranch(),
       data: {
         is_active: !(

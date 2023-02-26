@@ -13,6 +13,7 @@ export const ProtectedRoutes: FC<{
       token: (user as any).accessToken,
       displayName: user.displayName,
       phoneNumber: user.phoneNumber,
+      emailVerified: user.emailVerified,
     }),
     [user]
   );
