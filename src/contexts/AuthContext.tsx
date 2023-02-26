@@ -20,7 +20,20 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase-config';
 import { usePlatform } from '../hooks/usePlatform';
 
-const UserAuthContext = createContext(undefined);
+const UserAuthContext = createContext<{
+  user: any;
+  signUp: any;
+  signIn: any;
+  logOut: any;
+  reAuth: any;
+  verifyPhone: any;
+  resetPassword: any;
+  verifyResetCode: any;
+  updatePhone: any;
+  isUpdatingPhone: any;
+  setIsUpdatingPhone: any;
+  verifyCodeEmail: any;
+}>(undefined);
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState<any>(true);

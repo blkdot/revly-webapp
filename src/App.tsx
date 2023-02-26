@@ -1,3 +1,6 @@
+import { auth } from 'firebase-config';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { SpinnerKit } from 'kits';
 import {
   Adverts,
   Check,
@@ -19,7 +22,8 @@ import {
   SignUp,
   VerifyCode,
 } from 'pages';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import {
   AuthLayout,
   MainLayout,
@@ -28,43 +32,78 @@ import {
   SettingsLayout,
 } from 'routes';
 
-const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route element={<AuthLayout />}>
-        <Route path='/' element={<SignIn />} />
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='/verify-code-signup' element={<VerifyCode />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-      </Route>
-      <Route path='/forgot-password' element={<ForgotPassword />} />
-      <Route element={<ProtectedRoutes />}>
-        <Route path='/check' element={<Check />} />
-        <Route path='/verify-code' element={<VerifyCode />} />
-        <Route element={<MainLayout />}>
-          <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
-        </Route>
-        <Route element={<ProtectedOnboardRoutes />}>
-          <Route element={<MainLayout />}>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/planning' element={<Planning />} />
-            <Route path='/competition/listing' element={<CompetitionListing />} />
-            <Route path='/competition/alerts' element={<CompetitionAlerts />} />
-            <Route path='/marketing/offer' element={<MarketingOffer />} />
-            <Route path='/marketing/ads' element={<MarketingAds />} />
-            <Route path='/adverts' element={<Adverts />} />
-          </Route>
-          <Route element={<SettingsLayout />}>
-            <Route path='/settings/general' element={<SettingsGeneral />} />
-            <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
-            <Route path='/settings/menu' element={<SettingsMenu />} />
-            <Route path='/settings/cost' element={<SettingsCost />} />
-            <Route path='/settings/change-password' element={<SettingsChangePassword />} />
-          </Route>
-        </Route>
-      </Route>
-    </Routes>
-  </BrowserRouter>
+const FirebaseUserContext = createContext<User>(undefined);
+
+export const FirebaseUserProvider: FC<{
+  value: User;
+  children: ReactNode;
+}> = ({ value, children }) => (
+  <FirebaseUserContext.Provider value={value}>{children}</FirebaseUserContext.Provider>
 );
+
+export const useFirebaseUser = () => useContext(FirebaseUserContext);
+
+const App = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User>(undefined);
+
+  useEffect(() => {
+    setLoading(true);
+
+    return onAuthStateChanged(auth, (u) => {
+      setLoading(false);
+
+      if (u) {
+        setUser(u);
+      } else {
+        navigate('/');
+      }
+    });
+  }, [navigate]);
+
+  if (loading) {
+    return <SpinnerKit />;
+  }
+
+  return (
+    <FirebaseUserProvider value={user}>
+      <Routes>
+        <Route element={<AuthLayout />}>
+          <Route path='/' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/verify-code-signup' element={<VerifyCode />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+        </Route>
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route element={<ProtectedRoutes user={user} />}>
+          <Route path='/check' element={<Check />} />
+          <Route path='/verify-code' element={<VerifyCode />} />
+          <Route element={<MainLayout />}>
+            <Route path='/dashboardOnboard' element={<DashboardOnboard />} />
+          </Route>
+          <Route element={<ProtectedOnboardRoutes />}>
+            <Route element={<MainLayout />}>
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/planning' element={<Planning />} />
+              <Route path='/competition/listing' element={<CompetitionListing />} />
+              <Route path='/competition/alerts' element={<CompetitionAlerts />} />
+              <Route path='/marketing/offer' element={<MarketingOffer />} />
+              <Route path='/marketing/ads' element={<MarketingAds />} />
+              <Route path='/adverts' element={<Adverts />} />
+            </Route>
+            <Route element={<SettingsLayout />}>
+              <Route path='/settings/general' element={<SettingsGeneral />} />
+              <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
+              <Route path='/settings/menu' element={<SettingsMenu />} />
+              <Route path='/settings/cost' element={<SettingsCost />} />
+              <Route path='/settings/change-password' element={<SettingsChangePassword />} />
+            </Route>
+          </Route>
+        </Route>
+      </Routes>
+    </FirebaseUserProvider>
+  );
+};
 
 export default App;

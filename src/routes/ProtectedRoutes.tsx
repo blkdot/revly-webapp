@@ -1,8 +1,7 @@
-import { auth } from 'firebase-config';
-import { onAuthStateChanged } from 'firebase/auth';
-import { SpinnerKit } from 'kits';
-import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { User } from 'firebase/auth';
+import { createContext, FC, ReactNode, useContext, useMemo } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 
 type UserContextType = {
   email: string;
@@ -25,42 +24,25 @@ export const UserProvider: FC<{
 
 export const useUser = () => useContext(UserContext);
 
-export const ProtectedRoutes: FC = () => {
-  const navigate = useNavigate();
+export const ProtectedRoutes: FC<{
+  user: User;
+}> = ({ user }) => {
+  const value = useMemo(
+    () => ({
+      email: user.email,
+      token: (user as any).accessToken,
+      displayName: user.displayName,
+      phoneNumber: user.phoneNumber,
+    }),
+    [user]
+  );
 
-  const [user, setUser] = useState<UserContextType>({
-    email: '',
-    token: '',
-    displayName: '',
-    phoneNumber: '',
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-
-    return onAuthStateChanged(auth, (u) => {
-      setLoading(false);
-
-      if (u) {
-        setUser({
-          email: u.email,
-          token: (u as any).accessToken,
-          displayName: u.displayName,
-          phoneNumber: u.phoneNumber,
-        });
-      } else {
-        navigate('/');
-      }
-    });
-  }, [navigate]);
-
-  if (loading) {
-    return <SpinnerKit />;
+  if (!user) {
+    return <Navigate replace to='/' />;
   }
 
   return (
-    <UserProvider value={user}>
+    <UserProvider value={value}>
       <Outlet />
     </UserProvider>
   );
