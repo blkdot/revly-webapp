@@ -1,4 +1,5 @@
 import { useUserAuth } from 'contexts';
+import { logout, signUp, verifyPhone } from 'firebase-config';
 import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
 import { useAlert, useApi } from 'hooks';
 import { useState } from 'react';
@@ -34,7 +35,7 @@ const SignUp = () => {
     pointOfSale: false,
   });
 
-  const { signUp, verifyPhone, setIsUpdatingPhone, logOut } = useUserAuth();
+  const { setIsUpdatingPhone } = useUserAuth();
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -68,7 +69,7 @@ const SignUp = () => {
           },
         });
         await verifyEmail(value);
-        await logOut();
+        await logout();
         navigate('/');
         triggerAlertWithMessageSuccess(
           'We sent an email verification to your email, please check it (include spam) before signin'
