@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import AccountSettingForm from 'components/forms/accountSettingForm/AccountSettingForm';
-import { useUserAuth } from 'contexts';
+import { useUser, useUserAuth } from 'contexts';
+import { auth, verifyPhone } from 'firebase-config';
 import { updateProfile } from 'firebase/auth';
 import { useAlert, useApi } from 'hooks';
 import { ButtonKit } from 'kits';
@@ -12,7 +13,8 @@ import validator from '../../../utlls/input/validator';
 import './General.scss';
 
 const General = () => {
-  const { user, setIsUpdatingPhone, verifyPhone } = useUserAuth();
+  const user = useUser();
+  const { setIsUpdatingPhone } = useUserAuth();
   const { settingsSave, settingsLoad } = useApi();
 
   const getNumber = () => {
@@ -75,7 +77,7 @@ const General = () => {
     setIsLoading(true);
     try {
       if (isValid('name', user.displayName)) {
-        await updateProfile(user, {
+        await updateProfile(auth.currentUser, {
           displayName: `${inputValue.name.trim()}`,
         });
       }
