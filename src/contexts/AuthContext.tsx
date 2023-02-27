@@ -1,8 +1,8 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 
 const UserAuthContext = createContext<{
-  isUpdatingPhone: any;
-  setIsUpdatingPhone: any;
+  isUpdatingPhone: boolean;
+  setIsUpdatingPhone: (v: boolean) => void;
 }>(undefined);
 
 export const AuthContextProvider = ({ children }) => {
