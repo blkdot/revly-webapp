@@ -151,7 +151,6 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
                         title='<'
-                        setPersonName={setLaunchOrder}
                         personName={obj.arrow}
                         handleChange={(e) => handleChange(e, 'arrow', index, 'launch')}
                       />

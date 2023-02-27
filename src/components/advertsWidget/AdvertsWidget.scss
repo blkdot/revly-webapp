@@ -62,7 +62,8 @@
   border: 1px solid #919eab29;
   border-radius: 8px;
   padding: 20px 0;
-
+  max-height: 45%;
+  overflow: hidden;
   > p {
     border-bottom: 1px solid #919eab29;
     padding: 0 20px;
@@ -85,6 +86,7 @@
     flex-direction: column;
     grid-gap: 5px;
     width: 30%;
+
     p {
       font-size: 12px;
     }
@@ -92,6 +94,52 @@
     span {
       font-size: 13px;
       font-weight: 600;
+    }
+  }
+
+  &.branch.branch {
+    flex-direction: column;
+    height: 95%;
+    overflow: auto;
+    scroll-behavior: smooth;
+    padding: 0;
+    margin: 0;
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #f3f3f3;
+      border-radius: 31px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #637381;
+      border-radius: 31px;
+    }
+
+    > div {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-between;
+      border-bottom: 1px solid #919eab29;
+      padding: 10px 20px;
+      > div {
+        display: flex;
+        flex-direction: column;
+        grid-gap: 5px;
+        width: 30%;
+
+        p {
+          font-size: 12px;
+        }
+
+        span {
+          font-size: 13px;
+          font-weight: 600;
+        }
+      }
     }
   }
 }

@@ -83,8 +83,8 @@ const UploadingActive: FC<{
       <div>
         <p className='__title'>Your Data is Being uploaded</p>
         <span className='__subtitle'>
-          Your {platform} account has been connect , we are uplouploading the necessary data to
-          manage your brands
+          Your {platform} account has been connect , we are uploading the necessary data to manage
+          your brands
         </span>
       </div>
       <div className='onboarding-branches-uploading'>

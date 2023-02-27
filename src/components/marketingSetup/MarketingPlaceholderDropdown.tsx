@@ -23,13 +23,13 @@ function getStyles(name, personName, theme) {
 }
 
 const MarketingPlaceholderDropdown: FC<{
-  setPersonName?: any;
-  personName?: any;
-  title?: any;
-  names?: any;
-  className?: any;
-  readOnly?: any;
-  handleChange?: any;
+  setPersonName?: (value: string) => void;
+  personName?: string;
+  title?: string;
+  names?: string[];
+  className?: string;
+  readOnly?: boolean;
+  handleChange?: (e: any, startType: string, index: number, endType: string) => void;
 }> = ({ setPersonName, personName, title, names, className, readOnly, handleChange }) => {
   const theme = useTheme();
 
