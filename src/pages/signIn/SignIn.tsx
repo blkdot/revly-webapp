@@ -1,6 +1,5 @@
-import { useUser } from 'contexts';
 import emailWhitelisted from 'data/whitelisted-email';
-import { logout, signIn, verifyCodeEmail } from 'firebase-config';
+import { auth, logout, signIn, verifyCodeEmail } from 'firebase-config';
 import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
@@ -12,7 +11,6 @@ import SignInForm from './form/SignInForm';
 import './SignIn.scss';
 
 const SignIn = () => {
-  const user = useUser();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -75,7 +73,7 @@ const SignIn = () => {
       } else if (mode === 'verifyEmail') {
         verifyEmail(oobCode);
       }
-    } else if (user) {
+    } else if (auth.currentUser) {
       navigate('/dashboard');
     }
   }, [oobCode, mode]);
