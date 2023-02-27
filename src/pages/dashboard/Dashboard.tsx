@@ -251,23 +251,22 @@ const Dashboard = () => {
           360° view of your restaurant revenue and profits
         </TypographyKit>
         <div className='dashboard-wrapper'>
-          {links
-            .map((obj: { title: string; link: string; tooltip?: string }) => (
-              <Widget
-                table={table}
-                setTable={setTable}
-                key={obj.link}
-                title={obj.title}
-                link={obj.link}
-                metricsbeforePeriod={metricsbeforePeriod}
-                metricsafterPeriod={metricsafterPeriod}
-                loading={
-                  metricsafterPeriod.length === 0 || metricsbeforePeriod.length === 0 || loading
-                }
-                links={links}
-                tooltip={obj.tooltip}
-              />
-            ))}
+          {links.map((obj: { title: string; link: string; tooltip?: string }) => (
+            <Widget
+              table={table}
+              setTable={setTable}
+              key={obj.link}
+              title={obj.title}
+              link={obj.link}
+              metricsbeforePeriod={metricsbeforePeriod}
+              metricsafterPeriod={metricsafterPeriod}
+              loading={
+                metricsafterPeriod.length === 0 || metricsbeforePeriod.length === 0 || loading
+              }
+              links={links}
+              tooltip={obj.tooltip}
+            />
+          ))}
         </div>
       </div>
       <TableRevlyNew
