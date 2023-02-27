@@ -1,4 +1,4 @@
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { useAlert, useApi, usePlatform } from 'hooks';
 import { TVendorsArr } from 'hooks/useVendors';
 import { useAtom } from 'jotai';
@@ -28,13 +28,13 @@ const Menu = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState<string | TVendorsArr>('');
-  const { user } = useUserAuth();
+  const user = useUser();
 
   const getMenuData = async (vendor, platforms) => {
     setLoading(true);
     try {
       const res = await getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor: vendor || [] },
+        { master_email: user.email, access_token: user.token, vendor: vendor || [] },
         platforms
       );
 

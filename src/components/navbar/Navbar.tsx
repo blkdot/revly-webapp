@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useUserAuth } from 'contexts';
+import { logout } from 'firebase-config';
 import { usePlatform } from 'hooks';
 import {
   AccordionDetailsKit,
@@ -24,13 +24,12 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  const { logOut } = useUserAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const handleLogout = async () => {
     try {
-      await logOut();
+      await logout();
       navigate('/');
     } catch (e) {
       navigate('/');

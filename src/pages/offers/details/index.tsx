@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
 import { useApi, useVendors } from 'hooks';
@@ -29,7 +29,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
 
   const { cancelOfferMaster } = useApi();
 
-  const { user } = useUserAuth();
+  const user = useUser();
   const { vendors, getChainData } = useVendors(undefined);
   const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
@@ -126,7 +126,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     cancelOfferMaster(
       {
         master_email: user.email,
-        access_token: user?.accessToken || '',
+        access_token: user.token,
         // TODO: check this
         platform_token: getToken(),
         offer_id: null,
@@ -154,7 +154,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       return (
         getPlanningOfferDetails({
           master_email: user.email,
-          access_token: user?.access_token || '',
+          access_token: user.token || '',
           vendors: vendorsObj,
           platform: platform.toLowerCase(),
           master_offer_id,

@@ -1,19 +1,19 @@
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
-import { useEffect, useState, useCallback } from 'react';
-import sortedVendors from 'components/restaurantDropdown/soretedVendors';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import { useCallback, useEffect, useState } from 'react';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import AreaIcon from '../../assets/images/ic_area.png';
+import Iccuisine from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
-import Iccuisine from '../../assets/images/ic_cuisine.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
 import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
 import Competitor from '../../components/competitor/Competitor';
@@ -78,7 +78,7 @@ const CompetitionListing = () => {
   });
   const [queueDropdown, setQueueDropdown] = useState(0);
   const { getRanking, getAreas, getCuisines } = useApi();
-  const { user } = useUserAuth();
+  const user = useUser();
   const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
@@ -158,7 +158,7 @@ const CompetitionListing = () => {
       try {
         const body = {
           master_email: user.email,
-          access_token: user.accessToken,
+          access_token: user.token,
           vendors: vend || [],
           day_period: timeSlotObj[timeSlot] || 'All',
           filter_location: newArea,
@@ -227,7 +227,7 @@ const CompetitionListing = () => {
 
         const body = {
           master_email: user.email,
-          access_token: user.accessToken,
+          access_token: user.token,
           vendors: vend || [],
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { saveUser } from 'api/userApi';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { useAlert, useApi } from 'hooks';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
@@ -33,7 +33,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
-  const { user } = useUserAuth();
+  const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const [vendors] = useAtom(vendorsAtom);
   const handleSubmitLogin = async (currentPlatform) => {
@@ -42,7 +42,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
         credentials: {
           email,
           password,
@@ -115,7 +115,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
       return arr;
     };
     await saveUser({
-      access_token: user.accessToken,
+      access_token: user.token,
       vendors: { [obj.platform]: vendorsBranch() },
       data: { is_active: !obj.active },
     });
@@ -123,7 +123,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     await settingsOnboardPlatformStatus(
       {
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
         email: obj.email,
         active_status: !obj.active,
       },
