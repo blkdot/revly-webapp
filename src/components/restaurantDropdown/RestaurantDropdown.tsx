@@ -1,7 +1,6 @@
-import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import selectIcon from '../../assets/images/ic_select.png';
 import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
@@ -34,12 +33,6 @@ const RestaurantDropdown: FC<{
   className?: string;
 }> = ({ setState, state, pageType, className }) => {
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq } = useVendors(undefined);
-  useEffect(() => {
-    if (Object.keys(vendorsReq.display).length > 0) {
-      setVendors(vendorsReq);
-    }
-  }, [vendorsReq]);
 
   const { display, vendorsObj } = state || vendorsContext;
 

@@ -151,7 +151,7 @@ const CompetitionAlerts = () => {
   };
 
   const filterData = () => {
-    if (competitor.length > 0) {
+    if (competitor?.length > 0) {
       const arr = competitor
         .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
         .flat();
@@ -312,7 +312,7 @@ const CompetitionAlerts = () => {
               widthPaper={400}
               heightPaper={80}
               rows={competitorList?.filter(
-                (compet) => compet.platform.toLowerCase() === platform.toLowerCase()
+                (compet) => compet.platform?.toLowerCase() === platform?.toLowerCase()
               )}
               multiple
               icon={competitorIcon}
