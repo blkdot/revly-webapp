@@ -1,27 +1,31 @@
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
 import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import CompetitionDropdown from 'components/competitionDropdown/CompetitionDropdown';
+import Competitor from 'components/competitor/Competitor';
+import Dates from 'components/dates/Dates';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
-import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
-import Competitor from '../../components/competitor/Competitor';
-import Dates from '../../components/dates/Dates';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 
 let fnDelays = null;
 
 const CompetitionAlerts = () => {
-  const [vendors, setVendors] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsObj } = vendors;
+  const { vendors, setVendors } = useVendors();
+  const { vendorsObj: vendorsObjFromQuery } = vendors;
+  const [vendorsFromAtom] = useAtom(vendorsAtom);
+  const { vendorsArr, vendorsObj } = vendorsFromAtom;
   const [platformList, setPlatformList] = useState([]);
   const user = useUser();
   const [opened, setOpened] = useState(false);
@@ -38,6 +42,7 @@ const CompetitionAlerts = () => {
     endDate: new Date(),
   });
   const { userPlatformData } = usePlatform();
+  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendors)));
 
   const Open = () => {
     setOpened(!opened);
@@ -134,6 +139,60 @@ const CompetitionAlerts = () => {
       }),
       {}
     );
+
+  useEffect(() => {
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    let counter = 0;
+    let defaultSelection = null;
+
+    sortedVendors(displayTemp).forEach((chainName) => {
+      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+        displayTemp[chainName][vendorName].checked =
+          vendorsData?.display?.[chainName]?.[vendorName]?.checked || false;
+
+        const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
+        platformsDisplay.forEach((platformV) => {
+          if (platform !== platformV && !displayTemp[chainName][vendorName].is_matched) {
+            displayTemp[chainName][vendorName].deleted = true;
+            displayTemp[chainName][vendorName].checked = false;
+          }
+
+          if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
+            displayTemp[chainName][vendorName].deleted = true;
+            displayTemp[chainName][vendorName].checked = false;
+          }
+          if (platform !== platformV) {
+            displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
+          }
+        });
+        if (!platformsDisplay.includes(platform)) {
+          displayTemp[chainName][vendorName].deleted = true;
+          displayTemp[chainName][vendorName].checked = false;
+        }
+
+        if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
+          defaultSelection = {
+            chainName,
+            vendorName,
+          };
+        }
+
+        if (displayTemp[chainName][vendorName].checked) {
+          counter += 1;
+        }
+      });
+    });
+
+    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
+      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
+    }
+
+    setVendorsData({
+      ...vendors,
+      display: displayTemp,
+      vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
+    });
+  }, [platform, vendors]);
 
   const getCompetitorsDropdownContent = async () => {
     const body = {
@@ -236,14 +295,10 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     if (platform && vendorsArr.length) {
-      const arr: any = Object.keys(vendorsObj).filter((v) => v === platform);
-
-      const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsObj[arr] }), {});
-
       setCompetitor([]);
-      getData(platform, red);
+      getData(platform, { [platform]: vendorsData.vendorsObj[platform] });
     }
-  }, [platform, vendors, beforePeriodBtn]);
+  }, [platform, vendorsData, beforePeriodBtn]);
 
   useEffect(() => {
     const arr = vendorsArr.filter((v) => v.platform === platform && v.metadata.is_active === true);
@@ -256,6 +311,12 @@ const CompetitionAlerts = () => {
 
     setCompetitor(value);
   };
+
+  const filterCompetitionList = competitorList?.filter(
+    (compet) =>
+      compet.platform?.toLowerCase() === platform?.toLowerCase() &&
+      vendorsData.vendorsObj[platform].some((vend) => vend.data.vendor_name === compet.vendor_name)
+  );
 
   return (
     <div className='wrapper'>
@@ -308,12 +369,17 @@ const CompetitionAlerts = () => {
               setRow={setPlatform}
               select={platform}
             />
+            <div className='listing-vendors top-competition'>
+              <RestaurantDropdown
+                pageType='listing'
+                state={vendorsData}
+                setState={setVendorsData}
+              />
+            </div>
             <CompetitionDropdown
               widthPaper={400}
               heightPaper={80}
-              rows={competitorList?.filter(
-                (compet) => compet.platform?.toLowerCase() === platform?.toLowerCase()
-              )}
+              rows={filterCompetitionList || []}
               multiple
               icon={competitorIcon}
               onChange={handleCompetitorChange}

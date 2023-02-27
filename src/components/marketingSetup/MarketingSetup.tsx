@@ -30,7 +30,6 @@ import {
   checkedAtom,
   createdAtom,
   customisedDayAtom,
-  defaultHeatmapState,
   disabledAtom,
   disabledDateAtom,
   discountPercentageAtom,
@@ -38,7 +37,6 @@ import {
   endingDateAtom,
   everyWeekAtom,
   filteredCategoryDataAtom,
-  heatmapDataAtom,
   itemMenuAtom,
   linkAtom,
   menuAtom,
@@ -47,12 +45,15 @@ import {
   recapAtom,
   selectedAtom,
   smRuleAtom,
+  heatmapDataAtom,
+  defaultHeatmapState,
+  maxOrderPercentageAtom,
+  triggerLoadingAtom,
   startingDateAtom,
-  stepsAtom,
+  typeScheduleAtom,
   targetAudienceAtom,
   timesAtom,
-  triggerLoadingAtom,
-  typeScheduleAtom,
+  stepsAtom,
   type TCategoryAtom,
   type THeatmapData,
   type TOfferDataResponse,
@@ -136,6 +137,7 @@ const MarketingSetup: React.FC<{
   const [menu, setMenu] = useAtom(menuAtom);
   const [discountPercentage] = useAtom(discountPercentageAtom);
   const [minOrder] = useAtom(minOrderPercentageAtom);
+  const [maxOrder] = useAtom(maxOrderPercentageAtom);
   const [duration] = useAtom(durationAtom);
   const [disabled, setDisabled] = useAtom(disabledAtom);
   const [triggerLoading, setTriggerLoading] = useAtom(triggerLoadingAtom);
@@ -367,6 +369,7 @@ const MarketingSetup: React.FC<{
       goal: getTargetAudience(),
       discount: Number(discountPercentage.replace('%', '')),
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
+      max_discount: maxOrder ? Number(maxOrder.toLowerCase().replace('aed', '')) : '',
       master_email: user.email,
       access_token: user.token,
       platform_token: '',
