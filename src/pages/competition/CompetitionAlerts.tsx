@@ -215,8 +215,8 @@ const CompetitionAlerts = () => {
             start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${
               v.end_date ? dayjs(new Date(v.end_date)).format('DD/MM') : 'undetermined'
             }`,
-            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${
-              v.end_date ? dayjs(new Date(v.end_date)).format('hh:mm') : 'undetermined'
+            slot: `${dayjs(new Date(v.start_date)).format('HH:mm')} - ${
+              v.end_date ? dayjs(new Date(v.end_date)).format('HH:mm') : 'undetermined'
             }`,
           }))
           .sort((a, b) => a.status - b.status);

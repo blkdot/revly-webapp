@@ -199,7 +199,7 @@ const CompetitionListing = () => {
   };
 
   const handleAreasDataResponse = (areas) => {
-    setAreasData(areas.data.locations);
+    setAreasData(areas.data.locations?.sort());
     setTimeSlot('Throughout Day');
     if (!areas) {
       setArea('Everywhere');
