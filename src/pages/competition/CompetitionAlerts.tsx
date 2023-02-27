@@ -315,9 +315,7 @@ const CompetitionAlerts = () => {
   const filterCompetitionList = competitorList?.filter(
     (compet) =>
       compet.platform?.toLowerCase() === platform?.toLowerCase() &&
-      vendorsData.vendorsObj[platform].some(
-        (vend) => vend.data.vendor_name === compet.vendor_name
-      )
+      vendorsData.vendorsObj[platform].some((vend) => vend.data.vendor_name === compet.vendor_name)
   );
 
   return (

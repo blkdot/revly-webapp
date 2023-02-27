@@ -69,7 +69,7 @@ export const TypeStep: FC<{
   getMenuActive,
   categoryLoading,
   maxOrder,
-  setMaxOrder
+  setMaxOrder,
 }) => {
   const getItemMenuActive = () => {
     if (categoryLoading) {
@@ -90,7 +90,7 @@ export const TypeStep: FC<{
     const indexMax = maxOrderValues.findIndex((price) => price === maxOrder);
     const indexMin = minOrderValues.findIndex((price) => price === minOrder);
 
-    if ((indexMin - 1) > indexMax) {
+    if (indexMin - 1 > indexMax) {
       if (indexMax === maxOrderValues.length - 1) {
         setMinOrder(minOrderValues[indexMin - 1]);
         return;
