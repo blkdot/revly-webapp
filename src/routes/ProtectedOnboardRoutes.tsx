@@ -79,7 +79,7 @@ export const ProtectedOnboardRoutes = () => {
 
   if (response.isLoading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+      <div className='main-loading'>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
       </div>
     );

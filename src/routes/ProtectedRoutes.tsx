@@ -56,7 +56,9 @@ export const ProtectedRoutes: FC = () => {
   }, [navigate]);
 
   if (loading) {
-    return <SpinnerKit />;
+    return <div className='navbar-loading'>
+      <SpinnerKit />
+    </div>;
   }
 
   return (
