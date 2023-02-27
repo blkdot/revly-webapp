@@ -40,7 +40,7 @@ const Widget: FC<{
   const endGetDate = endDate.getDate();
 
   const procent = () => {
-    if (metricsbeforePeriod && metricsafterPeriod) {
+    if (Object.keys(metricsbeforePeriod).length > 0 && Object.keys(metricsafterPeriod).length > 0) {
       if (Number(metricsafterPeriod.all[link]) === 0) {
         return 0;
       }
@@ -102,7 +102,7 @@ const Widget: FC<{
   };
   const getActiveLinkWidth = (index: number, type: string) => {
     const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
-
+    
     if (type === 'scroll') {
       return tableLink.offsetLeft - tableLink.scrollLeft;
     }
