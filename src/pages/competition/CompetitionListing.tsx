@@ -62,7 +62,6 @@ const headersAlert = (cuisine: string) => [
 ];
 
 const CompetitionListing = () => {
-  const [vendors] = useAtom(vendorsAtom);
   const { vendors: vendorsDatas } = useVendors();
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
@@ -199,7 +198,7 @@ const CompetitionListing = () => {
   };
 
   const handleAreasDataResponse = (areas) => {
-    setAreasData(areas.data.locations);
+    setAreasData(areas.data.locations?.sort());
     setTimeSlot('Throughout Day');
     if (!areas) {
       setArea('Everywhere');
@@ -281,7 +280,7 @@ const CompetitionListing = () => {
   }, [platform, vendorsData, queueDropdown]);
 
   useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    const displayTemp = JSON.parse(JSON.stringify(vendorsDatas.display));
     let counter = 0;
     let defaultSelection = null;
 
@@ -328,11 +327,11 @@ const CompetitionListing = () => {
     }
 
     setVendorsData({
-      ...vendors,
+      ...vendorsDatas,
       display: displayTemp,
       vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
     });
-  }, [platform, vendors]);
+  }, [platform, vendorsDatas]);
 
   return (
     <div className='wrapper'>

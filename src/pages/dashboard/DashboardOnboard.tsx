@@ -22,8 +22,7 @@ import './Dashboard.scss';
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const { vendorsObj, display, chainData } = vendors;
-  const { metricsbeforePeriod, metricsafterPeriod, loading } = useMetrics(vendorsObj);
+  const { display, chainData } = vendors;
   const [table, setTable] = useState('revenue');
 
   const links = [
@@ -235,8 +234,8 @@ const Dashboard = () => {
                 key={obj.link}
                 title={obj.title}
                 link={obj.link}
-                metricsbeforePeriod={[]}
-                metricsafterPeriod={[]}
+                metricsbeforePeriod={{}}
+                metricsafterPeriod={{}}
                 loading={false}
                 links={links}
                 tooltip={obj.tooltip}
@@ -246,7 +245,7 @@ const Dashboard = () => {
       </div>
       <TableRevlyNew
         renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
-        isLoading={loading}
+        isLoading={false}
         link={table}
         setLink={setTable}
         links={links.filter((obj: { disabled?: boolean }) => !obj.disabled)}

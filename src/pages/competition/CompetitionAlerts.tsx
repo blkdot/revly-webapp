@@ -151,7 +151,7 @@ const CompetitionAlerts = () => {
   };
 
   const filterData = () => {
-    if (competitor.length > 0) {
+    if (competitor?.length > 0) {
       const arr = competitor
         .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
         .flat();
@@ -215,8 +215,8 @@ const CompetitionAlerts = () => {
             start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${
               v.end_date ? dayjs(new Date(v.end_date)).format('DD/MM') : 'undetermined'
             }`,
-            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${
-              v.end_date ? dayjs(new Date(v.end_date)).format('hh:mm') : 'undetermined'
+            slot: `${dayjs(new Date(v.start_date)).format('HH:mm')} - ${
+              v.end_date ? dayjs(new Date(v.end_date)).format('HH:mm') : 'undetermined'
             }`,
           }))
           .sort((a, b) => a.status - b.status);
@@ -312,7 +312,7 @@ const CompetitionAlerts = () => {
               widthPaper={400}
               heightPaper={80}
               rows={competitorList?.filter(
-                (compet) => compet.platform.toLowerCase() === platform.toLowerCase()
+                (compet) => compet.platform?.toLowerCase() === platform?.toLowerCase()
               )}
               multiple
               icon={competitorIcon}

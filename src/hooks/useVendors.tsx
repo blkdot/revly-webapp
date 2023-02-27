@@ -258,7 +258,13 @@ const useVendors = (isSign = false) => {
     };
 
     setVendors(dataV);
-    setVendorsAtom(dataV);
+    setVendorsAtom((prev) => {
+      if (prev.chainData.length !== dataV.chainData.length) {
+        return dataV;
+      }
+
+      return prev;
+    });
 
     vendorsTemp = [];
     vendorsSelectedTemp = [];

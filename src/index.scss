@@ -105,3 +105,16 @@ h2 {
     }
   }
 }
+.navbar-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 280px;
+  height: 100vh;
+}
+.main-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}

@@ -92,7 +92,6 @@ const Planning = () => {
     renderCurrency,
     renderStatus,
     renderChainId,
-    renderTarget,
     renderSimpleRow,
     renderVendorId,
     renderSimpleRowSkeleton,
@@ -352,8 +351,6 @@ const Planning = () => {
       if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
     });
 
-    // clonedFilters.discount_rate = clonedFilters.discount_rate.sort((a,b) => a - b);
-
     setFilters(clonedFilters);
 
     const preHeadPlatform = preHead.platform.map((s: string) => ({
@@ -412,9 +409,9 @@ const Planning = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
           new Date(obj.valid_to)
-        ).format('hh:mm')}`,
+        ).format('HH:mm')}`,
       }))
     );
     setDataFilteredAds(
