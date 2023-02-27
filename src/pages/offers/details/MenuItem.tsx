@@ -1,5 +1,5 @@
 import { Checkbox } from '@mui/material';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { useApi } from 'hooks';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const [data, setData] = useState(null);
   const { getOfferDetails } = useApi();
 
-  const { user } = useUserAuth();
+  const user = useUser();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
 
@@ -20,7 +20,7 @@ const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
     getOfferDetails(
       {
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
         vendor,
         drn_id: drnId,
       },

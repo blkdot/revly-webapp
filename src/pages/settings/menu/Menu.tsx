@@ -1,6 +1,6 @@
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { useAlert, useApi, usePlatform } from 'hooks';
 import useVendors, { type TVendorsArr } from 'hooks/useVendors';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,6 @@ import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import './Menu.scss';
 import MenuDropdown from './menuDropdown/MenuDropdown';
-import MenuTable from './menuTable/MenuTable';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -31,13 +30,13 @@ const Menu = () => {
   const { vendors } = useVendors();
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState<string | TVendorsArr>('');
-  const { user } = useUserAuth();
+  const user = useUser();
 
   const getMenuData = async (vendor, platforms) => {
     setLoading(true);
     try {
       const res = await getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor: vendor || [] },
+        { master_email: user.email, access_token: user.token, vendor: vendor || [] },
         platforms
       );
 

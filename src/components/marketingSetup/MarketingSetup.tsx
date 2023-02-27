@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import { useUserAuth } from 'contexts';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
+import { useUser } from 'contexts';
 import { format } from 'date-fns';
-import { useAlert, useApi, usePlatform, useMarketingSetup, useVendors } from 'hooks';
+import dayjs from 'dayjs';
+import { useAlert, useApi, useMarketingSetup, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -14,50 +16,48 @@ import {
   SpinnerKit,
   TypographyKit,
 } from 'kits';
-import dayjs from 'dayjs';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import React, { ReactNode, useEffect, useState, type createRef } from 'react';
+import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import {
-  platformAtom,
-  selectedAtom,
+  beforePeriodBtnAtom,
+  branchAtom,
+  categoryAtom,
+  categoryDataAtom,
+  categoryDataListAtom,
+  categoryLoadingAtom,
+  checkedAtom,
+  createdAtom,
+  customisedDayAtom,
+  disabledAtom,
+  disabledDateAtom,
+  discountPercentageAtom,
+  durationAtom,
+  endingDateAtom,
+  everyWeekAtom,
+  filteredCategoryDataAtom,
+  itemMenuAtom,
   linkAtom,
   menuAtom,
-  discountPercentageAtom,
   minOrderPercentageAtom,
-  durationAtom,
-  disabledAtom,
-  triggerLoadingAtom,
-  beforePeriodBtnAtom,
-  categoryDataListAtom,
-  branchAtom,
-  categoryDataAtom,
-  startingDateAtom,
-  endingDateAtom,
-  typeScheduleAtom,
-  disabledDateAtom,
-  customisedDayAtom,
-  timesAtom,
-  everyWeekAtom,
-  itemMenuAtom,
-  categoryAtom,
-  filteredCategoryDataAtom,
-  targetAudienceAtom,
-  createdAtom,
+  platformAtom,
   recapAtom,
-  stepsAtom,
-  checkedAtom,
-  categoryLoadingAtom,
+  selectedAtom,
   smRuleAtom,
   heatmapDataAtom,
   defaultHeatmapState,
   maxOrderPercentageAtom,
+  triggerLoadingAtom,
+  startingDateAtom,
+  typeScheduleAtom,
+  targetAudienceAtom,
+  timesAtom,
+  stepsAtom,
   type TCategoryAtom,
   type THeatmapData,
   type TOfferDataResponse,
 } from 'store/marketingSetupAtom';
-import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
-import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
@@ -176,7 +176,7 @@ const MarketingSetup: React.FC<{
   }, [vendors]);
 
   const { getHeatmap, triggerOffers, getMenu } = useApi();
-  const { user } = useUserAuth();
+  const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const {
     setStartTimeFormat,
@@ -371,7 +371,7 @@ const MarketingSetup: React.FC<{
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
       max_discount: maxOrder ? Number(maxOrder.toLowerCase().replace('aed', '')) : '',
       master_email: user.email,
-      access_token: user.accessToken,
+      access_token: user.token,
       platform_token: '',
       vendors: [{}],
       chain_id: '',
@@ -524,7 +524,7 @@ const MarketingSetup: React.FC<{
 
     const body = {
       master_email: user.email,
-      access_token: user.accessToken,
+      access_token: user.token,
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
@@ -595,7 +595,7 @@ const MarketingSetup: React.FC<{
     try {
       setCategoryLoading(true);
       const res = await getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor },
+        { master_email: user.email, access_token: user.token, vendor },
         platforms
       );
 

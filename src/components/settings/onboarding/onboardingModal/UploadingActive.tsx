@@ -1,9 +1,9 @@
+import { useUser } from 'contexts';
 import { useAlert, useApi } from 'hooks';
-import { FC } from 'react';
 import { ButtonKit } from 'kits';
+import { FC } from 'react';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
-import { useUserAuth } from '../../../../contexts/AuthContext';
 
 const UploadingActive: FC<{
   propsVariables: {
@@ -42,12 +42,12 @@ const UploadingActive: FC<{
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { settingsOnboardPlatformStatus } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
-  const { user } = useUserAuth();
+  const user = useUser();
   const confirm = async () => {
     const res = await settingsOnboardPlatformStatus(
       {
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
         email,
         active_status: true,
       },

@@ -1,4 +1,4 @@
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { vendorsAtom } from 'store/vendorsAtom';
@@ -27,7 +27,7 @@ const CompetitionAlerts = () => {
   const [vendorsFromAtom] = useAtom(vendorsAtom);
   const { vendorsArr, vendorsObj } = vendorsFromAtom;
   const [platformList, setPlatformList] = useState([]);
-  const { user } = useUserAuth();
+  const user = useUser();
   const [opened, setOpened] = useState(false);
   const [platform, setPlatform] = useState('deliveroo');
   const [competitionAlertsData, setCompetitionAlertsData] = useState([]);
@@ -197,7 +197,7 @@ const CompetitionAlerts = () => {
   const getCompetitorsDropdownContent = async () => {
     const body = {
       master_email: user.email,
-      access_token: user.accessToken,
+      access_token: user.token,
       vendors: vendorsObj,
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
@@ -252,7 +252,7 @@ const CompetitionAlerts = () => {
       try {
         const body = {
           master_email: user.email,
-          access_token: user.accessToken,
+          access_token: user.token,
           vendors: vend || {},
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
