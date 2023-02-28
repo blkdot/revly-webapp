@@ -9,10 +9,10 @@ import { CSSProperties, FC } from 'react';
 // import Calendar from '../../../assets/images/calendar.svg';
 // import Clock from '../../../assets/images/clock.svg';
 // import User from '../../../assets/images/user.svg';
-import Eye from '../../../assets/images/eye.svg';
-import Graph from '../../../assets/images/graph.svg';
-import ShoppingBag from '../../../assets/images/shopping-bag.svg';
-import Smile from '../../../assets/images/smile.svg';
+import Eye from '../../assets/images/eye.svg';
+import Graph from '../../assets/images/graph.svg';
+import ShoppingBag from '../../assets/images/shopping-bag.svg';
+import Smile from '../../assets/images/smile.svg';
 
 const AdvertsDetails: FC<{
   data: any;

@@ -2,9 +2,9 @@ import { ButtonKit, InputKit, RadioKit, TooltipKit } from 'kits';
 import { FC, useState } from 'react';
 import { Arrow } from 'assets/icons';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import Graph from '../../../../assets/images/graph.svg';
-import Chart from '../../../../assets/images/chart.svg';
-import TooltipIcon from '../../../../assets/images/tooltip-ic.svg';
+import Graph from '../../../assets/images/graph.svg';
+import Chart from '../../../assets/images/chart.svg';
+import TooltipIcon from '../../../assets/images/tooltip-ic.svg';
 
 type stateType = {
   title: string;

@@ -1,7 +1,7 @@
 import { Arrow } from 'assets/icons';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
-import Congrats from '../../../../assets/images/congrats.gif';
+import Congrats from '../../../assets/images/congrats.gif';
 
 const CongratStep: FC<{
   step: string;

@@ -15,9 +15,9 @@ import { FC, useState } from 'react';
 import { countDaysOfWeekBetweenDates } from 'utlls/date/getAllDateSetup';
 import MarketingCheckmarkDropdownOld from 'components/marketingSetup/MarketingCheckmarkDropdownOld';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import CalendarCheckGrayIcon from '../../../../assets/images/ic_calendar-check-gray.svg';
-import CalendarEventIcon from '../../../../assets/images/ic_calendar-event.png';
-import TooltipIcon from '../../../../assets/images/tooltip-ic.svg';
+import CalendarCheckGrayIcon from '../../../assets/images/ic_calendar-check-gray.svg';
+import CalendarEventIcon from '../../../assets/images/ic_calendar-event.png';
+import TooltipIcon from '../../../assets/images/tooltip-ic.svg';
 
 type stateType = {
   title: string;

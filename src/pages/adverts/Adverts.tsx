@@ -13,8 +13,8 @@ import { ButtonKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Adverts.scss';
-import AdvertsCreateNewCampaign from './createNewCampaign/AdvertsCreateNewCampaign';
-import AdvertsDetails from './details/AdvertsDetails';
+import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreateNewCampaign';
+import AdvertsDetails from 'components/details/AdvertsDetails';
 
 const Adverts = () => {
   const { date } = useDate();
