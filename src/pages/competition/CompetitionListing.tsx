@@ -3,6 +3,8 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
+import { vendorsIsolatedAtom } from 'store/vendorsAtom';
 import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState, useCallback } from 'react';
@@ -60,7 +62,8 @@ const headersAlert = (cuisine: string) => [
 ];
 
 const CompetitionListing = () => {
-  const { vendors: vendorsDatas } = useVendors();
+  const { vendors } = useVendors();
+  const [vendorsData, setVendorsData] = useAtom(vendorsIsolatedAtom);
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
@@ -80,7 +83,6 @@ const CompetitionListing = () => {
   const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
-  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendorsDatas)));
 
   const Open = () => {
     setOpened(!opened);
@@ -277,15 +279,22 @@ const CompetitionListing = () => {
     }
   }, [platform, vendorsData, queueDropdown]);
 
-  useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendorsDatas.display));
+  const initVendorsDataSelection = useCallback(() => {
+    const usedVendors = vendorsData.display;
+
+    const displayTemp = JSON.parse(JSON.stringify(usedVendors));
     let counter = 0;
     let defaultSelection = null;
 
     sortedVendors(displayTemp).forEach((chainName) => {
+      const isAllChecked = Object.values(displayTemp[chainName]).every(
+        (vendorObj: any) => vendorObj?.checked
+      );
+
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked =
-          vendorsData?.display?.[chainName]?.[vendorName]?.checked || false;
+        displayTemp[chainName][vendorName].checked = isAllChecked
+          ? false
+          : displayTemp[chainName][vendorName].checked;
 
         const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
         platformsDisplay.forEach((platformV) => {
@@ -298,10 +307,12 @@ const CompetitionListing = () => {
             displayTemp[chainName][vendorName].deleted = true;
             displayTemp[chainName][vendorName].checked = false;
           }
+
           if (platform !== platformV) {
             displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
           }
         });
+
         if (!platformsDisplay.includes(platform)) {
           displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
@@ -325,11 +336,15 @@ const CompetitionListing = () => {
     }
 
     setVendorsData({
-      ...vendorsDatas,
+      ...vendors,
       display: displayTemp,
       vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
     });
-  }, [platform, vendorsDatas]);
+  }, [vendors]);
+
+  useEffect(() => {
+    initVendorsDataSelection();
+  }, [platform, vendors]);
 
   return (
     <div className='wrapper'>

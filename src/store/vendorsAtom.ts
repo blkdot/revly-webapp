@@ -10,4 +10,13 @@ export const vendorsAtom = atom<TVendors>({
   chainData: [],
 });
 
+export const vendorsIsolatedAtom = atom<TVendors>({
+  vendorsSelected: [],
+  vendorsObj: {},
+  vendorsArr: [],
+  display: {},
+  chainObj: {},
+  chainData: [],
+});
+
 export default vendorsAtom;
