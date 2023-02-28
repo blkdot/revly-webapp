@@ -1,21 +1,18 @@
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
-import Dates from 'components/dates/Dates';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import dayjs from 'dayjs';
+import Widget from 'components/widget/Widget';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { vendorsAtom } from 'store/vendorsAtom';
+import dayjs from 'dayjs';
 import { useDate, useMetrics, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
-import './Dashboard.scss';
 import { TypographyKit } from 'kits';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import Widget from 'components/widget/Widget';
+import { useEffect, useState } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
+import './Dashboard.scss';
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
@@ -79,12 +76,7 @@ const Dashboard = () => {
     setConnectAccount,
   };
   const { userPlatformData } = usePlatform();
-  const getDropdown = () => {
-    if (!userPlatformData.onboarded) {
-      return <RestaurantDropdownEmpty />;
-    }
-    return <RestaurantDropdown />;
-  };
+
   const { date } = useDate();
   const { typeDate } = date;
   const getPeriod = (title, period) => {
@@ -225,10 +217,6 @@ const Dashboard = () => {
   };
   return (
     <div className='wrapper'>
-      <div className='top-inputs'>
-        {getDropdown()}
-        <Dates isDashboard />
-      </div>
       {!userPlatformData.onboarded ? (
         <div className='dashboard-stepper'>
           <OnboardingModal propsVariables={propsVariables} />
