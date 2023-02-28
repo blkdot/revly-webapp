@@ -119,7 +119,6 @@ const TableRevlyNew: FC<{
           <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
             <img src={noData} alt='no-data' />
             <p>{noDataText || 'Files not found description here'}</p>
-            <p>{noDataText || 'Files not found description here'}</p>
           </TableCellKit>
         </TableRowKit>
       );
