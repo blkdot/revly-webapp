@@ -64,6 +64,7 @@
   padding: 20px 0;
   max-height: 45%;
   overflow: hidden;
+
   > p {
     border-bottom: 1px solid #919eab29;
     padding: 0 20px;
@@ -104,6 +105,7 @@
     scroll-behavior: smooth;
     padding: 0;
     margin: 0;
+
     &::-webkit-scrollbar {
       width: 6px;
     }
@@ -125,6 +127,7 @@
       justify-content: space-between;
       border-bottom: 1px solid #919eab29;
       padding: 10px 20px;
+
       > div {
         display: flex;
         flex-direction: column;
@@ -140,6 +143,10 @@
           font-weight: 600;
         }
       }
+    }
+
+    > div:last-of-type {
+      border-bottom: none;
     }
   }
 }

@@ -2,12 +2,22 @@ import { Arrow } from 'assets/icons';
 import trash from 'assets/images/ic_trash.png';
 import { useMarketingSetup } from 'hooks';
 import TimePickerDropdown from 'components/timePicker/TimePickerDropdown';
-import { addDays, differenceInDays, isSameDay } from 'date-fns';
-import { ButtonKit, DatePickerDayKit, FormControlKit, RadioKit, TextfieldKit } from 'kits';
+import { addDays, differenceInBusinessDays, differenceInDays, isSameDay } from 'date-fns';
+import {
+  ButtonKit,
+  DatePickerDayKit,
+  FormControlKit,
+  RadioKit,
+  TextfieldKit,
+  TooltipKit,
+} from 'kits';
 import { FC, useState } from 'react';
+import { countDaysOfWeekBetweenDates } from 'utlls/date/getAllDateSetup';
+import MarketingCheckmarkDropdownOld from 'components/marketingSetup/MarketingCheckmarkDropdownOld';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import CalendarCheckGrayIcon from '../../../../assets/images/ic_calendar-check-gray.svg';
 import CalendarEventIcon from '../../../../assets/images/ic_calendar-event.png';
+import TooltipIcon from '../../../../assets/images/tooltip-ic.svg';
 
 type stateType = {
   title: string;
@@ -32,7 +42,6 @@ const RecurencyStep: FC<{
   setStep: (value: string) => void;
   state: stateType;
   setState: (stateType) => void;
-  setOpened: (value: boolean) => void;
   step: string;
   startingDate: number | Date;
   setStartingDate: (value: Date) => void;
@@ -52,7 +61,6 @@ const RecurencyStep: FC<{
   setStep,
   state,
   setState,
-  setOpened,
   step,
   startingDate,
   setStartingDate,
@@ -69,7 +77,7 @@ const RecurencyStep: FC<{
       return true;
     }
 
-    return typeSchedule !== 'everyday';
+    return typeSchedule !== 'Every day';
   };
   const date = document.querySelectorAll('.date-error');
   const onChange = async (newValue: Date, type: string) => {
@@ -82,27 +90,58 @@ const RecurencyStep: FC<{
     date.forEach((el) => arr.push(el.children[0].classList.contains('Mui-error')));
     setDisabled(!arr.every((bool) => bool === false));
     const stateTemp = { ...state };
-    stateTemp.content.find((obj) => obj.title === 'Days').value = `${
-      Math.abs(
-        differenceInDays(
-          type === 'start' ? new Date(newValue) : startingDate,
-          type === 'end' ? new Date(newValue) : endingDate
-        )
-      ) + 1
-    } Days`;
+    if (typeSchedule === 'Work week') {
+      stateTemp.content.find((obj) => obj.title === 'Days').value = `${Math.abs(
+        type === 'start'
+          ? differenceInDays(new Date(newValue), new Date(endingDate))
+          : differenceInDays(new Date(startingDate), new Date(newValue))
+      )} Days`;
+    } else if (typeSchedule === 'Every day') {
+      stateTemp.content.find((obj) => obj.title === 'Days').value = `${Math.abs(
+        type === 'start'
+          ? countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[0] +
+              countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[6]
+          : countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[0] +
+              countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[6]
+      )} Days`;
+    } else {
+      stateTemp.content.find((obj) => obj.title === 'Days').value = `${Math.abs(
+        type === 'start'
+          ? differenceInDays(new Date(newValue), new Date(endingDate))
+          : differenceInDays(new Date(startingDate), new Date(newValue))
+      )} Days`;
+    }
     setState({ ...stateTemp });
   };
 
   const { disableWeekends } = useMarketingSetup();
   const [customised, setCustomised] = useState([]);
   const typeScheduleArr = [
-    { type: 'everyday', title: 'Every day' },
-    { type: 'workweek', title: 'Work week' },
-    { type: 'weekend', title: 'Week-end days' },
-    { type: customised.toString().toLowerCase().replace(/,/g, '.'), title: 'Customised' },
+    {
+      type: 'everyday',
+      title: 'Every day',
+      days: Math.abs(differenceInDays(new Date(startingDate), new Date(endingDate))),
+    },
+    {
+      type: 'workweek',
+      title: 'Work week',
+      days: Math.abs(differenceInBusinessDays(new Date(startingDate), new Date(endingDate))),
+    },
+    {
+      type: 'weekend',
+      title: 'Week-end days',
+      days:
+        countDaysOfWeekBetweenDates(new Date(startingDate), new Date(endingDate))[0] +
+        countDaysOfWeekBetweenDates(new Date(startingDate), new Date(endingDate))[6],
+    },
+    {
+      type: customised.toString().toLowerCase().replace(/,/g, '.'),
+      title: 'Customised',
+      days: Math.abs(differenceInDays(new Date(startingDate), new Date(endingDate))),
+    },
   ];
   const getWorkWeek = () => {
-    if (typeSchedule === 'workweek') {
+    if (typeSchedule === 'Work week') {
       // checking if endingDate eqaul sunday we put monday
       if (new Date(endingDate).getDay() === 0) {
         return new Date(addDays(endingDate, 1));
@@ -115,10 +154,10 @@ const RecurencyStep: FC<{
     }
     return endingDate;
   };
+  const stateTemp = { ...state };
+  const stateBranchTemp = { ...stateBranch };
   const handleClick = () => {
     setStep('budget');
-    const stateTemp = { ...state };
-    const stateBranchTemp = { ...stateBranch };
     stateTemp.content.find((obj) => obj.title === 'Total budget').value = 'AED 0';
     stateBranchTemp.content = selectedVendors('name', branchVendors.display).map((name) => [
       {
@@ -137,6 +176,8 @@ const RecurencyStep: FC<{
     setState({ ...stateTemp });
     setStateBranch({ ...stateBranchTemp });
   };
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
   return (
     <div className={`adverts-step ${step || ''}`}>
       <div className='top'>
@@ -151,6 +192,16 @@ const RecurencyStep: FC<{
               <img src={CalendarCheckGrayIcon} alt='CalendarCheckIcon' />
             </span>
             <p>Your Advert Schedule </p>
+            <TooltipKit
+              onClick={(e) => e.stopPropagation()}
+              interactive={1}
+              id='table-tooltip'
+              placement='right'
+              arrow
+              title='Your ads schedule'
+            >
+              <img className='table-header-tooltip' src={TooltipIcon} alt='tooltip icon' />
+            </TooltipKit>
           </div>
           <div className='adverts-date-picker'>
             <div className='picker-duration'>
@@ -158,7 +209,7 @@ const RecurencyStep: FC<{
                 Starting Date
                 <DatePickerDayKit
                   className='date-error'
-                  shouldDisableDate={typeSchedule === 'workweek' ? disableWeekends : null}
+                  shouldDisableDate={typeSchedule === 'Work week' ? disableWeekends : null}
                   value={startingDate}
                   onChange={(newValue) => {
                     onChange(newValue, 'start');
@@ -171,7 +222,7 @@ const RecurencyStep: FC<{
                 Ending Date
                 <DatePickerDayKit
                   className='date-error'
-                  shouldDisableDate={typeSchedule === 'workweek' ? disableWeekends : null}
+                  shouldDisableDate={typeSchedule === 'Work week' ? disableWeekends : null}
                   minDate={new Date(startingDate)}
                   value={getWorkWeek()}
                   onChange={(newValue) => {
@@ -261,32 +312,53 @@ const RecurencyStep: FC<{
             <span>
               <img src={CalendarEventIcon} alt='CalendarEventIcon' />
             </span>
-            <p>Your Advert Schedule </p>
+            <p>Program the Advert duration</p>
+            <TooltipKit
+              onClick={(e) => e.stopPropagation()}
+              interactive={1}
+              id='table-tooltip'
+              placement='right'
+              arrow
+              title='Program the ads duration'
+            >
+              <img className='table-header-tooltip' src={TooltipIcon} alt='tooltip icon' />
+            </TooltipKit>
           </div>
           <div className='adverts-duration-picker'>
             <FormControlKit
               value={typeSchedule}
               onChange={(e) => {
                 setTypeSchedule(e.target.value);
-                const stateTemp = { ...state };
-                stateTemp.content.find((obj) => obj.title === 'Reccurence').value =
-                  typeScheduleArr.find((obj) => obj.type === e.target.value).title;
+                stateTemp.content[2].value = e.target.value;
+                stateTemp.content[1].value = `${
+                  typeScheduleArr.find((obj) => obj.title === e.target.value).days
+                } Days`;
                 setState({ ...stateTemp });
               }}
             >
               {typeScheduleArr.map((obj) => (
-                <div key={obj.type} className='adverts-radio'>
-                  <RadioKit checked={obj.type === typeSchedule} value={obj.type} />
+                <div key={obj.title} className='adverts-radio'>
+                  <RadioKit checked={obj.title === typeSchedule} value={obj.title} />
                   <p>{obj.title}</p>
                 </div>
               ))}
             </FormControlKit>
           </div>
+          {typeSchedule === 'Customised' ? (
+            <MarketingCheckmarkDropdownOld
+              className='adverts-dropdown'
+              names={days}
+              setName={setCustomised}
+              personName={customised}
+            />
+          ) : (
+            ''
+          )}
         </div>
       </div>
       <div className='buttons'>
-        <ButtonKit onClick={() => setOpened(false)} className='cancel' variant='contained'>
-          Cancel
+        <ButtonKit onClick={() => setStep('launch')} className='cancel' variant='contained'>
+          Back
         </ButtonKit>
         <ButtonKit
           onClick={handleClick}

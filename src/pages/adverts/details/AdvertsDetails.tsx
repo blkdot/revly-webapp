@@ -3,7 +3,7 @@ import AdvertsWidget from 'components/advertsWidget/AdvertsWidget';
 import AdvertsWidgetCustom from 'components/advertsWidget/AdvertsWidgetCustom';
 import { platformObject } from 'data/platformList';
 import { useVendors } from 'hooks';
-import { ButtonKit, PaperKit } from 'kits';
+import { ButtonKit, PaperKit, SkeletonKit } from 'kits';
 import { CSSProperties, FC } from 'react';
 // import { differenceInDays } from 'date-fns';
 // import Calendar from '../../../assets/images/calendar.svg';
@@ -111,6 +111,16 @@ const AdvertsDetails: FC<{
     }
     return data.status;
   };
+  const renderAdvertDetails = (content) => (
+    <div className='adverts-widget-custom_content'>
+      {content.map((obj) => (
+        <div key={obj.title}>
+          <p>{obj.title}</p>
+          {!obj.value ? <SkeletonKit /> : <span>{obj.value}</span>}
+        </div>
+      ))}
+    </div>
+  );
   return (
     <PaperKit className='competition-paper adverts'>
       <button onClick={() => setOpened(false)} type='button' className='back-icon'>
@@ -173,7 +183,11 @@ const AdvertsDetails: FC<{
       </div>
       <div className='advert_settings'>
         {advertSettings.map((obj) => (
-          <AdvertsWidgetCustom key={obj.title} {...obj} />
+          <AdvertsWidgetCustom
+            key={obj.title}
+            {...obj}
+            content={renderAdvertDetails(obj.content)}
+          />
         ))}
       </div>
       {getStatus() === 'Live' || getStatus() === 'Scheduled' ? (

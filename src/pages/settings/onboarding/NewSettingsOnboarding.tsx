@@ -53,9 +53,9 @@ const NewSettingsOnboarding = () => {
     const vendorPlatform = (obj: any) =>
       Object.keys(obj.data.platforms).map((plat) => ({
         platform: plat,
-        status: accounts.find(
-          (objAcc) => objAcc.email === obj.data.platforms[plat].email && objAcc.platform === plat
-        )?.active
+        status: userPlatformData.platforms[plat].find(
+          (objAcc) => objAcc.email === obj.data.platforms[plat].email
+        ).active
           ? 'active'
           : 'suspended',
       }));
@@ -93,11 +93,6 @@ const NewSettingsOnboarding = () => {
   );
 
   useEffect(() => {
-    setVendors(vendors);
-    setBranchData(getBranchData());
-  }, [vendors]);
-
-  useEffect(() => {
     setAccounts(getAccounts());
   }, [JSON.stringify(userPlatformData.platforms)]);
 
@@ -109,6 +104,11 @@ const NewSettingsOnboarding = () => {
       });
     }
   }, [JSON.stringify(userRequestData.data)]);
+
+  useEffect(() => {
+    setVendors(vendors);
+    setBranchData(getBranchData());
+  }, [vendors, userPlatformData]);
 
   const openCloseModal = () => {
     setOpenedModal(!openedModal);

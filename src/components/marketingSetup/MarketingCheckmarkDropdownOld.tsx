@@ -1,4 +1,5 @@
 import {
+  CheckboxKit,
   FormControlKit,
   InputLabelKit,
   ListItemTextKit,
@@ -19,6 +20,7 @@ const MarketingCheckmarkDropdownOld = ({
   type,
   height,
   platform,
+  className,
 }: any) => {
   const ITEM_HEIGHT = height || 48;
   const ITEM_PADDING_TOP = 8;
@@ -86,7 +88,7 @@ const MarketingCheckmarkDropdownOld = ({
         key={name}
         value={name}
       >
-        <RadioKit
+        <CheckboxKit
           checked={(type === 'vendor' ? personName.vendorsSelected : personName).indexOf(name) > -1}
         />
         <ListItemTextKit primary={name} />
@@ -123,7 +125,7 @@ const MarketingCheckmarkDropdownOld = ({
     return selected.join(', ');
   };
   return (
-    <div style={{ width: '100%' }}>
+    <div className={className || ''} style={{ width: '100%' }}>
       <FormControlKit
         className='top-competition marketing-setup-dropdown'
         sx={{ m: 1, width: 300 }}

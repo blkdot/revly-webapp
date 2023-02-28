@@ -1,3 +1,4 @@
+import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
 import { FC } from 'react';
@@ -32,7 +33,7 @@ const RestaurantDropdown: FC<{
   pageType?: string;
   className?: string;
 }> = ({ setState, state, pageType, className }) => {
-  const [vendorsContext, setVendors] = useAtom(vendorsAtom);
+  const { vendors: vendorsContext, setVendors } = useVendors(undefined);
 
   const { display, vendorsObj } = state || vendorsContext;
 

@@ -57,7 +57,7 @@
       }
     }
 
-    &.biling {
+    &.biding {
       transition: 0.7s;
 
       &::before {
@@ -271,6 +271,39 @@
   margin-top: 15px;
   margin-bottom: 40px;
 
+  &.biding {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > div {
+      width: 48%;
+    }
+
+    .adverts-average {
+      height: 46px;
+      width: 48%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 30px;
+      background-color: #f6f3ff;
+      border-radius: 6px;
+
+      p {
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 12px;
+      }
+
+      span {
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 12px;
+      }
+    }
+  }
+
   > div {
     width: 100%;
 
@@ -287,7 +320,7 @@
     height: 36px !important;
     width: 100%;
     background-color: #f8f9fb;
-    padding: 11px 18px;
+    padding: 6px 18px;
     border-radius: 8px;
     overflow: hidden;
   }
@@ -327,6 +360,67 @@
     > .advert-input {
       width: 40%;
       margin: 0;
+    }
+  }
+}
+
+.adverts-dropdown {
+  > div {
+    width: 100%;
+    padding-right: 8px;
+
+    label {
+      top: -5px !important;
+      &[data-shrink='true'] {
+        display: none !important;
+      }
+    }
+
+    legend {
+      display: none !important;
+    }
+
+    > div {
+      height: 46px !important;
+      background-color: #f8f9fb;
+      border-radius: 6px !important;
+      > fieldset {
+        border: none !important;
+      }
+    }
+  }
+}
+.adverts-title-radio {
+  position: absolute;
+  right: 0;
+}
+.adverts-congrats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  p {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 36px;
+    display: block;
+    margin: 15px 0;
+  }
+  span {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #637381;
+  }
+}
+
+@media (max-width: 1000px) {
+  .adverts_create_new_campaign-wrapper {
+    flex-direction: column-reverse;
+    grid-gap: 30px;
+    > div {
+      width: 100% !important;
     }
   }
 }
