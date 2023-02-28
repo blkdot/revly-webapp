@@ -9,6 +9,7 @@ import {
 } from 'contexts';
 import ReactDOM from 'react-dom/client';
 import Modal from 'react-modal';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.scss';
 
@@ -41,7 +42,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <PlatformProvider>
           <AuthContextProvider>
             <GlobalFunctionalitiesContextProvider>
-              <App />
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
             </GlobalFunctionalitiesContextProvider>
           </AuthContextProvider>
         </PlatformProvider>

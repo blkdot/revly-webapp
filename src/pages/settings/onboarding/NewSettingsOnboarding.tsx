@@ -1,14 +1,14 @@
+import { useSettingsOnboarded } from 'api/settingsApi';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMiddleContent';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
+import { useUser } from 'contexts';
 import { usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { useSettingsOnboarded } from 'api/settingsApi';
-import { useUser } from 'routes/ProtectedRoutes';
 import './SettingOnboarding.scss';
 
 const NewSettingsOnboarding = () => {

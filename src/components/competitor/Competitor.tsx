@@ -1,6 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { useAlert } from 'hooks';
 import {
   ButtonKit,
@@ -34,7 +34,7 @@ const Competitor = ({ open, opened, platformList }) => {
   const [cuisineFilter, setCuisineFilter] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingReq, setLoadingReq] = useState(false);
-  const { user } = useUserAuth();
+  const user = useUser();
   const { showAlert, setAlertMessage } = useAlert();
   const [userRestoName, setUserRestoName] = useState('');
 
@@ -42,7 +42,7 @@ const Competitor = ({ open, opened, platformList }) => {
     try {
       const data = await settingsLoad({
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
       });
       setUserRestoName(data.restoname || '');
     } catch (err) {

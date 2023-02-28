@@ -1,8 +1,8 @@
-import { useAtom } from 'jotai';
-import { vendorsAtom } from 'store/vendorsAtom';
 import { useQuery } from '@tanstack/react-query';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
+import { vendorsAtom, vendorsIsolatedAtom } from 'store/vendorsAtom';
 import { platformList } from '../data/platformList';
 import useApi from './useApi';
 import { usePlatform } from './usePlatform';
@@ -113,6 +113,7 @@ export type TVendors = {
 const useVendors = (isSign = false) => {
   const { getVendors } = useApi();
   const [, setVendorsAtom] = useAtom(vendorsAtom);
+  const [, setVendorsIsolatedAtom] = useAtom(vendorsIsolatedAtom);
 
   const [vendors, setVendors] = useState<TVendors>({
     vendorsSelected: [],
@@ -123,11 +124,11 @@ const useVendors = (isSign = false) => {
     chainData: [],
   });
 
-  const { user } = useUserAuth();
+  const user = useUser();
   const { userPlatformData } = usePlatform();
   const requestVendorsDefaultParam = {
-    master_email: user?.email || '',
-    access_token: user?.accessToken || '',
+    master_email: user.email,
+    access_token: user.token,
   };
 
   const { data, isLoading, isError } = useQuery(
@@ -259,6 +260,14 @@ const useVendors = (isSign = false) => {
 
     setVendors(dataV);
     setVendorsAtom((prev) => {
+      if (prev.chainData.length !== dataV.chainData.length) {
+        return dataV;
+      }
+
+      return prev;
+    });
+
+    setVendorsIsolatedAtom((prev) => {
       if (prev.chainData.length !== dataV.chainData.length) {
         return dataV;
       }

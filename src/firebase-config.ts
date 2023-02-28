@@ -1,6 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import {
+  applyActionCode,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  confirmPasswordReset,
+  createUserWithEmailAndPassword,
+  EmailAuthProvider,
+  getAuth,
+  PhoneAuthProvider,
+  reauthenticateWithCredential,
+  RecaptchaVerifier,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signOut,
+  updatePhoneNumber,
+  verifyPasswordResetCode,
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,3 +37,57 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+export const signUp = async (email: string, password: string) =>
+  createUserWithEmailAndPassword(auth, email, password);
+
+export const signIn = async (email: string, password: string, remember: boolean) => {
+  await setPersistence(auth, remember ? browserSessionPersistence : browserLocalPersistence);
+  return signInWithEmailAndPassword(auth, email, password);
+};
+
+export const logout = async () => signOut(auth);
+
+export const verifyResetCode = async (code: string) => verifyPasswordResetCode(auth, code);
+
+export const verifyCodeEmail = async (code: string) => applyActionCode(auth, code);
+
+export const resetPassword = async (code: string, password: string) =>
+  confirmPasswordReset(auth, code, password);
+
+export const reAuth = async (password: string) =>
+  reauthenticateWithCredential(
+    auth.currentUser,
+    EmailAuthProvider.credential(auth.currentUser.email, password)
+  );
+
+export const updatePhone = async (vId: string, code: string) =>
+  updatePhoneNumber(auth.currentUser, PhoneAuthProvider.credential(vId, code));
+
+export const createRecaptcha = () => {
+  const existDiv = document.getElementById('recaptcha');
+
+  if (existDiv) {
+    existDiv.remove();
+  }
+
+  const div = document.createElement('div');
+  div.id = 'recaptcha';
+  div.style.display = 'none';
+  document.body.appendChild(div);
+
+  (window as any).applicationVerifier = new RecaptchaVerifier(
+    'recaptcha',
+    {
+      size: 'invisible',
+    },
+    auth
+  );
+};
+
+export const verifyPhone = async (phone: string) => {
+  createRecaptcha();
+  return new PhoneAuthProvider(auth).verifyPhoneNumber(phone, (window as any).applicationVerifier);
+};
+
+export const reAuthGoogle = async () => {};

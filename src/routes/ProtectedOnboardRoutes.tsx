@@ -1,13 +1,13 @@
-import { useSettingsOnboarded } from 'api/settingsApi';
-import { usePlatform } from 'hooks';
-import { SpinnerKit } from 'kits';
-import { useEffect, useCallback } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
 import { getElligibilityDeliveroo } from 'api/elligibilityDeliverooApi';
+import { useSettingsOnboarded } from 'api/settingsApi';
+import { useUser } from 'contexts';
+import { usePlatform } from 'hooks';
+import { useAtom } from 'jotai';
+import { SpinnerKit } from 'kits';
+import { useCallback, useEffect } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { useAtom } from 'jotai';
-import { useUser } from './ProtectedRoutes';
 
 export const ProtectedOnboardRoutes = () => {
   const user = useUser();

@@ -1,9 +1,9 @@
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
-import { type TVendorsObj } from './useVendors';
 import useApi from './useApi';
 import useDate from './useDate';
+import { type TVendorsObj } from './useVendors';
 
 let fnDelays = null;
 
@@ -13,7 +13,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const { getMetrics } = useApi();
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
-  const { user } = useUserAuth();
+  const user = useUser();
   const newVendorsObj = {};
 
   Object.keys(vendorsObj).forEach((plat) => {
@@ -39,7 +39,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
 
     getMetrics({
       master_email: user.email,
-      access_token: user.accessToken,
+      access_token: user.token,
       vendors: newVendorsObj,
       start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(date.endDate).format('YYYY-MM-DD'),

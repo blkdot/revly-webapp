@@ -420,9 +420,9 @@ const Planning = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
           new Date(obj.valid_to)
-        ).format('hh:mm')}`,
+        ).format('HH:mm')}`,
       }))
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);

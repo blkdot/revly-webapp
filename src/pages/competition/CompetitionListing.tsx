@@ -1,25 +1,25 @@
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
+import { vendorsIsolatedAtom } from 'store/vendorsAtom';
+import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState, useCallback } from 'react';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import CompetitionDropdown from 'components/competitionDropdown/CompetitionDropdown';
+import Competitor from 'components/competitor/Competitor';
+import Dates from 'components/dates/Dates';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import AreaIcon from '../../assets/images/ic_area.png';
+import Iccuisine from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
-import Iccuisine from '../../assets/images/ic_cuisine.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
-import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
-import Competitor from '../../components/competitor/Competitor';
-import Dates from '../../components/dates/Dates';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
 
 let fnDelays = null;
@@ -62,7 +62,8 @@ const headersAlert = (cuisine: string) => [
 ];
 
 const CompetitionListing = () => {
-  const { vendors: vendorsDatas } = useVendors();
+  const { vendors } = useVendors();
+  const [vendorsData, setVendorsData] = useAtom(vendorsIsolatedAtom);
   const [opened, setOpened] = useState(false);
   const [platformList, setPlatformList] = useState([]);
   const [platform, setPlatform] = useState('deliveroo');
@@ -78,11 +79,10 @@ const CompetitionListing = () => {
   });
   const [queueDropdown, setQueueDropdown] = useState(0);
   const { getRanking, getAreas, getCuisines } = useApi();
-  const { user } = useUserAuth();
+  const user = useUser();
   const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
-  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendorsDatas)));
 
   const Open = () => {
     setOpened(!opened);
@@ -158,7 +158,7 @@ const CompetitionListing = () => {
       try {
         const body = {
           master_email: user.email,
-          access_token: user.accessToken,
+          access_token: user.token,
           vendors: vend || [],
           day_period: timeSlotObj[timeSlot] || 'All',
           filter_location: newArea,
@@ -227,7 +227,7 @@ const CompetitionListing = () => {
 
         const body = {
           master_email: user.email,
-          access_token: user.accessToken,
+          access_token: user.token,
           vendors: vend || [],
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
@@ -279,15 +279,22 @@ const CompetitionListing = () => {
     }
   }, [platform, vendorsData, queueDropdown]);
 
-  useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendorsDatas.display));
+  const initVendorsDataSelection = useCallback(() => {
+    const usedVendors = vendorsData.display;
+
+    const displayTemp = JSON.parse(JSON.stringify(usedVendors));
     let counter = 0;
     let defaultSelection = null;
 
     sortedVendors(displayTemp).forEach((chainName) => {
+      const isAllChecked = Object.values(displayTemp[chainName]).every(
+        (vendorObj: any) => vendorObj?.checked
+      );
+
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked =
-          vendorsData?.display?.[chainName]?.[vendorName]?.checked || false;
+        displayTemp[chainName][vendorName].checked = isAllChecked
+          ? false
+          : displayTemp[chainName][vendorName].checked;
 
         const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
         platformsDisplay.forEach((platformV) => {
@@ -300,10 +307,12 @@ const CompetitionListing = () => {
             displayTemp[chainName][vendorName].deleted = true;
             displayTemp[chainName][vendorName].checked = false;
           }
+
           if (platform !== platformV) {
             displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
           }
         });
+
         if (!platformsDisplay.includes(platform)) {
           displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
@@ -327,11 +336,15 @@ const CompetitionListing = () => {
     }
 
     setVendorsData({
-      ...vendorsDatas,
+      ...vendors,
       display: displayTemp,
       vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
     });
-  }, [platform, vendorsDatas]);
+  }, [vendors]);
+
+  useEffect(() => {
+    initVendorsDataSelection();
+  }, [platform, vendors]);
 
   return (
     <div className='wrapper'>

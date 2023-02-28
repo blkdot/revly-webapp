@@ -1,4 +1,4 @@
-import { useUserAuth } from 'contexts';
+import { resetPassword, verifyResetCode } from 'firebase-config';
 import { useAlert } from 'hooks';
 import { ButtonLoadingKit, SpinnerKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -7,7 +7,6 @@ import ResetPasswordForm from './form/ResetPasswordForm';
 import './ResetPassword.scss';
 
 const ResetPassword = () => {
-  const { resetPassword, verifyResetCode } = useUserAuth();
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({ new: '', confirm: '' });
   const [error, setError] = useState({ new: false, confirm: false });
