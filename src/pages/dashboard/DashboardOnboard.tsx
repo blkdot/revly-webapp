@@ -201,6 +201,7 @@ const Dashboard = () => {
     <div className='wrapper'>
       <div className='top-inputs'>
         {getDropdown()}
+        {getDropdown()}
         <Dates isDashboard />
       </div>
       {!userPlatformData.onboarded ? (

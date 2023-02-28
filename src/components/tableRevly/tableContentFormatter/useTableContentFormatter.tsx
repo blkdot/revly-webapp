@@ -8,6 +8,7 @@ import shortid from 'shortid';
 import costAtom from 'store/costAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { isInfinity } from 'utlls/scripts/scripts';
+import { platformList, platformObject } from '../../../data/platformList';
 import Calendar from '../../../assets/images/calendar.svg';
 import Clock from '../../../assets/images/clock.svg';
 import Eye from '../../../assets/images/eye.svg';
@@ -15,7 +16,6 @@ import Graph from '../../../assets/images/graph.svg';
 import ShoppingBag from '../../../assets/images/shopping-bag.svg';
 import Smile from '../../../assets/images/smile.svg';
 import User from '../../../assets/images/user.svg';
-import { platformList, platformObject } from '../../../data/platformList';
 
 const useTableContentFormatter = () => {
   const { getChainData } = useVendors();
@@ -179,10 +179,10 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-                <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
-                  {vendor}
-                </span>
-              ))
+              <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
+                {vendor}
+              </span>
+            ))
         }
         disableHoverListener={r[h.id]?.length === 0}
         id='category-tooltip'
@@ -221,13 +221,13 @@ const useTableContentFormatter = () => {
               vendorsContent === null || !vendorsContent
                 ? '-'
                 : vendors.map((vendor) => (
-                    <span
-                      key={`${vendor}${shortid.generate()}`}
-                      className='render-row-tooltip column'
-                    >
-                      {vendor}
-                    </span>
-                  ))
+                  <span
+                    key={`${vendor}${shortid.generate()}`}
+                    className='render-row-tooltip column'
+                  >
+                    {vendor}
+                  </span>
+                ))
             }
             disableHoverListener={vendorsContent?.length === 0}
             id='category-tooltip'

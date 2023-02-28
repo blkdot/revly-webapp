@@ -8,8 +8,8 @@ const selectedVendors = (name: string, display: any, plat?: string) => {
         if (name === 'name') {
           arr.push(vName);
         } else if (name === 'full') {
-          if (display[cName][vName].platforms[plat]) {
-            arr.push(display[cName][vName].platforms[plat]);
+          if (display[cName][vName].platforms[plat]){
+            arr.push(display[cName][vName].platforms[plat])
           }
         } else {
           arr.push(display[cName][vName]);
