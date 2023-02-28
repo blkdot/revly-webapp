@@ -12,7 +12,7 @@ import { useUser } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { useDate, useMetrics, usePlatform } from 'hooks';
+import { useDate, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
