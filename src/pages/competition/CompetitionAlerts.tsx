@@ -1,10 +1,10 @@
 import { useUser } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
-import { vendorsAtom } from 'store/vendorsAtom';
+import { vendorsIsolatedAtom } from 'store/vendorsAtom';
 import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
@@ -22,10 +22,8 @@ import './Competition.scss';
 let fnDelays = null;
 
 const CompetitionAlerts = () => {
-  const { vendors, setVendors } = useVendors();
-  const { vendorsObj: vendorsObjFromQuery } = vendors;
-  const [vendorsFromAtom] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsObj } = vendorsFromAtom;
+  const { vendors } = useVendors();
+  const [vendorsData, setVendorsData] = useAtom(vendorsIsolatedAtom);
   const [platformList, setPlatformList] = useState([]);
   const user = useUser();
   const [opened, setOpened] = useState(false);
@@ -42,7 +40,6 @@ const CompetitionAlerts = () => {
     endDate: new Date(),
   });
   const { userPlatformData } = usePlatform();
-  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendors)));
 
   const Open = () => {
     setOpened(!opened);
@@ -140,15 +137,22 @@ const CompetitionAlerts = () => {
       {}
     );
 
-  useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+  const initVendorsDataSelection = useCallback(() => {
+    const usedVendors = vendorsData.display;
+
+    const displayTemp = JSON.parse(JSON.stringify(usedVendors));
     let counter = 0;
     let defaultSelection = null;
 
     sortedVendors(displayTemp).forEach((chainName) => {
+      const isAllChecked = Object.values(displayTemp[chainName]).every(
+        (vendorObj: any) => vendorObj?.checked
+      );
+
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked =
-          vendorsData?.display?.[chainName]?.[vendorName]?.checked || false;
+        displayTemp[chainName][vendorName].checked = isAllChecked
+          ? false
+          : displayTemp[chainName][vendorName].checked;
 
         const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
         platformsDisplay.forEach((platformV) => {
@@ -161,10 +165,12 @@ const CompetitionAlerts = () => {
             displayTemp[chainName][vendorName].deleted = true;
             displayTemp[chainName][vendorName].checked = false;
           }
+
           if (platform !== platformV) {
             displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
           }
         });
+
         if (!platformsDisplay.includes(platform)) {
           displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
@@ -192,13 +198,17 @@ const CompetitionAlerts = () => {
       display: displayTemp,
       vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
     });
+  }, [vendors]);
+
+  useEffect(() => {
+    initVendorsDataSelection();
   }, [platform, vendors]);
 
   const getCompetitorsDropdownContent = async () => {
     const body = {
       master_email: user.email,
       access_token: user.token,
-      vendors: vendorsObj,
+      vendors: { [platform]: vendors.vendorsObj[platform] },
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
     };
@@ -206,7 +216,7 @@ const CompetitionAlerts = () => {
     const comp = await getCompetitors(body);
 
     setCompetitorList(comp.data ? comp.data.data : []);
-    setCompetitor(comp.data ? comp.data.data : []);
+    setCompetitor([]);
   };
 
   const filterData = () => {
@@ -223,7 +233,7 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     getCompetitorsDropdownContent();
-  }, []);
+  }, [vendors]);
 
   useEffect(() => {
     filterData();
@@ -294,17 +304,11 @@ const CompetitionAlerts = () => {
   };
 
   useEffect(() => {
-    if (platform && vendorsArr.length) {
+    if (platform && vendorsData.vendorsArr.length) {
       setCompetitor([]);
       getData(platform, { [platform]: vendorsData.vendorsObj[platform] });
     }
   }, [platform, vendorsData, beforePeriodBtn]);
-
-  useEffect(() => {
-    const arr = vendorsArr.filter((v) => v.platform === platform && v.metadata.is_active === true);
-
-    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });
-  }, [platform]);
 
   const handleCompetitorChange = (e) => {
     const { value } = e.target;
@@ -313,9 +317,7 @@ const CompetitionAlerts = () => {
   };
 
   const filterCompetitionList = competitorList?.filter(
-    (compet) =>
-      compet.platform?.toLowerCase() === platform?.toLowerCase() &&
-      vendorsData.vendorsObj[platform].some((vend) => vend.data.vendor_name === compet.vendor_name)
+    (compet) => compet.platform?.toLowerCase() === platform?.toLowerCase()
   );
 
   return (
