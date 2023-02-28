@@ -31,7 +31,6 @@ const FilterMore = (props: any) => {
               values={filters.status}
               onChange={onChangeMultipleSelect('status')}
               label='Status'
-              style={{ width: '100%' }}
             />
           </div>
           <div style={{ marginTop: '0.5rem' }}>

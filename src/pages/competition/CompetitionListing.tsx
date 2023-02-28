@@ -6,12 +6,16 @@ import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { vendorsIsolatedAtom } from 'store/vendorsAtom';
 import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
-import { ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
+import { ListItemTextKit, MenuItemKit, PaperKit } from 'kits';
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
 import { useEffect, useState, useCallback } from 'react';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import CompetitionDropdown from 'components/competitionDropdown/CompetitionDropdown';
 import Competitor from 'components/competitor/Competitor';
+import { platformObject } from 'data/platformList';
 import Dates from 'components/dates/Dates';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
@@ -20,6 +24,7 @@ import Iccuisine from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
 import ictalabat from '../../assets/images/talabat-favicon.png';
+import Columns from '../../assets/images/columns.svg';
 import './Competition.scss';
 
 let fnDelays = null;
@@ -83,6 +88,7 @@ const CompetitionListing = () => {
   const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
+  const [selectedPlatform, setSelectedPlatform] = useState(['deliveroo']);
 
   const Open = () => {
     setOpened(!opened);
@@ -358,49 +364,24 @@ const CompetitionListing = () => {
           defaultTypeDate='day'
         />
       </div>
-      <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
-        Competition - Listing
-      </TypographyKit>
-      <TypographyKit variant='subtitle'>
-        Be informed on how you rank compared to your competitors
-      </TypographyKit>
+      <MainTitle>Competition - Listing</MainTitle>
+      <DescriptionTitle>
+        Stay one step ahead of the game by tracking your listing and visibility against your
+        competitors.
+      </DescriptionTitle>
       <PaperKit className='competition-paper'>
         <div className='competition-top-input'>
           <div className='dropdowns'>
-            {Array.isArray(platformList) && platformList.length > 0 ? (
-              <CompetitionDropdown
-                rows={platformList}
-                renderOptions={(v) => (
-                  <MenuItemKit key={v.name} value={v.name}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        textTransform: 'capitalize',
-                      }}
-                    >
-                      <img
-                        src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                        width={24}
-                        height={24}
-                        style={{ objectFit: 'contain' }}
-                        alt='icon'
-                      />
-                      <ListItemTextKit primary={v.name} />
-                    </div>
-                  </MenuItemKit>
-                )}
-                icon={PlatformIcon}
-                title='Select a Platform'
-                type='platform'
-                className='top-competition'
-                setRow={setPlatform}
-                select={platform}
-              />
-            ) : (
-              ''
-            )}
+            <FilterDropdown
+              items={[{ text: 'deliveroo', value: 'deliveroo' }, { text: 'talabat', value: 'talabat' }]}
+              values={selectedPlatform}
+              onChange={(v) => setSelectedPlatform([v])}
+              label='Platforms'
+              icon={<img src={Columns} alt='Platform' />}
+              internalIconOnActive={platformObject}
+              maxShowned={1}
+              mono
+            />
 
             <div className='listing-vendors top-competition'>
               <RestaurantDropdown

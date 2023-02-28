@@ -1,6 +1,10 @@
+.MuiRadio-root .MuiSvgIcon-root [data-testid="RadioButtonUncheckedIcon"]{
+  left: 7px;
+}
 .comp-dropdown {
   display: flex;
   position: relative;
+
 
   button {
     border: none;
@@ -43,14 +47,14 @@
       display: flex;
       align-items: center;
 
-      &.__active {
-        * {
-          &:not(img) {
-            filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
-              contrast(102%);
-          }
-        }
-      }
+      // &.__active {
+      //   * {
+      //     &:not(img) {
+      //       filter: invert(43%) sepia(64%) saturate(2282%) hue-rotate(229deg) brightness(65%)
+      //         contrast(102%);
+      //     }
+      //   }
+      // }
     }
 
     img,

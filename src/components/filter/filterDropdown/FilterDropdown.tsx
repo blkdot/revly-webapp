@@ -1,13 +1,31 @@
 import { useClickAwayListener } from 'hooks';
-import { ButtonKit, CheckboxKit } from 'kits';
-import { useRef, useState } from 'react';
+import { ButtonKit, CheckboxKit, RadioKit } from 'kits';
+import { useRef, useState, type ReactNode } from 'react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import type { TPlatformObject } from 'data/platformList';
 import './FilterDropdown.scss';
 
-const FilterDropdown = (props: any) => {
-  const { items, values, onChange, label, icon, customTag, maxShowned, internalIconOnActive } =
-    props;
-
+const FilterDropdown: React.FC<{
+  items: { value: string; text: string }[]
+  values: string[];
+  onChange: (k: string) => void;
+  label: string;
+  icon?: ReactNode;
+  customTag?: string;
+  internalIconOnActive?: TPlatformObject;
+  mono?: boolean;
+  maxShowned?: number;
+}> = ({
+  items,
+  values,
+  onChange,
+  label,
+  icon,
+  customTag,
+  maxShowned,
+  internalIconOnActive,
+  mono,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const refDropdown = useRef(null);
@@ -48,10 +66,14 @@ const FilterDropdown = (props: any) => {
         role='button'
         tabIndex={0}
       >
-        <CheckboxKit
-          checked={values.includes(item.value)}
-          onChange={() => selectItem(item.value)}
-        />
+        {mono ? (
+          <RadioKit checked={values.includes(item.value)} onChange={() => selectItem(item.value)} />
+        ) : (
+          <CheckboxKit
+            checked={values.includes(item.value)}
+            onChange={() => selectItem(item.value)}
+          />
+        )}
         <span>{item.text}</span>
       </div>
     ));

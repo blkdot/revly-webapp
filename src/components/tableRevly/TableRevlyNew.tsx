@@ -47,7 +47,7 @@ const TableRevlyNew: FC<{
     status?: any[];
     type_offer?: any[];
   };
-  handleChangeMultipleFilter?: (k: string) => void;
+  handleChangeMultipleFilter?: (k: string) => (v: string) => void;
   noDataText?: string;
 }> = ({
   headers,
