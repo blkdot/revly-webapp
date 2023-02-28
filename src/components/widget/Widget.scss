@@ -9,7 +9,7 @@
   border-radius: 16px;
   border: 1px solid #fff;
 
-  >div {
+  > div {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -35,7 +35,7 @@
       background-color: $color-icon !important;
     }
 
-    >svg {
+    > svg {
       width: 70%;
       height: 70%;
       object-fit: cover;
@@ -52,7 +52,6 @@
   }
 
   .card-icon {
-
     svg,
     img {
       filter: invert(58%) sepia(0%) saturate(671%) hue-rotate(147deg) brightness(87%) contrast(84%);

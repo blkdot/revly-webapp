@@ -51,7 +51,7 @@
     border-radius: 31px;
   }
 
-  >div {
+  > div {
     white-space: nowrap;
     text-transform: capitalize;
     padding: 8px 20px;
@@ -73,7 +73,8 @@
       color: #906bff;
 
       img {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
       }
     }
 
@@ -81,7 +82,8 @@
       color: #906bff;
 
       img {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%) contrast(102%);
+        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
       }
     }
 
@@ -102,25 +104,25 @@
     left: 0px;
   }
 
-  >div:nth-of-type(2).active~.indicator {
+  > div:nth-of-type(2).active ~ .indicator {
     left: calc(135px * 1);
   }
 
-  >div:nth-of-type(3).active~.indicator {
+  > div:nth-of-type(3).active ~ .indicator {
     left: calc(140px * 2);
   }
 
-  >div:nth-of-type(4).active~.indicator {
+  > div:nth-of-type(4).active ~ .indicator {
     left: calc(142px * 3);
     width: 175px;
   }
 
-  >div:nth-of-type(5).active~.indicator {
+  > div:nth-of-type(5).active ~ .indicator {
     left: calc(150px * 4);
     width: 195px;
   }
 
-  >div:nth-of-type(6).active~.indicator {
+  > div:nth-of-type(6).active ~ .indicator {
     left: calc(160px * 5);
     width: 180px;
   }

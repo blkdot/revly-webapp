@@ -179,10 +179,10 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-              <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
-                {vendor}
-              </span>
-            ))
+                <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
+                  {vendor}
+                </span>
+              ))
         }
         disableHoverListener={r[h.id]?.length === 0}
         id='category-tooltip'
@@ -221,13 +221,13 @@ const useTableContentFormatter = () => {
               vendorsContent === null || !vendorsContent
                 ? '-'
                 : vendors.map((vendor) => (
-                  <span
-                    key={`${vendor}${shortid.generate()}`}
-                    className='render-row-tooltip column'
-                  >
-                    {vendor}
-                  </span>
-                ))
+                    <span
+                      key={`${vendor}${shortid.generate()}`}
+                      className='render-row-tooltip column'
+                    >
+                      {vendor}
+                    </span>
+                  ))
             }
             disableHoverListener={vendorsContent?.length === 0}
             id='category-tooltip'

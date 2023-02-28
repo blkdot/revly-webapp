@@ -155,18 +155,23 @@ const RestaurantCheckboxAccordion: FC<{
                     {vendorName}
                   </div>
                 </TooltipKit>
-                {
-                  pageType !== 'listing' ? <div
+                {pageType !== 'listing' ? (
+                  <div
                     role='presentation'
                     tabIndex={-1}
                     onClick={(e) => e.stopPropagation()}
                     className='only-button'
                   >
-                    <ButtonKit onClick={(e) => handleClickVendor(e, vendorName)} variant='contained'>
+                    <ButtonKit
+                      onClick={(e) => handleClickVendor(e, vendorName)}
+                      variant='contained'
+                    >
                       Only
                     </ButtonKit>
-                  </div> : ''
-                }
+                  </div>
+                ) : (
+                  ''
+                )}
               </MenuItemKit>
             </div>
           );
@@ -223,8 +228,8 @@ const RestaurantCheckboxAccordion: FC<{
                     <img key={plat} className='restaurant-img' src={getIcon(plat)} alt={plat} />
                   ))}
               </div>
-              {
-                pageType !== 'listing' ? <div className='only-button vendor'>
+              {pageType !== 'listing' ? (
+                <div className='only-button vendor'>
                   <ButtonKit
                     disabled={!info[vendorName].active}
                     onClick={(e) => handleClickVendor(e, vendorName)}
@@ -232,8 +237,10 @@ const RestaurantCheckboxAccordion: FC<{
                   >
                     Only
                   </ButtonKit>
-                </div> : ''
-              }
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </InputLabelKit>
         );
