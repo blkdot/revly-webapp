@@ -1,0 +1,8 @@
+.platform-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  &.disabled {
+    opacity: 0.7;
+  }
+}

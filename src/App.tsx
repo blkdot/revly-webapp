@@ -22,6 +22,7 @@ import {
   SignUp,
   VerifyCode,
 } from 'pages';
+import { Test } from 'pages/Test';
 import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import {
@@ -79,6 +80,7 @@ const App = () => {
             <Route path='/marketing/offer' element={<MarketingOffer />} />
             <Route path='/marketing/ads' element={<MarketingAds />} />
             <Route path='/adverts' element={<Adverts />} />
+            <Route path='/test' element={<Test />} />
           </Route>
           <Route element={<SettingsLayout />}>
             <Route path='/settings/general' element={<SettingsGeneral />} />
