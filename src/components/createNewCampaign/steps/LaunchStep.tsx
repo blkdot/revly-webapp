@@ -1,14 +1,17 @@
 import { Arrow } from 'assets/icons';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { differenceInDays } from 'date-fns';
+import { useAtom } from 'jotai';
+import { branchAtom } from 'store/marketingSetupAtom';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
 
-type stateType = {
+type StateType = {
   title: string;
   content: {
     title: string;
     value: string | number;
+    disabled?: boolean;
   }[];
 };
 
@@ -16,11 +19,10 @@ const LaunchStep: FC<{
   setStep: (value: string) => void;
   setOpened: (value: boolean) => void;
   step: string;
-  setState: (stateType) => void;
-  state: stateType;
-  branchVendors: any;
-  setBranchVendors: any;
-}> = ({ setStep, setOpened, step, setState, state, branchVendors, setBranchVendors }) => {
+  setState: (StateType) => void;
+  state: StateType;
+}> = ({ setStep, setOpened, step, setState, state }) => {
+  const [branchVendors, setBranchVendors] = useAtom(branchAtom);
   const handleClick = () => {
     const stateTemp = { ...state };
     setStep('recurency');

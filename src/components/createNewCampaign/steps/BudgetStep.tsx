@@ -1,20 +1,23 @@
 import { ButtonKit, InputKit, RadioKit, TooltipKit } from 'kits';
 import { FC, useState } from 'react';
 import { Arrow } from 'assets/icons';
+import { useAtom } from 'jotai';
+import { branchAtom } from 'store/marketingSetupAtom';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import Wallet from '../../../assets/images/wallet.svg';
 import List from '../../../assets/images/list.svg';
 import TooltipIcon from '../../../assets/images/tooltip-ic.svg';
 
-type stateType = {
+type StateType = {
   title: string;
   content: {
     title: string;
     value: string | number;
+    disabled?: boolean;
   }[];
 };
 
-type stateBranchType = {
+type StateBranchType = {
   title: string;
   content: {
     title: string;
@@ -24,23 +27,15 @@ type stateBranchType = {
 
 const BudgetStep: FC<{
   setStep: (value: string) => void;
-  stateAdverts: stateType;
-  setStateAdverts: (stateType) => void;
-  stateBranch: stateBranchType;
-  setStateBranch: (stateBranchType) => void;
+  stateAdverts: StateType;
+  setStateAdverts: (value: StateType) => void;
+  stateBranch: StateBranchType;
+  setStateBranch: (value: StateBranchType) => void;
   step: string;
-  branchVendors: any;
-}> = ({
-  setStep,
-  stateAdverts,
-  setStateAdverts,
-  stateBranch,
-  setStateBranch,
-  step,
-  branchVendors,
-}) => {
+}> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch, step }) => {
   const stateTemp = { ...stateAdverts };
   const stateBranchTemp = { ...stateBranch };
+  const [branchVendors] = useAtom(branchAtom);
   const getDisabled = () => {
     if (
       Number(

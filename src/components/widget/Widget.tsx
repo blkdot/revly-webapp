@@ -153,12 +153,7 @@ const Widget: FC<{
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
         >
           <div>
-            <TypographyKit
-              style={{ textTransform: 'capitalize' }}
-              variant='subtitle2'
-              className='card-typography'
-              component='div'
-            >
+            <TypographyKit variant='subtitle2' className='card-typography' component='div'>
               {title}
             </TypographyKit>
             {loading ? (

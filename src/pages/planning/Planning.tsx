@@ -7,6 +7,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
+import { ContainerKit } from 'kits';
 
 import { useEffect, useState } from 'react';
 
@@ -433,21 +434,23 @@ const Planning = () => {
         <RestaurantDropdown />
         <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
-      {opened ? (
-        <OfferDetailComponent
-          data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
-          setOpened={setOpened}
+      <ContainerKit>
+        {opened ? (
+          <OfferDetailComponent
+            data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
+            setOpened={setOpened}
+          />
+        ) : (
+          renderTable()
+        )}
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
         />
-      ) : (
-        renderTable()
-      )}
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+      </ContainerKit>
     </div>
   );
 };

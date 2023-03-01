@@ -6,10 +6,12 @@
   margin-bottom: 40px;
   grid-gap: 15px;
   flex-wrap: wrap;
+
   > div {
     display: flex;
     flex-direction: column;
   }
+
   .adverts-title {
     font-size: 20px;
     font-weight: 400;
@@ -46,11 +48,20 @@
 
     img {
       margin-left: 15px;
-      width: 17px;
-      height: 17px;
+      width: 12px;
+      height: 12px;
       object-fit: contain;
       filter: invert(98%) sepia(5%) saturate(198%) hue-rotate(224deg) brightness(340%)
         contrast(100%);
+    }
+
+    &.Mui-disabled {
+      color: rgba(0, 0, 0, 0.26);
+      background-color: rgba(0, 0, 0, 0.12);
+
+      img {
+        filter: invert(0%) sepia(3%) saturate(0%) hue-rotate(196deg) brightness(100%) contrast(103%);
+      }
     }
   }
 }
@@ -190,6 +201,7 @@
     width: 100%;
   }
 }
+
 .advert-cancel.advert-cancel {
   margin-top: 40px;
   background-color: #ff484214;
@@ -199,6 +211,7 @@
   font-size: 17px;
   font-weight: 700;
   height: 55px;
+
   &:hover {
     background-color: #ff484214 !important;
   }

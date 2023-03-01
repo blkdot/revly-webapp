@@ -21,6 +21,7 @@ const MarketingCheckmarkDropdownOld = ({
   height,
   platform,
   className,
+  onChange,
 }: any) => {
   const ITEM_HEIGHT = height || 48;
   const ITEM_PADDING_TOP = 8;
@@ -142,7 +143,7 @@ const MarketingCheckmarkDropdownOld = ({
           id='demo-multiple-checkbox'
           multiple={type !== 'vendor'}
           value={getValue()}
-          onChange={handleChange}
+          onChange={onChange || handleChange}
           input={<OutlinedInputKit label={title || 'Customised Days'} />}
           renderValue={(selected) => getRenderValue(selected)}
           MenuProps={MenuProps}

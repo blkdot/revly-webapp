@@ -11,6 +11,8 @@ import {
   TextfieldKit,
   TooltipKit,
 } from 'kits';
+import { branchAtom, endingDateAtom, startingDateAtom, timesAtom } from 'store/marketingSetupAtom';
+import { useAtom } from 'jotai';
 import { FC, useState } from 'react';
 import { countDaysOfWeekBetweenDates } from 'utlls/date/getAllDateSetup';
 import MarketingCheckmarkDropdownOld from 'components/marketingSetup/MarketingCheckmarkDropdownOld';
@@ -19,59 +21,46 @@ import CalendarCheckGrayIcon from '../../../assets/images/ic_calendar-check-gray
 import CalendarEventIcon from '../../../assets/images/ic_calendar-event.png';
 import TooltipIcon from '../../../assets/images/tooltip-ic.svg';
 
-type stateType = {
+type StateType = {
   title: string;
   content: {
     title: string;
     value: string | number;
+    disabled?: boolean;
   }[];
 };
-type stateBranchType = {
+type StateBranchType = {
   title: string;
   content: {
     title: string;
     value: string | number;
   }[][];
 };
-type timesType = {
-  startTime: Date;
-  endTime: Date;
-  pos: number;
-}[];
+
 const RecurencyStep: FC<{
   setStep: (value: string) => void;
-  state: stateType;
-  setState: (stateType) => void;
+  state: StateType;
+  setState: (value: StateType) => void;
   step: string;
-  startingDate: number | Date;
-  setStartingDate: (value: Date) => void;
-  endingDate: number | Date;
-  setEndingDate: (value: Date) => void;
   typeSchedule: string;
   setTypeSchedule: (value: string) => void;
-  times: timesType;
-  setTimes: (timesType) => void;
-  stateBranch: stateBranchType;
-  setStateBranch: (stateBranchType) => void;
-  branchVendors: any;
+  stateBranch: StateBranchType;
+  setStateBranch: (value: StateBranchType) => void;
 }> = ({
-  branchVendors,
   stateBranch,
   setStateBranch,
   setStep,
   state,
   setState,
   step,
-  startingDate,
-  setStartingDate,
-  endingDate,
-  setEndingDate,
   typeSchedule,
   setTypeSchedule,
-  times,
-  setTimes,
 }) => {
   const [disabled, setDisabled] = useState(false);
+  const [startingDate, setStartingDate] = useAtom(startingDateAtom);
+  const [endingDate, setEndingDate] = useAtom(endingDateAtom);
+  const [times, setTimes] = useAtom(timesAtom);
+  const [branchVendors] = useAtom(branchAtom);
   const isEndingLimited = () => {
     if (isSameDay(new Date(endingDate), new Date(startingDate))) {
       return true;
@@ -96,7 +85,7 @@ const RecurencyStep: FC<{
           ? differenceInDays(new Date(newValue), new Date(endingDate))
           : differenceInDays(new Date(startingDate), new Date(newValue))
       )} Days`;
-    } else if (typeSchedule === 'Every day') {
+    } else if (typeSchedule === 'Week-end days') {
       stateTemp.content.find((obj) => obj.title === 'Days').value = `${Math.abs(
         type === 'start'
           ? countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[0] +
@@ -113,9 +102,22 @@ const RecurencyStep: FC<{
     }
     setState({ ...stateTemp });
   };
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  const [customised, setCustomised] = useState([]);
+  const getCustomisedDays = (type: string, newValue: Date) => {
+    let count = 0;
+    customised.forEach((day) => {
+      count += countDaysOfWeekBetweenDates(
+        new Date(type === 'start' ? newValue : startingDate),
+        new Date(type === 'end' ? newValue : endingDate)
+      )[days.findIndex((d) => day === d) + 1 === 7 ? 0 : days.findIndex((d) => d === day) + 1];
+    });
+
+    return count;
+  };
 
   const { disableWeekends } = useMarketingSetup();
-  const [customised, setCustomised] = useState([]);
   const typeScheduleArr = [
     {
       type: 'everyday',
@@ -137,7 +139,7 @@ const RecurencyStep: FC<{
     {
       type: customised.toString().toLowerCase().replace(/,/g, '.'),
       title: 'Customised',
-      days: Math.abs(differenceInDays(new Date(startingDate), new Date(endingDate))),
+      days: getCustomisedDays('custom', new Date()),
     },
   ];
   const getWorkWeek = () => {
@@ -176,7 +178,6 @@ const RecurencyStep: FC<{
     setState({ ...stateTemp });
     setStateBranch({ ...stateBranchTemp });
   };
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   return (
     <div className={`adverts-step ${step || ''}`}>
@@ -333,6 +334,7 @@ const RecurencyStep: FC<{
                 stateTemp.content[1].value = `${
                   typeScheduleArr.find((obj) => obj.title === e.target.value).days
                 } Days`;
+
                 setState({ ...stateTemp });
               }}
             >
@@ -350,6 +352,15 @@ const RecurencyStep: FC<{
               names={days}
               setName={setCustomised}
               personName={customised}
+              onChange={(e) => {
+                stateTemp.content[1].value = `${
+                  typeScheduleArr.find((obj) => obj.title === 'Customised').days
+                } Days`;
+                setCustomised(
+                  typeof e.target.value === 'string' ? e.target.value.split(', ') : e.target.value
+                );
+                setState({ ...stateTemp });
+              }}
             />
           ) : (
             ''
