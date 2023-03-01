@@ -74,7 +74,6 @@ const AdvertsCreateNewCampaign: FC<{
   const stepsObject = {
     launch: (
       <LaunchStep
-        step={step}
         setStep={setStep}
         setOpened={setOpened}
         setState={setAdvertDetailsWidget}
@@ -83,7 +82,6 @@ const AdvertsCreateNewCampaign: FC<{
     ),
     recurency: (
       <RecurencyStep
-        step={step}
         setStep={setStep}
         state={advertDetailsWidget}
         setState={setAdvertDetailsWidget}
@@ -95,7 +93,6 @@ const AdvertsCreateNewCampaign: FC<{
     ),
     budget: (
       <BudgetStep
-        step={step}
         setStep={setStep}
         stateAdverts={advertDetailsWidget}
         setStateAdverts={setAdvertDetailsWidget}
@@ -105,7 +102,6 @@ const AdvertsCreateNewCampaign: FC<{
     ),
     biding: (
       <BidingStep
-        step={step}
         setStep={setStep}
         stateAdverts={advertDetailsWidget}
         setStateAdverts={setAdvertDetailsWidget}
@@ -113,7 +109,7 @@ const AdvertsCreateNewCampaign: FC<{
         setStateBranch={setBranchDetailsWidget}
       />
     ),
-    congrats: <CongratStep step={step} setStep={setStep} setOpened={setOpened} />,
+    congrats: <CongratStep setStep={setStep} setOpened={setOpened} />,
   };
 
   const advertDetails = () => (
@@ -144,7 +140,7 @@ const AdvertsCreateNewCampaign: FC<{
   );
   return (
     <div className='adverts_create_new_campaign-wrapper'>
-      {stepsObject[step]}
+      <div className={`adverts-step-wrapper ${step || ''}`}>{stepsObject[step]}</div>
       <div className='adverts_create_new_campaign_widgets'>
         <AdvertsWidgetCustom {...advertDetailsWidget} content={advertDetails()} />
         <AdvertsWidgetCustom {...branchDetailsWidget} content={advertBranches()} />

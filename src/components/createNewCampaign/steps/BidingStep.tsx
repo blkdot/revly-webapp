@@ -31,8 +31,7 @@ const BidingStep: FC<{
   setStateAdverts: (value: StateType) => void;
   stateBranch: StateBranchType;
   setStateBranch: (value: StateBranchType) => void;
-  step: string;
-}> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch, step }) => {
+}> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch }) => {
   const stateTemp = { ...stateAdverts };
   const stateBranchTemp = { ...stateBranch };
   const [branchVendors] = useAtom(branchAtom);
@@ -56,8 +55,8 @@ const BidingStep: FC<{
     setStateAdverts({ ...stateTemp });
   };
   return (
-    <div className={`adverts-step ${step || ''}`}>
-      <div className='top'>
+    <div className='adverts-step'>
+      <div className='adverts-step_top'>
         <p>4. Setup your advert biding</p>
         <span>Set a biding for each branch</span>
         <div className='advert-total-budget'>
@@ -175,8 +174,8 @@ const BidingStep: FC<{
           </div>
         </div>
       </div>
-      <div className='buttons'>
-        <ButtonKit onClick={() => setStep('budget')} className='cancel' variant='contained'>
+      <div className='adverts-buttons'>
+        <ButtonKit onClick={() => setStep('budget')} className='adverts-cancel' variant='contained'>
           Back
         </ButtonKit>
         <ButtonKit
@@ -184,7 +183,7 @@ const BidingStep: FC<{
             setStep('congrats');
           }}
           disabled={getDisabled()}
-          className='continue'
+          className='adverts-continue'
           variant='contained'
         >
           Continue <Arrow />

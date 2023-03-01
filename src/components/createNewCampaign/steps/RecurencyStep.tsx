@@ -41,21 +41,11 @@ const RecurencyStep: FC<{
   setStep: (value: string) => void;
   state: StateType;
   setState: (value: StateType) => void;
-  step: string;
   typeSchedule: string;
   setTypeSchedule: (value: string) => void;
   stateBranch: StateBranchType;
   setStateBranch: (value: StateBranchType) => void;
-}> = ({
-  stateBranch,
-  setStateBranch,
-  setStep,
-  state,
-  setState,
-  step,
-  typeSchedule,
-  setTypeSchedule,
-}) => {
+}> = ({ stateBranch, setStateBranch, setStep, state, setState, typeSchedule, setTypeSchedule }) => {
   const [disabled, setDisabled] = useState(false);
   const [startingDate, setStartingDate] = useAtom(startingDateAtom);
   const [endingDate, setEndingDate] = useAtom(endingDateAtom);
@@ -180,8 +170,8 @@ const RecurencyStep: FC<{
   };
 
   return (
-    <div className={`adverts-step ${step || ''}`}>
-      <div className='top'>
+    <div className='adverts-step'>
+      <div className='adverts-step_top'>
         <p>2. Setup your Advert schedule and recurency</p>
         <span>
           Stand out from the crowd with an advert, Advertise on your platforms and you&apos;ll
@@ -367,14 +357,14 @@ const RecurencyStep: FC<{
           )}
         </div>
       </div>
-      <div className='buttons'>
-        <ButtonKit onClick={() => setStep('launch')} className='cancel' variant='contained'>
+      <div className='adverts-buttons'>
+        <ButtonKit onClick={() => setStep('launch')} className='adverts-cancel' variant='contained'>
           Back
         </ButtonKit>
         <ButtonKit
           onClick={handleClick}
           disabled={disabled}
-          className='continue'
+          className='adverts-continue'
           variant='contained'
         >
           Continue <Arrow />

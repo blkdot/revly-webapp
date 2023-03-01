@@ -4,25 +4,24 @@ import { FC } from 'react';
 import Congrats from '../../../assets/images/congrats.gif';
 
 const CongratStep: FC<{
-  step: string;
   setStep: (value: string) => void;
   setOpened: (value: boolean) => void;
-}> = ({ step, setOpened, setStep }) => (
-  <div className={`adverts-step ${step || ''}`}>
-    <div className='top'>
+}> = ({ setOpened, setStep }) => (
+  <div className='adverts-step'>
+    <div className='adverts-step_top'>
       <div className='adverts-congrats'>
         <img src={Congrats} alt='congrats gif' />
         <p>Congrats!</p>
         <span>Your ads has been launched</span>
       </div>
     </div>
-    <div className='buttons'>
+    <div className='adverts-buttons'>
       <ButtonKit
         onClick={() => {
           setStep('launch');
           setOpened(false);
         }}
-        className='continue'
+        className='adverts-continue'
         variant='contained'
         style={{ width: '100%' }}
       >

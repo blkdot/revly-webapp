@@ -31,8 +31,7 @@ const BudgetStep: FC<{
   setStateAdverts: (value: StateType) => void;
   stateBranch: StateBranchType;
   setStateBranch: (value: StateBranchType) => void;
-  step: string;
-}> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch, step }) => {
+}> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch }) => {
   const stateTemp = { ...stateAdverts };
   const stateBranchTemp = { ...stateBranch };
   const [branchVendors] = useAtom(branchAtom);
@@ -62,8 +61,8 @@ const BudgetStep: FC<{
   };
 
   return (
-    <div className={`adverts-step ${step || ''}`}>
-      <div className='top'>
+    <div className='adverts-step'>
+      <div className='adverts-step_top'>
         <p>3. Setup your Adverts budgets</p>
         <span>
           Set a budget for all your selected branches , we will adjust this advert on your platform
@@ -170,8 +169,12 @@ const BudgetStep: FC<{
           </div>
         </div>
       </div>
-      <div className='buttons'>
-        <ButtonKit onClick={() => setStep('recurency')} className='cancel' variant='contained'>
+      <div className='adverts-buttons'>
+        <ButtonKit
+          onClick={() => setStep('recurency')}
+          className='adverts-cancel'
+          variant='contained'
+        >
           Back
         </ButtonKit>
         <ButtonKit
@@ -183,7 +186,7 @@ const BudgetStep: FC<{
             setStateBranch({ ...stateBranchTemp });
           }}
           disabled={getDisabled()}
-          className='continue'
+          className='adverts-continue'
           variant='contained'
         >
           Continue <Arrow />

@@ -18,10 +18,9 @@ type StateType = {
 const LaunchStep: FC<{
   setStep: (value: string) => void;
   setOpened: (value: boolean) => void;
-  step: string;
   setState: (StateType) => void;
   state: StateType;
-}> = ({ setStep, setOpened, step, setState, state }) => {
+}> = ({ setStep, setOpened, setState, state }) => {
   const [branchVendors, setBranchVendors] = useAtom(branchAtom);
   const handleClick = () => {
     const stateTemp = { ...state };
@@ -34,8 +33,8 @@ const LaunchStep: FC<{
     setState({ ...stateTemp });
   };
   return (
-    <div className={`adverts-step ${step || ''}`}>
-      <div className='top'>
+    <div className='adverts-step'>
+      <div className='adverts-step_top'>
         <p>1. Launch a New Adverts </p>
         <span>
           Stand out from the crowd with an advert, Advertise on your platforms and you&apos;ll
@@ -45,11 +44,11 @@ const LaunchStep: FC<{
           <RestaurantDropdown pageType='branch' setState={setBranchVendors} state={branchVendors} />
         </div>
       </div>
-      <div className='buttons'>
-        <ButtonKit onClick={() => setOpened(false)} className='cancel' variant='contained'>
+      <div className='adverts-buttons'>
+        <ButtonKit onClick={() => setOpened(false)} className='adverts-cancel' variant='contained'>
           Cancel
         </ButtonKit>
-        <ButtonKit onClick={handleClick} className='continue' variant='contained'>
+        <ButtonKit onClick={handleClick} className='adverts-continue' variant='contained'>
           Continue <Arrow />
         </ButtonKit>
       </div>
