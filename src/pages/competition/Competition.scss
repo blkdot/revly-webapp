@@ -24,6 +24,7 @@
   border-radius: 16px;
   background: #ffffff !important;
   margin-bottom: 40px;
+  min-height: 40rem;
 }
 
 .top-competition {
@@ -129,9 +130,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 25px 0px;
-  border-bottom: 1px solid rgba(145, 158, 171, 0.24);
-  margin-bottom: 25px;
+  padding: 25px 0px 0px;
 
   .dropdowns {
     display: flex;

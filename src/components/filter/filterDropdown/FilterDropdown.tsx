@@ -15,6 +15,7 @@ const FilterDropdown: React.FC<{
   internalIconOnActive?: TPlatformObject;
   mono?: boolean;
   maxShowned?: number;
+  disabled?: boolean;
 }> = ({
   items,
   values,
@@ -25,6 +26,7 @@ const FilterDropdown: React.FC<{
   maxShowned,
   internalIconOnActive,
   mono,
+  disabled,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -79,7 +81,7 @@ const FilterDropdown: React.FC<{
     ));
 
   const renderItems = () => {
-    if (!isOpen) {
+    if (!isOpen || disabled) {
       return null;
     }
 
@@ -112,7 +114,7 @@ const FilterDropdown: React.FC<{
   };
 
   return (
-    <div className='comp-dropdown'>
+    <div className={`comp-dropdown ${disabled ? 'disabled' : ''}`}>
       <ButtonKit
         variant='outlined'
         onClick={(e) => {

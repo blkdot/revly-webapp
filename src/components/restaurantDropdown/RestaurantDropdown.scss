@@ -84,18 +84,13 @@
   }
 
   > div {
-    box-shadow: none;
-    border-radius: 30px;
-    margin: 0;
-    border: 1px solid rgba(145, 158, 171, 0.32);
-    height: 40px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: row;
-    padding: 0 15px 0 5px;
-    cursor: pointer;
-    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 26px;
+    gap: 10px;
+    background: #F8F9FB;
+  border-radius: 10px;
 
     fieldset {
       border: none;

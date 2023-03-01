@@ -257,7 +257,10 @@ const useVendors = (isSign = false) => {
       chainObj: { ...display },
       chainData,
     };
-
+    console.log(dataV);
+    // const chainCompactData = dataV.chainData.reduce((acc, cur) => {
+    //   const new = { chain_id }
+    // }, []);
     setVendors(dataV);
     setVendorsAtom((prev) => {
       if (prev.chainData.length !== dataV.chainData.length) {
