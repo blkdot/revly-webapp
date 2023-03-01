@@ -7,16 +7,16 @@ export type DateRange = {
 };
 
 export type DatesContextType = {
-  before: DateRange;
-  after: DateRange;
+  current: DateRange;
+  compare: DateRange;
 };
 
 const DatesContext = createContext<DatesContextType>({
-  before: {
+  current: {
     from: dayjs(new Date()),
     until: dayjs(new Date()),
   },
-  after: {
+  compare: {
     from: dayjs(new Date()),
     until: dayjs(new Date()),
   },

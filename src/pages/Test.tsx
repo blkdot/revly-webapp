@@ -61,7 +61,7 @@ export const Test: FC = () => {
 
   // TODO: fix type
 
-  const { before, after } = useDates();
+  const { current: before, compare: after } = useDates();
 
   /* today, yesterday, current week, last week, curren month, last month */
   const presets: {

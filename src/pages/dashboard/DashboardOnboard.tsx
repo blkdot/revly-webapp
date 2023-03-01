@@ -1,7 +1,4 @@
 import { settingsOnboarded } from 'api/settingsApi';
-import Dates from 'components/dates/Dates';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -12,7 +9,7 @@ import { useUser } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { useDate, useMetrics, usePlatform } from 'hooks';
+import { useDate, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -80,12 +77,6 @@ const Dashboard = () => {
     setConnectAccount,
   };
   const { userPlatformData, setUserPlatformData } = usePlatform();
-  const getDropdown = () => {
-    if (!userPlatformData.onboarded) {
-      return <RestaurantDropdownEmpty />;
-    }
-    return <RestaurantDropdown />;
-  };
   const { date } = useDate();
   const { typeDate } = date;
   const getPeriod = (title, period) => {
@@ -197,13 +188,10 @@ const Dashboard = () => {
     }
     onboard();
   }, [branchData]);
+
   return (
     <div className='wrapper'>
-      <div className='top-inputs'>
-        {getDropdown()}
-        <Dates isDashboard />
-      </div>
-      {!userPlatformData.onboarded ? (
+      {!userPlatformData.onboarded && (
         <div className='dashboard-stepper'>
           <OnboardingModal propsVariables={propsVariables} />
           <OnboardingStepper
@@ -212,8 +200,6 @@ const Dashboard = () => {
             openCloseModal={openCloseModal}
           />
         </div>
-      ) : (
-        ''
       )}
       <div className='block'>
         <TypographyKit className='dashboard-title'>

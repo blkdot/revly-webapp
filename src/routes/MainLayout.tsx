@@ -16,26 +16,26 @@ const isOffer = (path: string) =>
   ['/marketing/ads', '/marketing/offer', '/planning', '/adverts'].includes(path);
 
 export const MainLayout = () => {
+  const { pathname } = useLocation();
+
   const [vendors, setVendors] = useState<unknown[]>([]);
 
-  const [before, setBefore] = useState<DateRange>({
+  const [current, setCurrent] = useState<DateRange>({
     from: dayjs(new Date()),
     until: dayjs(new Date()),
   });
-  const [after, setAfter] = useState<DateRange>({
+  const [compare, setConmpare] = useState<DateRange>({
     from: dayjs(new Date()),
     until: dayjs(new Date()),
   });
 
   const dates = useMemo(
     () => ({
-      before,
-      after,
+      current,
+      compare,
     }),
-    [after, before]
+    [compare, current]
   );
-
-  const { pathname } = useLocation();
 
   return (
     <div className='user-page'>
@@ -43,15 +43,17 @@ export const MainLayout = () => {
       <VendorsProvider value={vendors}>
         <DatesProvider value={dates}>
           <ContainerKit>
-            <div className='top-inputs'>
-              <RestaurantDropdown />
-              <Dates
-                isDashboard={isDashboard(pathname)}
-                offer={isOffer(pathname)}
-                isListing={isListing}
-              />
+            <div className='wrapper'>
+              <div className='top-inputs'>
+                <RestaurantDropdown />
+                <Dates
+                  isDashboard={isDashboard(pathname)}
+                  offer={isOffer(pathname)}
+                  isListing={isListing}
+                />
+              </div>
+              <Outlet />
             </div>
-            <Outlet />
           </ContainerKit>
         </DatesProvider>
       </VendorsProvider>
