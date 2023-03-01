@@ -2,6 +2,7 @@ import { useClickAwayListener, useVendors } from 'hooks';
 import { ButtonKit, RadioKit } from 'kits';
 import { useRef, useState, useMemo, type ReactNode } from 'react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TChainData } from 'hooks/useVendors';
 import List from '@mui/material/List';
 import { ListItemText } from '@mui/material';
@@ -20,9 +21,13 @@ const FilterBranch: React.FC<{
   const [openAccordion, setOpenAccordion] = useState('');
   const { vendors } = useVendors();
 
-  const chains = useMemo(() => Object.keys(vendors.display), [vendors.display]);
+  const chains = useMemo(
+    () => Object.keys(vendors.display).sort((a) => (a.trim() === '' ? 1 : -1)),
+    [vendors.display]
+  );
 
   const refDropdown = useRef(null);
+  const [regfItemDropdown] = useAutoAnimate();
 
   const selectItem = (v) => {
     onChange(v);
@@ -38,7 +43,8 @@ const FilterBranch: React.FC<{
     }
 
     if (lengthValues === items.length) {
-      if (items.length === 1) return items.find((item) => values[0] === item.vendor_id)?.vendor_name;
+      if (items.length === 1)
+        return items.find((item) => values[0] === item.vendor_id)?.vendor_name;
 
       return `All ${label} selected`;
     }
@@ -64,6 +70,7 @@ const FilterBranch: React.FC<{
         onKeyDown={() => selectItem(String(item.vendor_id))}
         role='button'
         tabIndex={0}
+        style={{ width: '100%' }}
       >
         <RadioKit
           checked={values.includes(String(item.vendor_id))}
@@ -77,21 +84,41 @@ const FilterBranch: React.FC<{
     chains.map((name) => {
       if (!name) {
         return (
-          <div onClick={() => setOpenAccordion(name)} onKeyDown={() => setOpenAccordion(name)} key={`${name}_key_empty`} role="button" tabIndex={0}>
+          <div key={`${name}_key_empty`} role='button' tabIndex={0} style={{ width: '100%' }}>
             {renderItem(items.filter((item) => item.chain_name === name))}
           </div>
         );
       }
 
       return (
-        <div key={name} onClick={() => setOpenAccordion(name)} onKeyDown={() => setOpenAccordion(name)} role="button" tabIndex={0} style={{ cursor: 'pointer', width: '100%' }}>
+        <div
+          key={name}
+          onClick={() => setOpenAccordion((prev) => (prev === name ? '' : name))}
+          onKeyDown={() => setOpenAccordion((prev) => (prev === name ? '' : name))}
+          role='button'
+          tabIndex={0}
+          style={{ cursor: 'pointer', width: '100%' }}
+          ref={regfItemDropdown}
+        >
           <ListItemText style={{ width: '100%' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: '1rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                marginTop: '1rem',
+              }}
+            >
               {name}
               {openAccordion === name ? <ExpandLess /> : <ExpandMore />}
             </div>
           </ListItemText>
-          {openAccordion === name ? <div key={name}>{renderItem(items.filter((item) => item.chain_name === name))}</div> : null}
+          {openAccordion === name ? (
+            <div key={name} style={{ width: '100%' }}>
+              {renderItem(items.filter((item) => item.chain_name === name))}
+            </div>
+          ) : null}
         </div>
       );
     });

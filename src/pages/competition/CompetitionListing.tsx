@@ -18,6 +18,7 @@ import AreaIcon from '../../assets/images/area.svg';
 import Iccuisine from '../../assets/images/ic_cuisine.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
 import Columns from '../../assets/images/columns.svg';
+import TooltipIcon from '../../assets/images/tooltip-ic.svg';
 import './Competition.scss';
 
 let fnDelays = null;
@@ -83,7 +84,13 @@ const CompetitionListing = () => {
   const [selectedArea, setSelectedArea] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState([]);
 
-  const branchActive = useMemo(() => chainData.find((chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]), [branchSelected, selectedPlatform]);
+  const branchActive = useMemo(
+    () =>
+      chainData.find(
+        (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+      ),
+    [branchSelected[0], selectedPlatform[0]]
+  );
 
   const Open = () => {
     setOpened(!opened);
@@ -179,7 +186,7 @@ const CompetitionListing = () => {
       return '';
     }
 
-    setSelectedCuisine(cuisines.length > 0 ? [cuisines[0]] : []);
+    setSelectedCuisine([cuisines[0]]);
 
     return cuisines[0] || '';
   };
@@ -236,21 +243,20 @@ const CompetitionListing = () => {
         };
 
         Promise.all([getCuisines(body, plat), getAreas(body, plat)])
-          .then(([cuisineResult, areaResult]) => {
-            const newCuisine = handleCuisineDataResponse(cuisineResult.data.cuisines);
-            const newArea = handleAreasDataResponse(areaResult.data.locations);
+          .then(([cuisineResult, areaResult]) => ({
+            cuisines: cuisineResult?.data?.cuisines,
+            areas: areaResult?.data?.locations,
+          }))
+          .then(({ cuisines, areas }) => {
+            const newCuisine = handleCuisineDataResponse(cuisines);
+            const newArea = handleAreasDataResponse(areas);
 
             if (stack === queueDropdown) setQueueDropdown(0);
 
             return { newCuisine, newArea };
           })
           .then(({ newCuisine, newArea }) => {
-            getData(
-              selectedPlatform[0],
-              [branchActive.data],
-              newCuisine,
-              newArea
-            );
+            getData(selectedPlatform[0], [vend], newCuisine, newArea);
           })
           .catch((err) => {
             setLoading(false);
@@ -275,7 +281,7 @@ const CompetitionListing = () => {
       branchSelected[0]
     ) {
       if (!branchActive) return;
-      
+
       setLoading(true);
       getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
     }
@@ -283,8 +289,6 @@ const CompetitionListing = () => {
 
   useEffect(() => {
     if (selectedPlatform[0] && branchSelected[0]) {
-      
-
       if (!branchActive) return;
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
@@ -385,6 +389,14 @@ const CompetitionListing = () => {
               mono
             />
           </div>
+        </div>
+        <div className="competition-tooltip-wrapper">
+          <img
+            src={TooltipIcon}
+            alt='tooltip icon'
+            className="competition-tooltip "
+          />
+          &nbsp;filter by area to be able to select a specific time slot
         </div>
         <TableRevlyNew
           renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
