@@ -37,8 +37,7 @@ const LaunchStep: FC<{
       <div className='adverts-step_top'>
         <p>1. Launch a New Adverts </p>
         <span>
-          Stand out from the crowd with an advert, Advertise on your platforms and you&apos;ll
-          appear in the Featured section of the app
+          Schedule ads at the right slot and boost your visibility and sales.
         </span>
         <div className='advert-branches'>
           <RestaurantDropdown pageType='branch' setState={setBranchVendors} state={branchVendors} />

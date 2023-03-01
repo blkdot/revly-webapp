@@ -70,21 +70,23 @@ const RecurencyStep: FC<{
     setDisabled(!arr.every((bool) => bool === false));
     const stateTemp = { ...state };
     if (typeSchedule === 'Work week') {
-      stateTemp.content.find((obj) => obj.title === 'Days').value = `${Math.abs(
+      stateTemp.content[1].value = `${Math.abs(
         type === 'start'
           ? differenceInDays(new Date(newValue), new Date(endingDate))
           : differenceInDays(new Date(startingDate), new Date(newValue))
       )} Days`;
     } else if (typeSchedule === 'Week-end days') {
-      stateTemp.content.find((obj) => obj.title === 'Days').value = `${Math.abs(
+      stateTemp.content[1].value = `${Math.abs(
         type === 'start'
           ? countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[0] +
-              countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[6]
+          countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[6]
           : countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[0] +
-              countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[6]
+          countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[6]
       )} Days`;
+    } else if (typeSchedule === 'Customised') {
+      stateTemp.content[1].value = `${getCustomisedDays(type, newValue, customised)} Days`
     } else {
-      stateTemp.content.find((obj) => obj.title === 'Days').value = `${Math.abs(
+      stateTemp.content[1].value = `${Math.abs(
         type === 'start'
           ? differenceInDays(new Date(newValue), new Date(endingDate))
           : differenceInDays(new Date(startingDate), new Date(newValue))
@@ -95,9 +97,9 @@ const RecurencyStep: FC<{
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const [customised, setCustomised] = useState([]);
-  const getCustomisedDays = (type: string, newValue: Date) => {
+  const getCustomisedDays = (type: string, newValue: Date, customisedArr: string[]) => {
     let count = 0;
-    customised.forEach((day) => {
+    customisedArr.forEach((day) => {
       count += countDaysOfWeekBetweenDates(
         new Date(type === 'start' ? newValue : startingDate),
         new Date(type === 'end' ? newValue : endingDate)
@@ -129,7 +131,7 @@ const RecurencyStep: FC<{
     {
       type: customised.toString().toLowerCase().replace(/,/g, '.'),
       title: 'Customised',
-      days: getCustomisedDays('custom', new Date()),
+      days: getCustomisedDays('custom', new Date(), customised),
     },
   ];
   const getWorkWeek = () => {
@@ -174,8 +176,7 @@ const RecurencyStep: FC<{
       <div className='adverts-step_top'>
         <p>2. Setup your Advert schedule and recurency</p>
         <span>
-          Stand out from the crowd with an advert, Advertise on your platforms and you&apos;ll
-          appear in the Featured section of the app
+          Schedule ads at the right slot and boost your visibility and sales.
         </span>
         <div className='advert-schedule'>
           <div className='advert-title-icon'>
@@ -321,9 +322,8 @@ const RecurencyStep: FC<{
               onChange={(e) => {
                 setTypeSchedule(e.target.value);
                 stateTemp.content[2].value = e.target.value;
-                stateTemp.content[1].value = `${
-                  typeScheduleArr.find((obj) => obj.title === e.target.value).days
-                } Days`;
+                stateTemp.content[1].value = `${typeScheduleArr.find((obj) => obj.title === e.target.value).days
+                  } Days`;
 
                 setState({ ...stateTemp });
               }}
@@ -343,12 +343,10 @@ const RecurencyStep: FC<{
               setName={setCustomised}
               personName={customised}
               onChange={(e) => {
-                stateTemp.content[1].value = `${
-                  typeScheduleArr.find((obj) => obj.title === 'Customised').days
-                } Days`;
                 setCustomised(
                   typeof e.target.value === 'string' ? e.target.value.split(', ') : e.target.value
                 );
+                stateTemp.content[1].value = `${getCustomisedDays('custom', new Date(), typeof e.target.value === 'string' ? e.target.value.split(', ') : e.target.value)} Days`;
                 setState({ ...stateTemp });
               }}
             />
