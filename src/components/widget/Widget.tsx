@@ -128,7 +128,7 @@ const Widget: FC<{
     );
   };
   return (
-    <CardKit className={`card_wrapper ${table === link ? 'active' : ''}`} onClick={changeLink}>
+    <CardKit className={`card_wrapper ${table === link && 'active'}`} onClick={changeLink}>
       <CardContentKit>
         {tooltip ? (
           <TooltipKit
@@ -165,7 +165,7 @@ const Widget: FC<{
             ) : (
               <TypographyKit
                 variant='h3'
-                className={`card-typography ${link === 'roi' ? 'card-roi' : ''}`}
+                className={`card-typography ${link === 'roi' && 'card-roi'}`}
               >
                 {renderMetrics()}
               </TypographyKit>
@@ -178,8 +178,8 @@ const Widget: FC<{
           ) : (
             <div style={{ margin: 0 }} className='card_bottom'>
               <PaperKit
-                className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
-                  procent() < 0 ? 'decreased' : ''
+                className={`icon-paper ${procent() > 0 && 'increased'} ${
+                  procent() < 0 && 'decreased'
                 }`}
               >
                 {procent() === 0 ? (
@@ -190,8 +190,8 @@ const Widget: FC<{
               </PaperKit>
               <TypographyKit
                 sx={{ lineHeight: 0 }}
-                className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
-                  procent() < 0 ? 'decreased' : ''
+                className={`card-procent ${procent() > 0 && 'increased'} ${
+                  procent() < 0 && 'decreased'
                 }`}
                 variant='body2'
               >

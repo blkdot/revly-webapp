@@ -43,7 +43,7 @@ const MarketingPlaceholderDropdown: FC<{
   };
 
   return (
-    <div className={`marketing-placeholder-dropdown ${personName ? 'active' : ''} ${className}`}>
+    <div className={`marketing-placeholder-dropdown ${personName && 'active'} ${className}`}>
       <FormControlKit sx={{ m: 1, width: 300, mt: 3 }}>
         <SelectKit
           readOnly={readOnly}

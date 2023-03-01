@@ -26,11 +26,11 @@ type StateBranchType = {
 };
 
 const BidingStep: FC<{
-  setStep: (value: string) => void;
+  setStep: (v: string) => void;
   stateAdverts: StateType;
-  setStateAdverts: (value: StateType) => void;
+  setStateAdverts: (v: StateType) => void;
   stateBranch: StateBranchType;
-  setStateBranch: (value: StateBranchType) => void;
+  setStateBranch: (v: StateBranchType) => void;
 }> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch }) => {
   const stateTemp = { ...stateAdverts };
   const stateBranchTemp = { ...stateBranch };

@@ -450,7 +450,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   <span className='offer-duration width-left-icon width-right-icon'>
                     {type_offer ? getMenuTypeOffer() : <SkeletonKit width={130} height={30} />}
                   </span>
-                  {type_offer && type_offer !== 'Menu discount' ? <ExpandIcon /> : ''}
+                  {type_offer && type_offer !== 'Menu discount' && <ExpandIcon />}
                 </div>
                 {type_offer && type_offer !== 'Menu discount' && (
                   <div

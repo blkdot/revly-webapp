@@ -4,8 +4,8 @@ import { FC } from 'react';
 import Congrats from '../../../assets/images/congrats.gif';
 
 const CongratStep: FC<{
-  setStep: (value: string) => void;
-  setOpened: (value: boolean) => void;
+  setStep: (v: string) => void;
+  setOpened: (v: boolean) => void;
 }> = ({ setOpened, setStep }) => (
   <div className='adverts-step'>
     <div className='adverts-step_top'>

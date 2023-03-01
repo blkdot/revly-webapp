@@ -757,7 +757,7 @@ const MarketingSetup: React.FC<{
   ]);
 
   const renderGradientValue = (v, i) => {
-    const indices = links === 'revenue' ? 'AED' : '';
+    const indices = links === 'revenue' && 'AED';
 
     if (i === 0) {
       return (
@@ -781,7 +781,7 @@ const MarketingSetup: React.FC<{
           Daily {links} up to {rangeHoursOpenedDay[num].label}
         </span>
         <span className='__item-value'>
-          {data.x_accrued_intra_day}&nbsp;{links === 'revenue' ? 'AED' : ''}
+          {data.x_accrued_intra_day}&nbsp;{links === 'revenue' && 'AED'}
         </span>
       </div>
       <div className='heatmap-tooltip__item'>
@@ -790,7 +790,7 @@ const MarketingSetup: React.FC<{
           {rangeHoursOpenedDay[num].label}
         </span>
         <span className='__item-value'>
-          {data.x_timeslot}&nbsp;{links === 'revenue' ? 'AED' : ''}
+          {data.x_timeslot}&nbsp;{links === 'revenue' && 'AED'}
         </span>
       </div>
       <div className='heatmap-tooltip__item'>
@@ -997,7 +997,7 @@ const MarketingSetup: React.FC<{
   };
 
   return (
-    <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
+    <div className={`marketing-setup-offer ${active && 'active'}`}>
       <PaperKit id='marketing-setup' className='marketing-paper'>
         <ContainerKit className='setup-container'>
           <div className='left-part'>
@@ -1021,18 +1021,18 @@ const MarketingSetup: React.FC<{
           <div className='right-part'>
             <div className='right-part-header'>
               <TypographyKit
-                className={`right-part-header_link setup ${links === 'orders' ? 'active' : ''}`}
+                className={`right-part-header_link setup ${links === 'orders' && 'active'}`}
                 variant='div'
               >
                 <BoxKit
-                  className={links === 'revenue' ? 'active' : ''}
+                  className={links === 'revenue' && 'active'}
                   onClick={() => setLinks('revenue')}
                 >
                   <img src={RevenueHeatMapIcon} alt='Revenue Heat Map Icon' />
                   Revenue
                 </BoxKit>
                 <BoxKit
-                  className={links === 'orders' ? 'active' : ''}
+                  className={links === 'orders' && 'active'}
                   onClick={() => setLinks('orders')}
                 >
                   <img src={PlatformIcon} alt='Order Heat Map Icon' />

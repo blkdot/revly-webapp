@@ -150,7 +150,7 @@ const RestaurantDropdown: FC<{
   return (
     <div
       className={`restaurant-dropdown_wrapper ${
-        pageType === 'cost' || pageType === 'listing' ? 'cost' : ''
+        pageType === 'cost' || (pageType === 'listing' && 'cost')
       } ${className || ''}`}
     >
       {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
@@ -174,7 +174,7 @@ const RestaurantDropdown: FC<{
             </div>
           )}
         >
-          <div className={`dropdown-paper ${pageType === 'cost' ? 'cost' : ''}`}>
+          <div className={`dropdown-paper ${pageType === 'cost' && 'cost'}`}>
             {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
               <div className='selected-chains'>
                 <p>Selected: {selectedVendors('name', display).length}</p>

@@ -38,13 +38,13 @@ type StateBranchType = {
 };
 
 const RecurencyStep: FC<{
-  setStep: (value: string) => void;
+  setStep: (v: string) => void;
   state: StateType;
-  setState: (value: StateType) => void;
+  setState: (v: StateType) => void;
   typeSchedule: string;
-  setTypeSchedule: (value: string) => void;
+  setTypeSchedule: (v: string) => void;
   stateBranch: StateBranchType;
-  setStateBranch: (value: StateBranchType) => void;
+  setStateBranch: (v: StateBranchType) => void;
 }> = ({ stateBranch, setStateBranch, setStep, state, setState, typeSchedule, setTypeSchedule }) => {
   const [disabled, setDisabled] = useState(false);
   const [startingDate, setStartingDate] = useAtom(startingDateAtom);
@@ -79,12 +79,12 @@ const RecurencyStep: FC<{
       stateTemp.content[1].value = `${Math.abs(
         type === 'start'
           ? countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[0] +
-          countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[6]
+              countDaysOfWeekBetweenDates(new Date(newValue), new Date(endingDate))[6]
           : countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[0] +
-          countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[6]
+              countDaysOfWeekBetweenDates(new Date(startingDate), new Date(newValue))[6]
       )} Days`;
     } else if (typeSchedule === 'Customised') {
-      stateTemp.content[1].value = `${getCustomisedDays(type, newValue, customised)} Days`
+      stateTemp.content[1].value = `${getCustomisedDays(type, newValue, customised)} Days`;
     } else {
       stateTemp.content[1].value = `${Math.abs(
         type === 'start'
@@ -175,9 +175,7 @@ const RecurencyStep: FC<{
     <div className='adverts-step'>
       <div className='adverts-step_top'>
         <p>2. Setup your Advert schedule and recurency</p>
-        <span>
-          Schedule ads at the right slot and boost your visibility and sales.
-        </span>
+        <span>Schedule ads at the right slot and boost your visibility and sales.</span>
         <div className='advert-schedule'>
           <div className='advert-title-icon'>
             <span>
@@ -322,8 +320,9 @@ const RecurencyStep: FC<{
               onChange={(e) => {
                 setTypeSchedule(e.target.value);
                 stateTemp.content[2].value = e.target.value;
-                stateTemp.content[1].value = `${typeScheduleArr.find((obj) => obj.title === e.target.value).days
-                  } Days`;
+                stateTemp.content[1].value = `${
+                  typeScheduleArr.find((obj) => obj.title === e.target.value).days
+                } Days`;
 
                 setState({ ...stateTemp });
               }}
@@ -346,7 +345,11 @@ const RecurencyStep: FC<{
                 setCustomised(
                   typeof e.target.value === 'string' ? e.target.value.split(', ') : e.target.value
                 );
-                stateTemp.content[1].value = `${getCustomisedDays('custom', new Date(), typeof e.target.value === 'string' ? e.target.value.split(', ') : e.target.value)} Days`;
+                stateTemp.content[1].value = `${getCustomisedDays(
+                  'custom',
+                  new Date(),
+                  typeof e.target.value === 'string' ? e.target.value.split(', ') : e.target.value
+                )} Days`;
                 setState({ ...stateTemp });
               }}
             />

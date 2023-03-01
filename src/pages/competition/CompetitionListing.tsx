@@ -368,7 +368,7 @@ const CompetitionListing = () => {
         <PaperKit className='competition-paper'>
           <div className='competition-top-input'>
             <div className='dropdowns'>
-              {Array.isArray(platformList) && platformList.length > 0 ? (
+              {Array.isArray(platformList) && platformList.length > 0 && (
                 <CompetitionDropdown
                   rows={platformList}
                   renderOptions={(v) => (
@@ -399,8 +399,6 @@ const CompetitionListing = () => {
                   setRow={setPlatform}
                   select={platform}
                 />
-              ) : (
-                ''
               )}
 
               <div className='listing-vendors top-competition'>

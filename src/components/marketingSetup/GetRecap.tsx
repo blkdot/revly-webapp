@@ -126,7 +126,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
           </TypographyKit>
           <BoxKit className='left-part-radio sm-rule'>
             <TypographyKit
-              className={launchOrder.length === 2 ? 'active' : ''}
+              className={launchOrder.length === 2 && 'active'}
               sx={{ width: '100%' }}
               variant='div'
             >
@@ -228,7 +228,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
               )}
             </TypographyKit>
             <TypographyKit
-              className={stopOrder.length === 2 ? 'active' : ''}
+              className={stopOrder.length === 2 && 'active'}
               sx={{ width: '100%' }}
               variant='div'
             >
@@ -514,7 +514,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
           </div>
           <div
             className={`radio recap-box-wrapper between under ${
-              menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
+              menu !== 'Offer on An Item from the Menu' && 'border-none'
             }`}
           >
             <div className='recap-between mov'>

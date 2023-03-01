@@ -103,7 +103,7 @@ const MarketingCheckmarksDropdown = ({
 
     return names.map((name) => (
       <MenuItemKit
-        className={type === 'vendor' ? 'listing-vendors-child' : ''}
+        className={type === 'vendor' && 'listing-vendors-child'}
         key={name.data.vendor_name}
         value={name}
         disabled={!getDisabled(name)}
@@ -156,7 +156,7 @@ const MarketingCheckmarksDropdown = ({
           className='competition-dropdown restaurant-dropdown-input'
           id='demo-multiple-checkbox-label'
         >
-          {icon ? <img src={icon} alt='Select Icon' /> : ''}
+          {icon && <img src={icon} alt='Select Icon' />}
           {title || 'Customised Days'}
         </InputLabelKit>
         <SelectKit

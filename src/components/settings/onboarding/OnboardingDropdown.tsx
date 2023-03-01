@@ -25,7 +25,7 @@ const OnboardingDropdown: FC<{
 
   return (
     <FormControlKit
-      className={`onboarding-dropdown ${rows.length === 0 ? 'onboarding-dropdown_skeleton' : ''}`}
+      className={`onboarding-dropdown ${rows.length === 0 && 'onboarding-dropdown_skeleton'}`}
       sx={{ m: 1, minWidth: 120 }}
     >
       <SelectKit

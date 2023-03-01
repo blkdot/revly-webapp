@@ -239,8 +239,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${
-        openedSwitchDeleteModal ? 'activeDelete' : ''
+      className={`onboarding-modal_overlay ${openedModal && 'active'} ${
+        openedSwitchDeleteModal && 'activeDelete'
       }`}
       onClick={openCloseModal}
     >

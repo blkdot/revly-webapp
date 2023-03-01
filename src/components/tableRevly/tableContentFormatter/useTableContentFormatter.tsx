@@ -294,7 +294,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', textAlign: 'left' }}
     >
       <span
-        className={r[h.id] !== null ? 'competition-table-alert' : ''}
+        className={r[h.id] !== null && 'competition-table-alert'}
         style={{ whiteSpace: 'nowrap' }}
       >
         {r[h.id] === null ? '-' : `${r[h.id]}%`}
@@ -502,8 +502,8 @@ const useTableContentFormatter = () => {
         key={`${h.id}_${r.id}`}
       >
         <div
-          className={`table_evolution ${Number(r[h.id]) > 0 ? 'table_increased' : ''} ${
-            Number(r[h.id]) < 0 ? 'table_decreased' : ''
+          className={`table_evolution ${Number(r[h.id]) > 0 && 'table_increased'} ${
+            Number(r[h.id]) < 0 && 'table_decreased'
           }`}
         >
           <span>{evolution(Number(r[h.id]))}</span>

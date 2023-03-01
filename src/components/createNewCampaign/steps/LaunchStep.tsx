@@ -16,9 +16,9 @@ type StateType = {
 };
 
 const LaunchStep: FC<{
-  setStep: (value: string) => void;
-  setOpened: (value: boolean) => void;
-  setState: (StateType) => void;
+  setStep: (v: string) => void;
+  setOpened: (v: boolean) => void;
+  setState: (v: StateType) => void;
   state: StateType;
 }> = ({ setStep, setOpened, setState, state }) => {
   const [branchVendors, setBranchVendors] = useAtom(branchAtom);
@@ -36,9 +36,7 @@ const LaunchStep: FC<{
     <div className='adverts-step'>
       <div className='adverts-step_top'>
         <p>1. Launch a New Adverts </p>
-        <span>
-          Schedule ads at the right slot and boost your visibility and sales.
-        </span>
+        <span>Schedule ads at the right slot and boost your visibility and sales.</span>
         <div className='advert-branches'>
           <RestaurantDropdown pageType='branch' setState={setBranchVendors} state={branchVendors} />
         </div>

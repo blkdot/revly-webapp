@@ -212,9 +212,11 @@ const Adverts = () => {
       return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign} />;
     }
     if (opened) {
-      return <ContainerKit>
-        <AdvertsDetails data={clickedRow} setOpened={setOpened} />
-      </ContainerKit>;
+      return (
+        <ContainerKit>
+          <AdvertsDetails data={clickedRow} setOpened={setOpened} />
+        </ContainerKit>
+      );
     }
     return (
       <ContainerKit>

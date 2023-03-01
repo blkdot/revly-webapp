@@ -223,7 +223,7 @@ const MarketingOfferFilter = (props: any) => {
       role='presentation'
       tabIndex={-1}
       onClick={() => CloseFilterPopup(true)}
-      className={`filter-overlay${openedFilter ? ' active' : ''}`}
+      className={`filter-overlay ${openedFilter && 'active'}`}
     >
       <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper filter-paper'>
         <div>
