@@ -6,7 +6,7 @@ import type { TPlatformObject } from 'data/platformList';
 import './FilterDropdown.scss';
 
 const FilterDropdown: React.FC<{
-  items: { value: string; text: string }[]
+  items: { value: string; text: string }[];
   values: string[];
   onChange: (k: string) => void;
   label: string;
@@ -46,14 +46,14 @@ const FilterDropdown: React.FC<{
     }
 
     if (lengthValues === items.length) {
-      if (items.length === 1) return `${values[0]}${customTag ?? ''}`;
+      if (items.length === 1) return `${values[0]} ${customTag ?? ''}`;
 
-      return `All ${label} selected`;
+      return `All ${customTag || label} selected`;
     }
 
-    if (lengthValues > max) return `${lengthValues} ${label} selected`;
+    if (lengthValues > max) return `${lengthValues} ${customTag || label} selected`;
 
-    return `${values.join(`${customTag ?? ''}, `)}${customTag ?? ''}`;
+    return `${values.join(`${customTag ?? ''}, `)} ${customTag ?? ''}`;
   };
 
   useClickAwayListener(refDropdown, () => setIsOpen(false));

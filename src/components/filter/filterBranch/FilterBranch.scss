@@ -2,15 +2,13 @@
   display: flex;
   position: relative;
 
-  .MuiRadio-root 
-   {
+  .MuiRadio-root {
     &.Mui-checked {
-      [data-testid="RadioButtonCheckedIcon"] {
+      [data-testid='RadioButtonCheckedIcon'] {
         left: 7px;
       }
     }
   }
-
 
   button {
     border: none;
@@ -95,12 +93,12 @@
       height: 1px;
       width: 4px;
     }
-  
+
     &::-webkit-scrollbar-track {
       background-color: #f3f3f3;
       border-radius: 31px;
     }
-  
+
     &::-webkit-scrollbar-thumb {
       background: #637381;
       border-radius: 31px;

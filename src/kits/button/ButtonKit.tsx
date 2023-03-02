@@ -24,5 +24,4 @@ const ButtonKit: FC<ButtonProps> = (props) => {
   );
 };
 
-
 export default ButtonKit;

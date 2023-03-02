@@ -2,7 +2,7 @@ import { useUser } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { useAlert, useApi, useVendors } from 'hooks';
-import {  PaperKit, ContainerKit } from 'kits';
+import { PaperKit, ContainerKit } from 'kits';
 import { useEffect, useState, useMemo } from 'react';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
@@ -14,7 +14,10 @@ import { platformObject } from 'data/platformList';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { competitionBranchSelectedAtom, competitionSelectedPlatformAtom } from './CompetitionStoreAtom';
+import {
+  competitionBranchSelectedAtom,
+  competitionSelectedPlatformAtom,
+} from './CompetitionStoreAtom';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import Columns from '../../assets/images/columns.svg';
 import './Competition.scss';
@@ -27,7 +30,6 @@ const CompetitionAlerts = () => {
   const user = useUser();
   const [opened, setOpened] = useState(false);
   const [competitionAlertsData, setCompetitionAlertsData] = useState([]);
-  const [competitor, setCompetitor] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [competitorList, setCompetitorList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -122,7 +124,7 @@ const CompetitionAlerts = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
-        id: `${cur.id}_${r.id}`,
+        id: r.alert_id,
         data: r,
       }),
       {}
@@ -158,13 +160,13 @@ const CompetitionAlerts = () => {
     const comp = await getCompetitors(body);
 
     setCompetitorList(comp.data ? comp.data.data : []);
-    setCompetitor([]);
+    setSelectedCompetitors([]);
   };
 
   const filterData = () => {
-    if (competitor?.length > 0) {
-      const arr = competitor
-        .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
+    if (selectedCompetitors?.length > 0) {
+      const arr = selectedCompetitors
+        .map((v) => competitionAlertsData.filter((k) => k.name === v))
         .flat();
 
       setFilteredData(arr);
@@ -178,8 +180,14 @@ const CompetitionAlerts = () => {
       if (!branchActive) {
         if (chainData.length > 0) {
           const localBranch = chainData.find(
-            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
           );
+
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
 
           getCompetitorsDropdownContent(localBranch.data);
         }
@@ -192,7 +200,7 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     filterData();
-  }, [competitor]);
+  }, [selectedCompetitors]);
 
   const getData = (plat, vend) => {
     clearTimeout(fnDelays);
@@ -238,7 +246,7 @@ const CompetitionAlerts = () => {
       } catch (err) {
         setCompetitionAlertsData([]);
         setCompetitorList([]);
-        setCompetitor([]);
+        setSelectedCompetitors([]);
         setFilteredData([]);
         setLoading(false);
         triggerAlertWithMessageError('Error while retrieving data');
@@ -248,12 +256,18 @@ const CompetitionAlerts = () => {
 
   useEffect(() => {
     if (selectedPlatform[0] && branchSelected[0]) {
-      setCompetitor([]);
+      setSelectedCompetitors([]);
       if (!branchActive) {
         if (chainData.length > 0) {
           const localBranch = chainData.find(
-            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
           );
+
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
 
           getData(selectedPlatform[0], { [selectedPlatform[0]]: [localBranch.data] });
         }
@@ -265,21 +279,15 @@ const CompetitionAlerts = () => {
   }, [selectedPlatform[0], branchSelected[0], beforePeriodBtn, chainData.length]);
 
   const handleCompetitorChange = (value) => {
-    const isChecked = competitor.findIndex((compet) => compet === value);
+    const isChecked = selectedCompetitors.findIndex((compet) => compet === value);
 
     if (isChecked >= 0) {
-      setSelectedCompetitors((prev) => {
-        const prevCopy = [...prev];
+      setSelectedCompetitors((prev) => prev.filter((compet, index) => value !== compet && prev.indexOf(compet) === index));
 
-        prevCopy.slice(isChecked, 1);
-
-        return prevCopy;
-      });
       return;
     }
 
-
-    setSelectedCompetitors((prev) => [...prev, value]);
+    setSelectedCompetitors((prev) => [...prev, value].filter((compet, index) => [...prev, value].indexOf(compet) === index));
   };
 
   const filterCompetitionList = competitorList?.filter(
@@ -335,13 +343,19 @@ const CompetitionAlerts = () => {
                 label='Show all branches'
               />
               <FilterDropdown
-                items={filterCompetitionList?.map((compets) => ({ value: compets.vendor_name, text: compets.vendor_name })) || []}
+                items={
+                  filterCompetitionList?.map((compets) => ({
+                    value: compets.vendor_name,
+                    text: compets.vendor_name,
+                  })) || []
+                }
                 values={selectedCompetitors}
                 onChange={handleCompetitorChange}
                 label='Show all competitors'
+                customTag='competitors'
                 icon={<img src={competitorIcon} alt='Competitor' />}
                 disabled={!(filterCompetitionList?.length > 0)}
-                maxShowned={2}
+                maxShowned={1}
               />
             </div>
           </div>
@@ -350,7 +364,7 @@ const CompetitionAlerts = () => {
             isLoading={loading}
             headers={headersAlert}
             rows={
-              competitor?.length > 0
+              selectedCompetitors?.length > 0
                 ? filteredData.map(renderRowsByHeader)
                 : competitionAlertsData.map(renderRowsByHeader)
             }
