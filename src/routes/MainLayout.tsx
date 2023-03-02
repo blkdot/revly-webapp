@@ -4,7 +4,6 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import { DateRange, DatesProvider } from 'contexts';
 import { VendorsProvider } from 'contexts/VendorsContext';
 import dayjs from 'dayjs';
-import { ContainerKit } from 'kits';
 import { useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -47,19 +46,17 @@ export const MainLayout = () => {
       <Navbar />
       <VendorsProvider value={vendors}>
         <DatesProvider value={dates}>
-          <ContainerKit>
-            <div className='wrapper'>
-              <div className='top-inputs'>
-                <RestaurantDropdown />
-                <Dates
-                  isDashboard={isDashboard(pathname)}
-                  offer={isOffer(pathname)}
-                  isListing={isListing}
-                />
-              </div>
-              <Outlet />
+          <div className='wrapper'>
+            <div className='top-inputs'>
+              <RestaurantDropdown />
+              <Dates
+                isDashboard={isDashboard(pathname)}
+                offer={isOffer(pathname)}
+                isListing={isListing}
+              />
             </div>
-          </ContainerKit>
+            <Outlet />
+          </div>
         </DatesProvider>
       </VendorsProvider>
     </div>

@@ -12,7 +12,7 @@ const SwitchDeleteModal: FC<{
   loading: any;
 }> = ({ openSwitchDeleteModal, openedSwitchDeleteModal, onClick, title, button, loading }) => (
   <div
-    className={`onboarding-delete-modal-overlay ${openedSwitchDeleteModal ? 'active' : ''}`}
+    className={`onboarding-delete-modal-overlay ${openedSwitchDeleteModal && 'active'}`}
     tabIndex={-1}
     role='presentation'
     onClick={openSwitchDeleteModal}

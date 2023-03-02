@@ -43,7 +43,7 @@ const Navbar = () => {
 
   const renderAccordionLinkSub = (s) => (
     <Navlink title={s.title} path={s.path} key={s.title}>
-      {s.src ? <img className='nav-icon' src={s.src} alt={s.title} /> : ''}
+      {s.src && <img className='nav-icon' src={s.src} alt={s.title} />}
     </Navlink>
   );
 
@@ -51,7 +51,7 @@ const Navbar = () => {
     link.map((s) => (
       <Navlink
         className={
-          !userPlatformData.onboarded && s.path !== '/dashboardOnboard' ? 'navlink-disabled' : ''
+          !userPlatformData.onboarded && s.path !== '/dashboardOnboard' && 'navlink-disabled'
         }
         title={s.title}
         path={s.path}
@@ -68,18 +68,16 @@ const Navbar = () => {
           !!((expanded === (a.id as any) && opened) || (expanded === (a.id as any) && open))
         }
         onChange={handleChange(a.id)}
-        className={`navbar-accordion ${!userPlatformData.onboarded ? 'disabled' : ''}`}
+        className={`navbar-accordion ${!userPlatformData.onboarded && 'disabled'}`}
         key={a.id}
         disabled={!userPlatformData.onboarded}
       >
         <ButtonKit
-          className={`navbar-button-kit ${
-            a.subs.some((sub) => sub.path === pathname) ? 'active' : ''
-          }`}
+          className={`navbar-button-kit ${a.subs.some((sub) => sub.path === pathname) && 'active'}`}
         >
           <AccordionSummaryKit
             className='accordion-sum'
-            expandIcon={opened || open ? <ExpandMoreIcon /> : ''}
+            expandIcon={(opened || open) && <ExpandMoreIcon />}
           >
             <TypographyKit
               sx={{
@@ -107,18 +105,16 @@ const Navbar = () => {
           !!((expanded === (a.id as any) && opened) || (expanded === (a.id as any) && open))
         }
         onChange={handleChange(a.id)}
-        className={`navbar-accordion ${!userPlatformData.onboarded ? 'disabled' : ''}`}
+        className={`navbar-accordion ${!userPlatformData.onboarded && 'disabled'}`}
         key={a.id}
         disabled={!userPlatformData.onboarded}
       >
         <ButtonKit
-          className={`navbar-button-kit ${
-            a.subs.some((sub) => sub.path === pathname) ? 'active' : ''
-          }`}
+          className={`navbar-button-kit ${a.subs.some((sub) => sub.path === pathname) && 'active'}`}
         >
           <AccordionSummaryKit
             className='accordion-sum'
-            expandIcon={opened || open ? <ExpandMoreIcon /> : ''}
+            expandIcon={(opened || open) && <ExpandMoreIcon />}
           >
             <TypographyKit
               sx={{
@@ -140,21 +136,21 @@ const Navbar = () => {
     ));
 
   return (
-    <div className={`navbar_wrapper ${opened ? 'opened' : ''}`}>
+    <div className={`navbar_wrapper ${opened && 'opened'}`}>
       <div
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        className={`Navbar ${opened || open ? 'opened' : ''}`}
+        className={`Navbar ${(opened || open) && 'opened'}`}
       >
         <ul>
-          <li className={`Navbar_logo ${opened || open ? 'opened' : ''}`}>
+          <li className={`Navbar_logo ${(opened || open) && 'opened'}`}>
             <img className='nav-logo' src={logo} alt='Revly' />
             <img className='nav-small-logo' src={smallLogo} alt='Revly' />
             <div
               role='presentation'
               tabIndex={-1}
               onClick={() => setOpened(!opened)}
-              className={`nav-double-arrow ${opened ? 'active' : ''}`}
+              className={`nav-double-arrow ${opened && 'active'}`}
             >
               <img src={arrow} alt='Arrow' />
             </div>

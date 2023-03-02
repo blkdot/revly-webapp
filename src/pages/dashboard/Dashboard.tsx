@@ -9,7 +9,7 @@ import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMetrics, usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
-import { TypographyKit } from 'kits';
+import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Dashboard.scss';
@@ -215,55 +215,57 @@ const Dashboard = () => {
   };
   return (
     <div className='wrapper'>
-      {!userPlatformData.onboarded ? (
-        <div className='dashboard-stepper'>
-          <OnboardingModal propsVariables={propsVariables} />
-          <OnboardingStepper
-            activeStep={activeStep}
-            accounts={accounts}
-            openCloseModal={openCloseModal}
-          />
-        </div>
-      ) : (
-        ''
-      )}
-      <div className='block'>
-        <TypographyKit className='dashboard-title'>
-          {getPeriod(titleDate, current).charAt(0).toUpperCase() +
-            getPeriod(titleDate, current).slice(1)}{' '}
-          results for {isDisplay()}
-        </TypographyKit>
-        <TypographyKit className='dashboard-subtitle'>
-          360° view of your restaurant revenue and profits
-        </TypographyKit>
-        <div className='dashboard-wrapper'>
-          {links.map((obj: { title: string; link: string; tooltip?: string }) => (
-            <Widget
-              table={table}
-              setTable={setTable}
-              key={obj.link}
-              title={obj.title}
-              link={obj.link}
-              metricsbeforePeriod={metricsbeforePeriod}
-              metricsafterPeriod={metricsafterPeriod}
-              loading={
-                metricsafterPeriod.length === 0 || metricsbeforePeriod.length === 0 || loading
-              }
-              links={links}
-              tooltip={obj.tooltip}
+      <ContainerKit>
+        {!userPlatformData.onboarded ? (
+          <div className='dashboard-stepper'>
+            <OnboardingModal propsVariables={propsVariables} />
+            <OnboardingStepper
+              activeStep={activeStep}
+              accounts={accounts}
+              openCloseModal={openCloseModal}
             />
-          ))}
+          </div>
+        ) : (
+          ''
+        )}
+        <div className='block'>
+          <TypographyKit className='dashboard-title'>
+            {getPeriod(titleDate, current).charAt(0).toUpperCase() +
+              getPeriod(titleDate, current).slice(1)}{' '}
+            results for {isDisplay()}
+          </TypographyKit>
+          <TypographyKit className='dashboard-subtitle'>
+            360° view of your restaurant revenue and profits
+          </TypographyKit>
+          <div className='dashboard-wrapper'>
+            {links.map((obj: { title: string; link: string; tooltip?: string }) => (
+              <Widget
+                table={table}
+                setTable={setTable}
+                key={obj.link}
+                title={obj.title}
+                link={obj.link}
+                metricsbeforePeriod={metricsbeforePeriod}
+                metricsafterPeriod={metricsafterPeriod}
+                loading={
+                  metricsafterPeriod.length === 0 || metricsbeforePeriod.length === 0 || loading
+                }
+                links={links}
+                tooltip={obj.tooltip}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      <TableRevlyNew
-        renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
-        isLoading={loading}
-        link={table}
-        setLink={setTable}
-        links={links}
-        headers={headers}
-        rows={metrics.map(renderRowsByHeader)}
-      />
+        <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
+          isLoading={loading}
+          link={table}
+          setLink={setTable}
+          links={links}
+          headers={headers}
+          rows={metrics.map(renderRowsByHeader)}
+        />
+      </ContainerKit>
     </div>
   );
 };

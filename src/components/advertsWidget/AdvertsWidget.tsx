@@ -9,7 +9,7 @@ const AdvertsWidget: FC<{
 }> = ({ name, title, src }) => (
   <CardKit className='advert-widget_card'>
     <div>
-      {src ? <img src={src} alt={name} /> : ''}
+      {src && <img src={src} alt={name} />}
       <p>{name}</p>
     </div>
     <span>{title === null ? '-' : title}</span>

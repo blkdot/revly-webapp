@@ -1,4 +1,6 @@
 import arrow from 'assets/images/arrow.svg';
+import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreateNewCampaign';
+import AdvertsDetails from 'components/details/AdvertsDetails';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
@@ -6,14 +8,12 @@ import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { usePlanningAds } from 'hooks';
+import { useMarketingSetup, usePlanningAds, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ButtonKit, TypographyKit } from 'kits';
+import { ButtonKit, ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
-import { vendorsAtom } from 'store/vendorsAtom';
+import { branchAtom } from 'store/marketingSetupAtom';
 import './Adverts.scss';
-import AdvertsCreateNewCampaign from './createNewCampaign/AdvertsCreateNewCampaign';
-import AdvertsDetails from './details/AdvertsDetails';
 
 const getOfferDate = (period: DateRange, type: string): Date => {
   if (type === 'month') {
@@ -28,10 +28,23 @@ const getOfferDate = (period: DateRange, type: string): Date => {
 };
 
 const Adverts = () => {
-  const { current, typeDate, titleDate } = useDates();
-  const [vendors] = useAtom(vendorsAtom);
+  const { current, titleDate, typeDate } = useDates();
+  const { vendors } = useVendors();
   const { display, vendorsArr } = vendors;
-
+  const [disabled, setDisabled] = useState(true);
+  const [branchVendors, setBranchVendors] = useAtom(branchAtom);
+  const platform = ['deliveroo'];
+  const { setVendors } = useMarketingSetup();
+  useEffect(() => {
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    setVendors(displayTemp, setBranchVendors, branchVendors, platform);
+    if (selectedVendors('name', displayTemp).length > 0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vendors]);
   const [link, setLink] = useState('ads_management');
   const startDate = current.from.toDate();
   const endDate = getOfferDate(current, typeDate);
@@ -196,43 +209,49 @@ const Adverts = () => {
       return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign} />;
     }
     if (opened) {
-      return <AdvertsDetails data={clickedRow} setOpened={setOpened} />;
+      return (
+        <ContainerKit>
+          <AdvertsDetails data={clickedRow} setOpened={setOpened} />
+        </ContainerKit>
+      );
     }
     return (
-      <div>
-        <div className='adverts_top-titles'>
-          <div>
-            <TypographyKit className='adverts-title' variant='subtitle'>
-              Manage Advertisements for
-              <span>{isDisplay()}</span>
-              for
-              <span>{getBeforePeriod()}</span>
-            </TypographyKit>
-            <p>
-              Here you can quickly and easily create and manage effective advertisements for their
-              businesses.
-            </p>
+      <ContainerKit>
+        <div>
+          <div className='adverts_top-titles'>
+            <div>
+              <TypographyKit className='adverts-title' variant='subtitle'>
+                Manage Advertisements for
+                <span>{isDisplay()}</span>
+                for
+                <span>{getBeforePeriod()}</span>
+              </TypographyKit>
+              <p>
+                Here you can quickly and easily create and manage effective advertisements for their
+                businesses.
+              </p>
+            </div>
+            <ButtonKit disabled={disabled} onClick={() => setOpenedCampaign(true)}>
+              Create new campaign
+              <img src={arrow} alt='right-arrow' />
+            </ButtonKit>
           </div>
-          <ButtonKit onClick={() => setOpenedCampaign(true)}>
-            Create new campaign
-            <img src={arrow} alt='right-arrow' />
-          </ButtonKit>
+          <TableRevlyNew
+            onClickRow={(id) => {
+              setClickedRow(adsData.find((obj) => `${obj.ad_ids.join('')}_ads` === id));
+              setOpened(true);
+            }}
+            link={link}
+            setLink={setLink}
+            links={links}
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderListLoading)}
+            isLoading={isLoadingAds}
+            headers={link === 'ads_management' ? headersList : headersPerformance}
+            rows={adsData.map(renderRowsByHeaderList)}
+            noDataText='No ads has been retrieved.'
+          />
         </div>
-        <TableRevlyNew
-          onClickRow={(id) => {
-            setClickedRow(adsData.find((obj) => `${obj.ad_ids.join('')}_ads` === id));
-            setOpened(true);
-          }}
-          link={link}
-          setLink={setLink}
-          links={links}
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderListLoading)}
-          isLoading={isLoadingAds}
-          headers={link === 'ads_management' ? headersList : headersPerformance}
-          rows={adsData.map(renderRowsByHeaderList)}
-          noDataText='No ads has been retrieved.'
-        />
-      </div>
+      </ContainerKit>
     );
   };
   return <div className='wrapper'>{renderLayout()}</div>;

@@ -6,9 +6,8 @@ import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
-
+import { ContainerKit } from 'kits';
 import { useEffect, useState } from 'react';
-
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
@@ -419,30 +418,32 @@ const Planning = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
           new Date(obj.valid_to)
-        ).format('hh:mm')}`,
+        ).format('HH:mm')}`,
       }))
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
   return (
     <div className='wrapper'>
-      {opened ? (
-        <OfferDetailComponent
-          data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
-          setOpened={setOpened}
+      <ContainerKit>
+        {opened ? (
+          <OfferDetailComponent
+            data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
+            setOpened={setOpened}
+          />
+        ) : (
+          renderTable()
+        )}
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
         />
-      ) : (
-        renderTable()
-      )}
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+      </ContainerKit>
     </div>
   );
 };

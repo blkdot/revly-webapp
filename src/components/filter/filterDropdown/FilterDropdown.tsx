@@ -1,16 +1,39 @@
 import { useClickAwayListener } from 'hooks';
-import { ButtonKit, CheckboxKit } from 'kits';
-import { useRef, useState } from 'react';
+import { ButtonKit, CheckboxKit, RadioKit } from 'kits';
+import { useRef, useState, type ReactNode } from 'react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import type { TPlatformObject } from 'data/platformList';
 import './FilterDropdown.scss';
 
-const FilterDropdown = (props: any) => {
-  const { items, values, onChange, label, icon, customTag, maxShowned, internalIconOnActive } =
-    props;
-
+const FilterDropdown: React.FC<{
+  items: { value: string; text: string | ReactNode }[];
+  values: string[];
+  onChange: (k: string) => void;
+  label: string;
+  icon?: ReactNode;
+  customTag?: string;
+  internalIconOnActive?: TPlatformObject;
+  mono?: boolean;
+  maxShowned?: number;
+  disabled?: boolean;
+}> = ({
+  items,
+  values,
+  onChange,
+  label,
+  icon,
+  customTag,
+  maxShowned,
+  internalIconOnActive,
+  mono,
+  disabled,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const refDropdown = useRef(null);
+
+  const [refAnimateShow] = useAutoAnimate();
 
   const selectItem = (v) => {
     onChange(v);
@@ -26,14 +49,14 @@ const FilterDropdown = (props: any) => {
     }
 
     if (lengthValues === items.length) {
-      if (items.length === 1) return `${values[0]}${customTag ?? ''}`;
+      if (items.length === 1) return `${values[0]} ${customTag ?? ''}`;
 
-      return `All ${label} selected`;
+      return `All ${customTag || label} selected`;
     }
 
-    if (lengthValues > max) return `${lengthValues} ${label} selected`;
+    if (lengthValues > max) return `${lengthValues} ${customTag || label} selected`;
 
-    return `${values.join(`${customTag ?? ''}, `)}${customTag ?? ''}`;
+    return `${values.join(`${customTag ?? ''}, `)} ${customTag ?? ''}`;
   };
 
   useClickAwayListener(refDropdown, () => setIsOpen(false));
@@ -41,23 +64,27 @@ const FilterDropdown = (props: any) => {
   const renderItem = () =>
     items.map((item) => (
       <div
-        className={`comp-dropdown__item ${values.includes(item.value) ? '__active' : ''}`}
+        className={`comp-dropdown__item ${values.includes(item.value) && '__active'}`}
         key={item.value}
         onClick={() => selectItem(item.value)}
         onKeyDown={() => selectItem(item.value)}
         role='button'
         tabIndex={0}
       >
-        <CheckboxKit
-          checked={values.includes(item.value)}
-          onChange={() => selectItem(item.value)}
-        />
+        {mono ? (
+          <RadioKit checked={values.includes(item.value)} onChange={() => selectItem(item.value)} />
+        ) : (
+          <CheckboxKit
+            checked={values.includes(item.value)}
+            onChange={() => selectItem(item.value)}
+          />
+        )}
         <span>{item.text}</span>
       </div>
     ));
 
   const renderItems = () => {
-    if (!isOpen) {
+    if (!isOpen || disabled) {
       return null;
     }
 
@@ -82,7 +109,7 @@ const FilterDropdown = (props: any) => {
     return (
       <i
         style={{ marginRight: '0.5rem', alignItems: 'center' }}
-        className={`${values.length > 0 ? '__active' : ''}`}
+        className={`${values.length > 0 && '__active'}`}
       >
         {icon}
       </i>
@@ -90,7 +117,7 @@ const FilterDropdown = (props: any) => {
   };
 
   return (
-    <div className='comp-dropdown'>
+    <div className={`comp-dropdown ${disabled ? 'disabled' : ''}`}>
       <ButtonKit
         variant='outlined'
         onClick={(e) => {
@@ -99,10 +126,10 @@ const FilterDropdown = (props: any) => {
         }}
         role='button'
         style={{ display: 'flex', justifyContent: 'space-between' }}
-        className={`${values.length > 0 ? '__active' : ''}`}
+        className={`${values.length > 0 && '__active'}`}
         tabIndex={0}
       >
-        <div className={`comp-content ${values.length > 0 ? 'active' : ''}`}>
+        <div className={`comp-content ${values.length > 0 && 'active'}`}>
           {renderIcon()}
           {getCurrentValue()}
         </div>
@@ -113,7 +140,7 @@ const FilterDropdown = (props: any) => {
           {isOpen ? <FaChevronRight /> : <FaChevronDown />}
         </div>
       </ButtonKit>
-      {renderItems()}
+      <div ref={refAnimateShow}>{renderItems()}</div>
     </div>
   );
 };

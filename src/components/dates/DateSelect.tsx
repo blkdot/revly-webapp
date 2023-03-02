@@ -249,7 +249,7 @@ const DateSelect = React.memo((props: any) => {
     >
       <ButtonKit
         onClick={changeSelect}
-        className={`navbar-button-kit ${expanded === `panel${index}` ? 'active' : ''}`}
+        className={`navbar-button-kit ${expanded === `panel${index}` && 'active'}`}
       >
         <AccordionSummaryKit className='accordion-sum' expandIcon={<ExpandMoreIcon />}>
           <TypographyKit
@@ -261,20 +261,20 @@ const DateSelect = React.memo((props: any) => {
       </ButtonKit>
       <AccordionDetailsKit className='date-accordion-details'>
         <ButtonKit
-          className={`navbar-button-kit ${active === 'current' ? 'active' : ''}`}
+          className={`navbar-button-kit ${active === 'current' && 'active'}`}
           onClick={() => getDate(type === 'day' ? 'today' : type)}
         >
           Current {type}
         </ButtonKit>
         <ButtonKit
-          className={`navbar-button-kit ${active === 'last' ? 'active' : ''}`}
+          className={`navbar-button-kit ${active === 'last' && 'active'}`}
           onClick={() => getDate(type === 'day' ? 'yesterday' : `last ${type}`)}
         >
           {type === 'day' ? 'yesterday' : `last ${type}`}
         </ButtonKit>
         {setupOffer ? (
           <ButtonKit
-            className={`navbar-button-kit ${active === 'last 4' ? 'active' : ''}`}
+            className={`navbar-button-kit ${active === 'last 4' && 'active'}`}
             onClick={() => getDate('last 4 weeks')}
           >
             Last 4 weeks
@@ -283,7 +283,7 @@ const DateSelect = React.memo((props: any) => {
           ''
         )}
         <ButtonKit
-          className={`navbar-button-kit ${active === 'custom' ? 'active' : ''}`}
+          className={`navbar-button-kit ${active === 'custom' && 'active'}`}
           onClick={handleCustomClick}
         >
           Custom {type}

@@ -55,7 +55,7 @@ export const DurationStep: FC<{
     >
       <BoxKit
         className={`left-part-radio under-textfields radio-dates ${
-          duration === 'Starting Now' ? 'active' : ''
+          duration === 'Starting Now' && 'active'
         }`}
       >
         <div className='radio'>
@@ -105,7 +105,7 @@ export const DurationStep: FC<{
       </BoxKit>
       <BoxKit
         className={`left-part-radio under-textfields ${
-          duration === 'Program the offer duration' ? 'active' : ''
+          duration === 'Program the offer duration' && 'active'
         }`}
       >
         <div className='radio'>

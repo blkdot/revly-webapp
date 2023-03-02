@@ -10,7 +10,7 @@ import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
-import { TypographyKit } from 'kits';
+import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { vendorsAtom } from 'store/vendorsAtom';
@@ -189,53 +189,57 @@ const Dashboard = () => {
 
   return (
     <div className='wrapper'>
-      {!userPlatformData.onboarded && (
-        <div className='dashboard-stepper'>
-          <OnboardingModal propsVariables={propsVariables} />
-          <OnboardingStepper
-            activeStep={activeStep}
-            accounts={accounts}
-            openCloseModal={openCloseModal}
-          />
+      <ContainerKit>
+        {!userPlatformData.onboarded ? (
+          <div className='dashboard-stepper'>
+            <OnboardingModal propsVariables={propsVariables} />
+            <OnboardingStepper
+              activeStep={activeStep}
+              accounts={accounts}
+              openCloseModal={openCloseModal}
+            />
+          </div>
+        ) : (
+          ''
+        )}
+        <div className='block'>
+          <TypographyKit className='dashboard-title'>
+            {getPeriod(titleDate, current).charAt(0).toUpperCase() +
+              getPeriod(titleDate, current).slice(1)}{' '}
+            results for {isDisplay()}
+          </TypographyKit>
+          <TypographyKit className='dashboard-subtitle'>
+            360° view of your restaurant revenue and profits
+          </TypographyKit>
+          <div className='dashboard-wrapper'>
+            {links
+              .filter((obj: { disabled?: boolean }) => !obj.disabled)
+              .map((obj: { title: string; link: string; tooltip?: string }) => (
+                <Widget
+                  table={table}
+                  setTable={setTable}
+                  key={obj.link}
+                  title={obj.title}
+                  link={obj.link}
+                  metricsbeforePeriod={{}}
+                  metricsafterPeriod={{}}
+                  loading={false}
+                  links={links}
+                  tooltip={obj.tooltip}
+                />
+              ))}
+          </div>
         </div>
-      )}
-      <div className='block'>
-        <TypographyKit className='dashboard-title'>
-          {getPeriod(titleDate, current).charAt(0).toUpperCase() +
-            getPeriod(titleDate, current).slice(1)}{' '}
-          results for {isDisplay()}
-        </TypographyKit>
-        <TypographyKit className='dashboard-subtitle'>
-          360° view of your restaurant revenue and profits
-        </TypographyKit>
-        <div className='dashboard-wrapper'>
-          {links
-            .filter((obj: { disabled?: boolean }) => !obj.disabled)
-            .map((obj: { title: string; link: string; tooltip?: string }) => (
-              <Widget
-                table={table}
-                setTable={setTable}
-                key={obj.link}
-                title={obj.title}
-                link={obj.link}
-                metricsbeforePeriod={{}}
-                metricsafterPeriod={{}}
-                loading={false}
-                links={links}
-                tooltip={obj.tooltip}
-              />
-            ))}
-        </div>
-      </div>
-      <TableRevlyNew
-        renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
-        isLoading={false}
-        link={table}
-        setLink={setTable}
-        links={links.filter((obj: { disabled?: boolean }) => !obj.disabled)}
-        headers={headers}
-        rows={[].map(renderRowsByHeader)}
-      />
+        <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
+          isLoading={false}
+          link={table}
+          setLink={setTable}
+          links={links.filter((obj: { disabled?: boolean }) => !obj.disabled)}
+          headers={headers}
+          rows={[].map(renderRowsByHeader)}
+        />
+      </ContainerKit>
     </div>
   );
 };

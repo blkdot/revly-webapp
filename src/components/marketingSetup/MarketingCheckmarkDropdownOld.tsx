@@ -1,4 +1,5 @@
 import {
+  CheckboxKit,
   FormControlKit,
   InputLabelKit,
   ListItemTextKit,
@@ -19,6 +20,8 @@ const MarketingCheckmarkDropdownOld = ({
   type,
   height,
   platform,
+  className,
+  onChange,
 }: any) => {
   const ITEM_HEIGHT = height || 48;
   const ITEM_PADDING_TOP = 8;
@@ -81,12 +84,8 @@ const MarketingCheckmarkDropdownOld = ({
       );
     }
     return names.map((name) => (
-      <MenuItemKit
-        className={type === 'vendor' ? 'listing-vendors-child' : ''}
-        key={name}
-        value={name}
-      >
-        <RadioKit
+      <MenuItemKit className={type === 'vendor' && 'listing-vendors-child'} key={name} value={name}>
+        <CheckboxKit
           checked={(type === 'vendor' ? personName.vendorsSelected : personName).indexOf(name) > -1}
         />
         <ListItemTextKit primary={name} />
@@ -123,7 +122,7 @@ const MarketingCheckmarkDropdownOld = ({
     return selected.join(', ');
   };
   return (
-    <div style={{ width: '100%' }}>
+    <div className={className || ''} style={{ width: '100%' }}>
       <FormControlKit
         className='top-competition marketing-setup-dropdown'
         sx={{ m: 1, width: 300 }}
@@ -132,7 +131,7 @@ const MarketingCheckmarkDropdownOld = ({
           className='competition-dropdown restaurant-dropdown-input'
           id='demo-multiple-checkbox-label'
         >
-          {icon ? <img src={icon} alt='Select Icon' /> : ''}
+          {icon && <img src={icon} alt='Select Icon' />}
           {title || 'Customised Days'}
         </InputLabelKit>
         <SelectKit
@@ -140,7 +139,7 @@ const MarketingCheckmarkDropdownOld = ({
           id='demo-multiple-checkbox'
           multiple={type !== 'vendor'}
           value={getValue()}
-          onChange={handleChange}
+          onChange={onChange || handleChange}
           input={<OutlinedInputKit label={title || 'Customised Days'} />}
           renderValue={(selected) => getRenderValue(selected)}
           MenuProps={MenuProps}

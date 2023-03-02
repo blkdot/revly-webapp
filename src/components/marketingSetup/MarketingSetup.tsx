@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import { useUser } from 'contexts';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
@@ -19,7 +18,6 @@ import {
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import React, { ReactNode, useEffect, useState, type createRef } from 'react';
-import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import {
   beforePeriodBtnAtom,
   branchAtom,
@@ -30,7 +28,6 @@ import {
   checkedAtom,
   createdAtom,
   customisedDayAtom,
-  defaultHeatmapState,
   disabledAtom,
   disabledDateAtom,
   discountPercentageAtom,
@@ -38,7 +35,6 @@ import {
   endingDateAtom,
   everyWeekAtom,
   filteredCategoryDataAtom,
-  heatmapDataAtom,
   itemMenuAtom,
   linkAtom,
   menuAtom,
@@ -47,12 +43,15 @@ import {
   recapAtom,
   selectedAtom,
   smRuleAtom,
+  heatmapDataAtom,
+  defaultHeatmapState,
+  maxOrderPercentageAtom,
+  triggerLoadingAtom,
   startingDateAtom,
-  stepsAtom,
+  typeScheduleAtom,
   targetAudienceAtom,
   timesAtom,
-  triggerLoadingAtom,
-  typeScheduleAtom,
+  stepsAtom,
   type TCategoryAtom,
   type THeatmapData,
   type TOfferDataResponse,
@@ -129,13 +128,13 @@ const MarketingSetup: React.FC<{
 }> = ({ active, setActive, ads }) => {
   const { getActivePlatform } = usePlatform();
 
-  const [elligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
   const [platform, setPlatform] = useAtom(platformAtom);
   const [selected, setSelected] = useAtom(selectedAtom);
   const [links, setLinks] = useAtom(linkAtom);
   const [menu, setMenu] = useAtom(menuAtom);
   const [discountPercentage] = useAtom(discountPercentageAtom);
   const [minOrder] = useAtom(minOrderPercentageAtom);
+  const [maxOrder] = useAtom(maxOrderPercentageAtom);
   const [duration] = useAtom(durationAtom);
   const [disabled, setDisabled] = useAtom(disabledAtom);
   const [triggerLoading, setTriggerLoading] = useAtom(triggerLoadingAtom);
@@ -184,6 +183,7 @@ const MarketingSetup: React.FC<{
     getDiscountMovType,
     getTargetAudience,
     getTypeSchedule,
+    setVendors,
   } = useMarketingSetup();
 
   const [heatmapData, setHeatmapData] = useAtom(heatmapDataAtom);
@@ -263,84 +263,7 @@ const MarketingSetup: React.FC<{
 
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
-    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
-    let counter = 0;
-    let defaultSelection = null;
-
-    sortedVendors(displayTemp).forEach((chainName) => {
-      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked =
-          branch?.display?.[chainName]?.[vendorName]?.checked || false;
-        if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
-          displayTemp[chainName][vendorName].deleted = true;
-          displayTemp[chainName][vendorName].checked = false;
-        } else {
-          const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
-          platformsDisplay.forEach((platformV) => {
-            displayTemp[chainName][vendorName].deactivated = false;
-
-            if (
-              platformV?.toLocaleLowerCase() === 'deliveroo' &&
-              ((platform.length === 1 && platform[0]?.toLocaleLowerCase() === 'deliveroo') ||
-                platform.length === 2)
-            ) {
-              const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
-
-              const exists = elligibilityDeliverooState?.[vId];
-
-              if (!exists) {
-                displayTemp[chainName][vendorName].deactivated = true;
-                displayTemp[chainName][vendorName].checked = false;
-                return;
-              }
-            }
-
-            if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
-              displayTemp[chainName][vendorName].deleted = true;
-              displayTemp[chainName][vendorName].checked = false;
-            }
-
-            if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
-              displayTemp[chainName][vendorName].deleted = true;
-              displayTemp[chainName][vendorName].checked = false;
-            }
-            if (platform[0] !== platformV) {
-              displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
-            }
-          });
-
-          if (platform.length === 1) {
-            platform.forEach((p) => {
-              if (!platformsDisplay.includes(p)) {
-                displayTemp[chainName][vendorName].deleted = true;
-                displayTemp[chainName][vendorName].checked = false;
-              }
-            });
-          }
-
-          if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
-            defaultSelection = {
-              chainName,
-              vendorName,
-            };
-          }
-
-          if (displayTemp[chainName][vendorName].checked) {
-            counter += 1;
-          }
-        }
-      });
-    });
-
-    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
-      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
-    }
-
-    setBranch({
-      ...vendors,
-      display: displayTemp,
-      vendorsObj: vendorsObjTemp,
-    });
+    setVendors(displayTemp, setBranch, branch, platform);
     setMenu('Offer on the whole Menu');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, vendors]);
@@ -367,6 +290,7 @@ const MarketingSetup: React.FC<{
       goal: getTargetAudience(),
       discount: Number(discountPercentage.replace('%', '')),
       mov: Number(minOrder.toLowerCase().replace('aed', '')),
+      max_discount: maxOrder ? Number(maxOrder.toLowerCase().replace('aed', '')) : '',
       master_email: user.email,
       access_token: user.token,
       platform_token: '',
@@ -790,14 +714,23 @@ const MarketingSetup: React.FC<{
       setHeatmapData(clearTimeSelected(heatmapData));
       if (menu === 'Offer on An Item from the Menu') {
         getSteps([0, 1, 2, 3, 4]);
+
         if (platform[0] === 'talabat') {
           setDisabled(!(menu && discountPercentage));
           return;
         }
+
         setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
         return;
       }
+
       getSteps([0, 1, 2, 3]);
+
+      if (platform.includes('talabat')) {
+        setDisabled(!(menu && discountPercentage && minOrder && maxOrder));
+        return;
+      }
+
       setDisabled(!(menu && discountPercentage && minOrder));
       return;
     }
@@ -815,6 +748,7 @@ const MarketingSetup: React.FC<{
   }, [
     menu,
     minOrder,
+    maxOrder,
     branch,
     platform,
     discountPercentage,
@@ -833,7 +767,7 @@ const MarketingSetup: React.FC<{
   ]);
 
   const renderGradientValue = (v, i) => {
-    const indices = links === 'revenue' ? 'AED' : '';
+    const indices = links === 'revenue' && 'AED';
 
     if (i === 0) {
       return (
@@ -857,7 +791,7 @@ const MarketingSetup: React.FC<{
           Daily {links} up to {rangeHoursOpenedDay[num].label}
         </span>
         <span className='__item-value'>
-          {data.x_accrued_intra_day}&nbsp;{links === 'revenue' ? 'AED' : ''}
+          {data.x_accrued_intra_day}&nbsp;{links === 'revenue' && 'AED'}
         </span>
       </div>
       <div className='heatmap-tooltip__item'>
@@ -866,7 +800,7 @@ const MarketingSetup: React.FC<{
           {rangeHoursOpenedDay[num].label}
         </span>
         <span className='__item-value'>
-          {data.x_timeslot}&nbsp;{links === 'revenue' ? 'AED' : ''}
+          {data.x_timeslot}&nbsp;{links === 'revenue' && 'AED'}
         </span>
       </div>
       <div className='heatmap-tooltip__item'>
@@ -1073,7 +1007,7 @@ const MarketingSetup: React.FC<{
   };
 
   return (
-    <div className={`marketing-setup-offer${active ? ' active ' : ''}`}>
+    <div className={`marketing-setup-offer ${active && 'active'}`}>
       <PaperKit id='marketing-setup' className='marketing-paper'>
         <ContainerKit className='setup-container'>
           <div className='left-part'>
@@ -1097,18 +1031,18 @@ const MarketingSetup: React.FC<{
           <div className='right-part'>
             <div className='right-part-header'>
               <TypographyKit
-                className={`right-part-header_link setup ${links === 'orders' ? 'active' : ''}`}
+                className={`right-part-header_link setup ${links === 'orders' && 'active'}`}
                 variant='div'
               >
                 <BoxKit
-                  className={links === 'revenue' ? 'active' : ''}
+                  className={links === 'revenue' && 'active'}
                   onClick={() => setLinks('revenue')}
                 >
                   <img src={RevenueHeatMapIcon} alt='Revenue Heat Map Icon' />
                   Revenue
                 </BoxKit>
                 <BoxKit
-                  className={links === 'orders' ? 'active' : ''}
+                  className={links === 'orders' && 'active'}
                   onClick={() => setLinks('orders')}
                 >
                   <img src={PlatformIcon} alt='Order Heat Map Icon' />

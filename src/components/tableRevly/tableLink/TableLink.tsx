@@ -41,7 +41,7 @@ const TableLink: FC<{
           {links.map((obj: { title: string; link: string }, index: number) => (
             <TypographyKit
               key={obj.link}
-              className={`table-link ${link === obj.link ? 'active' : ''}`}
+              className={`table-link ${link === obj.link && 'active'}`}
               onClick={() => changeLink(obj.link, index)}
             >
               {obj.title}

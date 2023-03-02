@@ -404,6 +404,12 @@
   align-items: center;
   width: 100%;
 
+  &.full-width {
+    > span {
+      width: 100% !important;
+    }
+  }
+
   > span {
     width: 100%;
   }
@@ -987,6 +993,10 @@
 
   > span {
     width: 46% !important;
+
+    &.full-width {
+      width: 100% !important;
+    }
   }
 }
 

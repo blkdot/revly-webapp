@@ -28,6 +28,7 @@ import {
   categorySearchAtom,
   disabledDateAtom,
   heatmapDataAtom,
+  maxOrderPercentageAtom,
 } from 'store/marketingSetupAtom';
 import { useAtom } from 'jotai';
 import { FC, useEffect, useState, ChangeEvent } from 'react';
@@ -47,6 +48,7 @@ const GetProgress: FC = () => {
   const [menu, setMenu] = useAtom(menuAtom);
   const [discountPercentage, setDiscountPercentage] = useAtom(discountPercentageAtom);
   const [minOrder, setMinOrder] = useAtom(minOrderPercentageAtom);
+  const [maxOrder, setMaxOrder] = useAtom(maxOrderPercentageAtom);
   const [duration, setDuration] = useAtom(durationAtom);
   const [categoryDataList] = useAtom(categoryDataListAtom);
   const [categoryData, setCategoryData] = useAtom(categoryDataAtom);
@@ -172,6 +174,7 @@ const GetProgress: FC = () => {
     if (selected === 2) {
       setDiscountPercentage('');
       setMinOrder('');
+      setMaxOrder('');
     }
     setMenuChanged(menu);
   }, [menu, itemMenu]);
@@ -198,7 +201,9 @@ const GetProgress: FC = () => {
         setDiscountPercentage={setDiscountPercentage}
         platform={platform}
         minOrder={minOrder}
+        maxOrder={maxOrder}
         setMinOrder={setMinOrder}
+        setMaxOrder={setMaxOrder}
         setItemMenu={setItemMenu}
         getDiscountMovType={getDiscountMovType}
         menuChanged={menuChanged}

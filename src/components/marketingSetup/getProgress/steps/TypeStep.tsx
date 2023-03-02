@@ -10,7 +10,7 @@ import {
   SpinnerKit,
   TypographyKit,
 } from 'kits';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Subtitle } from './components/Subtitle';
 
 const MENU_ITEMS = [
@@ -32,6 +32,9 @@ const MENU_ITEMS = [
   },
 ];
 
+const minOrderValues = ['0 AED', '10 AED', '20 AED', '30 AED'];
+const maxOrderValues = ['20 AED', '30 AED', '40 AED'];
+
 // eslint-disable-next-line import/prefer-default-export
 export const TypeStep: FC<{
   index: number;
@@ -42,7 +45,9 @@ export const TypeStep: FC<{
   setDiscountPercentage: any;
   platform: any;
   minOrder: any;
+  maxOrder: string;
   setMinOrder: any;
+  setMaxOrder: any;
   setItemMenu: any;
   getDiscountMovType: any;
   menuChanged: any;
@@ -63,6 +68,8 @@ export const TypeStep: FC<{
   menuChanged,
   getMenuActive,
   categoryLoading,
+  maxOrder,
+  setMaxOrder,
 }) => {
   const getItemMenuActive = () => {
     if (categoryLoading) {
@@ -72,6 +79,85 @@ export const TypeStep: FC<{
       return <FormControlLabelKit value='Offer on An Item from the Menu' control={<RadioKit />} />;
     }
     return '';
+  };
+
+  useEffect(() => {
+    if (!platform.includes('talabat')) {
+      setMaxOrder('');
+    }
+  }, [minOrder, maxOrder]);
+
+  const manageDiscountForm = () => {
+    if (platform.includes('talabat')) {
+      return (
+        <div>
+          <div className='dropdown-wrapper'>
+            <TypographyKit className='min-max-textfields full-width' variant='div'>
+              <TypographyKit variant='div'>
+                Percentage Discount
+                <MarketingPlaceholderDropdown
+                  names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+                  title='%'
+                  setPersonName={setDiscountPercentage}
+                  personName={discountPercentage}
+                />
+              </TypographyKit>
+            </TypographyKit>
+          </div>
+          <div className='dropdown-wrapper'>
+            <TypographyKit className='min-max-textfields' variant='div'>
+              <TypographyKit variant='div'>
+                Max discount amount
+                <MarketingPlaceholderDropdown
+                  names={maxOrderValues}
+                  title='0 AED'
+                  setPersonName={setMaxOrder}
+                  personName={maxOrder}
+                />
+              </TypographyKit>
+            </TypographyKit>
+            <TypographyKit className='min-max-textfields' variant='div'>
+              <TypographyKit variant='div'>
+                Min. Order Value
+                <MarketingPlaceholderDropdown
+                  names={minOrderValues}
+                  title='0 AED'
+                  setPersonName={setMinOrder}
+                  personName={minOrder}
+                />
+              </TypographyKit>
+            </TypographyKit>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className='dropdown-wrapper'>
+        <TypographyKit className='min-max-textfields' variant='div'>
+          <TypographyKit variant='div'>
+            Percentage Discount
+            <MarketingPlaceholderDropdown
+              names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
+              title='%'
+              setPersonName={setDiscountPercentage}
+              personName={discountPercentage}
+            />
+          </TypographyKit>
+        </TypographyKit>
+        <TypographyKit className='min-max-textfields' variant='div'>
+          <TypographyKit variant='div'>
+            Min. Order Value
+            <MarketingPlaceholderDropdown
+              names={['0 AED', '10 AED', '20 AED', '30 AED', '50 AED', '75 AED', '100 AED']}
+              title='0 AED'
+              setPersonName={setMinOrder}
+              personName={minOrder}
+            />
+          </TypographyKit>
+        </TypographyKit>
+      </div>
+    );
   };
   return (
     <div className='left-part-middle'>
@@ -85,7 +171,7 @@ export const TypeStep: FC<{
       >
         <BoxKit
           className={`left-part-radio under-textfields radio-dates ${
-            menu === 'Offer on the whole Menu' ? 'active' : ''
+            menu === 'Offer on the whole Menu' && 'active'
           }
                   `}
         >
@@ -103,46 +189,15 @@ export const TypeStep: FC<{
           </div>
           <div style={{ width: '100%', marginTop: '0px' }}>
             <div style={{ width: '100%' }}>
-              {menuChanged === 'Offer on the whole Menu' ? (
-                <div className='dropdown-wrapper'>
-                  <TypographyKit className='min-max-textfields' variant='div'>
-                    <TypographyKit variant='div'>
-                      Percentage Discount
-                      <MarketingPlaceholderDropdown
-                        names={['10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%']}
-                        title='%'
-                        setPersonName={setDiscountPercentage}
-                        personName={discountPercentage}
-                      />
-                    </TypographyKit>
-                  </TypographyKit>
-                  <TypographyKit className='min-max-textfields' variant='div'>
-                    <TypographyKit variant='div'>
-                      Min. Order Value
-                      <MarketingPlaceholderDropdown
-                        names={
-                          platform.includes('talabat')
-                            ? ['0 AED', '10 AED', '20 AED', '30 AED']
-                            : ['0 AED', '10 AED', '20 AED', '30 AED', '50 AED', '75 AED', '100 AED']
-                        }
-                        title='0 AED'
-                        setPersonName={setMinOrder}
-                        personName={minOrder}
-                      />
-                    </TypographyKit>
-                  </TypographyKit>
-                </div>
-              ) : (
-                ''
-              )}
+              {menuChanged === 'Offer on the whole Menu' && manageDiscountForm()}
             </div>
           </div>
         </BoxKit>
         {platform.length === 1 ? (
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
-              getMenuActive() ? 'disabled' : ''
-            } ${menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''}
+              getMenuActive() && 'disabled'
+            } ${menuChanged === 'Offer on An Item from the Menu' && 'active'}
                   `}
           >
             <div className='radio'>
@@ -188,7 +243,7 @@ export const TypeStep: FC<{
                     <TypographyKit className='min-max-textfields' variant='div'>
                       <TypographyKit variant='div'>
                         Min. Order Value{' '}
-                        {platform[0] === 'talabat' ? <span className='static'>i</span> : ''}
+                        {platform[0] === 'talabat' && <span className='static'>i</span>}
                         {platform[0] === 'talabat' ? (
                           <div className='get_progress_min_order'>20 AED</div>
                         ) : (

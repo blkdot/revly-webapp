@@ -5,7 +5,7 @@ import { FC } from 'react';
 import Columns from '../../../assets/images/columns.svg';
 
 const TableFilters: FC<{
-  handleChangeMultipleFilter: (k: string) => void;
+  handleChangeMultipleFilter: (k: string) => (v: string) => void;
   filters: {
     discount_rate?: any[];
     end_hour?: any[];

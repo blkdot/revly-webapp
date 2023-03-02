@@ -10,10 +10,10 @@ import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useQueryState } from 'hooks';
 import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
-import { ButtonKit, TypographyKit } from 'kits';
+import { ButtonAction, ContainerKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
 import { useEffect, useState } from 'react';
-import SettingFuture from '../../assets/images/ic_setting-future.png';
-import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
@@ -101,6 +101,12 @@ const MarketingOffer = () => {
   const headersPerformance = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     {
       id: 'revenue',
       disablePadding: true,
@@ -428,43 +434,40 @@ const MarketingOffer = () => {
   };
   return (
     <div className='wrapper marketing-wrapper'>
-      <div className='marketing-top'>
-        <div className='marketing-top-text'>
-          <TypographyKit variant='h4'>Marketing - Offers</TypographyKit>
-          <TypographyKit color='#637381' variant='subtitle'>
-            Create and manage all your offers. Set personalised rules to automatically trigger your
-            offers.
-          </TypographyKit>
+      <ContainerKit>
+        <div className='marketing-top'>
+          <div className='marketing-top-text'>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <MainTitle>Marketing - Offers</MainTitle>
+                <DescriptionTitle>
+                  Create and manage all your offers. Set personalised rules to automatically trigger
+                  your offers
+                </DescriptionTitle>
+              </div>
+            </div>
+          </div>
+          <ButtonAction onClick={() => OpenSetup()}>Set up an offer</ButtonAction>
         </div>
-        <div className='markting-top-btns'>
-          <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
-            <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
-            Create a smart rule
-          </ButtonKit>
-          <ButtonKit onClick={() => OpenSetup()} variant='contained'>
-            <img src={SettingFuture} alt='Setting future icon' />
-            Set up an offer
-          </ButtonKit>
-        </div>
-      </div>
-      {openedOffer ? (
-        <OfferDetailComponent
-          // eslint-disable-next-line eqeqeq
-          data={data?.offers.find((o) => o.master_offer_id == clickedId)}
-          setOpened={setOpenedOffer}
+        {openedOffer ? (
+          <OfferDetailComponent
+            // eslint-disable-next-line eqeqeq
+            data={data?.offers.find((o) => o.master_offer_id == clickedId)}
+            setOpened={setOpenedOffer}
+          />
+        ) : (
+          renderTable()
+        )}
+        <MarketingSetup active={active} setActive={setActive} />
+        <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
         />
-      ) : (
-        renderTable()
-      )}
-      <MarketingSetup active={active} setActive={setActive} />
-      <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+      </ContainerKit>
     </div>
   );
 };

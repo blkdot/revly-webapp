@@ -4,10 +4,10 @@ import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { usePlanningAds } from 'hooks';
-import { ButtonKit, PaperKit, TypographyKit } from 'kits';
+import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
 import { useEffect, useState } from 'react';
-import SettingFuture from '../../assets/images/ic_setting-future.png';
-import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import logo from '../../assets/images/small-logo.png';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
@@ -79,6 +79,12 @@ const MarketingAds = () => {
   const headersPerformance = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     {
       id: 'spend',
       disablePadding: true,
@@ -381,59 +387,58 @@ const MarketingAds = () => {
   };
   return (
     <div className='wrapper marketing-wrapper'>
-      <div className='marketing-top'>
-        <div className='marketing-top-text'>
-          <TypographyKit variant='h4'>Marketing - Ads</TypographyKit>
-          <TypographyKit color='#637381' variant='subtitle'>
-            Create and manage all your offers. Set personalised rules to automatically trigger your
-            Ads.
-          </TypographyKit>
-        </div>
-        <div className='markting-top-btns'>
-          <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
-            <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
-            Create a smart rule
-          </ButtonKit>
-          <ButtonKit disabled variant='contained'>
-            <img src={SettingFuture} alt='Setting future icon' />
-            Set up an ad
-          </ButtonKit>
-        </div>
-      </div>
-      {renderTable()}
-      <MarketingSetup ads active={active} setActive={setActive} />
-      <div
-        role='presentation'
-        tabIndex={-1}
-        onClick={() => setOpened(false)}
-        className={`delete-overlay ${opened ? 'active' : ''}`}
-      >
-        <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper'>
-          <div>
-            <img src={logo} alt='logo' />
-            <TypographyKit>Are you sure you want to delete this offer ?</TypographyKit>
+      <ContainerKit>
+        <div className='marketing-top'>
+          <div className='marketing-top-text'>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <MainTitle>Marketing - Ads</MainTitle>
+                <DescriptionTitle>
+                  Create and manage all your ads. Set personalised rules to automatically trigger
+                  your ads.
+                </DescriptionTitle>
+              </div>
+            </div>
           </div>
-          <TypographyKit>
-            Amet, morbi egestas ultrices id non a. Est morbi consequat quis ac, duis elit, eleifend.
-            Tellus diam mi phasellus facilisi id iaculis egestas.
-          </TypographyKit>
-          <div>
-            <ButtonKit onClick={() => CancelAd()} variant='contained'>
-              Cancel Offer
-            </ButtonKit>
-            <ButtonKit onClick={() => setOpened(false)} variant='outlined'>
-              Cancel
-            </ButtonKit>
-          </div>
-        </PaperKit>
-      </div>
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+          <ButtonAction disabled onClick={() => /* */ null}>
+            Create new campaign
+          </ButtonAction>
+        </div>
+        {renderTable()}
+        <MarketingSetup ads active={active} setActive={setActive} />
+        <div
+          role='presentation'
+          tabIndex={-1}
+          onClick={() => setOpened(false)}
+          className={`delete-overlay ${opened && 'active'}`}
+        >
+          <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper'>
+            <div>
+              <img src={logo} alt='logo' />
+              <TypographyKit>Are you sure you want to delete this offer ?</TypographyKit>
+            </div>
+            <TypographyKit>
+              Amet, morbi egestas ultrices id non a. Est morbi consequat quis ac, duis elit,
+              eleifend. Tellus diam mi phasellus facilisi id iaculis egestas.
+            </TypographyKit>
+            <div>
+              <ButtonKit onClick={() => CancelAd()} variant='contained'>
+                Cancel Offer
+              </ButtonKit>
+              <ButtonKit onClick={() => setOpened(false)} variant='outlined'>
+                Cancel
+              </ButtonKit>
+            </div>
+          </PaperKit>
+        </div>
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
+        />
+      </ContainerKit>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import shortid from 'shortid';
 import costAtom from 'store/costAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { isInfinity } from 'utlls/scripts/scripts';
+import { platformList, platformObject } from '../../../data/platformList';
 import Calendar from '../../../assets/images/calendar.svg';
 import Clock from '../../../assets/images/clock.svg';
 import Eye from '../../../assets/images/eye.svg';
@@ -15,7 +16,6 @@ import Graph from '../../../assets/images/graph.svg';
 import ShoppingBag from '../../../assets/images/shopping-bag.svg';
 import Smile from '../../../assets/images/smile.svg';
 import User from '../../../assets/images/user.svg';
-import { platformList, platformObject } from '../../../data/platformList';
 
 const useTableContentFormatter = () => {
   const { getChainData } = useVendors();
@@ -294,7 +294,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', textAlign: 'left' }}
     >
       <span
-        className={r[h.id] !== null ? 'competition-table-alert' : ''}
+        className={r[h.id] !== null && 'competition-table-alert'}
         style={{ whiteSpace: 'nowrap' }}
       >
         {r[h.id] === null ? '-' : `${r[h.id]}%`}
@@ -502,8 +502,8 @@ const useTableContentFormatter = () => {
         key={`${h.id}_${r.id}`}
       >
         <div
-          className={`table_evolution ${Number(r[h.id]) > 0 ? 'table_increased' : ''} ${
-            Number(r[h.id]) < 0 ? 'table_decreased' : ''
+          className={`table_evolution ${Number(r[h.id]) > 0 && 'table_increased'} ${
+            Number(r[h.id]) < 0 && 'table_decreased'
           }`}
         >
           <span>{evolution(Number(r[h.id]))}</span>

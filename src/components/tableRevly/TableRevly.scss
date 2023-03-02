@@ -345,14 +345,16 @@
   border-radius: 11px;
   box-shadow: none;
   border: none;
-  margin-top: 50px;
+  margin-top: 20px;
 
   .table-paper-top {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #919eab3d;
     margin-bottom: 10px;
-
+    > div {
+      overflow: auto;
+    }
     .table-filter {
       border-left: 1px solid #919eab3d;
       display: flex;
@@ -470,6 +472,8 @@
   position: relative;
   padding: 0 20px;
   transition: 0.4s;
+  overflow: auto;
+  white-space: nowrap;
 
   &::before {
     content: '';
@@ -532,8 +536,8 @@
 }
 
 .table-header-tooltip {
-  height: 15px;
-  width: 15px;
+  height: 15px !important;
+  width: 15px !important;
   margin-left: 5px;
   cursor: pointer;
 

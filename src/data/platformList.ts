@@ -21,7 +21,7 @@ export const platformList = [
   },
 ];
 
-export const platformObject: {
+export type TPlatformObject = {
   [x: string]: {
     srcFavicon: string;
     srcFaviconWhite: string;
@@ -29,7 +29,12 @@ export const platformObject: {
     name: string;
     color: string;
   };
-} = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
+};
+
+export const platformObject: TPlatformObject = platformList.reduce(
+  (acc, cur) => ({ ...acc, [cur.name]: cur }),
+  {}
+);
 
 export type TPlatformUserData = {
   onboarded: boolean;

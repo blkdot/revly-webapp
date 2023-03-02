@@ -1,25 +1,30 @@
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
 import { subDays } from 'date-fns';
-import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
-import { useCallback, useEffect, useState } from 'react';
-import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
-import AreaIcon from '../../assets/images/ic_area.png';
+import { pascalCase } from 'change-case';
+import dayjs from 'dayjs';
+import { useAlert, useApi, useVendors } from 'hooks';
+import FilterBranch from 'components/filter/filterBranch/FilterBranch';
+import { PaperKit, ContainerKit } from 'kits';
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import Competitor from 'components/competitor/Competitor';
+import { platformObject } from 'data/platformList';
+import Dates from 'components/dates/Dates';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import {
+  competitionBranchSelectedAtom,
+  competitionSelectedPlatformAtom,
+} from './CompetitionStoreAtom';
+import AreaIcon from '../../assets/images/area.svg';
 import Iccuisine from '../../assets/images/ic_cuisine.png';
-import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
-import ictalabat from '../../assets/images/talabat-favicon.png';
-import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
-import Competitor from '../../components/competitor/Competitor';
-import Dates from '../../components/dates/Dates';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { vendorsAtom } from '../../store/vendorsAtom';
+import Columns from '../../assets/images/columns.svg';
+import TooltipIcon from '../../assets/images/tooltip-ic.svg';
 import './Competition.scss';
 
 let fnDelays = null;
@@ -62,15 +67,12 @@ const headersAlert = (cuisine: string) => [
 ];
 
 const CompetitionListing = () => {
-  const { vendors: vendorsDatas } = useVendors();
+  const { vendors } = useVendors();
+  const { chainData } = vendors;
+  const user = useUser();
   const [opened, setOpened] = useState(false);
-  const [platformList, setPlatformList] = useState([]);
-  const [platform, setPlatform] = useState('deliveroo');
-  const [area, setArea] = useState('Everywhere');
-  const [timeSlot, setTimeSlot] = useState('Throughout Day');
   const [loading, setLoading] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
-  const [cuisine, setCuisine] = useState('');
   const { triggerAlertWithMessageError } = useAlert();
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: subDays(new Date(), 1),
@@ -78,11 +80,23 @@ const CompetitionListing = () => {
   });
   const [queueDropdown, setQueueDropdown] = useState(0);
   const { getRanking, getAreas, getCuisines } = useApi();
-  const user = useUser();
-  const { userPlatformData } = usePlatform();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
-  const [vendorsData, setVendorsData] = useState(JSON.parse(JSON.stringify(vendorsDatas)));
+
+  // New filter part
+  const [selectedPlatform, setSelectedPlatform] = useAtom(competitionSelectedPlatformAtom);
+  const [branchSelected, setBranchSelected] = useAtom(competitionBranchSelectedAtom);
+  const [selectedCuisine, setSelectedCuisine] = useState([]);
+  const [selectedArea, setSelectedArea] = useState([]);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState([]);
+
+  const branchActive = useMemo(
+    () =>
+      chainData.find(
+        (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+      ),
+    [branchSelected[0], selectedPlatform[0]]
+  );
 
   const Open = () => {
     setOpened(!opened);
@@ -93,21 +107,6 @@ const CompetitionListing = () => {
       body.style.overflowY = 'hidden';
     }
   };
-
-  useEffect(() => {
-    if (userPlatformData) {
-      const pl = userPlatformData.platforms;
-      const list = Object.keys(pl)
-        .map((v) => ({
-          name: v,
-          registered: pl[v].some((obj) => obj.active),
-        }))
-        .filter((k) => k.registered === true);
-
-      setPlatform(list[0]?.name);
-      setPlatformList(list);
-    }
-  }, [userPlatformData]);
 
   const { renderSimpleRow, renderOrdinalSuffixV3, renderSimpleRowSkeleton } =
     useTableContentFormatter();
@@ -120,11 +119,11 @@ const CompetitionListing = () => {
   };
 
   const renderRowsByHeader = (r) =>
-    headersAlert(cuisine).reduce(
+    headersAlert(selectedCuisine[0]).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject?.[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
-        id: `${cur.id}_${r.id}`,
+        id: r.id,
         data: r,
       }),
       {}
@@ -138,7 +137,7 @@ const CompetitionListing = () => {
   };
 
   const renderRowsByHeaderLoading = (r) =>
-    headersAlert(cuisine).reduce(
+    headersAlert(selectedCuisine[0]).reduce(
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObjectLoading[cur.id](cur),
@@ -148,19 +147,22 @@ const CompetitionListing = () => {
     );
 
   useEffect(() => {
-    setTimeSlot((prev) => (area === 'Everywhere' ? 'Throughout Day' : prev));
-  }, [area]);
+    setSelectedTimeSlot((prev) => (selectedArea[0] === 'Everywhere' ? ['Throughout Day'] : prev));
+  }, [selectedArea]);
 
   const getData = (plat, vend, newCuisine, newArea) => {
     clearTimeout(fnDelays);
 
+    if (!newCuisine) throw new Error;
+
     fnDelays = setTimeout(async () => {
+      setLoading(true);
       try {
         const body = {
           master_email: user.email,
           access_token: user.token,
           vendors: vend || [],
-          day_period: timeSlotObj[timeSlot] || 'All',
+          day_period: timeSlotObj[selectedTimeSlot[0]] || 'All',
           filter_location: newArea,
           filter_offer: 'all_discounts',
           filter_cuisine: newCuisine || '',
@@ -184,29 +186,45 @@ const CompetitionListing = () => {
     }, 250);
   };
 
-  const handleCuisineDataResponse = (cuisines) => {
-    if (!cuisines) {
-      setCuisine('');
+  const handleCuisineDataResponse = (cuisines: string[]) => {
+    setCuisinesData(cuisines?.sort() || []);
+
+    if (!cuisines || cuisines.length === 0) {
+      setSelectedCuisine([]);
       setCuisinesData([]);
       return '';
     }
 
-    setCuisinesData(cuisines?.data?.cuisines || []);
-    setCuisine(cuisines?.data?.cuisines[0] || '');
+    setSelectedCuisine([cuisines[0]]);
 
-    return cuisines?.data?.cuisines[0] || '';
+    return cuisines[0] || '';
   };
 
   const handleAreasDataResponse = (areas) => {
-    setAreasData(areas.data.locations?.sort());
-    setTimeSlot('Throughout Day');
+    setAreasData(areas?.sort());
+    setSelectedTimeSlot(['Throughout Day']);
+
     if (!areas) {
-      setArea('Everywhere');
+      setSelectedArea(['Everywhere']);
       return 'Everywhere';
     }
 
-    setArea(areas.data.locations[0] || 'Everywhere');
-    return areas.data.locations[0] || 'Everywhere';
+    setSelectedArea([areas[0]] || ['Everywhere']);
+
+    setAreasData((prev) => {
+      const arr = [...prev];
+
+      const relocateFrom = prev.indexOf('Everywhere');
+
+      const relocateTo = arr.length - 1;
+
+      const element = arr.splice(relocateFrom, 1)[0];
+
+      arr.splice(relocateTo, 0, element);
+
+      return arr;
+    });
+    return areas[0] || 'Everywhere';
   };
 
   const getCuisineAndAreas = useCallback(
@@ -234,104 +252,95 @@ const CompetitionListing = () => {
         };
 
         Promise.all([getCuisines(body, plat), getAreas(body, plat)])
-          .then(([cuisineResult, areaResult]) => {
-            const newCuisine = handleCuisineDataResponse(cuisineResult);
-            const newArea = handleAreasDataResponse(areaResult);
+          .then(([cuisineResult, areaResult]) => ({
+            cuisines: cuisineResult?.data?.cuisines,
+            areas: areaResult?.data?.locations,
+          }))
+          .then(({ cuisines, areas }) => {
+            const newCuisine = handleCuisineDataResponse(cuisines);
+            const newArea = handleAreasDataResponse(areas);
 
             if (stack === queueDropdown) setQueueDropdown(0);
 
             return { newCuisine, newArea };
           })
           .then(({ newCuisine, newArea }) => {
-            getData(platform, vendorsData.vendorsObj[platform], newCuisine, newArea);
+            getData(selectedPlatform[0], vend, newCuisine, newArea);
           })
           .catch((err) => {
             setLoading(false);
             triggerAlertWithMessageError(err.message);
             setAreasData([]);
-            setCuisine('');
+            setSelectedCuisine([]);
             setCuisinesData([]);
-            setTimeSlot('Throughout Day');
-            setArea('Everywhere');
+            setSelectedTimeSlot([]);
+            setSelectedArea([]);
           });
       }, 750);
     },
-    [platform, vendorsData]
+    [selectedPlatform[0]]
   );
 
   useEffect(() => {
     if (
-      platform &&
-      area &&
-      timeSlot &&
-      cuisine &&
-      vendorsData.vendorsObj[platform] &&
-      cuisinesData.length > 0
+      selectedPlatform[0] &&
+      selectedArea[0] &&
+      selectedTimeSlot[0] &&
+      selectedCuisine[0] &&
+      branchSelected[0]
     ) {
-      setLoading(true);
-      getData(platform, vendorsData.vendorsObj[platform], cuisine, area);
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
+
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
+
+          getData(selectedPlatform[0], [localBranch.data], selectedCuisine[0], selectedArea[0]);
+        }
+
+        return;
+      }
+
+      getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
     }
-  }, [cuisine, area, timeSlot, beforePeriodBtn]);
+  }, [selectedArea, selectedTimeSlot, selectedCuisine, beforePeriodBtn]);
 
   useEffect(() => {
-    if (platform && vendorsData.vendorsObj[platform] !== null) {
-      getCuisineAndAreas(platform, vendorsData.vendorsObj[platform], queueDropdown);
+    if (selectedPlatform[0] && branchSelected[0]) {
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
+
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
+
+          getCuisineAndAreas(selectedPlatform[0], [localBranch.data], queueDropdown);
+        }
+
+        return;
+      }
+
+      getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
-  }, [platform, vendorsData, queueDropdown]);
+  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive, beforePeriodBtn]);
 
-  useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendorsDatas.display));
-    let counter = 0;
-    let defaultSelection = null;
-
-    sortedVendors(displayTemp).forEach((chainName) => {
-      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked =
-          vendorsData?.display?.[chainName]?.[vendorName]?.checked || false;
-
-        const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
-        platformsDisplay.forEach((platformV) => {
-          if (platform !== platformV && !displayTemp[chainName][vendorName].is_matched) {
-            displayTemp[chainName][vendorName].deleted = true;
-            displayTemp[chainName][vendorName].checked = false;
-          }
-
-          if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
-            displayTemp[chainName][vendorName].deleted = true;
-            displayTemp[chainName][vendorName].checked = false;
-          }
-          if (platform !== platformV) {
-            displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
-          }
-        });
-        if (!platformsDisplay.includes(platform)) {
-          displayTemp[chainName][vendorName].deleted = true;
-          displayTemp[chainName][vendorName].checked = false;
-        }
-
-        if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
-          defaultSelection = {
-            chainName,
-            vendorName,
-          };
-        }
-
-        if (displayTemp[chainName][vendorName].checked) {
-          counter += 1;
-        }
-      });
-    });
-
-    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
-      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
-    }
-
-    setVendorsData({
-      ...vendorsDatas,
-      display: displayTemp,
-      vendorsObj: { [platform]: selectedVendors('full', displayTemp, platform) },
-    });
-  }, [platform, vendorsDatas]);
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
 
   return (
     <div className='wrapper'>
@@ -345,141 +354,105 @@ const CompetitionListing = () => {
           defaultTypeDate='day'
         />
       </div>
-      <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
-        Competition - Listing
-      </TypographyKit>
-      <TypographyKit variant='subtitle'>
-        Be informed on how you rank compared to your competitors
-      </TypographyKit>
-      <PaperKit className='competition-paper'>
-        <div className='competition-top-input'>
-          <div className='dropdowns'>
-            {Array.isArray(platformList) && platformList.length > 0 ? (
-              <CompetitionDropdown
-                rows={platformList}
-                renderOptions={(v) => (
-                  <MenuItemKit key={v.name} value={v.name}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        textTransform: 'capitalize',
-                      }}
-                    >
-                      <img
-                        src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                        width={24}
-                        height={24}
-                        style={{ objectFit: 'contain' }}
-                        alt='icon'
-                      />
-                      <ListItemTextKit primary={v.name} />
-                    </div>
-                  </MenuItemKit>
-                )}
-                icon={PlatformIcon}
-                title='Select a Platform'
-                type='platform'
-                className='top-competition'
-                setRow={setPlatform}
-                select={platform}
+      <ContainerKit>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+            <MainTitle>Competition - Listing</MainTitle>
+            <DescriptionTitle>
+              Stay one step ahead of the game by tracking your listing and visibility against your
+              competitors.
+            </DescriptionTitle>
+          </div>
+          <div style={{ marginTop: '2rem' }}>
+            <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
+          </div>
+        </div>
+        <PaperKit className='competition-paper'>
+          <div className='competition-top-input'>
+            <div className='dropdowns'>
+              <FilterDropdown
+                items={[
+                  { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
+                  { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
+                ]}
+                values={selectedPlatform}
+                onChange={(v) => setSelectedPlatform([v])}
+                label='Show all platforms'
+                icon={<img src={Columns} alt='Platform' />}
+                internalIconOnActive={platformObject}
+                maxShowned={1}
+                mono
               />
-            ) : (
-              ''
-            )}
-
-            <div className='listing-vendors top-competition'>
-              <RestaurantDropdown
-                pageType='listing'
-                state={vendorsData}
-                setState={setVendorsData}
+              <FilterBranch
+                items={chainData.filter(
+                  (chainD) => chainD.platform === selectedPlatform[0] && chainD.is_active
+                )}
+                values={branchSelected}
+                onChange={(v) => setBranchSelected([v])}
+                icon={<img src={Columns} alt='Platform' />}
+                label='Show all branches'
+              />
+              <FilterDropdown
+                items={
+                  cuisinesData.length > 0
+                    ? cuisinesData.map((cuisineItem) => ({ value: cuisineItem, text: cuisineItem }))
+                    : [{ value: '—', text: '—' }]
+                }
+                values={selectedCuisine}
+                onChange={(v) => setSelectedCuisine([v])}
+                label='Show all cuisines'
+                maxShowned={1}
+                disabled={cuisinesData.length < 1}
+                icon={<img src={Iccuisine} alt='Platform' />}
+                mono
+              />
+              <FilterDropdown
+                items={
+                  areasData.length > 0
+                    ? areasData.map((areaItem) => ({ value: areaItem, text: areaItem }))
+                    : [{ value: 'Everywhere', text: 'Everywhere' }]
+                }
+                values={selectedArea}
+                onChange={(v) => setSelectedArea([v])}
+                label='Show all areas'
+                maxShowned={1}
+                icon={<img src={AreaIcon} alt='Area' />}
+                mono
+              />
+              <FilterDropdown
+                items={
+                  selectedArea[0] === 'Everywhere'
+                    ? [{ value: 'Throughout Day', text: 'Throughout Day' }]
+                    : Object.keys(timeSlotObj).map((timeslot) => ({
+                        value: timeslot,
+                        text: timeSlotObj[timeslot],
+                      }))
+                }
+                values={selectedTimeSlot}
+                onChange={(v) => setSelectedTimeSlot([v])}
+                label='Show all slots'
+                maxShowned={1}
+                icon={<img src={TimeSlotIcon} alt='Slot' />}
+                disabled={selectedArea.length < 1}
+                mono
               />
             </div>
-            <CompetitionDropdown
-              rows={cuisinesData.length > 0 ? cuisinesData : ['—']}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={Iccuisine}
-              title='Cuisine'
-              type='cuisine'
-              className='top-competition not-platform'
-              setRow={setCuisine}
-              disabled={cuisinesData.length < 1}
-              select={cuisine || '—'}
-            />
-            <CompetitionDropdown
-              rows={areasData.length > 0 ? areasData : ['Everywhere']}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={AreaIcon}
-              title='Select Area'
-              type='area'
-              className='top-competition not-platform'
-              setRow={setArea}
-              select={area}
-            />
-            <CompetitionDropdown
-              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={TimeSlotIcon}
-              title='Select Timeslot'
-              type='timeslot'
-              className='top-competition not-platform'
-              setRow={setTimeSlot}
-              select={timeSlot}
-              tooltipMessage='Select Area First'
-            />
           </div>
-          <Competitor platformList={platformList} open={Open} opened={opened} />
-        </div>
-        <TableRevlyNew
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
-          isLoading={loading}
-          headers={headersAlert(cuisine)}
-          rows={competitionListingData.map(renderRowsByHeader)}
-          className='competition-alerts'
-          mainFieldOrdered='name'
-          mainOrder='desc'
-        />
-      </PaperKit>
+          <div className='competition-tooltip-wrapper'>
+            <img src={TooltipIcon} alt='tooltip icon' className='competition-tooltip ' />
+            &nbsp;filter by area to be able to select a specific time slot
+          </div>
+          <TableRevlyNew
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+            isLoading={loading}
+            headers={headersAlert(selectedCuisine[0])}
+            rows={competitionListingData.map(renderRowsByHeader)}
+            className='competition-alerts'
+            mainFieldOrdered='name'
+            mainOrder='desc'
+          />
+        </PaperKit>
+      </ContainerKit>
     </div>
   );
 };

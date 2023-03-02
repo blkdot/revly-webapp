@@ -17,6 +17,7 @@ export const menuAtom = atom('Offer on the whole Menu');
 export const discountPercentageAtom = atom('');
 
 export const minOrderPercentageAtom = atom('');
+export const maxOrderPercentageAtom = atom('');
 
 // Type of duration
 export const durationAtom = atom('Starting Now');
