@@ -3,6 +3,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
 import { subDays } from 'date-fns';
 import { useAtom } from 'jotai';
+import { pascalCase } from 'change-case';
 import dayjs from 'dayjs';
 import { useAlert, useApi, useVendors } from 'hooks';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -303,7 +304,7 @@ const CompetitionListing = () => {
 
         return;
       }
-      
+
       getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
     }
   }, [selectedArea, selectedTimeSlot, selectedCuisine, beforePeriodBtn]);
@@ -331,6 +332,13 @@ const CompetitionListing = () => {
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
   }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive]);
+
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
 
   return (
     <div className='wrapper'>
@@ -362,8 +370,8 @@ const CompetitionListing = () => {
             <div className='dropdowns'>
               <FilterDropdown
                 items={[
-                  { text: 'deliveroo', value: 'deliveroo' },
-                  { text: 'talabat', value: 'talabat' },
+                  { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
+                  { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
                 ]}
                 values={selectedPlatform}
                 onChange={(v) => setSelectedPlatform([v])}

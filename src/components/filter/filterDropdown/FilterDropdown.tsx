@@ -2,11 +2,12 @@ import { useClickAwayListener } from 'hooks';
 import { ButtonKit, CheckboxKit, RadioKit } from 'kits';
 import { useRef, useState, type ReactNode } from 'react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import type { TPlatformObject } from 'data/platformList';
 import './FilterDropdown.scss';
 
 const FilterDropdown: React.FC<{
-  items: { value: string; text: string }[];
+  items: { value: string; text: string | ReactNode }[];
   values: string[];
   onChange: (k: string) => void;
   label: string;
@@ -31,6 +32,8 @@ const FilterDropdown: React.FC<{
   const [isOpen, setIsOpen] = useState(false);
 
   const refDropdown = useRef(null);
+
+  const [refAnimateShow] = useAutoAnimate();
 
   const selectItem = (v) => {
     onChange(v);
@@ -137,7 +140,7 @@ const FilterDropdown: React.FC<{
           {isOpen ? <FaChevronRight /> : <FaChevronDown />}
         </div>
       </ButtonKit>
-      {renderItems()}
+      <div ref={refAnimateShow}>{renderItems()}</div>
     </div>
   );
 };

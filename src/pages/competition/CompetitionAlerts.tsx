@@ -4,6 +4,7 @@ import { useAtom } from 'jotai';
 import { useAlert, useApi, useVendors } from 'hooks';
 import { PaperKit, ContainerKit } from 'kits';
 import { useEffect, useState, useMemo } from 'react';
+import { pascalCase } from 'change-case';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import Competitor from 'components/competitor/Competitor';
@@ -282,16 +283,27 @@ const CompetitionAlerts = () => {
     const isChecked = selectedCompetitors.findIndex((compet) => compet === value);
 
     if (isChecked >= 0) {
-      setSelectedCompetitors((prev) => prev.filter((compet, index) => value !== compet && prev.indexOf(compet) === index));
+      setSelectedCompetitors((prev) =>
+        prev.filter((compet, index) => value !== compet && prev.indexOf(compet) === index)
+      );
 
       return;
     }
 
-    setSelectedCompetitors((prev) => [...prev, value].filter((compet, index) => [...prev, value].indexOf(compet) === index));
+    setSelectedCompetitors((prev) =>
+      [...prev, value].filter((compet, index) => [...prev, value].indexOf(compet) === index)
+    );
   };
 
   const filterCompetitionList = competitorList?.filter(
     (compet) => compet.platform?.toLowerCase() === selectedPlatform[0].toLowerCase()
+  );
+
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
   );
 
   return (
@@ -322,8 +334,8 @@ const CompetitionAlerts = () => {
             <div className='competition-dropdowns'>
               <FilterDropdown
                 items={[
-                  { text: 'deliveroo', value: 'deliveroo' },
-                  { text: 'talabat', value: 'talabat' },
+                  { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
+                  { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
                 ]}
                 values={selectedPlatform}
                 onChange={(v) => setSelectedPlatform([v])}
