@@ -20,12 +20,10 @@ const MarketingRadio: FC<{
   return (
     <BoxKit className={`left-part-radio ${disabled && 'disabled'} ${!icon && 'reversed'}`}>
       <div>
-        {icon ? (
+        {icon && (
           <span className={className}>
             <img src={icon} alt='Box Icon' />
           </span>
-        ) : (
-          ''
         )}
         <div>
           {title}

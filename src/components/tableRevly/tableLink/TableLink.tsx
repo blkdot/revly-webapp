@@ -1,18 +1,11 @@
 import { BoxKit, TypographyKit } from 'kits';
-import { FC, useEffect } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import Arrow from '../../../assets/images/arrow.svg';
 
 const TableLink: FC<{
   links: { link: string; title: string; tooltip?: string }[];
   link: string;
-  filters: {
-    discount_rate?: any[];
-    end_hour?: any[];
-    platform?: any[];
-    start_hour?: any[];
-    status?: any[];
-    type_offer?: any[];
-  };
+  filters: ReactNode;
   setLink: (v: string) => void;
   setOpenedFilter: (v: boolean) => void;
 }> = ({ links, setLink, link, filters, setOpenedFilter }) => {

@@ -5,7 +5,7 @@
 
   .top-inputs {
     background-color: white;
-    padding: 1.5em 0.5em;
+    padding: 1.5em 24px;
     border-radius: 0px;
     top: 0;
     position: sticky;
@@ -132,12 +132,6 @@
 
 .dashboard-stepper {
   margin-top: 30px;
-}
-
-@media (max-width: 1100px) {
-  .top-inputs {
-    padding: 1.5em 0.7em !important;
-  }
 }
 
 .dashboard-title {
