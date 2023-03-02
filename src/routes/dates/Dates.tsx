@@ -48,7 +48,6 @@ import DateSelect from './DateSelect';
 const Dates: FC<{
   isListing?: boolean;
   isDashboard?: boolean;
-  isMarketingHeatMap?: boolean;
   beforePeriodBtn?: any;
   setBeforePeriodBtn?: any;
   offer: boolean;
@@ -60,7 +59,6 @@ const Dates: FC<{
 }> = ({
   isListing,
   isDashboard,
-  isMarketingHeatMap,
   beforePeriodBtn,
   setBeforePeriodBtn,
   offer,
@@ -90,16 +88,13 @@ const Dates: FC<{
     new Date(afterPeriodContext.startDate).getFullYear()
   );
   const getExpanded = () => {
-    if (!isMarketingHeatMap) {
-      if (typeDate === 'day') {
-        return 'panel1';
-      }
-      if (typeDate === 'week') {
-        return 'panel2';
-      }
-      return 'panel3';
+    if (typeDate === 'day') {
+      return 'panel1';
     }
-    return 'panel2';
+    if (typeDate === 'week') {
+      return 'panel2';
+    }
+    return 'panel3';
   };
   const [expanded, setExpanded] = useState(getExpanded());
   const [title, setTitle] = useState(defaultTitle || titleDateContext);
@@ -873,25 +868,8 @@ const Dates: FC<{
     }
     return endOfMonth(new Date(new Date(newDateMonth).setFullYear(year)));
   };
-  const getMarketingHeatMap = () => {
-    if (isMarketingHeatMap) {
-      return (
-        <DatePickerKit
-          onRangeFocusChange={(e) => e}
-          minDate={new Date(minDate.unix())}
-          maxDate={offer ? new Date(addYears(new Date(), 1)) : new Date()}
-          onChange={handleOnChange}
-          showSelectionPreview
-          moveRangeOnFirstSelection={false}
-          months={2}
-          ranges={beforePeriod}
-          direction='horizontal'
-          dragSelectionEnabled={false}
-          weekStartsOn={1}
-        />
-      );
-    }
-    return typeDate === 'month' ? (
+  const getMarketingHeatMap = () =>
+    typeDate === 'month' ? (
       <LocalizationProviderKit dateAdapter={AdapterDayjs}>
         <div className='month-wrapper'>
           <PaperKit className='year-dropdown-paper'>
@@ -941,15 +919,12 @@ const Dates: FC<{
         weekStartsOn={1}
       />
     );
-  };
   const getDateSelect = () => {
     const dateSelectArray = () => {
       if (isListing) {
         return ['day'];
       }
-      if (isMarketingHeatMap) {
-        return ['week'];
-      }
+
       return ['day', 'week', 'month'];
     };
     return (
@@ -1008,7 +983,7 @@ const Dates: FC<{
         </PaperKit>
         {getMarketingHeatMap()}
       </div>
-      {!isMarketingHeatMap ? (
+      {isDashboard ? (
         <div className='dashboard-date '>
           <img src={switchIcon} alt='Compare' />
           <div className={`date-picker_wrapper ${!isDashboard && 'disabled'}`}>
