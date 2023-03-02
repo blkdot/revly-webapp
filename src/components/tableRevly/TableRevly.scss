@@ -142,13 +142,10 @@
 .no-data.no-data {
   white-space: nowrap;
   position: sticky;
-  width: 100%;
   pointer-events: none;
-
-  td {
-    border-bottom: none;
-  }
-
+  left: 0%;
+  top: 0;
+  text-align: center;
   img {
     width: 330px;
     height: 330px;

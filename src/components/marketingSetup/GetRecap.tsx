@@ -461,7 +461,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
             ))}
           </div>
         </BoxKit>
-        {platform.includes('deliveroo') ? (
+        {platform.includes('deliveroo') && (
           <BoxKit className='left-part-radio recap-left-part'>
             <div className='radio recap-box-wrapper'>
               <div className='recap-box'>
@@ -480,8 +480,6 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
               </div>
             </div>
           </BoxKit>
-        ) : (
-          ''
         )}
         <BoxKit className='left-part-radio under-textfields recap-left-part radio-dates active'>
           <div className='radio recap-box-wrapper'>

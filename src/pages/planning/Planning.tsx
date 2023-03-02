@@ -4,10 +4,11 @@ import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOffer
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { endOfMonth, endOfWeek } from 'date-fns';
+import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
-import { ContainerKit } from 'kits';
+import { ContainerKit, TypographyKit } from 'kits';
 
 import { useEffect, useState } from 'react';
 
@@ -70,7 +71,7 @@ const Planning = () => {
     endDate: getOfferDate(),
     ...JSON.parse(dateSaved || '{}'),
   });
-
+  const [dateTitle, setDateTitle] = useState(date.titleDate)
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
@@ -428,11 +429,12 @@ const Planning = () => {
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
+  const [period,setPeriod] = useState('')
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
         <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
+        <Dates setPeriodProps={setPeriod} offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
       </div>
       <ContainerKit>
         {opened ? (
@@ -441,7 +443,15 @@ const Planning = () => {
             setOpened={setOpened}
           />
         ) : (
-          renderTable()
+          <div className='block'>
+            <TypographyKit className='dashboard-title'>
+                Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for {period.charAt(0).toUpperCase() + period.slice(1)}
+            </TypographyKit>
+            <TypographyKit className='dashboard-subtitle'>
+              Plan and visualize all the scheduled and past discounts and campaigns.
+            </TypographyKit>
+            {renderTable()}
+          </div>
         )}
         <MarketingOfferFilter
           CloseFilterPopup={CloseFilterPopup}

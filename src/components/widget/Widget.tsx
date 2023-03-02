@@ -130,7 +130,7 @@ const Widget: FC<{
   return (
     <CardKit className={`card_wrapper ${table === link && 'active'}`} onClick={changeLink}>
       <CardContentKit>
-        {tooltip ? (
+        {tooltip && (
           <TooltipKit
             onClick={(e) => e.stopPropagation()}
             interactive={1}
@@ -145,8 +145,6 @@ const Widget: FC<{
               alt='tooltip icon'
             />
           </TooltipKit>
-        ) : (
-          ''
         )}
         <TypographyKit
           component='div'

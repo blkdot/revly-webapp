@@ -204,7 +204,7 @@ const Dashboard = () => {
         <Dates isDashboard />
       </div>
       <ContainerKit>
-        {!userPlatformData.onboarded ? (
+        {!userPlatformData.onboarded && (
           <div className='dashboard-stepper'>
             <OnboardingModal propsVariables={propsVariables} />
             <OnboardingStepper
@@ -213,8 +213,6 @@ const Dashboard = () => {
               openCloseModal={openCloseModal}
             />
           </div>
-        ) : (
-          ''
         )}
         <div className='block'>
           <TypographyKit className='dashboard-title'>

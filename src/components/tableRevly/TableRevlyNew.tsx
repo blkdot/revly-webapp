@@ -68,118 +68,121 @@ const TableRevlyNew: FC<{
   handleChangeMultipleFilter,
   noDataText,
 }) => {
-  const [order, setOrder] = useState(mainOrder || 'asc');
-  const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
+    const [order, setOrder] = useState(mainOrder || 'asc');
+    const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
-  const handleRequestSort = (property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-  const renderSkeleton = () =>
-    [1, 2, 3, 4, 5].map((n) => (
-      <TableRowKit key={n}>
-        {headers.map((h) => (
-          <TableCellKit key={h.id}>
-            <SkeletonKit />
-          </TableCellKit>
-        ))}
-      </TableRowKit>
-    ));
+    const handleRequestSort = (property) => {
+      const isAsc = orderBy === property && order === 'asc';
+      setOrder(isAsc ? 'desc' : 'asc');
+      setOrderBy(property);
+    };
+    const renderSkeleton = () =>
+      [1, 2, 3, 4, 5].map((n) => (
+        <TableRowKit key={n}>
+          {headers.map((h) => (
+            <TableCellKit key={h.id}>
+              <SkeletonKit />
+            </TableCellKit>
+          ))}
+        </TableRowKit>
+      ));
 
-  const handleRowClick = (id) => () => {
-    if (!onClickRow) return;
+    const handleRowClick = (id) => () => {
+      if (!onClickRow) return;
 
-    onClickRow(id);
-  };
+      onClickRow(id);
+    };
 
-  const renderRowsContent = () =>
-    stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit className='marketing-table-top' onClick={handleRowClick(r.id)} key={r.id}>
-        {headers.map((h) => r[h.id])}
-      </TableRowKit>
-    ));
-  const renderRows = () => {
-    if (isLoading)
-      return renderCustomSkelton
-        ? renderCustomSkelton.map((r) => (
+    const renderRowsContent = () =>
+      stableSort(rows, getComparator(order, orderBy)).map((r) => (
+        <TableRowKit className='marketing-table-top' onClick={handleRowClick(r.id)} key={r.id}>
+          {headers.map((h) => r[h.id])}
+        </TableRowKit>
+      ));
+    const renderRows = () => {
+      if (isLoading)
+        return renderCustomSkelton
+          ? renderCustomSkelton.map((r) => (
             <TableRowKit className='marketing-table-top' key={r.id}>
               {headers.map((h) => r[h.id])}
             </TableRowKit>
           ))
-        : renderSkeleton();
+          : renderSkeleton();
 
-    if (!rows || rows.length < 1) {
-      if (noEmptyMessage) {
+      if (!rows || rows.length < 1) {
         return null;
       }
 
-      return (
-        <TableRowKit className='no-data'>
-          <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
-            <img src={noData} alt='no-data' />
-            <p>{noDataText || 'Files not found description here'}</p>
-          </TableCellKit>
-        </TableRowKit>
-      );
-    }
+      return renderRowsContent();
+    };
 
-    return renderRowsContent();
-  };
-
-  const renderTop = () => {
-    if (links) {
-      return (
-        <TableLink
-          links={links}
-          setLink={setLink}
-          link={link}
-          filters={filters}
-          setOpenedFilter={setOpenedFilter}
-        />
-      );
+    const renderTop = () => {
+      if (links) {
+        return (
+          <TableLink
+            links={links}
+            setLink={setLink}
+            link={link}
+            filters={filters}
+            setOpenedFilter={setOpenedFilter}
+          />
+        );
+      }
+      return '';
+    };
+    const renderFilters = () => {
+      if (filters) {
+        return (
+          <TableFilters
+            handleChangeMultipleFilter={handleChangeMultipleFilter}
+            filters={filters}
+            filtersHead={filtersHead}
+          />
+        );
+      }
+      return '';
+    };
+    const renderNoData = () => {
+      if (!rows || rows.length < 1 && !isLoading) {
+        if (noEmptyMessage) {
+          return null;
+        }
+        return <div className='no-data'>
+          <img src={noData} alt='no-data' />
+          <p>{noDataText || 'Files not found description here'}</p>
+        </div>
+      }
+      return null;
     }
-    return '';
+    return (
+      <BoxKit className={`competition-box ${className || ''}`} sx={{ width: '100%' }}>
+        <PaperKit className='table-paper' sx={{ width: '100%', mb: 2 }}>
+          {renderTop()}
+          {renderFilters()}
+          <TableContainerKit className='table-container'>
+            <TableKit
+              sx={{ minWidth: 750, maxHeight: 250 }}
+              aria-labelledby='tableTitle'
+              size='medium'
+              style={{ '--length': Object.keys(headers).length }}
+            >
+              <EnhancedTableHead
+                header={headers}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length ?? 0}
+              />
+              <TableBodyKit>{renderRows()}</TableBodyKit>
+            </TableKit>
+            {
+              renderNoData()
+            }
+          </TableContainerKit>
+        </PaperKit>
+      </BoxKit>
+    );
   };
-  const renderFilters = () => {
-    if (filters) {
-      return (
-        <TableFilters
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
-          filters={filters}
-          filtersHead={filtersHead}
-        />
-      );
-    }
-    return '';
-  };
-
-  return (
-    <BoxKit className={`competition-box ${className || ''}`} sx={{ width: '100%' }}>
-      <PaperKit className='table-paper' sx={{ width: '100%', mb: 2 }}>
-        {renderTop()}
-        {renderFilters()}
-        <TableContainerKit className='table-container'>
-          <TableKit
-            sx={{ minWidth: 750, maxHeight: 250 }}
-            aria-labelledby='tableTitle'
-            size='medium'
-            style={{ '--length': Object.keys(headers).length }}
-          >
-            <EnhancedTableHead
-              header={headers}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length ?? 0}
-            />
-            <TableBodyKit>{renderRows()}</TableBodyKit>
-          </TableKit>
-        </TableContainerKit>
-      </PaperKit>
-    </BoxKit>
-  );
-};
 TableRevlyNew.defaultProps = {
   isLoading: null,
   mainFieldOrdered: null,

@@ -206,7 +206,7 @@ export const TypeStep: FC<{
             </div>
           </div>
         </BoxKit>
-        {platform.length === 1 ? (
+        {platform.length === 1 && (
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
               getMenuActive() && 'disabled'
@@ -276,8 +276,6 @@ export const TypeStep: FC<{
               </RadioGroupKit>
             </div>
           </BoxKit>
-        ) : (
-          ''
         )}
       </RadioGroupKit>
     </div>
