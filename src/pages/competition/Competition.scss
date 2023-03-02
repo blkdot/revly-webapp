@@ -24,6 +24,7 @@
   border-radius: 16px;
   background: #ffffff !important;
   margin-bottom: 40px;
+  min-height: 40rem;
 }
 
 .top-competition {
@@ -129,9 +130,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 25px 0px;
-  border-bottom: 1px solid rgba(145, 158, 171, 0.24);
-  margin-bottom: 25px;
+  padding: 25px 0px 0px;
 
   .dropdowns {
     display: flex;
@@ -155,7 +154,6 @@
     grid-gap: 20px;
     flex-wrap: wrap;
     justify-content: flex-start;
-    width: 60%;
 
     .top-competition {
       width: 45% !important;
@@ -190,6 +188,20 @@
       }
     }
   }
+}
+
+.competition-tooltip-wrapper {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: -0.5rem;
+  font-size: 12px;
+  color: #637381;
+}
+
+.competition-tooltip {
+  filter: invert(33%) sepia(99%) saturate(1277%) hue-rotate(192deg) brightness(83%) contrast(175%);
 }
 
 @media (max-width: 1100px) {

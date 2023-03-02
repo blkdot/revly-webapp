@@ -10,7 +10,7 @@ import {
   SpinnerKit,
   TypographyKit,
 } from 'kits';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { Subtitle } from './components/Subtitle';
 
 const MENU_ITEMS = [
@@ -84,19 +84,6 @@ export const TypeStep: FC<{
   useEffect(() => {
     if (!platform.includes('talabat')) {
       setMaxOrder('');
-      return;
-    }
-
-    const indexMax = maxOrderValues.findIndex((price) => price === maxOrder);
-    const indexMin = minOrderValues.findIndex((price) => price === minOrder);
-
-    if (indexMin - 1 > indexMax) {
-      if (indexMax === maxOrderValues.length - 1) {
-        setMinOrder(minOrderValues[indexMin - 1]);
-        return;
-      }
-
-      setMaxOrder(maxOrderValues[indexMax + 1]);
     }
   }, [minOrder, maxOrder]);
 

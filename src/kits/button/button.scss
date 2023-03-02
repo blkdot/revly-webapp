@@ -1,0 +1,20 @@
+.button-action-kit {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px 10px 30px;
+  gap: 20px;
+
+  width: 224px;
+  height: 46px;
+
+  background: #906bff;
+  border-radius: 6px;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 26px;
+  text-transform: none;
+}

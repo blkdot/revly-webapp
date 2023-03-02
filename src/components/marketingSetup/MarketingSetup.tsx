@@ -714,14 +714,23 @@ const MarketingSetup: React.FC<{
       setHeatmapData(clearTimeSelected(heatmapData));
       if (menu === 'Offer on An Item from the Menu') {
         getSteps([0, 1, 2, 3, 4]);
+
         if (platform[0] === 'talabat') {
           setDisabled(!(menu && discountPercentage));
           return;
         }
+
         setDisabled(!(menu && discountPercentage && minOrder && itemMenu));
         return;
       }
+
       getSteps([0, 1, 2, 3]);
+
+      if (platform.includes('talabat')) {
+        setDisabled(!(menu && discountPercentage && minOrder && maxOrder));
+        return;
+      }
+
       setDisabled(!(menu && discountPercentage && minOrder));
       return;
     }
@@ -739,6 +748,7 @@ const MarketingSetup: React.FC<{
   }, [
     menu,
     minOrder,
+    maxOrder,
     branch,
     platform,
     discountPercentage,
