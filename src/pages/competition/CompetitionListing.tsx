@@ -153,6 +153,8 @@ const CompetitionListing = () => {
   const getData = (plat, vend, newCuisine, newArea) => {
     clearTimeout(fnDelays);
 
+    if (!newCuisine) throw new Error;
+
     fnDelays = setTimeout(async () => {
       setLoading(true);
       try {
@@ -263,7 +265,7 @@ const CompetitionListing = () => {
             return { newCuisine, newArea };
           })
           .then(({ newCuisine, newArea }) => {
-            getData(selectedPlatform[0], [vend], newCuisine, newArea);
+            getData(selectedPlatform[0], vend, newCuisine, newArea);
           })
           .catch((err) => {
             setLoading(false);
@@ -331,7 +333,7 @@ const CompetitionListing = () => {
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
-  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive]);
+  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive, beforePeriodBtn]);
 
   const renderPlatformInsideFilter = (s) => (
     <div key={s}>
