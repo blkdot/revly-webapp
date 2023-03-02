@@ -1,10 +1,11 @@
 import Navbar from 'components/navbar/Navbar';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { DateRange, DatesProvider } from 'contexts';
+import { DateRange, DatesContextType, DatesProvider } from 'contexts';
 import { VendorsProvider } from 'contexts/VendorsContext';
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { Old } from 'types';
 import Dates from './dates/Dates';
 
 const isDashboard = (path: string) => path === '/dashboard';
@@ -13,6 +14,20 @@ const isListing = (path: string) => path === '/competition/listing';
 
 const isOffer = (path: string) =>
   ['/marketing/ads', '/marketing/offer', '/planning', '/adverts'].includes(path);
+
+const toOld = (v: DatesContextType): Old => ({
+  beforePeriod: {
+    startDate: v.current.from.toDate(),
+    endDate: v.current.until.toDate(),
+  },
+  afterPeriod: {
+    startDate: v.compare.from.toDate(),
+    endDate: v.compare.until.toDate(),
+  },
+  titleDate: v.currentTitle,
+  titleAfterPeriod: v.compareTitle,
+  typeDate: v.calendar,
+});
 
 export const MainLayout = () => {
   const { pathname } = useLocation();
@@ -49,6 +64,15 @@ export const MainLayout = () => {
     [compare, current]
   );
 
+  const old = useMemo(() => toOld(dates), [dates]);
+  const setOld = useCallback((v: Old) => {
+    setCurrent({ from: dayjs(v.beforePeriod.startDate), until: dayjs(v.beforePeriod.endDate) });
+    setCompare({ from: dayjs(v.afterPeriod.startDate), until: dayjs(v.afterPeriod.endDate) });
+    setCalendar(v.typeDate);
+    setCurrentTitle(v.titleDate);
+    setCompareTitle(v.titleAfterPeriod);
+  }, []);
+
   return (
     <div className='user-page'>
       <Navbar />
@@ -60,7 +84,9 @@ export const MainLayout = () => {
               <Dates
                 isDashboard={isDashboard(pathname)}
                 offer={isOffer(pathname)}
-                isListing={isListing}
+                isListing={isListing(pathname)}
+                dateContext={old}
+                setDateContext={setOld}
               />
             </div>
             <Outlet />
