@@ -21,18 +21,23 @@ export const MainLayout = () => {
   const [vendors, setVendors] = useState<unknown[]>([]);
 
   const [current, setCurrent] = useState<DateRange>({
-    from: dayjs(new Date()),
-    until: dayjs(new Date()),
+    from: dayjs().startOf('week'),
+    until: dayjs().subtract(1, 'day').endOf('day'),
   });
-  const [compare, setConmpare] = useState<DateRange>({
-    from: dayjs(new Date()),
-    until: dayjs(new Date()),
+  const [compare, setCompare] = useState<DateRange>({
+    from: dayjs().subtract(1, 'week').startOf('week'),
+    until: dayjs().subtract(1, 'week').endOf('week'),
   });
 
   const dates = useMemo(
     () => ({
       current,
+      setCurrent,
       compare,
+      setCompare,
+      titleDate: 'current week',
+      titleAfterPeriod: 'last week',
+      typeDate: 'week',
     }),
     [compare, current]
   );
