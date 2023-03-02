@@ -15,10 +15,14 @@ import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
 import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import { Switch } from 'assets/icons';
+import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
+
 
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
@@ -392,6 +396,25 @@ const MarketingOffer = () => {
     setOpenedOffer(true);
     setClickedId(id);
   };
+  const renderFilters = () => <div className='table-filters'>
+    <FilterDropdown
+      items={filtersHead.platform}
+      values={filters.platform}
+      onChange={handleChangeMultipleFilter('platform')}
+      label='Platforms'
+      icon={<img src={Columns} alt='Clock' />}
+      internalIconOnActive={platformObject}
+      maxShowned={1}
+    />
+    <FilterDropdown
+      items={filtersHead.status}
+      values={filters.status}
+      onChange={handleChangeMultipleFilter('status')}
+      label='Statuses'
+      icon={<Switch />}
+      maxShowned={1}
+    />
+  </div>
   const renderTable = () => {
     if (link === 'offers_performance') {
       return (
@@ -405,9 +428,7 @@ const MarketingOffer = () => {
           rows={offersDataFiltered.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={!isEmptyList() ? filters : null}
-          filtersHead={filtersHead}
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          filters={renderFilters()}
           noDataText='No offer has been retrieved.'
         />
       );
@@ -425,9 +446,7 @@ const MarketingOffer = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={!isEmptyList() ? filters : null}
-        filtersHead={filtersHead}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
+        filters={renderFilters()}
         noDataText='No offer has been retrieved.'
       />
     );

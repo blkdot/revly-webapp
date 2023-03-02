@@ -87,9 +87,16 @@ const Widget: FC<{
           case 'accrued_discounts':
           case 'revenue':
           case 'profit':
+          case 'accrued_ads':
             return (
               <p>
                 AED <span>{value}</span>
+              </p>
+            );
+          case 'roas':
+            return (
+              <p>
+                <span>{value}</span> AED <span>for every 1 AED spent on Ads</span>
               </p>
             );
           case 'roi':

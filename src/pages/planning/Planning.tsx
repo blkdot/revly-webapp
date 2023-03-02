@@ -1,17 +1,17 @@
 import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
 import { ContainerKit, TypographyKit } from 'kits';
-
 import { useEffect, useState } from 'react';
-
+import { Switch } from 'assets/icons';
+import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
@@ -71,7 +71,6 @@ const Planning = () => {
     endDate: getOfferDate(),
     ...JSON.parse(dateSaved || '{}'),
   });
-  const [dateTitle, setDateTitle] = useState(date.titleDate)
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
   const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
   const [filters, setFilters] = useState({
@@ -239,6 +238,25 @@ const Planning = () => {
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
 
+  const renderFilters = () => <div className='table-filters'>
+    <FilterDropdown
+      items={filtersHead.platform}
+      values={filters.platform}
+      onChange={handleChangeMultipleFilter('platform')}
+      label='Platforms'
+      icon={<img src={Columns} alt='Clock' />}
+      internalIconOnActive={platformObject}
+      maxShowned={1}
+    />
+    <FilterDropdown
+      items={filtersHead.status}
+      values={filters.status}
+      onChange={handleChangeMultipleFilter('status')}
+      label='Statuses'
+      icon={<Switch />}
+      maxShowned={1}
+    />
+  </div>
   const renderTable = () => {
     if (link === 'ads_planning') {
       return (
@@ -252,9 +270,7 @@ const Planning = () => {
           rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={!isEmptyList() ? filters : null}
-          filtersHead={filtersHead}
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          filters={renderFilters()}
           noDataText='No ads has been retrieved.'
         />
       );
@@ -272,9 +288,7 @@ const Planning = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={!isEmptyList() ? filters : null}
-        filtersHead={filtersHead}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
+        filters={renderFilters()}
         noDataText='No offer has been retrieved.'
       />
     );
@@ -429,7 +443,7 @@ const Planning = () => {
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
-  const [period,setPeriod] = useState('')
+  const [period, setPeriod] = useState('')
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
@@ -445,7 +459,7 @@ const Planning = () => {
         ) : (
           <div className='block'>
             <TypographyKit className='dashboard-title'>
-                Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for {period.charAt(0).toUpperCase() + period.slice(1)}
+              Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for {period.charAt(0).toUpperCase() + period.slice(1)}
             </TypographyKit>
             <TypographyKit className='dashboard-subtitle'>
               Plan and visualize all the scheduled and past discounts and campaigns.
