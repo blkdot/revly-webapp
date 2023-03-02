@@ -1,4 +1,3 @@
-import Dates from 'components/dates/Dates';
 import Navbar from 'components/navbar/Navbar';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { DateRange, DatesProvider } from 'contexts';
@@ -6,6 +5,7 @@ import { VendorsProvider } from 'contexts/VendorsContext';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import Dates from './dates/Dates';
 
 const isDashboard = (path: string) => path === '/dashboard';
 
