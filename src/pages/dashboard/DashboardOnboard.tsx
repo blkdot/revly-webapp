@@ -37,6 +37,12 @@ const Dashboard = () => {
       link: 'roi',
       tooltip: `# AED generated in Profits for every 1 AED spent on discount. Profits are revenue minus aggregator's commission, order discount, ads CPC and food cost.`,
     },
+    {
+      title: 'Accrued discount', link: 'accrued_ads'
+    },
+    {
+      title: 'ROAS', link: 'roas'
+    },
   ];
   const [openedModal, setOpenedModal] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -190,7 +196,7 @@ const Dashboard = () => {
   return (
     <div className='wrapper'>
       <ContainerKit>
-        {!userPlatformData.onboarded ? (
+        {!userPlatformData.onboarded && (
           <div className='dashboard-stepper'>
             <OnboardingModal propsVariables={propsVariables} />
             <OnboardingStepper
@@ -199,8 +205,6 @@ const Dashboard = () => {
               openCloseModal={openCloseModal}
             />
           </div>
-        ) : (
-          ''
         )}
         <div className='block'>
           <TypographyKit className='dashboard-title'>

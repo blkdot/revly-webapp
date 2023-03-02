@@ -38,12 +38,10 @@ const OnboardingMiddleContent: FC<{
         </span>
       </div>
       <div className='settings-onboarding-btn_wrapper'>
-        {accounts.length > 0 ? (
+        {accounts.length > 0 && (
           <OnboardingDropdown rows={filteredChains()} state={kitchen} setState={setKitchen} />
-        ) : (
-          ''
         )}
-        {accounts.length > 0 ? (
+        {accounts.length > 0 && (
           <ButtonKit
             onClick={() => {
               openCloseModal();
@@ -55,8 +53,6 @@ const OnboardingMiddleContent: FC<{
             <img src={SettingsIcon} alt='settings-icon' />
             Manage my Accounts
           </ButtonKit>
-        ) : (
-          ''
         )}
         <ButtonKit
           onClick={(e) => openCloseModal(e)}

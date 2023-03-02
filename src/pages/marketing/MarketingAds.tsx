@@ -1,13 +1,16 @@
+import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { usePlanningAds } from 'hooks';
 import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
-import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
-import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
+import DescriptionTitle from 'kits/title/DescriptionTitle';
+import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useState } from 'react';
+import Columns from '../../assets/images/columns.svg';
 import logo from '../../assets/images/small-logo.png';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
@@ -345,7 +348,27 @@ const MarketingAds = () => {
   };
 
   const isEmptyList = () => adsData.length < 1;
-
+  const renderFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeMultipleFilter('platform')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeMultipleFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'ads_performance') {
       return (
@@ -359,9 +382,7 @@ const MarketingAds = () => {
           rows={adsFilteredData.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
-          filters={!isEmptyList() ? filters : null}
-          filtersHead={!isEmptyList() ? filtersHead : null}
-          handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+          filters={renderFilters()}
           noDataText='No ads has been retrieved.'
         />
       );
@@ -378,9 +399,7 @@ const MarketingAds = () => {
         rows={adsFilteredData.map(renderRowsByHeader)}
         mainFieldOrdered='start_date'
         setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
-        filters={!isEmptyList() ? filters : null}
-        filtersHead={!isEmptyList() ? filtersHead : null}
-        handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+        filters={renderFilters()}
         noDataText='No ads has been retrieved.'
       />
     );

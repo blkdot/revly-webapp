@@ -44,9 +44,18 @@ const Widget: FC<{
         return 0;
       }
 
-      return parseFloat(
-        (metricsbeforePeriod.all[link] / (metricsafterPeriod.all[link] / 100) - 100).toFixed(0)
-      );
+      if (
+        !Number.isNaN(
+          parseFloat(
+            (metricsbeforePeriod.all[link] / (metricsafterPeriod.all[link] / 100) - 100).toFixed(0)
+          )
+        )
+      ) {
+        return parseFloat(
+          (metricsbeforePeriod.all[link] / (metricsafterPeriod.all[link] / 100) - 100).toFixed(0)
+        );
+      }
+      return 0;
     }
     return 0;
   };
@@ -76,16 +85,29 @@ const Widget: FC<{
         case 'accrued_discounts':
         case 'revenue':
         case 'profit':
+        case 'accrued_ads':
           return (
             <p>
               AED <span>{value}</span>
             </p>
           );
+        case 'roas':
+          return (
+            <div>
+              <p>
+                <span>{value}</span> AED
+              </p>{' '}
+              <span>for every 1 AED spent on Ads</span>
+            </div>
+          );
         case 'roi':
           return (
-            <p>
-              <span>{value}</span> AED <span>for every 1 AED spent on Discounts and Ads</span>
-            </p>
+            <div>
+              <p>
+                <span>{value}</span> AED
+              </p>{' '}
+              <span>for every 1 AED spent on Discounts and Ads</span>
+            </div>
           );
         default:
           return value;
@@ -124,7 +146,7 @@ const Widget: FC<{
   return (
     <CardKit className={`card_wrapper ${table === link && 'active'}`} onClick={changeLink}>
       <CardContentKit>
-        {tooltip ? (
+        {tooltip && (
           <TooltipKit
             onClick={(e) => e.stopPropagation()}
             interactive={1}
@@ -139,8 +161,6 @@ const Widget: FC<{
               alt='tooltip icon'
             />
           </TooltipKit>
-        ) : (
-          ''
         )}
         <TypographyKit
           component='div'

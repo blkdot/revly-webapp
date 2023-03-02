@@ -5,7 +5,7 @@
 
   .top-inputs {
     background-color: white;
-    padding: 1.5em 0.5em;
+    padding: 1.5em 24px;
     border-radius: 0px;
     top: 0;
     position: sticky;
@@ -134,12 +134,6 @@
   margin-top: 30px;
 }
 
-@media (max-width: 1100px) {
-  .top-inputs {
-    padding: 1.5em 0.7em !important;
-  }
-}
-
 .dashboard-title {
   font-weight: 700 !important;
   font-size: 24px !important;
@@ -160,8 +154,8 @@
   justify-content: space-between;
   grid-gap: 20px;
   > div {
-    flex: 1 1 20%;
-    min-width: 300px;
+    flex: 1 1 30%;
+      min-width: 400px;
   }
 }
 .dashboard-tooltip {
@@ -171,4 +165,13 @@
 }
 .block {
   margin-top: 20px;
+}
+@media(max-width: 1200px){
+  .dashboard-wrapper {
+
+      >div {
+        flex: 1 1 20%;
+        min-width: 300px;
+      }
+    }
 }
