@@ -44,7 +44,7 @@
     "@typescript-eslint/no-unused-vars": 1,
     "@typescript-eslint/no-use-before-define": 1,
     "react-hooks/rules-of-hooks": 1,
-    "react-hooks/exhaustive-deps": 1,
+    "react-hooks/exhaustive-deps": 0,
     "import/prefer-default-export": 0
   }
 }
