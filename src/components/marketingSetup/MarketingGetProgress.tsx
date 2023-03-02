@@ -174,6 +174,7 @@ const GetProgress: FC = () => {
     if (selected === 2) {
       setDiscountPercentage('');
       setMinOrder('');
+      setMaxOrder('');
     }
     setMenuChanged(menu);
   }, [menu, itemMenu]);

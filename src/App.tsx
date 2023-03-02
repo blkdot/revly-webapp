@@ -52,7 +52,11 @@ const App = () => {
   }, [navigate]);
 
   if (loading) {
-    return <SpinnerKit />;
+    return (
+      <div className='main-loading'>
+        <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
+      </div>
+    );
   }
 
   return (
