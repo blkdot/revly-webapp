@@ -1,15 +1,13 @@
-import { useUser } from 'contexts';
-import dayjs from 'dayjs';
+import { DateRange, useDates, useUser } from 'contexts';
 import { useMemo, useState } from 'react';
 import useApi from './useApi';
-import useDate from './useDate';
 import { type TVendorsObj } from './useVendors';
 
 let fnDelays = null;
 
 function useMetrics(vendorsObj: TVendorsObj) {
-  const { date: dateContext } = useDate();
-  const { beforePeriod, afterPeriod } = dateContext;
+  const { current, compare } = useDates();
+
   const { getMetrics } = useApi();
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
@@ -29,7 +27,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState(0);
 
-  const handleRequest = (date, setMetrics, stack) => {
+  const handleRequest = (date: DateRange, setMetrics, stack) => {
     if (Object.keys(newVendorsObj).length === 0) {
       setLoading(false);
       return;
@@ -41,8 +39,8 @@ function useMetrics(vendorsObj: TVendorsObj) {
       master_email: user.email,
       access_token: user.token,
       vendors: newVendorsObj,
-      start_date: dayjs(date.startDate).format('YYYY-MM-DD'),
-      end_date: dayjs(date.endDate).format('YYYY-MM-DD'),
+      start_date: date.from.format('YYYY-MM-DD'),
+      end_date: date.until.format('YYYY-MM-DD'),
     }).then((data) => {
       setLoading(false);
       if (stack === queue) setQueue(0);
@@ -58,10 +56,10 @@ function useMetrics(vendorsObj: TVendorsObj) {
         return;
       }
 
-      handleRequest(afterPeriod, setMetricsafterPeriod, queue);
-      handleRequest(beforePeriod, setMetricsbeforePeriod, queue);
+      handleRequest(compare, setMetricsafterPeriod, queue);
+      handleRequest(current, setMetricsbeforePeriod, queue);
     }, 750 + queue);
-  }, [afterPeriod, beforePeriod, JSON.stringify(vendorsObj), queue]);
+  }, [current, compare, JSON.stringify(vendorsObj), queue]);
 
   return { metricsbeforePeriod, metricsafterPeriod, loading };
 }

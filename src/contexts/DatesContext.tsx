@@ -1,5 +1,7 @@
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { createContext, FC, ReactNode, useContext } from 'react';
+
+// TODO: rename titleAfterPeriod, update default values
 
 export type DateRange = {
   from: Dayjs;
@@ -9,18 +11,14 @@ export type DateRange = {
 export type DatesContextType = {
   current: DateRange;
   compare: DateRange;
+  setCurrent: (v: DateRange) => void;
+  setCompare: (v: DateRange) => void;
+  titleDate: string;
+  titleAfterPeriod: string;
+  typeDate: string;
 };
 
-const DatesContext = createContext<DatesContextType>({
-  current: {
-    from: dayjs(new Date()),
-    until: dayjs(new Date()),
-  },
-  compare: {
-    from: dayjs(new Date()),
-    until: dayjs(new Date()),
-  },
-});
+const DatesContext = createContext<DatesContextType>(undefined);
 
 export const DatesProvider: FC<{
   value: DatesContextType;
