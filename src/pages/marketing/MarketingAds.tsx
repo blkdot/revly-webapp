@@ -2,12 +2,12 @@ import { pascalCase } from 'change-case';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useDate, usePlanningAds } from 'hooks';
-import { ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
+import { ButtonKit, ContainerKit, PaperKit, TypographyKit, ButtonAction } from 'kits';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import SettingFuture from '../../assets/images/ic_setting-future.png';
-import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import logo from '../../assets/images/small-logo.png';
 import Dates from '../../components/dates/Dates';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
@@ -77,6 +77,12 @@ const MarketingAds = () => {
   const headersPerformance = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     {
       id: 'spend',
       disablePadding: true,
@@ -386,22 +392,14 @@ const MarketingAds = () => {
       <ContainerKit>
         <div className='marketing-top'>
           <div className='marketing-top-text'>
-            <TypographyKit variant='h4'>Marketing - Ads</TypographyKit>
-            <TypographyKit color='#637381' variant='subtitle'>
-              Create and manage all your offers. Set personalised rules to automatically trigger
-              your Ads.
-            </TypographyKit>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <MainTitle>Marketing - Ads</MainTitle>
+                <DescriptionTitle>Create and manage all your ads. Set personalised rules to automatically trigger your ads.</DescriptionTitle>
+              </div>
+            </div>
           </div>
-          <div className='markting-top-btns'>
-            <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
-              <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
-              Create a smart rule
-            </ButtonKit>
-            <ButtonKit disabled variant='contained'>
-              <img src={SettingFuture} alt='Setting future icon' />
-              Set up an ad
-            </ButtonKit>
-          </div>
+          <ButtonAction disabled onClick={() => /* */ null}>Create new campaign</ButtonAction>
         </div>
         {renderTable()}
         <MarketingSetup ads active={active} setActive={setActive} />

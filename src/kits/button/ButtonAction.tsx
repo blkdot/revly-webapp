@@ -1,3 +1,4 @@
+import { ButtonProps } from '@mui/material';
 import ButtonKit from './ButtonKit';
 
 import './button.scss';
@@ -7,8 +8,8 @@ type TButtonAction = {
   children: string;
 };
 
-const ButtonAction: React.FC<TButtonAction> = ({ onClick, children }) => (
-  <ButtonKit onClick={onClick} variant='contained' className='button-action-kit' disableElevation>
+const ButtonAction: React.FC<TButtonAction & ButtonProps> = ({ onClick, children, disabled }) => (
+  <ButtonKit onClick={onClick} variant='contained' className='button-action-kit' disableElevation disabled={disabled}>
     {children}
     <svg width='9' height='14' viewBox='0 0 9 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
