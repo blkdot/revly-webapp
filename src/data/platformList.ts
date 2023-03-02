@@ -28,10 +28,13 @@ export type TPlatformObject = {
     src: string;
     name: string;
     color: string;
-  }
+  };
 };
 
-export const platformObject: TPlatformObject = platformList.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
+export const platformObject: TPlatformObject = platformList.reduce(
+  (acc, cur) => ({ ...acc, [cur.name]: cur }),
+  {}
+);
 
 export type TPlatformUserData = {
   onboarded: boolean;
