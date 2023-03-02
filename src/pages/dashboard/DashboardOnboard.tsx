@@ -5,11 +5,10 @@ import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper'
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import Widget from 'components/widget/Widget';
-import { useUser } from 'contexts';
+import { DateRange, useDates, useUser } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import dayjs from 'dayjs';
-import { useDate, usePlatform } from 'hooks';
+import { usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -77,22 +76,21 @@ const Dashboard = () => {
     setConnectAccount,
   };
   const { userPlatformData, setUserPlatformData } = usePlatform();
-  const { date } = useDate();
-  const { typeDate } = date;
-  const getPeriod = (title, period) => {
+  const { current, compare, typeDate, titleDate, titleAfterPeriod } = useDates();
+
+  const getPeriod = (title: string, period: DateRange) => {
     if (title === 'custom') {
       if (typeDate === 'day') {
-        return `${dayjs(period.startDate).format('DD/MM')}`;
+        return `${period.from.format('DD/MM')}`;
       }
+
       if (typeDate === 'month') {
-        return `${format(new Date(period.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
-          new Date(period.startDate)
+        return `${format(period.from.toDate(), 'LLL', { locale: enUS })}  -  ${getYear(
+          period.from.toDate()
         )}`;
       }
 
-      return `${dayjs(period.startDate).format('DD/MM')} - ${dayjs(period.endDate).format(
-        'DD/MM'
-      )}`;
+      return `${period.from.format('DD/MM')} - ${period.until.format('DD/MM')}`;
     }
 
     return title;
@@ -108,13 +106,13 @@ const Dashboard = () => {
       id: 'beforePeriod',
       numeric: false,
       disablePadding: false,
-      label: getPeriod(date.titleDate, date.beforePeriod),
+      label: getPeriod(titleDate, current),
     },
     {
       id: 'afterPeriod',
       numeric: false,
       disablePadding: true,
-      label: getPeriod(date.titleafterPeriod, date.afterPeriod),
+      label: getPeriod(titleAfterPeriod, compare),
     },
     {
       id: 'evolution',
@@ -203,8 +201,8 @@ const Dashboard = () => {
       )}
       <div className='block'>
         <TypographyKit className='dashboard-title'>
-          {getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
-            getPeriod(date.titleDate, date.beforePeriod).slice(1)}{' '}
+          {getPeriod(titleDate, current).charAt(0).toUpperCase() +
+            getPeriod(titleDate, current).slice(1)}{' '}
           results for {isDisplay()}
         </TypographyKit>
         <TypographyKit className='dashboard-subtitle'>

@@ -1,15 +1,14 @@
 import { pascalCase } from 'change-case';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate, usePlanningAds } from 'hooks';
+import dayjs from 'dayjs';
+import { usePlanningAds } from 'hooks';
 import { ButtonKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import logo from '../../assets/images/small-logo.png';
-import Dates from '../../components/dates/Dates';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
@@ -17,23 +16,26 @@ import { platformObject } from '../../data/platformList';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
+const getOfferDate = (current: DateRange, type: string): Date => {
+  if (type === 'month') {
+    return endOfMonth(new Date(current.until.toDate()));
+  }
+  if (type === 'week') {
+    return endOfWeek(new Date(current.until.toDate()), { weekStartsOn: 1 });
+  }
+  return current.until.toDate();
+};
+
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
-  const { date } = useDate();
-  const getOfferDate = () => {
-    if (date.typeDate === 'month') {
-      return endOfMonth(new Date(date.beforePeriod.endDate));
-    }
-    if (date.typeDate === 'week') {
-      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
-    }
-    return date.beforePeriod.endDate;
-  };
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: date.beforePeriod.startDate,
-    endDate: getOfferDate(),
+  const { current, typeDate } = useDates();
+
+  const { ads, isLoading: isLoadingAds } = usePlanningAds({
+    dateRange: {
+      startDate: current.from.toDate(),
+      endDate: getOfferDate(current, typeDate),
+    },
   });
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
 
   const {
     renderPlatform,
@@ -379,10 +381,6 @@ const MarketingAds = () => {
   };
   return (
     <div className='wrapper marketing-wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-      </div>
       <div className='marketing-top'>
         <div className='marketing-top-text'>
           <TypographyKit variant='h4'>Marketing - Ads</TypographyKit>

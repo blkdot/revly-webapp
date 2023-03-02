@@ -1,19 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { pascalCase } from 'change-case';
-import Dates from 'components/dates/Dates';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate, useQueryState } from 'hooks';
+import dayjs from 'dayjs';
+import { useQueryState } from 'hooks';
 import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
 import { ButtonKit, TypographyKit } from 'kits';
-import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import SettingFuture from '../../assets/images/ic_setting-future.png';
 import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
 import { platformObject } from '../../data/platformList';
@@ -21,24 +19,25 @@ import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
-const MarketingOffer = () => {
-  const [active, setActive] = useState(false);
-  const { date: dateContext } = useDate();
-  const getOfferDate = () => {
-    if (dateContext.typeDate === 'month') {
-      return endOfMonth(new Date(dateContext.beforePeriod.endDate));
-    }
-    if (dateContext.typeDate === 'week') {
-      return endOfWeek(new Date(dateContext.beforePeriod.endDate), { weekStartsOn: 1 });
-    }
-    return dateContext.beforePeriod.endDate;
-  };
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: dateContext.beforePeriod.startDate,
-    endDate: getOfferDate(),
-  });
+const getOfferDate = (period: DateRange, type: string): Date => {
+  if (type === 'month') {
+    return endOfMonth(new Date(period.until.toDate()));
+  }
+  if (type === 'week') {
+    return endOfWeek(new Date(period.until.toDate()), { weekStartsOn: 1 });
+  }
 
-  const { data, isLoading: isLoadingOffers } = usePlanningOffersNew(beforePeriodBtn);
+  return period.until.toDate();
+};
+
+const MarketingOffer = () => {
+  const { current, typeDate } = useDates();
+  const [active, setActive] = useState(false);
+
+  const { data, isLoading: isLoadingOffers } = usePlanningOffersNew({
+    startDate: current.from,
+    endDate: getOfferDate(current, typeDate),
+  });
 
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
@@ -429,10 +428,6 @@ const MarketingOffer = () => {
   };
   return (
     <div className='wrapper marketing-wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-      </div>
       <div className='marketing-top'>
         <div className='marketing-top-text'>
           <TypographyKit variant='h4'>Marketing - Offers</TypographyKit>

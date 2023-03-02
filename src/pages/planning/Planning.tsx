@@ -1,12 +1,11 @@
 import { pascalCase } from 'change-case';
-import Dates from 'components/dates/Dates';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
+import { usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
 
 import { useEffect, useState } from 'react';
 
@@ -50,24 +49,25 @@ type TAds = {
   _metadata: null;
 };
 
-const Planning = () => {
-  const [dateSaved, setDateSaved] = useQueryState('date');
-  const [filtersSaved, setFiltersSaved] = useQueryState('filters');
-  const { date } = useDate();
+const getOfferDate = (period: DateRange, type: string): Date => {
+  if (type === 'month') {
+    return endOfMonth(new Date(period.until.toDate()));
+  }
+  if (type === 'week') {
+    return endOfWeek(new Date(period.until.toDate()), { weekStartsOn: 1 });
+  }
 
-  const getOfferDate = () => {
-    if (date.typeDate === 'month') {
-      return endOfMonth(new Date(date.beforePeriod.endDate));
-    }
-    if (date.typeDate === 'week') {
-      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
-    }
-    return date.beforePeriod.endDate;
-  };
-  const [dateRange, setDateRange] = useState({
-    startDate: date.beforePeriod.startDate,
-    endDate: getOfferDate(),
-    ...JSON.parse(dateSaved || '{}'),
+  return period.until.toDate();
+};
+
+const Planning = () => {
+  const [filtersSaved, setFiltersSaved] = useQueryState('filters');
+
+  const { current, typeDate } = useDates();
+
+  const [dateRange] = useState({
+    startDate: current.from.toDate(),
+    endDate: getOfferDate(current, typeDate),
   });
 
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
@@ -82,7 +82,6 @@ const Planning = () => {
   const [openedFilter, setOpenedFilter] = useState(false);
 
   useEffect(() => {
-    setDateSaved(dateRange);
     setFiltersSaved(filters);
   }, [JSON.stringify(filters), JSON.stringify(dateRange)]);
 
@@ -429,10 +428,6 @@ const Planning = () => {
 
   return (
     <div className='wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
-      </div>
       {opened ? (
         <OfferDetailComponent
           data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}

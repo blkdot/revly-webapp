@@ -1,13 +1,12 @@
 import arrow from 'assets/images/arrow.svg';
-import Dates from 'components/dates/Dates';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { useDate, usePlanningAds } from 'hooks';
+import { usePlanningAds } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -16,33 +15,32 @@ import './Adverts.scss';
 import AdvertsCreateNewCampaign from './createNewCampaign/AdvertsCreateNewCampaign';
 import AdvertsDetails from './details/AdvertsDetails';
 
+const getOfferDate = (period: DateRange, type: string): Date => {
+  if (type === 'month') {
+    return endOfMonth(period.until.toDate());
+  }
+
+  if (type === 'week') {
+    return endOfWeek(period.until.toDate(), { weekStartsOn: 1 });
+  }
+
+  return period.until.toDate();
+};
+
 const Adverts = () => {
-  const { date } = useDate();
+  const { current, typeDate, titleDate } = useDates();
   const [vendors] = useAtom(vendorsAtom);
   const { display, vendorsArr } = vendors;
-  const { beforePeriod, titleDate } = date;
-  const getOfferDate = () => {
-    if (date.typeDate === 'month') {
-      return endOfMonth(new Date(date.beforePeriod.endDate));
-    }
-    if (date.typeDate === 'week') {
-      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
-    }
-    return date.beforePeriod.endDate;
-  };
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: beforePeriod.startDate,
-    endDate: getOfferDate(),
-  });
+
   const [link, setLink] = useState('ads_management');
-  const startDate = new Date(beforePeriodBtn.startDate);
-  const endDate = new Date(beforePeriodBtn.endDate);
+  const startDate = current.from.toDate();
+  const endDate = getOfferDate(current, typeDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
 
-  const getbeforePeriod = () => {
+  const getBeforePeriod = () => {
     if (titleDate === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
@@ -65,7 +63,7 @@ const Adverts = () => {
     }
     return selectedVendors('name', display).join(', ');
   };
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
+  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: { startDate, endDate } });
   const [adsData, setAdsData] = useState([]);
   useEffect(() => {
     const newArr = ads.map((obj) => ({
@@ -208,7 +206,7 @@ const Adverts = () => {
               Manage Advertisements for
               <span>{isDisplay()}</span>
               for
-              <span>{getbeforePeriod()}</span>
+              <span>{getBeforePeriod()}</span>
             </TypographyKit>
             <p>
               Here you can quickly and easily create and manage effective advertisements for their
@@ -237,15 +235,7 @@ const Adverts = () => {
       </div>
     );
   };
-  return (
-    <div className='wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-      </div>
-      {renderLayout()}
-    </div>
-  );
+  return <div className='wrapper'>{renderLayout()}</div>;
 };
 
 export default Adverts;
