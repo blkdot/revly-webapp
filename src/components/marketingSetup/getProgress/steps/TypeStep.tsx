@@ -171,7 +171,7 @@ export const TypeStep: FC<{
       >
         <BoxKit
           className={`left-part-radio under-textfields radio-dates ${
-            menu === 'Offer on the whole Menu' ? 'active' : ''
+            menu === 'Offer on the whole Menu' && 'active'
           }
                   `}
         >
@@ -189,15 +189,15 @@ export const TypeStep: FC<{
           </div>
           <div style={{ width: '100%', marginTop: '0px' }}>
             <div style={{ width: '100%' }}>
-              {menuChanged === 'Offer on the whole Menu' ? manageDiscountForm() : ''}
+              {menuChanged === 'Offer on the whole Menu' && manageDiscountForm()}
             </div>
           </div>
         </BoxKit>
         {platform.length === 1 ? (
           <BoxKit
             className={`left-part-radio under-textfields radio-dates ${
-              getMenuActive() ? 'disabled' : ''
-            } ${menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''}
+              getMenuActive() && 'disabled'
+            } ${menuChanged === 'Offer on An Item from the Menu' && 'active'}
                   `}
           >
             <div className='radio'>
@@ -243,7 +243,7 @@ export const TypeStep: FC<{
                     <TypographyKit className='min-max-textfields' variant='div'>
                       <TypographyKit variant='div'>
                         Min. Order Value{' '}
-                        {platform[0] === 'talabat' ? <span className='static'>i</span> : ''}
+                        {platform[0] === 'talabat' && <span className='static'>i</span>}
                         {platform[0] === 'talabat' ? (
                           <div className='get_progress_min_order'>20 AED</div>
                         ) : (

@@ -1,7 +1,8 @@
 import { useUser } from 'contexts';
 import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
 import { useAlert, useApi, useVendors } from 'hooks';
-import {  PaperKit } from 'kits';
+import {  PaperKit, ContainerKit } from 'kits';
 import { useEffect, useState, useMemo } from 'react';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
@@ -13,6 +14,7 @@ import { platformObject } from 'data/platformList';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import { competitionBranchSelectedAtom, competitionSelectedPlatformAtom } from './CompetitionStoreAtom';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import Columns from '../../assets/images/columns.svg';
 import './Competition.scss';
@@ -36,8 +38,8 @@ const CompetitionAlerts = () => {
     endDate: new Date(),
   });
 
-  const [selectedPlatform, setSelectedPlatform] = useState(['deliveroo']);
-  const [branchSelected, setBranchSelected] = useState<string[]>([]);
+  const [selectedPlatform, setSelectedPlatform] = useAtom(competitionSelectedPlatformAtom);
+  const [branchSelected, setBranchSelected] = useAtom(competitionBranchSelectedAtom);
   const [selectedCompetitors, setSelectedCompetitors] = useState<string[]>([]);
 
   const branchActive = useMemo(
@@ -144,11 +146,11 @@ const CompetitionAlerts = () => {
       {}
     );
 
-  const getCompetitorsDropdownContent = async () => {
+  const getCompetitorsDropdownContent = async (vend) => {
     const body = {
       master_email: user.email,
       access_token: user.token,
-      vendors: { [selectedPlatform[0]]: [branchActive?.data] },
+      vendors: { [selectedPlatform[0]]: [vend] },
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
     };
@@ -172,10 +174,21 @@ const CompetitionAlerts = () => {
   };
 
   useEffect(() => {
-    if (selectedPlatform[0] && branchActive) {
-      getCompetitorsDropdownContent();
+    if (selectedPlatform[0] && branchSelected[0]) {
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
+
+          getCompetitorsDropdownContent(localBranch.data);
+        }
+
+        return;
+      }
+      getCompetitorsDropdownContent(branchActive.data);
     }
-  }, [selectedPlatform[0], branchSelected[0]]);
+  }, [selectedPlatform[0], branchSelected[0], chainData.length]);
 
   useEffect(() => {
     filterData();
@@ -234,11 +247,22 @@ const CompetitionAlerts = () => {
   };
 
   useEffect(() => {
-    if (selectedPlatform[0] && branchActive) {
+    if (selectedPlatform[0] && branchSelected[0]) {
       setCompetitor([]);
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
+
+          getData(selectedPlatform[0], { [selectedPlatform[0]]: [localBranch.data] });
+        }
+
+        return;
+      }
       getData(selectedPlatform[0], { [selectedPlatform[0]]: [branchActive.data] });
     }
-  }, [selectedPlatform, branchSelected, beforePeriodBtn]);
+  }, [selectedPlatform[0], branchSelected[0], beforePeriodBtn, chainData.length]);
 
   const handleCompetitorChange = (value) => {
     const isChecked = competitor.findIndex((compet) => compet === value);
@@ -273,65 +297,67 @@ const CompetitionAlerts = () => {
           setbeforePeriodBtn={setbeforePeriodBtn}
         />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <MainTitle>Competition - Alerts</MainTitle>
-          <DescriptionTitle>
-            Stay one step ahead of the game by tracking your competitors marketing actions.
-          </DescriptionTitle>
-        </div>
-        <div style={{ marginTop: '2rem' }}>
-          <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
-        </div>
-      </div>
-      <PaperKit className='competition-paper'>
-        <div className='competition-top-input alerts-top-inputs'>
-          <div className='competition-dropdowns'>
-            <FilterDropdown
-              items={[
-                { text: 'deliveroo', value: 'deliveroo' },
-                { text: 'talabat', value: 'talabat' },
-              ]}
-              values={selectedPlatform}
-              onChange={(v) => setSelectedPlatform([v])}
-              label='Show all platforms'
-              icon={<img src={Columns} alt='Platform' />}
-              internalIconOnActive={platformObject}
-              maxShowned={1}
-              mono
-            />
-            <FilterBranch
-              items={chainData.filter(
-                (chainD) => chainD.platform === selectedPlatform[0] && chainD.is_active
-              )}
-              values={branchSelected}
-              onChange={(v) => setBranchSelected([v])}
-              icon={<img src={Columns} alt='Platform' />}
-              label='Show all branches'
-            />
-            <FilterDropdown
-              items={filterCompetitionList?.map((compets) => ({ value: compets.vendor_name, text: compets.vendor_name })) || []}
-              values={selectedCompetitors}
-              onChange={handleCompetitorChange}
-              label='Show all competitors'
-              icon={<img src={competitorIcon} alt='Competitor' />}
-              disabled={!(filterCompetitionList?.length > 0)}
-              maxShowned={2}
-            />
+      <ContainerKit>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+            <MainTitle>Competition - Alerts</MainTitle>
+            <DescriptionTitle>
+              Stay one step ahead of the game by tracking your competitors marketing actions.
+            </DescriptionTitle>
+          </div>
+          <div style={{ marginTop: '2rem' }}>
+            <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
           </div>
         </div>
-        <TableRevlyNew
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
-          isLoading={loading}
-          headers={headersAlert}
-          rows={
-            competitor?.length > 0
-              ? filteredData.map(renderRowsByHeader)
-              : competitionAlertsData.map(renderRowsByHeader)
-          }
-          className='competition-alerts'
-        />
-      </PaperKit>
+        <PaperKit className='competition-paper'>
+          <div className='competition-top-input alerts-top-inputs'>
+            <div className='competition-dropdowns'>
+              <FilterDropdown
+                items={[
+                  { text: 'deliveroo', value: 'deliveroo' },
+                  { text: 'talabat', value: 'talabat' },
+                ]}
+                values={selectedPlatform}
+                onChange={(v) => setSelectedPlatform([v])}
+                label='Show all platforms'
+                icon={<img src={Columns} alt='Platform' />}
+                internalIconOnActive={platformObject}
+                maxShowned={1}
+                mono
+              />
+              <FilterBranch
+                items={chainData.filter(
+                  (chainD) => chainD.platform === selectedPlatform[0] && chainD.is_active
+                )}
+                values={branchSelected}
+                onChange={(v) => setBranchSelected([v])}
+                icon={<img src={Columns} alt='Platform' />}
+                label='Show all branches'
+              />
+              <FilterDropdown
+                items={filterCompetitionList?.map((compets) => ({ value: compets.vendor_name, text: compets.vendor_name })) || []}
+                values={selectedCompetitors}
+                onChange={handleCompetitorChange}
+                label='Show all competitors'
+                icon={<img src={competitorIcon} alt='Competitor' />}
+                disabled={!(filterCompetitionList?.length > 0)}
+                maxShowned={2}
+              />
+            </div>
+          </div>
+          <TableRevlyNew
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+            isLoading={loading}
+            headers={headersAlert}
+            rows={
+              competitor?.length > 0
+                ? filteredData.map(renderRowsByHeader)
+                : competitionAlertsData.map(renderRowsByHeader)
+            }
+            className='competition-alerts'
+          />
+        </PaperKit>
+      </ContainerKit>
     </div>
   );
 };

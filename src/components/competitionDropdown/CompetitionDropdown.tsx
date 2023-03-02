@@ -71,15 +71,13 @@ const CompetitionDropdown = (props: any) => {
         renderOptions(name)
       ) : (
         <MenuItemKit key={name} value={name}>
-          {title === 'Country' ? <img className='flag-img' src={getFlag(name)} alt={name} /> : ''}
-          {type === 'platform' ? (
+          {title === 'Country' && <img className='flag-img' src={getFlag(name)} alt={name} />}
+          {type === 'platform' && (
             <img
               className='flag-img'
               src={name === 'deliveroo' ? icdeliveroo : ictalabat}
               alt={name}
             />
-          ) : (
-            ''
           )}
           <ListItemTextKit primary={name} />
         </MenuItemKit>
@@ -93,7 +91,7 @@ const CompetitionDropdown = (props: any) => {
           className='restaurant-dropdown-input competition-dropdown'
           id='demo-multiple-checkbox-label'
         >
-          {icon ? <img src={icon} alt='Select Icon' /> : ''}
+          {icon && <img src={icon} alt='Select Icon' />}
           {title}
           {tooltipMessage ? (
             <TooltipKit

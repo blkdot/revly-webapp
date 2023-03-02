@@ -87,7 +87,7 @@ const ManageAccount: FC<{
         {accounts.map((obj, index) => (
           <div
             key={`${obj.platform}-${obj.email}`}
-            className={`onboarding-account ${obj.active ? 'connected' : ''}`}
+            className={`onboarding-account ${obj.active && 'connected'}`}
           >
             <div>
               <TypographyKit

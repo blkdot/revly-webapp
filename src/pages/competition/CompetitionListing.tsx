@@ -2,10 +2,11 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
 import { subDays } from 'date-fns';
+import { useAtom } from 'jotai';
 import dayjs from 'dayjs';
 import { useAlert, useApi, useVendors } from 'hooks';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
-import { PaperKit } from 'kits';
+import { PaperKit, ContainerKit } from 'kits';
 import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
 import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
 import { useEffect, useState, useCallback, useMemo } from 'react';
@@ -14,6 +15,7 @@ import Competitor from 'components/competitor/Competitor';
 import { platformObject } from 'data/platformList';
 import Dates from 'components/dates/Dates';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import { competitionBranchSelectedAtom, competitionSelectedPlatformAtom } from './CompetitionStoreAtom';
 import AreaIcon from '../../assets/images/area.svg';
 import Iccuisine from '../../assets/images/ic_cuisine.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
@@ -78,8 +80,8 @@ const CompetitionListing = () => {
   const [cuisinesData, setCuisinesData] = useState([]);
 
   // New filter part
-  const [selectedPlatform, setSelectedPlatform] = useState(['deliveroo']);
-  const [branchSelected, setBranchSelected] = useState([]);
+  const [selectedPlatform, setSelectedPlatform] = useAtom(competitionSelectedPlatformAtom);
+  const [branchSelected, setBranchSelected] = useAtom(competitionBranchSelectedAtom);
   const [selectedCuisine, setSelectedCuisine] = useState([]);
   const [selectedArea, setSelectedArea] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState([]);
@@ -280,7 +282,17 @@ const CompetitionListing = () => {
       selectedCuisine[0] &&
       branchSelected[0]
     ) {
-      if (!branchActive) return;
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
+
+          getData(selectedPlatform[0], [localBranch.data], selectedCuisine[0], selectedArea[0]);
+        }
+
+        return;
+      }
 
       setLoading(true);
       getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
@@ -289,11 +301,21 @@ const CompetitionListing = () => {
 
   useEffect(() => {
     if (selectedPlatform[0] && branchSelected[0]) {
-      if (!branchActive) return;
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
+
+          getCuisineAndAreas(selectedPlatform[0], [localBranch.data], queueDropdown);
+        }
+
+        return;
+      };
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
-  }, [selectedPlatform, branchSelected, queueDropdown]);
+  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive]);
 
   return (
     <div className='wrapper'>
@@ -307,107 +329,109 @@ const CompetitionListing = () => {
           defaultTypeDate='day'
         />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <MainTitle>Competition - Listing</MainTitle>
-          <DescriptionTitle>
-            Stay one step ahead of the game by tracking your listing and visibility against your
-            competitors.
-          </DescriptionTitle>
-        </div>
-        <div style={{ marginTop: '2rem' }}>
-          <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
-        </div>
-      </div>
-      <PaperKit className='competition-paper'>
-        <div className='competition-top-input'>
-          <div className='dropdowns'>
-            <FilterDropdown
-              items={[
-                { text: 'deliveroo', value: 'deliveroo' },
-                { text: 'talabat', value: 'talabat' },
-              ]}
-              values={selectedPlatform}
-              onChange={(v) => setSelectedPlatform([v])}
-              label='Show all platforms'
-              icon={<img src={Columns} alt='Platform' />}
-              internalIconOnActive={platformObject}
-              maxShowned={1}
-              mono
-            />
-            <FilterBranch
-              items={chainData.filter(
-                (chainD) => chainD.platform === selectedPlatform[0] && chainD.is_active
-              )}
-              values={branchSelected}
-              onChange={(v) => setBranchSelected([v])}
-              icon={<img src={Columns} alt='Platform' />}
-              label='Show all branches'
-            />
-            <FilterDropdown
-              items={
-                cuisinesData.length > 0
-                  ? cuisinesData.map((cuisineItem) => ({ value: cuisineItem, text: cuisineItem }))
-                  : [{ value: '—', text: '—' }]
-              }
-              values={selectedCuisine}
-              onChange={(v) => setSelectedCuisine([v])}
-              label='Show all cuisines'
-              maxShowned={1}
-              disabled={cuisinesData.length < 1}
-              icon={<img src={Iccuisine} alt='Platform' />}
-              mono
-            />
-            <FilterDropdown
-              items={
-                areasData.length > 0
-                  ? areasData.map((areaItem) => ({ value: areaItem, text: areaItem }))
-                  : [{ value: 'Everywhere', text: 'Everywhere' }]
-              }
-              values={selectedArea}
-              onChange={(v) => setSelectedArea([v])}
-              label='Show all areas'
-              maxShowned={1}
-              icon={<img src={AreaIcon} alt='Area' />}
-              mono
-            />
-            <FilterDropdown
-              items={
-                selectedArea[0] === 'Everywhere'
-                  ? [{ value: 'Throughout Day', text: 'Throughout Day' }]
-                  : Object.keys(timeSlotObj).map((timeslot) => ({
-                      value: timeslot,
-                      text: timeSlotObj[timeslot],
-                    }))
-              }
-              values={selectedTimeSlot}
-              onChange={(v) => setSelectedTimeSlot([v])}
-              label='Show all slots'
-              maxShowned={1}
-              icon={<img src={TimeSlotIcon} alt='Slot' />}
-              disabled={selectedArea.length < 1}
-              mono
-            />
+      <ContainerKit>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+            <MainTitle>Competition - Listing</MainTitle>
+            <DescriptionTitle>
+              Stay one step ahead of the game by tracking your listing and visibility against your
+              competitors.
+            </DescriptionTitle>
+          </div>
+          <div style={{ marginTop: '2rem' }}>
+            <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
           </div>
         </div>
-        <div className="competition-tooltip-wrapper">
-          <img
-            src={TooltipIcon}
-            alt='tooltip icon'
-            className="competition-tooltip "
+        <PaperKit className='competition-paper'>
+          <div className='competition-top-input'>
+            <div className='dropdowns'>
+              <FilterDropdown
+                items={[
+                  { text: 'deliveroo', value: 'deliveroo' },
+                  { text: 'talabat', value: 'talabat' },
+                ]}
+                values={selectedPlatform}
+                onChange={(v) => setSelectedPlatform([v])}
+                label='Show all platforms'
+                icon={<img src={Columns} alt='Platform' />}
+                internalIconOnActive={platformObject}
+                maxShowned={1}
+                mono
+              />
+              <FilterBranch
+                items={chainData.filter(
+                  (chainD) => chainD.platform === selectedPlatform[0] && chainD.is_active
+                )}
+                values={branchSelected}
+                onChange={(v) => setBranchSelected([v])}
+                icon={<img src={Columns} alt='Platform' />}
+                label='Show all branches'
+              />
+              <FilterDropdown
+                items={
+                  cuisinesData.length > 0
+                    ? cuisinesData.map((cuisineItem) => ({ value: cuisineItem, text: cuisineItem }))
+                    : [{ value: '—', text: '—' }]
+                }
+                values={selectedCuisine}
+                onChange={(v) => setSelectedCuisine([v])}
+                label='Show all cuisines'
+                maxShowned={1}
+                disabled={cuisinesData.length < 1}
+                icon={<img src={Iccuisine} alt='Platform' />}
+                mono
+              />
+              <FilterDropdown
+                items={
+                  areasData.length > 0
+                    ? areasData.map((areaItem) => ({ value: areaItem, text: areaItem }))
+                    : [{ value: 'Everywhere', text: 'Everywhere' }]
+                }
+                values={selectedArea}
+                onChange={(v) => setSelectedArea([v])}
+                label='Show all areas'
+                maxShowned={1}
+                icon={<img src={AreaIcon} alt='Area' />}
+                mono
+              />
+              <FilterDropdown
+                items={
+                  selectedArea[0] === 'Everywhere'
+                    ? [{ value: 'Throughout Day', text: 'Throughout Day' }]
+                    : Object.keys(timeSlotObj).map((timeslot) => ({
+                        value: timeslot,
+                        text: timeSlotObj[timeslot],
+                      }))
+                }
+                values={selectedTimeSlot}
+                onChange={(v) => setSelectedTimeSlot([v])}
+                label='Show all slots'
+                maxShowned={1}
+                icon={<img src={TimeSlotIcon} alt='Slot' />}
+                disabled={selectedArea.length < 1}
+                mono
+              />
+            </div>
+          </div>
+          <div className="competition-tooltip-wrapper">
+            <img
+              src={TooltipIcon}
+              alt='tooltip icon'
+              className="competition-tooltip "
+            />
+            &nbsp;filter by area to be able to select a specific time slot
+          </div>
+          <TableRevlyNew
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+            isLoading={loading}
+            headers={headersAlert(selectedCuisine[0])}
+            rows={competitionListingData.map(renderRowsByHeader)}
+            className='competition-alerts'
+            mainFieldOrdered='name'
+            mainOrder='desc'
           />
-          &nbsp;filter by area to be able to select a specific time slot
-        </div>
-        <TableRevlyNew
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
-          isLoading={loading}
-          headers={headersAlert(selectedCuisine[0])}
-          rows={competitionListingData.map(renderRowsByHeader)}
-          className='competition-alerts'
-          mainFieldOrdered='name'
-          mainOrder='desc'
-        />
-      </PaperKit>
+        </PaperKit>
+      </ContainerKit>
     </div>
   );
 };

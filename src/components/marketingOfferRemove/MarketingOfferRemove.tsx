@@ -9,7 +9,7 @@ const MarketingOfferRemove = (props: any) => {
       role='presentation'
       tabIndex={-1}
       onClick={() => setOpened(false)}
-      className={`delete-overlay ${opened ? 'active' : ''}`}
+      className={`delete-overlay ${opened && 'active'}`}
     >
       <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper'>
         <div>

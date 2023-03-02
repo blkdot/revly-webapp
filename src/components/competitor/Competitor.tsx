@@ -190,7 +190,7 @@ const Competitor = ({ open, opened, platformList }) => {
         role='presentation'
         tabIndex={-1}
         onClick={() => open()}
-        className={`competitor-overlay ${opened ? 'active' : ''}`}
+        className={`competitor-overlay ${opened && 'active'}`}
       >
         <form role='presentation' tabIndex={-1} onSubmit={(e) => submit(e)}>
           <PaperKit onClick={(e) => e.stopPropagation()} className='competitor-paper'>
@@ -204,7 +204,7 @@ const Competitor = ({ open, opened, platformList }) => {
               <ButtonKit
                 type='submit'
                 variant='contained'
-                className={`competition-add ${loading ? 'active' : ''}`}
+                className={`competition-add ${loading && 'active'}`}
               >
                 Add this competitor
               </ButtonKit>

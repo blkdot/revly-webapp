@@ -304,7 +304,7 @@ const AfterPeriodSelect = ({
     <PaperKit
       onClick={(e) => e.preventDefault()}
       style={{ background: '#fff' }}
-      className={`date-select ${selected ? 'selected' : ''}`}
+      className={`date-select ${selected && 'selected'}`}
     >
       {render()}
     </PaperKit>

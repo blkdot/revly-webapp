@@ -61,7 +61,7 @@ const FilterDropdown: React.FC<{
   const renderItem = () =>
     items.map((item) => (
       <div
-        className={`comp-dropdown__item ${values.includes(item.value) ? '__active' : ''}`}
+        className={`comp-dropdown__item ${values.includes(item.value) && '__active'}`}
         key={item.value}
         onClick={() => selectItem(item.value)}
         onKeyDown={() => selectItem(item.value)}
@@ -106,7 +106,7 @@ const FilterDropdown: React.FC<{
     return (
       <i
         style={{ marginRight: '0.5rem', alignItems: 'center' }}
-        className={`${values.length > 0 ? '__active' : ''}`}
+        className={`${values.length > 0 && '__active'}`}
       >
         {icon}
       </i>
@@ -123,10 +123,10 @@ const FilterDropdown: React.FC<{
         }}
         role='button'
         style={{ display: 'flex', justifyContent: 'space-between' }}
-        className={`${values.length > 0 ? '__active' : ''}`}
+        className={`${values.length > 0 && '__active'}`}
         tabIndex={0}
       >
-        <div className={`comp-content ${values.length > 0 ? 'active' : ''}`}>
+        <div className={`comp-content ${values.length > 0 && 'active'}`}>
           {renderIcon()}
           {getCurrentValue()}
         </div>
