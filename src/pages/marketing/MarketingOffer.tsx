@@ -443,8 +443,8 @@ const MarketingOffer = () => {
           <div className='marketing-top-text'>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
-                <MainTitle>Manage ads for current week</MainTitle>
-                <DescriptionTitle>Here insert description of what are they seeing</DescriptionTitle>
+                <MainTitle>Marketing - Offers</MainTitle>
+                <DescriptionTitle>Create and manage all your offers. Set personalised rules to automatically trigger your offers</DescriptionTitle>
               </div>
             </div>
           </div>
