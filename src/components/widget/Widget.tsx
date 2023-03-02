@@ -95,15 +95,15 @@ const Widget: FC<{
             );
           case 'roas':
             return (
-              <p>
-                <span>{value}</span> AED <span>for every 1 AED spent on Ads</span>
-              </p>
+              <div>
+                <p><span>{value}</span> AED</p> <span>for every 1 AED spent on Ads</span>
+              </div>
             );
           case 'roi':
             return (
-              <p>
-                <span>{value}</span> AED <span>for every 1 AED spent on Discounts and Ads</span>
-              </p>
+              <div>
+                <p><span>{value}</span> AED</p> <span>for every 1 AED spent on Discounts and Ads</span>
+              </div>
             );
           default:
             return value;
