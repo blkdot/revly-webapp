@@ -13,14 +13,14 @@
 }
 
 .Navbar.Navbar {
-  background: rgba($color: #fff, $alpha: 0.4);
+  background: #fff;
   backdrop-filter: blur(10px);
   position: fixed;
   top: 0px;
   left: 0;
   height: 100vh;
   z-index: 1000;
-  border-right: 1px solid rgba(145, 158, 171, 0.24);
+  border-right: 1px solid #f8f9fd;
   width: 70px;
   padding: 15px 12px 0 12px;
   overflow: hidden;

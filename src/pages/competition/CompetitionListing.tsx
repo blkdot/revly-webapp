@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { vendorsIsolatedAtom } from 'store/vendorsAtom';
 import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
-import { ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
+import { ContainerKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
 import { useEffect, useState, useCallback } from 'react';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
@@ -358,20 +358,60 @@ const CompetitionListing = () => {
           defaultTypeDate='day'
         />
       </div>
-      <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
-        Competition - Listing
-      </TypographyKit>
-      <TypographyKit variant='subtitle'>
-        Be informed on how you rank compared to your competitors
-      </TypographyKit>
-      <PaperKit className='competition-paper'>
-        <div className='competition-top-input'>
-          <div className='dropdowns'>
-            {Array.isArray(platformList) && platformList.length > 0 ? (
+      <ContainerKit>
+        <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
+          Competition - Listing
+        </TypographyKit>
+        <TypographyKit variant='subtitle'>
+          Be informed on how you rank compared to your competitors
+        </TypographyKit>
+        <PaperKit className='competition-paper'>
+          <div className='competition-top-input'>
+            <div className='dropdowns'>
+              {Array.isArray(platformList) && platformList.length > 0 && (
+                <CompetitionDropdown
+                  rows={platformList}
+                  renderOptions={(v) => (
+                    <MenuItemKit key={v.name} value={v.name}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 10,
+                          textTransform: 'capitalize',
+                        }}
+                      >
+                        <img
+                          src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                          width={24}
+                          height={24}
+                          style={{ objectFit: 'contain' }}
+                          alt='icon'
+                        />
+                        <ListItemTextKit primary={v.name} />
+                      </div>
+                    </MenuItemKit>
+                  )}
+                  icon={PlatformIcon}
+                  title='Select a Platform'
+                  type='platform'
+                  className='top-competition'
+                  setRow={setPlatform}
+                  select={platform}
+                />
+              )}
+
+              <div className='listing-vendors top-competition'>
+                <RestaurantDropdown
+                  pageType='listing'
+                  state={vendorsData}
+                  setState={setVendorsData}
+                />
+              </div>
               <CompetitionDropdown
-                rows={platformList}
+                rows={cuisinesData.length > 0 ? cuisinesData : ['—']}
                 renderOptions={(v) => (
-                  <MenuItemKit key={v.name} value={v.name}>
+                  <MenuItemKit key={v} value={v}>
                     <div
                       style={{
                         display: 'flex',
@@ -380,119 +420,79 @@ const CompetitionListing = () => {
                         textTransform: 'capitalize',
                       }}
                     >
-                      <img
-                        src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                        width={24}
-                        height={24}
-                        style={{ objectFit: 'contain' }}
-                        alt='icon'
-                      />
-                      <ListItemTextKit primary={v.name} />
+                      <ListItemTextKit primary={v} />
                     </div>
                   </MenuItemKit>
                 )}
-                icon={PlatformIcon}
-                title='Select a Platform'
-                type='platform'
-                className='top-competition'
-                setRow={setPlatform}
-                select={platform}
+                icon={Iccuisine}
+                title='Cuisine'
+                type='cuisine'
+                className='top-competition not-platform'
+                setRow={setCuisine}
+                disabled={cuisinesData.length < 1}
+                select={cuisine || '—'}
               />
-            ) : (
-              ''
-            )}
-
-            <div className='listing-vendors top-competition'>
-              <RestaurantDropdown
-                pageType='listing'
-                state={vendorsData}
-                setState={setVendorsData}
+              <CompetitionDropdown
+                rows={areasData.length > 0 ? areasData : ['Everywhere']}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v} value={v}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      <ListItemTextKit primary={v} />
+                    </div>
+                  </MenuItemKit>
+                )}
+                icon={AreaIcon}
+                title='Select Area'
+                type='area'
+                className='top-competition not-platform'
+                setRow={setArea}
+                select={area}
+              />
+              <CompetitionDropdown
+                rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v} value={v}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      <ListItemTextKit primary={v} />
+                    </div>
+                  </MenuItemKit>
+                )}
+                icon={TimeSlotIcon}
+                title='Select Timeslot'
+                type='timeslot'
+                className='top-competition not-platform'
+                setRow={setTimeSlot}
+                select={timeSlot}
+                tooltipMessage='Select Area First'
               />
             </div>
-            <CompetitionDropdown
-              rows={cuisinesData.length > 0 ? cuisinesData : ['—']}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={Iccuisine}
-              title='Cuisine'
-              type='cuisine'
-              className='top-competition not-platform'
-              setRow={setCuisine}
-              disabled={cuisinesData.length < 1}
-              select={cuisine || '—'}
-            />
-            <CompetitionDropdown
-              rows={areasData.length > 0 ? areasData : ['Everywhere']}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={AreaIcon}
-              title='Select Area'
-              type='area'
-              className='top-competition not-platform'
-              setRow={setArea}
-              select={area}
-            />
-            <CompetitionDropdown
-              rows={area === 'Everywhere' ? ['Throughout Day'] : Object.keys(timeSlotObj)}
-              renderOptions={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <ListItemTextKit primary={v} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={TimeSlotIcon}
-              title='Select Timeslot'
-              type='timeslot'
-              className='top-competition not-platform'
-              setRow={setTimeSlot}
-              select={timeSlot}
-              tooltipMessage='Select Area First'
-            />
+            <Competitor platformList={platformList} open={Open} opened={opened} />
           </div>
-          <Competitor platformList={platformList} open={Open} opened={opened} />
-        </div>
-        <TableRevlyNew
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
-          isLoading={loading}
-          headers={headersAlert(cuisine)}
-          rows={competitionListingData.map(renderRowsByHeader)}
-          className='competition-alerts'
-          mainFieldOrdered='name'
-          mainOrder='desc'
-        />
-      </PaperKit>
+          <TableRevlyNew
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+            isLoading={loading}
+            headers={headersAlert(cuisine)}
+            rows={competitionListingData.map(renderRowsByHeader)}
+            className='competition-alerts'
+            mainFieldOrdered='name'
+            mainOrder='desc'
+          />
+        </PaperKit>
+      </ContainerKit>
     </div>
   );
 };

@@ -24,7 +24,7 @@ const AccountSettingForm = (props: any) => {
       <div className='account-form__flex'>
         <div className='account-form__flex__block'>
           <TextfieldKit
-            helperText={valueName.error ? '* must be > 2 and only alphabet' : ''}
+            helperText={valueName.error && '* must be > 2 and only alphabet'}
             error={valueName.error}
             value={valueName.value}
             name='name'
@@ -34,7 +34,7 @@ const AccountSettingForm = (props: any) => {
             label='Name'
           />
           <TextfieldKit
-            helperText={valueCity.error ? '* must be > 2 and only alphabet' : ''}
+            helperText={valueCity.error && '* must be > 2 and only alphabet'}
             error={valueCity.error}
             value={valueCity.value}
             name='city'
@@ -66,7 +66,7 @@ const AccountSettingForm = (props: any) => {
 
         <div className='account-form__flex__block'>
           <TextfieldKit
-            helperText={valueRestoName.error ? '* must be > 2' : ''}
+            helperText={valueRestoName.error && '* must be > 2'}
             error={valueRestoName.error}
             value={valueRestoName.value}
             name='restoName'

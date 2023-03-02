@@ -159,7 +159,7 @@ export const DiscountedItemsStep: FC<{
       <Subtitle />
       <BoxKit
         className={`left-part-radio under-textfields radio-dates ${
-          menuChanged === 'Offer on An Item from the Menu' ? 'active' : ''
+          menuChanged === 'Offer on An Item from the Menu' && 'active'
         }
                   `}
       >

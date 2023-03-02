@@ -974,13 +974,13 @@ const Dates = (props: any) => {
             <CalendarMonthIcon />
             <span>{getbeforePeriod()}</span>
           </TypographyKit>
-          <ExpandMoreIcon className={`expand-img ${opened ? 'active' : ''}`} />
+          <ExpandMoreIcon className={`expand-img ${opened && 'active'}`} />
         </PaperKit>
       </div>
       <div
         role='presentation'
         tabIndex={-1}
-        className={`date-range ${opened ? 'opened ' : ''}${typeDate === 'month' ? 'month' : ''}`}
+        className={`date-range ${opened && 'opened '}${typeDate === 'month' && 'month'}`}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
@@ -997,7 +997,7 @@ const Dates = (props: any) => {
       {!isMarketingHeatMap ? (
         <div className='dashboard-date '>
           <img src={switchIcon} alt='Compare' />
-          <div className={`date-picker_wrapper ${!isDashboard ? 'disabled' : ''}`}>
+          <div className={`date-picker_wrapper ${!isDashboard && 'disabled'}`}>
             <TypographyKit className='top-text-inputs' variant='subtitle'>
               Compare to
             </TypographyKit>
@@ -1005,13 +1005,13 @@ const Dates = (props: any) => {
               <PaperKit
                 style={{ background: '#fff' }}
                 onClick={() => setSelected(isDashboard ? !selected : false)}
-                className={`date-input ${selected ? 'selected' : ''}`}
+                className={`date-input ${selected && 'selected'}`}
               >
                 <TypographyKit component='div' className='date-typography'>
                   <CalendarMonthIcon />
                   <span>{getDateAfterPeriod()}</span>
                 </TypographyKit>
-                <ExpandMoreIcon className={`expand-img ${selected ? 'active' : ''}`} />
+                <ExpandMoreIcon className={`expand-img ${selected && 'active'}`} />
               </PaperKit>
               <AfterPeriodSelect
                 setafterPeriodBtn={setAfterPeriodContext}
@@ -1034,7 +1034,7 @@ const Dates = (props: any) => {
           <div
             role='presentation'
             tabIndex={-1}
-            className={`date-range range-afterPeriodContext ${openedAfterPeriod ? 'opened' : ''}`}
+            className={`date-range range-afterPeriodContext ${openedAfterPeriod && 'opened'}`}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
@@ -1057,7 +1057,7 @@ const Dates = (props: any) => {
                 <ButtonKit
                   disabled={getafterPeriod()}
                   onClick={handleClickAfterPeriod}
-                  className={`date-save-btn ${getafterPeriod() ? 'date-disabled-btn' : ''}`}
+                  className={`date-save-btn ${getafterPeriod() && 'date-disabled-btn'}`}
                   variant='contained'
                 >
                   Ok
@@ -1127,21 +1127,21 @@ const Dates = (props: any) => {
       <div
         role='presentation'
         tabIndex={-1}
-        className={`date-range-overlay ${opened ? 'opened' : ''}`}
+        className={`date-range-overlay ${opened && 'opened'}`}
         onClick={() => setOpened(false)}
         onKeyDown={() => setOpened(false)}
       />
       <div
         role='presentation'
         tabIndex={-1}
-        className={`date-range-overlay ${openedAfterPeriod ? 'opened' : ''}`}
+        className={`date-range-overlay ${openedAfterPeriod && 'opened'}`}
         onClick={() => setOpenedAfterPeriod(false)}
         onKeyDown={() => setOpenedAfterPeriod(false)}
       />
       <div
         role='presentation'
         tabIndex={-1}
-        className={`date-range-overlay ${selected ? 'opened' : ''}`}
+        className={`date-range-overlay ${selected && 'opened'}`}
         onClick={() => setSelected(false)}
         onKeyDown={() => setSelected(false)}
       />

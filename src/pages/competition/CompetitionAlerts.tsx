@@ -3,7 +3,14 @@ import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { vendorsIsolatedAtom } from 'store/vendorsAtom';
 import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
-import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
+import {
+  CheckboxKit,
+  ContainerKit,
+  ListItemTextKit,
+  MenuItemKit,
+  PaperKit,
+  TypographyKit,
+} from 'kits';
 import { useEffect, useState, useCallback } from 'react';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
@@ -331,89 +338,91 @@ const CompetitionAlerts = () => {
           setbeforePeriodBtn={setbeforePeriodBtn}
         />
       </div>
-      <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
-        Competition - Alerts
-      </TypographyKit>
-      <TypographyKit variant='subtitle'>
-        Keep an eye on your competitors marketing campaigns
-      </TypographyKit>
-      <PaperKit className='competition-paper'>
-        <div className='competition-top-input alerts-top-inputs'>
-          <div className='competition-dropdowns'>
-            <CompetitionDropdown
-              rows={platformList}
-              renderOptions={(v) => (
-                <MenuItemKit key={v.name} value={v.name}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <img
-                      src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                      width={24}
-                      height={24}
-                      style={{ objectFit: 'contain' }}
-                      alt='icon'
+      <ContainerKit>
+        <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
+          Competition - Alerts
+        </TypographyKit>
+        <TypographyKit variant='subtitle'>
+          Keep an eye on your competitors marketing campaigns
+        </TypographyKit>
+        <PaperKit className='competition-paper'>
+          <div className='competition-top-input alerts-top-inputs'>
+            <div className='competition-dropdowns'>
+              <CompetitionDropdown
+                rows={platformList}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v.name} value={v.name}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      <img
+                        src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                        width={24}
+                        height={24}
+                        style={{ objectFit: 'contain' }}
+                        alt='icon'
+                      />
+                      <ListItemTextKit primary={v.name} />
+                    </div>
+                  </MenuItemKit>
+                )}
+                icon={PlatformIcon}
+                title='Select a Platform'
+                id='platform_dropdown_menu'
+                type='platform'
+                className='top-competition'
+                setRow={setPlatform}
+                select={platform}
+              />
+              <div className='listing-vendors top-competition'>
+                <RestaurantDropdown
+                  pageType='listing'
+                  state={vendorsData}
+                  setState={setVendorsData}
+                />
+              </div>
+              <CompetitionDropdown
+                widthPaper={400}
+                heightPaper={80}
+                rows={filterCompetitionList || []}
+                multiple
+                icon={competitorIcon}
+                onChange={handleCompetitorChange}
+                renderValue={(v) => v.map((k) => k.vendor_name).join(',')}
+                renderOptions={(v) => (
+                  <MenuItemKit key={v.vendor_name} value={v}>
+                    <CheckboxKit checked={competitor.indexOf(v) > -1} />
+                    <ListItemTextKit
+                      className='competitor-dropdown-list-item'
+                      primary={v.vendor_name}
                     />
-                    <ListItemTextKit primary={v.name} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={PlatformIcon}
-              title='Select a Platform'
-              id='platform_dropdown_menu'
-              type='platform'
-              className='top-competition'
-              setRow={setPlatform}
-              select={platform}
-            />
-            <div className='listing-vendors top-competition'>
-              <RestaurantDropdown
-                pageType='listing'
-                state={vendorsData}
-                setState={setVendorsData}
+                  </MenuItemKit>
+                )}
+                title='Competitor'
+                className='top-competition competitor'
+                select={competitor}
               />
             </div>
-            <CompetitionDropdown
-              widthPaper={400}
-              heightPaper={80}
-              rows={filterCompetitionList || []}
-              multiple
-              icon={competitorIcon}
-              onChange={handleCompetitorChange}
-              renderValue={(v) => v.map((k) => k.vendor_name).join(',')}
-              renderOptions={(v) => (
-                <MenuItemKit key={v.vendor_name} value={v}>
-                  <CheckboxKit checked={competitor.indexOf(v) > -1} />
-                  <ListItemTextKit
-                    className='competitor-dropdown-list-item'
-                    primary={v.vendor_name}
-                  />
-                </MenuItemKit>
-              )}
-              title='Competitor'
-              className='top-competition competitor'
-              select={competitor}
-            />
+            <Competitor open={Open} opened={opened} platformList={platformList} />
           </div>
-          <Competitor open={Open} opened={opened} platformList={platformList} />
-        </div>
-        <TableRevlyNew
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
-          isLoading={loading}
-          headers={headersAlert}
-          rows={
-            competitor?.length > 0
-              ? filteredData.map(renderRowsByHeader)
-              : competitionAlertsData.map(renderRowsByHeader)
-          }
-          className='competition-alerts'
-        />
-      </PaperKit>
+          <TableRevlyNew
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+            isLoading={loading}
+            headers={headersAlert}
+            rows={
+              competitor?.length > 0
+                ? filteredData.map(renderRowsByHeader)
+                : competitionAlertsData.map(renderRowsByHeader)
+            }
+            className='competition-alerts'
+          />
+        </PaperKit>
+      </ContainerKit>
     </div>
   );
 };

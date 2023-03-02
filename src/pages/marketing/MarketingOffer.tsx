@@ -10,7 +10,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import { useDate, useQueryState } from 'hooks';
 import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
-import { ButtonKit, TypographyKit } from 'kits';
+import { ButtonKit, ContainerKit, TypographyKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
@@ -433,43 +433,45 @@ const MarketingOffer = () => {
         <RestaurantDropdown />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
-      <div className='marketing-top'>
-        <div className='marketing-top-text'>
-          <TypographyKit variant='h4'>Marketing - Offers</TypographyKit>
-          <TypographyKit color='#637381' variant='subtitle'>
-            Create and manage all your offers. Set personalised rules to automatically trigger your
-            offers.
-          </TypographyKit>
+      <ContainerKit>
+        <div className='marketing-top'>
+          <div className='marketing-top-text'>
+            <TypographyKit variant='h4'>Marketing - Offers</TypographyKit>
+            <TypographyKit color='#637381' variant='subtitle'>
+              Create and manage all your offers. Set personalised rules to automatically trigger
+              your offers.
+            </TypographyKit>
+          </div>
+          <div className='markting-top-btns'>
+            <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
+              <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
+              Create a smart rule
+            </ButtonKit>
+            <ButtonKit onClick={() => OpenSetup()} variant='contained'>
+              <img src={SettingFuture} alt='Setting future icon' />
+              Set up an offer
+            </ButtonKit>
+          </div>
         </div>
-        <div className='markting-top-btns'>
-          <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
-            <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
-            Create a smart rule
-          </ButtonKit>
-          <ButtonKit onClick={() => OpenSetup()} variant='contained'>
-            <img src={SettingFuture} alt='Setting future icon' />
-            Set up an offer
-          </ButtonKit>
-        </div>
-      </div>
-      {openedOffer ? (
-        <OfferDetailComponent
-          // eslint-disable-next-line eqeqeq
-          data={data?.offers.find((o) => o.master_offer_id == clickedId)}
-          setOpened={setOpenedOffer}
+        {openedOffer ? (
+          <OfferDetailComponent
+            // eslint-disable-next-line eqeqeq
+            data={data?.offers.find((o) => o.master_offer_id == clickedId)}
+            setOpened={setOpenedOffer}
+          />
+        ) : (
+          renderTable()
+        )}
+        <MarketingSetup active={active} setActive={setActive} />
+        <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
         />
-      ) : (
-        renderTable()
-      )}
-      <MarketingSetup active={active} setActive={setActive} />
-      <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+      </ContainerKit>
     </div>
   );
 };
