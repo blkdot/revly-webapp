@@ -10,12 +10,15 @@ export type DateRange = {
 
 export type DatesContextType = {
   current: DateRange;
-  compare: DateRange;
   setCurrent: (v: DateRange) => void;
+  compare: DateRange;
   setCompare: (v: DateRange) => void;
-  titleDate: string;
-  titleAfterPeriod: string;
-  typeDate: string;
+  currentTitle: string;
+  setCurrentTitle: (v: string) => void;
+  compareTitle: string;
+  setCompareTitle: (v: string) => void;
+  calendar: string;
+  setCalendar: (v: string) => void;
 };
 
 const DatesContext = createContext<DatesContextType>(undefined);

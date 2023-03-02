@@ -19,10 +19,15 @@ export const MainLayout = () => {
 
   const [vendors, setVendors] = useState<unknown[]>([]);
 
+  const [calendar, setCalendar] = useState('week');
+
+  const [currentTitle, setCurrentTitle] = useState('current week');
   const [current, setCurrent] = useState<DateRange>({
     from: dayjs().startOf('week'),
     until: dayjs().subtract(1, 'day').endOf('day'),
   });
+
+  const [compareTitle, setCompareTitle] = useState('last week');
   const [compare, setCompare] = useState<DateRange>({
     from: dayjs().subtract(1, 'week').startOf('week'),
     until: dayjs().subtract(1, 'week').endOf('week'),
@@ -34,9 +39,12 @@ export const MainLayout = () => {
       setCurrent,
       compare,
       setCompare,
-      titleDate: 'current week',
-      titleAfterPeriod: 'last week',
-      typeDate: 'week',
+      calendar,
+      setCalendar,
+      currentTitle,
+      setCurrentTitle,
+      compareTitle,
+      setCompareTitle,
     }),
     [compare, current]
   );

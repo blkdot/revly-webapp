@@ -62,11 +62,11 @@ const getOfferDate = (period: DateRange, type: string): Date => {
 const Planning = () => {
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
 
-  const { current, typeDate } = useDates();
+  const { current, calendar } = useDates();
 
   const [dateRange] = useState({
     startDate: current.from.toDate(),
-    endDate: getOfferDate(current, typeDate),
+    endDate: getOfferDate(current, calendar),
   });
 
   const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });

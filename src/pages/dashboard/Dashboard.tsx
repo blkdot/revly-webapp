@@ -77,14 +77,14 @@ const Dashboard = () => {
   };
   const { userPlatformData } = usePlatform();
 
-  const { current, compare, typeDate, titleDate, titleAfterPeriod } = useDates();
+  const { current, compare, calendar, currentTitle, compareTitle } = useDates();
 
   const getPeriod = (title: string, period: DateRange) => {
     if (title === 'custom') {
-      if (typeDate === 'day') {
+      if (calendar === 'day') {
         return `${period.from.format('DD/MM')}`;
       }
-      if (typeDate === 'month') {
+      if (calendar === 'month') {
         return `${format(period.from.toDate(), 'LLL', { locale: enUS })}  -  ${getYear(
           period.from.toDate()
         )}`;
@@ -106,13 +106,13 @@ const Dashboard = () => {
       id: 'beforePeriod',
       numeric: false,
       disablePadding: false,
-      label: getPeriod(titleDate, current),
+      label: getPeriod(currentTitle, current),
     },
     {
       id: 'afterPeriod',
       numeric: false,
       disablePadding: true,
-      label: getPeriod(titleAfterPeriod, compare),
+      label: getPeriod(compareTitle, compare),
     },
     {
       id: 'evolution',
@@ -230,8 +230,8 @@ const Dashboard = () => {
         )}
         <div className='block'>
           <TypographyKit className='dashboard-title'>
-            {getPeriod(titleDate, current).charAt(0).toUpperCase() +
-              getPeriod(titleDate, current).slice(1)}{' '}
+            {getPeriod(currentTitle, current).charAt(0).toUpperCase() +
+              getPeriod(currentTitle, current).slice(1)}{' '}
             results for {isDisplay()}
           </TypographyKit>
           <TypographyKit className='dashboard-subtitle'>

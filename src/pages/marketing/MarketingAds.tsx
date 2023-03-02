@@ -28,12 +28,12 @@ const getOfferDate = (current: DateRange, type: string): Date => {
 
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
-  const { current, typeDate } = useDates();
+  const { current, calendar } = useDates();
 
   const { ads, isLoading: isLoadingAds } = usePlanningAds({
     dateRange: {
       startDate: current.from.toDate(),
-      endDate: getOfferDate(current, typeDate),
+      endDate: getOfferDate(current, calendar),
     },
   });
 

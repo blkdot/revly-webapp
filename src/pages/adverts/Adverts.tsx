@@ -28,7 +28,7 @@ const getOfferDate = (period: DateRange, type: string): Date => {
 };
 
 const Adverts = () => {
-  const { current, titleDate, typeDate } = useDates();
+  const { current, currentTitle, calendar } = useDates();
   const { vendors } = useVendors();
   const { display, vendorsArr } = vendors;
   const [disabled, setDisabled] = useState(true);
@@ -47,14 +47,14 @@ const Adverts = () => {
   }, [vendors]);
   const [link, setLink] = useState('ads_management');
   const startDate = current.from.toDate();
-  const endDate = getOfferDate(current, typeDate);
+  const endDate = getOfferDate(current, calendar);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
   const endGetDate = endDate.getDate();
 
   const getBeforePeriod = () => {
-    if (titleDate === 'custom') {
+    if (currentTitle === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(startDate).format('DD/MM')}`;
       }
@@ -65,7 +65,7 @@ const Adverts = () => {
       return `${dayjs(startDate).format('DD/MM')} - ${dayjs(endDate).format('DD/MM')}`;
     }
 
-    return `${titleDate}`;
+    return `${currentTitle}`;
   };
   const isDisplay = () => {
     if (selectedVendors('name', display).length === vendorsArr.length) {

@@ -30,7 +30,7 @@ const Widget: FC<{
   link,
   tooltip,
 }) => {
-  const { compare, titleAfterPeriod } = useDates();
+  const { compare, compareTitle } = useDates();
   const startDate = compare.from.toDate();
   const endDate = compare.until.toDate();
   const startLocal = startDate.toLocaleDateString();
@@ -52,7 +52,7 @@ const Widget: FC<{
   };
 
   const getafterPeriod = () => {
-    if (titleAfterPeriod === 'custom') {
+    if (compareTitle === 'custom') {
       if (startLocal === endLocal) {
         return `${dayjs(compare.from).format('DD/MM')}`;
       }
@@ -65,7 +65,7 @@ const Widget: FC<{
       return `${dayjs(compare.from).format('DD/MM')} - ${dayjs(compare.until).format('DD/MM')}`;
     }
 
-    return `${titleAfterPeriod}`;
+    return `${compareTitle}`;
   };
 
   const renderMetrics = () => {
