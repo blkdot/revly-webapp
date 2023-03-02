@@ -801,7 +801,9 @@ const Dates = (props: any) => {
     return title;
   };
   useEffect(() => {
-    setPeriodProps(getbeforePeriod())
+    if(setPeriodProps){
+      setPeriodProps(getbeforePeriod())
+    }
   }, [beforePeriodBtn])
   const getDateAfterPeriod = () => {
     if (titleafterPeriod !== 'custom') {

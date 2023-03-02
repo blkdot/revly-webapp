@@ -3,6 +3,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
 import { subDays } from 'date-fns';
 import { useAtom } from 'jotai';
+import { pascalCase } from 'change-case';
 import dayjs from 'dayjs';
 import { useAlert, useApi, useVendors } from 'hooks';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -15,7 +16,10 @@ import Competitor from 'components/competitor/Competitor';
 import { platformObject } from 'data/platformList';
 import Dates from 'components/dates/Dates';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { competitionBranchSelectedAtom, competitionSelectedPlatformAtom } from './CompetitionStoreAtom';
+import {
+  competitionBranchSelectedAtom,
+  competitionSelectedPlatformAtom,
+} from './CompetitionStoreAtom';
 import AreaIcon from '../../assets/images/area.svg';
 import Iccuisine from '../../assets/images/ic_cuisine.png';
 import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
@@ -119,7 +123,7 @@ const CompetitionListing = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject?.[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
-        id: `${cur.id}_${r.id}`,
+        id: r.id,
         data: r,
       }),
       {}
@@ -150,6 +154,7 @@ const CompetitionListing = () => {
     clearTimeout(fnDelays);
 
     fnDelays = setTimeout(async () => {
+      setLoading(true);
       try {
         const body = {
           master_email: user.email,
@@ -285,8 +290,14 @@ const CompetitionListing = () => {
       if (!branchActive) {
         if (chainData.length > 0) {
           const localBranch = chainData.find(
-            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
           );
+
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
 
           getData(selectedPlatform[0], [localBranch.data], selectedCuisine[0], selectedArea[0]);
         }
@@ -294,7 +305,6 @@ const CompetitionListing = () => {
         return;
       }
 
-      setLoading(true);
       getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
     }
   }, [selectedArea, selectedTimeSlot, selectedCuisine, beforePeriodBtn]);
@@ -304,18 +314,31 @@ const CompetitionListing = () => {
       if (!branchActive) {
         if (chainData.length > 0) {
           const localBranch = chainData.find(
-            (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
           );
+
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
 
           getCuisineAndAreas(selectedPlatform[0], [localBranch.data], queueDropdown);
         }
 
         return;
-      };
+      }
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
   }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive]);
+
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
 
   return (
     <div className='wrapper'>
@@ -347,8 +370,8 @@ const CompetitionListing = () => {
             <div className='dropdowns'>
               <FilterDropdown
                 items={[
-                  { text: 'deliveroo', value: 'deliveroo' },
-                  { text: 'talabat', value: 'talabat' },
+                  { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
+                  { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
                 ]}
                 values={selectedPlatform}
                 onChange={(v) => setSelectedPlatform([v])}
@@ -413,12 +436,8 @@ const CompetitionListing = () => {
               />
             </div>
           </div>
-          <div className="competition-tooltip-wrapper">
-            <img
-              src={TooltipIcon}
-              alt='tooltip icon'
-              className="competition-tooltip "
-            />
+          <div className='competition-tooltip-wrapper'>
+            <img src={TooltipIcon} alt='tooltip icon' className='competition-tooltip ' />
             &nbsp;filter by area to be able to select a specific time slot
           </div>
           <TableRevlyNew

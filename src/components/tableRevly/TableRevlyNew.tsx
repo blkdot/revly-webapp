@@ -9,6 +9,7 @@ import {
   TableRowKit,
 } from 'kits';
 import { FC, useState } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import noData from '../../assets/images/no-result.svg';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
@@ -71,21 +72,23 @@ const TableRevlyNew: FC<{
     const [order, setOrder] = useState(mainOrder || 'asc');
     const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
-    const handleRequestSort = (property) => {
-      const isAsc = orderBy === property && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(property);
-    };
-    const renderSkeleton = () =>
-      [1, 2, 3, 4, 5].map((n) => (
-        <TableRowKit key={n}>
-          {headers.map((h) => (
-            <TableCellKit key={h.id}>
-              <SkeletonKit />
-            </TableCellKit>
-          ))}
-        </TableRowKit>
-      ));
+  const [refRowTable] = useAutoAnimate();
+
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+  const renderSkeleton = () =>
+    [1, 2, 3, 4, 5].map((n) => (
+      <TableRowKit key={n}>
+        {headers.map((h) => (
+          <TableCellKit key={h.id}>
+            <SkeletonKit />
+          </TableCellKit>
+        ))}
+      </TableRowKit>
+    ));
 
     const handleRowClick = (id) => () => {
       if (!onClickRow) return;
@@ -93,16 +96,21 @@ const TableRevlyNew: FC<{
       onClickRow(id);
     };
 
-    const renderRowsContent = () =>
-      stableSort(rows, getComparator(order, orderBy)).map((r) => (
-        <TableRowKit className='marketing-table-top' onClick={handleRowClick(r.id)} key={r.id}>
-          {headers.map((h) => r[h.id])}
-        </TableRowKit>
-      ));
-    const renderRows = () => {
-      if (isLoading)
-        return renderCustomSkelton
-          ? renderCustomSkelton.map((r) => (
+  const renderRowsContent = () =>
+    stableSort(rows, getComparator(order, orderBy)).map((r) => (
+      <TableRowKit
+        className='marketing-table-top'
+        onClick={handleRowClick(r.id)}
+        key={r.id}
+        ref={refRowTable}
+      >
+        {headers.map((h) => r[h.id])}
+      </TableRowKit>
+    ));
+  const renderRows = () => {
+    if (isLoading)
+      return renderCustomSkelton
+        ? renderCustomSkelton.map((r) => (
             <TableRowKit className='marketing-table-top' key={r.id}>
               {headers.map((h) => r[h.id])}
             </TableRowKit>
@@ -115,8 +123,7 @@ const TableRevlyNew: FC<{
 
       return renderRowsContent();
     };
-
-    const renderTop = () => {
+ const renderTop = () => {
       if (links) {
         return (
           <TableLink

@@ -10,7 +10,7 @@ import {
   SpinnerKit,
   TextfieldKit,
   TypographyKit,
-  ButtonAction
+  ButtonAction,
 } from 'kits';
 import { useEffect, useState } from 'react';
 import { sendMail } from '../../api/competitionApi';
@@ -183,9 +183,7 @@ const Competitor = ({ open, opened, platformList }) => {
 
   return (
     <div className='competitor-wrapper'>
-      <ButtonAction onClick={() => open()}>
-        Add a competitor
-      </ButtonAction>
+      <ButtonAction onClick={() => open()}>Add a competitor</ButtonAction>
       <div
         role='presentation'
         tabIndex={-1}
