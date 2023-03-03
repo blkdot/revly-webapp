@@ -107,7 +107,7 @@ const FilterBranch: React.FC<{
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 width: '100%',
-                marginTop: '1rem',
+                marginTop: '0.6rem',
               }}
             >
               {name}
