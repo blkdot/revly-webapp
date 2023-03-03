@@ -27,6 +27,7 @@ const FilterBranch: React.FC<{
 
   const refDropdown = useRef(null);
   const [regfItemDropdown] = useAutoAnimate();
+  const [regfDropdown] = useAutoAnimate();
 
   const selectItem = (v) => {
     onChange(v);
@@ -126,7 +127,7 @@ const FilterBranch: React.FC<{
     if (!isOpen) return null;
 
     return (
-      <div className='comp-dropdown__content' ref={refDropdown}>
+      <div className='comp-dropdown__content'>
         {renderNewItem()}
       </div>
     );
@@ -146,7 +147,7 @@ const FilterBranch: React.FC<{
   };
 
   return (
-    <div className='comp-dropdown__branch'>
+    <div className='comp-dropdown__branch' ref={refDropdown}>
       <ButtonKit
         variant='outlined'
         onClick={(e) => {
@@ -169,7 +170,7 @@ const FilterBranch: React.FC<{
           {isOpen ? <FaChevronRight /> : <FaChevronDown />}
         </div>
       </ButtonKit>
-      <List component='nav' style={{ display: 'flex', flexDirection: 'column' }}>
+      <List component='nav' style={{ display: 'flex', flexDirection: 'column' }} ref={regfDropdown}>
         {renderItems()}
       </List>
     </div>

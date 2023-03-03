@@ -177,6 +177,16 @@ const CompetitionAlerts = () => {
   };
 
   useEffect(() => {
+    if (!branchSelected[0] && selectedPlatform[0]) {
+      const chainDefault = chainData.find((chain) => chain.platform === selectedPlatform[0]);
+
+      if (!chainDefault) return;
+
+      setBranchSelected([String(chainDefault.vendor_id)]);
+    }
+  }, [chainData, selectedPlatform[0]]);
+
+  useEffect(() => {
     if (selectedPlatform[0] && branchSelected[0]) {
       if (!branchActive) {
         if (chainData.length > 0) {
@@ -335,7 +345,7 @@ const CompetitionAlerts = () => {
               <FilterDropdown
                 items={[
                   { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
-                  { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
+                  // { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
                 ]}
                 values={selectedPlatform}
                 onChange={(v) => setSelectedPlatform([v])}
@@ -368,6 +378,7 @@ const CompetitionAlerts = () => {
                 icon={<img src={competitorIcon} alt='Competitor' />}
                 disabled={!(filterCompetitionList?.length > 0)}
                 maxShowned={1}
+                toRight
               />
             </div>
           </div>
