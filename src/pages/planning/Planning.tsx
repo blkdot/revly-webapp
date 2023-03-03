@@ -7,10 +7,11 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
+import { useDate, usePlanningAds, usePlanningOffers, usePlatform, useQueryState, useVendors } from 'hooks';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
-import { Switch } from 'assets/icons';
+import { Switch, Tag } from 'assets/icons';
+import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
@@ -18,6 +19,7 @@ import './Planning.scss';
 
 const defaultFilterStateFormat = {
   platform: [],
+  vendors: [],
   type_offer: [],
   discount_rate: [],
   status: [],
@@ -77,6 +79,14 @@ const Planning = () => {
     ...defaultFilterStateFormat,
     ...JSON.parse(filtersSaved || '{}'),
   });
+  const { userPlatformData } = usePlatform();
+  const renderPlatformInsideFilter = (s: string) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
+  
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [dataFilteredAds, setDataFilteredAds] = useState([]);
@@ -221,13 +231,13 @@ const Planning = () => {
     { title: 'Offers planning', link: 'offers_planning' },
     { title: 'Ads planning', link: 'ads_planning' },
   ];
-  const handleChangeMultipleFilter = (k: string) => (v: string) => {
+  const handleChangeFilter = (k: string, type?: string) => (v: string) => {
     const propertyFilter = filters[k];
 
     const index = propertyFilter.findIndex((p: string) => p === v);
 
     if (index < 0) {
-      setFilters({ ...filters, [k]: [...propertyFilter, v] });
+      setFilters({ ...filters, [k]: type === 'single' ? [v] : [...propertyFilter,v] });
       return;
     }
 
@@ -237,23 +247,51 @@ const Planning = () => {
 
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
-
+  
+  const {vendors} = useVendors();
+  const {chainData} = vendors;
   const renderFilters = () => <div className='table-filters'>
     <FilterDropdown
       items={filtersHead.platform}
       values={filters.platform}
-      onChange={handleChangeMultipleFilter('platform')}
+      onChange={handleChangeFilter('platform', 'single')}
       label='Platforms'
       icon={<img src={Columns} alt='Clock' />}
       internalIconOnActive={platformObject}
       maxShowned={1}
+      mono
+    />
+    <FilterBranch
+      items={chainData.filter(
+        (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+      )}
+      values={filters.vendors}
+      onChange={handleChangeFilter('vendors')}
+      icon={<img src={Columns} alt='Platform' />}
+      label='Show all branches'
     />
     <FilterDropdown
       items={filtersHead.status}
       values={filters.status}
-      onChange={handleChangeMultipleFilter('status')}
+      onChange={handleChangeFilter('status')}
       label='Statuses'
       icon={<Switch />}
+      maxShowned={1}
+    />
+    <FilterDropdown
+      items={filtersHead.type_offer}
+      values={filters.type_offer}
+      onChange={handleChangeFilter('type_offer')}
+      label='Discount type'
+      icon={<Tag />}
+      maxShowned={1}
+    />
+    <FilterDropdown
+      items={filtersHead.discount_rate}
+      values={filters.discount_rate}
+      onChange={handleChangeFilter('discount_rate')}
+      label='Discount rate'
+      icon={<Tag />}
       maxShowned={1}
     />
   </div>
@@ -320,13 +358,6 @@ const Planning = () => {
     );
   };
 
-  const renderPlatformInsideFilter = (s: string) => (
-    <div key={s}>
-      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
-      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
-    </div>
-  );
-
   useEffect(() => {
     const source = link === 'ads_planning' ? ads : offers;
     const preHead = source.reduce(
@@ -354,6 +385,12 @@ const Planning = () => {
     clonedFilters.platform.forEach((fp, i) => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
     });
+    
+    const defaultPlatform = Object.keys(userPlatformData.platforms).find((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
+    
+    if (clonedFilters.platform.length < 1 && defaultPlatform && JSON.parse(filtersSaved).platform.length < 1) {
+      clonedFilters.platform.push(defaultPlatform)
+    }
 
     clonedFilters.type_offer.forEach((fp, i) => {
       if (!preHead.type_offer.includes(fp)) clonedFilters.type_offer.splice(i, 1);
@@ -383,6 +420,7 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
+      vendors: chainData,
       type_offer: link === 'ads_planning' ? [] : preHeadTypeOffer,
       discount_rate: link === 'ads_planning' ? [] : preHeadProcent,
       status: preHeadStatus,
@@ -472,7 +510,7 @@ const Planning = () => {
           openedFilter={openedFilter}
           filtersHead={filtersHead}
           filters={filters}
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          handleChangeMultipleFilter={handleChangeFilter}
         />
       </ContainerKit>
     </div>
