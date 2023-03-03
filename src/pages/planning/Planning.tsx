@@ -308,7 +308,7 @@ const Planning = () => {
           rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={renderFilters()}
+          filters={!isEmptyList() && renderFilters()}
           noDataText='No ads has been retrieved.'
         />
       );
@@ -326,7 +326,7 @@ const Planning = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={renderFilters()}
+        filters={!isEmptyList() && renderFilters()}
         noDataText='No offer has been retrieved.'
       />
     );
@@ -388,7 +388,7 @@ const Planning = () => {
     
     const defaultPlatform = Object.keys(userPlatformData.platforms).find((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
     
-    if (clonedFilters.platform.length < 1 && defaultPlatform && JSON.parse(filtersSaved).platform.length < 1) {
+    if (clonedFilters.platform.length < 1 && defaultPlatform) {
       clonedFilters.platform.push(defaultPlatform)
     }
 
