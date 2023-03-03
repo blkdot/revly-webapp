@@ -126,6 +126,7 @@ const useVendors = (isSign = false) => {
 
   const user = useUser();
   const { userPlatformData } = usePlatform();
+
   const requestVendorsDefaultParam = {
     master_email: user.email,
     access_token: user.token,

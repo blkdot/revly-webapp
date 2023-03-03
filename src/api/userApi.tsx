@@ -1,5 +1,5 @@
 import axios from 'axios';
-import config from '../setup/config';
+import config from 'setup/config';
 import { handleResponse } from './baseApi';
 
 const { apiUrl, firebaseApiUrl } = config;

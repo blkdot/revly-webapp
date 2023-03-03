@@ -20,7 +20,6 @@ const FilterBranch: React.FC<{
   const [isOpen, setIsOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState('');
   const { vendors } = useVendors();
-
   const chains = useMemo(
     () => Object.keys(vendors.display).sort((a) => (a.trim() === '' ? 1 : -1)),
     [vendors.display]
@@ -28,6 +27,7 @@ const FilterBranch: React.FC<{
 
   const refDropdown = useRef(null);
   const [regfItemDropdown] = useAutoAnimate();
+  const [regfDropdown] = useAutoAnimate();
 
   const selectItem = (v) => {
     onChange(v);
@@ -107,7 +107,7 @@ const FilterBranch: React.FC<{
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 width: '100%',
-                marginTop: '1rem',
+                marginTop: '0.6rem',
               }}
             >
               {name}
@@ -126,11 +126,7 @@ const FilterBranch: React.FC<{
   const renderItems = () => {
     if (!isOpen) return null;
 
-    return (
-      <div className='comp-dropdown__content' ref={refDropdown}>
-        {renderNewItem()}
-      </div>
-    );
+    return <div className='comp-dropdown__content'>{renderNewItem()}</div>;
   };
 
   const renderIcon = () => {
@@ -147,7 +143,7 @@ const FilterBranch: React.FC<{
   };
 
   return (
-    <div className='comp-dropdown__branch'>
+    <div className='comp-dropdown__branch' ref={refDropdown}>
       <ButtonKit
         variant='outlined'
         onClick={(e) => {
@@ -170,7 +166,7 @@ const FilterBranch: React.FC<{
           {isOpen ? <FaChevronRight /> : <FaChevronDown />}
         </div>
       </ButtonKit>
-      <List component='nav' style={{ display: 'flex', flexDirection: 'column' }}>
+      <List component='nav' style={{ display: 'flex', flexDirection: 'column' }} ref={regfDropdown}>
         {renderItems()}
       </List>
     </div>

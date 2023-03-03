@@ -17,6 +17,7 @@ const FilterDropdown: React.FC<{
   mono?: boolean;
   maxShowned?: number;
   disabled?: boolean;
+  toRight?: boolean;
 }> = ({
   items,
   values,
@@ -28,6 +29,7 @@ const FilterDropdown: React.FC<{
   internalIconOnActive,
   mono,
   disabled,
+  toRight,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -89,9 +91,7 @@ const FilterDropdown: React.FC<{
     }
 
     return (
-      <div className='comp-dropdown__content' ref={refDropdown}>
-        {renderItem()}
-      </div>
+      <div className={`comp-dropdown__content ${toRight ? 'to-right' : ''}`}>{renderItem()}</div>
     );
   };
 
@@ -117,7 +117,7 @@ const FilterDropdown: React.FC<{
   };
 
   return (
-    <div className={`comp-dropdown ${disabled ? 'disabled' : ''}`}>
+    <div className={`comp-dropdown ${disabled ? 'disabled' : ''}`} ref={refDropdown}>
       <ButtonKit
         variant='outlined'
         onClick={(e) => {

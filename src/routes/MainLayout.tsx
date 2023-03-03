@@ -39,7 +39,7 @@ export const MainLayout = () => {
   const [currentTitle, setCurrentTitle] = useState('current week');
   const [current, setCurrent] = useState<DateRange>({
     from: dayjs().startOf('week'),
-    until: dayjs().subtract(1, 'day').endOf('day'),
+    until: dayjs().endOf('day'),
   });
 
   const [compareTitle, setCompareTitle] = useState('last week');
