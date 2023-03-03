@@ -346,25 +346,27 @@ const MarketingAds = () => {
   };
 
   const isEmptyList = () => adsData.length < 1;
-  const renderFilters = () => <div className='table-filters'>
-    <FilterDropdown
-      items={filtersHead.platform}
-      values={filters.platform}
-      onChange={handleChangeMultipleFilter('platform')}
-      label='Platforms'
-      icon={<img src={Columns} alt='Clock' />}
-      internalIconOnActive={platformObject}
-      maxShowned={1}
-    />
-    <FilterDropdown
-      items={filtersHead.status}
-      values={filters.status}
-      onChange={handleChangeMultipleFilter('status')}
-      label='Statuses'
-      icon={<Switch />}
-      maxShowned={1}
-    />
-  </div>
+  const renderFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeMultipleFilter('platform')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeMultipleFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'ads_performance') {
       return (
@@ -412,11 +414,16 @@ const MarketingAds = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
                 <MainTitle>Marketing - Ads</MainTitle>
-                <DescriptionTitle>Create and manage all your ads. Set personalised rules to automatically trigger your ads.</DescriptionTitle>
+                <DescriptionTitle>
+                  Create and manage all your ads. Set personalised rules to automatically trigger
+                  your ads.
+                </DescriptionTitle>
               </div>
             </div>
           </div>
-          <ButtonAction disabled onClick={() => /* */ null}>Create new campaign</ButtonAction>
+          <ButtonAction disabled onClick={() => /* */ null}>
+            Create new campaign
+          </ButtonAction>
         </div>
         {renderTable()}
         <MarketingSetup ads active={active} setActive={setActive} />

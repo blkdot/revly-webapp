@@ -23,7 +23,6 @@ import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
-
 const MarketingOffer = () => {
   const [active, setActive] = useState(false);
   const { date: dateContext } = useDate();
@@ -396,25 +395,27 @@ const MarketingOffer = () => {
     setOpenedOffer(true);
     setClickedId(id);
   };
-  const renderFilters = () => <div className='table-filters'>
-    <FilterDropdown
-      items={filtersHead.platform}
-      values={filters.platform}
-      onChange={handleChangeMultipleFilter('platform')}
-      label='Platforms'
-      icon={<img src={Columns} alt='Clock' />}
-      internalIconOnActive={platformObject}
-      maxShowned={1}
-    />
-    <FilterDropdown
-      items={filtersHead.status}
-      values={filters.status}
-      onChange={handleChangeMultipleFilter('status')}
-      label='Statuses'
-      icon={<Switch />}
-      maxShowned={1}
-    />
-  </div>
+  const renderFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeMultipleFilter('platform')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeMultipleFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'offers_performance') {
       return (
@@ -463,7 +464,10 @@ const MarketingOffer = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
                 <MainTitle>Marketing - Offers</MainTitle>
-                <DescriptionTitle>Create and manage all your offers. Set personalised rules to automatically trigger your offers</DescriptionTitle>
+                <DescriptionTitle>
+                  Create and manage all your offers. Set personalised rules to automatically trigger
+                  your offers
+                </DescriptionTitle>
               </div>
             </div>
           </div>

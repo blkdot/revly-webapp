@@ -7,7 +7,14 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useDate, usePlanningAds, usePlanningOffers, usePlatform, useQueryState, useVendors } from 'hooks';
+import {
+  useDate,
+  usePlanningAds,
+  usePlanningOffers,
+  usePlatform,
+  useQueryState,
+  useVendors,
+} from 'hooks';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { Switch, Tag } from 'assets/icons';
@@ -86,7 +93,7 @@ const Planning = () => {
       <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
     </div>
   );
-  
+
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [dataFilteredAds, setDataFilteredAds] = useState([]);
@@ -237,7 +244,7 @@ const Planning = () => {
     const index = propertyFilter.findIndex((p: string) => p === v);
 
     if (index < 0) {
-      setFilters({ ...filters, [k]: type === 'single' ? [v] : [...propertyFilter,v] });
+      setFilters({ ...filters, [k]: type === 'single' ? [v] : [...propertyFilter, v] });
       return;
     }
 
@@ -247,54 +254,56 @@ const Planning = () => {
 
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
-  
-  const {vendors} = useVendors();
-  const {chainData} = vendors;
-  const renderFilters = () => <div className='table-filters'>
-    <FilterDropdown
-      items={filtersHead.platform}
-      values={filters.platform}
-      onChange={handleChangeFilter('platform', 'single')}
-      label='Platforms'
-      icon={<img src={Columns} alt='Clock' />}
-      internalIconOnActive={platformObject}
-      maxShowned={1}
-      mono
-    />
-    <FilterBranch
-      items={chainData.filter(
-        (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
-      )}
-      values={filters.vendors}
-      onChange={handleChangeFilter('vendors')}
-      icon={<img src={Columns} alt='Platform' />}
-      label='Show all branches'
-    />
-    <FilterDropdown
-      items={filtersHead.status}
-      values={filters.status}
-      onChange={handleChangeFilter('status')}
-      label='Statuses'
-      icon={<Switch />}
-      maxShowned={1}
-    />
-    <FilterDropdown
-      items={filtersHead.type_offer}
-      values={filters.type_offer}
-      onChange={handleChangeFilter('type_offer')}
-      label='Discount type'
-      icon={<Tag />}
-      maxShowned={1}
-    />
-    <FilterDropdown
-      items={filtersHead.discount_rate}
-      values={filters.discount_rate}
-      onChange={handleChangeFilter('discount_rate')}
-      label='Discount rate'
-      icon={<Tag />}
-      maxShowned={1}
-    />
-  </div>
+
+  const { vendors } = useVendors();
+  const { chainData } = vendors;
+  const renderFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeFilter('platform', 'single')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+        mono
+      />
+      <FilterBranch
+        items={chainData.filter(
+          (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+        )}
+        values={filters.vendors}
+        onChange={handleChangeFilter('vendors')}
+        icon={<img src={Columns} alt='Platform' />}
+        label='Show all branches'
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.type_offer}
+        values={filters.type_offer}
+        onChange={handleChangeFilter('type_offer')}
+        label='Discount type'
+        icon={<Tag />}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.discount_rate}
+        values={filters.discount_rate}
+        onChange={handleChangeFilter('discount_rate')}
+        label='Discount rate'
+        icon={<Tag />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'ads_planning') {
       return (
@@ -385,11 +394,13 @@ const Planning = () => {
     clonedFilters.platform.forEach((fp, i) => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
     });
-    
-    const defaultPlatform = Object.keys(userPlatformData.platforms).find((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
-    
+
+    const defaultPlatform = Object.keys(userPlatformData.platforms).find((plat) =>
+      userPlatformData.platforms[plat].some((obj) => obj.active)
+    );
+
     if (clonedFilters.platform.length < 1 && defaultPlatform) {
-      clonedFilters.platform.push(defaultPlatform)
+      clonedFilters.platform.push(defaultPlatform);
     }
 
     clonedFilters.type_offer.forEach((fp, i) => {
@@ -481,12 +492,17 @@ const Planning = () => {
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
-  const [period, setPeriod] = useState('')
+  const [period, setPeriod] = useState('');
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
         <RestaurantDropdown />
-        <Dates setPeriodProps={setPeriod} offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
+        <Dates
+          setPeriodProps={setPeriod}
+          offer
+          beforePeriodBtn={dateRange}
+          setbeforePeriodBtn={setDateRange}
+        />
       </div>
       <ContainerKit>
         {opened ? (
@@ -497,7 +513,8 @@ const Planning = () => {
         ) : (
           <div className='block'>
             <TypographyKit className='dashboard-title'>
-              Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for {period.charAt(0).toUpperCase() + period.slice(1)}
+              Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for{' '}
+              {period.charAt(0).toUpperCase() + period.slice(1)}
             </TypographyKit>
             <TypographyKit className='dashboard-subtitle'>
               Plan and visualize all the scheduled and past discounts and campaigns.

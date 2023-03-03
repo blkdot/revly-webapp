@@ -31,12 +31,12 @@ let fnDelays = null;
 let fnDelaysDropdown = null;
 
 const timeSlotObj = {
+  'Throughout Day': 'Throughout Day',
   'Breakfast (04:00 - 11:00)': 'Breakfast',
   'Lunch (11:00 - 14:00)': 'Lunch',
   'Interpeak (14:00 - 17:00)': 'Interpeak',
   'Dinner (17:00 - 00:00)': 'Dinner',
   'Late night (00:00 - 04:00)': 'Late Night',
-  'Throughout Day': 'Throughout Day',
 };
 
 const headersAlert = (cuisine: string) => [
@@ -150,10 +150,23 @@ const CompetitionListing = () => {
     setSelectedTimeSlot((prev) => (selectedArea[0] === 'Everywhere' ? ['Throughout Day'] : prev));
   }, [selectedArea]);
 
+  useEffect(() => {
+    if (!branchSelected[0] && selectedPlatform[0]) {
+      const chainDefault = chainData.find((chain) => chain.platform === selectedPlatform[0]);
+
+      if (!chainDefault) {
+        setBranchSelected([]);
+        return;
+      }
+
+      setBranchSelected([String(chainDefault.vendor_id)]);
+    }
+  }, [chainData, selectedPlatform[0]]);
+
   const getData = (plat, vend, newCuisine, newArea) => {
     clearTimeout(fnDelays);
 
-    if (!newCuisine) throw new Error;
+    if (!newCuisine) throw new Error();
 
     fnDelays = setTimeout(async () => {
       setLoading(true);
@@ -216,11 +229,9 @@ const CompetitionListing = () => {
 
       const relocateFrom = prev.indexOf('Everywhere');
 
-      const relocateTo = arr.length - 1;
-
       const element = arr.splice(relocateFrom, 1)[0];
 
-      arr.splice(relocateTo, 0, element);
+      arr.splice(0, 0, element);
 
       return arr;
     });
@@ -333,7 +344,14 @@ const CompetitionListing = () => {
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
-  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive, beforePeriodBtn]);
+  }, [
+    selectedPlatform,
+    branchSelected,
+    queueDropdown,
+    chainData.length,
+    branchActive,
+    beforePeriodBtn,
+  ]);
 
   const renderPlatformInsideFilter = (s) => (
     <div key={s}>

@@ -29,10 +29,16 @@ const Dashboard = () => {
     { title: 'Avg. basket', link: 'average_basket' },
     { title: 'Accrued discount', link: 'accrued_discounts' },
     {
-      title: 'Ads spend', link: 'accrued_ads', tooltip: 'The total budget spent on advertising (CPC and premium positions) across all platforms'
+      title: 'Ads spend',
+      link: 'accrued_ads',
+      tooltip:
+        'The total budget spent on advertising (CPC and premium positions) across all platforms',
     },
     {
-      title: 'Return on Ads Spend', link: 'roas', tooltip: 'The amount of revenue earned for every AED invested in advertising (CPC, premium positions)'
+      title: 'Return on Ads Spend',
+      link: 'roas',
+      tooltip:
+        'The amount of revenue earned for every AED invested in advertising (CPC, premium positions)',
     },
     {
       title: 'Net revenue',
