@@ -76,23 +76,23 @@ export const MainLayout = () => {
   return (
     <div className='user-page'>
       <Navbar />
-      <VendorsProvider value={vendors}>
-        <DatesProvider value={dates}>
-          <div className='wrapper'>
-            <div className='top-inputs'>
-              <RestaurantDropdown />
-              <Dates
-                isDashboard={isDashboard(pathname)}
-                offer={isOffer(pathname)}
-                isListing={isListing(pathname)}
-                dateContext={old}
-                setDateContext={setOld}
-              />
-            </div>
+      <div className='wrapper'>
+        <div className='top-inputs'>
+          <RestaurantDropdown />
+          <Dates
+            isDashboard={isDashboard(pathname)}
+            offer={isOffer(pathname)}
+            isListing={isListing(pathname)}
+            dateContext={old}
+            setDateContext={setOld}
+          />
+        </div>
+        <VendorsProvider value={vendors}>
+          <DatesProvider value={dates}>
             <Outlet />
-          </div>
-        </DatesProvider>
-      </VendorsProvider>
+          </DatesProvider>
+        </VendorsProvider>
+      </div>
     </div>
   );
 };
