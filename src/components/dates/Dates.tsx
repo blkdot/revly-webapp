@@ -998,7 +998,7 @@ const Dates = (props: any) => {
         </PaperKit>
         {getMarketingHeatMap()}
       </div>
-      {!isMarketingHeatMap || !isDashboard && (
+      {isDashboard && (
         <div className='dashboard-date '>
           <img src={switchIcon} alt='Compare' />
           <div className='date-picker_wrapper'>
