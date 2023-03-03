@@ -9,7 +9,7 @@
   border-radius: 16px;
   border: 1px solid #fff;
 
-  > div {
+  >div {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -35,7 +35,7 @@
       background-color: $color-icon !important;
     }
 
-    > svg {
+    >svg {
       width: 70%;
       height: 70%;
       object-fit: cover;
@@ -52,6 +52,7 @@
   }
 
   .card-icon {
+
     svg,
     img {
       filter: invert(58%) sepia(0%) saturate(671%) hue-rotate(147deg) brightness(87%) contrast(84%);
@@ -123,16 +124,25 @@
       }
 
       &.card-roi {
-        > p {
-          color: #212b36;
-          line-height: 0;
-          margin-bottom: 10px;
-
-          > span:nth-of-type(2) {
+        >div {
+          display: flex;
+          align-items: center;
+          grid-gap: 5px;
+          >span {
+            display: inline;
             font-size: 13px;
             font-weight: 500;
-            line-height: 0;
+            line-height: 15px;
           }
+        }
+
+        p {
+          display: inline-block;
+          width: fit-content;
+          color: #212b36;
+          line-height: 15px;
+          margin-bottom: 10px;
+          white-space: nowrap;
         }
       }
     }

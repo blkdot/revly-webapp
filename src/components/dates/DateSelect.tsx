@@ -272,15 +272,13 @@ const DateSelect = React.memo((props: any) => {
         >
           {type === 'day' ? 'yesterday' : `last ${type}`}
         </ButtonKit>
-        {setupOffer ? (
+        {setupOffer && (
           <ButtonKit
             className={`navbar-button-kit ${active === 'last 4' && 'active'}`}
             onClick={() => getDate('last 4 weeks')}
           >
             Last 4 weeks
           </ButtonKit>
-        ) : (
-          ''
         )}
         <ButtonKit
           className={`navbar-button-kit ${active === 'custom' && 'active'}`}
