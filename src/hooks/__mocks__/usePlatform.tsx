@@ -16,7 +16,7 @@ export const usePlatform = () => ({
       talabat: [
         {
           access_token: '',
-          access_token_bis:'',
+          access_token_bis: '',
           active: true,
           registered: true,
           email: 'revly@test.com',

@@ -23,7 +23,7 @@ const FilterBranch: React.FC<{
   const chains = useMemo(
     () => Object.keys(vendors.display).sort((a) => (a.trim() === '' ? 1 : -1)),
     [vendors.display]
-    );
+  );
 
   const refDropdown = useRef(null);
   const [regfItemDropdown] = useAutoAnimate();

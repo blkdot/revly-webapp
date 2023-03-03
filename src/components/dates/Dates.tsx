@@ -266,7 +266,7 @@ const Dates = (props: any) => {
         startGetDay === 1 &&
         endGetDay === 0 &&
         getWeek(startDate, { weekStartsOn: 1 }) ===
-        getWeek(subWeeks(date, 1), { weekStartsOn: 1 }) &&
+          getWeek(subWeeks(date, 1), { weekStartsOn: 1 }) &&
         (isSameYear(startDate, date) || startDate.getFullYear() === date.getFullYear() - 1)
       ) {
         setTitleDate('last week');
@@ -410,7 +410,7 @@ const Dates = (props: any) => {
           startGetDay === 1 &&
           endGetDay === 0 &&
           getWeek(startDate, { weekStartsOn: 1 }) ===
-          getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
+            getWeek(subWeeks(date, 1), { weekStartsOn: 1 })
         ) {
           setTitle('last week');
           return;
@@ -454,7 +454,7 @@ const Dates = (props: any) => {
     if (
       getMonth(startDate) === getMonth(subMonths(date, 1)) &&
       new Date(startDate).toLocaleDateString() ===
-      new Date(startOfMonth(subMonths(new Date(), 1))).toLocaleDateString() &&
+        new Date(startOfMonth(subMonths(new Date(), 1))).toLocaleDateString() &&
       isSameYear(date, startDate)
     ) {
       setTitle('last month');
@@ -650,7 +650,7 @@ const Dates = (props: any) => {
 
           if (
             getWeek(new Date(), { weekStartsOn: 1 }) ===
-            getWeek(selection.startDate, { weekStartsOn: 1 }) &&
+              getWeek(selection.startDate, { weekStartsOn: 1 }) &&
             isSameYear(new Date(), selection.startDate)
           ) {
             return new Date();
@@ -764,9 +764,9 @@ const Dates = (props: any) => {
       if (
         beforePeriodContextStartGetDate === 1 &&
         beforePeriodContextEndGetDate ===
-        (new Date(beforePeriodContextEnd).getFullYear() === new Date().getFullYear() + 1
-          ? new Date().getDate()
-          : endOfMonth(beforePeriodContextEnd).getDate())
+          (new Date(beforePeriodContextEnd).getFullYear() === new Date().getFullYear() + 1
+            ? new Date().getDate()
+            : endOfMonth(beforePeriodContextEnd).getDate())
       ) {
         return `${format(beforePeriodContextStart, 'LLL', { locale: enUS })} - ${getYear(
           beforePeriodContextStart
@@ -788,9 +788,9 @@ const Dates = (props: any) => {
       if (
         beforePeriodContextBtnStartGetDate === 1 &&
         beforePeriodContextBtnEndGetDate ===
-        (new Date(beforePeriodContextStartBtn).getFullYear() === new Date().getFullYear() + 1
-          ? new Date().getDate()
-          : endOfMonth(beforePeriodContextStartBtn).getDate())
+          (new Date(beforePeriodContextStartBtn).getFullYear() === new Date().getFullYear() + 1
+            ? new Date().getDate()
+            : endOfMonth(beforePeriodContextStartBtn).getDate())
       ) {
         return `${format(beforePeriodContextStartBtn, 'LLL', { locale: enUS })} - ${getYear(
           beforePeriodContextStartBtn
@@ -801,10 +801,10 @@ const Dates = (props: any) => {
     return title;
   };
   useEffect(() => {
-    if(setPeriodProps){
-      setPeriodProps(getbeforePeriod())
+    if (setPeriodProps) {
+      setPeriodProps(getbeforePeriod());
     }
-  }, [beforePeriodBtn])
+  }, [beforePeriodBtn]);
   const getDateAfterPeriod = () => {
     if (titleafterPeriod !== 'custom') {
       return titleafterPeriod;
