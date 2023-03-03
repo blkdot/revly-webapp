@@ -20,11 +20,10 @@ const FilterBranch: React.FC<{
   const [isOpen, setIsOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState('');
   const { vendors } = useVendors();
-
   const chains = useMemo(
     () => Object.keys(vendors.display).sort((a) => (a.trim() === '' ? 1 : -1)),
     [vendors.display]
-  );
+    );
 
   const refDropdown = useRef(null);
   const [regfItemDropdown] = useAutoAnimate();
