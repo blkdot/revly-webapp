@@ -126,11 +126,7 @@ const FilterBranch: React.FC<{
   const renderItems = () => {
     if (!isOpen) return null;
 
-    return (
-      <div className='comp-dropdown__content'>
-        {renderNewItem()}
-      </div>
-    );
+    return <div className='comp-dropdown__content'>{renderNewItem()}</div>;
   };
 
   const renderIcon = () => {

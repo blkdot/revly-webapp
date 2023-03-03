@@ -157,7 +157,7 @@ const CompetitionListing = () => {
       if (!chainDefault) {
         setBranchSelected([]);
         return;
-      };
+      }
 
       setBranchSelected([String(chainDefault.vendor_id)]);
     }

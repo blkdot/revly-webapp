@@ -91,9 +91,7 @@ const FilterDropdown: React.FC<{
     }
 
     return (
-      <div className={`comp-dropdown__content ${toRight ? 'to-right' : ''}`}>
-        {renderItem()}
-      </div>
+      <div className={`comp-dropdown__content ${toRight ? 'to-right' : ''}`}>{renderItem()}</div>
     );
   };
 
