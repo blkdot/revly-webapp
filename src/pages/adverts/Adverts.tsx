@@ -1,3 +1,4 @@
+import { usePlanningAds } from 'api';
 import arrow from 'assets/images/arrow.svg';
 import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreateNewCampaign';
 import AdvertsDetails from 'components/details/AdvertsDetails';
@@ -8,7 +9,7 @@ import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { useMarketingSetup, usePlanningAds, useVendors } from 'hooks';
+import { useMarketingSetup, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';

@@ -1,3 +1,4 @@
+import { usePlanningAds } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
@@ -5,7 +6,6 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { usePlanningAds } from 'hooks';
 import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';

@@ -5,8 +5,5 @@ export { default as useCost } from './useCost';
 export { default as useDate } from './useDate';
 export { default as useGlobal } from './useGlobal';
 export { default as useMarketingSetup } from './useMarketingSetup';
-export * from './useMetrics';
-export * from './usePlanningAds';
-export * from './usePlanningOffers';
 export { default as useQueryState } from './useQueryState';
 export { default as useVendors } from './useVendors';

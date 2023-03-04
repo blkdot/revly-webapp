@@ -1,3 +1,4 @@
+import { usePlanningAds, usePlanningOffers } from 'api';
 import { Switch, Tag } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -8,7 +9,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useDates, usePlatform } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { usePlanningAds, usePlanningOffers, useQueryState, useVendors } from 'hooks';
+import { useQueryState, useVendors } from 'hooks';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { DatePeriod } from 'types';

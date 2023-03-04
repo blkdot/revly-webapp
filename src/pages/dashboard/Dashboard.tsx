@@ -1,3 +1,4 @@
+import { useMetrics } from 'api';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -7,7 +8,6 @@ import Widget from 'components/widget/Widget';
 import { useDates, usePlatform } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import { useMetrics } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';

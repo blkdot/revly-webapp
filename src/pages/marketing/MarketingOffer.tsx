@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { usePlanningOffers } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
@@ -11,7 +12,6 @@ import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useQueryState } from 'hooks';
-import { usePlanningOffers } from 'hooks/usePlanningOffers';
 import { ButtonAction, ContainerKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
