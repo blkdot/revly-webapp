@@ -1,6 +1,6 @@
+import { handleResponse } from 'api/utils';
 import axios from 'axios';
 import { useUser } from 'contexts';
-import { handleResponse } from '../api/baseApi';
 import config from '../setup/config';
 
 const { apiUrl } = config;

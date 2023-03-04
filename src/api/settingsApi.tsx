@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import config from 'setup/config';
-import { handleResponse } from './baseApi';
+import { handleResponse } from './utils';
 
 const { apiUrl } = config;
 
