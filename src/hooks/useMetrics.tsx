@@ -1,6 +1,6 @@
 import { useDates, useUser } from 'contexts';
 import { useMemo, useState } from 'react';
-import { DatePeriod } from 'types';
+import { DatePeriod, prepareVendors } from 'types';
 import useApi from './useApi';
 import { type TVendorsObj } from './useVendors';
 
@@ -13,23 +13,14 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [metricsbeforePeriod, setMetricsbeforePeriod] = useState([]);
   const [metricsafterPeriod, setMetricsafterPeriod] = useState([]);
   const user = useUser();
-  const newVendorsObj = {};
 
-  Object.keys(vendorsObj).forEach((plat) => {
-    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
-  });
-
-  Object.keys(newVendorsObj).forEach((plat) => {
-    if (newVendorsObj[plat].length === 0 || plat === 'display') {
-      delete newVendorsObj[plat];
-    }
-  });
+  const v = useMemo(() => prepareVendors(vendorsObj), []);
 
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState(0);
 
   const handleRequest = (date: DatePeriod, setMetrics, stack) => {
-    if (Object.keys(newVendorsObj).length === 0) {
+    if (Object.keys(v).length === 0) {
       setLoading(false);
       return;
     }
@@ -39,7 +30,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
     getMetrics({
       master_email: user.email,
       access_token: user.token,
-      vendors: newVendorsObj,
+      vendors: v,
       start_date: date.from.format('YYYY-MM-DD'),
       end_date: date.until.format('YYYY-MM-DD'),
     }).then((data) => {

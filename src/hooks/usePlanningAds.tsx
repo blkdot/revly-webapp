@@ -2,35 +2,28 @@ import { useQuery } from '@tanstack/react-query';
 import { ApiError, fetcher } from 'api/hooks';
 import { useUser } from 'contexts';
 import { useAtom } from 'jotai';
+import { useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { DatePeriod } from 'types';
+import { DatePeriod, prepareVendors } from 'types';
 
 export const usePlanningAds = (period: DatePeriod) => {
+  const user = useUser();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
-  const user = useUser();
-  const newVendorsObj = {};
-  Object.keys(vendorsObj).forEach((plat) => {
-    newVendorsObj[plat] = vendorsObj[plat].filter((obj) => obj.metadata.is_active);
-  });
 
-  Object.keys(newVendorsObj).forEach((plat) => {
-    if (newVendorsObj[plat].length === 0 || plat === 'display') {
-      delete newVendorsObj[plat];
-    }
-  });
+  const v = useMemo(() => prepareVendors(vendorsObj), [vendorsObj]);
 
-  return useQuery<any, ApiError, any>(
-    ['planning', 'adsv3', period, newVendorsObj],
+  return useQuery<unknown, ApiError, any>(
+    ['planning', 'adsv3', period, v],
     async () =>
       fetcher('/planning/adsv3', {
         master_email: user.email,
-        vendors: newVendorsObj,
+        vendors: v,
         start_date: period.from.format('YYYY-MM-DD'),
         end_date: period.until.format('YYYY-MM-DD'),
       }),
     {
-      enabled: Object.keys(vendorsObj).length > 0,
+      enabled: Object.keys(v).length > 0,
     }
   );
 };

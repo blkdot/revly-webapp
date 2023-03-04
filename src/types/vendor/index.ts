@@ -1,3 +1,6 @@
+/* eslint-disable import/no-cycle */
+import { TVendorsObj } from 'hooks/useVendors';
+
 export type VendorsV2 = {
   deliveroo: unknown;
   talabat: unknown;
@@ -44,4 +47,20 @@ export type Talabat = {
     is_deleted: boolean;
     prefix_vendor_id: string;
   };
+};
+
+export const prepareVendors = (vendors: TVendorsObj) => {
+  const out = {};
+
+  Object.keys(vendors).forEach((p) => {
+    out[p] = vendors[p].filter((v) => v.metadata.is_active);
+  });
+
+  Object.keys(out).forEach((p) => {
+    if (out[p].length === 0 || p === 'display') {
+      delete out[p];
+    }
+  });
+
+  return out;
 };

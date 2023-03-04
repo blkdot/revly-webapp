@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { useQuery } from '@tanstack/react-query';
 import { useUser } from 'contexts';
 import { useAtom } from 'jotai';
