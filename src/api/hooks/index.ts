@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { QueryKey, useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
+import { QueryKey, UseQueryOptions } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import { useUser } from 'contexts';
 import config from 'setup/config';
-import { VendorsV2 } from 'types';
 
 const { apiUrl } = config;
 
@@ -45,18 +43,4 @@ export const fetcher = async <T>(url: string, payload: Record<string, unknown>):
   } catch (error) {
     throw errorToApiError(error);
   }
-};
-
-export const useVendorsV2 = (options?: Options<VendorsV2>): UseQueryResult<VendorsV2, ApiError> => {
-  const user = useUser();
-
-  return useQuery<unknown, ApiError, VendorsV2>(
-    ['user', 'vendorsv2'],
-    () =>
-      fetcher<unknown>('/user/vendorsv2', {
-        master_email: user.email,
-        access_token: user.token,
-      }),
-    options
-  );
 };

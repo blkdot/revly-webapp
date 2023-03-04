@@ -1,2 +1,2 @@
-export * from './date';
-export * from './vendor';
+export * from './date/date';
+export * from './vendor/vendor';

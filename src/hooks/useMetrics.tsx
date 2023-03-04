@@ -1,8 +1,7 @@
 import { useDates, useUser } from 'contexts';
 import { useMemo, useState } from 'react';
-import { DatePeriod, prepareVendors } from 'types';
+import { DatePeriod, prepareVendors, TVendorsObj } from 'types';
 import useApi from './useApi';
-import { type TVendorsObj } from './useVendors';
 
 let fnDelays = null;
 

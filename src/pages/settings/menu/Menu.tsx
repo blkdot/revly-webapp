@@ -1,9 +1,9 @@
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
-import { useAlert, useApi, usePlatform } from 'hooks';
-import useVendors, { type TVendorsArr } from 'hooks/useVendors';
+import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
 import { useEffect, useState } from 'react';
+import { TVendorsArr } from 'types';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
