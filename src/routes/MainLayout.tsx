@@ -1,11 +1,11 @@
 import Navbar from 'components/navbar/Navbar';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { DateRange, DatesContextType, DatesProvider } from 'contexts';
+import { DatesContextType, DatesProvider } from 'contexts';
 import { VendorsProvider } from 'contexts/VendorsContext';
 import dayjs from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { Old } from 'types';
+import { DatePeriod, Old } from 'types';
 import Dates from './dates/Dates';
 
 const isDashboard = (path: string) => path === '/dashboard';
@@ -37,13 +37,13 @@ export const MainLayout = () => {
   const [calendar, setCalendar] = useState('week');
 
   const [currentTitle, setCurrentTitle] = useState('current week');
-  const [current, setCurrent] = useState<DateRange>({
+  const [current, setCurrent] = useState<DatePeriod>({
     from: dayjs().startOf('week'),
     until: dayjs().endOf('day'),
   });
 
   const [compareTitle, setCompareTitle] = useState('last week');
-  const [compare, setCompare] = useState<DateRange>({
+  const [compare, setCompare] = useState<DatePeriod>({
     from: dayjs().subtract(1, 'week').startOf('week'),
     until: dayjs().subtract(1, 'week').endOf('week'),
   });

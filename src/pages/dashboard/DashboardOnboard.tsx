@@ -5,7 +5,7 @@ import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper'
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import Widget from 'components/widget/Widget';
-import { DateRange, useDates, useUser } from 'contexts';
+import { useDates, useUser } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { usePlatform } from 'hooks';
@@ -14,6 +14,7 @@ import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { vendorsAtom } from 'store/vendorsAtom';
+import { DatePeriod } from 'types';
 import './Dashboard.scss';
 
 const Dashboard = () => {
@@ -86,7 +87,7 @@ const Dashboard = () => {
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const { current, compare, calendar, currentTitle, compareTitle } = useDates();
 
-  const getPeriod = (title: string, period: DateRange) => {
+  const getPeriod = (title: string, period: DatePeriod) => {
     if (title === 'custom') {
       if (calendar === 'day') {
         return `${period.from.format('DD/MM')}`;

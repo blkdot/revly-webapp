@@ -1,5 +1,6 @@
-import { DateRange, useDates, useUser } from 'contexts';
+import { useDates, useUser } from 'contexts';
 import { useMemo, useState } from 'react';
+import { DatePeriod } from 'types';
 import useApi from './useApi';
 import { type TVendorsObj } from './useVendors';
 
@@ -27,7 +28,7 @@ function useMetrics(vendorsObj: TVendorsObj) {
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState(0);
 
-  const handleRequest = (date: DateRange, setMetrics, stack) => {
+  const handleRequest = (date: DatePeriod, setMetrics, stack) => {
     if (Object.keys(newVendorsObj).length === 0) {
       setLoading(false);
       return;

@@ -2,7 +2,7 @@ import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { DateRange, useDates } from 'contexts';
+import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { usePlanningAds } from 'hooks';
@@ -10,6 +10,7 @@ import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from '
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useMemo, useState } from 'react';
+import { DatePeriod } from 'types';
 import Columns from '../../assets/images/columns.svg';
 import logo from '../../assets/images/small-logo.png';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
@@ -19,14 +20,14 @@ import { platformObject } from '../../data/platformList';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
-const getOfferDate = (current: DateRange, type: string): Date => {
+const getOfferDate = (period: DatePeriod, type: string): Date => {
   if (type === 'month') {
-    return endOfMonth(new Date(current.until.toDate()));
+    return endOfMonth(new Date(period.until.toDate()));
   }
   if (type === 'week') {
-    return endOfWeek(new Date(current.until.toDate()), { weekStartsOn: 1 });
+    return endOfWeek(new Date(period.until.toDate()), { weekStartsOn: 1 });
   }
-  return current.until.toDate();
+  return period.until.toDate();
 };
 
 const MarketingAds = () => {
@@ -34,8 +35,8 @@ const MarketingAds = () => {
   const { current, calendar } = useDates();
 
   const { data, isLoading: isLoadingAds } = usePlanningAds({
-    startDate: current.from.toDate(),
-    endDate: getOfferDate(current, calendar),
+    from: current.from,
+    until: dayjs(getOfferDate(current, calendar)),
   });
 
   const ads = useMemo(() => data?.ads || [], [data]);

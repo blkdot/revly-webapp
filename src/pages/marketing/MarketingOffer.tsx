@@ -7,7 +7,7 @@ import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOffer
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { DateRange, useDates } from 'contexts';
+import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useQueryState } from 'hooks';
@@ -16,13 +16,14 @@ import { ButtonAction, ContainerKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useState } from 'react';
+import { DatePeriod } from 'types';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
-const getOfferDate = (period: DateRange, type: string): Date => {
+const getOfferDate = (period: DatePeriod, type: string): Date => {
   if (type === 'month') {
     return endOfMonth(new Date(period.until.toDate()));
   }
@@ -38,8 +39,8 @@ const MarketingOffer = () => {
   const [active, setActive] = useState(false);
 
   const { data, isLoading: isLoadingOffers } = usePlanningOffers({
-    startDate: current.from.toDate(),
-    endDate: getOfferDate(current, calendar),
+    from: current.from,
+    until: dayjs(getOfferDate(current, calendar)),
   });
 
   const [selected, setSelected] = useState([]);

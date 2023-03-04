@@ -1,16 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, fetcher } from 'api/hooks';
 import { useUser } from 'contexts';
-import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { vendorsAtom } from 'store/vendorsAtom';
+import { DatePeriod } from 'types';
 
-type DateRange = {
-  startDate: Date;
-  endDate: Date;
-};
-
-export const usePlanningAds = (range: DateRange) => {
+export const usePlanningAds = (period: DatePeriod) => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
   const user = useUser();
@@ -26,13 +21,13 @@ export const usePlanningAds = (range: DateRange) => {
   });
 
   return useQuery<any, ApiError, any>(
-    ['planning', 'adsv3', range, newVendorsObj],
+    ['planning', 'adsv3', period, newVendorsObj],
     async () =>
       fetcher('/planning/adsv3', {
         master_email: user.email,
         vendors: newVendorsObj,
-        start_date: dayjs(range.startDate).format('YYYY-MM-DD'),
-        end_date: dayjs(range.endDate).format('YYYY-MM-DD'),
+        start_date: period.from.format('YYYY-MM-DD'),
+        end_date: period.until.format('YYYY-MM-DD'),
       }),
     {
       enabled: Object.keys(vendorsObj).length > 0,

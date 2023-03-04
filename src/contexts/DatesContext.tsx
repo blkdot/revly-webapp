@@ -1,16 +1,11 @@
-import { Dayjs } from 'dayjs';
 import { createContext, FC, ReactNode, useContext } from 'react';
-
-export type DateRange = {
-  from: Dayjs;
-  until: Dayjs;
-};
+import { DatePeriod } from 'types';
 
 export type DatesContextType = {
-  current: DateRange;
-  setCurrent: (v: DateRange) => void;
-  compare: DateRange;
-  setCompare: (v: DateRange) => void;
+  current: DatePeriod;
+  setCurrent: (v: DatePeriod) => void;
+  compare: DatePeriod;
+  setCompare: (v: DatePeriod) => void;
   currentTitle: string;
   setCurrentTitle: (v: string) => void;
   compareTitle: string;

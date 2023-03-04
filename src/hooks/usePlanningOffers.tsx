@@ -4,13 +4,9 @@ import { useUser } from 'contexts';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { vendorsAtom } from 'store/vendorsAtom';
+import { DatePeriod } from 'types';
 
-type DateRange = {
-  startDate: Date;
-  endDate: Date;
-};
-
-export const usePlanningOffers = (range: DateRange) => {
+export const usePlanningOffers = (period: DatePeriod) => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
   const user = useUser();
@@ -26,13 +22,13 @@ export const usePlanningOffers = (range: DateRange) => {
   });
 
   return useQuery<any, ApiError, any>(
-    ['planning', 'offersv3', range, newVendorsObj],
+    ['planning', 'offersv3', period, newVendorsObj],
     async () =>
       fetcher('/planning/offersv3', {
         master_email: user.email,
         vendors: newVendorsObj,
-        start_date: dayjs(range.startDate).format('YYYY-MM-DD'),
-        end_date: dayjs(range.endDate).format('YYYY-MM-DD'),
+        start_date: dayjs(period.from).format('YYYY-MM-DD'),
+        end_date: dayjs(period.until).format('YYYY-MM-DD'),
       }),
     {
       enabled: Object.keys(vendorsObj).length > 0,

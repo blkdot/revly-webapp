@@ -4,7 +4,7 @@ import AdvertsDetails from 'components/details/AdvertsDetails';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { DateRange, useDates } from 'contexts';
+import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
@@ -13,9 +13,10 @@ import { useAtom } from 'jotai';
 import { ButtonKit, ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { branchAtom } from 'store/marketingSetupAtom';
+import { DatePeriod } from 'types';
 import './Adverts.scss';
 
-const getOfferDate = (period: DateRange, type: string): Date => {
+const getOfferDate = (period: DatePeriod, type: string): Date => {
   if (type === 'month') {
     return endOfMonth(period.until.toDate());
   }
@@ -76,7 +77,10 @@ const Adverts = () => {
     }
     return selectedVendors('name', display).join(', ');
   };
-  const { data, isLoading: isLoadingAds } = usePlanningAds({ startDate, endDate });
+  const { data, isLoading: isLoadingAds } = usePlanningAds({
+    from: dayjs(startDate),
+    until: dayjs(endDate),
+  });
 
   const ads = useMemo(() => data?.ads || [], [data]);
 

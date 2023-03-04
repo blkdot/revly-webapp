@@ -5,12 +5,13 @@ import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { DateRange, useDates } from 'contexts';
+import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { usePlanningAds, usePlanningOffers, usePlatform, useQueryState, useVendors } from 'hooks';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
+import { DatePeriod } from 'types';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
@@ -53,7 +54,7 @@ type TAds = {
   _metadata: null;
 };
 
-const getOfferDate = (period: DateRange, type: string): Date => {
+const getOfferDate = (period: DatePeriod, type: string): Date => {
   if (type === 'month') {
     return endOfMonth(new Date(period.until.toDate()));
   }
@@ -70,9 +71,10 @@ const Planning = () => {
   const { current, calendar } = useDates();
 
   const dateRange = {
-    startDate: current.from.toDate(),
-    endDate: getOfferDate(current, calendar),
+    from: current.from,
+    until: dayjs(getOfferDate(current, calendar)),
   };
+
   const { data: adsData, isLoading: isLoadingAds } = usePlanningAds(dateRange);
   const { data: offersData, isLoading: isLoadingOffers } = usePlanningOffers(dateRange);
 
