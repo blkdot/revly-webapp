@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, fetcher } from 'api/hooks';
+import { ApiError, fetcher } from 'api/utils';
 import { useUser } from 'contexts';
 import { useMemo } from 'react';
 import { DatePeriod, prepareVendors, TVendorsObj } from 'types';

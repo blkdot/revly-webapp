@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, fetcher } from 'api/hooks';
+import { ApiError, fetcher } from 'api/utils';
 import { useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { useMemo } from 'react';
