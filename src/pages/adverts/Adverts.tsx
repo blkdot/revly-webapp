@@ -8,10 +8,10 @@ import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { useMarketingSetup, usePlanningAds, useVendors } from 'hooks';
+import { useMarketingSetup, usePlanningAdsNew, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, ContainerKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { branchAtom } from 'store/marketingSetupAtom';
 import './Adverts.scss';
 
@@ -76,7 +76,10 @@ const Adverts = () => {
     }
     return selectedVendors('name', display).join(', ');
   };
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: { startDate, endDate } });
+  const { data, isLoading: isLoadingAds } = usePlanningAdsNew({ startDate, endDate });
+
+  const ads = useMemo(() => data?.ads || [], [data]);
+
   const [adsData, setAdsData] = useState([]);
   useEffect(() => {
     const newArr = ads.map((obj) => ({

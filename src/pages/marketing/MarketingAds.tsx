@@ -5,11 +5,11 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { usePlanningAds } from 'hooks';
+import { usePlanningAdsNew } from 'hooks';
 import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Columns from '../../assets/images/columns.svg';
 import logo from '../../assets/images/small-logo.png';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
@@ -33,12 +33,12 @@ const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { current, calendar } = useDates();
 
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({
-    dateRange: {
-      startDate: current.from.toDate(),
-      endDate: getOfferDate(current, calendar),
-    },
+  const { data, isLoading: isLoadingAds } = usePlanningAdsNew({
+    startDate: current.from.toDate(),
+    endDate: getOfferDate(current, calendar),
   });
+
+  const ads = useMemo(() => data?.ads || [], [data]);
 
   const {
     renderPlatform,
