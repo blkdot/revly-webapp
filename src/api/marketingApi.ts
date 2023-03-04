@@ -1,33 +1,25 @@
-import axios from 'axios';
-import config from 'setup/config';
-import { handleResponse } from './utils';
-
-const { apiUrl } = config;
+import { api, handleResponse } from './utils';
 
 export const getOffers = (body) =>
-  axios
-    .post(`${apiUrl}/planning/offers`, body)
+  api
+    .post(`/planning/offers`, body)
     .then((res) => res)
     .catch(handleResponse);
 
 export const cancelOffer = (body, platform) =>
-  axios
-    .post(`${apiUrl}/marketingv2/cancel/${platform}`, body)
+  api
+    .post(`/marketingv2/cancel/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
-export const cancelOfferMaster = (body, platform) =>
-  axios
-    .post(`${apiUrl}/marketingv2/mastercancel/${platform}`, body)
-    .then((res) => res)
-    .catch(handleResponse);
-export const triggerOffers = (platform, body) =>
-  axios
-    .post(`${apiUrl}/marketingv2/offer/${platform}`, body)
-    .then((res) => res)
-    .catch(handleResponse);
-// export const triggerOffers = (platform, body) => {
-//   console.log(body);
-//   return new Error;
-// };
 
-export const _ = () => null;
+export const cancelOfferMaster = (body, platform) =>
+  api
+    .post(`/marketingv2/mastercancel/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);
+
+export const triggerOffers = (platform, body) =>
+  api
+    .post(`/marketingv2/offer/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);

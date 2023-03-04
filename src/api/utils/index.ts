@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryKey, UseQueryOptions } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import config from 'setup/config';
 
 const { apiUrl } = config;
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: apiUrl,
   timeout: 60000,
   timeoutErrorMessage: 'Request Timeout',

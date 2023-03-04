@@ -1,9 +1,5 @@
-import { handleResponse } from 'api/utils';
-import axios from 'axios';
+import { api, handleResponse } from 'api/utils';
 import { useUser } from 'contexts';
-import config from '../setup/config';
-
-const { apiUrl } = config;
 
 const useCost = (vendorsObj) => {
   const user = useUser();
@@ -15,10 +11,10 @@ const useCost = (vendorsObj) => {
 
   const defaulltBody = { vendors: vendorsObj, ...requestVendorsDefaultParam };
 
-  const load = () => axios.post(`${apiUrl}/user/loadv2`, { ...defaulltBody }).then(handleResponse);
+  const load = () => api.post(`/user/loadv2`, { ...defaulltBody }).then(handleResponse);
 
   const save = ({ cost, vendors }) =>
-    axios.post(`${apiUrl}/user/savev2`, { ...defaulltBody, vendors, data: { cost } });
+    api.post(`/user/savev2`, { ...defaulltBody, vendors, data: { cost } });
 
   return {
     load,
