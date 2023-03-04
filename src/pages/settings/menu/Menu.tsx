@@ -1,7 +1,7 @@
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useUser } from 'contexts';
-import { useAlert, useApi, usePlatform, useVendors } from 'hooks';
+import { usePlatform, useUser } from 'contexts';
+import { useAlert, useApi, useVendors } from 'hooks';
 import { useEffect, useState } from 'react';
 import { TVendorsArr } from 'types';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';

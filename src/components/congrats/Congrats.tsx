@@ -1,4 +1,4 @@
-import { usePlatform } from 'hooks';
+import { usePlatform } from 'contexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Congrats.scss';

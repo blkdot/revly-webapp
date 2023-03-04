@@ -1,4 +1,4 @@
-import { platformContexDefaultFormat } from './platformList';
+import { platformContextDefaultFormat } from './platformList';
 
 export const fakeSettingsOnboardPlatform = {
   registered: true,
@@ -8,4 +8,4 @@ export const fakeSettingsOnboardPlatform = {
   access_token_bis: null,
 };
 
-export const fakeSettingsLogin = platformContexDefaultFormat;
+export const fakeSettingsLogin = platformContextDefaultFormat;

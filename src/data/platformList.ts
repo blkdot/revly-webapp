@@ -1,8 +1,8 @@
-import imageDeliveroo from '../assets/images/deliveroo.png';
-import imageDeliverooFavicon from '../assets/images/deliveroo-favicon.webp';
 import imageDeliverooFaviconWhite from '../assets/images/deliveroo-favicon-white.png';
-import imageTalabat from '../assets/images/talabat.png';
+import imageDeliverooFavicon from '../assets/images/deliveroo-favicon.webp';
+import imageDeliveroo from '../assets/images/deliveroo.png';
 import imageTalabatFavicon from '../assets/images/talabat-favicon.png';
+import imageTalabat from '../assets/images/talabat.png';
 
 export const platformList = [
   {
@@ -50,7 +50,7 @@ export type TPlatformUserData = {
   };
 };
 
-export const platformContexDefaultFormat: TPlatformUserData = {
+export const platformContextDefaultFormat: TPlatformUserData = {
   onboarded: false,
   platforms: platformList.reduce(
     (acc, { name }) => ({

@@ -5,10 +5,9 @@ import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper'
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import Widget from 'components/widget/Widget';
-import { useDates, useUser } from 'contexts';
+import { useDates, usePlatform, useUser } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import { usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';

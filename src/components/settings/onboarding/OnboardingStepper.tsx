@@ -1,7 +1,7 @@
 import { styled } from '@mui/system';
-import { usePlatform } from 'hooks';
+import { usePlatform } from 'contexts';
 import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kits';
-import { useEffect, useState, FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.svg';
 import ClockIcon from '../../../assets/images/clock.svg';

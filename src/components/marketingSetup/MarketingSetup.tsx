@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import { useUser } from 'contexts';
+import { usePlatform, useUser } from 'contexts';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, useMarketingSetup, usePlatform, useVendors } from 'hooks';
+import { useAlert, useApi, useMarketingSetup, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,

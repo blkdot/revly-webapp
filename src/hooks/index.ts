@@ -8,6 +8,5 @@ export { default as useMarketingSetup } from './useMarketingSetup';
 export * from './useMetrics';
 export * from './usePlanningAds';
 export * from './usePlanningOffers';
-export { default as usePlatform } from './usePlatform';
 export { default as useQueryState } from './useQueryState';
 export { default as useVendors } from './useVendors';

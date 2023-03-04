@@ -1,6 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { usePlatform } from 'contexts';
 import { logout } from 'firebase-config';
-import { usePlatform } from 'hooks';
 import {
   AccordionDetailsKit,
   AccordionKit,
