@@ -1,4 +1,4 @@
-import config from 'setup/config';
+import { config } from 'config';
 import { api, handleResponse } from './utils';
 
 const { firebaseApiUrl } = config;

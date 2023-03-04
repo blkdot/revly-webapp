@@ -1,6 +1,6 @@
 import { QueryKey, UseQueryOptions } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import config from 'setup/config';
+import { config } from 'config';
 
 const { apiUrl } = config;
 
