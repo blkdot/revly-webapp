@@ -8,9 +8,11 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { usePlanningAds, usePlanningOffers, usePlatform, useQueryState, useVendors } from 'hooks';
+import { usePlatform, useQueryState, useVendors } from 'hooks';
+import { usePlanningAdsNew } from 'hooks/usePlanningAds';
+import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
 import { ContainerKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
@@ -73,8 +75,12 @@ const Planning = () => {
     startDate: current.from.toDate(),
     endDate: getOfferDate(current, calendar),
   };
-  const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
+  const { data: adsData, isLoading: isLoadingAds } = usePlanningAdsNew(dateRange);
+  const { data: offersData, isLoading: isLoadingOffers } = usePlanningOffersNew(dateRange);
+
+  const ads = useMemo(() => adsData?.ads || [], [adsData]);
+  const offers = useMemo(() => offersData?.offers || [], [offersData]);
+
   const [filters, setFilters] = useState({
     ...defaultFilterStateFormat,
     ...JSON.parse(filtersSaved || '{}'),

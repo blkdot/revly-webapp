@@ -38,7 +38,7 @@ const MarketingOffer = () => {
   const [active, setActive] = useState(false);
 
   const { data, isLoading: isLoadingOffers } = usePlanningOffersNew({
-    startDate: current.from,
+    startDate: current.from.toDate(),
     endDate: getOfferDate(current, calendar),
   });
 

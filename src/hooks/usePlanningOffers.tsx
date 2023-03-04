@@ -56,8 +56,8 @@ function usePlanningOffers({ dateRange }) {
 export default usePlanningOffers;
 
 type DateRange = {
-  startDate: any;
-  endDate: any;
+  startDate: Date;
+  endDate: Date;
 };
 
 export const usePlanningOffersNew = (range: DateRange) => {
