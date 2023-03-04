@@ -1,42 +1,45 @@
-import { pascalCase } from 'change-case';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate, usePlanningAds } from 'hooks';
-import { ButtonKit, ContainerKit, PaperKit, TypographyKit, ButtonAction } from 'kits';
-import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
-import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
-import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import { usePlanningAds } from 'api';
 import { Switch } from 'assets/icons';
+import { pascalCase } from 'change-case';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { useDates } from 'contexts';
+import { endOfMonth, endOfWeek } from 'date-fns';
+import dayjs from 'dayjs';
+import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle';
+import MainTitle from 'kits/title/MainTitle';
+import { useEffect, useMemo, useState } from 'react';
+import { DatePeriod } from 'types';
 import Columns from '../../assets/images/columns.svg';
-import { platformObject } from '../../data/platformList';
 import logo from '../../assets/images/small-logo.png';
-import Dates from '../../components/dates/Dates';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import { platformObject } from '../../data/platformList';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
+const getOfferDate = (period: DatePeriod, type: string): Date => {
+  if (type === 'month') {
+    return endOfMonth(new Date(period.until.toDate()));
+  }
+  if (type === 'week') {
+    return endOfWeek(new Date(period.until.toDate()), { weekStartsOn: 1 });
+  }
+  return period.until.toDate();
+};
+
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
-  const { date } = useDate();
-  const getOfferDate = () => {
-    if (date.typeDate === 'month') {
-      return endOfMonth(new Date(date.beforePeriod.endDate));
-    }
-    if (date.typeDate === 'week') {
-      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
-    }
-    return date.beforePeriod.endDate;
-  };
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: date.beforePeriod.startDate,
-    endDate: getOfferDate(),
+  const { current, calendar } = useDates();
+
+  const { data, isLoading: isLoadingAds } = usePlanningAds({
+    from: current.from,
+    until: dayjs(getOfferDate(current, calendar)),
   });
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
+
+  const ads = useMemo(() => data?.ads || [], [data]);
 
   const {
     renderPlatform,
@@ -404,10 +407,6 @@ const MarketingAds = () => {
   };
   return (
     <div className='wrapper marketing-wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
-      </div>
       <ContainerKit>
         <div className='marketing-top'>
           <div className='marketing-top-text'>

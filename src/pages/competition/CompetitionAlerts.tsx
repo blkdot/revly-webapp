@@ -1,31 +1,31 @@
-import { useUser } from 'contexts';
-import dayjs from 'dayjs';
-import { useAtom } from 'jotai';
-import { useAlert, useApi, useVendors } from 'hooks';
-import { PaperKit, ContainerKit } from 'kits';
-import { useEffect, useState, useMemo } from 'react';
+import { getAlerts, getCompetitors } from 'api';
 import { pascalCase } from 'change-case';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import Competitor from 'components/competitor/Competitor';
-import Dates from 'components/dates/Dates';
-import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
-import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
-import { platformObject } from 'data/platformList';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { useDates, useUser } from 'contexts';
+import { platformObject } from 'data/platformList';
+import dayjs from 'dayjs';
+import { useAlert, useVendors } from 'hooks';
+import { useAtom } from 'jotai';
+import { ContainerKit, PaperKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
+import { useEffect, useMemo, useState } from 'react';
+import Columns from '../../assets/images/columns.svg';
+import competitorIcon from '../../assets/images/ic_competitor.png';
+import './Competition.scss';
 import {
   competitionBranchSelectedAtom,
   competitionSelectedPlatformAtom,
 } from './CompetitionStoreAtom';
-import competitorIcon from '../../assets/images/ic_competitor.png';
-import Columns from '../../assets/images/columns.svg';
-import './Competition.scss';
 
 let fnDelays = null;
 
 const CompetitionAlerts = () => {
+  const { current } = useDates();
   const { vendors } = useVendors();
   const { chainData } = vendors;
   const user = useUser();
@@ -34,13 +34,7 @@ const CompetitionAlerts = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [competitorList, setCompetitorList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { getAlerts, getCompetitors } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
-
   const [selectedPlatform, setSelectedPlatform] = useAtom(competitionSelectedPlatformAtom);
   const [branchSelected, setBranchSelected] = useAtom(competitionBranchSelectedAtom);
   const [selectedCompetitors, setSelectedCompetitors] = useState<string[]>([]);
@@ -154,8 +148,8 @@ const CompetitionAlerts = () => {
       master_email: user.email,
       access_token: user.token,
       vendors: { [selectedPlatform[0]]: [vend] },
-      start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-      end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+      start_date: current.from.format('YYYY-MM-DD'),
+      end_date: current.until.format('YYYY-MM-DD'),
     };
 
     const comp = await getCompetitors(body);
@@ -224,8 +218,8 @@ const CompetitionAlerts = () => {
           master_email: user.email,
           access_token: user.token,
           vendors: vend || {},
-          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+          start_date: current.from.format('YYYY-MM-DD'),
+          end_date: current.until.format('YYYY-MM-DD'),
         };
 
         const alerts = await getAlerts(body, plat);
@@ -287,7 +281,7 @@ const CompetitionAlerts = () => {
       }
       getData(selectedPlatform[0], { [selectedPlatform[0]]: [branchActive.data] });
     }
-  }, [selectedPlatform[0], branchSelected[0], beforePeriodBtn, chainData.length]);
+  }, [selectedPlatform[0], branchSelected[0], chainData.length]);
 
   const handleCompetitorChange = (value) => {
     const isChecked = selectedCompetitors.findIndex((compet) => compet === value);
@@ -318,15 +312,6 @@ const CompetitionAlerts = () => {
 
   return (
     <div className='wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates
-          defaultTypeDate='day'
-          defaultTitle='today'
-          beforePeriodBtn={beforePeriodBtn}
-          setbeforePeriodBtn={setbeforePeriodBtn}
-        />
-      </div>
       <ContainerKit>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>

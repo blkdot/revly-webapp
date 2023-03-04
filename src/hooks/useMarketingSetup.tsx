@@ -1,17 +1,18 @@
-import {
-  timesAtom,
-  itemMenuAtom,
-  everyWeekAtom,
-  customisedDayAtom,
-  typeScheduleAtom,
-  targetAudienceAtom,
-} from 'store/marketingSetupAtom';
-import { addMinutes, format, addHours } from 'date-fns';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
+import { addHours, addMinutes, format } from 'date-fns';
 import { useAtom } from 'jotai';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
-import sortedVendors from 'components/restaurantDropdown/soretedVendors';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import useVendors, { TDisplayVendor, TVendors } from './useVendors';
+import {
+  customisedDayAtom,
+  everyWeekAtom,
+  itemMenuAtom,
+  targetAudienceAtom,
+  timesAtom,
+  typeScheduleAtom,
+} from 'store/marketingSetupAtom';
+import { TDisplayVendor, TVendors } from 'types';
+import useVendors from './useVendors';
 
 const itemMenuObj = {
   'Flash Deal': {

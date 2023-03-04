@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
+import { getHeatmap, getMenu, triggerOffers } from 'api';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import { useUser } from 'contexts';
+import { usePlatform, useUser } from 'contexts';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, useMarketingSetup, usePlatform, useVendors } from 'hooks';
+import { useAlert, useMarketingSetup, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -28,6 +29,7 @@ import {
   checkedAtom,
   createdAtom,
   customisedDayAtom,
+  defaultHeatmapState,
   disabledAtom,
   disabledDateAtom,
   discountPercentageAtom,
@@ -35,23 +37,22 @@ import {
   endingDateAtom,
   everyWeekAtom,
   filteredCategoryDataAtom,
+  heatmapDataAtom,
   itemMenuAtom,
   linkAtom,
+  maxOrderPercentageAtom,
   menuAtom,
   minOrderPercentageAtom,
   platformAtom,
   recapAtom,
   selectedAtom,
   smRuleAtom,
-  heatmapDataAtom,
-  defaultHeatmapState,
-  maxOrderPercentageAtom,
-  triggerLoadingAtom,
   startingDateAtom,
-  typeScheduleAtom,
+  stepsAtom,
   targetAudienceAtom,
   timesAtom,
-  stepsAtom,
+  triggerLoadingAtom,
+  typeScheduleAtom,
   type TCategoryAtom,
   type THeatmapData,
   type TOfferDataResponse,
@@ -172,7 +173,6 @@ const MarketingSetup: React.FC<{
     setBranch({ ...vendors });
   }, [vendors]);
 
-  const { getHeatmap, triggerOffers, getMenu } = useApi();
   const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const {

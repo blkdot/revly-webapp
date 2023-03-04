@@ -1,18 +1,24 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { createContext, useMemo, useState } from 'react';
-import { platformContexDefaultFormat } from '../data/platformList';
+import { createContext, useContext, useMemo, useState } from 'react';
+import { platformContextDefaultFormat, TPlatformUserData } from '../data/platformList';
 
-export const PlatformContext = createContext(undefined);
+export type PlatformContextType = {
+  getActivePlatform: () => string | null;
+  cleanPlatformData: () => void;
+  userPlatformData: TPlatformUserData;
+  setUserPlatformData: (v: TPlatformUserData) => void;
+};
 
-const defaultState = () => platformContexDefaultFormat;
+const PlatformContext = createContext<PlatformContextType>(undefined);
+
+const defaultState = () => platformContextDefaultFormat;
 
 export const PlatformProvider = ({ children }) => {
   const [userPlatformData, setUserPlatformData] = useState(defaultState());
 
   const cleanPlatformData = () => {
-    if (JSON.stringify(userPlatformData) === JSON.stringify(platformContexDefaultFormat)) return;
+    if (JSON.stringify(userPlatformData) === JSON.stringify(platformContextDefaultFormat)) return;
 
-    setUserPlatformData(platformContexDefaultFormat);
+    setUserPlatformData(platformContextDefaultFormat);
   };
 
   const getActivePlatform = (): string | null => {
@@ -27,7 +33,7 @@ export const PlatformProvider = ({ children }) => {
     return activePlatform;
   };
 
-  const PlatformWrapper = useMemo(
+  const value = useMemo(
     () => ({
       userPlatformData,
       setUserPlatformData,
@@ -37,5 +43,7 @@ export const PlatformProvider = ({ children }) => {
     [userPlatformData]
   );
 
-  return <PlatformContext.Provider value={PlatformWrapper}>{children}</PlatformContext.Provider>;
+  return <PlatformContext.Provider value={value}>{children}</PlatformContext.Provider>;
 };
+
+export const usePlatform = () => useContext(PlatformContext);

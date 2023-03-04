@@ -1,117 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { useUser } from 'contexts';
+import { getVendors } from 'api';
+import { usePlatform, useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { vendorsAtom, vendorsIsolatedAtom } from 'store/vendorsAtom';
+import { TChainData, TResponseVendorsApi, TVendors, TVendorsArr } from 'types';
 import { platformList } from '../data/platformList';
-import useApi from './useApi';
-import { usePlatform } from './usePlatform';
-
-export type TVendorsObj = {
-  [x: string]: {
-    chain_id: number;
-    vendor_id: string | number;
-    data: {
-      chain_name: string;
-      vendor_name: string;
-    };
-    metadata: {
-      drn_id?: string;
-      prefix_vendor_id?: string;
-      is_active: boolean;
-      is_deleted: boolean;
-      ord_id?: string;
-    };
-  }[];
-};
-
-export type TDisplayVendor =
-  | {
-      [x: string]: {
-        is_matched: boolean;
-        platforms: {
-          [x: string]: {
-            chain_id: number;
-            vendor_id: string | number;
-            data: {
-              chain_name: string;
-              vendor_name: string;
-            };
-            metadata: {
-              drn_id?: string;
-              prefix_vendor_id?: string;
-              is_active: boolean;
-              is_deleted: boolean;
-              ord_id?: string;
-            };
-          };
-        };
-      };
-    }
-  | Record<string, never>;
-
-type TResponseVendorsApi = TVendorsObj & {
-  display: TDisplayVendor;
-};
-
-export type TVendorsArr = {
-  chain_id: number;
-  vendor_id: string | number;
-  data: {
-    chain_name: string;
-    vendor_name: string;
-  };
-  metadata: {
-    drn_id?: string;
-    prefix_vendor_id?: string;
-    is_active: boolean;
-    is_deleted: boolean;
-    ord_id?: string;
-  };
-  platform: string;
-  email: string;
-  access_token: string;
-  access_token_bis: string;
-};
-
-export type TChainData = {
-  chain_id: number;
-  chain_name: string;
-  vendor_id: string | number;
-  vendor_name: string;
-  is_active: boolean;
-  access_token: string;
-  access_token_bis: string;
-  platform: string;
-  data: {
-    chain_id: number;
-    vendor_id: string | number;
-    data: {
-      chain_name: string;
-      vendor_name: string;
-    };
-    metadata: {
-      drn_id?: string;
-      prefix_vendor_id?: string;
-      is_active: boolean;
-      is_deleted: boolean;
-      ord_id?: string;
-      cost?: string | number;
-    };
-  };
-};
-
-export type TVendors = {
-  vendorsSelected: TVendorsArr[];
-  vendorsObj: TVendorsObj;
-  vendorsArr: TVendorsArr[];
-  display: TDisplayVendor;
-  chainObj: TDisplayVendor;
-  chainData: TChainData[];
-};
 
 const useVendors = (isSign = false) => {
-  const { getVendors } = useApi();
   const [, setVendorsAtom] = useAtom(vendorsAtom);
   const [, setVendorsIsolatedAtom] = useAtom(vendorsIsolatedAtom);
 

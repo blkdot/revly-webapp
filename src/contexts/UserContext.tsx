@@ -1,6 +1,6 @@
 import { createContext, FC, ReactNode, useContext } from 'react';
 
-type UserContextType = {
+export type UserContextType = {
   email: string;
   token: string;
   displayName: string;

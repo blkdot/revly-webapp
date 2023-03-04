@@ -1,11 +1,7 @@
-import axios from 'axios';
-import config from 'setup/config';
-import { handleResponse } from './baseApi';
-
-const { apiUrl } = config;
+import { api, handleResponse } from './utils';
 
 export const getElligibilityDeliveroo = (body) =>
-  axios
-    .post(`${apiUrl}/marketingv2/eligibility/deliveroo`, body)
+  api
+    .post(`/marketingv2/eligibility/deliveroo`, body)
     .then((res) => res)
     .catch(handleResponse);

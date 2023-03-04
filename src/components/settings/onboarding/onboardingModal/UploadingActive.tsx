@@ -1,5 +1,6 @@
+import { settingsOnboardPlatformStatus } from 'api';
 import { useUser } from 'contexts';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
 import Arrow from '../../../../assets/icons/Arrow';
@@ -40,7 +41,6 @@ const UploadingActive: FC<{
     deleteAccount,
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
-  const { settingsOnboardPlatformStatus } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
   const user = useUser();
   const confirm = async () => {

@@ -1,7 +1,6 @@
 import { saveUser } from 'api/userApi';
-import { useUser } from 'contexts';
+import { usePlatform, useUser } from 'contexts';
 import { platformList } from 'data/platformList';
-import { usePlatform } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, TypographyKit } from 'kits';
 import { FC } from 'react';

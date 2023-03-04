@@ -1,13 +1,13 @@
-import { useClickAwayListener, useVendors } from 'hooks';
-import { ButtonKit, RadioKit } from 'kits';
-import { useRef, useState, useMemo, type ReactNode } from 'react';
-import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TChainData } from 'hooks/useVendors';
-import List from '@mui/material/List';
-import { ListItemText } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { ListItemText } from '@mui/material';
+import List from '@mui/material/List';
+import { useClickAwayListener, useVendors } from 'hooks';
+import { ButtonKit, RadioKit } from 'kits';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { TChainData } from 'types';
 import './FilterBranch.scss';
 
 const FilterBranch: React.FC<{

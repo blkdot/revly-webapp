@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
+import { settingsOnboardPlatform, settingsOnboardPlatformStatus, settingsSave } from 'api';
 import { saveUser } from 'api/userApi';
 import { useUser } from 'contexts';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
@@ -32,7 +33,6 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
   const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const [vendors] = useAtom(vendorsAtom);

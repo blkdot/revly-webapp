@@ -1,6 +1,6 @@
 import { Checkbox } from '@mui/material';
+import { getOfferDetails } from 'api';
 import { useUser } from 'contexts';
-import { useApi } from 'hooks';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import defaultImage from '../../../assets/images/default.png';
@@ -8,8 +8,6 @@ import { vendorsAtom } from '../../../store/vendorsAtom';
 
 const MenuItem = ({ drnId, discountRate, platform, vendorId }) => {
   const [data, setData] = useState(null);
-  const { getOfferDetails } = useApi();
-
   const user = useUser();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;

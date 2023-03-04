@@ -1,31 +1,28 @@
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useUser } from 'contexts';
-import { subDays } from 'date-fns';
-import { useAtom } from 'jotai';
+import { getAreas, getCuisines, getRanking } from 'api';
 import { pascalCase } from 'change-case';
-import dayjs from 'dayjs';
-import { useAlert, useApi, useVendors } from 'hooks';
-import FilterBranch from 'components/filter/filterBranch/FilterBranch';
-import { PaperKit, ContainerKit } from 'kits';
-import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
-import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import Competitor from 'components/competitor/Competitor';
-import { platformObject } from 'data/platformList';
-import Dates from 'components/dates/Dates';
+import FilterBranch from 'components/filter/filterBranch/FilterBranch';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { useDates, useUser } from 'contexts';
+import { platformObject } from 'data/platformList';
+import { useAlert, useVendors } from 'hooks';
+import { useAtom } from 'jotai';
+import { ContainerKit, PaperKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import AreaIcon from '../../assets/images/area.svg';
+import Columns from '../../assets/images/columns.svg';
+import Iccuisine from '../../assets/images/ic_cuisine.png';
+import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
+import TooltipIcon from '../../assets/images/tooltip-ic.svg';
+import './Competition.scss';
 import {
   competitionBranchSelectedAtom,
   competitionSelectedPlatformAtom,
 } from './CompetitionStoreAtom';
-import AreaIcon from '../../assets/images/area.svg';
-import Iccuisine from '../../assets/images/ic_cuisine.png';
-import TimeSlotIcon from '../../assets/images/ic_timeslot.png';
-import Columns from '../../assets/images/columns.svg';
-import TooltipIcon from '../../assets/images/tooltip-ic.svg';
-import './Competition.scss';
 
 let fnDelays = null;
 let fnDelaysDropdown = null;
@@ -67,6 +64,7 @@ const headersAlert = (cuisine: string) => [
 ];
 
 const CompetitionListing = () => {
+  const { current } = useDates();
   const { vendors } = useVendors();
   const { chainData } = vendors;
   const user = useUser();
@@ -74,12 +72,7 @@ const CompetitionListing = () => {
   const [loading, setLoading] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
-  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
-    startDate: subDays(new Date(), 1),
-    endDate: subDays(new Date(), 1),
-  });
   const [queueDropdown, setQueueDropdown] = useState(0);
-  const { getRanking, getAreas, getCuisines } = useApi();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
 
@@ -179,8 +172,8 @@ const CompetitionListing = () => {
           filter_location: newArea,
           filter_offer: 'all_discounts',
           filter_cuisine: newCuisine || '',
-          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+          start_date: current.from.format('YYYY-MM-DD'),
+          end_date: current.until.format('YYYY-MM-DD'),
         };
 
         const ranking = await getRanking(body, plat);
@@ -258,8 +251,8 @@ const CompetitionListing = () => {
           master_email: user.email,
           access_token: user.token,
           vendors: vend || [],
-          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
-          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+          start_date: current.from.format('YYYY-MM-DD'),
+          end_date: current.until.format('YYYY-MM-DD'),
         };
 
         Promise.all([getCuisines(body, plat), getAreas(body, plat)])
@@ -320,7 +313,7 @@ const CompetitionListing = () => {
 
       getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
     }
-  }, [selectedArea, selectedTimeSlot, selectedCuisine, beforePeriodBtn]);
+  }, [selectedArea, selectedTimeSlot, selectedCuisine]);
 
   useEffect(() => {
     if (selectedPlatform[0] && branchSelected[0]) {
@@ -344,14 +337,7 @@ const CompetitionListing = () => {
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
-  }, [
-    selectedPlatform,
-    branchSelected,
-    queueDropdown,
-    chainData.length,
-    branchActive,
-    beforePeriodBtn,
-  ]);
+  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive]);
 
   const renderPlatformInsideFilter = (s) => (
     <div key={s}>
@@ -362,16 +348,6 @@ const CompetitionListing = () => {
 
   return (
     <div className='wrapper'>
-      <div className='top-inputs'>
-        <RestaurantDropdown />
-        <Dates
-          isListing
-          beforePeriodBtn={beforePeriodBtn}
-          setbeforePeriodBtn={setbeforePeriodBtn}
-          defaultTitle='Yesterday'
-          defaultTypeDate='day'
-        />
-      </div>
       <ContainerKit>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>

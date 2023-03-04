@@ -1,9 +1,10 @@
-import { useUser } from 'contexts';
-import { useAlert, useApi, usePlatform } from 'hooks';
-import { TVendorsArr } from 'hooks/useVendors';
+import { getMenu } from 'api';
+import { usePlatform, useUser } from 'contexts';
+import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit } from 'kits';
 import { useEffect, useState } from 'react';
+import { TVendorsArr } from 'types';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
@@ -24,7 +25,6 @@ const Menu = () => {
 
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert();
-  const { getMenu } = useApi();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState<string | TVendorsArr>('');

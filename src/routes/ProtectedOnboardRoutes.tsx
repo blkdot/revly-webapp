@@ -1,7 +1,6 @@
 import { getElligibilityDeliveroo } from 'api/elligibilityDeliverooApi';
 import { useSettingsOnboarded } from 'api/settingsApi';
-import { useUser } from 'contexts';
-import { usePlatform } from 'hooks';
+import { usePlatform, useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { SpinnerKit } from 'kits';
 import { useCallback, useEffect } from 'react';

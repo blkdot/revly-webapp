@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { cancelOfferMaster } from 'api';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
 import { useUser } from 'contexts';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
-import { useApi, useVendors } from 'hooks';
+import { useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { getPlanningOfferDetails } from '../../../api/userApi';
@@ -22,14 +23,11 @@ const scheduleTypeMapping = {
 };
 
 const OfferDetailComponent = ({ data, setOpened }) => {
+  const user = useUser();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
   const [offerDetailMaster, setofferDetailMaster] = useState<any>({});
-
-  const { cancelOfferMaster } = useApi();
-
-  const user = useUser();
   const { vendors, getChainData } = useVendors(undefined);
   const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {

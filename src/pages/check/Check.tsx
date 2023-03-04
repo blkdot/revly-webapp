@@ -1,10 +1,9 @@
-import { useUser } from 'contexts';
-import { useApi, usePlatform } from 'hooks';
+import { settingsOnboarded } from 'api';
+import { usePlatform, useUser } from 'contexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Check = () => {
-  const { settingsOnboarded } = useApi();
   const navigate = useNavigate();
   const { setUserPlatformData, userPlatformData } = usePlatform();
   const user = useUser();
