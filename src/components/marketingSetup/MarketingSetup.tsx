@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
+import { getHeatmap, getMenu, triggerOffers } from 'api';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { usePlatform, useUser } from 'contexts';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useApi, useMarketingSetup, useVendors } from 'hooks';
+import { useAlert, useMarketingSetup, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import {
   BoxKit,
@@ -172,7 +173,6 @@ const MarketingSetup: React.FC<{
     setBranch({ ...vendors });
   }, [vendors]);
 
-  const { getHeatmap, triggerOffers, getMenu } = useApi();
   const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const {

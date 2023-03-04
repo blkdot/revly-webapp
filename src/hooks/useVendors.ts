@@ -1,14 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
+import { getVendors } from 'api';
 import { usePlatform, useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { vendorsAtom, vendorsIsolatedAtom } from 'store/vendorsAtom';
 import { TChainData, TResponseVendorsApi, TVendors, TVendorsArr } from 'types';
 import { platformList } from '../data/platformList';
-import useApi from './useApi';
 
 const useVendors = (isSign = false) => {
-  const { getVendors } = useApi();
   const [, setVendorsAtom] = useAtom(vendorsAtom);
   const [, setVendorsIsolatedAtom] = useAtom(vendorsIsolatedAtom);
 

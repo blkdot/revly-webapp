@@ -1,5 +1,4 @@
 export { default as useAlert } from './useAlert';
-export { default as useApi } from './useApi';
 export { default as useClickAwayListener } from './useClickAwayListener';
 export { default as useCost } from './useCost';
 export { default as useDate } from './useDate';

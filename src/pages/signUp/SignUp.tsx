@@ -1,7 +1,8 @@
+import { settingsSave } from 'api';
 import { useUserAuth } from 'contexts';
 import { logout, signUp, verifyPhone } from 'firebase-config';
 import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { verifyEmail } from '../../api/userApi';
@@ -21,7 +22,6 @@ const SignUp = () => {
     isAgree: false,
     pointOfSale: '',
   });
-  const { settingsSave } = useApi();
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
   const [errorData, setErrorData] = useState<{

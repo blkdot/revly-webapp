@@ -1,9 +1,10 @@
+import { settingsLoad, settingsSave } from 'api';
 import { AxiosError } from 'axios';
 import AccountSettingForm from 'components/forms/accountSettingForm/AccountSettingForm';
 import { useUser, useUserAuth } from 'contexts';
 import { auth, verifyPhone } from 'firebase-config';
 import { updateProfile } from 'firebase/auth';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { ButtonKit } from 'kits';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +16,6 @@ import './General.scss';
 const General = () => {
   const user = useUser();
   const { setIsUpdatingPhone } = useUserAuth();
-  const { settingsSave, settingsLoad } = useApi();
 
   const getNumber = () => {
     if (!user.phoneNumber) return '';

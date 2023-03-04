@@ -1,5 +1,6 @@
+import { getMenu } from 'api';
 import { usePlatform, useUser } from 'contexts';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
 import { CheckboxKit, ListItemTextKit, MenuItemKit } from 'kits';
 import { useEffect, useState } from 'react';
@@ -24,7 +25,6 @@ const Menu = () => {
 
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert();
-  const { getMenu } = useApi();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState<string | TVendorsArr>('');

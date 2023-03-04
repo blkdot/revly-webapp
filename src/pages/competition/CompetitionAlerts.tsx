@@ -1,3 +1,4 @@
+import { getAlerts, getCompetitors } from 'api';
 import { pascalCase } from 'change-case';
 import Competitor from 'components/competitor/Competitor';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -7,7 +8,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useDates, useUser } from 'contexts';
 import { platformObject } from 'data/platformList';
 import dayjs from 'dayjs';
-import { useAlert, useApi, useVendors } from 'hooks';
+import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, PaperKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
@@ -33,7 +34,6 @@ const CompetitionAlerts = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [competitorList, setCompetitorList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { getAlerts, getCompetitors } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
   const [selectedPlatform, setSelectedPlatform] = useAtom(competitionSelectedPlatformAtom);
   const [branchSelected, setBranchSelected] = useAtom(competitionBranchSelectedAtom);

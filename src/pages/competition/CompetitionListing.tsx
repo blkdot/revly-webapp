@@ -1,3 +1,4 @@
+import { getAreas, getCuisines, getRanking } from 'api';
 import { pascalCase } from 'change-case';
 import Competitor from 'components/competitor/Competitor';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -6,7 +7,7 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useDates, useUser } from 'contexts';
 import { platformObject } from 'data/platformList';
-import { useAlert, useApi, useVendors } from 'hooks';
+import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, PaperKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
@@ -72,7 +73,6 @@ const CompetitionListing = () => {
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
   const [queueDropdown, setQueueDropdown] = useState(0);
-  const { getRanking, getAreas, getCuisines } = useApi();
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
 

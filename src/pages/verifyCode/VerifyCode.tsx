@@ -1,8 +1,9 @@
 import { ArrowBack } from '@mui/icons-material';
+import { settingsSave } from 'api';
 import { useUserAuth } from 'contexts';
 import { logout, updatePhone, verifyPhone } from 'firebase-config';
 import { getAuth } from 'firebase/auth';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { ModalKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,7 +14,6 @@ import './VerifyCode.scss';
 
 const VerifyCode = () => {
   const { isUpdatingPhone, setIsUpdatingPhone } = useUserAuth();
-  const { settingsSave } = useApi();
   const [values, setValues] = useState({
     code1: '',
     code2: '',
