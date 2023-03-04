@@ -2,11 +2,10 @@ import {
   getAlerts,
   getAreas,
   getCompetitors,
-  getRanking,
   getCuisines,
+  getRanking,
 } from '../api/competitionApi';
 import { cancelOffer, cancelOfferMaster, triggerOffers } from '../api/marketingApi';
-import { getAds, getOffers } from '../api/planningApi';
 import {
   settingsLoad,
   settingsLogin,
@@ -27,11 +26,9 @@ const useApi = () => ({
   getRanking,
   settingsSave,
   getMenu,
-  getOffers,
   getCompetitors,
   getAlerts,
   getVendors,
-  getAds,
   getHeatmap,
   getOfferDetails,
   cancelOffer,
