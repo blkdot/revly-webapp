@@ -1,7 +1,6 @@
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import { addHours, addMinutes, format } from 'date-fns';
-import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import {
@@ -13,6 +12,7 @@ import {
   typeScheduleAtom,
 } from 'store/marketingSetupAtom';
 import { TDisplayVendor, TVendors } from 'types';
+import useVendors from './useVendors';
 
 const itemMenuObj = {
   'Flash Deal': {
