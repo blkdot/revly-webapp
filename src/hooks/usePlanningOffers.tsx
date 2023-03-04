@@ -10,7 +10,7 @@ type DateRange = {
   endDate: Date;
 };
 
-export const usePlanningOffersNew = (range: DateRange) => {
+export const usePlanningOffers = (range: DateRange) => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj } = vendors;
   const user = useUser();

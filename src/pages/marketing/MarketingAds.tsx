@@ -5,7 +5,7 @@ import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { usePlanningAdsNew } from 'hooks';
+import { usePlanningAds } from 'hooks';
 import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
@@ -33,7 +33,7 @@ const MarketingAds = () => {
   const [active, setActive] = useState(false);
   const { current, calendar } = useDates();
 
-  const { data, isLoading: isLoadingAds } = usePlanningAdsNew({
+  const { data, isLoading: isLoadingAds } = usePlanningAds({
     startDate: current.from.toDate(),
     endDate: getOfferDate(current, calendar),
   });

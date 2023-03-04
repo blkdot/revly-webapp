@@ -11,7 +11,7 @@ import { DateRange, useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useQueryState } from 'hooks';
-import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
+import { usePlanningOffers } from 'hooks/usePlanningOffers';
 import { ButtonAction, ContainerKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
@@ -37,7 +37,7 @@ const MarketingOffer = () => {
   const { current, calendar } = useDates();
   const [active, setActive] = useState(false);
 
-  const { data, isLoading: isLoadingOffers } = usePlanningOffersNew({
+  const { data, isLoading: isLoadingOffers } = usePlanningOffers({
     startDate: current.from.toDate(),
     endDate: getOfferDate(current, calendar),
   });
