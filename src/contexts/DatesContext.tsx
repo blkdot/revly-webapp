@@ -1,8 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { createContext, FC, ReactNode, useContext } from 'react';
 
-// TODO: rename titleAfterPeriod, update default values
-
 export type DateRange = {
   from: Dayjs;
   until: Dayjs;
