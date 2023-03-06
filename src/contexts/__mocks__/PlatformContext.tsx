@@ -29,4 +29,6 @@ export const usePlatform = () => ({
   cleanPlatformData: jest.fn(),
 });
 
+export const PlatformProvider = jest.fn();
+
 export default usePlatform;
