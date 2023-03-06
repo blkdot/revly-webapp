@@ -9,7 +9,6 @@ import {
   TableRowKit,
 } from 'kits';
 import { FC, useState, ReactNode } from 'react';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
 import noData from '../../assets/images/no-result.svg';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
@@ -53,8 +52,6 @@ const TableRevlyNew: FC<{
   const [order, setOrder] = useState(mainOrder || 'asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
-  const [refRowTable] = useAutoAnimate();
-
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -83,7 +80,6 @@ const TableRevlyNew: FC<{
         className='marketing-table-top'
         onClick={handleRowClick(r.id)}
         key={r.id}
-        ref={refRowTable}
       >
         {headers.map((h) => r[h.id])}
       </TableRowKit>
