@@ -5,6 +5,11 @@ export type DatePeriod = {
   until: Dayjs;
 };
 
+export type OldDatePeriod = {
+  startDate: Date;
+  endDate: Date;
+};
+
 export const periodToJSON = (period: DatePeriod): string =>
   JSON.stringify({
     from: period.from.toString(),

@@ -5,7 +5,7 @@ import { VendorsProvider } from 'contexts/VendorsContext';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { Old, periodFromJSON, periodToJSON } from 'types';
+import { DatePeriod, Old, OldDatePeriod, periodFromJSON, periodToJSON } from 'types';
 import Dates from './dates/Dates';
 
 const isDashboard = (path: string) => path === '/dashboard';
@@ -47,6 +47,11 @@ const toOld = (v: DatesContextType): Old => ({
   typeDate: v.calendar,
 });
 
+const toOldBeforePeriod = (period: DatePeriod): OldDatePeriod => ({
+  startDate: period.from.toDate(),
+  endDate: period.from.toDate(),
+});
+
 export const MainLayout = () => {
   const { pathname } = useLocation();
 
@@ -85,6 +90,12 @@ export const MainLayout = () => {
     setCompareTitle(v.titleAfterPeriod);
   }, []);
 
+  const oldBeforePeriod = useMemo(() => toOldBeforePeriod(current), [current]);
+  const setOldBeforePeriod = useCallback(
+    (v: OldDatePeriod) => setCurrent({ from: dayjs(v.startDate), until: dayjs(v.endDate) }),
+    []
+  );
+
   useEffect(() => {
     localStorage.setItem('calendar', calendar);
   }, [calendar]);
@@ -117,6 +128,8 @@ export const MainLayout = () => {
             isListing={isListing(pathname)}
             dateContext={old}
             setDateContext={setOld}
+            beforePeriodBtn={oldBeforePeriod}
+            setBeforePeriodBtn={setOldBeforePeriod}
           />
         </div>
         <VendorsProvider value={vendors}>
