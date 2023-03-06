@@ -10,6 +10,19 @@
     }
   }
 
+  &.disabled {
+    button {
+      color: gray;
+      cursor: not-allowed;
+    }
+
+    img,
+    svg {
+      color: gray;
+      filter: contrast(0.1);
+    }
+  }
+
   button {
     border: none;
     border-radius: 10px;

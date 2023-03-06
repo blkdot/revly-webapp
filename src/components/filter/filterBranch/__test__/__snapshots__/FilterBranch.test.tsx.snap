@@ -2,7 +2,7 @@
 
 exports[`Should render Branch Filter 1`] = `
 <div
-  className="comp-dropdown__branch"
+  className="comp-dropdown__branch disabled"
 >
   <button
     className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium __active css-8xewcm-MuiButtonBase-root-MuiButton-root"
