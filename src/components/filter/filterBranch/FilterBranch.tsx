@@ -34,6 +34,8 @@ const FilterBranch: React.FC<{
     setIsOpen(false);
   };
 
+  const filteredData = items.filter((item) => chains.some((name) => item.chain_name === name));
+
   const getCurrentValue = () => {
     const lengthValues = values.length;
     const max = 1;
@@ -82,13 +84,17 @@ const FilterBranch: React.FC<{
 
   const renderNewItem = () =>
     chains.map((name) => {
+      const itemData = items.filter((item) => item.chain_name === name);
+
       if (!name) {
         return (
           <div key={`${name}_key_empty`} role='button' tabIndex={0} style={{ width: '100%' }}>
-            {renderItem(items.filter((item) => item.chain_name === name))}
+            {renderItem(itemData)}
           </div>
         );
       }
+
+      if (itemData.length < 1) return null;
 
       return (
         <div
@@ -116,7 +122,7 @@ const FilterBranch: React.FC<{
           </ListItemText>
           {openAccordion === name ? (
             <div key={name} style={{ width: '100%' }}>
-              {renderItem(items.filter((item) => item.chain_name === name))}
+              {renderItem(itemData)}
             </div>
           ) : null}
         </div>
@@ -124,7 +130,7 @@ const FilterBranch: React.FC<{
     });
 
   const renderItems = () => {
-    if (!isOpen) return null;
+    if (!isOpen || filteredData.length < 1) return null;
 
     return <div className='comp-dropdown__content'>{renderNewItem()}</div>;
   };
@@ -143,7 +149,10 @@ const FilterBranch: React.FC<{
   };
 
   return (
-    <div className='comp-dropdown__branch' ref={refDropdown}>
+    <div
+      className={`comp-dropdown__branch ${filteredData.length < 1 ? 'disabled' : ''}`}
+      ref={refDropdown}
+    >
       <ButtonKit
         variant='outlined'
         onClick={(e) => {

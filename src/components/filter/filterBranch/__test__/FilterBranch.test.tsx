@@ -4,7 +4,7 @@ import FilterBranch from '../FilterBranch';
 
 jest.mock('axios');
 jest.mock('@formkit/auto-animate/react');
-jest.mock('hooks/usePlatform');
+jest.mock('contexts/PlatformContext');
 
 const items = [
   {
