@@ -91,15 +91,15 @@ const BudgetStep: FC<{
           <div className='advert-input'>
             <InputKit
               onChange={(e) => {
+                setBudget('total');
                 stateTemp.content[0].value = `AED ${e.target.value || 0}`;
                 stateBranchTemp.content.forEach((arr, index) => {
                   stateBranchTemp.content[index][2].value = `AED ${
-                    e.target.value / stateBranchTemp.content.length
+                    parseFloat(Number(e.target.value / stateBranchTemp.content.length).toFixed(2))
                   }`;
                 });
                 setStateBranch({ ...stateBranchTemp });
                 setStateAdverts({ ...stateTemp });
-                setBudget('total');
               }}
               value={Number(stateTemp.content[0].value.toString().replace('AED ', '')) || ''}
               type='number'
@@ -134,6 +134,7 @@ const BudgetStep: FC<{
                 <div className='advert-input'>
                   <InputKit
                     onChange={(e) => {
+                      setBudget('per');
                       stateBranchTemp.content[index][2].value = `AED ${e.target.value || 0}`;
                       const value = Number(
                         stateBranchTemp.content
@@ -153,7 +154,6 @@ const BudgetStep: FC<{
                       stateTemp.content[0].value = `AED ${value}`;
                       setStateBranch({ ...stateBranchTemp });
                       setStateAdverts({ ...stateTemp });
-                      setBudget('per');
                     }}
                     value={
                       Number(
@@ -171,7 +171,29 @@ const BudgetStep: FC<{
       </div>
       <div className='adverts-buttons'>
         <ButtonKit
-          onClick={() => setStep('recurency')}
+          onClick={() => {
+            setStep('recurency')
+            stateBranchTemp.content = [
+              [
+                {
+                  title: 'Branch Name',
+                  value: '',
+                },
+                {
+                  title: 'Bid',
+                  value: '',
+                },
+                {
+                  title: 'Branch budget',
+                  value: '',
+                },
+              ],
+            ]
+            stateTemp.content[0].value = '';
+            setStateAdverts({...stateTemp})
+            setStateBranch({...stateBranchTemp})
+        
+          }}
           className='adverts-cancel'
           variant='contained'
         >

@@ -5,7 +5,7 @@ import AdvertsDetails from 'components/details/AdvertsDetails';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useDates } from 'contexts';
+import { useDates, usePlatform } from 'contexts';
 import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
@@ -37,16 +37,21 @@ const Adverts = () => {
   const [branchVendors, setBranchVendors] = useAtom(branchAtom);
   const platform = ['deliveroo'];
   const { setVendors } = useMarketingSetup();
+  const [openedCampaign, setOpenedCampaign] = useState(false);
+  const { userPlatformData } = usePlatform();
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     setVendors(displayTemp, setBranchVendors, branchVendors, platform);
-    if (selectedVendors('name', displayTemp).length > 0) {
-      setDisabled(false);
+
+    if (selectedVendors('name', displayTemp).length > 0 && platform.some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))) {
+      setTimeout(() => {
+        setDisabled(false);
+      }, 1500)
     } else {
       setDisabled(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vendors]);
+  }, [vendors, openedCampaign]);
   const [link, setLink] = useState('ads_management');
   const startDate = current.from.toDate();
   const endDate = getOfferDate(current, calendar);
@@ -205,7 +210,6 @@ const Adverts = () => {
       }),
       {}
     );
-  const [openedCampaign, setOpenedCampaign] = useState(false);
   const [opened, setOpened] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
   const links = [

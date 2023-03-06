@@ -54,6 +54,7 @@ const BidingStep: FC<{
     setStateBranch({ ...stateBranchTemp });
     setStateAdverts({ ...stateTemp });
   };
+  
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>
@@ -82,15 +83,15 @@ const BidingStep: FC<{
           <div className='advert-input biding'>
             <InputKit
               onChange={(e) => {
+                setBudget('total');
                 stateTemp.content[3].value = `AED ${e.target.value || 0}`;
                 stateBranchTemp.content.forEach((arr, index) => {
                   stateBranchTemp.content[index][1].value = `AED ${
-                    e.target.value / stateBranchTemp.content.length
+                    parseFloat(Number(e.target.value / stateBranchTemp.content.length).toFixed(2))
                   }`;
                 });
                 setStateBranch({ ...stateBranchTemp });
                 setStateAdverts({ ...stateTemp });
-                setBudget('total');
               }}
               value={Number(stateTemp.content[3].value.toString().replace('AED ', '')) || ''}
               type='number'
@@ -139,6 +140,7 @@ const BidingStep: FC<{
                 <div className='advert-input'>
                   <InputKit
                     onChange={(e) => {
+                      setBudget('per');
                       stateBranchTemp.content[index][1].value = `AED ${e.target.value || 0}`;
                       const value = Number(
                         stateBranchTemp.content
@@ -151,14 +153,13 @@ const BidingStep: FC<{
                                 Number(a[1].value.toString().replace('AED ', '')) +
                                 Number(b[1].value.toString().replace('AED ', '')),
                             },
-                          ])[2]
+                          ])[1]
                           .value.toString()
                           .replace('AED ', '')
                       );
                       stateTemp.content[3].value = `AED ${value}`;
                       setStateBranch({ ...stateBranchTemp });
                       setStateAdverts({ ...stateTemp });
-                      setBudget('per');
                     }}
                     value={
                       Number(
@@ -175,7 +176,13 @@ const BidingStep: FC<{
         </div>
       </div>
       <div className='adverts-buttons'>
-        <ButtonKit onClick={() => setStep('budget')} className='adverts-cancel' variant='contained'>
+        <ButtonKit onClick={() => {
+          setStep('budget');
+          stateBranchTemp.content.forEach((arr, index) => {
+            stateBranchTemp.content[index][1].value = '';
+          });
+          setStateBranch({...stateBranchTemp})
+        }} className='adverts-cancel' variant='contained'>
           Back
         </ButtonKit>
         <ButtonKit

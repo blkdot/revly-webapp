@@ -179,7 +179,7 @@ const Widget: FC<{
             ) : (
               <TypographyKit
                 variant='h3'
-                className={`card-typography ${link === 'roi' && 'card-roi'}`}
+                className={`card-typography ${(link === 'roi' || link === 'roas') && 'card-roi'}`}
               >
                 {renderMetrics()}
               </TypographyKit>
