@@ -10,8 +10,6 @@ import Dates from './dates/Dates';
 
 const isDashboard = (path: string) => path === '/dashboard';
 
-const isListing = (path: string) => path === '/competition/listing';
-
 const isOffer = (path: string) =>
   ['/marketing/ads', '/marketing/offer', '/planning', '/adverts'].includes(path);
 
@@ -49,7 +47,7 @@ const toOld = (v: DatesContextType): Old => ({
 
 const toOldBeforePeriod = (period: DatePeriod): OldDatePeriod => ({
   startDate: period.from.toDate(),
-  endDate: period.from.toDate(),
+  endDate: period.until.toDate(),
 });
 
 export const MainLayout = () => {
@@ -125,7 +123,6 @@ export const MainLayout = () => {
           <Dates
             isDashboard={isDashboard(pathname)}
             offer={isOffer(pathname)}
-            isListing={isListing(pathname)}
             dateContext={old}
             setDateContext={setOld}
             beforePeriodBtn={oldBeforePeriod}

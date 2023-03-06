@@ -43,10 +43,13 @@ const Adverts = () => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     setVendors(displayTemp, setBranchVendors, branchVendors, platform);
 
-    if (selectedVendors('name', displayTemp).length > 0 && platform.some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))) {
+    if (
+      selectedVendors('name', displayTemp).length > 0 &&
+      platform.some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
+    ) {
       setTimeout(() => {
         setDisabled(false);
-      }, 1500)
+      }, 1500);
     } else {
       setDisabled(true);
     }

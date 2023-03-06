@@ -359,12 +359,16 @@ const RecurencyStep: FC<{
         </div>
       </div>
       <div className='adverts-buttons'>
-        <ButtonKit onClick={() => {
-          setStep('launch')
-          stateTemp.content[1].value = ''
-          stateTemp.content[2].value = ''
-          setState({...stateTemp})
-        }} className='adverts-cancel' variant='contained'>
+        <ButtonKit
+          onClick={() => {
+            setStep('launch');
+            stateTemp.content[1].value = '';
+            stateTemp.content[2].value = '';
+            setState({ ...stateTemp });
+          }}
+          className='adverts-cancel'
+          variant='contained'
+        >
           Back
         </ButtonKit>
         <ButtonKit

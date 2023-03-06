@@ -94,9 +94,9 @@ const BudgetStep: FC<{
                 setBudget('total');
                 stateTemp.content[0].value = `AED ${e.target.value || 0}`;
                 stateBranchTemp.content.forEach((arr, index) => {
-                  stateBranchTemp.content[index][2].value = `AED ${
-                    parseFloat(Number(e.target.value / stateBranchTemp.content.length).toFixed(2))
-                  }`;
+                  stateBranchTemp.content[index][2].value = `AED ${parseFloat(
+                    Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                  )}`;
                 });
                 setStateBranch({ ...stateBranchTemp });
                 setStateAdverts({ ...stateTemp });
@@ -172,7 +172,7 @@ const BudgetStep: FC<{
       <div className='adverts-buttons'>
         <ButtonKit
           onClick={() => {
-            setStep('recurency')
+            setStep('recurency');
             stateBranchTemp.content = [
               [
                 {
@@ -188,11 +188,10 @@ const BudgetStep: FC<{
                   value: '',
                 },
               ],
-            ]
+            ];
             stateTemp.content[0].value = '';
-            setStateAdverts({...stateTemp})
-            setStateBranch({...stateBranchTemp})
-        
+            setStateAdverts({ ...stateTemp });
+            setStateBranch({ ...stateBranchTemp });
           }}
           className='adverts-cancel'
           variant='contained'

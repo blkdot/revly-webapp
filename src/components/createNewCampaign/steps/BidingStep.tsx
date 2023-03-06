@@ -1,11 +1,11 @@
+import { Arrow } from 'assets/icons';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import { useAtom } from 'jotai';
 import { ButtonKit, InputKit, RadioKit, TooltipKit } from 'kits';
 import { FC, useState } from 'react';
-import { Arrow } from 'assets/icons';
-import { useAtom } from 'jotai';
 import { branchAtom } from 'store/marketingSetupAtom';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import Graph from '../../../assets/images/graph.svg';
 import Chart from '../../../assets/images/chart.svg';
+import Graph from '../../../assets/images/graph.svg';
 import TooltipIcon from '../../../assets/images/tooltip-ic.svg';
 
 type StateType = {
@@ -54,7 +54,7 @@ const BidingStep: FC<{
     setStateBranch({ ...stateBranchTemp });
     setStateAdverts({ ...stateTemp });
   };
-  
+
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>
@@ -86,9 +86,9 @@ const BidingStep: FC<{
                 setBudget('total');
                 stateTemp.content[3].value = `AED ${e.target.value || 0}`;
                 stateBranchTemp.content.forEach((arr, index) => {
-                  stateBranchTemp.content[index][1].value = `AED ${
-                    parseFloat(Number(e.target.value / stateBranchTemp.content.length).toFixed(2))
-                  }`;
+                  stateBranchTemp.content[index][1].value = `AED ${parseFloat(
+                    Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                  )}`;
                 });
                 setStateBranch({ ...stateBranchTemp });
                 setStateAdverts({ ...stateTemp });
@@ -176,13 +176,17 @@ const BidingStep: FC<{
         </div>
       </div>
       <div className='adverts-buttons'>
-        <ButtonKit onClick={() => {
-          setStep('budget');
-          stateBranchTemp.content.forEach((arr, index) => {
-            stateBranchTemp.content[index][1].value = '';
-          });
-          setStateBranch({...stateBranchTemp})
-        }} className='adverts-cancel' variant='contained'>
+        <ButtonKit
+          onClick={() => {
+            setStep('budget');
+            stateBranchTemp.content.forEach((arr, index) => {
+              stateBranchTemp.content[index][1].value = '';
+            });
+            setStateBranch({ ...stateBranchTemp });
+          }}
+          className='adverts-cancel'
+          variant='contained'
+        >
           Back
         </ButtonKit>
         <ButtonKit
