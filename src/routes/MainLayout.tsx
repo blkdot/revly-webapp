@@ -5,7 +5,15 @@ import { VendorsProvider } from 'contexts/VendorsContext';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { DatePeriod, Old, OldDatePeriod, periodFromJSON, periodToJSON } from 'types';
+import {
+  currentWeek,
+  DatePeriod,
+  lastWeek,
+  Old,
+  OldDatePeriod,
+  periodFromJSON,
+  periodToJSON,
+} from 'types';
 import Dates from './dates/Dates';
 
 const isDashboard = (path: string) => path === '/dashboard';
@@ -15,20 +23,10 @@ const isOffer = (path: string) =>
 
 const loadCalendar = () => localStorage.getItem('calendar') || 'week';
 
-const loadCurrent = () =>
-  periodFromJSON(localStorage.getItem('current') || '{}', {
-    from: dayjs().startOf('week'),
-    until: dayjs().endOf('day'),
-  });
-
+const loadCurrent = () => periodFromJSON(localStorage.getItem('current') || '{}', currentWeek());
 const loadCurrentTitle = () => localStorage.getItem('currentTitle') || 'current week';
 
-const loadCompare = () =>
-  periodFromJSON(localStorage.getItem('compare') || '{}', {
-    from: dayjs().subtract(1, 'week').startOf('week'),
-    until: dayjs().subtract(1, 'week').endOf('week'),
-  });
-
+const loadCompare = () => periodFromJSON(localStorage.getItem('compare') || '{}', lastWeek());
 const loadCompareTitle = () => localStorage.getItem('compareTitle') || 'last week';
 
 const toOld = (v: DatesContextType): Old => ({
