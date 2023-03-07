@@ -11,7 +11,7 @@ export type TVendorsObj = {
       prefix_vendor_id?: string;
       is_active: boolean;
       is_deleted: boolean;
-      ord_id?: string;
+      org_id?: string;
     };
   }[];
 };
@@ -33,7 +33,7 @@ export type TDisplayVendor =
               prefix_vendor_id?: string;
               is_active: boolean;
               is_deleted: boolean;
-              ord_id?: string;
+              org_id?: string;
             };
           };
         };
@@ -86,7 +86,7 @@ export type TChainData = {
       prefix_vendor_id?: string;
       is_active: boolean;
       is_deleted: boolean;
-      ord_id?: string;
+      org_id?: string;
       cost?: string | number;
     };
   };
