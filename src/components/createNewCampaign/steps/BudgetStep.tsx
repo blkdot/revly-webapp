@@ -94,9 +94,19 @@ const BudgetStep: FC<{
                 setBudget('total');
                 stateTemp.content[0].value = `AED ${e.target.value || 0}`;
                 stateBranchTemp.content.forEach((arr, index) => {
-                  stateBranchTemp.content[index][2].value = `AED ${parseFloat(
-                    Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
-                  )}`;
+                  stateBranchTemp.content[index][2].value = `AED ${
+                    index + 1 === stateBranchTemp.content.length
+                      ? (
+                          Number(e.target.value) -
+                          Number(
+                            Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                          ) *
+                            (stateBranchTemp.content.length - 1)
+                        ).toFixed(2)
+                      : parseFloat(
+                          Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                        )
+                  }`;
                 });
                 setStateBranch({ ...stateBranchTemp });
                 setStateAdverts({ ...stateTemp });
