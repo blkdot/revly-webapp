@@ -119,6 +119,8 @@ const useMarketingSetup = () => {
     let counter = 0;
     let defaultSelection = null;
 
+    console.log(elligibilityDeliverooState, displayTemp);
+
     sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
         displayTemp[chainName][vendorName].checked =
@@ -131,18 +133,23 @@ const useMarketingSetup = () => {
           platformsDisplay.forEach((platformV) => {
             displayTemp[chainName][vendorName].deactivated = false;
 
-            if (
-              platformV?.toLocaleLowerCase() === 'deliveroo' &&
-              ((platform.length === 1 && platform[0]?.toLocaleLowerCase() === 'deliveroo') ||
-                platform.length === 2)
-            ) {
+            if (platformV?.toLocaleLowerCase() === 'deliveroo' && platform.includes('deliveroo')) {
               const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
 
               const exists = elligibilityDeliverooState?.[vId];
 
               if (!exists) {
-                displayTemp[chainName][vendorName].deactivated = true;
-                displayTemp[chainName][vendorName].checked = false;
+                if (platform.length === 1) {
+                  displayTemp[chainName][vendorName].deactivated = true;
+                  displayTemp[chainName][vendorName].checked = false;
+                  return;
+                }
+
+                if (Object.keys(displayTemp[chainName][vendorName].platforms).length === 2) {
+                  displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active =
+                    false;
+                }
+
                 return;
               }
             }
@@ -156,7 +163,7 @@ const useMarketingSetup = () => {
               displayTemp[chainName][vendorName].deleted = true;
               displayTemp[chainName][vendorName].checked = false;
             }
-            if (platform[0] !== platformV) {
+            if (!platform.includes(platformV)) {
               displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
             }
           });

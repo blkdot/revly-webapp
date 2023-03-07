@@ -3,17 +3,31 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import { DatesContextType, DatesProvider } from 'contexts';
 import { VendorsProvider } from 'contexts/VendorsContext';
 import dayjs from 'dayjs';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { DatePeriod, Old } from 'types';
+import {
+  currentWeek,
+  DatePeriod,
+  lastWeek,
+  Old,
+  OldDatePeriod,
+  periodFromJSON,
+  periodToJSON,
+} from 'types';
 import Dates from './dates/Dates';
 
 const isDashboard = (path: string) => path === '/dashboard';
 
-const isListing = (path: string) => path === '/competition/listing';
-
 const isOffer = (path: string) =>
   ['/marketing/ads', '/marketing/offer', '/planning', '/adverts'].includes(path);
+
+const loadCalendar = () => localStorage.getItem('calendar') || 'week';
+
+const loadCurrent = () => periodFromJSON(localStorage.getItem('current') || '{}', currentWeek());
+const loadCurrentTitle = () => localStorage.getItem('currentTitle') || 'current week';
+
+const loadCompare = () => periodFromJSON(localStorage.getItem('compare') || '{}', lastWeek());
+const loadCompareTitle = () => localStorage.getItem('compareTitle') || 'last week';
 
 const toOld = (v: DatesContextType): Old => ({
   beforePeriod: {
@@ -29,24 +43,23 @@ const toOld = (v: DatesContextType): Old => ({
   typeDate: v.calendar,
 });
 
+const toOldBeforePeriod = (period: DatePeriod): OldDatePeriod => ({
+  startDate: period.from.toDate(),
+  endDate: period.until.toDate(),
+});
+
 export const MainLayout = () => {
   const { pathname } = useLocation();
 
   const [vendors, setVendors] = useState<unknown[]>([]);
 
-  const [calendar, setCalendar] = useState('week');
+  const [calendar, setCalendar] = useState(loadCalendar());
 
-  const [currentTitle, setCurrentTitle] = useState('current week');
-  const [current, setCurrent] = useState<DatePeriod>({
-    from: dayjs().startOf('week'),
-    until: dayjs().endOf('day'),
-  });
+  const [current, setCurrent] = useState(loadCurrent());
+  const [currentTitle, setCurrentTitle] = useState(loadCurrentTitle());
 
-  const [compareTitle, setCompareTitle] = useState('last week');
-  const [compare, setCompare] = useState<DatePeriod>({
-    from: dayjs().subtract(1, 'week').startOf('week'),
-    until: dayjs().subtract(1, 'week').endOf('week'),
-  });
+  const [compare, setCompare] = useState(loadCompare());
+  const [compareTitle, setCompareTitle] = useState(loadCompareTitle());
 
   const dates = useMemo(
     () => ({
@@ -73,6 +86,32 @@ export const MainLayout = () => {
     setCompareTitle(v.titleAfterPeriod);
   }, []);
 
+  const oldBeforePeriod = useMemo(() => toOldBeforePeriod(current), [current]);
+  const setOldBeforePeriod = useCallback(
+    (v: OldDatePeriod) => setCurrent({ from: dayjs(v.startDate), until: dayjs(v.endDate) }),
+    []
+  );
+
+  useEffect(() => {
+    localStorage.setItem('calendar', calendar);
+  }, [calendar]);
+
+  useEffect(() => {
+    localStorage.setItem('current', periodToJSON(current));
+  }, [current]);
+
+  useEffect(() => {
+    localStorage.setItem('currentTitle', currentTitle);
+  }, [currentTitle]);
+
+  useEffect(() => {
+    localStorage.setItem('compare', periodToJSON(compare));
+  }, [compare]);
+
+  useEffect(() => {
+    localStorage.setItem('compareTitle', compareTitle);
+  }, [compareTitle]);
+
   return (
     <div className='user-page'>
       <Navbar />
@@ -82,9 +121,10 @@ export const MainLayout = () => {
           <Dates
             isDashboard={isDashboard(pathname)}
             offer={isOffer(pathname)}
-            isListing={isListing(pathname)}
             dateContext={old}
             setDateContext={setOld}
+            beforePeriodBtn={oldBeforePeriod}
+            setBeforePeriodBtn={setOldBeforePeriod}
           />
         </div>
         <VendorsProvider value={vendors}>

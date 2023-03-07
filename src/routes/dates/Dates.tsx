@@ -50,7 +50,7 @@ const Dates: FC<{
   isDashboard?: boolean;
   beforePeriodBtn?: any;
   setBeforePeriodBtn?: any;
-  offer: boolean;
+  offer?: boolean;
   defaultTypeDate?: any;
   defaultTitle?: any;
   setupOffer?: any;

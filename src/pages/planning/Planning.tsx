@@ -69,7 +69,7 @@ const getOfferDate = (period: DatePeriod, type: string): Date => {
 const Planning = () => {
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
 
-  const { current, calendar } = useDates();
+  const { current, currentTitle, calendar } = useDates();
 
   const dateRange = {
     from: current.from,
@@ -491,7 +491,6 @@ const Planning = () => {
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
-  const [period, setPeriod] = useState('');
   return (
     <div className='wrapper'>
       <ContainerKit>
@@ -504,7 +503,7 @@ const Planning = () => {
           <div className='block'>
             <TypographyKit className='dashboard-title'>
               Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for{' '}
-              {period.charAt(0).toUpperCase() + period.slice(1)}
+              {currentTitle.charAt(0).toUpperCase() + currentTitle.slice(1)}
             </TypographyKit>
             <TypographyKit className='dashboard-subtitle'>
               Plan and visualize all the scheduled and past discounts and campaigns.

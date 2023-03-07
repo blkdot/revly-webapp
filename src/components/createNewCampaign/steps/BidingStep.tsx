@@ -75,6 +75,7 @@ const BidingStep: FC<{
   useEffect(() => {
     getBid();
   }, []);
+  
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>
@@ -176,17 +177,18 @@ const BidingStep: FC<{
                         stateBranchTemp.content
                           .reduce((a, b) => [
                             { title: '', value: '' },
-                            { title: '', value: '' },
                             {
                               title: '',
                               value:
                                 Number(a[1].value.toString().replace('AED ', '')) +
                                 Number(b[1].value.toString().replace('AED ', '')),
                             },
+                            { title: '', value: '' },
                           ])[1]
                           .value.toString()
                           .replace('AED ', '')
                       );
+                      
                       stateTemp.content[3].value = `AED ${value}`;
                       setStateBranch({ ...stateBranchTemp });
                       setStateAdverts({ ...stateTemp });
