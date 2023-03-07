@@ -1,8 +1,10 @@
 import { ButtonKit, InputKit, RadioKit, TooltipKit } from 'kits';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Arrow } from 'assets/icons';
 import { useAtom } from 'jotai';
 import { branchAtom } from 'store/marketingSetupAtom';
+import { getBidRecommendations } from 'api';
+import { useUser } from 'contexts';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import Graph from '../../../assets/images/graph.svg';
 import Chart from '../../../assets/images/chart.svg';
@@ -54,7 +56,25 @@ const BidingStep: FC<{
     setStateBranch({ ...stateBranchTemp });
     setStateAdverts({ ...stateTemp });
   };
-  
+  const user = useUser();
+  const [minAverageMax, setMinAverageMax] = useState({
+    average_bid: 0,
+    high_bid: 0,
+    low_bid: 0,
+  });
+  const getBid = async () => {
+    const data = await getBidRecommendations('deliveroo', {
+      master_email: user.email,
+      access_token: user.token,
+      chain_id: String(branchVendors.vendorsObj.deliveroo[0].chain_id),
+      chain_drn_id: String(branchVendors.vendorsObj.deliveroo[0].metadata.org_id),
+      vendors: branchVendors.vendorsObj.deliveroo,
+    });
+    setMinAverageMax(data.data);
+  };
+  useEffect(() => {
+    getBid();
+  }, []);
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>
@@ -87,7 +107,17 @@ const BidingStep: FC<{
                 stateTemp.content[3].value = `AED ${e.target.value || 0}`;
                 stateBranchTemp.content.forEach((arr, index) => {
                   stateBranchTemp.content[index][1].value = `AED ${
-                    parseFloat(Number(e.target.value / stateBranchTemp.content.length).toFixed(2))
+                    index + 1 === stateBranchTemp.content.length
+                      ? (
+                          Number(e.target.value) -
+                          Number(
+                            Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                          ) *
+                            (stateBranchTemp.content.length - 1)
+                        ).toFixed(2)
+                      : parseFloat(
+                          Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                        )
                   }`;
                 });
                 setStateBranch({ ...stateBranchTemp });
@@ -99,15 +129,15 @@ const BidingStep: FC<{
             />
             <div className='adverts-average'>
               <div>
-                <p>AED 2.40</p>
+                <p>AED {minAverageMax.average_bid}</p>
                 <span>Average in UAE</span>
               </div>
               <div>
-                <p>AED 1.40</p>
+                <p>AED {minAverageMax.low_bid}</p>
                 <span>Minimum in UAE</span>
               </div>
               <div>
-                <p>AED 3.40</p>
+                <p>AED {minAverageMax.high_bid}</p>
                 <span>Maximum in UAE</span>
               </div>
             </div>
@@ -176,13 +206,17 @@ const BidingStep: FC<{
         </div>
       </div>
       <div className='adverts-buttons'>
-        <ButtonKit onClick={() => {
-          setStep('budget');
-          stateBranchTemp.content.forEach((arr, index) => {
-            stateBranchTemp.content[index][1].value = '';
-          });
-          setStateBranch({...stateBranchTemp})
-        }} className='adverts-cancel' variant='contained'>
+        <ButtonKit
+          onClick={() => {
+            setStep('budget');
+            stateBranchTemp.content.forEach((arr, index) => {
+              stateBranchTemp.content[index][1].value = '';
+            });
+            setStateBranch({ ...stateBranchTemp });
+          }}
+          className='adverts-cancel'
+          variant='contained'
+        >
           Back
         </ButtonKit>
         <ButtonKit

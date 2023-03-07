@@ -76,11 +76,7 @@ const TableRevlyNew: FC<{
 
   const renderRowsContent = () =>
     stableSort(rows, getComparator(order, orderBy)).map((r) => (
-      <TableRowKit
-        className='marketing-table-top'
-        onClick={handleRowClick(r.id)}
-        key={r.id}
-      >
+      <TableRowKit className='marketing-table-top' onClick={handleRowClick(r.id)} key={r.id}>
         {headers.map((h) => r[h.id])}
       </TableRowKit>
     ));
