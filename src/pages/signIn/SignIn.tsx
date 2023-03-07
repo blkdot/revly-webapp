@@ -90,14 +90,14 @@ const SignIn = () => {
     try {
       const res = await signIn(email, password, remember);
 
-      if (!res.user.emailVerified) {
-        await verifyEmailSample(email);
-        await logOut();
-        setProcessing(false);
-        throw new Error(
-          'Email not verified, please check your email (include spam) for verification'
-        );
-      }
+      // if (!res.user.emailVerified) {
+      //   await verifyEmailSample(email);
+      //   await logOut();
+      //   setProcessing(false);
+      //   throw new Error(
+      //     'Email not verified, please check your email (include spam) for verification'
+      //   );
+      // }
 
       navigate('/dashboard');
     } catch (error) {
