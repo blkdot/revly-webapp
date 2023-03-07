@@ -62,7 +62,7 @@ export const ProtectedOnboardRoutes = () => {
     ) {
       requestEligibilityDeliveroo();
     }
-  }, []);
+  }, [userPlatformData.platforms.deliveroo.length]);
 
   // TODO: replace it with a better approach
   // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
