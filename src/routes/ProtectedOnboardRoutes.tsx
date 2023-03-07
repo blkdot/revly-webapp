@@ -15,10 +15,16 @@ export const ProtectedOnboardRoutes = () => {
   const { chainData } = vendors;
   const [, setEligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
 
-  const response = useSettingsOnboarded({
-    master_email: user.email,
-    access_token: user.token,
-  });
+  const response = useSettingsOnboarded(
+    {
+      master_email: user.email,
+      access_token: user.token,
+    },
+    {
+      launcher: 'ProtectedOnboardRoutes',
+      user,
+    }
+  );
 
   const requestEligibilityDeliveroo = useCallback(() => {
     const reqEligibilities = userPlatformData.platforms.deliveroo.map((platformData) => {
@@ -51,32 +57,29 @@ export const ProtectedOnboardRoutes = () => {
     if (
       vendors.chainData.length > 0 &&
       userPlatformData.platforms.deliveroo.length > 0 &&
-      !response.isLoading &&
+      !response?.isLoading &&
       user
     ) {
       requestEligibilityDeliveroo();
     }
-  }, [requestEligibilityDeliveroo]);
+  }, []);
 
   // TODO: replace it with a better approach
   // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
   useEffect(() => {
-    if (response.data) {
+    if (response?.data) {
       setUserPlatformData({
         onboarded: true,
-        platforms: { ...userPlatformData.platforms, ...response.data.platforms },
+        platforms: { ...userPlatformData.platforms, ...response?.data.platforms },
       });
     }
-  }, [response.data, setUserPlatformData]);
+  }, [JSON.stringify(response?.data)]);
 
-  if (
-    response.isError ||
-    (response.isSuccess && (!response.data.onboarded || !response.data.platforms))
-  ) {
+  if (response?.isError || !response?.data?.onboarded || !response?.data?.platforms) {
     return <Navigate to='/dashboardOnboard' />;
   }
 
-  if (response.isLoading) {
+  if (response?.isLoading) {
     return (
       <div className='main-loading'>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />

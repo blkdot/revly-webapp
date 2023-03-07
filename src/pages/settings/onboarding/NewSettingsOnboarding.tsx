@@ -89,7 +89,7 @@ const NewSettingsOnboarding = () => {
       master_email: user.email,
       access_token: user.token,
     },
-    { branchData, openedModal }
+    { launcher: 'NewSettingsOnboarding', branchData, openedModal }
   );
 
   useEffect(() => {
