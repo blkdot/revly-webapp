@@ -1,6 +1,3 @@
-import { auth } from 'firebase-config';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { SpinnerKit } from 'kits';
 import {
   Adverts,
   Check,
@@ -22,8 +19,7 @@ import {
   SignUp,
   VerifyCode,
 } from 'pages';
-import { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import {
   AuthLayout,
   MainLayout,
@@ -32,34 +28,7 @@ import {
   SettingsLayout,
 } from 'routes';
 
-const App = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User>(null);
-
-  useEffect(() => {
-    setLoading(true);
-
-    return onAuthStateChanged(auth, (u) => {
-      setLoading(false);
-
-      if (u) {
-        setUser(u);
-      } else {
-        navigate('/');
-      }
-    });
-  }, [navigate]);
-
-  if (loading) {
-    return (
-      <div className='main-loading'>
-        <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
-      </div>
-    );
-  }
-
-  return (
+const App = () => (
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path='/' element={<SignIn />} />
@@ -68,7 +37,7 @@ const App = () => {
         <Route path='/reset-password' element={<ResetPassword />} />
       </Route>
       <Route path='/forgot-password' element={<ForgotPassword />} />
-      <Route element={<ProtectedRoutes user={user} />}>
+      <Route element={<ProtectedRoutes />}>
         <Route path='/check' element={<Check />} />
         <Route path='/verify-code' element={<VerifyCode />} />
         <Route element={<MainLayout />}>
@@ -95,6 +64,5 @@ const App = () => {
       </Route>
     </Routes>
   );
-};
 
 export default App;
