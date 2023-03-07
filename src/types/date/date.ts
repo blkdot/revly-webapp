@@ -1,5 +1,3 @@
-import { Dayjs } from 'dayjs';
-
 export type Old = {
   beforePeriod: {
     startDate: Date | number;
@@ -12,9 +10,4 @@ export type Old = {
   titleDate: string;
   titleAfterPeriod: string;
   typeDate: string;
-};
-
-export type DatePeriod = {
-  from: Dayjs;
-  until: Dayjs;
 };
