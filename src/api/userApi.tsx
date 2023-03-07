@@ -48,6 +48,14 @@ export const verifyEmail = (user) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const verifyEmailSample = (email) =>
+  axios
+    .post(
+      `${firebaseApiUrl}/verifyEmail?email=${email}`
+    )
+    .then((res) => res)
+    .catch(handleResponse);
+
 export const saveUser = (body) =>
   axios
     .post(`${apiUrl}/user/savev2`, body)

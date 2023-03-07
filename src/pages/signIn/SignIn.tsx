@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import emailWhitelisted from 'data/whitelisted-email';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
+import { verifyEmailSample } from 'api/userApi';
 import { useAtom } from 'jotai';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import SignInForm from './form/SignInForm';
@@ -90,6 +91,7 @@ const SignIn = () => {
       const res = await signIn(email, password, remember);
 
       if (!res.user.emailVerified) {
+        await verifyEmailSample(email);
         await logOut();
         setProcessing(false);
         throw new Error(
