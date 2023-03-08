@@ -79,7 +79,7 @@ const RestaurantDropdown: FC<{
       if (pageType === 'branch') {
         if (
           selectedVendors('vendors', display).every(
-            (obj: any) => platformsSelected.every((plat) => obj.platforms[plat].data.chain_name === displayTemp[chainName][value].platforms[plat].data.chain_name)
+            (obj: any) => platformsSelected.some((plat) => obj.platforms[plat]?.data.chain_name === displayTemp[chainName][value].platforms[plat]?.data.chain_name)
           )
         ) {
           displayTemp[chainName][value].checked = true;
