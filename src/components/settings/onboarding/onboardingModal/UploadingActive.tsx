@@ -58,12 +58,12 @@ const UploadingActive: FC<{
       return;
     }
 
+    setBranchData([...branchDataUploading, ...branchData]);
     setActiveStep(100);
     setConnectAccount('completed');
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    setBranchData([...branchDataUploading, ...branchData]);
   };
   return (
     <div

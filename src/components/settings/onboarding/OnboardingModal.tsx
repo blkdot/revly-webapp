@@ -29,6 +29,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setBranchData,
     setLoading,
     loading,
+    getBranchData,
   } = propsVariables;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -86,16 +87,30 @@ const OnboardingModal = ({ propsVariables }: any) => {
       email: clickedEmail,
       data: { is_deleted: true },
     });
-
     accounts.splice(
       accounts.findIndex((obj) => obj.email === clickedEmail && obj.platform === platform),
       1
     );
+    branchData
+      .filter((obj) =>
+        obj.linked_platforms.find(
+          (objL) => objL.email === clickedEmail && objL.platform === platform
+        )
+      )
+      .forEach((obj) => {
+        obj.accounts.splice(
+          obj.accounts.findIndex((objAcc) => objAcc === clickedEmail),
+          1
+        );
+        obj.linked_platforms.splice(
+          obj.linked_platforms.findIndex(
+            (objL) => objL.email === clickedEmail && objL.platform === platform
+          ),
+          1
+        );
+      });
 
-    setBranchData(
-      branchData.filter((obj) => obj.accounts.some((objAcc) => objAcc !== clickedEmail))
-    );
-
+    setBranchData(branchData.filter((obj) => obj.accounts.length > 0));
     setAccounts([...accounts]);
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
