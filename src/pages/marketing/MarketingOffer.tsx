@@ -326,8 +326,6 @@ const MarketingOffer = () => {
     setOpenedFilter(false);
   };
 
-  const isEmptyList = () => offersData.length < 1;
-
   useEffect(() => {
     let filteredData = offersData;
 
@@ -394,6 +392,7 @@ const MarketingOffer = () => {
     setOpenedOffer(true);
     setClickedId(id);
   };
+  const isEmptyList = () => offersData.length < 1;
   const renderFilters = () => (
     <div className='table-filters'>
       <FilterDropdown

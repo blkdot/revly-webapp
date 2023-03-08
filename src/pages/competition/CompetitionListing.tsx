@@ -282,7 +282,7 @@ const CompetitionListing = () => {
           });
       }, 750);
     },
-    [selectedPlatform[0]]
+    [selectedPlatform[0], current]
   );
 
   useEffect(() => {
@@ -313,7 +313,7 @@ const CompetitionListing = () => {
 
       getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
     }
-  }, [selectedArea, selectedTimeSlot, selectedCuisine]);
+  }, [selectedArea, selectedTimeSlot, selectedCuisine, current]);
 
   useEffect(() => {
     if (selectedPlatform[0] && branchSelected[0]) {
@@ -337,7 +337,7 @@ const CompetitionListing = () => {
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
-  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive]);
+  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive, current]);
 
   const renderPlatformInsideFilter = (s) => (
     <div key={s}>

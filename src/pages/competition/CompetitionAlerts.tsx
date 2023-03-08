@@ -201,7 +201,7 @@ const CompetitionAlerts = () => {
       }
       getCompetitorsDropdownContent(branchActive.data);
     }
-  }, [selectedPlatform[0], branchSelected[0], chainData.length]);
+  }, [selectedPlatform[0], branchSelected[0], chainData.length, current]);
 
   useEffect(() => {
     filterData();
@@ -281,7 +281,7 @@ const CompetitionAlerts = () => {
       }
       getData(selectedPlatform[0], { [selectedPlatform[0]]: [branchActive.data] });
     }
-  }, [selectedPlatform[0], branchSelected[0], chainData.length]);
+  }, [selectedPlatform[0], branchSelected[0], chainData.length, current]);
 
   const handleCompetitorChange = (value) => {
     const isChecked = selectedCompetitors.findIndex((compet) => compet === value);
