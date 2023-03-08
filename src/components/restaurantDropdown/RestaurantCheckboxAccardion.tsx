@@ -15,6 +15,8 @@ const RestaurantCheckboxAccordion: FC<{
   pageType: string;
 }> = ({ info, chainName, handleChangeVendor, index, setVendors, vendors, display, pageType }) => {
   const [active, setActive] = useState(false);
+  const [hoverStatusChain, setHoverChain] = useState(false);
+  const [hoverStatusVendor, setHoverVendor] = useState([]);
   // we checking if all vendor in this chain are checked
   const compareSize = () => {
     // get 1 element of .chain-name
@@ -46,9 +48,7 @@ const RestaurantCheckboxAccordion: FC<{
     },
     [vendorsNew?.ariaExpanded, active, display]
   );
-
-  const [hoverStatusChain, setHoverChain] = useState(false);
-  const [hoverStatusVendor, setHoverVendor] = useState([]);
+  
   const getHoverStatusVendor = (vName: string) => hoverStatusVendor.find((v) => v === vName);
   // function for vendor button "Only"
   const handleClickVendor = (e: any, vendorName: string) => {

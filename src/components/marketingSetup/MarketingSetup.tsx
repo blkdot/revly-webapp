@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from '@mui/material';
 import { getHeatmap, getMenu, triggerOffers } from 'api';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
@@ -236,7 +235,6 @@ const MarketingSetup: React.FC<{
     ]);
 
     setHeatmapData(clearTimeSelected(heatmapData));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration]);
 
   useEffect(() => {
@@ -251,7 +249,6 @@ const MarketingSetup: React.FC<{
         pos: 1,
       },
     ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeSchedule]);
 
   useEffect(() => {
@@ -265,7 +262,6 @@ const MarketingSetup: React.FC<{
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     setVendors(displayTemp, setBranch, branch, platform);
     setMenu('Offer on the whole Menu');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, vendors]);
 
   const handleSchedule = async () => {
@@ -416,7 +412,6 @@ const MarketingSetup: React.FC<{
 
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [heatmapLoading]);
 
   const getHeatmapData = () => {
@@ -509,7 +504,6 @@ const MarketingSetup: React.FC<{
     if (!active) return;
 
     getHeatmapData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beforePeriodBtn, vendors, active, branch.display]);
 
   const getMenuData = async (vendor, platforms) => {
@@ -552,7 +546,6 @@ const MarketingSetup: React.FC<{
         getMenuData(vendorDisplay, platform[0]);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, selected]);
 
   const timeSelected = () => {
@@ -744,7 +737,6 @@ const MarketingSetup: React.FC<{
     if (menu === 'Offer on the whole Menu') {
       durationDisable(3, [0, 1, 2, 3]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     menu,
     minOrder,
@@ -826,17 +818,14 @@ const MarketingSetup: React.FC<{
   useEffect(() => {
     setSelected(1);
     setRecap(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   useEffect(() => {
     setItemMenu('Flash Deal');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menu]);
 
   useEffect(() => {
     setFreshStartingDate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recap]);
 
   const getRecapBtn = () => {

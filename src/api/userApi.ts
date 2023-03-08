@@ -46,6 +46,14 @@ export const verifyEmail = (user) =>
     .then((res) => res)
     .catch(handleResponse);
 
+export const verifyEmailSample = (email) =>
+  api
+    .post(
+      `${firebaseApiUrl}/verifyEmail?email=${email}`
+    )
+    .then((res) => res)
+    .catch(handleResponse);
+
 export const saveUser = (body) =>
   api
     .post(`/user/savev2`, body)

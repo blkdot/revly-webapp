@@ -1,8 +1,9 @@
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
 import { FC } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { platformAtom } from 'store/marketingSetupAtom';
 import selectIcon from '../../assets/images/ic_select.png';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import './RestaurantDropdown.scss';
 import selectedVendors from './selectedVendors';
@@ -33,6 +34,7 @@ const RestaurantDropdown: FC<{
   className?: string;
 }> = ({ setState, state, pageType, className }) => {
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
+  const [platformsSelected] = useAtom(platformAtom);
 
   const { display, vendorsObj } = state || vendorsContext;
 
@@ -77,7 +79,7 @@ const RestaurantDropdown: FC<{
       if (pageType === 'branch') {
         if (
           selectedVendors('vendors', display).every(
-            (obj: any) => obj.email === displayTemp[chainName][value].email
+            (obj: any) => platformsSelected.every((plat) => obj.platforms[plat].data.chain_name === displayTemp[chainName][value].platforms[plat].data.chain_name)
           )
         ) {
           displayTemp[chainName][value].checked = true;
@@ -89,6 +91,7 @@ const RestaurantDropdown: FC<{
             }
           });
         } else {
+
           Object.keys(displayTemp).forEach((cName) => {
             Object.keys(displayTemp[cName]).forEach((vName) => {
               displayTemp[cName][vName].checked = false;
