@@ -75,7 +75,7 @@ export const ProtectedOnboardRoutes = () => {
     }
   }, [JSON.stringify(response?.data)]);
 
-  if (response?.isError || !response?.data?.onboarded || !response?.data?.platforms) {
+  if (!response?.isLoading && (response?.isError || !response?.data?.onboarded || !response?.data?.platforms)) {
     return <Navigate to='/dashboardOnboard' />;
   }
 

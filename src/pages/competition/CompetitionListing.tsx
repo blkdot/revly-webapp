@@ -273,12 +273,15 @@ const CompetitionListing = () => {
           })
           .catch((err) => {
             setLoading(false);
-            triggerAlertWithMessageError(err.message);
             setAreasData([]);
             setSelectedCuisine([]);
             setCuisinesData([]);
             setSelectedTimeSlot([]);
             setSelectedArea([]);
+
+            if (err?.message) {
+              triggerAlertWithMessageError(err.message);
+            }
           });
       }, 750);
     },

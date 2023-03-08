@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
+import { verifyEmailSample } from 'api/userApi';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import SignInForm from './form/SignInForm';
@@ -88,13 +89,14 @@ const SignIn = () => {
     try {
       const res = await signIn(email, password, remember);
 
-      if (!res.user.emailVerified) {
-        await logout();
-        setProcessing(false);
-        throw new Error(
-          'Email not verified, please check your email (include spam) for verification'
-        );
-      }
+      // if (!res.user.emailVerified) {
+      //   await verifyEmailSample(email);
+      //   await logOut();
+      //   setProcessing(false);
+      //   throw new Error(
+      //     'Email not verified, please check your email (include spam) for verification'
+      //   );
+      // }
 
       navigate('/dashboard');
     } catch (error) {

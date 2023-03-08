@@ -119,8 +119,6 @@ const useMarketingSetup = () => {
     let counter = 0;
     let defaultSelection = null;
 
-    console.log(elligibilityDeliverooState, displayTemp);
-
     sortedVendors(displayTemp).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
         displayTemp[chainName][vendorName].checked =
