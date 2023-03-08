@@ -29,7 +29,6 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setBranchData,
     setLoading,
     loading,
-    getBranchData,
   } = propsVariables;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

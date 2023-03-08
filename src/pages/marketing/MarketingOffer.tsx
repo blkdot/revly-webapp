@@ -357,9 +357,7 @@ const MarketingOffer = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
-          new Date(obj.valid_to)
-        ).format('HH:mm')}`,
+        slot: `${obj.start_hour} - ${obj.end_hour}`,
         orders: obj.n_orders,
       }))
     );
@@ -394,6 +392,7 @@ const MarketingOffer = () => {
     setOpenedOffer(true);
     setClickedId(id);
   };
+  const isEmptyList = () => offersData.length < 1;
   const renderFilters = () => (
     <div className='table-filters'>
       <FilterDropdown
@@ -428,8 +427,9 @@ const MarketingOffer = () => {
           rows={offersDataFiltered.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={renderFilters()}
+          filters={!isEmptyList() && renderFilters()}
           noDataText='No offer has been retrieved.'
+          onClickRow={handleRowClick}
         />
       );
     }
@@ -446,7 +446,7 @@ const MarketingOffer = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={renderFilters()}
+        filters={!isEmptyList() && renderFilters()}
         noDataText='No offer has been retrieved.'
       />
     );

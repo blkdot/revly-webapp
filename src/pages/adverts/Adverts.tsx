@@ -1,21 +1,28 @@
 import { usePlanningAds } from 'api';
 import arrow from 'assets/images/arrow.svg';
+import { Switch } from 'assets/icons';
 import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreateNewCampaign';
 import AdvertsDetails from 'components/details/AdvertsDetails';
+import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useDates, usePlatform } from 'contexts';
-import { endOfMonth, endOfWeek, format, getYear } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useMarketingSetup, useVendors } from 'hooks';
+import { useMarketingSetup, useQueryState, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ButtonKit, ContainerKit, TypographyKit } from 'kits';
+import { ButtonKit, ContainerKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { branchAtom } from 'store/marketingSetupAtom';
 import { DatePeriod } from 'types';
 import './Adverts.scss';
+import { defaultFilterStateFormat } from 'pages/marketing/marketingOfferData';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import { platformObject } from 'data/platformList';
+import { pascalCase } from 'change-case';
+import Columns from '../../assets/images/columns.svg';
+
 
 const getOfferDate = (period: DatePeriod, type: string): Date => {
   if (type === 'month') {
@@ -30,22 +37,21 @@ const getOfferDate = (period: DatePeriod, type: string): Date => {
 };
 
 const Adverts = () => {
-  const { current, currentTitle, calendar } = useDates();
+  const { current, calendar } = useDates();
   const { vendors } = useVendors();
-  const { display, vendorsArr } = vendors;
   const [disabled, setDisabled] = useState(true);
   const [branchVendors, setBranchVendors] = useAtom(branchAtom);
-  const platform = ['deliveroo'];
+  const AvailablePlatform = ['deliveroo'];
   const { setVendors } = useMarketingSetup();
   const [openedCampaign, setOpenedCampaign] = useState(false);
   const { userPlatformData } = usePlatform();
   useEffect(() => {
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
-    setVendors(displayTemp, setBranchVendors, branchVendors, platform);
+    setVendors(displayTemp, setBranchVendors, branchVendors, AvailablePlatform);
 
     if (
       selectedVendors('name', displayTemp).length > 0 &&
-      platform.some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
+      AvailablePlatform.some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
     ) {
       setTimeout(() => {
         setDisabled(false);
@@ -58,34 +64,7 @@ const Adverts = () => {
   const [link, setLink] = useState('ads_management');
   const startDate = current.from.toDate();
   const endDate = getOfferDate(current, calendar);
-  const startLocal = startDate.toLocaleDateString();
-  const endLocal = endDate.toLocaleDateString();
-  const startGetDate = startDate.getDate();
-  const endGetDate = endDate.getDate();
 
-  const getBeforePeriod = () => {
-    if (currentTitle === 'custom') {
-      if (startLocal === endLocal) {
-        return `${dayjs(startDate).format('DD/MM')}`;
-      }
-      if (startGetDate === 1 && endGetDate === endOfMonth(startDate).getDate()) {
-        return `${format(startDate, 'LLL', { locale: enUS })}  -  ${getYear(startDate)}`;
-      }
-
-      return `${dayjs(startDate).format('DD/MM')} - ${dayjs(endDate).format('DD/MM')}`;
-    }
-
-    return `${currentTitle}`;
-  };
-  const isDisplay = () => {
-    if (selectedVendors('name', display).length === vendorsArr.length) {
-      return 'All Points of sales';
-    }
-    if (selectedVendors('name', display).length > 2) {
-      return `${selectedVendors('name', display).length} selected vendors`;
-    }
-    return selectedVendors('name', display).join(', ');
-  };
   const { data, isLoading: isLoadingAds } = usePlanningAds({
     from: dayjs(startDate),
     until: dayjs(endDate),
@@ -215,6 +194,147 @@ const Adverts = () => {
     );
   const [opened, setOpened] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
+  const [openedFilter, setOpenedFilter] = useState(false);
+  const [dataFiltered,setDataFiltered] = useState([]);
+  const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
+  const [filters, setFilters] = useState({
+    ...defaultFilterStateFormat,
+    ...JSON.parse((filtersSaved || '{}') as any),
+  });
+  const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
+  useEffect(() => {
+    setFiltersSaved(filters);
+  }, [JSON.stringify(filters)]);
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
+  const renderStatusFilter = (s) => {
+    if (!s) return null;
+
+    return (
+      <span style={{ whiteSpace: 'nowrap' }} className={`competition-status ${s}`}>
+        {s}
+      </span>
+    );
+  };
+  useEffect(() => {
+    const preHead = adsData.reduce(
+      (acc, cur) => {
+        const { platform, status } = acc;
+
+        if (!platform.includes(cur.platform.toLowerCase()) && cur.platform)
+          platform.push(cur.platform.toLowerCase());
+
+        if (!status.includes(cur.status.toLowerCase()) && cur.status)
+          status.push(cur.status.toLowerCase());
+
+        return {
+          ...acc,
+          platform,
+          status,
+        };
+      },
+      { platform: [], status: [] }
+    );
+
+    const clonedFilters = { ...filters };
+
+    clonedFilters.platform.forEach((fp, i) => {
+      if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
+    });
+
+    clonedFilters.status.forEach((fp, i) => {
+      if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
+    });
+
+    setFilters(clonedFilters);
+
+    const preHeadPlatform = preHead.platform.map((s) => ({
+      value: s.toLowerCase(),
+      text: renderPlatformInsideFilter(s.toLowerCase()),
+    }));
+
+    const preHeadStatus = preHead.status.map((s) => ({
+      value: s.toLowerCase(),
+      text: renderStatusFilter(s),
+    }));
+
+    setFiltersHead({
+      platform: preHeadPlatform,
+      type_offer: [],
+      discount_rate: [],
+      status: preHeadStatus,
+      goal: [],
+      start_hour: [],
+      end_hour: [],
+    });
+  }, [JSON.stringify(adsData)]);
+  const handleChangeMultipleFilter = (k) => (v) => {
+    const propertyFilter = filters[k];
+
+    const index = propertyFilter.findIndex((p) => p === v);
+
+    if (index < 0) {
+      setFilters({ ...filters, [k]: [...propertyFilter, v] });
+      return;
+    }
+
+    const mutablePropertyFilter = [...propertyFilter];
+
+    mutablePropertyFilter.splice(index, 1);
+
+    setFilters({ ...filters, [k]: mutablePropertyFilter });
+  };
+  const CloseFilterPopup = (cancel = false) => {
+    if (cancel) {
+      setFilters(defaultFilterStateFormat);
+    }
+
+    const body = document.querySelector('body');
+    body.style.overflow = 'visible';
+    setOpenedFilter(false);
+  };
+
+  const isEmptyList = () => adsData.length < 1;
+  useEffect(() => {
+    let filteredData = adsData;
+
+    if (filters.platform.length > 0) {
+      filteredData = filteredData.filter((f) =>
+        filters.platform.includes(f.platform.toLowerCase())
+      );
+    }
+
+    if (filters.status.length > 0) {
+      filteredData = filteredData.filter((f) => filters.status.includes(f.status.toLowerCase()));
+    }
+
+    setDataFiltered(filteredData);
+  }, [JSON.stringify(filters), adsData]);
+  const renderFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeMultipleFilter('platform')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeMultipleFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const links = [
     { title: 'Ads management', link: 'ads_management' },
     { title: 'Ads performance', link: 'ads_performance' },
@@ -235,16 +355,12 @@ const Adverts = () => {
         <div>
           <div className='adverts_top-titles'>
             <div>
-              <TypographyKit className='adverts-title' variant='subtitle'>
-                Manage Advertisements for
-                <span>{isDisplay()}</span>
-                for
-                <span>{getBeforePeriod()}</span>
-              </TypographyKit>
-              <p>
-                Here you can quickly and easily create and manage effective advertisements for their
-                businesses.
-              </p>
+              <div className='dashboard-title'>
+                Marketing - Ads
+              </div>
+              <div className='dashboard-subtitle'>
+                Create and manage all your ads. Set personalised rules to automatically trigger your ads.
+              </div>
             </div>
             <ButtonKit disabled={disabled} onClick={() => setOpenedCampaign(true)}>
               Create new campaign
@@ -262,10 +378,19 @@ const Adverts = () => {
             renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderListLoading)}
             isLoading={isLoadingAds}
             headers={link === 'ads_management' ? headersList : headersPerformance}
-            rows={adsData.map(renderRowsByHeaderList)}
+            rows={dataFiltered.map(renderRowsByHeaderList)}
             noDataText='No ads has been retrieved.'
+            filters={!isEmptyList() && renderFilters()}
+            setOpenedFilter={setOpenedFilter}
           />
         </div>
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
+        />
       </ContainerKit>
     );
   };

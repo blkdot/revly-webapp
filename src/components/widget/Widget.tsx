@@ -118,7 +118,7 @@ const Widget: FC<{
   };
   const getActiveLinkWidth = (index: number, type: string) => {
     const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
-
+    tableLink.scrollIntoView();
     if (type === 'scroll') {
       return tableLink.offsetLeft - tableLink.scrollLeft;
     }

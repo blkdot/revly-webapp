@@ -256,7 +256,7 @@ const Planning = () => {
 
   const { vendors } = useVendors();
   const { chainData } = vendors;
-  const renderFilters = () => (
+  const renderOffersFilters = () => (
     <div className='table-filters'>
       <FilterDropdown
         items={filtersHead.platform}
@@ -303,6 +303,37 @@ const Planning = () => {
       />
     </div>
   );
+  const renderAdsFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeFilter('platform', 'single')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+        mono
+      />
+      <FilterBranch
+        items={chainData.filter(
+          (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+        )}
+        values={filters.vendors}
+        onChange={handleChangeFilter('vendors')}
+        icon={<img src={Columns} alt='Platform' />}
+        label='Show all branches'
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'ads_planning') {
       return (
@@ -316,7 +347,7 @@ const Planning = () => {
           rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={!isEmptyList() && renderFilters()}
+          filters={!isEmptyList() && renderAdsFilters()}
           noDataText='No ads has been retrieved.'
         />
       );
@@ -334,7 +365,7 @@ const Planning = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={!isEmptyList() && renderFilters()}
+        filters={!isEmptyList() && renderOffersFilters()}
         noDataText='No offer has been retrieved.'
       />
     );
@@ -473,9 +504,7 @@ const Planning = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
-          new Date(obj.valid_to)
-        ).format('HH:mm')}`,
+        slot: `${obj.start_hour} - ${obj.end_hour}`,
       }))
     );
     setDataFilteredAds(

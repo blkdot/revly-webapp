@@ -87,9 +87,12 @@ const ConnectAccount: FC<{
         {platformList.map((obj) => (
           <ButtonKit
             onClick={() => {
-              setConnect(obj.name);
-              setConnectAccount('platform');
+              if(!obj?.disabled){
+                setConnect(obj.name);
+                setConnectAccount('platform');
+              }
             }}
+            disabled={obj?.disabled}
             variant='contained'
             key={obj.name}
             style={{ '--color': obj.color } as React.CSSProperties}

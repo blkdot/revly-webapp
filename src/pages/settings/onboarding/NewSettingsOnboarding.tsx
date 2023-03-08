@@ -130,7 +130,6 @@ const NewSettingsOnboarding = () => {
     setConnectAccount,
     setLoading,
     loading,
-    getBranchData,
   };
 
   return (

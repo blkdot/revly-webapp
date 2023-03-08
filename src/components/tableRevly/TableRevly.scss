@@ -472,24 +472,9 @@
   position: relative;
   padding: 0 20px;
   transition: 0.4s;
-  overflow: auto;
+  overflow: hidden;
   white-space: nowrap;
   scroll-behavior: smooth;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: #f3f3f3;
-    border-radius: 31px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #637381;
-    border-radius: 31px;
-  }
 
   &::before {
     content: '';
