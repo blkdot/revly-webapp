@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { api, handleResponse } from './utils';
+import { api, handleResponse, fetcher, type ApiError } from './utils';
 
 export const settingsOnboardPlatform = (body, platform) =>
   api.post(`/settingsv2/onboard/${platform}`, body).then(handleResponse).catch(handleResponse);
@@ -23,8 +23,8 @@ export const settingsLoad = (body) =>
   api.post(`/settingsv2/loadv2`, body).then(handleResponse).catch(handleResponse);
 
 export const useSettingsOnboarded = (body: Record<string, unknown>, key?: any) =>
-  useQuery(['userSettings', key], async () => {
-    const response = await api.post(`/settingsv2/onboarded`, body);
-
-    return response.data;
-  });
+  useQuery<unknown, ApiError, any>(
+    ['userSettings', key],
+    () => fetcher(`/settingsv2/onboarded`, body),
+    { retry: false }
+  );

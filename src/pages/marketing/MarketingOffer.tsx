@@ -326,8 +326,6 @@ const MarketingOffer = () => {
     setOpenedFilter(false);
   };
 
-  const isEmptyList = () => offersData.length < 1;
-
   useEffect(() => {
     let filteredData = offersData;
 
