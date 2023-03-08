@@ -61,6 +61,8 @@ const SignUp = () => {
       } else {
         await settingsSave({
           master_email: value.email,
+          platform: '',
+          email: '',
           data: {
             restoname: value.restoName.trim(),
             pointOfSale: value.pointOfSale,
