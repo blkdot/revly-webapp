@@ -1,10 +1,9 @@
-import { useSettingsOnboarded } from 'api/settingsApi';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMiddleContent';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
-import { usePlatform, useUser } from 'contexts';
+import { usePlatform } from 'contexts';
 import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -12,8 +11,7 @@ import { vendorsAtom } from 'store/vendorsAtom';
 import './SettingOnboarding.scss';
 
 const NewSettingsOnboarding = () => {
-  const user = useUser();
-  const { userPlatformData, setUserPlatformData } = usePlatform();
+  const { userPlatformData } = usePlatform();
   const [, setVendors] = useAtom(vendorsAtom);
   const { vendors } = useVendors(undefined);
   const [loading, setLoading] = useState(true);
@@ -52,10 +50,11 @@ const NewSettingsOnboarding = () => {
 
     const vendorPlatform = (obj: any) =>
       Object.keys(obj.data.platforms).map((plat) => ({
+        email: obj.data.platforms[plat].email,
         platform: plat,
         status: userPlatformData.platforms[plat].find(
           (objAcc) => objAcc.email === obj.data.platforms[plat].email
-        ).active
+        )?.active
           ? 'active'
           : 'suspended',
       }));
@@ -97,18 +96,9 @@ const NewSettingsOnboarding = () => {
   }, [JSON.stringify(userPlatformData.platforms)]);
 
   useEffect(() => {
-    if (userRequestData.data) {
-      setUserPlatformData({
-        onboarded: true,
-        platforms: { ...userPlatformData.platforms, ...userRequestData.data.platforms },
-      });
-    }
-  }, [JSON.stringify(userRequestData.data)]);
-
-  useEffect(() => {
     setVendors(vendors);
     setBranchData(getBranchData());
-  }, [vendors, userPlatformData]);
+  }, [vendors, JSON.stringify(userPlatformData.platforms)]);
 
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
@@ -148,6 +138,7 @@ const NewSettingsOnboarding = () => {
     setConnectAccount,
     setLoading,
     loading,
+    getBranchData,
   };
 
   return (
