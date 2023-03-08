@@ -3,7 +3,7 @@ import { useSettingsOnboarded } from 'api/settingsApi';
 import { usePlatform, useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { SpinnerKit } from 'kits';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import { vendorsAtom } from 'store/vendorsAtom';
@@ -26,7 +26,7 @@ export const ProtectedOnboardRoutes = () => {
     }
   );
 
-  const requestEligibilityDeliveroo = useCallback(() => {
+  const requestEligibilityDeliveroo = () => {
     const reqEligibilities = userPlatformData.platforms.deliveroo.map((platformData) => {
       const vendorIds = platformData.vendor_ids;
 
@@ -35,13 +35,13 @@ export const ProtectedOnboardRoutes = () => {
           vendorIds.includes(String(chain.vendor_id)) &&
           chain.platform.toLocaleLowerCase() === 'deliveroo'
       );
-
+      
       if (!firstVendorData) return null;
 
       return getElligibilityDeliveroo({
         master_email: user.email,
         access_token: user.token,
-        chain_id: '',
+        chain_id: String(firstVendorData?.data.chain_id),
         vendors: [firstVendorData?.data],
       });
     });
@@ -51,18 +51,15 @@ export const ProtectedOnboardRoutes = () => {
         setEligibilityDeliverooState((prev) => ({ ...prev, ...res?.data }));
       });
     });
-  }, [JSON.stringify(vendors.chainData), JSON.stringify(userPlatformData.platforms.deliveroo)]);
+  }
 
   useEffect(() => {
-    if (
-      vendors.chainData.length > 0 &&
-      userPlatformData.platforms.deliveroo.length > 0 &&
-      !response?.isLoading &&
-      user
-    ) {
-      requestEligibilityDeliveroo();
+    if (chainData.length > 0) {
+      setInterval(requestEligibilityDeliveroo, 10*60*1000)
+      const int = setInterval(requestEligibilityDeliveroo, 1000)
+      setTimeout(() => clearInterval(int), 1000)
     }
-  }, [userPlatformData.platforms.deliveroo.length]);
+  }, [chainData])
 
   // TODO: replace it with a better approach
   // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
