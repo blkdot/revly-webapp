@@ -55,7 +55,7 @@ export const ProtectedOnboardRoutes = () => {
 
   useEffect(() => {
     if (chainData.length > 0) {
-      setInterval(requestEligibilityDeliveroo, 10*60*1000)
+      setInterval(requestEligibilityDeliveroo, 900*1000)
       const int = setInterval(requestEligibilityDeliveroo, 1000)
       setTimeout(() => clearInterval(int), 1000)
     }
