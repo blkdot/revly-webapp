@@ -3,6 +3,8 @@ import imageDeliverooFavicon from '../assets/images/deliveroo-favicon.webp';
 import imageDeliveroo from '../assets/images/deliveroo.png';
 import imageTalabatFavicon from '../assets/images/talabat-favicon.png';
 import imageTalabat from '../assets/images/talabat.png';
+import imageCareemFavicon from '../assets/images/careem-favicon.svg';
+import imageCareem from '../assets/images/careem.png';
 
 export const platformList = [
   {
@@ -19,6 +21,14 @@ export const platformList = [
     name: 'talabat',
     color: '#FF5A00',
   },
+  {
+    srcFavicon: imageCareemFavicon,
+    srcFaviconWhite: imageCareemFavicon,
+    src: imageCareem,
+    name: 'careem',
+    color: '#3BB44E',
+    disabled: true,
+  },
 ];
 
 export type TPlatformObject = {
@@ -28,6 +38,7 @@ export type TPlatformObject = {
     src: string;
     name: string;
     color: string;
+    disabled?: boolean;
   };
 };
 

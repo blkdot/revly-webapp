@@ -428,7 +428,7 @@ const MarketingOffer = () => {
           rows={offersDataFiltered.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={renderFilters()}
+          filters={!isEmptyList() && renderFilters()}
           noDataText='No offer has been retrieved.'
           onClickRow={handleRowClick}
         />
@@ -447,7 +447,7 @@ const MarketingOffer = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={renderFilters()}
+        filters={!isEmptyList() && renderFilters()}
         noDataText='No offer has been retrieved.'
       />
     );
