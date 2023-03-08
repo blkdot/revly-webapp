@@ -1,16 +1,17 @@
 import { usePlanningAds } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
+import { useDate } from 'hooks';
 import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useMemo, useState } from 'react';
-import { DatePeriod } from 'types';
 import Columns from '../../assets/images/columns.svg';
 import logo from '../../assets/images/small-logo.png';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
@@ -20,23 +21,26 @@ import { platformObject } from '../../data/platformList';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
-const getOfferDate = (period: DatePeriod, type: string): Date => {
-  if (type === 'month') {
-    return endOfMonth(new Date(period.until.toDate()));
-  }
-  if (type === 'week') {
-    return endOfWeek(new Date(period.until.toDate()), { weekStartsOn: 1 });
-  }
-  return period.until.toDate();
-};
-
 const MarketingAds = () => {
   const [active, setActive] = useState(false);
-  const { current, calendar } = useDates();
+  const { date } = useDate();
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
+  };
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: date.beforePeriod.startDate,
+    endDate: getOfferDate(),
+  });
 
   const { data, isLoading: isLoadingAds } = usePlanningAds({
-    from: current.from,
-    until: dayjs(getOfferDate(current, calendar)),
+    from: dayjs(beforePeriodBtn.startDate),
+    until: dayjs(beforePeriodBtn.endDate),
   });
 
   const ads = useMemo(() => data?.ads || [], [data]);
@@ -407,6 +411,10 @@ const MarketingAds = () => {
   };
   return (
     <div className='wrapper marketing-wrapper'>
+      <div className='top-inputs'>
+        <RestaurantDropdown />
+        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+      </div>
       <ContainerKit>
         <div className='marketing-top'>
           <div className='marketing-top-text'>
