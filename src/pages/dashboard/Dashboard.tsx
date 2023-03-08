@@ -14,7 +14,7 @@ import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useDate } from 'hooks';
 import { useAtom } from 'jotai';
-import { TypographyKit } from 'kits';
+import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Dashboard.scss';
@@ -247,55 +247,58 @@ const Dashboard = () => {
         {getDropdown()}
         <Dates isDashboard />
       </div>
-      {!userPlatformData.onboarded ? (
-        <div className='dashboard-stepper'>
-          <OnboardingModal propsVariables={propsVariables} />
-          <OnboardingStepper
-            activeStep={activeStep}
-            accounts={accounts}
-            openCloseModal={openCloseModal}
-          />
-        </div>
-      ) : (
-        ''
-      )}
-      <div className='block'>
-        <TypographyKit className='dashboard-title'>
-          {getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
-            getPeriod(date.titleDate, date.beforePeriod).slice(1)}{' '}
-          results for {isDisplay()}
-        </TypographyKit>
-        <TypographyKit className='dashboard-subtitle'>
-          360° view of your restaurant revenue and profits
-        </TypographyKit>
-        <div className='dashboard-wrapper'>
-          {links.map((obj: { title: string; link: string; tooltip?: string }) => (
-            <Widget
-              table={table}
-              setTable={setTable}
-              key={obj.link}
-              title={obj.title}
-              link={obj.link}
-              metricsbeforePeriod={metricsbeforePeriod}
-              metricsafterPeriod={metricsafterPeriod}
-              loading={
-                metricsafterPeriod.length === 0 || metricsbeforePeriod.length === 0 || loading
-              }
-              links={links}
-              tooltip={obj.tooltip}
+      <ContainerKit>
+        {!userPlatformData.onboarded ? (
+          <div className='dashboard-stepper'>
+            <OnboardingModal propsVariables={propsVariables} />
+            <OnboardingStepper
+              activeStep={activeStep}
+              accounts={accounts}
+              openCloseModal={openCloseModal}
             />
-          ))}
+          </div>
+        ) : (
+          ''
+        )}
+
+        <div className='block'>
+          <TypographyKit className='dashboard-title'>
+            {getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
+              getPeriod(date.titleDate, date.beforePeriod).slice(1)}{' '}
+            results for {isDisplay()}
+          </TypographyKit>
+          <TypographyKit className='dashboard-subtitle'>
+            360° view of your restaurant revenue and profits
+          </TypographyKit>
+          <div className='dashboard-wrapper'>
+            {links.map((obj: { title: string; link: string; tooltip?: string }) => (
+              <Widget
+                table={table}
+                setTable={setTable}
+                key={obj.link}
+                title={obj.title}
+                link={obj.link}
+                metricsbeforePeriod={metricsbeforePeriod}
+                metricsafterPeriod={metricsafterPeriod}
+                loading={
+                  metricsafterPeriod.length === 0 || metricsbeforePeriod.length === 0 || loading
+                }
+                links={links}
+                tooltip={obj.tooltip}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      <TableRevlyNew
-        renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
-        isLoading={loading}
-        link={table}
-        setLink={setTable}
-        links={links}
-        headers={headers}
-        rows={metrics.map(renderRowsByHeader)}
-      />
+        <TableRevlyNew
+          renderCustomSkelton={[0, 1, 2].map(renderRowsByHeaderLoading)}
+          isLoading={loading}
+          link={table}
+          setLink={setTable}
+          links={links}
+          headers={headers}
+          rows={metrics.map(renderRowsByHeader)}
+        />
+      </ContainerKit>
     </div>
   );
 };
