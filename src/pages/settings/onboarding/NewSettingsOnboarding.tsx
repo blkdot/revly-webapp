@@ -83,14 +83,6 @@ const NewSettingsOnboarding = () => {
     }));
   };
 
-  const userRequestData = useSettingsOnboarded(
-    {
-      master_email: user.email,
-      access_token: user.token,
-    },
-    { launcher: 'NewSettingsOnboarding', branchData, openedModal }
-  );
-
   useEffect(() => {
     setAccounts(getAccounts());
   }, [JSON.stringify(userPlatformData.platforms)]);
