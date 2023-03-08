@@ -235,16 +235,12 @@ const Adverts = () => {
         <div>
           <div className='adverts_top-titles'>
             <div>
-              <TypographyKit className='adverts-title' variant='subtitle'>
-                Manage Advertisements for
-                <span>{isDisplay()}</span>
-                for
-                <span>{getBeforePeriod()}</span>
-              </TypographyKit>
-              <p>
-                Here you can quickly and easily create and manage effective advertisements for their
-                businesses.
-              </p>
+              <div className='dashboard-title'>
+                Marketing - Ads
+              </div>
+              <div className='dashboard-subtitle'>
+                Create and manage all your ads. Set personalised rules to automatically trigger your ads.
+              </div>
             </div>
             <ButtonKit disabled={disabled} onClick={() => setOpenedCampaign(true)}>
               Create new campaign

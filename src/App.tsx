@@ -9,7 +9,6 @@ import {
   Dashboard,
   DashboardOnboard,
   ForgotPassword,
-  MarketingAds,
   MarketingOffer,
   Planning,
   ResetPassword,
@@ -81,8 +80,7 @@ const App = () => {
             <Route path='/competition/listing' element={<CompetitionListing />} />
             <Route path='/competition/alerts' element={<CompetitionAlerts />} />
             <Route path='/marketing/offer' element={<MarketingOffer />} />
-            <Route path='/marketing/ads' element={<MarketingAds />} />
-            <Route path='/adverts' element={<Adverts />} />
+            <Route path='/marketing/ads' element={<Adverts />} />
           </Route>
           <Route element={<SettingsLayout />}>
             <Route path='/settings/general' element={<SettingsGeneral />} />

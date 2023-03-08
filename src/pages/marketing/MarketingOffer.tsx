@@ -359,9 +359,7 @@ const MarketingOffer = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
-          new Date(obj.valid_to)
-        ).format('HH:mm')}`,
+        slot: `${obj.start_hour} - ${obj.end_hour}`,
         orders: obj.n_orders,
       }))
     );
@@ -432,6 +430,7 @@ const MarketingOffer = () => {
           setOpenedFilter={setOpenedFilter}
           filters={renderFilters()}
           noDataText='No offer has been retrieved.'
+          onClickRow={handleRowClick}
         />
       );
     }

@@ -473,9 +473,7 @@ const Planning = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
-          new Date(obj.valid_to)
-        ).format('HH:mm')}`,
+        slot: `${obj.start_hour} - ${obj.end_hour}`,
       }))
     );
     setDataFilteredAds(
@@ -484,9 +482,7 @@ const Planning = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
-          new Date(obj.valid_to)
-        ).format('HH:mm')}`,
+        slot: `${obj.start_hour} - ${obj.end_hour}`,
       }))
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);

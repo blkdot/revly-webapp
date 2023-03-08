@@ -11,6 +11,7 @@ const TableLink: FC<{
 }> = ({ links, setLink, link, filters, setOpenedFilter }) => {
   const getActiveLinkWidth = (index: number, type: string) => {
     const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
+    tableLink.scrollIntoView();
     if (type === 'scroll') {
       return tableLink.offsetLeft - tableLink.scrollLeft;
     }
@@ -24,8 +25,8 @@ const TableLink: FC<{
   };
   useEffect(() => {
     const tableLinks = document.querySelector('.table-links') as HTMLElement;
-    tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(0, 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(0, 'scroll')}px`);
+    tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(links.findIndex((obj) => obj.link === link), 'width')}px`);
+    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(links.findIndex((obj) => obj.link === link), 'scroll')}px`);
   }, []);
   return (
     <div className='table-paper-top'>

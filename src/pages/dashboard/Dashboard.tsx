@@ -124,13 +124,13 @@ const Dashboard = () => {
       id: 'beforePeriod',
       numeric: false,
       disablePadding: false,
-      label: getPeriod(currentTitle, current),
+      label: getPeriod(currentTitle, current).charAt(0).toUpperCase() + getPeriod(currentTitle, current).slice(1),
     },
     {
       id: 'afterPeriod',
       numeric: false,
       disablePadding: true,
-      label: getPeriod(compareTitle, compare),
+      label: getPeriod(compareTitle, compare).charAt(0).toUpperCase() + getPeriod(compareTitle, compare).slice(1),
     },
     {
       id: 'evolution',
