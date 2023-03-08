@@ -1,12 +1,16 @@
 import { getAreas, getCuisines, getRanking } from 'api';
 import { pascalCase } from 'change-case';
 import Competitor from 'components/competitor/Competitor';
+import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useDates, useUser } from 'contexts';
+import { useUser } from 'contexts';
 import { platformObject } from 'data/platformList';
+import { subDays } from 'date-fns';
+import dayjs from 'dayjs';
 import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, PaperKit } from 'kits';
@@ -64,7 +68,6 @@ const headersAlert = (cuisine: string) => [
 ];
 
 const CompetitionListing = () => {
-  const { current } = useDates();
   const { vendors } = useVendors();
   const { chainData } = vendors;
   const user = useUser();
@@ -72,6 +75,10 @@ const CompetitionListing = () => {
   const [loading, setLoading] = useState(false);
   const [competitionListingData, setCompetitionListingData] = useState([]);
   const { triggerAlertWithMessageError } = useAlert();
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: subDays(new Date(), 1),
+    endDate: subDays(new Date(), 1),
+  });
   const [queueDropdown, setQueueDropdown] = useState(0);
   const [areasData, setAreasData] = useState([]);
   const [cuisinesData, setCuisinesData] = useState([]);
@@ -172,8 +179,8 @@ const CompetitionListing = () => {
           filter_location: newArea,
           filter_offer: 'all_discounts',
           filter_cuisine: newCuisine || '',
-          start_date: current.from.format('YYYY-MM-DD'),
-          end_date: current.until.format('YYYY-MM-DD'),
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
 
         const ranking = await getRanking(body, plat);
@@ -251,8 +258,8 @@ const CompetitionListing = () => {
           master_email: user.email,
           access_token: user.token,
           vendors: vend || [],
-          start_date: current.from.format('YYYY-MM-DD'),
-          end_date: current.until.format('YYYY-MM-DD'),
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
 
         Promise.all([getCuisines(body, plat), getAreas(body, plat)])
@@ -285,7 +292,7 @@ const CompetitionListing = () => {
           });
       }, 750);
     },
-    [selectedPlatform[0], current]
+    [selectedPlatform[0], beforePeriodBtn]
   );
 
   useEffect(() => {
@@ -316,7 +323,7 @@ const CompetitionListing = () => {
 
       getData(selectedPlatform[0], [branchActive.data], selectedCuisine[0], selectedArea[0]);
     }
-  }, [selectedArea, selectedTimeSlot, selectedCuisine, current]);
+  }, [selectedArea, selectedTimeSlot, selectedCuisine, beforePeriodBtn]);
 
   useEffect(() => {
     if (selectedPlatform[0] && branchSelected[0]) {
@@ -340,7 +347,14 @@ const CompetitionListing = () => {
 
       getCuisineAndAreas(selectedPlatform[0], [branchActive.data], queueDropdown);
     }
-  }, [selectedPlatform, branchSelected, queueDropdown, chainData.length, branchActive, current]);
+  }, [
+    selectedPlatform,
+    branchSelected,
+    queueDropdown,
+    chainData.length,
+    branchActive,
+    beforePeriodBtn,
+  ]);
 
   const renderPlatformInsideFilter = (s) => (
     <div key={s}>
@@ -351,6 +365,16 @@ const CompetitionListing = () => {
 
   return (
     <div className='wrapper'>
+      <div className='top-inputs'>
+        <RestaurantDropdown />
+        <Dates
+          isListing
+          beforePeriodBtn={beforePeriodBtn}
+          setbeforePeriodBtn={setbeforePeriodBtn}
+          defaultTitle='Yesterday'
+          defaultTypeDate='day'
+        />
+      </div>
       <ContainerKit>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>

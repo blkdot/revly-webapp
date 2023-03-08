@@ -1,9 +1,9 @@
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import MovingIcon from '@mui/icons-material/Moving';
-import { useDates } from 'contexts';
-import { endOfMonth, format, getYear } from 'date-fns';
+import { endOfMonth, format, getYear, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { useDate } from 'hooks';
 import { CardContentKit, CardKit, PaperKit, SkeletonKit, TooltipKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import TooltipIcon from '../../assets/images/tooltip-ic.svg';
@@ -30,9 +30,10 @@ const Widget: FC<{
   link,
   tooltip,
 }) => {
-  const { compare, compareTitle } = useDates();
-  const startDate = compare.from.toDate();
-  const endDate = compare.until.toDate();
+  const { date } = useDate();
+  const { afterPeriod, titleafterPeriod } = date;
+  const startDate = parseISO(afterPeriod.startDate);
+  const endDate = parseISO(afterPeriod.endDate);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
@@ -61,20 +62,25 @@ const Widget: FC<{
   };
 
   const getafterPeriod = () => {
-    if (compareTitle === 'custom') {
+    if (titleafterPeriod === 'custom') {
       if (startLocal === endLocal) {
-        return `${dayjs(compare.from).format('DD/MM')}`;
+        return `${dayjs(afterPeriod.startDate).format('DD/MM')}`;
       }
-      if (startGetDate === 1 && endGetDate === endOfMonth(compare.from.toDate()).getDate()) {
-        return `${format(compare.from.toDate(), 'LLL', {
+      if (
+        startGetDate === 1 &&
+        endGetDate === endOfMonth(parseISO(afterPeriod.startDate)).getDate()
+      ) {
+        return `${format(parseISO(afterPeriod.startDate), 'LLL', {
           locale: enUS,
-        })}  -  ${getYear(compare.from.toDate())}`;
+        })}  -  ${getYear(parseISO(afterPeriod.startDate))}`;
       }
 
-      return `${dayjs(compare.from).format('DD/MM')} - ${dayjs(compare.until).format('DD/MM')}`;
+      return `${dayjs(afterPeriod.startDate).format('DD/MM')} - ${dayjs(afterPeriod.endDate).format(
+        'DD/MM'
+      )}`;
     }
 
-    return `${compareTitle}`;
+    return `${titleafterPeriod}`;
   };
 
   const renderMetrics = () => {
