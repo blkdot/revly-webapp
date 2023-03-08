@@ -865,7 +865,7 @@ const MarketingSetup: React.FC<{
   };
 
   const renderSkeleton = (num) => (
-    <TypographyKit style={{ '--i': num - 5 }} className='absolute loading' key={num}>
+    <TypographyKit style={{ '--i': num - minHour }} className='absolute loading' key={num}>
       <span />
     </TypographyKit>
   );
@@ -879,7 +879,7 @@ const MarketingSetup: React.FC<{
             return (
               <TypographyKit
                 component='div'
-                style={{ '--i': num - 5 }}
+                style={{ '--i': num - minHour }}
                 className='absolute'
                 key={num}
               >
@@ -904,7 +904,7 @@ const MarketingSetup: React.FC<{
             return (
               <TypographyKit
                 component='div'
-                style={{ '--i': num - 5 }}
+                style={{ '--i': num - minHour }}
                 className='absolute active'
                 key={num}
               >
@@ -916,7 +916,7 @@ const MarketingSetup: React.FC<{
           return (
             <TypographyKit
               component='div'
-              style={{ '--i': num - 5 }}
+              style={{ '--i': num - minHour }}
               className='absolute'
               key={num}
             >
