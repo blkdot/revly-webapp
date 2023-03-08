@@ -1,11 +1,13 @@
 import { getAlerts, getCompetitors } from 'api';
 import { pascalCase } from 'change-case';
 import Competitor from 'components/competitor/Competitor';
+import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useDates, useUser } from 'contexts';
+import { useUser } from 'contexts';
 import { platformObject } from 'data/platformList';
 import dayjs from 'dayjs';
 import { useAlert, useVendors } from 'hooks';
@@ -25,7 +27,6 @@ import {
 let fnDelays = null;
 
 const CompetitionAlerts = () => {
-  const { current } = useDates();
   const { vendors } = useVendors();
   const { chainData } = vendors;
   const user = useUser();
@@ -35,6 +36,10 @@ const CompetitionAlerts = () => {
   const [competitorList, setCompetitorList] = useState([]);
   const [loading, setLoading] = useState(false);
   const { triggerAlertWithMessageError } = useAlert();
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
   const [selectedPlatform, setSelectedPlatform] = useAtom(competitionSelectedPlatformAtom);
   const [branchSelected, setBranchSelected] = useAtom(competitionBranchSelectedAtom);
   const [selectedCompetitors, setSelectedCompetitors] = useState<string[]>([]);
@@ -148,8 +153,8 @@ const CompetitionAlerts = () => {
       master_email: user.email,
       access_token: user.token,
       vendors: { [selectedPlatform[0]]: [vend] },
-      start_date: current.from.format('YYYY-MM-DD'),
-      end_date: current.until.format('YYYY-MM-DD'),
+      start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
     };
 
     const comp = await getCompetitors(body);
@@ -201,7 +206,7 @@ const CompetitionAlerts = () => {
       }
       getCompetitorsDropdownContent(branchActive.data);
     }
-  }, [selectedPlatform[0], branchSelected[0], chainData.length, current]);
+  }, [selectedPlatform[0], branchSelected[0], chainData.length, beforePeriodBtn]);
 
   useEffect(() => {
     filterData();
@@ -218,8 +223,8 @@ const CompetitionAlerts = () => {
           master_email: user.email,
           access_token: user.token,
           vendors: vend || {},
-          start_date: current.from.format('YYYY-MM-DD'),
-          end_date: current.until.format('YYYY-MM-DD'),
+          start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+          end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
 
         const alerts = await getAlerts(body, plat);
@@ -281,7 +286,7 @@ const CompetitionAlerts = () => {
       }
       getData(selectedPlatform[0], { [selectedPlatform[0]]: [branchActive.data] });
     }
-  }, [selectedPlatform[0], branchSelected[0], chainData.length, current]);
+  }, [selectedPlatform[0], branchSelected[0], chainData.length, beforePeriodBtn]);
 
   const handleCompetitorChange = (value) => {
     const isChecked = selectedCompetitors.findIndex((compet) => compet === value);
@@ -312,6 +317,15 @@ const CompetitionAlerts = () => {
 
   return (
     <div className='wrapper'>
+      <div className='top-inputs'>
+        <RestaurantDropdown />
+        <Dates
+          defaultTypeDate='day'
+          defaultTitle='today'
+          beforePeriodBtn={beforePeriodBtn}
+          setbeforePeriodBtn={setbeforePeriodBtn}
+        />
+      </div>
       <ContainerKit>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>
