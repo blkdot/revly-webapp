@@ -64,7 +64,7 @@ const CompetitionDropdown = (props: any) => {
     }
     return Qatar;
   };
-
+  
   const renderSelectOption = (arr) =>
     arr?.map((name) =>
       renderOptions ? (
