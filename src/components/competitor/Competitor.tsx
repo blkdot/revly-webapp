@@ -116,8 +116,8 @@ const Competitor = ({ open, opened, platformList }) => {
           />
           <CompetitionDropdown
             rows={platformList}
-            renderOptions={(v) => (
-              <MenuItemKit key={v.name} value={v.name}>
+            renderOptions={(name) => (
+              <MenuItemKit key={name} value={name}>
                 <div
                   style={{
                     display: 'flex',
@@ -127,13 +127,13 @@ const Competitor = ({ open, opened, platformList }) => {
                   }}
                 >
                   <img
-                    src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
+                    src={name === 'deliveroo' ? icdeliveroo : ictalabat}
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}
                     alt='icon'
                   />
-                  <ListItemTextKit primary={v.name} />
+                  <ListItemTextKit primary={name} />
                 </div>
               </MenuItemKit>
             )}
