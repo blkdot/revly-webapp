@@ -2,45 +2,47 @@
 import { usePlanningOffers } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useDates } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useQueryState } from 'hooks';
+import { useDate, useQueryState } from 'hooks';
 import { ButtonAction, ContainerKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useState } from 'react';
-import { DatePeriod } from 'types';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
 import { defaultFilterStateFormat } from './marketingOfferData';
 
-const getOfferDate = (period: DatePeriod, type: string): Date => {
-  if (type === 'month') {
-    return endOfMonth(new Date(period.until.toDate()));
-  }
-  if (type === 'week') {
-    return endOfWeek(new Date(period.until.toDate()), { weekStartsOn: 1 });
-  }
-
-  return period.until.toDate();
-};
-
 const MarketingOffer = () => {
-  const { current, calendar } = useDates();
   const [active, setActive] = useState(false);
+  const { date: dateContext } = useDate();
+  const getOfferDate = () => {
+    if (dateContext.typeDate === 'month') {
+      return endOfMonth(new Date(dateContext.beforePeriod.endDate));
+    }
+    if (dateContext.typeDate === 'week') {
+      return endOfWeek(new Date(dateContext.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return dateContext.beforePeriod.endDate;
+  };
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: dateContext.beforePeriod.startDate,
+    endDate: getOfferDate(),
+  });
 
   const { data, isLoading: isLoadingOffers } = usePlanningOffers({
-    from: current.from,
-    until: dayjs(getOfferDate(current, calendar)),
+    from: dayjs(beforePeriodBtn.startDate),
+    until: dayjs(beforePeriodBtn.endDate),
   });
 
   const [selected, setSelected] = useState([]);
@@ -453,6 +455,10 @@ const MarketingOffer = () => {
   };
   return (
     <div className='wrapper marketing-wrapper'>
+      <div className='top-inputs'>
+        <RestaurantDropdown />
+        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+      </div>
       <ContainerKit>
         <div className='marketing-top'>
           <div className='marketing-top-text'>

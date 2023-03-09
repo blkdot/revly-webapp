@@ -1,43 +1,32 @@
 import { usePlanningAds } from 'api';
-import arrow from 'assets/images/arrow.svg';
 import { Switch } from 'assets/icons';
+import arrow from 'assets/images/arrow.svg';
+import { pascalCase } from 'change-case';
 import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreateNewCampaign';
+import Dates from 'components/dates/Dates';
 import AdvertsDetails from 'components/details/AdvertsDetails';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useDates, usePlatform } from 'contexts';
+import { usePlatform } from 'contexts';
+import { platformObject } from 'data/platformList';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useMarketingSetup, useQueryState, useVendors } from 'hooks';
+import { useDate, useMarketingSetup, useQueryState, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, ContainerKit } from 'kits';
+import { defaultFilterStateFormat } from 'pages/marketing/marketingOfferData';
 import { useEffect, useMemo, useState } from 'react';
 import { branchAtom } from 'store/marketingSetupAtom';
-import { DatePeriod } from 'types';
-import './Adverts.scss';
-import { defaultFilterStateFormat } from 'pages/marketing/marketingOfferData';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
-import { platformObject } from 'data/platformList';
-import { pascalCase } from 'change-case';
 import Columns from '../../assets/images/columns.svg';
-
-
-const getOfferDate = (period: DatePeriod, type: string): Date => {
-  if (type === 'month') {
-    return endOfMonth(period.until.toDate());
-  }
-
-  if (type === 'week') {
-    return endOfWeek(period.until.toDate(), { weekStartsOn: 1 });
-  }
-
-  return period.until.toDate();
-};
+import './Adverts.scss';
 
 const Adverts = () => {
-  const { current, calendar } = useDates();
+  const { date } = useDate();
+  const { beforePeriod } = date;
   const { vendors } = useVendors();
   const [disabled, setDisabled] = useState(true);
   const [branchVendors, setBranchVendors] = useAtom(branchAtom);
@@ -61,9 +50,24 @@ const Adverts = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vendors, openedCampaign]);
+
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
+  };
+  const [beforePeriodBtn, setbeforePeriodBtn] = useState({
+    startDate: beforePeriod.startDate,
+    endDate: getOfferDate(),
+  });
+
   const [link, setLink] = useState('ads_management');
-  const startDate = current.from.toDate();
-  const endDate = getOfferDate(current, calendar);
+  const startDate = new Date(beforePeriodBtn.startDate);
+  const endDate = new Date(beforePeriodBtn.endDate);
 
   const { data, isLoading: isLoadingAds } = usePlanningAds({
     from: dayjs(startDate),
@@ -195,7 +199,7 @@ const Adverts = () => {
   const [opened, setOpened] = useState(false);
   const [clickedRow, setClickedRow] = useState({});
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [dataFiltered,setDataFiltered] = useState([]);
+  const [dataFiltered, setDataFiltered] = useState([]);
   const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
   const [filters, setFilters] = useState({
     ...defaultFilterStateFormat,
@@ -355,11 +359,10 @@ const Adverts = () => {
         <div>
           <div className='adverts_top-titles'>
             <div>
-              <div className='dashboard-title'>
-                Marketing - Ads
-              </div>
+              <div className='dashboard-title'>Marketing - Ads</div>
               <div className='dashboard-subtitle'>
-                Create and manage all your ads. Set personalised rules to automatically trigger your ads.
+                Create and manage all your ads. Set personalised rules to automatically trigger your
+                ads.
               </div>
             </div>
             <ButtonKit disabled={disabled} onClick={() => setOpenedCampaign(true)}>
@@ -394,7 +397,16 @@ const Adverts = () => {
       </ContainerKit>
     );
   };
-  return <div className='wrapper'>{renderLayout()}</div>;
+
+  return (
+    <div className='wrapper'>
+      <div className='top-inputs'>
+        <RestaurantDropdown />
+        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+      </div>
+      {renderLayout()}
+    </div>
+  );
 };
 
 export default Adverts;

@@ -1,31 +1,43 @@
 import { useMetrics } from 'api';
+import Dates from 'components/dates/Dates';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import Widget from 'components/widget/Widget';
-import { useDates, usePlatform } from 'contexts';
+import { usePlatform } from 'contexts';
 import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
+import { useDate } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { DatePeriod } from 'types';
 import './Dashboard.scss';
 
 const Dashboard = () => {
-  const { current, compare, calendar, currentTitle, compareTitle } = useDates();
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj, display, chainData } = vendors;
   const [table, setTable] = useState('revenue');
 
-  const m1 = useMetrics(current, vendorsObj);
-  const m2 = useMetrics(compare, vendorsObj);
+  const { date: dateContext } = useDate();
+  const { beforePeriod, afterPeriod } = dateContext;
 
-  const metricsBeforePeriod = useMemo(() => m1.data?.metrics || [], [m1.data]);
-  const metricsAfterPeriod = useMemo(() => m2.data?.metrics || [], [m2.data]);
+  const m1 = useMetrics(
+    { from: dayjs(beforePeriod.startDate), until: dayjs(beforePeriod.endDate) },
+    vendorsObj
+  );
+  const m2 = useMetrics(
+    { from: dayjs(afterPeriod.startDate), until: dayjs(afterPeriod.endDate) },
+    vendorsObj
+  );
+
+  const metricsbeforePeriod = useMemo(() => m1.data?.metrics || [], [m1.data]);
+  const metricsafterPeriod = useMemo(() => m2.data?.metrics || [], [m2.data]);
 
   const loading = m1.isLoading || m2.isLoading;
 
@@ -96,19 +108,28 @@ const Dashboard = () => {
     setConnectAccount,
   };
   const { userPlatformData } = usePlatform();
-
-  const getPeriod = (title: string, period: DatePeriod) => {
+  const getDropdown = () => {
+    if (!userPlatformData.onboarded) {
+      return <RestaurantDropdownEmpty />;
+    }
+    return <RestaurantDropdown />;
+  };
+  const { date } = useDate();
+  const { typeDate } = date;
+  const getPeriod = (title, period) => {
     if (title === 'custom') {
-      if (calendar === 'day') {
-        return `${period.from.format('DD/MM')}`;
+      if (typeDate === 'day') {
+        return `${dayjs(period.startDate).format('DD/MM')}`;
       }
-      if (calendar === 'month') {
-        return `${format(period.from.toDate(), 'LLL', { locale: enUS })}  -  ${getYear(
-          period.from.toDate()
+      if (typeDate === 'month') {
+        return `${format(new Date(period.startDate), 'LLL', { locale: enUS })}  -  ${getYear(
+          new Date(period.startDate)
         )}`;
       }
 
-      return `${period.from.format('DD/MM')} - ${period.until.format('DD/MM')}`;
+      return `${dayjs(period.startDate).format('DD/MM')} - ${dayjs(period.endDate).format(
+        'DD/MM'
+      )}`;
     }
 
     return title;
@@ -124,13 +145,13 @@ const Dashboard = () => {
       id: 'beforePeriod',
       numeric: false,
       disablePadding: false,
-      label: getPeriod(currentTitle, current).charAt(0).toUpperCase() + getPeriod(currentTitle, current).slice(1),
+      label: getPeriod(date.titleDate, date.beforePeriod),
     },
     {
       id: 'afterPeriod',
       numeric: false,
       disablePadding: true,
-      label: getPeriod(compareTitle, compare).charAt(0).toUpperCase() + getPeriod(compareTitle, compare).slice(1),
+      label: getPeriod(date.titleafterPeriod, date.afterPeriod),
     },
     {
       id: 'evolution',
@@ -215,12 +236,12 @@ const Dashboard = () => {
     ];
     const data = platforms.map((plat) => ({
       platform: plat === 'all' ? 'Total' : plat,
-      beforePeriod: getNum(metricsBeforePeriod[plat]),
-      afterPeriod: getNum(metricsAfterPeriod[plat]),
-      evolution: getProcent(metricsBeforePeriod[plat], metricsAfterPeriod[plat]),
+      beforePeriod: getNum(metricsbeforePeriod[plat]),
+      afterPeriod: getNum(metricsafterPeriod[plat]),
+      evolution: getProcent(metricsbeforePeriod[plat], metricsafterPeriod[plat]),
     }));
     setMetrics(data);
-  }, [metricsBeforePeriod, metricsAfterPeriod, table]);
+  }, [metricsbeforePeriod, metricsafterPeriod, table]);
 
   const isDisplay = () => {
     if (selectedVendors('name', display).length === chainData.length) {
@@ -233,6 +254,10 @@ const Dashboard = () => {
   };
   return (
     <div className='wrapper'>
+      <div className='top-inputs'>
+        {getDropdown()}
+        <Dates isDashboard />
+      </div>
       <ContainerKit>
         {!userPlatformData.onboarded && (
           <div className='dashboard-stepper'>
@@ -246,8 +271,8 @@ const Dashboard = () => {
         )}
         <div className='block'>
           <TypographyKit className='dashboard-title'>
-            {getPeriod(currentTitle, current).charAt(0).toUpperCase() +
-              getPeriod(currentTitle, current).slice(1)}{' '}
+            {getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
+              getPeriod(date.titleDate, date.beforePeriod).slice(1)}{' '}
             results for {isDisplay()}
           </TypographyKit>
           <TypographyKit className='dashboard-subtitle'>
@@ -261,10 +286,10 @@ const Dashboard = () => {
                 key={obj.link}
                 title={obj.title}
                 link={obj.link}
-                metricsbeforePeriod={metricsBeforePeriod}
-                metricsafterPeriod={metricsAfterPeriod}
+                metricsbeforePeriod={metricsbeforePeriod}
+                metricsafterPeriod={metricsafterPeriod}
                 loading={
-                  metricsAfterPeriod.length === 0 || metricsBeforePeriod.length === 0 || loading
+                  metricsafterPeriod.length === 0 || metricsbeforePeriod.length === 0 || loading
                 }
                 links={links}
                 tooltip={obj.tooltip}

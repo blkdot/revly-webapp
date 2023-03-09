@@ -1,18 +1,19 @@
 import { usePlanningAds, usePlanningOffers } from 'api';
 import { Switch, Tag } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useDates, usePlatform } from 'contexts';
+import { usePlatform } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useQueryState, useVendors } from 'hooks';
+import { useDate, useQueryState, useVendors } from 'hooks';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
-import { DatePeriod } from 'types';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
@@ -55,29 +56,34 @@ type TAds = {
   _metadata: null;
 };
 
-const getOfferDate = (period: DatePeriod, type: string): Date => {
-  if (type === 'month') {
-    return endOfMonth(new Date(period.until.toDate()));
-  }
-  if (type === 'week') {
-    return endOfWeek(new Date(period.until.toDate()), { weekStartsOn: 1 });
-  }
-
-  return period.until.toDate();
-};
-
 const Planning = () => {
+  const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
-
-  const { current, currentTitle, calendar } = useDates();
-
-  const dateRange = {
-    from: current.from,
-    until: dayjs(getOfferDate(current, calendar)),
+  const { date } = useDate();
+  const getOfferDate = () => {
+    if (date.typeDate === 'month') {
+      return endOfMonth(new Date(date.beforePeriod.endDate));
+    }
+    if (date.typeDate === 'week') {
+      return endOfWeek(new Date(date.beforePeriod.endDate), { weekStartsOn: 1 });
+    }
+    return date.beforePeriod.endDate;
   };
 
-  const { data: adsData, isLoading: isLoadingAds } = usePlanningAds(dateRange);
-  const { data: offersData, isLoading: isLoadingOffers } = usePlanningOffers(dateRange);
+  const [dateRange, setDateRange] = useState({
+    startDate: date.beforePeriod.startDate,
+    endDate: getOfferDate(),
+    ...JSON.parse(dateSaved || '{}'),
+  });
+
+  const { data: adsData, isLoading: isLoadingAds } = usePlanningAds({
+    from: dayjs(dateRange.startDate),
+    until: dayjs(dateRange.endDate),
+  });
+  const { data: offersData, isLoading: isLoadingOffers } = usePlanningOffers({
+    from: dayjs(dateRange.startDate),
+    until: dayjs(dateRange.endDate),
+  });
 
   const ads = useMemo(() => adsData?.ads || [], [adsData]);
   const offers = useMemo(() => offersData?.offers || [], [offersData]);
@@ -100,6 +106,7 @@ const Planning = () => {
   const [openedFilter, setOpenedFilter] = useState(false);
 
   useEffect(() => {
+    setDateSaved(dateRange);
     setFiltersSaved(filters);
   }, [JSON.stringify(filters), JSON.stringify(dateRange)]);
 
@@ -520,8 +527,19 @@ const Planning = () => {
     );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
 
+  const [period, setPeriod] = useState('');
+
   return (
     <div className='wrapper'>
+      <div className='top-inputs'>
+        <RestaurantDropdown />
+        <Dates
+          setPeriodProps={setPeriod}
+          offer
+          beforePeriodBtn={dateRange}
+          setbeforePeriodBtn={setDateRange}
+        />
+      </div>
       <ContainerKit>
         {opened ? (
           <OfferDetailComponent
@@ -532,7 +550,7 @@ const Planning = () => {
           <div className='block'>
             <TypographyKit className='dashboard-title'>
               Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for{' '}
-              {currentTitle.charAt(0).toUpperCase() + currentTitle.slice(1)}
+              {period.charAt(0).toUpperCase() + period.slice(1)}
             </TypographyKit>
             <TypographyKit className='dashboard-subtitle'>
               Plan and visualize all the scheduled and past discounts and campaigns.
