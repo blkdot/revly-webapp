@@ -338,6 +338,57 @@
   }
 }
 
+.table-filter {
+  border-left: 1px solid #919eab3d;
+  display: flex;
+  align-items: center;
+  padding: 0 35px;
+  cursor: pointer;
+
+  >p {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 22px;
+  }
+
+  >span:nth-of-type(1) {
+    width: 9px;
+    height: 1.5px;
+    position: relative;
+    border-radius: 2px;
+    background-color: #212b36;
+    left: -5px;
+    margin-left: 10px;
+    margin-right: 5px;
+
+    &::before {
+      content: '';
+      width: 3px;
+      height: 1px;
+      position: absolute;
+      bottom: -4px;
+      border-radius: 2px;
+      background-color: #212b36;
+      left: 3px;
+    }
+
+    &::after {
+      content: '';
+      width: 14px;
+      height: 1.5px;
+      position: absolute;
+      top: -3.75px;
+      border-radius: 2px;
+      background-color: #212b36;
+      left: -2px;
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
 .table-paper.table-paper {
   background: #fff !important;
   border-radius: 11px;
@@ -355,57 +406,7 @@
       overflow: auto;
     }
 
-    .table-filter {
-      border-left: 1px solid #919eab3d;
-      display: flex;
-      align-items: center;
-      padding: 0 35px;
-      cursor: pointer;
-
-      > p {
-        font-weight: 700;
-        font-size: 13px;
-        line-height: 22px;
-      }
-
-      > span {
-        width: 9px;
-        height: 1.5px;
-        position: relative;
-        border-radius: 2px;
-        background-color: #212b36;
-        left: -5px;
-        margin-left: 10px;
-        margin-right: 5px;
-
-        &::before {
-          content: '';
-          width: 3px;
-          height: 1px;
-          position: absolute;
-          bottom: -4px;
-          border-radius: 2px;
-          background-color: #212b36;
-          left: 3px;
-        }
-
-        &::after {
-          content: '';
-          width: 14px;
-          height: 1.5px;
-          position: absolute;
-          top: -3.75px;
-          border-radius: 2px;
-          background-color: #212b36;
-          left: -2px;
-        }
-      }
-
-      &.disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
-      }
-    }
+    
   }
 
   .MuiSkeleton-pulse {
