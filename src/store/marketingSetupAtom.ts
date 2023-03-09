@@ -1,6 +1,6 @@
-import type { TVendors } from 'hooks/useVendors';
-import { atom } from 'jotai';
 import { addDays, addHours, addMinutes, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
+import { atom } from 'jotai';
+import { TVendors } from 'types';
 
 // The list of active platform to show on the first screen
 export const platformAtom = atom<string[]>([]);
@@ -17,6 +17,7 @@ export const menuAtom = atom('Offer on the whole Menu');
 export const discountPercentageAtom = atom('');
 
 export const minOrderPercentageAtom = atom('');
+export const maxOrderPercentageAtom = atom('');
 
 // Type of duration
 export const durationAtom = atom('Starting Now');

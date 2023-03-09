@@ -18,21 +18,19 @@ const MarketingRadio: FC<{
     return <CheckboxKit onChange={onChange} value={title} checked={state.indexOf(title) > -1} />;
   };
   return (
-    <BoxKit className={`left-part-radio ${disabled ? 'disabled' : ''} ${!icon ? 'reversed' : ''}`}>
+    <BoxKit className={`left-part-radio ${disabled && 'disabled'} ${!icon && 'reversed'}`}>
       <div>
-        {icon ? (
+        {icon && (
           <span className={className}>
             <img src={icon} alt='Box Icon' />
           </span>
-        ) : (
-          ''
         )}
         <div>
           {title}
-          {subtitle ? <p>{subtitle}</p> : ''}
+          {subtitle && <p>{subtitle}</p>}
         </div>
       </div>
-      {!disabled ? getButton() : ''}
+      {!disabled && getButton()}
     </BoxKit>
   );
 };

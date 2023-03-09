@@ -1,20 +1,21 @@
-import { CSSProperties } from 'react';
-import { useAtom } from 'jotai';
-import { parseISO, format } from 'date-fns';
-import { OutlinedInputKit, SkeletonKit, TableCellKit, TextfieldKit, TooltipKit } from 'kits';
-import shortid from 'shortid';
-import { vendorsAtom } from 'store/vendorsAtom';
+import { format, parseISO } from 'date-fns';
 import { useVendors } from 'hooks';
-import costAtom from 'store/costAtom';
+import { useAtom } from 'jotai';
+import { OutlinedInputKit, SkeletonKit, TableCellKit, TooltipKit } from 'kits';
 import InputAdornmentKit from 'kits/inputAdornment/InputAdornmentKit';
+import { CSSProperties } from 'react';
+import shortid from 'shortid';
+import costAtom from 'store/costAtom';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { isInfinity } from 'utlls/scripts/scripts';
 import { platformList, platformObject } from '../../../data/platformList';
 import Calendar from '../../../assets/images/calendar.svg';
 import Clock from '../../../assets/images/clock.svg';
-import User from '../../../assets/images/user.svg';
-import ShoppingBag from '../../../assets/images/shopping-bag.svg';
-import Graph from '../../../assets/images/graph.svg';
 import Eye from '../../../assets/images/eye.svg';
+import Graph from '../../../assets/images/graph.svg';
+import ShoppingBag from '../../../assets/images/shopping-bag.svg';
 import Smile from '../../../assets/images/smile.svg';
+import User from '../../../assets/images/user.svg';
 
 const useTableContentFormatter = () => {
   const { getChainData } = useVendors();
@@ -178,10 +179,10 @@ const useTableContentFormatter = () => {
           r[h.id] === null || !r[h.id]
             ? '-'
             : r[h.id].map((vendor) => (
-              <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
-                {vendor}
-              </span>
-            ))
+                <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
+                  {vendor}
+                </span>
+              ))
         }
         disableHoverListener={r[h.id]?.length === 0}
         id='category-tooltip'
@@ -198,9 +199,9 @@ const useTableContentFormatter = () => {
   const renderVendorId = (r, h) => {
     const vendorsContent = r[h.id].filter((value, index, self) => self.indexOf(value) === index);
 
-    const vendors = r[h.id].map((vendor) => {
-      const vendorData = chainData.find((objV) => String(objV.vendor_id) === String(vendor))
-      
+    const vendors = vendorsContent.map((vendor) => {
+      const vendorData = chainData.find((objV) => String(objV.vendor_id) === String(vendor));
+
       if (!vendorData) return null;
 
       return vendorData.vendor_name || vendor;
@@ -220,13 +221,13 @@ const useTableContentFormatter = () => {
               vendorsContent === null || !vendorsContent
                 ? '-'
                 : vendors.map((vendor) => (
-                  <span
-                    key={`${vendor}${shortid.generate()}`}
-                    className='render-row-tooltip column'
-                  >
-                    {vendor}
-                  </span>
-                ))
+                    <span
+                      key={`${vendor}${shortid.generate()}`}
+                      className='render-row-tooltip column'
+                    >
+                      {vendor}
+                    </span>
+                  ))
             }
             disableHoverListener={vendorsContent?.length === 0}
             id='category-tooltip'
@@ -234,7 +235,9 @@ const useTableContentFormatter = () => {
             arrow
           >
             <span className='render-row-tooltip' key={h.id}>
-              {vendorsContent === null || !vendorsContent ? '-' : (vendorsContent?.length || 0)?.toLocaleString('en-US')}
+              {vendorsContent === null || !vendorsContent
+                ? '-'
+                : (vendorsContent?.length || 0)?.toLocaleString('en-US')}
             </span>
           </TooltipKit>
         )}
@@ -291,7 +294,7 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', textAlign: 'left' }}
     >
       <span
-        className={r[h.id] !== null ? 'competition-table-alert' : ''}
+        className={r[h.id] !== null && 'competition-table-alert'}
         style={{ whiteSpace: 'nowrap' }}
       >
         {r[h.id] === null ? '-' : `${r[h.id]}%`}
@@ -480,12 +483,34 @@ const useTableContentFormatter = () => {
           type='number'
           defaultValue={r[h.id]}
           onChange={handleChange}
-          endAdornment={<InputAdornmentKit position="end">%</InputAdornmentKit>}
+          endAdornment={<InputAdornmentKit position='end'>%</InputAdornmentKit>}
         />
       </TableCellKit>
     );
   };
-
+  const renderEvolution = (r, h, i = 0) => {
+    const evolution = (procent) => {
+      if (Number.isNaN(procent) || procent === '-' || procent === null || isInfinity(procent)) {
+        return '-';
+      }
+      return `${procent}%`;
+    };
+    return (
+      <TableCellKit
+        style={{ paddingLeft: 0, textAlign: 'left' }}
+        id={`${h.id}_${i}`}
+        key={`${h.id}_${r.id}`}
+      >
+        <div
+          className={`table_evolution ${Number(r[h.id]) > 0 && 'table_increased'} ${
+            Number(r[h.id]) < 0 && 'table_decreased'
+          }`}
+        >
+          <span>{evolution(Number(r[h.id]))}</span>
+        </div>
+      </TableCellKit>
+    );
+  };
   // row skeleton
 
   const renderSimpleRowSkeleton = (h, i = 0) => (
@@ -541,6 +566,7 @@ const useTableContentFormatter = () => {
     renderSimpleRowSkeleton,
     renderPercentSkeleton,
     renderOrdinalSuffixV3,
+    renderEvolution,
   };
 };
 

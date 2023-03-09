@@ -1,13 +1,18 @@
-import {
-  timesAtom,
-  itemMenuAtom,
-  everyWeekAtom,
-  customisedDayAtom,
-  typeScheduleAtom,
-  targetAudienceAtom,
-} from 'store/marketingSetupAtom';
-import { addMinutes, format, addHours } from 'date-fns';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import sortedVendors from 'components/restaurantDropdown/soretedVendors';
+import { addHours, addMinutes, format } from 'date-fns';
 import { useAtom } from 'jotai';
+import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
+import {
+  customisedDayAtom,
+  everyWeekAtom,
+  itemMenuAtom,
+  targetAudienceAtom,
+  timesAtom,
+  typeScheduleAtom,
+} from 'store/marketingSetupAtom';
+import { TDisplayVendor, TVendors } from 'types';
+import useVendors from './useVendors';
 
 const itemMenuObj = {
   'Flash Deal': {
@@ -100,6 +105,103 @@ const useMarketingSetup = () => {
 
   const disableWeekends = (date: Date) => date.getDay() === 0 || date.getDay() === 6;
 
+  const [elligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
+  const { vendors } = useVendors();
+
+  const setVendors = (
+    display: TDisplayVendor,
+    setState: (value: TVendors | Record<string, never>) => void,
+    state: TVendors | Record<string, never>,
+    platform: string[]
+  ) => {
+    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
+    const displayTemp = JSON.parse(JSON.stringify(display));
+    let counter = 0;
+    let defaultSelection = null;
+
+    sortedVendors(displayTemp).forEach((chainName) => {
+      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+        displayTemp[chainName][vendorName].checked =
+          state?.display?.[chainName]?.[vendorName]?.checked || false;
+        if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
+          displayTemp[chainName][vendorName].deleted = true;
+          displayTemp[chainName][vendorName].checked = false;
+        } else {
+          const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
+          platformsDisplay.forEach((platformV) => {
+            displayTemp[chainName][vendorName].deactivated = false;
+
+            if (platformV?.toLocaleLowerCase() === 'deliveroo' && platform.includes('deliveroo')) {
+              const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
+
+              const exists = elligibilityDeliverooState?.[vId];
+
+              if (!exists) {
+                if (platform.length === 1) {
+                  displayTemp[chainName][vendorName].deactivated = true;
+                  displayTemp[chainName][vendorName].checked = false;
+                  return;
+                }
+
+                if (Object.keys(displayTemp[chainName][vendorName].platforms).length === 2) {
+                  displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active =
+                    false;
+                }
+
+                return;
+              }
+            }
+
+            if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
+              displayTemp[chainName][vendorName].deleted = true;
+              displayTemp[chainName][vendorName].checked = false;
+            }
+
+            if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
+              displayTemp[chainName][vendorName].deleted = true;
+              displayTemp[chainName][vendorName].checked = false;
+            }
+            if (!platform.includes(platformV)) {
+              displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
+            }
+          });
+
+          if (platform.length === 1) {
+            platform.forEach((p) => {
+              if (!platformsDisplay.includes(p)) {
+                displayTemp[chainName][vendorName].deleted = true;
+                displayTemp[chainName][vendorName].checked = false;
+              }
+            });
+          }
+
+          if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
+            defaultSelection = {
+              chainName,
+              vendorName,
+            };
+          }
+
+          if (displayTemp[chainName][vendorName].checked) {
+            counter += 1;
+          }
+        }
+      });
+    });
+
+    if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
+      displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
+    }
+    platform.forEach((plat) => {
+      vendorsObjTemp[plat] = selectedVendors('full', displayTemp, plat);
+    });
+    setState({
+      ...vendors,
+      display: displayTemp,
+      vendorsObj: vendorsObjTemp,
+    });
+  };
+
   return {
     setStartTimeFormat,
     setEndTimeFormat,
@@ -109,6 +211,7 @@ const useMarketingSetup = () => {
     getTargetAudience,
     getTypeSchedule,
     disableWeekends,
+    setVendors,
   };
 };
 

@@ -1,9 +1,9 @@
-import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { platformAtom } from 'store/marketingSetupAtom';
 import selectIcon from '../../assets/images/ic_select.png';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import './RestaurantDropdown.scss';
 import selectedVendors from './selectedVendors';
@@ -34,12 +34,7 @@ const RestaurantDropdown: FC<{
   className?: string;
 }> = ({ setState, state, pageType, className }) => {
   const [vendorsContext, setVendors] = useAtom(vendorsAtom);
-  const { vendors: vendorsReq } = useVendors(undefined);
-  useEffect(() => {
-    if (Object.keys(vendorsReq.display).length > 0) {
-      setVendors(vendorsReq);
-    }
-  }, [vendorsReq]);
+  const [platformsSelected] = useAtom(platformAtom);
 
   const { display, vendorsObj } = state || vendorsContext;
 
@@ -84,7 +79,7 @@ const RestaurantDropdown: FC<{
       if (pageType === 'branch') {
         if (
           selectedVendors('vendors', display).every(
-            (obj: any) => obj.email === displayTemp[chainName][value].email
+            (obj: any) => platformsSelected.some((plat) => obj.platforms[plat]?.data.chain_name === displayTemp[chainName][value].platforms[plat]?.data.chain_name)
           )
         ) {
           displayTemp[chainName][value].checked = true;
@@ -96,6 +91,7 @@ const RestaurantDropdown: FC<{
             }
           });
         } else {
+
           Object.keys(displayTemp).forEach((cName) => {
             Object.keys(displayTemp[cName]).forEach((vName) => {
               displayTemp[cName][vName].checked = false;
@@ -157,7 +153,7 @@ const RestaurantDropdown: FC<{
   return (
     <div
       className={`restaurant-dropdown_wrapper ${
-        pageType === 'cost' || pageType === 'listing' ? 'cost' : ''
+        pageType === 'cost' || (pageType === 'listing' && 'cost')
       } ${className || ''}`}
     >
       {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
@@ -181,7 +177,7 @@ const RestaurantDropdown: FC<{
             </div>
           )}
         >
-          <div className={`dropdown-paper ${pageType === 'cost' ? 'cost' : ''}`}>
+          <div className={`dropdown-paper ${pageType === 'cost' && 'cost'}`}>
             {!(pageType === 'cost' || pageType === 'listing' || pageType === 'branch') ? (
               <div className='selected-chains'>
                 <p>Selected: {selectedVendors('name', display).length}</p>

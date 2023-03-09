@@ -1,9 +1,10 @@
-import { useAlert, useApi } from 'hooks';
-import { FC } from 'react';
+import { settingsOnboardPlatformStatus } from 'api';
+import { useUser } from 'contexts';
+import { useAlert } from 'hooks';
 import { ButtonKit } from 'kits';
+import { FC } from 'react';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
-import { useUserAuth } from '../../../../contexts/AuthContext';
 
 const UploadingActive: FC<{
   propsVariables: {
@@ -40,14 +41,13 @@ const UploadingActive: FC<{
     deleteAccount,
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
-  const { settingsOnboardPlatformStatus } = useApi();
   const { triggerAlertWithMessageError } = useAlert();
-  const { user } = useUserAuth();
+  const user = useUser();
   const confirm = async () => {
     const res = await settingsOnboardPlatformStatus(
       {
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
         email,
         active_status: true,
       },
@@ -58,12 +58,12 @@ const UploadingActive: FC<{
       return;
     }
 
+    setBranchData([...branchDataUploading, ...branchData]);
     setActiveStep(100);
     setConnectAccount('completed');
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    setBranchData([...branchDataUploading, ...branchData]);
   };
   return (
     <div
@@ -83,8 +83,8 @@ const UploadingActive: FC<{
       <div>
         <p className='__title'>Your Data is Being uploaded</p>
         <span className='__subtitle'>
-          Your {platform} account has been connect , we are uplouploading the necessary data to
-          manage your brands
+          Your {platform} account has been connect , we are uploading the necessary data to manage
+          your brands
         </span>
       </div>
       <div className='onboarding-branches-uploading'>

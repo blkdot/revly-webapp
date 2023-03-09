@@ -1,6 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { useAlert } from 'hooks';
 import {
   ButtonKit,
@@ -10,6 +10,7 @@ import {
   SpinnerKit,
   TextfieldKit,
   TypographyKit,
+  ButtonAction,
 } from 'kits';
 import { useEffect, useState } from 'react';
 import { sendMail } from '../../api/competitionApi';
@@ -34,7 +35,7 @@ const Competitor = ({ open, opened, platformList }) => {
   const [cuisineFilter, setCuisineFilter] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingReq, setLoadingReq] = useState(false);
-  const { user } = useUserAuth();
+  const user = useUser();
   const { showAlert, setAlertMessage } = useAlert();
   const [userRestoName, setUserRestoName] = useState('');
 
@@ -42,7 +43,7 @@ const Competitor = ({ open, opened, platformList }) => {
     try {
       const data = await settingsLoad({
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
       });
       setUserRestoName(data.restoname || '');
     } catch (err) {
@@ -182,15 +183,12 @@ const Competitor = ({ open, opened, platformList }) => {
 
   return (
     <div className='competitor-wrapper'>
-      <ButtonKit onClick={() => open()} variant='contained' className='competition-add'>
-        <AddIcon />
-        Add a Competitor
-      </ButtonKit>
+      <ButtonAction onClick={() => open()}>Add a competitor</ButtonAction>
       <div
         role='presentation'
         tabIndex={-1}
         onClick={() => open()}
-        className={`competitor-overlay ${opened ? 'active' : ''}`}
+        className={`competitor-overlay ${opened && 'active'}`}
       >
         <form role='presentation' tabIndex={-1} onSubmit={(e) => submit(e)}>
           <PaperKit onClick={(e) => e.stopPropagation()} className='competitor-paper'>
@@ -204,7 +202,7 @@ const Competitor = ({ open, opened, platformList }) => {
               <ButtonKit
                 type='submit'
                 variant='contained'
-                className={`competition-add ${loading ? 'active' : ''}`}
+                className={`competition-add ${loading && 'active'}`}
               >
                 Add this competitor
               </ButtonKit>

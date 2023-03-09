@@ -9,6 +9,11 @@ type TDaysObject = {
 };
 
 export const rangeHoursOpenedDay = {
+  0: { hour: 0, value: 0, label: '12AM', isNext: false },
+  1: { hour: 1, value: 1, label: '1AM', isNext: false },
+  2: { hour: 2, value: 2, label: '2AM', isNext: false },
+  3: { hour: 3, value: 3, label: '3AM', isNext: false },
+  4: { hour: 4, value: 4, label: '4AM', isNext: false },
   5: { hour: 5, value: 5, label: '5AM', isNext: false },
   6: { hour: 6, value: 6, label: '6AM', isNext: false },
   7: { hour: 7, value: 7, label: '7AM', isNext: false },
@@ -16,7 +21,7 @@ export const rangeHoursOpenedDay = {
   9: { hour: 9, value: 9, label: '9AM', isNext: false },
   10: { hour: 10, value: 10, label: '10AM', isNext: false },
   11: { hour: 11, value: 11, label: '11AM', isNext: false },
-  12: { hour: 12, value: 12, label: '12AM', isNext: false },
+  12: { hour: 12, value: 12, label: '12PM', isNext: false },
   13: { hour: 13, value: 13, label: '13PM', isNext: false },
   14: { hour: 14, value: 14, label: '14PM', isNext: false },
   15: { hour: 15, value: 15, label: '15PM', isNext: false },

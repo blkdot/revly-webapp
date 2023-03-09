@@ -9,7 +9,7 @@
   border-radius: 16px;
   border: 1px solid #fff;
 
-  >div {
+  > div {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -35,7 +35,7 @@
       background-color: $color-icon !important;
     }
 
-    >svg {
+    > svg {
       width: 70%;
       height: 70%;
       object-fit: cover;
@@ -52,7 +52,6 @@
   }
 
   .card-icon {
-
     svg,
     img {
       filter: invert(58%) sepia(0%) saturate(671%) hue-rotate(147deg) brightness(87%) contrast(84%);
@@ -65,35 +64,34 @@
   }
 
   &:hover {
-    background: #F6F3FF;
+    background: #f6f3ff;
     transition: 0.3s;
-    border-color: #906BFF;
+    border-color: #906bff;
 
     svg {
       filter: none;
     }
 
-
     .card-typography {
       &.MuiTypography-h3 {
-        color: #906BFF;
+        color: #906bff;
       }
     }
   }
 
   &.active {
-    background: #F6F3FF;
-    border-color: #906BFF;
+    background: #f6f3ff;
+    border-color: #906bff;
 
     .card-typography {
       &.MuiTypography-h3 {
-        color: #906BFF;
+        color: #906bff;
 
         p {
-          color: #906BFF;
+          color: #906bff !important;
 
           span {
-            color: #906BFF;
+            color: #906bff;
           }
         }
       }
@@ -103,7 +101,7 @@
   .card-typography {
     font-weight: 600;
     font-size: 16px !important;
-    color: #212B36;
+    color: #212b36;
 
     &.MuiTypography-h3 {
       font-weight: 700 !important;
@@ -121,22 +119,30 @@
         font-weight: 700;
         font-size: 32px;
         line-height: 48px;
-        color: #212B36;
+        color: #212b36;
       }
 
       &.card-roi {
-        >p {
-          color: #212B36;
-          line-height: 0;
-          margin-bottom: 10px;
-
-          >span:nth-of-type(2) {
+        > div {
+          display: flex;
+          align-items: center;
+          grid-gap: 5px;
+          > span {
+            display: inline;
             font-size: 13px;
             font-weight: 500;
-            line-height: 0;
+            line-height: 15px;
           }
         }
 
+        p {
+          display: inline-block;
+          width: fit-content;
+          color: #212b36;
+          line-height: 15px;
+          margin-bottom: 10px;
+          white-space: nowrap;
+        }
       }
     }
   }
@@ -160,7 +166,7 @@
 
   .card-week {
     font-size: 14px;
-    color: #212B36;
+    color: #212b36;
     text-transform: lowercase;
   }
 

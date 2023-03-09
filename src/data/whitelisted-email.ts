@@ -7,6 +7,7 @@ const emailWhitelisted = [
   'amanbekasylbekov0@gmail.com',
   'amanbekasylbekov2@gmail.com',
   'tchi.devica@gmail.com',
+  'amine.elalj@gmail.com',
   'gergelylevente.szabo@goofycowburger.com',
 ];
 

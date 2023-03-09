@@ -1,24 +1,20 @@
-import axios from 'axios';
-import { useUserAuth } from 'contexts';
-import { handleResponse } from '../api/baseApi';
-import config from '../setup/config';
-
-const { apiUrl } = config;
+import { api, handleResponse } from 'api/utils';
+import { useUser } from 'contexts';
 
 const useCost = (vendorsObj) => {
-  const { user } = useUserAuth();
+  const user = useUser();
 
   const requestVendorsDefaultParam = {
     master_email: user.email,
-    access_token: user.accessToken,
+    access_token: user.token,
   };
 
   const defaulltBody = { vendors: vendorsObj, ...requestVendorsDefaultParam };
 
-  const load = () => axios.post(`${apiUrl}/user/loadv2`, { ...defaulltBody }).then(handleResponse);
+  const load = () => api.post(`/user/loadv2`, { ...defaulltBody }).then(handleResponse);
 
   const save = ({ cost, vendors }) =>
-    axios.post(`${apiUrl}/user/savev2`, { ...defaulltBody, vendors, data: { cost } });
+    api.post(`/user/savev2`, { ...defaulltBody, vendors, data: { cost } });
 
   return {
     load,

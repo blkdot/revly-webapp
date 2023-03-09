@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { cancelOfferMaster } from 'api';
 import { Arrow, Calendar, ExpandIcon, FastFood, Timer, Warning } from 'assets/icons';
-import { useUserAuth } from 'contexts';
+import { useUser } from 'contexts';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
-import { useApi, useVendors } from 'hooks';
+import { useVendors } from 'hooks';
 import { PaperKit, SkeletonKit, SpinnerKit } from 'kits';
 import { useState } from 'react';
 import { getPlanningOfferDetails } from '../../../api/userApi';
@@ -22,14 +23,11 @@ const scheduleTypeMapping = {
 };
 
 const OfferDetailComponent = ({ data, setOpened }) => {
+  const user = useUser();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [offerDetail, setOfferDetail] = useState(data);
   // eslint-disable-next-line
   const [offerDetailMaster, setofferDetailMaster] = useState<any>({});
-
-  const { cancelOfferMaster } = useApi();
-
-  const { user } = useUserAuth();
   const { vendors, getChainData } = useVendors(undefined);
   const { display, vendorsObj } = vendors;
   const renderOfferStatus = (status) => {
@@ -126,7 +124,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
     cancelOfferMaster(
       {
         master_email: user.email,
-        access_token: user?.accessToken || '',
+        access_token: user.token,
         // TODO: check this
         platform_token: getToken(),
         offer_id: null,
@@ -154,7 +152,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       return (
         getPlanningOfferDetails({
           master_email: user.email,
-          access_token: user?.access_token || '',
+          access_token: user.token || '',
           vendors: vendorsObj,
           platform: platform.toLowerCase(),
           master_offer_id,
@@ -240,14 +238,6 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                     </div>
                     <div className='offer-visibility-sub-title'>Caroussel</div>
                   </div>
-                  {/* <div className='offer-visibility-block'>
-                    <div>
-                      <span className='offer-visibility-title'>Visibility Rank</span>
-                    </div>
-                    <div className='offer-visibility-sub-title'>
-                      {accrued_discount === 0 || accrued_discount ? accrued_discount : '-'}
-                    </div>
-                  </div> */}
                   <div className='offer-visibility-block'>
                     <div>
                       <span className='offer-visibility-title'>Orders</span>
@@ -450,7 +440,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                   <span className='offer-duration width-left-icon width-right-icon'>
                     {type_offer ? getMenuTypeOffer() : <SkeletonKit width={130} height={30} />}
                   </span>
-                  {type_offer && type_offer !== 'Menu discount' ? <ExpandIcon /> : ''}
+                  {type_offer && type_offer !== 'Menu discount' && <ExpandIcon />}
                 </div>
                 {type_offer && type_offer !== 'Menu discount' && (
                   <div
@@ -666,9 +656,7 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {data.start_hour ? (
-              format(new Date(`01 Jan 1970 ${data.start_hour || '00:00'}:00`), 'H:mm aaa')
-            ) : (
+            {data.start_hour || (
               <SkeletonKit />
             )}
           </span>
@@ -704,9 +692,7 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {data.end_hour ? (
-              format(new Date(`01 Jan 1970 ${data.end_hour || '00:00'}:00`), 'H:mm aaa')
-            ) : (
+            {data.end_hour || (
               <SkeletonKit />
             )}
           </span>

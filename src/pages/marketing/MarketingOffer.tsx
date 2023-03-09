@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
+import { usePlanningOffers } from 'api';
+import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
@@ -8,14 +11,13 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate, useQueryState } from 'hooks';
-import { usePlanningOffersNew } from 'hooks/usePlanningOffers';
-import { ButtonKit, TypographyKit } from 'kits';
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import SettingFuture from '../../assets/images/ic_setting-future.png';
-import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
+import { useDate, useQueryState } from 'hooks';
+import { ButtonAction, ContainerKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle';
+import MainTitle from 'kits/title/MainTitle';
+import { useEffect, useState } from 'react';
+import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
@@ -38,7 +40,10 @@ const MarketingOffer = () => {
     endDate: getOfferDate(),
   });
 
-  const { data, isLoading: isLoadingOffers } = usePlanningOffersNew(beforePeriodBtn);
+  const { data, isLoading: isLoadingOffers } = usePlanningOffers({
+    from: dayjs(beforePeriodBtn.startDate),
+    until: dayjs(beforePeriodBtn.endDate),
+  });
 
   const [selected, setSelected] = useState([]);
   const [opened, setOpened] = useState(false);
@@ -79,7 +84,10 @@ const MarketingOffer = () => {
   } = useTableContentFormatter();
 
   const [link, setLink] = useState('offers_managment');
-  const links = [{ title: 'Offers management', link: 'offers_managment' }, { title: 'Offers performance', link: 'offers_performance'}];
+  const links = [
+    { title: 'Offers management', link: 'offers_managment' },
+    { title: 'Offers performance', link: 'offers_performance' },
+  ];
   const headersManagment = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
@@ -99,6 +107,12 @@ const MarketingOffer = () => {
   const headersPerformance = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     {
       id: 'revenue',
       disablePadding: true,
@@ -128,8 +142,7 @@ const MarketingOffer = () => {
       id: 'roi',
       disablePadding: true,
       label: 'ROI',
-      tooltip:
-        `# AED generated in Profits for every 1 AED spent on discount. Profits are revenue minus aggregator's commission, order discount, ads CPC and food cost.`,
+      tooltip: `# AED generated in Profits for every 1 AED spent on discount. Profits are revenue minus aggregator's commission, order discount, ads CPC and food cost.`,
     },
     { id: 'status', disablePadding: true, label: 'Status' },
   ];
@@ -315,8 +328,6 @@ const MarketingOffer = () => {
     setOpenedFilter(false);
   };
 
-  const isEmptyList = () => offersData.length < 1;
-
   useEffect(() => {
     let filteredData = offersData;
 
@@ -348,9 +359,7 @@ const MarketingOffer = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
-          new Date(obj.valid_to)
-        ).format('hh:mm')}`,
+        slot: `${obj.start_hour} - ${obj.end_hour}`,
         orders: obj.n_orders,
       }))
     );
@@ -385,6 +394,28 @@ const MarketingOffer = () => {
     setOpenedOffer(true);
     setClickedId(id);
   };
+  const isEmptyList = () => offersData.length < 1;
+  const renderFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeMultipleFilter('platform')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeMultipleFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'offers_performance') {
       return (
@@ -398,10 +429,9 @@ const MarketingOffer = () => {
           rows={offersDataFiltered.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={!isEmptyList() ? filters : null}
-          filtersHead={filtersHead}
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          filters={!isEmptyList() && renderFilters()}
           noDataText='No offer has been retrieved.'
+          onClickRow={handleRowClick}
         />
       );
     }
@@ -418,9 +448,7 @@ const MarketingOffer = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={!isEmptyList() ? filters : null}
-        filtersHead={filtersHead}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
+        filters={!isEmptyList() && renderFilters()}
         noDataText='No offer has been retrieved.'
       />
     );
@@ -431,43 +459,40 @@ const MarketingOffer = () => {
         <RestaurantDropdown />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
-      <div className='marketing-top'>
-        <div className='marketing-top-text'>
-          <TypographyKit variant='h4'>Marketing - Offers</TypographyKit>
-          <TypographyKit color='#637381' variant='subtitle'>
-            Create and manage all your offers. Set personalised rules to automatically trigger your
-            offers.
-          </TypographyKit>
+      <ContainerKit>
+        <div className='marketing-top'>
+          <div className='marketing-top-text'>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <MainTitle>Marketing - Offers</MainTitle>
+                <DescriptionTitle>
+                  Create and manage all your offers. Set personalised rules to automatically trigger
+                  your offers
+                </DescriptionTitle>
+              </div>
+            </div>
+          </div>
+          <ButtonAction onClick={() => OpenSetup()}>Set up an offer</ButtonAction>
         </div>
-        <div className='markting-top-btns'>
-          <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
-            <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
-            Create a smart rule
-          </ButtonKit>
-          <ButtonKit onClick={() => OpenSetup()} variant='contained'>
-            <img src={SettingFuture} alt='Setting future icon' />
-            Set up an offer
-          </ButtonKit>
-        </div>
-      </div>
-      {openedOffer ? (
-        <OfferDetailComponent
-          // eslint-disable-next-line eqeqeq
-          data={data?.offers.find((o) => o.master_offer_id == clickedId)}
-          setOpened={setOpenedOffer}
+        {openedOffer ? (
+          <OfferDetailComponent
+            // eslint-disable-next-line eqeqeq
+            data={data?.offers.find((o) => o.master_offer_id == clickedId)}
+            setOpened={setOpenedOffer}
+          />
+        ) : (
+          renderTable()
+        )}
+        <MarketingSetup active={active} setActive={setActive} />
+        <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
         />
-      ) : (
-        renderTable()
-      )}
-      <MarketingSetup active={active} setActive={setActive} />
-      <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+      </ContainerKit>
     </div>
   );
 };

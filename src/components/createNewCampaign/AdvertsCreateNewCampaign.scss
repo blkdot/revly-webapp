@@ -1,0 +1,421 @@
+.adverts_create_new_campaign-wrapper {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  z-index: 1000;
+  background-color: #f8f9fd;
+  top: 0;
+  display: flex;
+
+  .adverts-step-wrapper {
+    width: 60%;
+    position: relative;
+
+    &::before {
+      content: '';
+      background-color: #7b61ff;
+      height: 4px;
+      width: 0;
+      transition: 0.7s;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 10;
+    }
+
+    &.launch {
+      transition: 0.7s;
+
+      &::before {
+        width: 20%;
+        transition: 0.7s;
+      }
+    }
+
+    &.recurency {
+      transition: 0.7s;
+
+      &::before {
+        transition: 0.7s;
+        width: 40%;
+      }
+    }
+
+    &.budget {
+      transition: 0.7s;
+
+      &::before {
+        transition: 0.7s;
+        width: 60%;
+      }
+    }
+
+    &.biding {
+      transition: 0.7s;
+
+      &::before {
+        transition: 0.7s;
+        width: 80%;
+      }
+    }
+
+    &.congrats {
+      transition: 0.7s;
+
+      &::before {
+        transition: 0.7s;
+        width: 100%;
+      }
+    }
+  }
+
+  .adverts-step {
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    padding: 50px 60px 50px 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: 0.7s;
+
+    .adverts-step_top {
+      position: relative;
+      height: 86.5%;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      > p {
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 22px;
+        color: #212b36;
+        margin-bottom: 5px;
+      }
+
+      > span {
+        font-weight: 400;
+        line-height: 20px;
+        color: #637381;
+        margin-bottom: 30px;
+        display: block;
+      }
+    }
+
+    .adverts-buttons {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        font-size: 16px;
+        height: 46px;
+        width: 48%;
+        box-shadow: none;
+        text-transform: none;
+      }
+
+      .adverts-cancel {
+        background-color: #f9fafb;
+        color: #1a1a1c;
+      }
+
+      .adverts-continue {
+        background-color: #7b61ff;
+        color: #fff;
+
+        svg {
+          margin-left: 10px;
+          transform: scale(-1, 1);
+
+          path {
+            fill: #fff;
+          }
+        }
+
+        &.Mui-disabled.Mui-disabled {
+          color: rgba(0, 0, 0, 0.26);
+          background-color: rgba(0, 0, 0, 0.12);
+
+          svg {
+            path {
+              fill: rgba(0, 0, 0, 0.2);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.advert-branches {
+  > div {
+    width: 100%;
+  }
+
+  .restaurant-dropdown_wrapper .MuiSvgIcon-root {
+    right: 20px;
+  }
+}
+
+.adverts_create_new_campaign_widgets {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  grid-gap: 17px;
+  padding-top: 74px;
+  flex-direction: column;
+
+  > div {
+    width: 80%;
+    background: #ffffff;
+    border: 1px solid rgba(145, 158, 171, 0.08);
+    border-radius: 9px;
+  }
+
+  .MuiSkeleton-text {
+    border-radius: 2px;
+    height: 20px;
+  }
+}
+
+.advert-title-icon {
+  display: flex;
+  align-items: center;
+  grid-gap: 15px;
+
+  > p {
+    color: #212b36;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  > span {
+    background-color: #7b61ff;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 50%;
+    display: block;
+    position: relative;
+
+    img,
+    svg {
+      width: 100%;
+      height: 100%;
+      filter: invert(100%) sepia(1%) saturate(2099%) hue-rotate(261deg) brightness(400%)
+        contrast(100%);
+    }
+  }
+}
+
+.adverts-date-picker {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+
+  .picker-duration {
+    display: flex;
+    justify-content: space-between;
+
+    > div {
+      width: 47% !important;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      grid-gap: 5px;
+      font-weight: 600;
+
+      > div {
+        width: 100%;
+        background-color: #f8f9fb;
+        border-radius: 8px;
+        overflow: hidden;
+
+        input {
+          background-color: #f8f9fb;
+        }
+
+        fieldset {
+          border: none;
+        }
+      }
+    }
+  }
+}
+
+.adverts-radio {
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+}
+
+.no-filter.no-filter {
+  filter: none !important;
+}
+
+.advert-input {
+  margin-top: 15px;
+  margin-bottom: 40px;
+
+  &.biding {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > div {
+      width: 48%;
+    }
+
+    .adverts-average {
+      height: 46px;
+      width: 48%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 30px;
+      background-color: #f6f3ff;
+      border-radius: 6px;
+
+      p {
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 12px;
+      }
+
+      span {
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 12px;
+      }
+    }
+  }
+
+  > div {
+    width: 100%;
+
+    &::before {
+      content: none;
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+
+  input {
+    height: 36px !important;
+    width: 100%;
+    background-color: #f8f9fb;
+    padding: 6px 18px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+}
+
+.advert-branches-budget {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 20px;
+  overflow: auto;
+  height: 63%;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f3f3f3;
+    border-radius: 31px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #637381;
+    border-radius: 31px;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > .advert-input {
+      width: 40%;
+      margin: 0;
+    }
+  }
+}
+
+.adverts-dropdown {
+  > div {
+    width: 100%;
+    padding-right: 8px;
+
+    label {
+      top: -5px !important;
+
+      &[data-shrink='true'] {
+        display: none !important;
+      }
+    }
+
+    legend {
+      display: none !important;
+    }
+
+    > div {
+      height: 46px !important;
+      background-color: #f8f9fb;
+      border-radius: 6px !important;
+
+      > fieldset {
+        border: none !important;
+      }
+    }
+  }
+}
+
+.adverts-title-radio {
+  position: absolute;
+  right: 0;
+}
+
+.adverts-congrats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  p {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 36px;
+    display: block;
+    margin: 15px 0;
+  }
+
+  span {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #637381;
+  }
+}
+
+@media (max-width: 1000px) {
+  .adverts_create_new_campaign-wrapper {
+    flex-direction: column-reverse;
+    grid-gap: 30px;
+
+    > div {
+      width: 100% !important;
+    }
+  }
+}

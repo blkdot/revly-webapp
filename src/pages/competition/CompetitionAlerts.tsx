@@ -1,45 +1,56 @@
-import { useUserAuth } from 'contexts';
-import dayjs from 'dayjs';
-import { useAlert, useApi, usePlatform } from 'hooks';
-import { useAtom } from 'jotai';
-import { CheckboxKit, ListItemTextKit, MenuItemKit, PaperKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
+import { getAlerts, getCompetitors } from 'api';
+import { pascalCase } from 'change-case';
+import Competitor from 'components/competitor/Competitor';
+import Dates from 'components/dates/Dates';
+import FilterBranch from 'components/filter/filterBranch/FilterBranch';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
+import { useUser } from 'contexts';
+import { platformObject } from 'data/platformList';
+import dayjs from 'dayjs';
+import { useAlert, useVendors } from 'hooks';
+import { useAtom } from 'jotai';
+import { ContainerKit, PaperKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
+import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
+import { useEffect, useMemo, useState } from 'react';
+import Columns from '../../assets/images/columns.svg';
 import competitorIcon from '../../assets/images/ic_competitor.png';
-import PlatformIcon from '../../assets/images/ic_select_platform.png';
-import ictalabat from '../../assets/images/talabat-favicon.png';
-import CompetitionDropdown from '../../components/competitionDropdown/CompetitionDropdown';
-import Competitor from '../../components/competitor/Competitor';
-import Dates from '../../components/dates/Dates';
-import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
-import { vendorsAtom } from '../../store/vendorsAtom';
 import './Competition.scss';
-import Calendar from '../../assets/images/calendar.svg';
-import Clock from '../../assets/images/clock.svg';
+import {
+  competitionBranchSelectedAtom,
+  competitionSelectedPlatformAtom,
+} from './CompetitionStoreAtom';
 
 let fnDelays = null;
 
 const CompetitionAlerts = () => {
-  const [vendors, setVendors] = useAtom(vendorsAtom);
-  const { vendorsArr, vendorsObj } = vendors;
-  const [platformList, setPlatformList] = useState([]);
-  const { user } = useUserAuth();
+  const { vendors } = useVendors();
+  const { chainData } = vendors;
+  const user = useUser();
   const [opened, setOpened] = useState(false);
-  const [platform, setPlatform] = useState('deliveroo');
   const [competitionAlertsData, setCompetitionAlertsData] = useState([]);
-  const [competitor, setCompetitor] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [competitorList, setCompetitorList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { getAlerts, getCompetitors } = useApi();
+  const [loading, setLoading] = useState(false);
   const { triggerAlertWithMessageError } = useAlert();
   const [beforePeriodBtn, setbeforePeriodBtn] = useState({
     startDate: new Date(),
     endDate: new Date(),
   });
-  const { userPlatformData } = usePlatform();
+  const [selectedPlatform, setSelectedPlatform] = useAtom(competitionSelectedPlatformAtom);
+  const [branchSelected, setBranchSelected] = useAtom(competitionBranchSelectedAtom);
+  const [selectedCompetitors, setSelectedCompetitors] = useState<string[]>([]);
+
+  const branchActive = useMemo(
+    () =>
+      chainData.find(
+        (chain) => chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+      ),
+    [branchSelected[0], selectedPlatform[0]]
+  );
 
   const Open = () => {
     setOpened(!opened);
@@ -97,7 +108,7 @@ const CompetitionAlerts = () => {
     renderSimpleIconRow,
     renderSimpleRowSkeleton,
     renderPercentSkeleton,
-    renderPercent
+    renderPercent,
   } = useTableContentFormatter();
 
   const cellTemplatesObject = {
@@ -113,7 +124,7 @@ const CompetitionAlerts = () => {
       (acc, cur) => ({
         ...acc,
         [cur.id]: cellTemplatesObject[cur.id] ? cellTemplatesObject[cur.id](r, cur) : r[cur.id],
-        id: `${cur.id}_${r.id}`,
+        id: r.alert_id,
         data: r,
       }),
       {}
@@ -136,37 +147,87 @@ const CompetitionAlerts = () => {
       }),
       {}
     );
-  useEffect(() => {
-    if (userPlatformData) {
-      const pl = userPlatformData.platforms;
-      const list = Object.keys(pl)
-        .map((v) => ({
-          name: v,
-          registered: pl[v].some((obj) => obj.active),
-        }))
-        .filter((k) => k.registered === true);
 
-      setPlatform(list[0]?.name);
-      setPlatformList(list);
+  const getCompetitorsDropdownContent = async (vend) => {
+    const body = {
+      master_email: user.email,
+      access_token: user.token,
+      vendors: { [selectedPlatform[0]]: [vend] },
+      start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
+      end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
+    };
+
+    const comp = await getCompetitors(body);
+
+    setCompetitorList(comp.data ? comp.data.data : []);
+    setSelectedCompetitors([]);
+  };
+
+  const filterData = () => {
+    if (selectedCompetitors?.length > 0) {
+      const arr = selectedCompetitors
+        .map((v) => competitionAlertsData.filter((k) => k.name === v))
+        .flat();
+
+      setFilteredData(arr);
+    } else {
+      setFilteredData([]);
     }
-  }, [userPlatformData]);
+  };
+
+  useEffect(() => {
+    if (!branchSelected[0] && selectedPlatform[0]) {
+      const chainDefault = chainData.find((chain) => chain.platform === selectedPlatform[0]);
+
+      if (!chainDefault) return;
+
+      setBranchSelected([String(chainDefault.vendor_id)]);
+    }
+  }, [chainData, selectedPlatform[0]]);
+
+  useEffect(() => {
+    if (selectedPlatform[0] && branchSelected[0]) {
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
+
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
+
+          getCompetitorsDropdownContent(localBranch.data);
+        }
+
+        return;
+      }
+      getCompetitorsDropdownContent(branchActive.data);
+    }
+  }, [selectedPlatform[0], branchSelected[0], chainData.length, beforePeriodBtn]);
+
+  useEffect(() => {
+    filterData();
+  }, [selectedCompetitors]);
 
   const getData = (plat, vend) => {
     clearTimeout(fnDelays);
 
     fnDelays = setTimeout(async () => {
       setLoading(true);
+
       try {
         const body = {
           master_email: user.email,
-          access_token: user.accessToken,
+          access_token: user.token,
           vendors: vend || {},
           start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
           end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
         };
-        const alerts = await getAlerts(body, plat);
 
-        const comp = await getCompetitors(body, plat);
+        const alerts = await getAlerts(body, plat);
 
         const filt = alerts.data?.data
           .map((v) => ({
@@ -180,28 +241,22 @@ const CompetitionAlerts = () => {
             end_hour: v.end_hour,
             status: v.status,
             id: v.alert_id,
-            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${dayjs(
-              new Date(v.end_date)
-            ).format('DD/MM')}`,
-            slot: `${dayjs(new Date(v.start_date)).format('hh:mm')} - ${dayjs(
-              new Date(v.end_date)
-            ).format('hh:mm')}`,
+            start_end_date: `${dayjs(new Date(v.start_date)).format('DD/MM')} - ${
+              v.end_date ? dayjs(new Date(v.end_date)).format('DD/MM') : 'undetermined'
+            }`,
+            slot: `${dayjs(new Date(v.start_date)).format('HH:mm')} - ${
+              v.end_date ? dayjs(new Date(v.end_date)).format('HH:mm') : 'undetermined'
+            }`,
           }))
           .sort((a, b) => a.status - b.status);
-        setCompetitionAlertsData(filt || []);
 
-        setCompetitorList(comp.data ? comp.data.data : []);
-        setCompetitor(comp.data ? comp.data.data : []);
-        setFilteredData(
-          (comp.data ? comp.data.data : [])
-            .map((v) => filt.filter((k) => k.name === v.vendor_name))
-            .flat()
-        );
+        setCompetitionAlertsData(filt || []);
+        setFilteredData(filt || []);
         setLoading(false);
       } catch (err) {
         setCompetitionAlertsData([]);
         setCompetitorList([]);
-        setCompetitor([]);
+        setSelectedCompetitors([]);
         setFilteredData([]);
         setLoading(false);
         triggerAlertWithMessageError('Error while retrieving data');
@@ -210,37 +265,55 @@ const CompetitionAlerts = () => {
   };
 
   useEffect(() => {
-    if (platform && vendorsArr.length) {
-      const arr: any = Object.keys(vendorsObj).filter((v) => v === platform);
+    if (selectedPlatform[0] && branchSelected[0]) {
+      setSelectedCompetitors([]);
+      if (!branchActive) {
+        if (chainData.length > 0) {
+          const localBranch = chainData.find(
+            (chain) =>
+              chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
+          );
 
-      const red = arr.reduce((a, b) => ({ ...a, [b]: vendorsObj[arr] }), {});
+          if (!localBranch) {
+            setBranchSelected([]);
+            return;
+          }
 
-      getData(platform, red);
+          getData(selectedPlatform[0], { [selectedPlatform[0]]: [localBranch.data] });
+        }
+
+        return;
+      }
+      getData(selectedPlatform[0], { [selectedPlatform[0]]: [branchActive.data] });
     }
-  }, [platform, vendors, beforePeriodBtn]);
+  }, [selectedPlatform[0], branchSelected[0], chainData.length, beforePeriodBtn]);
 
-  useEffect(() => {
-    const arr = vendorsArr.filter((v) => v.platform === platform && v.metadata.is_active === true);
+  const handleCompetitorChange = (value) => {
+    const isChecked = selectedCompetitors.findIndex((compet) => compet === value);
 
-    // TODO: fix the type here
-    setVendors({ ...vendors, vendorsSelected: arr, vendorsObj: { [platform]: arr } });
-  }, [platform]);
+    if (isChecked >= 0) {
+      setSelectedCompetitors((prev) =>
+        prev.filter((compet, index) => value !== compet && prev.indexOf(compet) === index)
+      );
 
-  const handleCompetitorChange = (e) => {
-    const { value } = e.target;
-
-    if (value.length > 0) {
-      const arr = value
-        .map((v) => competitionAlertsData.filter((k) => k.name === v.vendor_name))
-        .flat();
-
-      setFilteredData(arr);
-    } else {
-      setFilteredData([]);
+      return;
     }
 
-    setCompetitor(value);
+    setSelectedCompetitors((prev) =>
+      [...prev, value].filter((compet, index) => [...prev, value].indexOf(compet) === index)
+    );
   };
+
+  const filterCompetitionList = competitorList?.filter(
+    (compet) => compet.platform?.toLowerCase() === selectedPlatform[0].toLowerCase()
+  );
+
+  const renderPlatformInsideFilter = (s) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
 
   return (
     <div className='wrapper'>
@@ -253,84 +326,74 @@ const CompetitionAlerts = () => {
           setbeforePeriodBtn={setbeforePeriodBtn}
         />
       </div>
-      <TypographyKit sx={{ marginTop: '40px' }} variant='h4'>
-        Competition - Alerts
-      </TypographyKit>
-      <TypographyKit variant='subtitle'>
-        Keep an eye on your competitors marketing campaigns
-      </TypographyKit>
-      <PaperKit className='competition-paper'>
-        <div className='competition-top-input alerts-top-inputs'>
-          <div className='competition-dropdowns'>
-            <CompetitionDropdown
-              rows={platformList}
-              renderOptions={(v) => (
-                <MenuItemKit key={v.name} value={v.name}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <img
-                      src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                      width={24}
-                      height={24}
-                      style={{ objectFit: 'contain' }}
-                      alt='icon'
-                    />
-                    <ListItemTextKit primary={v.name} />
-                  </div>
-                </MenuItemKit>
-              )}
-              icon={PlatformIcon}
-              title='Select a Platform'
-              id='platform_dropdown_menu'
-              type='platform'
-              className='top-competition'
-              setRow={setPlatform}
-              select={platform}
-            />
-            <CompetitionDropdown
-              widthPaper={400}
-              heightPaper={80}
-              rows={competitorList}
-              multiple
-              icon={competitorIcon}
-              onChange={handleCompetitorChange}
-              renderValue={(v) => v.map((k) => k.vendor_name).join(',')}
-              renderOptions={(v) => (
-                <MenuItemKit key={v.vendor_name} value={v}>
-                  <CheckboxKit checked={competitor.indexOf(v) > -1} />
-                  <ListItemTextKit
-                    className='competitor-dropdown-list-item'
-                    primary={v.vendor_name}
-                  />
-                </MenuItemKit>
-              )}
-              title='Competitor'
-              className='top-competition competitor'
-              select={competitor}
-            />
+      <ContainerKit>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+            <MainTitle>Competition - Alerts</MainTitle>
+            <DescriptionTitle>
+              Stay one step ahead of the game by tracking your competitors marketing actions.
+            </DescriptionTitle>
           </div>
-          <Competitor open={Open} opened={opened} platformList={platformList} />
+          <div style={{ marginTop: '2rem' }}>
+            <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
+          </div>
         </div>
-        <TypographyKit variant='subtitle'>
-          You can select up to 5 competitors to be monitored. Competitors can be changed every 3
-          months.
-        </TypographyKit>
-        <TableRevlyNew
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
-          isLoading={loading}
-          headers={headersAlert}
-          rows={(filteredData).map(
-            renderRowsByHeader
-          )}
-          className='competition-alerts'
-        />
-      </PaperKit>
+        <PaperKit className='competition-paper'>
+          <div className='competition-top-input alerts-top-inputs'>
+            <div className='competition-dropdowns'>
+              <FilterDropdown
+                items={[
+                  { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
+                  // { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
+                ]}
+                values={selectedPlatform}
+                onChange={(v) => setSelectedPlatform([v])}
+                label='Show all platforms'
+                icon={<img src={Columns} alt='Platform' />}
+                internalIconOnActive={platformObject}
+                maxShowned={1}
+                mono
+              />
+              <FilterBranch
+                items={chainData.filter(
+                  (chainD) => chainD.platform === selectedPlatform[0] && chainD.is_active
+                )}
+                values={branchSelected}
+                onChange={(v) => setBranchSelected([v])}
+                icon={<img src={Columns} alt='Platform' />}
+                label='Show all branches'
+              />
+              <FilterDropdown
+                items={
+                  filterCompetitionList?.map((compets) => ({
+                    value: compets.vendor_name,
+                    text: compets.vendor_name,
+                  })) || []
+                }
+                values={selectedCompetitors}
+                onChange={handleCompetitorChange}
+                label='Show all competitors'
+                customTag='competitors'
+                icon={<img src={competitorIcon} alt='Competitor' />}
+                disabled={!(filterCompetitionList?.length > 0)}
+                maxShowned={1}
+                toRight
+              />
+            </div>
+          </div>
+          <TableRevlyNew
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+            isLoading={loading}
+            headers={headersAlert}
+            rows={
+              selectedCompetitors?.length > 0
+                ? filteredData.map(renderRowsByHeader)
+                : competitionAlertsData.map(renderRowsByHeader)
+            }
+            className='competition-alerts'
+          />
+        </PaperKit>
+      </ContainerKit>
     </div>
   );
 };

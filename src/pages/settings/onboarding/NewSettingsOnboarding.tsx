@@ -3,17 +3,15 @@ import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMi
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
-import { usePlatform, useVendors } from 'hooks';
+import { usePlatform } from 'contexts';
+import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { useSettingsOnboarded } from 'api/settingsApi';
-import { useUser } from 'routes/ProtectedRoutes';
 import './SettingOnboarding.scss';
 
 const NewSettingsOnboarding = () => {
-  const user = useUser();
-  const { userPlatformData, setUserPlatformData } = usePlatform();
+  const { userPlatformData } = usePlatform();
   const [, setVendors] = useAtom(vendorsAtom);
   const { vendors } = useVendors(undefined);
   const [loading, setLoading] = useState(true);
@@ -52,9 +50,10 @@ const NewSettingsOnboarding = () => {
 
     const vendorPlatform = (obj: any) =>
       Object.keys(obj.data.platforms).map((plat) => ({
+        email: obj.data.platforms[plat].email,
         platform: plat,
-        status: accounts.find(
-          (objAcc) => objAcc.email === obj.data.platforms[plat].email && objAcc.platform === plat
+        status: userPlatformData.platforms[plat].find(
+          (objAcc) => objAcc.email === obj.data.platforms[plat].email
         )?.active
           ? 'active'
           : 'suspended',
@@ -84,31 +83,14 @@ const NewSettingsOnboarding = () => {
     }));
   };
 
-  const userRequestData = useSettingsOnboarded(
-    {
-      master_email: user.email,
-      access_token: user.token,
-    },
-    { branchData, openedModal }
-  );
-
-  useEffect(() => {
-    setVendors(vendors);
-    setBranchData(getBranchData());
-  }, [vendors]);
-
   useEffect(() => {
     setAccounts(getAccounts());
   }, [JSON.stringify(userPlatformData.platforms)]);
 
   useEffect(() => {
-    if (userRequestData.data) {
-      setUserPlatformData({
-        onboarded: true,
-        platforms: { ...userPlatformData.platforms, ...userRequestData.data.platforms },
-      });
-    }
-  }, [JSON.stringify(userRequestData.data)]);
+    setVendors(vendors);
+    setBranchData(getBranchData());
+  }, [vendors, JSON.stringify(userPlatformData.platforms)]);
 
   const openCloseModal = () => {
     setOpenedModal(!openedModal);

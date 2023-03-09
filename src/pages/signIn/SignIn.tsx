@@ -1,11 +1,12 @@
-import { useUserAuth } from 'contexts';
+import emailWhitelisted from 'data/whitelisted-email';
+import { auth, logout, signIn, verifyCodeEmail } from 'firebase-config';
 import { useAlert, useVendors } from 'hooks';
+import { useAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import emailWhitelisted from 'data/whitelisted-email';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import { verifyEmailSample } from 'api/userApi';
-import { useAtom } from 'jotai';
+import { vendorsAtom } from 'store/vendorsAtom';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import SignInForm from './form/SignInForm';
 import './SignIn.scss';
@@ -23,10 +24,8 @@ const SignIn = () => {
   const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
   const [params] = useSearchParams();
   const { setVendors } = useVendors(true);
-  const { setVendors: setVendorsReq } = useVendors(true);
+  const [, setVendorsAtom] = useAtom(vendorsAtom);
   const [, setEligibilityDeliveroo] = useAtom(elligibilityDeliverooAtom);
-
-  const { signIn, user, logOut, verifyCodeEmail } = useUserAuth();
 
   const oobCode = params.get('oobCode');
   const mode = params.get('mode');
@@ -42,8 +41,8 @@ const SignIn = () => {
       chainData: [],
     };
     localStorage.clear();
-    setVendorsReq(defaultState);
     setVendors(defaultState);
+    setVendorsAtom(defaultState);
     setEligibilityDeliveroo({});
   }, []);
 
@@ -69,22 +68,22 @@ const SignIn = () => {
 
   useEffect(() => {
     if (oobCode) {
-      logOut();
+      logout();
       if (mode === 'resetPassword') {
         navigate(`/reset-password?oobCode=${oobCode}`);
       } else if (mode === 'verifyEmail') {
         verifyEmail(oobCode);
       }
-    } else if (user) {
+    } else if (auth.currentUser) {
       navigate('/dashboard');
     }
   }, [oobCode, mode]);
 
   const handleSubmit = useCallback(async () => {
-//    if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
-//     triggerAlertWithMessageError('Unauthorized email address');
-//      return;
-//    }
+    //    if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
+    //     triggerAlertWithMessageError('Unauthorized email address');
+    //      return;
+    //    }
 
     setProcessing(true);
     try {
@@ -116,7 +115,7 @@ const SignIn = () => {
       triggerAlertWithMessageError(message);
       setProcessing(false);
     }
-  }, [email, logOut, navigate, password, remember, signIn, triggerAlertWithMessageError]);
+  }, [email, navigate, password, remember, triggerAlertWithMessageError]);
 
   const onEmailBlur = useCallback(() => setEmailError(!email), [email]);
   const onPasswordBlur = useCallback(() => setPasswordError(!password), [password]);

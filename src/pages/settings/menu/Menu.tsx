@@ -1,9 +1,10 @@
+import { getMenu } from 'api';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { useUserAuth } from 'contexts';
-import { useAlert, useApi, usePlatform } from 'hooks';
-import useVendors, { type TVendorsArr } from 'hooks/useVendors';
+import { usePlatform, useUser } from 'contexts';
+import { useAlert, useVendors } from 'hooks';
 import { useEffect, useState } from 'react';
+import { TVendorsArr } from 'types';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
@@ -14,7 +15,6 @@ import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import './Menu.scss';
 import MenuDropdown from './menuDropdown/MenuDropdown';
-import MenuTable from './menuTable/MenuTable';
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -27,17 +27,16 @@ const Menu = () => {
 
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert();
-  const { getMenu } = useApi();
   const { vendors } = useVendors();
   const { vendorsArr: vendorList } = vendors;
   const [branch, setBranch] = useState<string | TVendorsArr>('');
-  const { user } = useUserAuth();
+  const user = useUser();
 
   const getMenuData = async (vendor, platforms) => {
     setLoading(true);
     try {
       const res = await getMenu(
-        { master_email: user.email, access_token: user.accessToken, vendor: vendor || [] },
+        { master_email: user.email, access_token: user.token, vendor: vendor || [] },
         platforms
       );
 

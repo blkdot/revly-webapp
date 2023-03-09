@@ -83,13 +83,16 @@ const ConnectAccount: FC<{
         This allows for easy access to important information and ensures that all necessary data are
         uploaded and stored securely.
       </span>
-      <div className={`onboarding-platform-buttons ${accounts.length <= 0 ? 'active' : ''}`}>
+      <div className={`onboarding-platform-buttons ${accounts.length <= 0 && 'active'}`}>
         {platformList.map((obj) => (
           <ButtonKit
             onClick={() => {
-              setConnect(obj.name);
-              setConnectAccount('platform');
+              if(!obj?.disabled){
+                setConnect(obj.name);
+                setConnectAccount('platform');
+              }
             }}
+            disabled={obj?.disabled}
             variant='contained'
             key={obj.name}
             style={{ '--color': obj.color } as React.CSSProperties}
@@ -114,7 +117,7 @@ const ConnectAccount: FC<{
         {accounts.map((obj: any, index: number) => (
           <div
             key={`${obj.platform}-${obj.email}`}
-            className={`onboarding-account ${obj.active ? 'connected' : ''}`}
+            className={`onboarding-account ${obj.active && 'connected'}`}
           >
             <div>
               <TypographyKit

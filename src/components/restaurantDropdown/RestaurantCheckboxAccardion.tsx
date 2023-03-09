@@ -15,6 +15,8 @@ const RestaurantCheckboxAccordion: FC<{
   pageType: string;
 }> = ({ info, chainName, handleChangeVendor, index, setVendors, vendors, display, pageType }) => {
   const [active, setActive] = useState(false);
+  const [hoverStatusChain, setHoverChain] = useState(false);
+  const [hoverStatusVendor, setHoverVendor] = useState([]);
   // we checking if all vendor in this chain are checked
   const compareSize = () => {
     // get 1 element of .chain-name
@@ -46,9 +48,7 @@ const RestaurantCheckboxAccordion: FC<{
     },
     [vendorsNew?.ariaExpanded, active, display]
   );
-
-  const [hoverStatusChain, setHoverChain] = useState(false);
-  const [hoverStatusVendor, setHoverVendor] = useState([]);
+  
   const getHoverStatusVendor = (vName: string) => hoverStatusVendor.find((v) => v === vName);
   // function for vendor button "Only"
   const handleClickVendor = (e: any, vendorName: string) => {
@@ -75,7 +75,7 @@ const RestaurantCheckboxAccordion: FC<{
     platformList.find((obj) => obj.name === platform).srcFavicon;
 
   return (
-    <div className={`checkbox-accordion-wrapper ${active ? 'active' : ''}`}>
+    <div className={`checkbox-accordion-wrapper ${active && 'active'}`}>
       {Object.values(info).every((objV: any) => !objV.is_matched) ? (
         ''
       ) : (
@@ -84,8 +84,8 @@ const RestaurantCheckboxAccordion: FC<{
           role='presentation'
           style={{ '--length': Object.keys(info).length } as React.CSSProperties}
           className={`checkbox-accordion ${
-            Object.values(info).every((objV) => objV.deleted) ? 'disabled' : ''
-          } ${active ? 'active' : ''}`}
+            Object.values(info).every((objV) => objV.deleted) && 'disabled'
+          } ${active && 'active'}`}
           onClick={() => setActive(!active)}
         >
           <div>
@@ -155,18 +155,23 @@ const RestaurantCheckboxAccordion: FC<{
                     {vendorName}
                   </div>
                 </TooltipKit>
-                {
-                  pageType !== 'listing' ? <div
+                {pageType !== 'listing' ? (
+                  <div
                     role='presentation'
                     tabIndex={-1}
                     onClick={(e) => e.stopPropagation()}
                     className='only-button'
                   >
-                    <ButtonKit onClick={(e) => handleClickVendor(e, vendorName)} variant='contained'>
+                    <ButtonKit
+                      onClick={(e) => handleClickVendor(e, vendorName)}
+                      variant='contained'
+                    >
                       Only
                     </ButtonKit>
-                  </div> : ''
-                }
+                  </div>
+                ) : (
+                  ''
+                )}
               </MenuItemKit>
             </div>
           );
@@ -185,7 +190,7 @@ const RestaurantCheckboxAccordion: FC<{
           <InputLabelKit
             disabled={!info[vendorName].active}
             key={vendorName}
-            className={`accordion-dropdown ${active ? 'active' : ''} `}
+            className={`accordion-dropdown ${active && 'active'} `}
           >
             <div>
               {pageType === 'listing' ? (
@@ -211,7 +216,7 @@ const RestaurantCheckboxAccordion: FC<{
                 disableHoverListener={!getHoverStatusVendor(vendorName)}
                 title={vendorName}
               >
-                <p className={`vendor-name ${info[vendorName]?.deactivated ? 'disabled' : ''}`}>
+                <p className={`vendor-name ${info[vendorName]?.deactivated && 'disabled'}`}>
                   {vendorName}
                 </p>
               </TooltipKit>
@@ -223,8 +228,8 @@ const RestaurantCheckboxAccordion: FC<{
                     <img key={plat} className='restaurant-img' src={getIcon(plat)} alt={plat} />
                   ))}
               </div>
-              {
-                pageType !== 'listing' ? <div className='only-button vendor'>
+              {pageType !== 'listing' ? (
+                <div className='only-button vendor'>
                   <ButtonKit
                     disabled={!info[vendorName].active}
                     onClick={(e) => handleClickVendor(e, vendorName)}
@@ -232,8 +237,10 @@ const RestaurantCheckboxAccordion: FC<{
                   >
                     Only
                   </ButtonKit>
-                </div> : ''
-              }
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </InputLabelKit>
         );

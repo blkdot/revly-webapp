@@ -1,21 +1,27 @@
+import { usePlanningAds, usePlanningOffers } from 'api';
+import { Switch, Tag } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
+import FilterBranch from 'components/filter/filterBranch/FilterBranch';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { usePlatform } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
-import { useDate, usePlanningAds, usePlanningOffers, useQueryState } from 'hooks';
-
-import { useEffect, useState } from 'react';
-
+import { useDate, useQueryState, useVendors } from 'hooks';
+import { ContainerKit, TypographyKit } from 'kits';
+import { useEffect, useMemo, useState } from 'react';
+import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Planning.scss';
 
 const defaultFilterStateFormat = {
   platform: [],
+  vendors: [],
   type_offer: [],
   discount_rate: [],
   status: [],
@@ -54,7 +60,6 @@ const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
   const { date } = useDate();
-
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
       return endOfMonth(new Date(date.beforePeriod.endDate));
@@ -64,18 +69,37 @@ const Planning = () => {
     }
     return date.beforePeriod.endDate;
   };
+
   const [dateRange, setDateRange] = useState({
     startDate: date.beforePeriod.startDate,
     endDate: getOfferDate(),
     ...JSON.parse(dateSaved || '{}'),
   });
 
-  const { offers, isLoading: isLoadingOffers } = usePlanningOffers({ dateRange });
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange });
+  const { data: adsData, isLoading: isLoadingAds } = usePlanningAds({
+    from: dayjs(dateRange.startDate),
+    until: dayjs(dateRange.endDate),
+  });
+  const { data: offersData, isLoading: isLoadingOffers } = usePlanningOffers({
+    from: dayjs(dateRange.startDate),
+    until: dayjs(dateRange.endDate),
+  });
+
+  const ads = useMemo(() => adsData?.ads || [], [adsData]);
+  const offers = useMemo(() => offersData?.offers || [], [offersData]);
+
   const [filters, setFilters] = useState({
     ...defaultFilterStateFormat,
     ...JSON.parse(filtersSaved || '{}'),
   });
+  const { userPlatformData } = usePlatform();
+  const renderPlatformInsideFilter = (s: string) => (
+    <div key={s}>
+      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
+      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
+    </div>
+  );
+
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
   const [dataFiltered, setDataFiltered] = useState([]);
   const [dataFilteredAds, setDataFilteredAds] = useState([]);
@@ -92,7 +116,6 @@ const Planning = () => {
     renderCurrency,
     renderStatus,
     renderChainId,
-    renderTarget,
     renderSimpleRow,
     renderVendorId,
     renderSimpleRowSkeleton,
@@ -218,16 +241,16 @@ const Planning = () => {
   };
   const [link, setLink] = useState('offers_planning');
   const links = [
-    {title: 'Offers planning',link: 'offers_planning'},
+    { title: 'Offers planning', link: 'offers_planning' },
     { title: 'Ads planning', link: 'ads_planning' },
-  ]
-  const handleChangeMultipleFilter = (k: string) => (v: string) => {
+  ];
+  const handleChangeFilter = (k: string, type?: string) => (v: string) => {
     const propertyFilter = filters[k];
 
     const index = propertyFilter.findIndex((p: string) => p === v);
 
     if (index < 0) {
-      setFilters({ ...filters, [k]: [...propertyFilter, v] });
+      setFilters({ ...filters, [k]: type === 'single' ? [v] : [...propertyFilter, v] });
       return;
     }
 
@@ -238,6 +261,86 @@ const Planning = () => {
     setFilters({ ...filters, [k]: mutablePropertyFilter });
   };
 
+  const { vendors } = useVendors();
+  const { chainData } = vendors;
+  const renderOffersFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeFilter('platform', 'single')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+        mono
+      />
+      <FilterBranch
+        items={chainData.filter(
+          (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+        )}
+        values={filters.vendors}
+        onChange={handleChangeFilter('vendors')}
+        icon={<img src={Columns} alt='Platform' />}
+        label='Show all branches'
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.type_offer}
+        values={filters.type_offer}
+        onChange={handleChangeFilter('type_offer')}
+        label='Discount type'
+        icon={<Tag />}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.discount_rate}
+        values={filters.discount_rate}
+        onChange={handleChangeFilter('discount_rate')}
+        label='Discount rate'
+        icon={<Tag />}
+        maxShowned={1}
+      />
+    </div>
+  );
+  const renderAdsFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeFilter('platform', 'single')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+        mono
+      />
+      <FilterBranch
+        items={chainData.filter(
+          (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+        )}
+        values={filters.vendors}
+        onChange={handleChangeFilter('vendors')}
+        icon={<img src={Columns} alt='Platform' />}
+        label='Show all branches'
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'ads_planning') {
       return (
@@ -251,9 +354,7 @@ const Planning = () => {
           rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={!isEmptyList() ? filters : null}
-          filtersHead={filtersHead}
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          filters={!isEmptyList() && renderAdsFilters()}
           noDataText='No ads has been retrieved.'
         />
       );
@@ -271,9 +372,7 @@ const Planning = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={!isEmptyList() ? filters : null}
-        filtersHead={filtersHead}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
+        filters={!isEmptyList() && renderOffersFilters()}
         noDataText='No offer has been retrieved.'
       />
     );
@@ -305,13 +404,6 @@ const Planning = () => {
     );
   };
 
-  const renderPlatformInsideFilter = (s: string) => (
-    <div key={s}>
-      <img src={platformObject[s].src} alt={s} width={30} style={{ verticalAlign: 'middle' }} />
-      <span style={{ verticalAlign: 'middle' }}>{pascalCase(s)}</span>
-    </div>
-  );
-
   useEffect(() => {
     const source = link === 'ads_planning' ? ads : offers;
     const preHead = source.reduce(
@@ -340,6 +432,14 @@ const Planning = () => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
     });
 
+    const defaultPlatform = Object.keys(userPlatformData.platforms).find((plat) =>
+      userPlatformData.platforms[plat].some((obj) => obj.active)
+    );
+
+    if (clonedFilters.platform.length < 1 && defaultPlatform) {
+      clonedFilters.platform.push(defaultPlatform);
+    }
+
     clonedFilters.type_offer.forEach((fp, i) => {
       if (!preHead.type_offer.includes(fp)) clonedFilters.type_offer.splice(i, 1);
     });
@@ -351,8 +451,6 @@ const Planning = () => {
     clonedFilters.status.forEach((fp, i) => {
       if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
     });
-
-    // clonedFilters.discount_rate = clonedFilters.discount_rate.sort((a,b) => a - b);
 
     setFilters(clonedFilters);
 
@@ -370,6 +468,7 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
+      vendors: chainData,
       type_offer: link === 'ads_planning' ? [] : preHeadTypeOffer,
       discount_rate: link === 'ads_planning' ? [] : preHeadProcent,
       status: preHeadStatus,
@@ -412,43 +511,61 @@ const Planning = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
-          new Date(obj.valid_to)
-        ).format('hh:mm')}`,
+        slot: `${obj.start_hour} - ${obj.end_hour}`,
       }))
     );
-    setDataFilteredAds(filteredDataAds.map((obj) => ({
-      ...obj,
-      start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
-        new Date(obj.valid_to)
-      ).format('DD/MM')}`,
-      slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
-        new Date(obj.valid_to)
-      ).format('hh:mm')}`,
-    })));
+    setDataFilteredAds(
+      filteredDataAds.map((obj) => ({
+        ...obj,
+        start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('DD/MM')}`,
+        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
+          new Date(obj.valid_to)
+        ).format('HH:mm')}`,
+      }))
+    );
   }, [JSON.stringify(filters), ads, offers, link, JSON.stringify(dateRange)]);
+
+  const [period, setPeriod] = useState('');
 
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
         <RestaurantDropdown />
-        <Dates offer beforePeriodBtn={dateRange} setbeforePeriodBtn={setDateRange} />
-      </div>
-      {opened ? (
-        <OfferDetailComponent
-          data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
-          setOpened={setOpened}
+        <Dates
+          setPeriodProps={setPeriod}
+          offer
+          beforePeriodBtn={dateRange}
+          setbeforePeriodBtn={setDateRange}
         />
-      ) : (
-        renderTable()
-      )}
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+      </div>
+      <ContainerKit>
+        {opened ? (
+          <OfferDetailComponent
+            data={offers.find((o) => String(o.master_offer_id) === String(clickedId))}
+            setOpened={setOpened}
+          />
+        ) : (
+          <div className='block'>
+            <TypographyKit className='dashboard-title'>
+              Planning for {link === 'offers_planning' ? 'discounts' : 'ads'} scheduled for{' '}
+              {period.charAt(0).toUpperCase() + period.slice(1)}
+            </TypographyKit>
+            <TypographyKit className='dashboard-subtitle'>
+              Plan and visualize all the scheduled and past discounts and campaigns.
+            </TypographyKit>
+            {renderTable()}
+          </div>
+        )}
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeFilter}
+        />
+      </ContainerKit>
     </div>
   );
 };

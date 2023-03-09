@@ -14,7 +14,7 @@ const AddAddressForm = (props: any) => {
   } = props;
 
   return (
-    <div className={`add-address-form ${visible ? '__visible' : ''}`}>
+    <div className={`add-address-form ${visible && '__visible'}`}>
       <p style={{ marginBottom: 7 }}>Add new address</p>
       <div className='add-address-form__input-flex'>
         <TextfieldKit

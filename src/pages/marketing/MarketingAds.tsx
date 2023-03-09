@@ -1,15 +1,19 @@
+import { usePlanningAds } from 'api';
+import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import Dates from 'components/dates/Dates';
+import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate, usePlanningAds } from 'hooks';
-import { ButtonKit, PaperKit, TypographyKit } from 'kits';
-import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import SettingFuture from '../../assets/images/ic_setting-future.png';
-import SmartRuleBtnIcon from '../../assets/images/ic_sm-rule.png';
+import { endOfMonth, endOfWeek } from 'date-fns';
+import dayjs from 'dayjs';
+import { useDate } from 'hooks';
+import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
+import DescriptionTitle from 'kits/title/DescriptionTitle';
+import MainTitle from 'kits/title/MainTitle';
+import { useEffect, useMemo, useState } from 'react';
+import Columns from '../../assets/images/columns.svg';
 import logo from '../../assets/images/small-logo.png';
-import Dates from '../../components/dates/Dates';
 import MarketingOfferFilter from '../../components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingSetup from '../../components/marketingSetup/MarketingSetup';
 import useTableContentFormatter from '../../components/tableRevly/tableContentFormatter/useTableContentFormatter';
@@ -33,7 +37,13 @@ const MarketingAds = () => {
     startDate: date.beforePeriod.startDate,
     endDate: getOfferDate(),
   });
-  const { ads, isLoading: isLoadingAds } = usePlanningAds({ dateRange: beforePeriodBtn });
+
+  const { data, isLoading: isLoadingAds } = usePlanningAds({
+    from: dayjs(beforePeriodBtn.startDate),
+    until: dayjs(beforePeriodBtn.endDate),
+  });
+
+  const ads = useMemo(() => data?.ads || [], [data]);
 
   const {
     renderPlatform,
@@ -49,7 +59,10 @@ const MarketingAds = () => {
   } = useTableContentFormatter();
 
   const [link, setLink] = useState('ads_managment');
-  const links = [{ title: 'Ads management', link: 'ads_managment' }, { title: 'Ads performance', link: 'ads_performance' }];
+  const links = [
+    { title: 'Ads management', link: 'ads_managment' },
+    { title: 'Ads performance', link: 'ads_performance' },
+  ];
 
   const headersManagment = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
@@ -74,6 +87,12 @@ const MarketingAds = () => {
   const headersPerformance = [
     { id: 'chain_id', disablePadding: true, label: 'Chain Name', tooltip: 'Your brand name' },
     { id: 'vendor_ids', disablePadding: true, label: 'Branches' },
+    {
+      id: 'slot',
+      disablePadding: true,
+      label: 'Slot',
+      tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
+    },
     {
       id: 'spend',
       disablePadding: true,
@@ -272,9 +291,9 @@ const MarketingAds = () => {
         start_end_date: `${dayjs(new Date(obj.valid_from)).format('DD/MM')} - ${dayjs(
           new Date(obj.valid_to)
         ).format('DD/MM')}`,
-        slot: `${dayjs(new Date(obj.valid_from)).format('hh:mm')} - ${dayjs(
+        slot: `${dayjs(new Date(obj.valid_from)).format('HH:mm')} - ${dayjs(
           new Date(obj.valid_to)
-        ).format('hh:mm')}`,
+        ).format('HH:mm')}`,
         orders: obj.orders_count,
         clicks: obj.clicks_count,
         impressions: obj.ad_serving_count,
@@ -334,7 +353,27 @@ const MarketingAds = () => {
   };
 
   const isEmptyList = () => adsData.length < 1;
-
+  const renderFilters = () => (
+    <div className='table-filters'>
+      <FilterDropdown
+        items={filtersHead.platform}
+        values={filters.platform}
+        onChange={handleChangeMultipleFilter('platform')}
+        label='Platforms'
+        icon={<img src={Columns} alt='Clock' />}
+        internalIconOnActive={platformObject}
+        maxShowned={1}
+      />
+      <FilterDropdown
+        items={filtersHead.status}
+        values={filters.status}
+        onChange={handleChangeMultipleFilter('status')}
+        label='Statuses'
+        icon={<Switch />}
+        maxShowned={1}
+      />
+    </div>
+  );
   const renderTable = () => {
     if (link === 'ads_performance') {
       return (
@@ -348,9 +387,7 @@ const MarketingAds = () => {
           rows={adsFilteredData.map(renderRowsByHeader)}
           mainFieldOrdered='start_date'
           setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
-          filters={!isEmptyList() ? filters : null}
-          filtersHead={!isEmptyList() ? filtersHead : null}
-          handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+          filters={renderFilters()}
           noDataText='No ads has been retrieved.'
         />
       );
@@ -367,9 +404,7 @@ const MarketingAds = () => {
         rows={adsFilteredData.map(renderRowsByHeader)}
         mainFieldOrdered='start_date'
         setOpenedFilter={!isEmptyList() ? setOpenedFilter : null}
-        filters={!isEmptyList() ? filters : null}
-        filtersHead={!isEmptyList() ? filtersHead : null}
-        handleChangeMultipleFilter={!isEmptyList() ? handleChangeMultipleFilter : null}
+        filters={renderFilters()}
         noDataText='No ads has been retrieved.'
       />
     );
@@ -380,59 +415,58 @@ const MarketingAds = () => {
         <RestaurantDropdown />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
-      <div className='marketing-top'>
-        <div className='marketing-top-text'>
-          <TypographyKit variant='h4'>Marketing - Ads</TypographyKit>
-          <TypographyKit color='#637381' variant='subtitle'>
-            Create and manage all your offers. Set personalised rules to automatically trigger your
-            Ads.
-          </TypographyKit>
-        </div>
-        <div className='markting-top-btns'>
-          <ButtonKit disabled className='sm-rule-btn disabled' variant='outlined'>
-            <img src={SmartRuleBtnIcon} alt='Smart rule icon' />
-            Create a smart rule
-          </ButtonKit>
-          <ButtonKit disabled variant='contained'>
-            <img src={SettingFuture} alt='Setting future icon' />
-            Set up an ad
-          </ButtonKit>
-        </div>
-      </div>
-      {renderTable()}
-      <MarketingSetup ads active={active} setActive={setActive} />
-      <div
-        role='presentation'
-        tabIndex={-1}
-        onClick={() => setOpened(false)}
-        className={`delete-overlay ${opened ? 'active' : ''}`}
-      >
-        <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper'>
-          <div>
-            <img src={logo} alt='logo' />
-            <TypographyKit>Are you sure you want to delete this offer ?</TypographyKit>
+      <ContainerKit>
+        <div className='marketing-top'>
+          <div className='marketing-top-text'>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <MainTitle>Marketing - Ads</MainTitle>
+                <DescriptionTitle>
+                  Create and manage all your ads. Set personalised rules to automatically trigger
+                  your ads.
+                </DescriptionTitle>
+              </div>
+            </div>
           </div>
-          <TypographyKit>
-            Amet, morbi egestas ultrices id non a. Est morbi consequat quis ac, duis elit, eleifend.
-            Tellus diam mi phasellus facilisi id iaculis egestas.
-          </TypographyKit>
-          <div>
-            <ButtonKit onClick={() => CancelAd()} variant='contained'>
-              Cancel Offer
-            </ButtonKit>
-            <ButtonKit onClick={() => setOpened(false)} variant='outlined'>
-              Cancel
-            </ButtonKit>
-          </div>
-        </PaperKit>
-      </div>
-      <MarketingOfferFilter
-        CloseFilterPopup={CloseFilterPopup}
-        openedFilter={openedFilter}
-        filtersHead={filtersHead}
-        filters={filters}
-        handleChangeMultipleFilter={handleChangeMultipleFilter}
-      />
+          <ButtonAction disabled onClick={() => /* */ null}>
+            Create new campaign
+          </ButtonAction>
+        </div>
+        {renderTable()}
+        <MarketingSetup ads active={active} setActive={setActive} />
+        <div
+          role='presentation'
+          tabIndex={-1}
+          onClick={() => setOpened(false)}
+          className={`delete-overlay ${opened && 'active'}`}
+        >
+          <PaperKit onClick={(e) => e.stopPropagation()} className='marketing-paper'>
+            <div>
+              <img src={logo} alt='logo' />
+              <TypographyKit>Are you sure you want to delete this offer ?</TypographyKit>
+            </div>
+            <TypographyKit>
+              Amet, morbi egestas ultrices id non a. Est morbi consequat quis ac, duis elit,
+              eleifend. Tellus diam mi phasellus facilisi id iaculis egestas.
+            </TypographyKit>
+            <div>
+              <ButtonKit onClick={() => CancelAd()} variant='contained'>
+                Cancel Offer
+              </ButtonKit>
+              <ButtonKit onClick={() => setOpened(false)} variant='outlined'>
+                Cancel
+              </ButtonKit>
+            </div>
+          </PaperKit>
+        </div>
+        <MarketingOfferFilter
+          CloseFilterPopup={CloseFilterPopup}
+          openedFilter={openedFilter}
+          filtersHead={filtersHead}
+          filters={filters}
+          handleChangeMultipleFilter={handleChangeMultipleFilter}
+        />
+      </ContainerKit>
     </div>
   );
 };

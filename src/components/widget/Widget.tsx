@@ -10,14 +10,14 @@ import TooltipIcon from '../../assets/images/tooltip-ic.svg';
 import './Widget.scss';
 
 const Widget: FC<{
-  title: any;
-  setTable: any;
-  table: any;
+  title: string;
+  setTable: (value: string) => void;
+  table: string;
   link: string;
   metricsbeforePeriod: any;
   metricsafterPeriod: any;
-  loading: any;
-  links: any;
+  loading: boolean;
+  links: { title: string; link: string; tooltip?: string }[];
   tooltip?: string;
 }> = ({
   title,
@@ -40,17 +40,23 @@ const Widget: FC<{
   const endGetDate = endDate.getDate();
 
   const procent = () => {
-    if (metricsbeforePeriod && metricsafterPeriod) {
-      if (Number(metricsafterPeriod.all?.[link]) === 0) {
+    if (Object.keys(metricsbeforePeriod).length > 0 && Object.keys(metricsafterPeriod).length > 0) {
+      if (Number(metricsafterPeriod.all[link]) === 0) {
         return 0;
       }
 
-      return parseFloat(
-        (
-          (metricsbeforePeriod.all?.[link] || 0) / ((metricsafterPeriod.all?.[link] || 0) / 100) -
-          100
-        ).toFixed(0)
-      );
+      if (
+        !Number.isNaN(
+          parseFloat(
+            (metricsbeforePeriod.all[link] / (metricsafterPeriod.all[link] / 100) - 100).toFixed(0)
+          )
+        )
+      ) {
+        return parseFloat(
+          (metricsbeforePeriod.all[link] / (metricsafterPeriod.all[link] / 100) - 100).toFixed(0)
+        );
+      }
+      return 0;
     }
     return 0;
   };
@@ -85,16 +91,29 @@ const Widget: FC<{
         case 'accrued_discounts':
         case 'revenue':
         case 'profit':
+        case 'accrued_ads':
           return (
             <p>
               AED <span>{value}</span>
             </p>
           );
+        case 'roas':
+          return (
+            <div>
+              <p>
+                <span>{value}</span> AED
+              </p>{' '}
+              <span>for every 1 AED spent on Ads</span>
+            </div>
+          );
         case 'roi':
           return (
-            <p>
-              <span>{value}</span> AED <span>for every 1 AED spent on Discounts and Ads</span>
-            </p>
+            <div>
+              <p>
+                <span>{value}</span> AED
+              </p>{' '}
+              <span>for every 1 AED spent on Discounts and Ads</span>
+            </div>
           );
         default:
           return value;
@@ -105,7 +124,7 @@ const Widget: FC<{
   };
   const getActiveLinkWidth = (index: number, type: string) => {
     const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
-
+    tableLink.scrollIntoView();
     if (type === 'scroll') {
       return tableLink.offsetLeft - tableLink.scrollLeft;
     }
@@ -131,9 +150,9 @@ const Widget: FC<{
     );
   };
   return (
-    <CardKit className={`card_wrapper ${table === link ? 'active' : ''}`} onClick={changeLink}>
+    <CardKit className={`card_wrapper ${table === link && 'active'}`} onClick={changeLink}>
       <CardContentKit>
-        {tooltip ? (
+        {tooltip && (
           <TooltipKit
             onClick={(e) => e.stopPropagation()}
             interactive={1}
@@ -148,20 +167,13 @@ const Widget: FC<{
               alt='tooltip icon'
             />
           </TooltipKit>
-        ) : (
-          ''
         )}
         <TypographyKit
           component='div'
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
         >
           <div>
-            <TypographyKit
-              style={{ textTransform: 'capitalize' }}
-              variant='subtitle2'
-              className='card-typography'
-              component='div'
-            >
+            <TypographyKit variant='subtitle2' className='card-typography' component='div'>
               {title}
             </TypographyKit>
             {loading ? (
@@ -173,7 +185,7 @@ const Widget: FC<{
             ) : (
               <TypographyKit
                 variant='h3'
-                className={`card-typography ${link === 'roi' ? 'card-roi' : ''}`}
+                className={`card-typography ${(link === 'roi' || link === 'roas') && 'card-roi'}`}
               >
                 {renderMetrics()}
               </TypographyKit>
@@ -186,8 +198,8 @@ const Widget: FC<{
           ) : (
             <div style={{ margin: 0 }} className='card_bottom'>
               <PaperKit
-                className={`icon-paper ${procent() > 0 ? 'increased' : ''} ${
-                  procent() < 0 ? 'decreased' : ''
+                className={`icon-paper ${procent() > 0 && 'increased'} ${
+                  procent() < 0 && 'decreased'
                 }`}
               >
                 {procent() === 0 ? (
@@ -198,8 +210,8 @@ const Widget: FC<{
               </PaperKit>
               <TypographyKit
                 sx={{ lineHeight: 0 }}
-                className={`card-procent ${procent() > 0 ? 'increased' : ''} ${
-                  procent() < 0 ? 'decreased' : ''
+                className={`card-procent ${procent() > 0 && 'increased'} ${
+                  procent() < 0 && 'decreased'
                 }`}
                 variant='body2'
               >

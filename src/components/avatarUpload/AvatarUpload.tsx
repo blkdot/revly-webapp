@@ -25,13 +25,13 @@ const AvatarUpload = (props: any) => {
           <AvatarKit
             className='image-upload__avatar'
             alt='avatar'
-            src={typeof file === 'string' ? file : ''}
+            src={typeof file === 'string' && file}
           >
             N
           </AvatarKit>
         )}
 
-        <div className={`image-upload__placeholder ${file ? '__withfile' : ''}`}>
+        <div className={`image-upload__placeholder ${file && '__withfile'}`}>
           <PhotoCamera />
           <p className='image-upload__placeholder__text'>
             {file ? 'Update photo' : 'Upload photo'}

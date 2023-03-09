@@ -7,10 +7,18 @@ import {
   GlobalFunctionalitiesContextProvider,
   PlatformProvider,
 } from 'contexts';
+import dayjs from 'dayjs';
+import updateLocale from 'dayjs/plugin/updateLocale';
 import ReactDOM from 'react-dom/client';
 import Modal from 'react-modal';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.scss';
+
+dayjs.extend(updateLocale);
+dayjs.updateLocale('en', {
+  weekStart: 1,
+});
 
 Modal.setAppElement('#root');
 
@@ -41,7 +49,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <PlatformProvider>
           <AuthContextProvider>
             <GlobalFunctionalitiesContextProvider>
-              <App />
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
             </GlobalFunctionalitiesContextProvider>
           </AuthContextProvider>
         </PlatformProvider>

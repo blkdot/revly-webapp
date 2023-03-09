@@ -1,7 +1,7 @@
 import { styled } from '@mui/system';
-import { usePlatform } from 'hooks';
+import { usePlatform } from 'contexts';
 import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kits';
-import { useEffect, useState, FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.svg';
 import ClockIcon from '../../../assets/images/clock.svg';
@@ -105,7 +105,7 @@ const OnboardingStepper: FC<{
     }
   }, [activeStep]);
   return (
-    <div className={`settings-onboarding bg ${active ? 'close' : ''}`}>
+    <div className={`settings-onboarding bg ${active && 'close'}`}>
       <StepperKit
         className='onboarding-stepper'
         alternativeLabel
@@ -117,8 +117,8 @@ const OnboardingStepper: FC<{
               <TypographyKit
                 components='span'
                 style={{ '--activeStep': `${getActiveStep(index)}%` }}
-                className={`${index !== 2 ? 'onboarding-stepper_line' : ''} ${
-                  Number(String(activeStep / 100)[0]) >= index + 1 ? 'active' : ''
+                className={`${index !== 2 && 'onboarding-stepper_line'} ${
+                  Number(String(activeStep / 100)[0]) >= index + 1 && 'active'
                 }`}
               />
               <p className='__title'>{`${index + 1}. ${obj.label}`}</p>

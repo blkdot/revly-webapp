@@ -1,8 +1,10 @@
+import { settingsLoad, settingsSave } from 'api';
 import { AxiosError } from 'axios';
 import AccountSettingForm from 'components/forms/accountSettingForm/AccountSettingForm';
-import { useUserAuth } from 'contexts';
+import { useUser, useUserAuth } from 'contexts';
+import { auth, verifyPhone } from 'firebase-config';
 import { updateProfile } from 'firebase/auth';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { ButtonKit } from 'kits';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +14,8 @@ import validator from '../../../utlls/input/validator';
 import './General.scss';
 
 const General = () => {
-  const { user, setIsUpdatingPhone, verifyPhone } = useUserAuth();
-  const { settingsSave, settingsLoad } = useApi();
+  const user = useUser();
+  const { setIsUpdatingPhone } = useUserAuth();
 
   const getNumber = () => {
     if (!user.phoneNumber) return '';
@@ -75,7 +77,7 @@ const General = () => {
     setIsLoading(true);
     try {
       if (isValid('name', user.displayName)) {
-        await updateProfile(user, {
+        await updateProfile(auth.currentUser, {
           displayName: `${inputValue.name.trim()}`,
         });
       }
@@ -146,7 +148,7 @@ const General = () => {
     try {
       const data = await settingsLoad({
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
       });
       const obj = {
         restoName: data.restoname || '',

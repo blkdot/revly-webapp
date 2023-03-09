@@ -126,7 +126,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
           </TypographyKit>
           <BoxKit className='left-part-radio sm-rule'>
             <TypographyKit
-              className={launchOrder.length === 2 ? 'active' : ''}
+              className={launchOrder.length === 2 && 'active'}
               sx={{ width: '100%' }}
               variant='div'
             >
@@ -151,7 +151,6 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
                       <MarketingPlaceholderDropdown
                         names={['>', '<']}
                         title='<'
-                        setPersonName={setLaunchOrder}
                         personName={obj.arrow}
                         handleChange={(e) => handleChange(e, 'arrow', index, 'launch')}
                       />
@@ -229,7 +228,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
               )}
             </TypographyKit>
             <TypographyKit
-              className={stopOrder.length === 2 ? 'active' : ''}
+              className={stopOrder.length === 2 && 'active'}
               sx={{ width: '100%' }}
               variant='div'
             >
@@ -462,7 +461,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
             ))}
           </div>
         </BoxKit>
-        {platform.includes('deliveroo') ? (
+        {platform.includes('deliveroo') && (
           <BoxKit className='left-part-radio recap-left-part'>
             <div className='radio recap-box-wrapper'>
               <div className='recap-box'>
@@ -481,8 +480,6 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
               </div>
             </div>
           </BoxKit>
-        ) : (
-          ''
         )}
         <BoxKit className='left-part-radio under-textfields recap-left-part radio-dates active'>
           <div className='radio recap-box-wrapper'>
@@ -515,7 +512,7 @@ const GetRecap: FC<TProps> = ({ closeSetup, ads, getItemMenuNamePrice }) => {
           </div>
           <div
             className={`radio recap-box-wrapper between under ${
-              menu !== 'Offer on An Item from the Menu' ? 'border-none' : ''
+              menu !== 'Offer on An Item from the Menu' && 'border-none'
             }`}
           >
             <div className='recap-between mov'>

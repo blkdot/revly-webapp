@@ -1,7 +1,9 @@
 import { ArrowBack } from '@mui/icons-material';
+import { settingsSave } from 'api';
 import { useUserAuth } from 'contexts';
+import { logout, updatePhone, verifyPhone } from 'firebase-config';
 import { getAuth } from 'firebase/auth';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { ModalKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,8 +13,7 @@ import Timer from '../../components/timer/Timer';
 import './VerifyCode.scss';
 
 const VerifyCode = () => {
-  const { updatePhone, verifyPhone, isUpdatingPhone, setIsUpdatingPhone, logOut } = useUserAuth();
-  const { settingsSave } = useApi();
+  const { isUpdatingPhone, setIsUpdatingPhone } = useUserAuth();
   const [values, setValues] = useState({
     code1: '',
     code2: '',
@@ -80,7 +81,7 @@ const VerifyCode = () => {
           },
         });
         await verifyEmail(data);
-        await logOut();
+        await logout();
         navigate('/');
         triggerAlertWithMessageSuccess(
           'We sent an email verification to your email, please check it (include spam) before signin'

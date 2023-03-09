@@ -32,18 +32,16 @@ const OnboardingMiddleContent: FC<{
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
-        <p className='__title'>Your branches list</p>
-        <span className='__subtitle'>
-          Egestas vel augue nunc risus augue neque amet diam in. Proin.
+        <p className='dashboard-title'>Your branches list</p>
+        <span className='dashboard-subtitle'>
+          Add and manage all your chains and branches. Monitor the activity of your branches.
         </span>
       </div>
       <div className='settings-onboarding-btn_wrapper'>
-        {accounts.length > 0 ? (
+        {accounts.length > 0 && (
           <OnboardingDropdown rows={filteredChains()} state={kitchen} setState={setKitchen} />
-        ) : (
-          ''
         )}
-        {accounts.length > 0 ? (
+        {accounts.length > 0 && (
           <ButtonKit
             onClick={() => {
               openCloseModal();
@@ -55,8 +53,6 @@ const OnboardingMiddleContent: FC<{
             <img src={SettingsIcon} alt='settings-icon' />
             Manage my Accounts
           </ButtonKit>
-        ) : (
-          ''
         )}
         <ButtonKit
           onClick={(e) => openCloseModal(e)}

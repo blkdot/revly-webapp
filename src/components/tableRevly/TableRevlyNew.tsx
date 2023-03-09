@@ -7,42 +7,37 @@ import {
   TableContainerKit,
   TableKit,
   TableRowKit,
-  TypographyKit,
 } from 'kits';
-import { useState, FC, useEffect } from 'react';
-import { platformObject } from 'data/platformList';
-import { Switch } from 'assets/icons';
-import Arrow from '../../assets/images/arrow.svg';
+import { FC, useState, ReactNode } from 'react';
+import noData from '../../assets/images/no-result.svg';
 import { getComparator, stableSort } from '../../utlls/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
+import TableLink from './tableLink/TableLink';
 import './TableRevly.scss';
-import noData from '../../assets/images/no-result.svg';
-import FilterDropdown from '../filter/filterDropdown/FilterDropdown';
-// import Clock from '../../assets/images/clock.svg';
-import Columns from '../../assets/images/columns.svg';
 
 const TableRevlyNew: FC<{
-  headers: any;
-  rows: any;
-  isLoading?: any;
-  mainFieldOrdered?: any;
-  onClickRow?: any;
-  noEmptyMessage?: any;
-  renderCustomSkelton?: any;
-  links?: any;
-  setLink?: any;
-  link?: any;
-  setOpenedFilter?: any;
+  headers: any[];
+  rows: any[];
+  isLoading?: boolean;
+  mainFieldOrdered?: string;
+  // eslint-disable-next-line react/require-default-props
+  mainOrder?: 'asc' | 'desc';
+  onClickRow?: (id: string | number) => void;
+  noEmptyMessage?: boolean;
+  renderCustomSkelton?: any[];
+  links?: { link: string; title: string; tooltip?: string }[];
+  setLink?: (v: string) => void;
+  link?: string;
+  setOpenedFilter?: (v: boolean) => void;
   className?: string;
-  filters?: any;
-  filtersHead?: any;
-  handleChangeMultipleFilter?: any;
-  noDataText?: string,
+  noDataText?: string;
+  filters?: ReactNode | null;
 }> = ({
   headers,
   rows,
   isLoading,
   mainFieldOrdered,
+  mainOrder,
   onClickRow,
   noEmptyMessage,
   renderCustomSkelton,
@@ -51,12 +46,10 @@ const TableRevlyNew: FC<{
   link,
   setOpenedFilter,
   className,
-  filters,
-  filtersHead,
-  handleChangeMultipleFilter,
   noDataText,
+  filters,
 }) => {
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState(mainOrder || 'asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
   const handleRequestSort = (property) => {
@@ -98,131 +91,45 @@ const TableRevlyNew: FC<{
         : renderSkeleton();
 
     if (!rows || rows.length < 1) {
-      if (noEmptyMessage) {
-        return null;
-      }
-
-      return (
-        <TableRowKit className='no-data'>
-          <TableCellKit colSpan={7} style={{ textAlign: 'center' }}>
-            <img src={noData} alt='no-data' />
-            <p>{noDataText || 'Files not found description here'}</p>
-          </TableCellKit>
-        </TableRowKit>
-      );
+      return null;
     }
 
     return renderRowsContent();
   };
-
-  const getActiveLinkWidth = (index: number, type: string) => {
-    const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
-    if (type === 'scroll') {
-      return tableLink.offsetLeft - tableLink.scrollLeft;
-    }
-    return tableLink?.clientWidth;
-  };
-
-  const changeLink = (name: string, index: number) => {
-    setLink(name);
-    const tableLinks = document.querySelector('.table-links') as HTMLElement;
-    tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(index, 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(index, 'scroll')}px`);
-  };
-  useEffect(() => {
-    const tableLinks = document.querySelector('.table-links') as HTMLElement;
-    tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(0, 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(0, 'scroll')}px`);
-  }, []);
   const renderTop = () => {
     if (links) {
       return (
-        <div className='table-paper-top'>
-          <div style={{ display: 'flex' }}>
-            <BoxKit className='table-links'>
-              {links.map((obj: {title: string, link: string}, index: number) => (
-                <TypographyKit
-                  key={obj.link}
-                  className={`table-link ${link === obj.link ? 'active' : ''}`}
-                  onClick={() => changeLink(obj.link, index)}
-                >
-                  {obj.title}
-                </TypographyKit>
-              ))}
-            </BoxKit>
-            <BoxKit className='table-arrow-links'>
-              <img
-                tabIndex={-1}
-                role='presentation'
-                className={links.findIndex((obj: { title: string, link: string }) => link === obj.link) > 0 ? 'active' : ''}
-                onClick={() =>
-                  changeLink(
-                    links[links.findIndex((obj: { title: string, link: string }) => link === obj.link) - 1].link,
-                    links.findIndex((obj: { title: string, link: string }) => link === obj.link) - 1
-                  )
-                }
-                src={Arrow}
-                alt='left-arrow'
-              />
-              <img
-                tabIndex={-1}
-                role='presentation'
-                className={links.findIndex((obj: { title: string, link: string }) => link === obj.link) < links.length - 1 ? 'active' : ''}
-                onClick={() =>
-                  changeLink(
-                    links[links.findIndex((obj: { title: string, link: string }) => link === obj.link) + 1].link,
-                    links.findIndex((obj: { title: string, link: string }) => link === obj.link) + 1
-                  )
-                }
-                src={Arrow}
-                alt='right-arrow'
-              />
-            </BoxKit>
-          </div>
-          {filters ? (
-            <BoxKit onClick={() => setOpenedFilter(true)} className='table-filter'>
-              <span />
-              <p>Filters</p>
-            </BoxKit>
-          ) : (
-            ''
-          )}
-        </div>
+        <TableLink
+          links={links}
+          setLink={setLink}
+          link={link}
+          filters={filters}
+          setOpenedFilter={setOpenedFilter}
+        />
       );
     }
     return '';
   };
-  const renderFilters = () => {
-    if (filters) {
+
+  const renderNoData = () => {
+    if (!rows || (rows.length < 1 && !isLoading)) {
+      if (noEmptyMessage) {
+        return null;
+      }
       return (
-        <div className='table-filters'>
-          <FilterDropdown
-            items={filtersHead.platform}
-            values={filters.platform}
-            onChange={handleChangeMultipleFilter('platform')}
-            label='Platforms'
-            icon={<img src={Columns} alt='Clock' />}
-            internalIconOnActive={platformObject}
-            maxShowned={1}
-          />
-          <FilterDropdown
-            items={filtersHead.status}
-            values={filters.status}
-            onChange={handleChangeMultipleFilter('status')}
-            label='Statuses'
-            icon={<Switch />}
-            maxShowned={1}
-          />
+        <div className='no-data'>
+          <img src={noData} alt='no-data' />
+          <p>{noDataText || 'Files not found description here'}</p>
         </div>
       );
     }
-    return '';
+    return null;
   };
   return (
     <BoxKit className={`competition-box ${className || ''}`} sx={{ width: '100%' }}>
       <PaperKit className='table-paper' sx={{ width: '100%', mb: 2 }}>
         {renderTop()}
-        {renderFilters()}
+        {filters}
         <TableContainerKit className='table-container'>
           <TableKit
             sx={{ minWidth: 750, maxHeight: 250 }}
@@ -239,6 +146,7 @@ const TableRevlyNew: FC<{
             />
             <TableBodyKit>{renderRows()}</TableBodyKit>
           </TableKit>
+          {renderNoData()}
         </TableContainerKit>
       </PaperKit>
     </BoxKit>
@@ -256,8 +164,6 @@ TableRevlyNew.defaultProps = {
   setOpenedFilter: null,
   className: '',
   filters: null,
-  filtersHead: null,
-  handleChangeMultipleFilter: null,
   noDataText: '',
 };
 

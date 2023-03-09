@@ -1,15 +1,15 @@
-import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 
 import './Navbar.scss';
 
-import { ButtonKit } from 'kits';
 import Navlink from 'components/navlink/Navlink';
-import { useUserAuth } from 'contexts';
+import { ButtonKit } from 'kits';
 
+import { logout } from 'firebase-config';
+import lines from '../../assets/images/lines.png';
 import logo from '../../assets/images/logo.png';
 import smallLogo from '../../assets/images/small-logo.png';
-import lines from '../../assets/images/lines.png';
 
 import { vendorsAtom } from '../../store/vendorsAtom';
 
@@ -72,7 +72,6 @@ export const simpleLink = [
 ];
 
 const NavbarOnboarding = () => {
-  const { logOut } = useUserAuth();
   const navigate = useNavigate();
 
   const [, setVendors] = useAtom(vendorsAtom);
@@ -87,7 +86,7 @@ const NavbarOnboarding = () => {
       chainData: [],
     });
     try {
-      await logOut();
+      await logout();
       navigate('/');
     } catch (e) {
       /* */

@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
+import { settingsOnboardPlatform, settingsOnboardPlatformStatus, settingsSave } from 'api';
 import { saveUser } from 'api/userApi';
-import { useUserAuth } from 'contexts';
-import { useAlert, useApi } from 'hooks';
+import { useUser } from 'contexts';
+import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
@@ -32,8 +33,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { settingsOnboardPlatform, settingsSave, settingsOnboardPlatformStatus } = useApi();
-  const { user } = useUserAuth();
+  const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const [vendors] = useAtom(vendorsAtom);
   const handleSubmitLogin = async (currentPlatform) => {
@@ -42,7 +42,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     const res = await settingsOnboardPlatform(
       {
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
         credentials: {
           email,
           password,
@@ -86,16 +86,30 @@ const OnboardingModal = ({ propsVariables }: any) => {
       email: clickedEmail,
       data: { is_deleted: true },
     });
-
     accounts.splice(
       accounts.findIndex((obj) => obj.email === clickedEmail && obj.platform === platform),
       1
     );
+    branchData
+      .filter((obj) =>
+        obj.linked_platforms.find(
+          (objL) => objL.email === clickedEmail && objL.platform === platform
+        )
+      )
+      .forEach((obj) => {
+        obj.accounts.splice(
+          obj.accounts.findIndex((objAcc) => objAcc === clickedEmail),
+          1
+        );
+        obj.linked_platforms.splice(
+          obj.linked_platforms.findIndex(
+            (objL) => objL.email === clickedEmail && objL.platform === platform
+          ),
+          1
+        );
+      });
 
-    setBranchData(
-      branchData.filter((obj) => obj.accounts.some((objAcc) => objAcc !== clickedEmail))
-    );
-
+    setBranchData(branchData.filter((obj) => obj.accounts.length > 0));
     setAccounts([...accounts]);
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
@@ -115,7 +129,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
       return arr;
     };
     await saveUser({
-      access_token: user.accessToken,
+      access_token: user.token,
       vendors: { [obj.platform]: vendorsBranch() },
       data: { is_active: !obj.active },
     });
@@ -123,7 +137,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     await settingsOnboardPlatformStatus(
       {
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
         email: obj.email,
         active_status: !obj.active,
       },
@@ -239,8 +253,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal ? 'active' : ''} ${
-        openedSwitchDeleteModal ? 'activeDelete' : ''
+      className={`onboarding-modal_overlay ${openedModal && 'active'} ${
+        openedSwitchDeleteModal && 'activeDelete'
       }`}
       onClick={openCloseModal}
     >

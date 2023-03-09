@@ -21,11 +21,12 @@
 }
 
 .marketing-top {
-  margin-top: 50px;
+  margin-top: 10px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   grid-gap: 20px;
+  align-items: center;
 }
 
 .marketing-links.marketing-links {
@@ -474,7 +475,7 @@
   font-size: 14px;
   line-height: 22px;
   color: #212b36;
-  p{
+  p {
     font-weight: 400;
   }
 }

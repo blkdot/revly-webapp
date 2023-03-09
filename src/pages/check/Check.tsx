@@ -1,13 +1,12 @@
-import { useUserAuth } from 'contexts';
-import { useApi, usePlatform } from 'hooks';
+import { settingsOnboarded } from 'api';
+import { usePlatform, useUser } from 'contexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Check = () => {
-  const { settingsOnboarded } = useApi();
   const navigate = useNavigate();
   const { setUserPlatformData, userPlatformData } = usePlatform();
-  const { user } = useUserAuth();
+  const user = useUser();
 
   const getPlatformData = async () => {
     if (!user) return navigate('/');
@@ -15,7 +14,7 @@ const Check = () => {
     try {
       const res = await settingsOnboarded({
         master_email: user.email,
-        access_token: user.accessToken,
+        access_token: user.token,
       });
 
       if (res instanceof Error || !res.onboarded) return navigate('/onboarding');

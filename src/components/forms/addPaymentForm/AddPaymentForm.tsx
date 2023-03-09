@@ -5,7 +5,7 @@ const AddPaymentForm = (props: any) => {
   const { visible, handleInputChange, onCancel, onSaveChange } = props;
 
   return (
-    <div className={`add-payment-form ${visible ? '__visible' : ''}`}>
+    <div className={`add-payment-form ${visible && '__visible'}`}>
       <p style={{ marginBottom: 7 }}>Add new card</p>
       <div className='add-payment-form__input-flex'>
         <TextfieldKit

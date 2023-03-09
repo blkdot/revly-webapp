@@ -1,40 +1,26 @@
-import { auth } from 'firebase-config';
-import { onAuthStateChanged } from 'firebase/auth';
-import { SpinnerKit } from 'kits';
-import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { UserProvider } from 'contexts';
+import { FC, useMemo, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-
-type UserContextType = {
-  email: string;
-  token: string;
-  displayName: string;
-  phoneNumber: string;
-};
-
-const UserContext = createContext<UserContextType>({
-  email: '',
-  token: '',
-  displayName: '',
-  phoneNumber: '',
-});
-
-export const UserProvider: FC<{
-  value: UserContextType;
-  children: ReactNode;
-}> = ({ value, children }) => <UserContext.Provider value={value}>{children}</UserContext.Provider>;
-
-export const useUser = () => useContext(UserContext);
+import { auth } from 'firebase-config';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { SpinnerKit } from 'kits';
 
 export const ProtectedRoutes: FC = () => {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState<UserContextType>({
-    email: '',
-    token: '',
-    displayName: '',
-    phoneNumber: '',
-  });
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User>(null);
+
+  const value = useMemo(
+    () => ({
+      email: user?.email,
+      token: (user as any)?.accessToken,
+      displayName: user?.displayName,
+      phoneNumber: user?.phoneNumber,
+      emailVerified: user?.emailVerified,
+    }),
+    [user]
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -43,12 +29,7 @@ export const ProtectedRoutes: FC = () => {
       setLoading(false);
 
       if (u) {
-        setUser({
-          email: u.email,
-          token: (u as any).accessToken,
-          displayName: u.displayName,
-          phoneNumber: u.phoneNumber,
-        });
+        setUser(u);
       } else {
         navigate('/');
       }
@@ -56,11 +37,15 @@ export const ProtectedRoutes: FC = () => {
   }, [navigate]);
 
   if (loading) {
-    return <SpinnerKit />;
+    return (
+      <div className='main-loading'>
+        <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />
+      </div>
+    );
   }
 
   return (
-    <UserProvider value={user}>
+    <UserProvider value={value}>
       <Outlet />
     </UserProvider>
   );

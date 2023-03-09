@@ -1,6 +1,8 @@
+import { settingsSave } from 'api';
 import { useUserAuth } from 'contexts';
+import { logout, signUp, verifyPhone } from 'firebase-config';
 import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
-import { useAlert, useApi } from 'hooks';
+import { useAlert } from 'hooks';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { verifyEmail } from '../../api/userApi';
@@ -20,7 +22,6 @@ const SignUp = () => {
     isAgree: false,
     pointOfSale: '',
   });
-  const { settingsSave } = useApi();
   const [processing, setProcessing] = useState(false); // set to true if an API call is running
   const { triggerAlertWithMessageError, triggerAlertWithMessageSuccess } = useAlert();
   const [errorData, setErrorData] = useState<{
@@ -34,7 +35,7 @@ const SignUp = () => {
     pointOfSale: false,
   });
 
-  const { signUp, verifyPhone, setIsUpdatingPhone, logOut } = useUserAuth();
+  const { setIsUpdatingPhone } = useUserAuth();
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -60,6 +61,8 @@ const SignUp = () => {
       } else {
         await settingsSave({
           master_email: value.email,
+          platform: '',
+          email: '',
           data: {
             restoname: value.restoName.trim(),
             pointOfSale: value.pointOfSale,
@@ -68,7 +71,7 @@ const SignUp = () => {
           },
         });
         await verifyEmail(value);
-        await logOut();
+        await logout();
         navigate('/');
         triggerAlertWithMessageSuccess(
           'We sent an email verification to your email, please check it (include spam) before signin'
