@@ -31,6 +31,7 @@ const NewSettingsOnboarding = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [branchDataUploading, setBranchDataUploading] = useState([]);
   const [branchData, setBranchData] = useState([]);
+  const [branchDataFiltered, setBranchDataFiltered] = useState([]);
   const [connectAccount, setConnectAccount] = useState('account');
   const [connect, setConnect] = useState('');
   const [clickedBranch, setClickedBranch] = useState({});
@@ -41,7 +42,7 @@ const NewSettingsOnboarding = () => {
     const arr = [];
     sortedVendors(vendors.display).forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
-        arr.push({ name: vName, data: vendors.display[cName][vName] });
+        arr.push({ name: vName, data: vendors.display[cName][vName], chainName: cName, });
       });
     });
 
@@ -80,6 +81,7 @@ const NewSettingsOnboarding = () => {
       linked_platforms: vendorPlatform(obj),
       branch_status: vendorsStatus(obj),
       id: obj.data.platforms[Object.keys(obj.data.platforms)[0]].vendor_id,
+      chain_name: obj.chainName,
     }));
   };
 
@@ -90,6 +92,7 @@ const NewSettingsOnboarding = () => {
   useEffect(() => {
     setVendors(vendors);
     setBranchData(getBranchData());
+    setBranchDataFiltered(getBranchData());
   }, [vendors, JSON.stringify(userPlatformData.platforms)]);
 
   const openCloseModal = () => {
@@ -144,10 +147,12 @@ const NewSettingsOnboarding = () => {
         openCloseModal={openCloseModal}
         accounts={accounts}
         setConnectAccount={setConnectAccount}
+        setBranchDataFiltered={setBranchDataFiltered}
+        branchData={branchData}
       />
       <OnboardingTable
         loading={loading}
-        branchData={branchData}
+        branchData={branchDataFiltered}
         openCloseModal={openCloseModal}
         setClickedBranch={setClickedBranch}
         setConnectAccount={setConnectAccount}

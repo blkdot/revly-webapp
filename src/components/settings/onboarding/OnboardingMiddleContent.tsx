@@ -7,10 +7,12 @@ import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
 
 const OnboardingMiddleContent: FC<{
-  openCloseModal: any;
+  openCloseModal: () => void;
   accounts: any;
   setConnectAccount: any;
-}> = ({ openCloseModal, accounts, setConnectAccount }) => {
+  branchData: any;
+  setBranchDataFiltered: any;
+}> = ({ openCloseModal, accounts, setConnectAccount, setBranchDataFiltered, branchData }) => {
   const [vendors] = useAtom(vendorsAtom);
   const filteredChains = () => {
     const arr = [];
@@ -27,8 +29,11 @@ const OnboardingMiddleContent: FC<{
   };
   const [kitchen, setKitchen] = useState([]);
   useEffect(() => {
+    setBranchDataFiltered(branchData.filter((obj) => kitchen.includes(obj.chain_name)))
+  }, [kitchen]);
+  useEffect(() => {
     setKitchen(filteredChains());
-  }, [filteredChains().length]);
+  },[filteredChains().length])
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
@@ -43,7 +48,7 @@ const OnboardingMiddleContent: FC<{
         )}
         {accounts.length > 0 && (
           <ButtonKit
-            onClick={() => {
+            onClick={(e) => {
               openCloseModal();
               setConnectAccount('manageAccount');
             }}
@@ -55,7 +60,7 @@ const OnboardingMiddleContent: FC<{
           </ButtonKit>
         )}
         <ButtonKit
-          onClick={(e) => openCloseModal(e)}
+          onClick={() => openCloseModal()}
           className='settings-onboarding-btn'
           variant='contained'
         >

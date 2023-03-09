@@ -11,7 +11,6 @@ const TableLink: FC<{
 }> = ({ links, setLink, link, filters, setOpenedFilter }) => {
   const getActiveLinkWidth = (index: number, type: string) => {
     const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
-    tableLink.scrollIntoView();
     if (type === 'scroll') {
       return tableLink.offsetLeft - tableLink.scrollLeft;
     }
@@ -20,6 +19,8 @@ const TableLink: FC<{
   const changeLink = (name: string, index: number) => {
     setLink(name);
     const tableLinks = document.querySelector('.table-links') as HTMLElement;
+    const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
+    tableLink.scrollIntoView();
     tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(index, 'width')}px`);
     tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(index, 'scroll')}px`);
   };

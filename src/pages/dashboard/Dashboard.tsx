@@ -244,7 +244,13 @@ const Dashboard = () => {
   }, [metricsbeforePeriod, metricsafterPeriod, table]);
 
   const isDisplay = () => {
-    if (selectedVendors('name', display).length === chainData.length) {
+    const arr = [];
+    Object.keys(display).forEach((cName) => {
+      Object.keys(display[cName]).forEach((vName) => {
+        arr.push(vName)
+      })
+    })
+    if (selectedVendors('name', display).length === arr.length) {
       return 'all Branches';
     }
     if (selectedVendors('name', display).length > 2) {
