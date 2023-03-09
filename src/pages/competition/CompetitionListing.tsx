@@ -8,7 +8,7 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
-import { platformObject } from 'data/platformList';
+import { platformList, platformObject } from 'data/platformList';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
 import { useAlert, useVendors } from 'hooks';
@@ -385,7 +385,7 @@ const CompetitionListing = () => {
             </DescriptionTitle>
           </div>
           <div style={{ marginTop: '2rem' }}>
-            <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
+            <Competitor platformList={platformList.filter((obj) => !obj?.disabled).map((obj) => obj.name)} open={Open} opened={opened} />
           </div>
         </div>
         <PaperKit className='competition-paper'>
