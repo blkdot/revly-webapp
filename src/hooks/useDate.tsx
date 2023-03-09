@@ -1,6 +1,6 @@
 import { GlobalFunctionalitiesContext } from 'contexts';
 import { useContext } from 'react';
 
-const useDate = () => useContext(GlobalFunctionalitiesContext) as any;
+const useDate = () => useContext(GlobalFunctionalitiesContext);
 
 export default useDate;

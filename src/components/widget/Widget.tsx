@@ -32,8 +32,8 @@ const Widget: FC<{
 }) => {
   const { date } = useDate();
   const { afterPeriod, titleafterPeriod } = date;
-  const startDate = parseISO(afterPeriod.startDate);
-  const endDate = parseISO(afterPeriod.endDate);
+  const startDate = parseISO(afterPeriod.startDate as string);
+  const endDate = parseISO(afterPeriod.endDate as string);
   const startLocal = startDate.toLocaleDateString();
   const endLocal = endDate.toLocaleDateString();
   const startGetDate = startDate.getDate();
@@ -68,11 +68,11 @@ const Widget: FC<{
       }
       if (
         startGetDate === 1 &&
-        endGetDate === endOfMonth(parseISO(afterPeriod.startDate)).getDate()
+        endGetDate === endOfMonth(parseISO(afterPeriod.startDate as string)).getDate()
       ) {
-        return `${format(parseISO(afterPeriod.startDate), 'LLL', {
+        return `${format(parseISO(afterPeriod.startDate as string), 'LLL', {
           locale: enUS,
-        })}  -  ${getYear(parseISO(afterPeriod.startDate))}`;
+        })}  -  ${getYear(parseISO(afterPeriod.startDate as string))}`;
       }
 
       return `${dayjs(afterPeriod.startDate).format('DD/MM')} - ${dayjs(afterPeriod.endDate).format(
