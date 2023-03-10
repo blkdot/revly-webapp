@@ -87,7 +87,7 @@ const ConnectAccount: FC<{
         {platformList.map((obj) => (
           <ButtonKit
             onClick={() => {
-              if(!obj?.disabled){
+              if (!obj?.disabled) {
                 setConnect(obj.name);
                 setConnectAccount('platform');
               }
@@ -95,7 +95,8 @@ const ConnectAccount: FC<{
             disabled={obj?.disabled}
             variant='contained'
             key={obj.name}
-            style={{ '--color': obj.color } as React.CSSProperties}
+            className={`${!obj?.color && 'onboarding-platform-border'}`}
+            style={{ '--color': obj?.color } as React.CSSProperties}
           >
             <img src={obj.srcFaviconWhite || obj.srcFavicon} alt={obj.name} />
             Connect with {obj.name.charAt(0).toUpperCase() + obj.name.slice(1)}

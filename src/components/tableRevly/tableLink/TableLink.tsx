@@ -26,8 +26,20 @@ const TableLink: FC<{
   };
   useEffect(() => {
     const tableLinks = document.querySelector('.table-links') as HTMLElement;
-    tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(links.findIndex((obj) => obj.link === link), 'width')}px`);
-    tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(links.findIndex((obj) => obj.link === link), 'scroll')}px`);
+    tableLinks?.style.setProperty(
+      '--length',
+      `${getActiveLinkWidth(
+        links.findIndex((obj) => obj.link === link),
+        'width'
+      )}px`
+    );
+    tableLinks?.style.setProperty(
+      '--left',
+      `${getActiveLinkWidth(
+        links.findIndex((obj) => obj.link === link),
+        'scroll'
+      )}px`
+    );
   }, []);
   return (
     <div className='table-paper-top'>

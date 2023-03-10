@@ -15,29 +15,29 @@ const OnboardingDropdown: FC<{
   state: any;
   handleChange: any;
   rows: any;
-}> = ({ state, handleChange, rows }) =>  (
-    <FormControlKit
-      className={`onboarding-dropdown ${rows.length === 0 && 'onboarding-dropdown_skeleton'}`}
-      sx={{ m: 1, minWidth: 120 }}
+}> = ({ state, handleChange, rows }) => (
+  <FormControlKit
+    className={`onboarding-dropdown ${rows.length === 0 && 'onboarding-dropdown_skeleton'}`}
+    sx={{ m: 1, minWidth: 120 }}
+  >
+    <SelectKit
+      value={state}
+      onChange={handleChange}
+      multiple
+      labelId='demo-multiple-checkbox-label'
+      id='demo-multiple-checkbox'
+      disabled={!(rows.length > 0)}
+      renderValue={(selected) => selected.join(', ')}
+      MenuProps={MenuProps}
     >
-      <SelectKit
-        value={state}
-        onChange={handleChange}
-        multiple
-        labelId='demo-multiple-checkbox-label'
-        id='demo-multiple-checkbox'
-        disabled={!(rows.length > 0)}
-        renderValue={(selected) => selected.join(', ')}
-        MenuProps={MenuProps}
-      >
-        {rows.map((r: string) => (
-          <MenuItemKit value={r} key={r}>
-            <CheckboxKit checked={state.indexOf(r) > -1} />
-            <ListItemTextKit primary={r} />
-          </MenuItemKit>
-        ))}
-      </SelectKit>
-    </FormControlKit>
-  );
+      {rows.map((r: string) => (
+        <MenuItemKit value={r} key={r}>
+          <CheckboxKit checked={state.indexOf(r) > -1} />
+          <ListItemTextKit primary={r} />
+        </MenuItemKit>
+      ))}
+    </SelectKit>
+  </FormControlKit>
+);
 
 export default OnboardingDropdown;

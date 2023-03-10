@@ -19,8 +19,10 @@ const NewSettingsOnboarding = () => {
     const arr = [];
 
     Object.keys(userPlatformData.platforms).forEach((plat: string) => {
-      userPlatformData.platforms[plat].forEach((obj: object) => {
-        arr.push({ ...obj, platform: plat });
+      userPlatformData.platforms[plat].forEach((obj: any) => {
+        if (obj.email && obj.vendor_ids.length > 0) {
+          arr.push({ ...obj, platform: plat });
+        }
       });
     });
 
@@ -42,7 +44,7 @@ const NewSettingsOnboarding = () => {
     const arr = [];
     sortedVendors(vendors.display).forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
-        arr.push({ name: vName, data: vendors.display[cName][vName], chainName: cName, });
+        arr.push({ name: vName, data: vendors.display[cName][vName], chainName: cName });
       });
     });
 
@@ -114,19 +116,7 @@ const NewSettingsOnboarding = () => {
 
     body.style.overflowY = 'visible';
   };
-  const filteredChains = () => {
-    const arr = [];
-    Object.keys(vendors.display).forEach((cName) => {
-      if (
-        Object.keys(vendors.display[cName]).every(
-          (vName) => vendors.display[cName][vName].is_matched
-        )
-      ) {
-        arr.push(cName);
-      }
-    });
-    return arr;
-  };
+
   const propsVariables = {
     openCloseModal,
     setConnect,

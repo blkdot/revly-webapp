@@ -79,10 +79,10 @@ const SignIn = () => {
   }, [oobCode, mode]);
 
   const handleSubmit = useCallback(async () => {
-      //  if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
-      //   triggerAlertWithMessageError('Unauthorized email address');
-      //    return;
-      //  }
+    //  if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
+    //   triggerAlertWithMessageError('Unauthorized email address');
+    //    return;
+    //  }
 
     setProcessing(true);
     try {
