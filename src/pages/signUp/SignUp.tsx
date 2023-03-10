@@ -1,11 +1,10 @@
 import { settingsSave } from 'api';
 import { useUserAuth } from 'contexts';
-import { logout, signUp, verifyPhone } from 'firebase-config';
-import { fetchSignInMethodsForEmail, getAuth, updateProfile } from 'firebase/auth';
+import {  logout, signUp, verifyPhone } from 'firebase-config';
+import { fetchSignInMethodsForEmail, getAuth, sendEmailVerification, updateProfile } from 'firebase/auth';
 import { useAlert } from 'hooks';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { verifyEmail } from '../../api/userApi';
 import SignUpForm from '../../components/forms/authForm/signUpForm/SignUpForm';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
 import './SignUp.scss';
@@ -70,7 +69,7 @@ const SignUp = () => {
             dial: value.dial.dialCode,
           },
         });
-        await verifyEmail(value);
+        await sendEmailVerification(credential.user)
         await logout();
         navigate('/');
         triggerAlertWithMessageSuccess(

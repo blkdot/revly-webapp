@@ -335,7 +335,7 @@ const CompetitionAlerts = () => {
             </DescriptionTitle>
           </div>
           <div style={{ marginTop: '2rem' }}>
-            <Competitor platformList={['deliveroo', 'talabat']} open={Open} opened={opened} />
+            <Competitor platformListProps={['deliveroo', 'talabat']} open={Open} opened={opened} />
           </div>
         </div>
         <PaperKit className='competition-paper'>

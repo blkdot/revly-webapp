@@ -1,9 +1,10 @@
+import { auth } from 'firebase-config';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { useAlert } from 'hooks';
 import { CardKit } from 'kits';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-import { forgotPassword } from '../../api/userApi';
 import logo from '../../assets/images/logo.png';
 import ForgotPasswordForm from '../../components/forms/forgotPasswordForm/ForgotPasswordForm';
 import { firebaseCodeError } from '../../data/firebaseCodeError';
@@ -23,7 +24,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     setIsLoading(true);
-    forgotPassword(email)
+    sendPasswordResetEmail(auth, email)
       .then(() => {
         setIsLoading(false);
         setAlertTheme('success');
