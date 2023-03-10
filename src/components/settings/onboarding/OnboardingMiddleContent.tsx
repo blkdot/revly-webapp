@@ -29,11 +29,8 @@ const OnboardingMiddleContent: FC<{
   };
   const [kitchen, setKitchen] = useState([]);
   useEffect(() => {
-    setBranchDataFiltered(branchData.filter((obj) => kitchen.includes(obj.chain_name)))
-  }, [kitchen]);
-  useEffect(() => {
     setKitchen(filteredChains());
-  },[filteredChains().length])
+  }, [filteredChains().length]);
   return (
     <div className='settings-onboarding-middle_content'>
       <div>
@@ -44,7 +41,16 @@ const OnboardingMiddleContent: FC<{
       </div>
       <div className='settings-onboarding-btn_wrapper'>
         {accounts.length > 0 && (
-          <OnboardingDropdown rows={filteredChains()} state={kitchen} setState={setKitchen} />
+          <OnboardingDropdown
+            rows={filteredChains()}
+            state={kitchen}
+            handleChange={({ target }) => {
+              setBranchDataFiltered(
+                branchData.filter((obj) => target.value.includes(obj.chain_name))
+              );
+              setKitchen(target.value);
+            }}
+          />
         )}
         {accounts.length > 0 && (
           <ButtonKit

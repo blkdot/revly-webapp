@@ -19,8 +19,10 @@ const NewSettingsOnboarding = () => {
     const arr = [];
 
     Object.keys(userPlatformData.platforms).forEach((plat: string) => {
-      userPlatformData.platforms[plat].forEach((obj: object) => {
-        arr.push({ ...obj, platform: plat });
+      userPlatformData.platforms[plat].forEach((obj: any) => {
+        if (obj.email && obj.vendor_ids.length > 0) {
+          arr.push({ ...obj, platform: plat });
+        }
       });
     });
 
@@ -42,7 +44,7 @@ const NewSettingsOnboarding = () => {
     const arr = [];
     sortedVendors(vendors.display).forEach((cName) => {
       Object.keys(vendors.display[cName]).forEach((vName) => {
-        arr.push({ name: vName, data: vendors.display[cName][vName], chainName: cName, });
+        arr.push({ name: vName, data: vendors.display[cName][vName], chainName: cName });
       });
     });
 
@@ -152,7 +154,7 @@ const NewSettingsOnboarding = () => {
       />
       <OnboardingTable
         loading={loading}
-        branchData={branchDataFiltered}
+        branchData={branchDataFiltered.length > 0 ? branchDataFiltered : branchData}
         openCloseModal={openCloseModal}
         setClickedBranch={setClickedBranch}
         setConnectAccount={setConnectAccount}

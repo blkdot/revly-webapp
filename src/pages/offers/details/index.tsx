@@ -656,9 +656,7 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {data.start_hour || (
-              <SkeletonKit />
-            )}
+            {data.start_hour || <SkeletonKit />}
           </span>
         </div>
         <div
@@ -692,9 +690,7 @@ const TimeSlot = ({ data }) => (
               color: '#212B36',
             }}
           >
-            {data.end_hour || (
-              <SkeletonKit />
-            )}
+            {data.end_hour || <SkeletonKit />}
           </span>
         </div>
       </div>

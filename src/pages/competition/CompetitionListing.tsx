@@ -385,7 +385,13 @@ const CompetitionListing = () => {
             </DescriptionTitle>
           </div>
           <div style={{ marginTop: '2rem' }}>
-            <Competitor platformList={platformList.filter((obj) => !obj?.disabled).map((obj) => obj.name)} open={Open} opened={opened} />
+            <Competitor
+              platformListProps={platformList
+                .filter((obj) => !obj?.disabled)
+                .map((obj) => obj.name)}
+              open={Open}
+              opened={opened}
+            />
           </div>
         </div>
         <PaperKit className='competition-paper'>

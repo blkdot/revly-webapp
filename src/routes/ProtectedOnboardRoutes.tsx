@@ -35,7 +35,7 @@ export const ProtectedOnboardRoutes = () => {
           vendorIds.includes(String(chain.vendor_id)) &&
           chain.platform.toLocaleLowerCase() === 'deliveroo'
       );
-      
+
       if (!firstVendorData) return null;
 
       return getElligibilityDeliveroo({
@@ -51,15 +51,15 @@ export const ProtectedOnboardRoutes = () => {
         setEligibilityDeliverooState((prev) => ({ ...prev, ...res?.data }));
       });
     });
-  }
+  };
 
   useEffect(() => {
     if (chainData.length > 0) {
-      setInterval(requestEligibilityDeliveroo, 900*1000)
-      const int = setInterval(requestEligibilityDeliveroo, 1000)
-      setTimeout(() => clearInterval(int), 1000)
+      setInterval(requestEligibilityDeliveroo, 900 * 1000);
+      const int = setInterval(requestEligibilityDeliveroo, 1000);
+      setTimeout(() => clearInterval(int), 1000);
     }
-  }, [chainData])
+  }, [chainData]);
 
   // TODO: replace it with a better approach
   // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
@@ -72,7 +72,10 @@ export const ProtectedOnboardRoutes = () => {
     }
   }, [JSON.stringify(response?.data)]);
 
-  if (!response?.isLoading && (response?.isError || !response?.data?.onboarded || !response?.data?.platforms)) {
+  if (
+    !response?.isLoading &&
+    (response?.isError || !response?.data?.onboarded || !response?.data?.platforms)
+  ) {
     return <Navigate to='/dashboardOnboard' />;
   }
 
