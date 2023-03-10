@@ -1,12 +1,33 @@
-// TODO: fix all linter problem
-/* eslint-disable react/jsx-no-constructed-context-values */
-// This file will handle any global functionnalities related to a context that do not belong to a specific context
-// To prevent creating so many other context
 import { endOfWeek, startOfWeek, subWeeks } from 'date-fns';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
 import Alert from '../components/alert/Alert';
 
-export const GlobalFunctionalitiesContext = createContext(undefined);
+type DateType = {
+  beforePeriod: {
+    startDate: Date | number | string;
+    endDate: Date | number | string;
+  };
+  afterPeriod: {
+    startDate: Date | number | string;
+    endDate: Date | number | string;
+  };
+  titleDate: string;
+  titleafterPeriod: string;
+  typeDate: string;
+};
+
+type GlobalFunctionalitiesContextType = {
+  date: DateType;
+  setDate: (v: DateType) => void;
+  setAlertTheme: (v: string) => void;
+  setAlertMessage: (v: string) => void;
+  showAlert: () => void;
+  triggerAlertWithMessageError: (v: string) => void;
+  triggerAlertWithMessageSuccess: (v: string) => void;
+};
+
+export const GlobalFunctionalitiesContext =
+  createContext<GlobalFunctionalitiesContextType>(undefined);
 
 export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [isShowing, setIsShowing] = useState(false);
@@ -14,7 +35,7 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
   const [severity, setSeverity] = useState('error');
 
   const storageDate = JSON.parse(localStorage.getItem('date')) || null;
-  const [date, setDate] = useState(
+  const [date, setDate] = useState<DateType>(
     storageDate || {
       beforePeriod: {
         startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -68,18 +89,29 @@ export const GlobalFunctionalitiesContextProvider = ({ children }) => {
     </Alert>
   );
 
+  const value = useMemo(
+    () => ({
+      setAlertTheme,
+      setAlertMessage,
+      showAlert,
+      triggerAlertWithMessageError,
+      triggerAlertWithMessageSuccess,
+      date,
+      setDate,
+    }),
+    [
+      setAlertTheme,
+      setAlertMessage,
+      showAlert,
+      triggerAlertWithMessageError,
+      triggerAlertWithMessageSuccess,
+      date,
+      setDate,
+    ]
+  );
+
   return (
-    <GlobalFunctionalitiesContext.Provider
-      value={{
-        setAlertTheme,
-        setAlertMessage,
-        showAlert,
-        triggerAlertWithMessageError,
-        triggerAlertWithMessageSuccess,
-        date,
-        setDate,
-      }}
-    >
+    <GlobalFunctionalitiesContext.Provider value={value}>
       {renderAlert()}
       {children}
     </GlobalFunctionalitiesContext.Provider>
