@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryKey, UseQueryOptions } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { config } from 'config';
+import { auth } from 'firebase-config';
 
 const { apiUrl } = config;
 
@@ -8,6 +10,14 @@ export const api = axios.create({
   baseURL: apiUrl,
   timeout: 60000,
   timeoutErrorMessage: 'Request Timeout',
+});
+
+api.interceptors.request.use((v) => {
+  if (auth.currentUser && (auth.currentUser as any).accessToken) {
+    v.headers.set('Authorization', `Bearer ${(auth.currentUser as any).accessToken}`);
+  }
+
+  return v;
 });
 
 export class ApiError extends Error {
