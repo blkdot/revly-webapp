@@ -1,6 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUser } from 'contexts';
+import { platformObject } from 'data/platformList';
 import { useAlert } from 'hooks';
 import {
   ButtonKit,
@@ -15,18 +16,16 @@ import {
 import { useEffect, useState } from 'react';
 import { sendMail } from '../../api/competitionApi';
 import { settingsLoad } from '../../api/settingsApi';
-import icdeliveroo from '../../assets/images/deliveroo-favicon.webp';
 import CityIcon from '../../assets/images/ic_city.png';
 import CountryIcon from '../../assets/images/ic_country.png';
 import CuisineIcon from '../../assets/images/ic_cuisine.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import lines from '../../assets/images/lines.png';
 import loadingImage from '../../assets/images/loading-image.png';
-import ictalabat from '../../assets/images/talabat-favicon.png';
 import CompetitionDropdown from '../competitionDropdown/CompetitionDropdown';
 import './Competitor.scss';
 
-const Competitor = ({ open, opened, platformList }) => {
+const Competitor = ({ open, opened, platformListProps }) => {
   const [restaurant, setRestaurant] = useState('');
   const [platform, setPlatform] = useState('');
   const [area, setArea] = useState('');
@@ -115,7 +114,7 @@ const Competitor = ({ open, opened, platformList }) => {
             required
           />
           <CompetitionDropdown
-            rows={platformList}
+            rows={platformListProps}
             renderOptions={(name) => (
               <MenuItemKit key={name} value={name}>
                 <div
@@ -127,7 +126,7 @@ const Competitor = ({ open, opened, platformList }) => {
                   }}
                 >
                   <img
-                    src={name === 'deliveroo' ? icdeliveroo : ictalabat}
+                    src={platformObject[name].srcFavicon}
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}

@@ -32,28 +32,6 @@ export const getPlanningOfferDetails = (body) =>
     .then((res) => res)
     .catch(handleResponse);
 
-export const forgotPassword = (email) =>
-  api
-    .post(`${firebaseApiUrl}/forgotPassword?email=${email}`)
-    .then((res) => res)
-    .catch(handleResponse);
-
-export const verifyEmail = (user) =>
-  api
-    .post(
-      `${firebaseApiUrl}/verifyEmail?email=${user.email}&fname=${user.fname}&lname=${user.lname}`
-    )
-    .then((res) => res)
-    .catch(handleResponse);
-
-export const verifyEmailSample = (email) =>
-  api
-    .post(
-      `${firebaseApiUrl}/verifyEmail?email=${email}`
-    )
-    .then((res) => res)
-    .catch(handleResponse);
-
 export const saveUser = (body) =>
   api
     .post(`/user/savev2`, body)

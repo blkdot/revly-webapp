@@ -13,17 +13,9 @@ const MenuProps = {
 };
 const OnboardingDropdown: FC<{
   state: any;
-  setState: any;
+  handleChange: any;
   rows: any;
-}> = ({ state, setState, rows }) => {
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setState(typeof value === 'string' ? value.split(',') : value);
-  };
-
-  return (
+}> = ({ state, handleChange, rows }) =>  (
     <FormControlKit
       className={`onboarding-dropdown ${rows.length === 0 && 'onboarding-dropdown_skeleton'}`}
       sx={{ m: 1, minWidth: 120 }}
@@ -47,6 +39,5 @@ const OnboardingDropdown: FC<{
       </SelectKit>
     </FormControlKit>
   );
-};
 
 export default OnboardingDropdown;

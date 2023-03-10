@@ -114,7 +114,19 @@ const NewSettingsOnboarding = () => {
 
     body.style.overflowY = 'visible';
   };
-
+  const filteredChains = () => {
+    const arr = [];
+    Object.keys(vendors.display).forEach((cName) => {
+      if (
+        Object.keys(vendors.display[cName]).every(
+          (vName) => vendors.display[cName][vName].is_matched
+        )
+      ) {
+        arr.push(cName);
+      }
+    });
+    return arr;
+  };
   const propsVariables = {
     openCloseModal,
     setConnect,
@@ -152,7 +164,7 @@ const NewSettingsOnboarding = () => {
       />
       <OnboardingTable
         loading={loading}
-        branchData={branchDataFiltered}
+        branchData={branchDataFiltered.length > 0 ? branchDataFiltered : branchData}
         openCloseModal={openCloseModal}
         setClickedBranch={setClickedBranch}
         setConnectAccount={setConnectAccount}

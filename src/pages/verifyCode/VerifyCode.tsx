@@ -1,13 +1,12 @@
 import { ArrowBack } from '@mui/icons-material';
 import { settingsSave } from 'api';
 import { useUserAuth } from 'contexts';
-import { logout, updatePhone, verifyPhone } from 'firebase-config';
-import { getAuth } from 'firebase/auth';
+import { auth, logout, updatePhone, verifyPhone } from 'firebase-config';
+import { getAuth, sendEmailVerification } from 'firebase/auth';
 import { useAlert } from 'hooks';
 import { ModalKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { verifyEmail } from '../../api/userApi';
 import VerifyCodeForm from '../../components/forms/verifyCodeForm/VerifyCodeForm';
 import Timer from '../../components/timer/Timer';
 import './VerifyCode.scss';
@@ -80,7 +79,7 @@ const VerifyCode = () => {
             dial: data.dial.dialCode,
           },
         });
-        await verifyEmail(data);
+        await sendEmailVerification(auth.currentUser);
         await logout();
         navigate('/');
         triggerAlertWithMessageSuccess(
