@@ -43,7 +43,7 @@ const UploadingActive: FC<{
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { triggerAlertWithMessageError } = useAlert();
-  const {userPlatformData,setUserPlatformData} = usePlatform();
+  const { userPlatformData, setUserPlatformData } = usePlatform();
   const user = useUser();
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ const UploadingActive: FC<{
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    if (location.pathname === '/dashboardOnboard'){
+    if (location.pathname === '/dashboardOnboard') {
       navigate('/dashboard');
     }
   };

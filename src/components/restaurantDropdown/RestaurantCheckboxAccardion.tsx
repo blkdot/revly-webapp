@@ -48,7 +48,7 @@ const RestaurantCheckboxAccordion: FC<{
     },
     [vendorsNew?.ariaExpanded, active, display]
   );
-  
+
   const getHoverStatusVendor = (vName: string) => hoverStatusVendor.find((v) => v === vName);
   // function for vendor button "Only"
   const handleClickVendor = (e: any, vendorName: string) => {

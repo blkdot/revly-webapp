@@ -250,19 +250,19 @@ const Dashboard = () => {
           </TypographyKit>
           <div className='dashboard-wrapper'>
             {links.map((obj: { title: string; link: string; tooltip?: string }) => (
-                <Widget
-                  table={table}
-                  setTable={setTable}
-                  key={obj.link}
-                  title={obj.title}
-                  link={obj.link}
-                  metricsbeforePeriod={{}}
-                  metricsafterPeriod={{}}
-                  loading={false}
-                  links={links}
-                  tooltip={obj.tooltip}
-                />
-              ))}
+              <Widget
+                table={table}
+                setTable={setTable}
+                key={obj.link}
+                title={obj.title}
+                link={obj.link}
+                metricsbeforePeriod={{}}
+                metricsafterPeriod={{}}
+                loading={false}
+                links={links}
+                tooltip={obj.tooltip}
+              />
+            ))}
           </div>
         </div>
         <TableRevlyNew

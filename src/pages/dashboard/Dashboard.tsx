@@ -145,13 +145,17 @@ const Dashboard = () => {
       id: 'beforePeriod',
       numeric: false,
       disablePadding: false,
-      label: getPeriod(date.titleDate, date.beforePeriod),
+      label:
+        getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
+        getPeriod(date.titleDate, date.beforePeriod).slice(1),
     },
     {
       id: 'afterPeriod',
       numeric: false,
       disablePadding: true,
-      label: getPeriod(date.titleafterPeriod, date.afterPeriod),
+      label:
+        getPeriod(date.titleafterPeriod, date.afterPeriod).charAt(0).toUpperCase() +
+        getPeriod(date.titleafterPeriod, date.afterPeriod).slice(1),
     },
     {
       id: 'evolution',
@@ -247,9 +251,9 @@ const Dashboard = () => {
     const arr = [];
     Object.keys(display).forEach((cName) => {
       Object.keys(display[cName]).forEach((vName) => {
-        arr.push(vName)
-      })
-    })
+        arr.push(vName);
+      });
+    });
     if (selectedVendors('name', display).length === arr.length) {
       return 'all Branches';
     }
