@@ -32,6 +32,23 @@ import {
 } from 'routes';
 import { VendorsSelect } from './v/VendorsSelect';
 
+const generate = () =>
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
+    value: i,
+    title: i.toString(),
+    subTitle: '10 Branches',
+    checked: false,
+    intermediate: false,
+    disabled: i % 3 === 0,
+    children: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((j) => ({
+      value: i * 10 + j,
+      title: i * 10 + j,
+      subTitle: i * 10 + j,
+      checked: false,
+      disabled: j % 4 === 0,
+    })),
+  }));
+
 const App = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -74,7 +91,10 @@ const App = () => {
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route element={<ProtectedRoutes user={user} />}>
         <Route path='/check' element={<Check />} />
-        <Route path='/test' element={<VendorsSelect />} />
+        <Route
+          path='/test'
+          element={<VendorsSelect values={[]} options={generate()} onChange={console.log} />}
+        />
         <Route path='/verify-code' element={<VerifyCode />} />
         <Route element={<MainLayout />}>
           <Route path='/dashboardOnboard' element={<DashboardOnboard />} />

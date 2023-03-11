@@ -1,64 +1,49 @@
 /* eslint-disable react/require-default-props */
 import { ArrowRightAlt, Search } from '@mui/icons-material';
 import { Button, Checkbox, Divider, Input, List, Popover, Space, Typography } from 'antd';
-import { FC, useMemo, useState } from 'react';
+import { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import './VendorsSelect.scss';
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
-const generate = (): State =>
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
-    value: i,
-    title: i.toString(),
-    subTitle: '10 Branches',
-    checked: false,
-    intermediate: false,
-    disabled: i % 3 === 0,
-    children: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((j) => ({
-      value: i * 10 + j,
-      title: `${i.toString().repeat(5)}-${j}`,
-      subTitle: `${i.toString().repeat(5)}-${j}`,
-      checked: false,
-      disabled: j % 4 === 0,
-    })),
-  }));
-
 type Value = number | string;
 
-const Title: FC<{ value: string }> = ({ value }) => (
+const Title: FC<{ value: ReactNode }> = ({ value }) => (
   <span className='vendors-select-title'>{value}</span>
 );
 
-const SubTitle: FC<{ value: string }> = ({ value }) => (
+const SubTitle: FC<{ value: ReactNode }> = ({ value }) => (
   <span className='vendors-select-sub-title'>{value}</span>
 );
 
 type Option = {
   value: Value;
-  title: string;
-  subTitle: string;
+  title: ReactNode;
+  subTitle: ReactNode;
   disabled?: boolean;
   children: {
     value: Value;
-    title: string;
-    subTitle: string;
+    title: ReactNode;
+    subTitle: ReactNode;
     disabled?: boolean;
+    extra?: ReactNode;
   }[];
 };
 
 type State = {
   value: Value;
-  title: string;
-  subTitle: string;
+  title: ReactNode;
+  subTitle: ReactNode;
   checked: boolean;
   intermediate: boolean;
   disabled?: boolean;
   children: {
     value: Value;
-    title: string;
-    subTitle: string;
+    title: ReactNode;
+    subTitle: ReactNode;
     checked: boolean;
     disabled?: boolean;
+    extra?: ReactNode;
   }[];
 }[];
 
@@ -76,14 +61,63 @@ const clean = (state: State): State => {
   return newState;
 };
 
+const findChecked = (state: State): Value[] => {
+  const values: Value[] = [];
+
+  state.forEach((a) => {
+    a.children.forEach((b) => {
+      if (b.checked) {
+        values.push(b.value);
+      }
+    });
+  });
+
+  return values;
+};
+
+const toState = (values: Value[], options: Option[]): State => {
+  const state: State = [];
+
+  options.forEach((a) => {
+    const children = [];
+
+    a.children.forEach((b) => {
+      children.push({
+        value: b.value,
+        title: b.title,
+        subTitle: b.subTitle,
+        checked: values.includes(b.value),
+        disabled: b.disabled,
+        extra: b.extra,
+      });
+    });
+
+    state.push({
+      value: a.value,
+      title: a.title,
+      subTitle: a.subTitle,
+      checked: children.every((c) => c.checked),
+      intermediate: children.some((c) => c.checked),
+      disabled: a.disabled,
+      children,
+    });
+  });
+
+  return state;
+};
+
 export const VendorsSelect: FC<{
-  values?: Value[];
-  options?: Option[];
-  onChange?: (v: Value[]) => void;
+  values: Value[];
+  options: Option[];
+  onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
   const [selected, setSelected] = useState(-1);
-  const [state, setState] = useState(generate());
+  const [state, setState] = useState(toState(values, options));
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    setState(toState(values, options));
+  }, [values, options]);
 
   const selectParent = (v: boolean, value: Value) => {
     setState((p) => {
@@ -98,6 +132,8 @@ export const VendorsSelect: FC<{
           newState[index].children[j].checked = v;
         }
       });
+
+      onChange(findChecked(newState));
 
       return newState;
     });
@@ -115,6 +151,8 @@ export const VendorsSelect: FC<{
           newState[index].children[j].checked = true;
         }
       });
+
+      onChange(findChecked(newState));
 
       return newState;
     });
@@ -134,6 +172,8 @@ export const VendorsSelect: FC<{
         newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
       }
 
+      onChange(findChecked(newState));
+
       return newState;
     });
   };
@@ -152,6 +192,8 @@ export const VendorsSelect: FC<{
         newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
       }
 
+      onChange(findChecked(newState));
+
       return newState;
     });
   };
@@ -169,6 +211,8 @@ export const VendorsSelect: FC<{
           }
         });
       });
+
+      onChange(findChecked(newState));
 
       return newState;
     });
@@ -205,7 +249,7 @@ export const VendorsSelect: FC<{
   const filteredOptions = useMemo(() => {}, [search, state]);
 
   return (
-    <div style={{ marginLeft: 400, marginTop: 100 }}>
+    <div style={{ marginLeft: 400, marginTop: 30 }}>
       <Popover
         open
         overlayInnerStyle={{ padding: 0 }}
@@ -274,7 +318,7 @@ export const VendorsSelect: FC<{
                 style={{ overflow: 'auto', height: 400, marginLeft: 20 }}
                 dataSource={selected === -1 ? [] : state[selected].children}
                 renderItem={(item) => (
-                  <List.Item>
+                  <List.Item extra={item.extra}>
                     <Checkbox
                       checked={item.checked}
                       onChange={(v) => selectChild(v.target.checked, item.value)}
