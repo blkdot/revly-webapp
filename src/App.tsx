@@ -30,6 +30,7 @@ import {
   ProtectedRoutes,
   SettingsLayout,
 } from 'routes';
+import { VendorsSelect } from './v/VendorsSelect';
 
 const App = () => {
   const navigate = useNavigate();
@@ -73,6 +74,7 @@ const App = () => {
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route element={<ProtectedRoutes user={user} />}>
         <Route path='/check' element={<Check />} />
+        <Route path='/test' element={<VendorsSelect />} />
         <Route path='/verify-code' element={<VerifyCode />} />
         <Route element={<MainLayout />}>
           <Route path='/dashboardOnboard' element={<DashboardOnboard />} />

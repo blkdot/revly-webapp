@@ -1,0 +1,38 @@
+.search-input {
+  margin: 20px;
+  width: calc(100% - 40px);
+}
+
+.header-container {
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.lists-container {
+  & > .ant-space-item:first-child {
+    width: 50%;
+  }
+
+  & > .ant-space-item:last-child {
+    width: 50%;
+  }
+}
+
+.vendors-select-title {
+  color: #212b36;
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.vendors-select-sub-title {
+  color: #637381;
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+}
