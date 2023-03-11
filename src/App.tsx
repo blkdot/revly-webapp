@@ -35,15 +35,15 @@ import { VendorsSelect } from './v/VendorsSelect';
 const generate = () =>
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
     value: i,
-    title: i.toString(),
+    title: 'Kulcha King - JLT Branch',
     subTitle: '10 Branches',
     checked: false,
     intermediate: false,
     disabled: i % 3 === 0,
     children: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((j) => ({
       value: i * 10 + j,
-      title: i * 10 + j,
-      subTitle: i * 10 + j,
+      title: `Kulcha King - JLT Branch (${i * 10 + j})`,
+      subTitle: `${i * 10 + j}`,
       checked: false,
       disabled: j % 4 === 0,
     })),

@@ -12,10 +12,22 @@
 .lists-container {
   & > .ant-space-item:first-child {
     width: 50%;
+
+    & > .parent-list {
+      overflow: auto;
+      height: 400px;
+      margin-left: 20px;
+    }
   }
 
   & > .ant-space-item:last-child {
     width: 50%;
+
+    & > .children-list {
+      overflow: auto;
+      height: 400px;
+      margin-left: 20px;
+    }
   }
 }
 

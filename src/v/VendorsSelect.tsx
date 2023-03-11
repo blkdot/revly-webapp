@@ -1,49 +1,47 @@
 /* eslint-disable react/require-default-props */
 import { ArrowRightAlt, Search } from '@mui/icons-material';
 import { Button, Checkbox, Divider, Input, List, Popover, Space, Typography } from 'antd';
-import { FC, ReactNode, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import './VendorsSelect.scss';
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
 type Value = number | string;
 
-const Title: FC<{ value: ReactNode }> = ({ value }) => (
+const Title: FC<{ value: string }> = ({ value }) => (
   <span className='vendors-select-title'>{value}</span>
 );
 
-const SubTitle: FC<{ value: ReactNode }> = ({ value }) => (
+const SubTitle: FC<{ value: string }> = ({ value }) => (
   <span className='vendors-select-sub-title'>{value}</span>
 );
 
 type Option = {
   value: Value;
-  title: ReactNode;
-  subTitle: ReactNode;
+  title: string;
+  subTitle: string;
   disabled?: boolean;
   children: {
     value: Value;
-    title: ReactNode;
-    subTitle: ReactNode;
+    title: string;
+    subTitle: string;
     disabled?: boolean;
-    extra?: ReactNode;
   }[];
 };
 
 type State = {
   value: Value;
-  title: ReactNode;
-  subTitle: ReactNode;
+  title: string;
+  subTitle: string;
   checked: boolean;
   intermediate: boolean;
   disabled?: boolean;
   children: {
     value: Value;
-    title: ReactNode;
-    subTitle: ReactNode;
+    title: string;
+    subTitle: string;
     checked: boolean;
     disabled?: boolean;
-    extra?: ReactNode;
   }[];
 }[];
 
@@ -88,7 +86,6 @@ const toState = (values: Value[], options: Option[]): State => {
         subTitle: b.subTitle,
         checked: values.includes(b.value),
         disabled: b.disabled,
-        extra: b.extra,
       });
     });
 
@@ -278,7 +275,7 @@ export const VendorsSelect: FC<{
             <Divider style={{ margin: 0, padding: 0 }} />
             <Space size={0} style={{ width: '100%' }} className='lists-container'>
               <List
-                style={{ overflow: 'auto', height: 400, marginLeft: 20 }}
+                className='parent-list'
                 dataSource={state}
                 renderItem={(item, index) => (
                   <List.Item
@@ -315,10 +312,10 @@ export const VendorsSelect: FC<{
               />
               <Divider type='vertical' style={{ height: 400, margin: 0, padding: 0 }} />
               <List
-                style={{ overflow: 'auto', height: 400, marginLeft: 20 }}
+                className='children-list'
                 dataSource={selected === -1 ? [] : state[selected].children}
                 renderItem={(item) => (
-                  <List.Item extra={item.extra}>
+                  <List.Item>
                     <Checkbox
                       checked={item.checked}
                       onChange={(v) => selectChild(v.target.checked, item.value)}
