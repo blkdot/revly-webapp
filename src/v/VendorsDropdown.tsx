@@ -5,7 +5,7 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { ReactComponent as ArrowDown } from './icons/arrow-down.svg';
 import { ReactComponent as ArrowUp } from './icons/arrow-up.svg';
 import { ReactComponent as VendorIcon } from './icons/vendor.svg';
-import './VendorsSelect.scss';
+import './VendorsDropdown.scss';
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
@@ -106,7 +106,7 @@ const toState = (values: Value[], options: Option[]): State => {
   return state;
 };
 
-export const VendorsSelect: FC<{
+export const VendorsDropdown: FC<{
   values: Value[];
   options: Option[];
   onChange: (v: Value[]) => void;
@@ -254,10 +254,10 @@ export const VendorsSelect: FC<{
       <Popover
         open={open}
         trigger='click'
-        overlayInnerStyle={{ padding: 0 }}
         onOpenChange={setOpen}
+        rootClassName='dropdown-popup'
         content={
-          <div style={{ width: 820 }}>
+          <>
             <Input
               value={search}
               prefix={<Search />}
@@ -343,10 +343,10 @@ export const VendorsSelect: FC<{
                 )}
               />
             </Space>
-          </div>
+          </>
         }
       >
-        <div className='dropdown'>
+        <div className='dropdown-header'>
           <div className='content'>
             <VendorIcon />
             <div className='text'>

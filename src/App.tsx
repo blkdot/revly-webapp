@@ -30,7 +30,7 @@ import {
   ProtectedRoutes,
   SettingsLayout,
 } from 'routes';
-import { VendorsSelect } from './v/VendorsSelect';
+import { VendorsDropdown } from './v/VendorsDropdown';
 
 const generate = () =>
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
@@ -93,7 +93,7 @@ const App = () => {
         <Route path='/check' element={<Check />} />
         <Route
           path='/test'
-          element={<VendorsSelect values={[]} options={generate()} onChange={console.log} />}
+          element={<VendorsDropdown values={[]} options={generate()} onChange={console.log} />}
         />
         <Route path='/verify-code' element={<VerifyCode />} />
         <Route element={<MainLayout />}>

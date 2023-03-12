@@ -1,6 +1,14 @@
 .search-input {
   margin: 20px;
   width: calc(100% - 40px);
+  background: #f8f9fb;
+  border-radius: 4px;
+  border: none;
+  height: 46px;
+
+  & > .ant-input {
+    background: #f8f9fb;
+  }
 }
 
 .header-container {
@@ -49,7 +57,7 @@
   line-height: 14px;
 }
 
-.dropdown {
+.dropdown-header {
   height: 48px;
   width: 370px;
   background: #f8f9fb;
@@ -78,6 +86,17 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+    }
+  }
+}
+
+.dropdown-popup {
+  & > .ant-popover-content {
+    width: 820px;
+
+    & > .ant-popover-inner {
+      margin: 0;
+      padding: 0;
     }
   }
 }
