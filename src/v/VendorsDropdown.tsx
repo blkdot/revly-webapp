@@ -1,8 +1,9 @@
 /* eslint-disable react/require-default-props */
-import { ArrowRightAlt, Search } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { Button, Checkbox, Divider, Input, List, Popover, Space, Typography } from 'antd';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { ReactComponent as ArrowDown } from './icons/arrow-down.svg';
+import { ReactComponent as ArrowRight } from './icons/arrow-right.svg';
 import { ReactComponent as ArrowUp } from './icons/arrow-up.svg';
 import { ReactComponent as VendorIcon } from './icons/vendor.svg';
 import './VendorsDropdown.scss';
@@ -291,7 +292,7 @@ export const VendorsDropdown: FC<{
                         onClick={() => setSelected(index)}
                         disabled={item.disabled}
                       >
-                        <ArrowRightAlt />
+                        <ArrowRight />
                       </Button>
                     }
                   >
