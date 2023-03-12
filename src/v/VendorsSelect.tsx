@@ -2,6 +2,9 @@
 import { ArrowRightAlt, Search } from '@mui/icons-material';
 import { Button, Checkbox, Divider, Input, List, Popover, Space, Typography } from 'antd';
 import { FC, useEffect, useMemo, useState } from 'react';
+import { ReactComponent as ArrowDown } from './icons/arrow-down.svg';
+import { ReactComponent as ArrowUp } from './icons/arrow-up.svg';
+import { ReactComponent as VendorIcon } from './icons/vendor.svg';
 import './VendorsSelect.scss';
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
@@ -108,6 +111,7 @@ export const VendorsSelect: FC<{
   options: Option[];
   onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
+  const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(-1);
   const [state, setState] = useState(toState(values, options));
   const [search, setSearch] = useState('');
@@ -248,8 +252,10 @@ export const VendorsSelect: FC<{
   return (
     <div style={{ marginLeft: 400, marginTop: 30 }}>
       <Popover
-        open
+        open={open}
+        trigger='click'
         overlayInnerStyle={{ padding: 0 }}
+        onOpenChange={setOpen}
         content={
           <div style={{ width: 820 }}>
             <Input
@@ -340,7 +346,17 @@ export const VendorsSelect: FC<{
           </div>
         }
       >
-        Vendors
+        <div className='dropdown'>
+          <div className='content'>
+            <VendorIcon />
+            <div className='text'>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, laudantium. Illum
+              cumque corrupti eaque impedit et necessitatibus. Nihil ullam voluptates, temporibus
+              obcaecati id quas maxime exercitationem sed! Earum, ut quasi.
+            </div>
+            {open ? <ArrowUp /> : <ArrowDown />}
+          </div>
+        </div>
       </Popover>
     </div>
   );
