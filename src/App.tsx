@@ -93,7 +93,9 @@ const App = () => {
         <Route path='/check' element={<Check />} />
         <Route
           path='/test'
-          element={<VendorsDropdown values={[]} options={generate()} onChange={console.log} />}
+          element={
+            <VendorsDropdown values={[11, 12]} options={generate()} onChange={console.log} />
+          }
         />
         <Route path='/verify-code' element={<VerifyCode />} />
         <Route element={<MainLayout />}>
