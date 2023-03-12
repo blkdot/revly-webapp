@@ -1,19 +1,12 @@
 import { Search } from '@mui/icons-material';
-import { Button, Checkbox, Divider, Input, List, Space, Typography } from 'antd';
-import { FC, useEffect, useMemo, useState } from 'react';
-import { ReactComponent as ArrowRight } from './icons/arrow-right.svg';
+import { Checkbox, Divider, Input, Typography } from 'antd';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChildrenList } from './list/ChildrenList';
+import { ParentList } from './list/ParentList';
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
 type Value = number | string;
-
-const Title: FC<{ value: string }> = ({ value }) => (
-  <span className='vendors-select-title'>{value}</span>
-);
-
-const SubTitle: FC<{ value: string }> = ({ value }) => (
-  <span className='vendors-select-sub-title'>{value}</span>
-);
 
 type Option = {
   value: Value;
@@ -115,84 +108,96 @@ export const Popup: FC<{
     setState(toState(values, options));
   }, [values, options]);
 
-  const selectParent = (v: boolean, value: Value) => {
-    setState((p) => {
-      const index = p.findIndex((i) => i.value === value);
-      setSelected(index);
+  const onParentSelect = useCallback(
+    (v: boolean, value: Value) => {
+      setState((p) => {
+        const index = p.findIndex((i) => i.value === value);
+        setSelected(index);
 
-      const newState = copy(p);
-      newState[index].checked = v;
-      newState[index].intermediate = false;
-      newState[index].children.forEach((_, j) => {
-        if (!newState[index].children[j].disabled) {
-          newState[index].children[j].checked = v;
-        }
+        const newState = copy(p);
+        newState[index].checked = v;
+        newState[index].intermediate = false;
+        newState[index].children.forEach((_, j) => {
+          if (!newState[index].children[j].disabled) {
+            newState[index].children[j].checked = v;
+          }
+        });
+
+        onChange(findChecked(newState));
+
+        return newState;
       });
+    },
+    [setState, setSelected, onChange]
+  );
 
-      onChange(findChecked(newState));
+  const onSelectOnlyParent = useCallback(
+    (value: Value) => {
+      setState((p) => {
+        const index = p.findIndex((i) => i.value === value);
+        setSelected(index);
 
-      return newState;
-    });
-  };
+        const newState = clean(p);
+        newState[index].checked = true;
+        newState[index].children.forEach((_, j) => {
+          if (!newState[index].children[j].disabled) {
+            newState[index].children[j].checked = true;
+          }
+        });
 
-  const selectOnlyParent = (value: Value) => {
-    setState((p) => {
-      const index = p.findIndex((i) => i.value === value);
-      setSelected(index);
+        onChange(findChecked(newState));
 
-      const newState = clean(p);
-      newState[index].checked = true;
-      newState[index].children.forEach((_, j) => {
-        if (!newState[index].children[j].disabled) {
-          newState[index].children[j].checked = true;
-        }
+        return newState;
       });
+    },
+    [setState, setSelected, onChange]
+  );
 
-      onChange(findChecked(newState));
+  const onSelectChild = useCallback(
+    (v: boolean, value: Value) => {
+      setState((p) => {
+        const index = p[selected].children.findIndex((i) => i.value === value);
 
-      return newState;
-    });
-  };
+        const newState = copy(p);
+        newState[selected].children[index].checked = v;
+        if (newState[selected].children.every((c) => c.checked)) {
+          newState[selected].checked = true;
+          newState[selected].intermediate = false;
+        } else {
+          newState[selected].checked = false;
+          newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
+        }
 
-  const selectChild = (v: boolean, value: Value) => {
-    setState((p) => {
-      const index = p[selected].children.findIndex((i) => i.value === value);
+        onChange(findChecked(newState));
 
-      const newState = copy(p);
-      newState[selected].children[index].checked = v;
-      if (newState[selected].children.every((c) => c.checked)) {
-        newState[selected].checked = true;
-        newState[selected].intermediate = false;
-      } else {
-        newState[selected].checked = false;
-        newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
-      }
+        return newState;
+      });
+    },
+    [setState, selected, onChange]
+  );
 
-      onChange(findChecked(newState));
+  const onSelectOnlyChild = useCallback(
+    (value: Value) => {
+      setState((p) => {
+        const index = p[selected].children.findIndex((i) => i.value === value);
 
-      return newState;
-    });
-  };
+        const newState = clean(p);
+        newState[selected].children[index].checked = true;
+        if (newState[selected].children.every((c) => c.checked)) {
+          newState[selected].checked = true;
+          newState[selected].intermediate = false;
+        } else {
+          newState[selected].checked = false;
+          newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
+        }
 
-  const selectOnlyChild = (value: Value) => {
-    setState((p) => {
-      const index = p[selected].children.findIndex((i) => i.value === value);
+        onChange(findChecked(newState));
 
-      const newState = clean(p);
-      newState[selected].children[index].checked = true;
-      if (newState[selected].children.every((c) => c.checked)) {
-        newState[selected].checked = true;
-        newState[selected].intermediate = false;
-      } else {
-        newState[selected].checked = false;
-        newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
-      }
-
-      onChange(findChecked(newState));
-
-      return newState;
-    });
-  };
+        return newState;
+      });
+    },
+    [setState, selected, onChange]
+  );
 
   const selectAll = (v: boolean) => {
     setState((p) => {
@@ -265,66 +270,20 @@ export const Popup: FC<{
         <Typography.Text type='secondary'>Selected branches ({selectedCount})</Typography.Text>
       </div>
       <Divider style={{ margin: 0, padding: 0 }} />
-      <Space size={0} style={{ width: '100%' }} className='lists-container'>
-        <List
-          className='parent-list'
-          dataSource={state}
-          renderItem={(item, index) => (
-            <List.Item
-              extra={
-                <Button type='text' onClick={() => setSelected(index)} disabled={item.disabled}>
-                  <ArrowRight />
-                </Button>
-              }
-            >
-              <Checkbox
-                checked={item.checked}
-                indeterminate={item.intermediate}
-                onChange={(v) => selectParent(v.target.checked, item.value)}
-                disabled={item.disabled}
-              >
-                <Space size={0} direction='vertical'>
-                  <Title value={item.title} />
-                  <SubTitle value={item.subTitle} />
-                </Space>
-              </Checkbox>
-              <Button
-                type='text'
-                onClick={() => selectOnlyParent(item.value)}
-                disabled={item.disabled}
-              >
-                Select Only
-              </Button>
-            </List.Item>
-          )}
+      <div className='lists-container'>
+        <ParentList
+          items={state}
+          onSelect={onParentSelect}
+          onSelectOnly={onSelectOnlyParent}
+          setSelected={setSelected}
         />
-        <Divider type='vertical' style={{ height: 400, margin: 0, padding: 0 }} />
-        <List
-          className='children-list'
-          dataSource={selected === -1 ? [] : state[selected].children}
-          renderItem={(item) => (
-            <List.Item>
-              <Checkbox
-                checked={item.checked}
-                onChange={(v) => selectChild(v.target.checked, item.value)}
-                disabled={item.disabled}
-              >
-                <Space size={0} direction='vertical'>
-                  <Title value={item.title} />
-                  <SubTitle value={item.subTitle} />
-                </Space>
-              </Checkbox>
-              <Button
-                type='text'
-                onClick={() => selectOnlyChild(item.value)}
-                disabled={item.disabled}
-              >
-                Select Only
-              </Button>
-            </List.Item>
-          )}
+        <Divider type='vertical' />
+        <ChildrenList
+          items={selected === -1 ? [] : state[selected].children}
+          onSelect={onSelectChild}
+          onSelectOnly={onSelectOnlyChild}
         />
-      </Space>
+      </div>
     </>
   );
 };
