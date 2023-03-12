@@ -1,8 +1,9 @@
 import { Search } from '@mui/icons-material';
 import { Checkbox, Divider, Input, Typography } from 'antd';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { ChildrenList } from './list/ChildrenList';
-import { ParentList } from './list/ParentList';
+import { ChildrenList } from './list/children/ChildrenList';
+import { ParentList } from './list/parent/ParentList';
+import './Popup.scss';
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 

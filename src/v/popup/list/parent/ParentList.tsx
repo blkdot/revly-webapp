@@ -1,6 +1,6 @@
-import { ArrowRight } from '@mui/icons-material';
 import { Button, Checkbox, List, Space } from 'antd';
 import { FC } from 'react';
+import { ReactComponent as ArrowRight } from './arrow-right.svg';
 
 const Title: FC<{ value: string }> = ({ value }) => (
   <span className='vendors-select-title'>{value}</span>
