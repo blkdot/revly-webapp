@@ -29,3 +29,9 @@ export const getBidRecommendations = (platform, body) =>
     .post(`/marketingv2/bid_recommendations/${platform}`, body)
     .then((res) => res)
     .catch(handleResponse);
+
+export const triggerAds = (platform, body) =>
+  api
+    .post(`/marketingv2/ad/${platform}`, body)
+    .then((res) => res)
+    .catch(handleResponse);

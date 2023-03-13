@@ -1,37 +1,38 @@
 import imageDeliverooFaviconWhite from '../assets/images/deliveroo-favicon-white.png';
 import imageDeliverooFavicon from '../assets/images/deliveroo-favicon.webp';
-import imageDeliveroo from '../assets/images/deliveroo.png';
 import imageTalabatFavicon from '../assets/images/talabat-favicon.png';
-import imageTalabat from '../assets/images/talabat.png';
+
 import imageCareem from '../assets/images/careem.svg';
 import imageNoon from '../assets/images/noon.svg';
 
+import imageDeliverooNoBg from '../assets/images/deliveroo-no-bg.svg';
+import imageTalabatNoBg from '../assets/images/talabat-no-bg.svg';
+import imageCareemNoBg from '../assets/images/careem-no-bg.svg';
+import imageNoonNoBg from '../assets/images/noon-no-bg.svg';
+
 export const platformList = [
   {
-    srcFavicon: imageDeliverooFavicon,
-    srcFaviconWhite: imageDeliverooFaviconWhite,
-    src: imageDeliveroo,
+    srcNoBg: imageDeliverooNoBg,
+    src: imageDeliverooFavicon,
+    srcWhite: imageDeliverooFaviconWhite,
     name: 'deliveroo',
     color: '#35B8B2',
   },
   {
-    srcFavicon: imageTalabatFavicon,
-    srcFaviconWhite: imageTalabatFavicon,
-    src: imageTalabat,
+    srcNoBg: imageTalabatNoBg,
+    src: imageTalabatFavicon,
     name: 'talabat',
     color: '#FF5A00',
   },
   {
-    srcFavicon: imageCareem,
-    srcFaviconWhite: imageCareem,
+    srcNoBg: imageCareemNoBg,
     src: imageCareem,
     name: 'careem',
     color: '#3BB44E',
     disabled: true,
   },
   {
-    srcFavicon: imageNoon,
-    srcFaviconWhite: imageNoon,
+    srcNoBg: imageNoonNoBg,
     src: imageNoon,
     name: 'noon',
     disabled: true,
@@ -40,8 +41,8 @@ export const platformList = [
 
 export type TPlatformObject = {
   [x: string]: {
-    srcFavicon: string;
-    srcFaviconWhite: string;
+    srcNoBG: string;
+    srcWhite: string;
     src: string;
     name: string;
     color: string;

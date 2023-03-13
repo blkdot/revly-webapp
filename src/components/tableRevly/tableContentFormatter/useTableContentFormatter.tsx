@@ -37,7 +37,9 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'left', cursor: 'pointer' }}
     >
       <span className='table-text' style={{ textAlign: 'justify' }} key={h.id}>
-        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
+        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US').split('_')[0]}
+        {/* @Chiekh: introduced .split('_')[0] because we are using 'vendor_name' as a unique key.
+        to handle duplicates, now, we process keys: 'vendor_name'_'vendor_id' and then render only vendor_name */}
       </span>
     </TableCellKit>
   );
@@ -276,8 +278,8 @@ const useTableContentFormatter = () => {
             } as CSSProperties
           }
           src={
-            platformObject[r[h.id].toLowerCase()].srcFaviconWhite ||
-            platformObject[r[h.id].toLowerCase()].srcFavicon
+            platformObject[r[h.id].toLowerCase()].srcWhite ||
+            platformObject[r[h.id].toLowerCase()].src
           }
           alt={platformObject[r[h.id].toLowerCase()].name}
         />
@@ -442,8 +444,8 @@ const useTableContentFormatter = () => {
           >
             <img
               src={
-                getPlatform(obj.platform.toLowerCase()).srcFaviconWhite ||
-                getPlatform(obj.platform.toLowerCase()).srcFavicon
+                getPlatform(obj.platform.toLowerCase()).srcWhite ||
+                getPlatform(obj.platform.toLowerCase()).src
               }
               alt={obj.platform.toLowerCase()}
             />

@@ -1,8 +1,6 @@
 import { settingsOnboarded } from 'api/settingsApi';
 import Dates from 'components/dates/Dates';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
@@ -13,11 +11,9 @@ import { format, getYear } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useDate } from 'hooks';
-import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { vendorsAtom } from 'store/vendorsAtom';
 import './Dashboard.scss';
 
 const links = [
@@ -50,8 +46,6 @@ const links = [
 ];
 
 const Dashboard = () => {
-  const [vendors] = useAtom(vendorsAtom);
-  const { display, chainData } = vendors;
   const [table, setTable] = useState('revenue');
 
   const [openedModal, setOpenedModal] = useState(false);
@@ -99,13 +93,6 @@ const Dashboard = () => {
     openedModal,
     connectAccount,
     setConnectAccount,
-  };
-
-  const getDropdown = () => {
-    if (!userPlatformData.onboarded) {
-      return <RestaurantDropdownEmpty />;
-    }
-    return <RestaurantDropdown />;
   };
 
   const { userPlatformData, setUserPlatformData } = usePlatform();
@@ -192,16 +179,6 @@ const Dashboard = () => {
       {}
     );
 
-  const isDisplay = () => {
-    if (selectedVendors('name', display).length === chainData.length) {
-      return 'all Branches';
-    }
-    if (selectedVendors('name', display).length > 2) {
-      return `${selectedVendors('name', display).length} selected Branches`;
-    }
-    return selectedVendors('name', display).join(', ');
-  };
-
   const onboard = async () => {
     const res = await settingsOnboarded({
       master_email: user.email,
@@ -225,7 +202,7 @@ const Dashboard = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        {getDropdown()}
+        <RestaurantDropdownEmpty />
         <Dates isDashboard />
       </div>
       <ContainerKit>
@@ -243,7 +220,7 @@ const Dashboard = () => {
           <TypographyKit className='dashboard-title'>
             {getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
               getPeriod(date.titleDate, date.beforePeriod).slice(1)}{' '}
-            results for {isDisplay()}
+            results for all Branches
           </TypographyKit>
           <TypographyKit className='dashboard-subtitle'>
             360° view of your restaurant revenue and profits
