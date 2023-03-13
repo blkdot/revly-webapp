@@ -1,99 +1,40 @@
 import { Search } from '@mui/icons-material';
 import { Checkbox, Divider, Input, Typography } from 'antd';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { ChildrenList } from './list/children/ChildrenList';
 import { ParentList } from './list/parent/ParentList';
 import './Popup.scss';
-
-const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
 type Value = number | string;
 
 type Option = {
   value: Value;
-  title: string;
-  subTitle: string;
+  title: ReactNode;
+  subTitle: ReactNode;
   disabled?: boolean;
   children: {
     value: Value;
-    title: string;
-    subTitle: string;
+    title: ReactNode;
+    subTitle: ReactNode;
     disabled?: boolean;
   }[];
 };
 
-type State = {
-  value: Value;
-  title: string;
-  subTitle: string;
-  checked: boolean;
-  intermediate: boolean;
-  disabled?: boolean;
-  children: {
-    value: Value;
-    title: string;
-    subTitle: string;
-    checked: boolean;
-    disabled?: boolean;
-  }[];
-}[];
+const unique = (values: Value[]): Value[] => Array.from(new Set(values));
 
-const clean = (state: State): State => {
-  const newState = copy(state);
-
-  newState.forEach((a, i) => {
-    newState[i].checked = false;
-    newState[i].intermediate = false;
-    a.children.forEach((b, j) => {
-      newState[i].children[j].checked = false;
-    });
-  });
-
-  return newState;
-};
-
-const findChecked = (state: State): Value[] => {
+const findAllValues = (options: Option[]): Value[] => {
   const values: Value[] = [];
-
-  state.forEach((a) => {
-    a.children.forEach((b) => {
-      if (b.checked) {
-        values.push(b.value);
-      }
-    });
-  });
-
-  return values;
-};
-
-const toState = (values: Value[], options: Option[]): State => {
-  const state: State = [];
-
   options.forEach((a) => {
-    const children = [];
-
-    a.children.forEach((b) => {
-      children.push({
-        value: b.value,
-        title: b.title,
-        subTitle: b.subTitle,
-        checked: values.includes(b.value),
-        disabled: b.disabled,
+    if (!a.disabled) {
+      a.children.forEach((b) => {
+        if (!b.disabled) {
+          values.push(b.value);
+        }
       });
-    });
-
-    state.push({
-      value: a.value,
-      title: a.title,
-      subTitle: a.subTitle,
-      checked: children.every((c) => c.checked),
-      intermediate: children.some((c) => c.checked),
-      disabled: a.disabled,
-      children,
-    });
+    }
   });
 
-  return state;
+  return unique(values);
 };
 
 export const Popup: FC<{
@@ -102,153 +43,140 @@ export const Popup: FC<{
   onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
   const [selected, setSelected] = useState(-1);
-  const [state, setState] = useState(toState(values, options));
   const [search, setSearch] = useState('');
 
-  useEffect(() => {
-    setState(toState(values, options));
-  }, [values, options]);
+  const valuesSet = useMemo(() => new Set(values), [values]);
 
   const onParentSelect = useCallback(
     (v: boolean, value: Value) => {
-      setState((p) => {
-        const index = p.findIndex((i) => i.value === value);
-        setSelected(index);
-
-        const newState = copy(p);
-        newState[index].checked = v;
-        newState[index].intermediate = false;
-        newState[index].children.forEach((_, j) => {
-          if (!newState[index].children[j].disabled) {
-            newState[index].children[j].checked = v;
-          }
-        });
-
-        onChange(findChecked(newState));
-
-        return newState;
+      const children: Value[] = [];
+      options.forEach((a) => {
+        if (a.value === value) {
+          a.children.forEach((b) => {
+            if (!b.disabled) {
+              children.push(b.value);
+            }
+          });
+        }
       });
+
+      if (v) {
+        onChange(unique([...values, ...children]));
+      } else {
+        onChange(unique(values.filter((a) => !children.find((b) => a === b))));
+      }
     },
-    [setState, setSelected, onChange]
+    [values, options, onChange]
   );
 
   const onSelectOnlyParent = useCallback(
     (value: Value) => {
-      setState((p) => {
-        const index = p.findIndex((i) => i.value === value);
-        setSelected(index);
-
-        const newState = clean(p);
-        newState[index].checked = true;
-        newState[index].children.forEach((_, j) => {
-          if (!newState[index].children[j].disabled) {
-            newState[index].children[j].checked = true;
-          }
-        });
-
-        onChange(findChecked(newState));
-
-        return newState;
+      const out: Value[] = [];
+      options.forEach((a, index) => {
+        if (a.value === value) {
+          setSelected(index);
+          a.children.forEach((b) => {
+            if (!b.disabled) {
+              out.push(b.value);
+            }
+          });
+        }
       });
+
+      onChange(unique(out));
     },
-    [setState, setSelected, onChange]
+    [options, setSelected, onChange]
   );
 
   const onSelectChild = useCallback(
     (v: boolean, value: Value) => {
-      setState((p) => {
-        const index = p[selected].children.findIndex((i) => i.value === value);
-
-        const newState = copy(p);
-        newState[selected].children[index].checked = v;
-        if (newState[selected].children.every((c) => c.checked)) {
-          newState[selected].checked = true;
-          newState[selected].intermediate = false;
-        } else {
-          newState[selected].checked = false;
-          newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
-        }
-
-        onChange(findChecked(newState));
-
-        return newState;
-      });
+      if (v) {
+        onChange(unique([...values, value]));
+      } else {
+        onChange(unique(values.filter((a) => a !== value)));
+      }
     },
-    [setState, selected, onChange]
+    [values, onChange]
   );
 
-  const onSelectOnlyChild = useCallback(
-    (value: Value) => {
-      setState((p) => {
-        const index = p[selected].children.findIndex((i) => i.value === value);
-
-        const newState = clean(p);
-        newState[selected].children[index].checked = true;
-        if (newState[selected].children.every((c) => c.checked)) {
-          newState[selected].checked = true;
-          newState[selected].intermediate = false;
-        } else {
-          newState[selected].checked = false;
-          newState[selected].intermediate = newState[selected].children.some((c) => c.checked);
-        }
-
-        onChange(findChecked(newState));
-
-        return newState;
-      });
-    },
-    [setState, selected, onChange]
-  );
+  const onSelectOnlyChild = (value: Value) => onChange([value]);
 
   const selectAll = (v: boolean) => {
-    setState((p) => {
-      const newState = clean(p);
-      newState.forEach((a, i) => {
-        if (!newState[i].disabled) {
-          newState[i].checked = v;
-        }
-        newState[i].children.forEach((b, j) => {
-          if (!newState[i].children[j].disabled) {
-            newState[i].children[j].checked = v;
-          }
-        });
-      });
-
-      onChange(findChecked(newState));
-
-      return newState;
-    });
+    if (v) {
+      onChange(findAllValues(options));
+    } else {
+      onChange([]);
+    }
   };
 
-  const count = useMemo(() => {
+  const totalCount = useMemo(() => {
     let n = 0;
-    state.forEach((a) => {
-      a.children.forEach((b) => {
-        if (!b.disabled) {
-          n += 1;
-        }
-      });
+    options.forEach((a) => {
+      if (!a.disabled) {
+        a.children.forEach((b) => {
+          if (!b.disabled) {
+            n += 1;
+          }
+        });
+      }
     });
 
     return n;
-  }, []);
+  }, [options]);
 
   const selectedCount = useMemo(() => {
     let n = 0;
-    state.forEach((a) =>
+    options.forEach((a) =>
       a.children.forEach((b) => {
-        if (b.checked) {
+        if (valuesSet.has(b.value)) {
           n += 1;
         }
       })
     );
 
     return n;
-  }, [state]);
+  }, [valuesSet, options]);
 
-  const allSelected = useMemo(() => count === selectedCount, [count, selectedCount]);
+  const allSelected = useMemo(() => totalCount === selectedCount, [totalCount, selectedCount]);
 
-  const filteredOptions = useMemo(() => {}, [search, state]);
+  const parentListItems = useMemo(() => {
+    const items = [];
+    options.forEach((v) => {
+      const checked = v.children.filter((c) => !c.disabled).every((c) => valuesSet.has(c.value));
+      const intermediate =
+        !checked && v.children.filter((c) => !c.disabled).some((c) => valuesSet.has(c.value));
+
+      items.push({
+        value: v.value,
+        title: v.title,
+        subTitle: v.subTitle,
+        disabled: v.disabled,
+        checked,
+        intermediate,
+      });
+    });
+
+    return items;
+  }, [valuesSet, options]);
+
+  const childrenListItems = useMemo(() => {
+    if (selected === -1) {
+      return [];
+    }
+
+    const items = [];
+    options[selected].children.forEach((v) => {
+      items.push({
+        value: v.value,
+        title: v.title,
+        subTitle: v.subTitle,
+        disabled: v.disabled,
+        checked: valuesSet.has(v.value),
+      });
+    });
+
+    return items;
+  }, [selected, valuesSet, options]);
 
   return (
     <>
@@ -273,14 +201,14 @@ export const Popup: FC<{
       <Divider style={{ margin: 0, padding: 0 }} />
       <div className='lists-container'>
         <ParentList
-          items={state}
+          items={parentListItems}
           onSelect={onParentSelect}
           onSelectOnly={onSelectOnlyParent}
           setSelected={setSelected}
         />
         <Divider type='vertical' />
         <ChildrenList
-          items={selected === -1 ? [] : state[selected].children}
+          items={childrenListItems}
           onSelect={onSelectChild}
           onSelectOnly={onSelectOnlyChild}
         />

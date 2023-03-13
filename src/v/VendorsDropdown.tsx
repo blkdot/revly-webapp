@@ -1,5 +1,5 @@
 import { Popover } from 'antd';
-import { FC, useMemo, useState } from 'react';
+import { FC, ReactNode, useMemo, useState } from 'react';
 import { ReactComponent as ArrowDownIcon } from './icons/arrow-down.svg';
 import { ReactComponent as ArrowUpIcon } from './icons/arrow-up.svg';
 import { ReactComponent as VendorIcon } from './icons/vendor.svg';
@@ -10,13 +10,13 @@ type Value = number | string;
 
 type Option = {
   value: Value;
-  title: string;
-  subTitle: string;
+  title: ReactNode;
+  subTitle: ReactNode;
   disabled?: boolean;
   children: {
     value: Value;
-    title: string;
-    subTitle: string;
+    title: ReactNode;
+    subTitle: ReactNode;
     disabled?: boolean;
   }[];
 };

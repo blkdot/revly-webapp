@@ -1,12 +1,13 @@
-import { Button, Checkbox, List, Space } from 'antd';
-import { FC } from 'react';
+/* eslint-disable react/require-default-props */
+import { Button, Checkbox, Empty, List, Space } from 'antd';
+import { FC, ReactNode } from 'react';
 import { ReactComponent as ArrowRight } from './arrow-right.svg';
 
-const Title: FC<{ value: string }> = ({ value }) => (
+const Title: FC<{ value: ReactNode }> = ({ value }) => (
   <span className='vendors-select-title'>{value}</span>
 );
 
-const SubTitle: FC<{ value: string }> = ({ value }) => (
+const SubTitle: FC<{ value: ReactNode }> = ({ value }) => (
   <span className='vendors-select-sub-title'>{value}</span>
 );
 
@@ -14,8 +15,8 @@ type Value = number | string;
 
 type Item = {
   value: Value;
-  title: string;
-  subTitle: string;
+  title: ReactNode;
+  subTitle: ReactNode;
   disabled?: boolean;
   checked: boolean;
   intermediate: boolean;
@@ -57,18 +58,24 @@ export const ParentList: FC<{
   onSelect: (v: boolean, value: Value) => void;
   onSelectOnly: (value: Value) => void;
   setSelected: (v: number) => void;
-}> = ({ items, onSelect, onSelectOnly, setSelected }) => (
-  <List
-    className='parent-list'
-    dataSource={items}
-    renderItem={(item, index) => (
-      <ParentListItem
-        item={item}
-        index={index}
-        onSelect={onSelect}
-        onSelectOnly={onSelectOnly}
-        setSelected={setSelected}
-      />
-    )}
-  />
-);
+}> = ({ items, onSelect, onSelectOnly, setSelected }) => {
+  if (items.length === 0) {
+    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  }
+
+  return (
+    <List
+      className='parent-list'
+      dataSource={items}
+      renderItem={(item, index) => (
+        <ParentListItem
+          item={item}
+          index={index}
+          onSelect={onSelect}
+          onSelectOnly={onSelectOnly}
+          setSelected={setSelected}
+        />
+      )}
+    />
+  );
+};

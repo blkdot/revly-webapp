@@ -1,21 +1,21 @@
-import { Button, Checkbox, List, Space } from 'antd';
-import { FC } from 'react';
+import { Button, Checkbox, Empty, List, Space } from 'antd';
+import { FC, ReactNode } from 'react';
 
 type Value = number | string;
 
 type Item = {
   value: Value;
-  title: string;
-  subTitle: string;
+  title: ReactNode;
+  subTitle: ReactNode;
   disabled?: boolean;
   checked: boolean;
 };
 
-const Title: FC<{ value: string }> = ({ value }) => (
+const Title: FC<{ value: ReactNode }> = ({ value }) => (
   <span className='vendors-select-title'>{value}</span>
 );
 
-const SubTitle: FC<{ value: string }> = ({ value }) => (
+const SubTitle: FC<{ value: ReactNode }> = ({ value }) => (
   <span className='vendors-select-sub-title'>{value}</span>
 );
 
@@ -45,12 +45,18 @@ export const ChildrenList: FC<{
   items: Item[];
   onSelect: (v: boolean, value: Value) => void;
   onSelectOnly: (value: Value) => void;
-}> = ({ items, onSelect, onSelectOnly }) => (
-  <List
-    className='children-list'
-    dataSource={items}
-    renderItem={(item) => (
-      <ChildrenListItem item={item} onSelect={onSelect} onSelectOnly={onSelectOnly} />
-    )}
-  />
-);
+}> = ({ items, onSelect, onSelectOnly }) => {
+  if (items.length === 0) {
+    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  }
+
+  return (
+    <List
+      className='children-list'
+      dataSource={items}
+      renderItem={(item) => (
+        <ChildrenListItem item={item} onSelect={onSelect} onSelectOnly={onSelectOnly} />
+      )}
+    />
+  );
+};

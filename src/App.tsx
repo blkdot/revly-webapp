@@ -72,6 +72,10 @@ const App = () => {
     });
   }, []);
 
+  const [values, setValues] = useState([11, 12]);
+
+  console.log(values);
+
   if (loading) {
     return (
       <div className='main-loading'>
@@ -94,7 +98,7 @@ const App = () => {
         <Route
           path='/test'
           element={
-            <VendorsDropdown values={[11, 12]} options={generate()} onChange={console.log} />
+            <VendorsDropdown values={values} options={generate()} onChange={setValues as any} />
           }
         />
         <Route path='/verify-code' element={<VerifyCode />} />
