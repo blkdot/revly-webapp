@@ -150,8 +150,8 @@ const AdvertsDetails: FC<{
                 } as CSSProperties
               }
               src={
-                platformObject[data.platform.toLowerCase()].srcFaviconWhite ||
-                platformObject[data.platform.toLowerCase()].srcFavicon
+                platformObject[data.platform.toLowerCase()].srcWhite ||
+                platformObject[data.platform.toLowerCase()].src
               }
               alt={platformObject[data.platform.toLowerCase()].name}
             />

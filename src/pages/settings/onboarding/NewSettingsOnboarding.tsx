@@ -135,6 +135,7 @@ const NewSettingsOnboarding = () => {
     setConnectAccount,
     setLoading,
     loading,
+    setBranchDataFiltered,
   };
 
   return (
