@@ -175,7 +175,7 @@ const useMarketingSetup = () => {
             });
           }
 
-          if (!displayTemp[chainName][vendorName].deleted && !defaultSelection) {
+          if (!displayTemp[chainName][vendorName].deleted && !defaultSelection && !displayTemp[chainName][vendorName].deactivated) {
             defaultSelection = {
               chainName,
               vendorName,
