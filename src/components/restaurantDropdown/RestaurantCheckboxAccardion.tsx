@@ -231,7 +231,7 @@ const RestaurantCheckboxAccordion: FC<{
               {pageType !== 'listing' ? (
                 <div className='only-button vendor'>
                   <ButtonKit
-                    disabled={!info[vendorName].active}
+                    disabled={!info[vendorName].active || info[vendorName].deactivated}
                     onClick={(e) => handleClickVendor(e, vendorName)}
                     variant='contained'
                   >
