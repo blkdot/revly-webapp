@@ -4,7 +4,7 @@ import { usePlatform, useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { SpinnerKit } from 'kits';
 import { useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import { vendorsAtom } from 'store/vendorsAtom';
 
@@ -66,17 +66,17 @@ export const ProtectedOnboardRoutes = () => {
   useEffect(() => {
     if (response?.data) {
       setUserPlatformData({
-        onboarded: true,
+        onboarded: response?.data.onboarded,
         platforms: { ...userPlatformData.platforms, ...response?.data.platforms },
       });
     }
   }, [JSON.stringify(response?.data)]);
-
+  const location = useLocation()
   if (
-    !response?.isLoading &&
+    !response?.isLoading && location.pathname !== '/dashboard' &&
     (response?.isError || !response?.data?.onboarded || !response?.data?.platforms)
   ) {
-    return <Navigate to='/dashboardOnboard' />;
+    return <Navigate to='/dashboard' />;
   }
 
   if (response?.isLoading) {

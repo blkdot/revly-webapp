@@ -98,7 +98,7 @@ const ConnectAccount: FC<{
             className={`${!obj?.color && 'onboarding-platform-border'}`}
             style={{ '--color': obj?.color } as React.CSSProperties}
           >
-            <img src={obj.srcFaviconWhite || obj.srcFavicon} alt={obj.name} />
+            <img src={obj.srcNoBg} alt={obj.name} />
             Connect with {obj.name.charAt(0).toUpperCase() + obj.name.slice(1)}
           </ButtonKit>
         ))}
@@ -130,8 +130,8 @@ const ConnectAccount: FC<{
               >
                 <img
                   src={
-                    platformObject[obj.platform].srcFaviconWhite ||
-                    platformObject[obj.platform].srcFavicon
+                    platformObject[obj.platform].srcWhite ||
+                    platformObject[obj.platform].src
                   }
                   alt={obj.platform}
                 />

@@ -169,8 +169,8 @@ const ManageBranch: FC<{
                 >
                   <img
                     src={
-                      getPlatform(obj.platform).srcFaviconWhite ||
-                      getPlatform(obj.platform).srcFavicon
+                      getPlatform(obj.platform).srcWhite ||
+                      getPlatform(obj.platform).src
                     }
                     alt={obj.platform}
                   />

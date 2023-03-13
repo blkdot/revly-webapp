@@ -106,7 +106,7 @@ const VerifyCode = () => {
   const handleResend = async () => {
     setIsResend(true);
     try {
-      const vIdTemp = await verifyPhone(`+${vId}`);
+      const vIdTemp = await verifyPhone(n.includes('+') ? n : `+${n}`);
       setVId(vIdTemp);
       triggerAlertWithMessageSuccess('Code resent');
     } catch (err) {
@@ -135,7 +135,7 @@ const VerifyCode = () => {
         </p>
         <p className='__title'>Please check your phone message!</p>
         <p className='__subtitle'>
-          We&apos;ve texted a 6-digit confirmation code to +{n}, please enter the code in below box
+          We&apos;ve texted a 6-digit confirmation code to {n.includes('+') ? n : `+${n}`}, please enter the code in below box
           to update your phone number.
         </p>
         <div className='__form'>

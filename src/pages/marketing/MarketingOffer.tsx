@@ -472,7 +472,7 @@ const MarketingOffer = () => {
               </div>
             </div>
           </div>
-          <ButtonAction onClick={() => OpenSetup()}>Set up an offer</ButtonAction>
+          <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>Create new offer</ButtonAction>
         </div>
         {openedOffer ? (
           <OfferDetailComponent
