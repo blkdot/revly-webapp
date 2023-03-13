@@ -12,11 +12,13 @@ type Option = {
   value: Value;
   title: ReactNode;
   subTitle: ReactNode;
+  label: string;
   disabled?: boolean;
   children: {
     value: Value;
     title: ReactNode;
     subTitle: ReactNode;
+    label: string;
     disabled?: boolean;
   }[];
 };

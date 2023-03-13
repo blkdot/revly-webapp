@@ -11,11 +11,13 @@ type Option = {
   value: Value;
   title: ReactNode;
   subTitle: ReactNode;
+  label: string;
   disabled?: boolean;
   children: {
     value: Value;
     title: ReactNode;
     subTitle: ReactNode;
+    label: string;
     disabled?: boolean;
   }[];
 };
@@ -42,8 +44,8 @@ export const Popup: FC<{
   options: Option[];
   onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
-  const [selected, setSelected] = useState(-1);
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<Value>(null);
 
   const valuesSet = useMemo(() => new Set(values), [values]);
 
@@ -72,9 +74,9 @@ export const Popup: FC<{
   const onSelectOnlyParent = useCallback(
     (value: Value) => {
       const out: Value[] = [];
-      options.forEach((a, index) => {
+      options.forEach((a) => {
         if (a.value === value) {
-          setSelected(index);
+          setSelected(value);
           a.children.forEach((b) => {
             if (!b.disabled) {
               out.push(b.value);
@@ -139,9 +141,26 @@ export const Popup: FC<{
 
   const allSelected = useMemo(() => totalCount === selectedCount, [totalCount, selectedCount]);
 
+  const filteredOptions = useMemo(() => {
+    const out = [];
+    options.forEach((a) => {
+      if (a.label.includes(search)) {
+        out.push(a);
+        return;
+      }
+
+      const children = a.children.filter((b) => b.label.includes(search));
+      if (children.length > 0) {
+        out.push({ ...a, children });
+      }
+    });
+
+    return out;
+  }, [search, options]);
+
   const parentListItems = useMemo(() => {
     const items = [];
-    options.forEach((v) => {
+    filteredOptions.forEach((v) => {
       const checked = v.children.filter((c) => !c.disabled).every((c) => valuesSet.has(c.value));
       const intermediate =
         !checked && v.children.filter((c) => !c.disabled).some((c) => valuesSet.has(c.value));
@@ -157,26 +176,28 @@ export const Popup: FC<{
     });
 
     return items;
-  }, [valuesSet, options]);
+  }, [valuesSet, filteredOptions]);
 
   const childrenListItems = useMemo(() => {
-    if (selected === -1) {
+    if (selected === null) {
       return [];
     }
 
     const items = [];
-    options[selected].children.forEach((v) => {
-      items.push({
-        value: v.value,
-        title: v.title,
-        subTitle: v.subTitle,
-        disabled: v.disabled,
-        checked: valuesSet.has(v.value),
+    filteredOptions
+      .find((v) => v.value === selected)
+      ?.children.forEach((v) => {
+        items.push({
+          value: v.value,
+          title: v.title,
+          subTitle: v.subTitle,
+          disabled: v.disabled,
+          checked: valuesSet.has(v.value),
+        });
       });
-    });
 
     return items;
-  }, [selected, valuesSet, options]);
+  }, [selected, valuesSet, filteredOptions]);
 
   return (
     <>

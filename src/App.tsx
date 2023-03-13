@@ -40,12 +40,14 @@ const generate = () =>
     checked: false,
     intermediate: false,
     disabled: i % 3 === 0,
+    label: 'Kulcha King - JLT Branch',
     children: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((j) => ({
       value: i * 10 + j,
       title: `Kulcha King - JLT Branch (${i * 10 + j})`,
       subTitle: `${i * 10 + j}`,
       checked: false,
       disabled: j % 4 === 0,
+      label: `Kulcha King - JLT Branch (${i * 10 + j})`,
     })),
   }));
 

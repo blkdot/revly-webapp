@@ -24,14 +24,13 @@ type Item = {
 
 const ParentListItem: FC<{
   item: Item;
-  index: number;
   onSelect: (v: boolean, value: Value) => void;
   onSelectOnly: (value: Value) => void;
-  setSelected: (v: number) => void;
-}> = ({ item, index, onSelect, onSelectOnly, setSelected }) => (
+  setSelected: (v: Value) => void;
+}> = ({ item, onSelect, onSelectOnly, setSelected }) => (
   <List.Item
     extra={
-      <Button type='text' onClick={() => setSelected(index)} disabled={item.disabled}>
+      <Button type='text' onClick={() => setSelected(item.value)} disabled={item.disabled}>
         <ArrowRight />
       </Button>
     }
@@ -57,7 +56,7 @@ export const ParentList: FC<{
   items: Item[];
   onSelect: (v: boolean, value: Value) => void;
   onSelectOnly: (value: Value) => void;
-  setSelected: (v: number) => void;
+  setSelected: (v: Value) => void;
 }> = ({ items, onSelect, onSelectOnly, setSelected }) => {
   if (items.length === 0) {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
@@ -67,10 +66,9 @@ export const ParentList: FC<{
     <List
       className='parent-list'
       dataSource={items}
-      renderItem={(item, index) => (
+      renderItem={(item) => (
         <ParentListItem
           item={item}
-          index={index}
           onSelect={onSelect}
           onSelectOnly={onSelectOnly}
           setSelected={setSelected}
