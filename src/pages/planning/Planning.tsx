@@ -87,7 +87,7 @@ const Planning = () => {
 
   const ads = useMemo(() => adsData?.ads || [], [adsData]);
   const offers = useMemo(() => offersData?.offers || [], [offersData]);
-
+  
   const [filters, setFilters] = useState({
     ...defaultFilterStateFormat,
     ...JSON.parse(filtersSaved || '{}'),
@@ -436,8 +436,10 @@ const Planning = () => {
       userPlatformData.platforms[plat].some((obj) => obj.active)
     );
 
-    if (clonedFilters.platform.length < 1 && defaultPlatform) {
-      clonedFilters.platform.push(defaultPlatform);
+    if(!filtersSaved){
+      if (clonedFilters.platform.length < 1 && defaultPlatform) {
+        clonedFilters.platform.push(defaultPlatform);
+      }
     }
 
     clonedFilters.type_offer.forEach((fp, i) => {
@@ -452,7 +454,10 @@ const Planning = () => {
       if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
     });
 
-    setFilters(clonedFilters);
+    setFilters({
+      ...clonedFilters,
+      ...JSON.parse(filtersSaved || '{}'),
+    });
 
     const preHeadPlatform = preHead.platform.map((s: string) => ({
       value: s.toLowerCase(),

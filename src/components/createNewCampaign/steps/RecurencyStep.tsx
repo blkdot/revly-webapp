@@ -45,7 +45,11 @@ const RecurencyStep: FC<{
   setTypeSchedule: (v: string) => void;
   stateBranch: StateBranchType;
   setStateBranch: (v: StateBranchType) => void;
-}> = ({ stateBranch, setStateBranch, setStep, state, setState, typeSchedule, setTypeSchedule }) => {
+  typeScheduleArr: any;
+  setCustomised: any;
+  getCustomisedDays: any;
+  customised: any;
+}> = ({ stateBranch, setStateBranch, setStep, state, setState, typeSchedule, setTypeSchedule, typeScheduleArr, setCustomised, getCustomisedDays, customised }) => {
   const [disabled, setDisabled] = useState(false);
   const [startingDate, setStartingDate] = useAtom(startingDateAtom);
   const [endingDate, setEndingDate] = useAtom(endingDateAtom);
@@ -58,6 +62,7 @@ const RecurencyStep: FC<{
 
     return typeSchedule !== 'Every day';
   };
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const date = document.querySelectorAll('.date-error');
   const onChange = async (newValue: Date, type: string) => {
     if (type === 'start') {
@@ -94,46 +99,8 @@ const RecurencyStep: FC<{
     }
     setState({ ...stateTemp });
   };
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-  const [customised, setCustomised] = useState([]);
-  const getCustomisedDays = (type: string, newValue: Date, customisedArr: string[]) => {
-    let count = 0;
-    customisedArr.forEach((day) => {
-      count += countDaysOfWeekBetweenDates(
-        new Date(type === 'start' ? newValue : startingDate),
-        new Date(type === 'end' ? newValue : endingDate)
-      )[days.findIndex((d) => day === d) + 1 === 7 ? 0 : days.findIndex((d) => d === day) + 1];
-    });
-
-    return count;
-  };
-
   const { disableWeekends } = useMarketingSetup();
-  const typeScheduleArr = [
-    {
-      type: 'everyday',
-      title: 'Every day',
-      days: Math.abs(differenceInDays(new Date(startingDate), new Date(endingDate))),
-    },
-    {
-      type: 'workweek',
-      title: 'Work week',
-      days: Math.abs(differenceInBusinessDays(new Date(startingDate), new Date(endingDate))),
-    },
-    {
-      type: 'weekend',
-      title: 'Week-end days',
-      days:
-        countDaysOfWeekBetweenDates(new Date(startingDate), new Date(endingDate))[0] +
-        countDaysOfWeekBetweenDates(new Date(startingDate), new Date(endingDate))[6],
-    },
-    {
-      type: customised.toString().toLowerCase().replace(/,/g, '.'),
-      title: 'Customised',
-      days: getCustomisedDays('custom', new Date(), customised),
-    },
-  ];
+
   const getWorkWeek = () => {
     if (typeSchedule === 'Work week') {
       // checking if endingDate eqaul sunday we put monday

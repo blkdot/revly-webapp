@@ -365,8 +365,7 @@ const Adverts = () => {
                 ads.
               </div>
             </div>
-            {/* in development */}
-            <ButtonKit onClick={() => !disabled && setOpenedCampaign(true)}>
+            <ButtonKit disabled={disabled} onClick={() => !disabled && setOpenedCampaign(true)}>
               Create new campaign
               <img src={arrow} alt='right-arrow' />
             </ButtonKit>
