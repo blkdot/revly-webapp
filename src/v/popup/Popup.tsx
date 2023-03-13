@@ -1,6 +1,6 @@
-import { Search } from '@mui/icons-material';
 import { Checkbox, Divider, Input, Typography } from 'antd';
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
+import { ReactComponent as SearchIcon } from './icons/search.svg';
 import { ChildrenList } from './list/children/ChildrenList';
 import { ParentList } from './list/parent/ParentList';
 import './Popup.scss';
@@ -203,7 +203,7 @@ export const Popup: FC<{
     <>
       <Input
         value={search}
-        prefix={<Search />}
+        prefix={<SearchIcon />}
         placeholder='Search by brand or branch name'
         onChange={(v) => setSearch(v.target.value)}
         className='search-input'

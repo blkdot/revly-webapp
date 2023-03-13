@@ -1,13 +1,27 @@
 .search-input {
   margin: 20px;
+  padding: 11px 18px;
   width: calc(100% - 40px);
   background: #f8f9fb;
   border-radius: 4px;
-  border: none;
+  border: none !important;
   height: 46px;
 
   & > .ant-input {
     background: #f8f9fb;
+  }
+
+  & > .ant-input-prefix {
+    margin-inline-end: 10px;
+  }
+
+  ::placeholder {
+    font-family: 'Public Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #919eab;
   }
 }
 
