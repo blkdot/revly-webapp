@@ -126,7 +126,7 @@ const Competitor = ({ open, opened, platformListProps }) => {
                   }}
                 >
                   <img
-                    src={platformObject[name].srcFavicon}
+                    src={platformObject[name].src}
                     width={24}
                     height={24}
                     style={{ objectFit: 'contain' }}

@@ -72,7 +72,7 @@ const RestaurantCheckboxAccordion: FC<{
   };
 
   const getIcon = (platform: string) =>
-    platformList.find((obj) => obj.name === platform).srcFavicon;
+    platformList.find((obj) => obj.name === platform).src;
 
   return (
     <div className={`checkbox-accordion-wrapper ${active && 'active'}`}>

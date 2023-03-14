@@ -1,3 +1,34 @@
+.adverts-btn.adverts-btn {
+  background-color: #906bff;
+  color: #fff;
+  text-transform: none;
+  padding: 10px 30px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 26px;
+  width: 280px;
+  &:hover {
+    background-color: #906bff;
+  }
+
+  img {
+    margin-left: 15px;
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    filter: invert(98%) sepia(5%) saturate(198%) hue-rotate(224deg) brightness(340%) contrast(100%);
+  }
+
+  &.Mui-disabled {
+    color: rgba(0, 0, 0, 0.26);
+    background-color: rgba(0, 0, 0, 0.12);
+
+    img {
+      filter: invert(0%) sepia(3%) saturate(0%) hue-rotate(196deg) brightness(100%) contrast(103%);
+    }
+  }
+}
+
 .adverts_top-titles {
   display: flex;
   justify-content: space-between;
@@ -7,7 +38,7 @@
   grid-gap: 15px;
   flex-wrap: wrap;
 
-  > div {
+  >div {
     display: flex;
     flex-direction: column;
   }
@@ -32,38 +63,6 @@
     line-height: 24px;
     color: #637381;
   }
-
-  button {
-    background-color: #906bff;
-    color: #fff;
-    text-transform: none;
-    padding: 10px 30px;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 26px;
-
-    &:hover {
-      background-color: #906bff;
-    }
-
-    img {
-      margin-left: 15px;
-      width: 12px;
-      height: 12px;
-      object-fit: contain;
-      filter: invert(98%) sepia(5%) saturate(198%) hue-rotate(224deg) brightness(340%)
-        contrast(100%);
-    }
-
-    &.Mui-disabled {
-      color: rgba(0, 0, 0, 0.26);
-      background-color: rgba(0, 0, 0, 0.12);
-
-      img {
-        filter: invert(0%) sepia(3%) saturate(0%) hue-rotate(196deg) brightness(100%) contrast(103%);
-      }
-    }
-  }
 }
 
 .competition-paper.adverts {
@@ -87,7 +86,7 @@
   th:nth-of-type(1) {
     padding: 0 !important;
 
-    > span {
+    >span {
       margin-left: 0 !important;
     }
   }
@@ -104,7 +103,7 @@
       text-align: left !important;
     }
 
-    > td:nth-of-type(1) {
+    >td:nth-of-type(1) {
       padding-left: 0 !important;
     }
   }
@@ -115,7 +114,7 @@
   justify-content: space-between;
   margin-top: 20px;
 
-  > div:nth-of-type(1) {
+  >div:nth-of-type(1) {
     p {
       line-height: 30px;
       font-weight: 600;
@@ -128,7 +127,7 @@
     }
   }
 
-  > div:nth-of-type(2) {
+  >div:nth-of-type(2) {
     display: flex;
     align-items: center;
     grid-gap: 40px;
@@ -191,13 +190,13 @@
   display: flex;
   justify-content: space-between;
 
-  > div {
+  >div {
     width: 32%;
   }
 }
 
 .advert_settings {
-  > div {
+  >div {
     width: 100%;
   }
 }

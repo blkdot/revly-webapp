@@ -17,7 +17,7 @@ import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useMarketingSetup, useQueryState, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ButtonKit, ContainerKit } from 'kits';
+import { ButtonAction, ButtonKit, ContainerKit } from 'kits';
 import { defaultFilterStateFormat } from 'pages/marketing/marketingOfferData';
 import { useEffect, useMemo, useState } from 'react';
 import { branchAtom } from 'store/marketingSetupAtom';
@@ -365,11 +365,9 @@ const Adverts = () => {
                 ads.
               </div>
             </div>
-            {/* in development */}
-            <ButtonKit onClick={() => !disabled && setOpenedCampaign(true)}>
+            <ButtonAction className='adverts-btn' disabled={disabled} onClick={() => !disabled && setOpenedCampaign(true)}>
               Create new campaign
-              <img src={arrow} alt='right-arrow' />
-            </ButtonKit>
+            </ButtonAction>
           </div>
           <TableRevlyNew
             onClickRow={(id) => {

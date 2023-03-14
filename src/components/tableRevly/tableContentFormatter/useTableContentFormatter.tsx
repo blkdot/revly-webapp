@@ -278,8 +278,8 @@ const useTableContentFormatter = () => {
             } as CSSProperties
           }
           src={
-            platformObject[r[h.id].toLowerCase()].srcFaviconWhite ||
-            platformObject[r[h.id].toLowerCase()].srcFavicon
+            platformObject[r[h.id].toLowerCase()].srcWhite ||
+            platformObject[r[h.id].toLowerCase()].src
           }
           alt={platformObject[r[h.id].toLowerCase()].name}
         />
@@ -444,8 +444,8 @@ const useTableContentFormatter = () => {
           >
             <img
               src={
-                getPlatform(obj.platform.toLowerCase()).srcFaviconWhite ||
-                getPlatform(obj.platform.toLowerCase()).srcFavicon
+                getPlatform(obj.platform.toLowerCase()).srcWhite ||
+                getPlatform(obj.platform.toLowerCase()).src
               }
               alt={obj.platform.toLowerCase()}
             />

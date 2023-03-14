@@ -88,9 +88,12 @@ const ConnectPlatform: FC<{
           disabled={!(email && password)}
           loading={isLoading}
         >
-          <img src={platformObj.srcFaviconWhite || platformObj.srcFavicon} alt={platform} />
-          Connect with {platform}
+          <img src={platformObj.srcNoBg} alt={platform} />
+          <p className={`onboarding-connect-content ${isLoading && 'loading'}`}>
+            Connect with {platform}
+          </p>
         </ButtonLoadingKit>
+
       </div>
     </div>
   );

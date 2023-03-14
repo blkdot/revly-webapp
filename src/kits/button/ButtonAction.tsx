@@ -6,13 +6,14 @@ import './button.scss';
 type TButtonAction = {
   onClick: () => void;
   children: string;
+  className?: string;
 };
 
-const ButtonAction: React.FC<TButtonAction & ButtonProps> = ({ onClick, children, disabled }) => (
+const ButtonAction: React.FC<TButtonAction & ButtonProps> = ({ onClick, children, disabled, className }) => (
   <ButtonKit
     onClick={onClick}
     variant='contained'
-    className='button-action-kit'
+    className={`button-action-kit ${className || ''}`}
     disableElevation
     disabled={disabled}
   >

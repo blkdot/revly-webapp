@@ -99,8 +99,8 @@ const ManageAccount: FC<{
               >
                 <img
                   src={
-                    platformObject[obj.platform].srcFaviconWhite ||
-                    platformObject[obj.platform].srcFavicon
+                    platformObject[obj.platform].srcWhite ||
+                    platformObject[obj.platform].src
                   }
                   alt={obj.platform}
                 />

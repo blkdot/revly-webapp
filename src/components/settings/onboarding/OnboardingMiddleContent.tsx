@@ -30,7 +30,7 @@ const OnboardingMiddleContent: FC<{
   const [kitchen, setKitchen] = useState([]);
   useEffect(() => {
     setKitchen(filteredChains());
-  }, [filteredChains().length]);
+  }, [filteredChains().length, branchData]);
   return (
     <div className='settings-onboarding-middle_content'>
       <div>

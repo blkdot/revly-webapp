@@ -1,9 +1,8 @@
-import { settingsOnboarded, settingsOnboardPlatformStatus } from 'api';
-import { usePlatform, useUser } from 'contexts';
+import { settingsOnboardPlatformStatus } from 'api';
+import { useUser } from 'contexts';
 import { useAlert } from 'hooks';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
@@ -23,6 +22,8 @@ const UploadingActive: FC<{
     setConnectAccount: any;
     setActiveStep: any;
     deleteAccount: any;
+    setBranchDataFiltered: any;
+    setLoading: any;
   };
 }> = ({ propsVariables }) => {
   const {
@@ -40,14 +41,14 @@ const UploadingActive: FC<{
     setConnectAccount,
     setActiveStep,
     deleteAccount,
+    setBranchDataFiltered,
+    setLoading,
   } = propsVariables;
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { triggerAlertWithMessageError } = useAlert();
-  const { userPlatformData, setUserPlatformData } = usePlatform();
   const user = useUser();
-  const location = useLocation();
-  const navigate = useNavigate();
   const confirm = async () => {
+    setLoading(true);
     const res = await settingsOnboardPlatformStatus(
       {
         master_email: user.email,
@@ -57,19 +58,18 @@ const UploadingActive: FC<{
       },
       connect
     );
+    setLoading(false);
     if (res instanceof Error) {
       triggerAlertWithMessageError(res.message);
       return;
     }
     setBranchData([...branchDataUploading, ...branchData]);
+    setBranchDataFiltered([...branchDataUploading, ...branchData]);
     setActiveStep(100);
     setConnectAccount('completed');
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    if (location.pathname === '/dashboardOnboard') {
-      navigate('/dashboard');
-    }
   };
   return (
     <div
