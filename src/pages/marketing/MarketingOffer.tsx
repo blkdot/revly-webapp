@@ -113,6 +113,7 @@ const MarketingOffer = () => {
       label: 'Slot',
       tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
     },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
     {
       id: 'revenue',
       disablePadding: true,

@@ -85,7 +85,7 @@ const OnboardingTable: FC<{
     openCloseModal();
     setClickedBranch(data);
   };
-  
+
   return (
     <TableRevlyNew
       renderCustomSkelton={[0, 1, 2, 3].map(renderRowsByHeaderLoading)}

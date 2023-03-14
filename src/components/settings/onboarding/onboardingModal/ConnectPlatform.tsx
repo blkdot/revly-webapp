@@ -1,35 +1,23 @@
 import { FC } from 'react';
+import { useAtom } from 'jotai';
+import { onboardingConnectAccountAtom, onboardingConnectAtom } from 'store/onboardingAtom';
 import { Arrow } from 'assets/icons';
 import { platformList } from 'data/platformList';
 import { ButtonKit, ButtonLoadingKit, TextfieldKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const ConnectPlatform: FC<{
-  propsVariables: {
-    openCloseModal: any;
-    connect: any;
-    setEmail: any;
-    setPassword: any;
-    email: string;
-    password: string;
-    setConnect: any;
-    setConnectAccount: any;
-    handleSubmitLogin: any;
-    isLoading: boolean;
-  };
-}> = ({ propsVariables }) => {
-  const {
-    openCloseModal,
-    connect,
-    setEmail,
-    setPassword,
-    email,
-    password,
-    setConnect,
-    setConnectAccount,
-    handleSubmitLogin,
-    isLoading,
-  } = propsVariables;
+  openCloseModal: any;
+  setEmail: any;
+  setPassword: any;
+  email: string;
+  password: string;
+  handleSubmitLogin: any;
+  isLoading: boolean;
+}> = ({ openCloseModal, setEmail, setPassword, email, password, handleSubmitLogin, isLoading }) => {
+  const [connect, setConnect] = useAtom(onboardingConnectAtom);
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const platformObj = platformList.find((obj) => obj.name === connect);
   return (
@@ -87,6 +75,9 @@ const ConnectPlatform: FC<{
           style={{ '--color': platformObj.color }}
           disabled={!(email && password)}
           loading={isLoading}
+          className={`connect-account-btn ${!platformObj?.color && 'onboarding-platform-border '} ${
+            platformObj.name
+          }`}
         >
           <img src={platformObj.srcNoBg} alt={platform} />
           <p className={`onboarding-connect-content ${isLoading && 'loading'}`}>

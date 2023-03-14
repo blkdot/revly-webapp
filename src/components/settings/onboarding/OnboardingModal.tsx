@@ -5,6 +5,16 @@ import { useUser } from 'contexts';
 import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
+import {
+  onboardingAccountsAtom,
+  onboardingBranchDataAtom,
+  onboardingBranchDataFilteredAtom,
+  onboardingBranchDataUploadingAtom,
+  onboardingConnectAccountAtom,
+  onboardingConnectAtom,
+  onboardingLoadingAtom,
+  onboardingOpenedModalAtom,
+} from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import ConnectAccount from './onboardingModal/ConnectAccount';
 import ConnectPlatform from './onboardingModal/ConnectPlatform';
@@ -15,32 +25,28 @@ import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
 const isUnRemovableBranch = (branchData: any[]): boolean => branchData.length < 2; // TODO: allow reactivation
 
-const OnboardingModal = ({ propsVariables }: any) => {
-  const {
-    openCloseModal,
-    openedModal,
-    connectAccount,
-    setBranchDataUploading,
-    connect,
-    setConnectAccount,
-    accounts,
-    setAccounts,
-    branchData,
-    setBranchData,
-    setLoading,
-    loading,
-    setBranchDataFiltered,
-  } = propsVariables;
+const OnboardingModal = ({ openCloseModal }: any) => {
+  const [openedModal] = useAtom(onboardingOpenedModalAtom);
+  const [connectAccount, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [connect] = useAtom(onboardingConnectAtom);
+  const [, setBranchDataUploading] = useAtom(onboardingBranchDataUploadingAtom);
+  const [accounts, setAccounts] = useAtom(onboardingAccountsAtom);
+  const [branchData, setBranchData] = useAtom(onboardingBranchDataAtom);
+  const [, setLoading] = useAtom(onboardingLoadingAtom);
+  const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const [vendors] = useAtom(vendorsAtom);
-  
+
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
-    if(accounts.filter((obj) => obj.platform === currentPlatform && obj.email === email).length === 0){
+    if (
+      accounts.filter((obj) => obj.platform === currentPlatform && obj.email === email).length === 0
+    ) {
       try {
         const res = await settingsOnboardPlatform(
           {
@@ -52,7 +58,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
             },
           },
           currentPlatform
-        )
+        );
         if (!res?.vendors) {
           throw new Error();
         }
@@ -67,8 +73,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
             id: obj.vendor_id,
           }))
         );
-      }
-      catch (error) {
+      } catch (error) {
         setIsLoading(false);
         triggerAlertWithMessageError(
           `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
@@ -76,9 +81,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
       }
     } else {
       setIsLoading(false);
-      triggerAlertWithMessageError(
-        `This account already connected`
-      );
+      triggerAlertWithMessageError(`This account already connected`);
     }
   };
 
@@ -193,68 +196,51 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const connectAccountModalObject = {
     manageAccount: (
       <ManageAccount
-        propsVariables={{
-          ...propsVariables,
-          deleteAccount,
-          changeStatusAccount,
-          openSwitchDeleteModal,
-          openedSwitchDeleteModal,
-          setLoading,
-          loading,
-        }}
+        openCloseModal={openCloseModal}
+        deleteAccount={deleteAccount}
+        changeStatusAccount={changeStatusAccount}
+        openSwitchDeleteModal={openSwitchDeleteModal}
+        openedSwitchDeleteModal={openedSwitchDeleteModal}
       />
     ),
     manageBranch: (
       <ManageBranch
-        propsVariables={{
-          ...propsVariables,
-          openSwitchDeleteModal,
-          openedSwitchDeleteModal,
-          loading,
-          setLoading,
-          deleteAccount,
-          setOpenedSwitchDeleteModal,
-        }}
+        openCloseModal={openCloseModal}
+        deleteAccount={deleteAccount}
+        setOpenedSwitchDeleteModal={setOpenedSwitchDeleteModal}
+        openSwitchDeleteModal={openSwitchDeleteModal}
+        openedSwitchDeleteModal={openedSwitchDeleteModal}
         unremovable={isUnRemovableBranch(branchData)}
       />
     ),
-    completed: <UploadingCompleted propsVariables={propsVariables} />,
+    completed: <UploadingCompleted openCloseModal={openCloseModal} />,
     active: (
       <UploadingActive
-        propsVariables={{
-          ...propsVariables,
-          email,
-          setEmail,
-          setPassword,
-          password,
-          deleteAccount,
-        }}
+        openCloseModal={openCloseModal}
+        email={email}
+        setEmail={setEmail}
+        setPassword={setPassword}
+        deleteAccount={deleteAccount}
       />
     ),
     platform: (
       <ConnectPlatform
-        propsVariables={{
-          ...propsVariables,
-          email,
-          setEmail,
-          setPassword,
-          password,
-          handleSubmitLogin,
-          isLoading,
-        }}
+        openCloseModal={openCloseModal}
+        setEmail={setEmail}
+        setPassword={setPassword}
+        email={email}
+        password={password}
+        handleSubmitLogin={handleSubmitLogin}
+        isLoading={isLoading}
       />
     ),
     account: (
       <ConnectAccount
-        propsVariables={{
-          ...propsVariables,
-          deleteAccount,
-          changeStatusAccount,
-          openSwitchDeleteModal,
-          openedSwitchDeleteModal,
-          setLoading,
-          loading,
-        }}
+        openCloseModal={openCloseModal}
+        deleteAccount={deleteAccount}
+        changeStatusAccount={changeStatusAccount}
+        openSwitchDeleteModal={openSwitchDeleteModal}
+        openedSwitchDeleteModal={openedSwitchDeleteModal}
       />
     ),
   };
@@ -263,8 +249,9 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal && 'active'} ${openedSwitchDeleteModal && 'activeDelete'
-        }`}
+      className={`onboarding-modal_overlay ${openedModal && 'active'} ${
+        openedSwitchDeleteModal && 'activeDelete'
+      }`}
       onClick={openCloseModal}
     >
       <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>

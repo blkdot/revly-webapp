@@ -1,49 +1,38 @@
 import { settingsOnboardPlatformStatus } from 'api';
 import { useUser } from 'contexts';
 import { useAlert } from 'hooks';
+import { useAtom } from 'jotai';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
+import {
+  onboardingAccountsAtom,
+  onboardingActiveStepAtom,
+  onboardingBranchDataAtom,
+  onboardingBranchDataFilteredAtom,
+  onboardingBranchDataUploadingAtom,
+  onboardingConnectAccountAtom,
+  onboardingConnectAtom,
+  onboardingLoadingAtom,
+} from 'store/onboardingAtom';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const UploadingActive: FC<{
-  propsVariables: {
-    branchDataUploading: any;
-    setBranchDataUploading: any;
-    setEmail: any;
-    setPassword: any;
-    setBranchData: any;
-    openCloseModal: any;
-    setAccounts: any;
-    accounts: any;
-    branchData: any;
-    connect: any;
-    email: any;
-    setConnectAccount: any;
-    setActiveStep: any;
-    deleteAccount: any;
-    setBranchDataFiltered: any;
-    setLoading: any;
-  };
-}> = ({ propsVariables }) => {
-  const {
-    branchDataUploading,
-    setBranchDataUploading,
-    setEmail,
-    setPassword,
-    setBranchData,
-    openCloseModal,
-    setAccounts,
-    accounts,
-    branchData,
-    connect,
-    email,
-    setConnectAccount,
-    setActiveStep,
-    deleteAccount,
-    setBranchDataFiltered,
-    setLoading,
-  } = propsVariables;
+  openCloseModal: any;
+  email: any;
+  setEmail: any;
+  setPassword: any;
+  deleteAccount: any;
+}> = ({ email, setEmail, setPassword, deleteAccount, openCloseModal }) => {
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [connect] = useAtom(onboardingConnectAtom);
+  const [branchDataUploading, setBranchDataUploading] = useAtom(onboardingBranchDataUploadingAtom);
+  const [accounts, setAccounts] = useAtom(onboardingAccountsAtom);
+  const [branchData, setBranchData] = useAtom(onboardingBranchDataAtom);
+  const [, setLoading] = useAtom(onboardingLoadingAtom);
+  const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const [, setActiveStep] = useAtom(onboardingActiveStepAtom);
+
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { triggerAlertWithMessageError } = useAlert();
   const user = useUser();

@@ -7,7 +7,6 @@ import {
   CompetitionAlerts,
   CompetitionListing,
   Dashboard,
-  DashboardOnboard,
   ForgotPassword,
   MarketingOffer,
   Planning,

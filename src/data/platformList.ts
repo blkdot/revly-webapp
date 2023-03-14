@@ -8,7 +8,6 @@ import imageNoon from '../assets/images/noon.svg';
 import imageDeliverooNoBg from '../assets/images/deliveroo-no-bg.svg';
 import imageTalabatNoBg from '../assets/images/talabat-no-bg.svg';
 import imageCareemNoBg from '../assets/images/careem-no-bg.svg';
-import imageNoonNoBg from '../assets/images/noon-no-bg.svg';
 
 export const platformList = [
   {
@@ -17,32 +16,35 @@ export const platformList = [
     srcWhite: imageDeliverooFaviconWhite,
     name: 'deliveroo',
     color: '#35B8B2',
+    disabled: false,
   },
   {
     srcNoBg: imageTalabatNoBg,
     src: imageTalabatFavicon,
     name: 'talabat',
     color: '#FF5A00',
+    disabled: false,
   },
   {
     srcNoBg: imageCareemNoBg,
     src: imageCareem,
     name: 'careem',
     color: '#3BB44E',
-    disabled: true,
+    disabled: false,
   },
   {
-    srcNoBg: imageNoonNoBg,
+    srcNoBg: imageNoon,
     src: imageNoon,
     name: 'noon',
-    disabled: true,
+    color: '#F2DF0C',
+    disabled: false,
   },
 ];
 
 export type TPlatformObject = {
   [x: string]: {
     srcNoBG: string;
-    srcWhite: string;
+    srcWhite?: string;
     src: string;
     name: string;
     color: string;
