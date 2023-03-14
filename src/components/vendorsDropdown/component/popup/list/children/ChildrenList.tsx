@@ -1,5 +1,6 @@
 import { Button, Checkbox, Empty, List, Space } from 'antd';
 import { FC, ReactNode } from 'react';
+import './ChildrenList.scss';
 
 type Value = number | string;
 
@@ -26,15 +27,7 @@ const ChildrenListItem: FC<{
   onSelectOnly: (value: Value) => void;
 }> = ({ item, onSelect, onSelectOnly }) => (
   <List.Item>
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '100%',
-        alignItems: 'center',
-        marginRight: 30,
-      }}
-    >
+    <div className='children-list-item-container'>
       <Checkbox
         checked={item.checked}
         onChange={(v) => onSelect(v.target.checked, item.value)}

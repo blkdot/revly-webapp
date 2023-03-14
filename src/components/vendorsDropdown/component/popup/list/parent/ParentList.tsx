@@ -30,15 +30,7 @@ const ParentListItem: FC<{
   setSelected: (v: Value) => void;
 }> = ({ item, onSelect, onSelectOnly, setSelected }) => (
   <List.Item>
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '100%',
-        alignItems: 'center',
-        marginRight: 30,
-      }}
-    >
+    <div className='parent-list-item-container'>
       <Checkbox
         checked={item.checked}
         indeterminate={item.intermediate}
@@ -50,7 +42,7 @@ const ParentListItem: FC<{
           <SubTitle value={item.subTitle} />
         </Space>
       </Checkbox>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className='action-buttons'>
         <Button type='text' onClick={() => onSelectOnly(item.value)} disabled={item.disabled}>
           Select Only
         </Button>
