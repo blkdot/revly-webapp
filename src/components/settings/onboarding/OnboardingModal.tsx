@@ -29,7 +29,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setBranchData,
     setLoading,
     loading,
-    setBranchDataFiltered
+    setBranchDataFiltered,
   } = propsVariables;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -118,7 +118,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
           1
         );
       });
-    setBranchData(branchData.filter((obj) => obj.accounts.length > 0))
+    setBranchData(branchData.filter((obj) => obj.accounts.length > 0));
     setBranchDataFiltered(branchData.filter((obj) => obj.accounts.length > 0));
     setAccounts([...accounts]);
     setLoading(false);

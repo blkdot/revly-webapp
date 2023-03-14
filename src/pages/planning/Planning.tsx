@@ -275,7 +275,9 @@ const Planning = () => {
         mono
       />
       <FilterBranch
-        items={filtersHead.vendors}
+        items={chainData.filter(
+          (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+        )}
         values={filters.vendors}
         onChange={handleChangeFilter('vendors')}
         icon={<img src={Columns} alt='Platform' />}
@@ -324,6 +326,13 @@ const Planning = () => {
       />
     </div>
   );
+
+  const isEmptyList = () => {
+    const source = link === 'ads_planning' ? ads : offers;
+
+    return source.length < 1;
+  };
+
   const renderTable = () => {
     if (link === 'ads_planning') {
       return (
@@ -371,12 +380,6 @@ const Planning = () => {
     setOpenedFilter(false);
   };
 
-  const isEmptyList = () => {
-    const source = link === 'ads_planning' ? ads : offers;
-
-    return source.length < 1;
-  };
-
   const renderStatusFilter = (s: string) => {
     if (!s) return null;
 
@@ -419,7 +422,7 @@ const Planning = () => {
       userPlatformData.platforms[plat].some((obj) => obj.active)
     );
 
-    if(!filtersSaved){
+    if (!filtersSaved) {
       if (clonedFilters.platform.length < 1 && defaultPlatform) {
         clonedFilters.platform.push(defaultPlatform);
       }
@@ -470,7 +473,7 @@ const Planning = () => {
   useEffect(() => {
     let filteredData = offers;
     let filteredDataAds = ads;
-    console.log(filters.vendors);
+
     if (filters.platform.length > 0) {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
       filteredDataAds = filteredDataAds.filter((f) => filters.platform.includes(f.platform));
@@ -496,8 +499,12 @@ const Planning = () => {
     }
 
     if (filters.vendors.length > 0) {
-      filteredData = filteredData.filter((f) => f.vendor_ids.some((vId) => filters.vendors.includes(vId)));
-      filteredDataAds = filteredDataAds.filter((f) => f.vendor_ids.some((vId) => filters.vendors.includes(vId)));
+      filteredData = filteredData.filter((f) =>
+        f.vendor_ids.some((vId) => filters.vendors.includes(vId))
+      );
+      filteredDataAds = filteredDataAds.filter((f) =>
+        f.vendor_ids.some((vId) => filters.vendors.includes(vId))
+      );
     }
 
     setDataFiltered(

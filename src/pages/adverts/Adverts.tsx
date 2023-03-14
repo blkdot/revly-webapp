@@ -365,7 +365,11 @@ const Adverts = () => {
                 ads.
               </div>
             </div>
-            <ButtonAction className='adverts-btn' disabled={disabled} onClick={() => !disabled && setOpenedCampaign(true)}>
+            <ButtonAction
+              className='adverts-btn'
+              disabled={disabled}
+              onClick={() => !disabled && setOpenedCampaign(true)}
+            >
               Create new campaign
             </ButtonAction>
           </div>

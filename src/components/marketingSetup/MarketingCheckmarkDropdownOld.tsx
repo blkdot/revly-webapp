@@ -83,7 +83,11 @@ const MarketingCheckmarkDropdownOld = ({
       );
     }
     return names.map((name) => (
-      <MenuItemKit className={type === 'vendor' ? 'listing-vendors-child' : ''} key={name} value={name}>
+      <MenuItemKit
+        className={type === 'vendor' ? 'listing-vendors-child' : ''}
+        key={name}
+        value={name}
+      >
         <CheckboxKit
           checked={(type === 'vendor' ? personName.vendorsSelected : personName).indexOf(name) > -1}
         />

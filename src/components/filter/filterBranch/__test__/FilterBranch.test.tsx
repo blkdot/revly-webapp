@@ -48,3 +48,18 @@ test('Should render Branch Filter', () => {
   const tree = component.toJSON();
   expect(tree).toMatchSnapshot();
 });
+
+test('Should render multiple Branch Filter', () => {
+  const queryClient = new QueryClient();
+
+  const mockOnchange = jest.fn();
+
+  const component = renderer.create(
+    <QueryClientProvider client={queryClient}>
+      <FilterBranch label='test' values={['value1']} onChange={mockOnchange} items={items} multi />
+    </QueryClientProvider>
+  );
+
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});

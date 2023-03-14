@@ -78,10 +78,10 @@ const BidingStep: FC<{
   useEffect(() => {
     getBid();
   }, []);
-  const [loading,setLoading] = useState(false);
-  const [startingDate,] = useAtom(startingDateAtom);
-  const [endingDate,] = useAtom(endingDateAtom);
-  const [times,] = useAtom(timesAtom);
+  const [loading, setLoading] = useState(false);
+  const [startingDate] = useAtom(startingDateAtom);
+  const [endingDate] = useAtom(endingDateAtom);
+  const [times] = useAtom(timesAtom);
   const { triggerAlertWithMessageError } = useAlert();
 
   const handleSubmit = async () => {
@@ -93,22 +93,23 @@ const BidingStep: FC<{
       vendors: branchVendors.vendorsObj.deliveroo,
       bid: Number(stateAdverts.content[3].value.toString().replace('AED ', '')) || 0,
       budget: Number(stateAdverts.content[0].value.toString().replace('AED ', '')) || 0,
-      type_schedule: typeScheduleArr.find((obj) => obj.title === stateAdverts.content[2].value).type,
+      type_schedule: typeScheduleArr.find((obj) => obj.title === stateAdverts.content[2].value)
+        .type,
       start_date: format(new Date(startingDate), 'yyyy-MM-dd'),
       end_date: format(new Date(endingDate), 'yyyy-MM-dd'),
-      start_hour: [format(new Date(times[0].startTime),'HH:mm')],
+      start_hour: [format(new Date(times[0].startTime), 'HH:mm')],
       end_hour: [format(new Date(times[0].endTime), 'HH:mm')],
       chain_drn_id: String(branchVendors.vendorsObj.deliveroo[0].metadata.org_id),
-    }).then(() => {
-      setStep('congrats');
-      setLoading(false);
     })
-    .catch((error) => {
-      triggerAlertWithMessageError(error.message);
-      setLoading(false);
-    })
-    
-  }
+      .then(() => {
+        setStep('congrats');
+        setLoading(false);
+      })
+      .catch((error) => {
+        triggerAlertWithMessageError(error.message);
+        setLoading(false);
+      });
+  };
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>
@@ -140,18 +141,19 @@ const BidingStep: FC<{
                 setBudget('total');
                 stateTemp.content[3].value = `AED ${e.target.value || 0}`;
                 stateBranchTemp.content.forEach((arr, index) => {
-                  stateBranchTemp.content[index][1].value = `AED ${index + 1 === stateBranchTemp.content.length
-                    ? (
-                      Number(e.target.value) -
-                      Number(
-                        Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
-                      ) *
-                      (stateBranchTemp.content.length - 1)
-                    ).toFixed(2)
-                    : parseFloat(
-                      Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
-                    )
-                    }`;
+                  stateBranchTemp.content[index][1].value = `AED ${
+                    index + 1 === stateBranchTemp.content.length
+                      ? (
+                          Number(e.target.value) -
+                          Number(
+                            Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                          ) *
+                            (stateBranchTemp.content.length - 1)
+                        ).toFixed(2)
+                      : parseFloat(
+                          Number(e.target.value / stateBranchTemp.content.length).toFixed(2)
+                        )
+                  }`;
                 });
                 setStateBranch({ ...stateBranchTemp });
                 setStateAdverts({ ...stateTemp });

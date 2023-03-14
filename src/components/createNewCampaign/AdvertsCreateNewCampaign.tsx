@@ -75,8 +75,8 @@ const AdvertsCreateNewCampaign: FC<{
   });
   const [typeSchedule, setTypeSchedule] = useState('Every day');
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const [startingDate,] = useAtom(startingDateAtom);
-  const [endingDate,] = useAtom(endingDateAtom);
+  const [startingDate] = useAtom(startingDateAtom);
+  const [endingDate] = useAtom(endingDateAtom);
   const [customised, setCustomised] = useState([]);
   const getCustomisedDays = (type: string, newValue: Date, customisedArr: string[]) => {
     let count = 0;

@@ -9,7 +9,12 @@ type TButtonAction = {
   className?: string;
 };
 
-const ButtonAction: React.FC<TButtonAction & ButtonProps> = ({ onClick, children, disabled, className }) => (
+const ButtonAction: React.FC<TButtonAction & ButtonProps> = ({
+  onClick,
+  children,
+  disabled,
+  className,
+}) => (
   <ButtonKit
     onClick={onClick}
     variant='contained'

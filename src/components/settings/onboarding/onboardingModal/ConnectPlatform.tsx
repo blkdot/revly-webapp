@@ -93,7 +93,6 @@ const ConnectPlatform: FC<{
             Connect with {platform}
           </p>
         </ButtonLoadingKit>
-
       </div>
     </div>
   );

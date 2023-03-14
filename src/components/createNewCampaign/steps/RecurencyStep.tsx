@@ -49,7 +49,19 @@ const RecurencyStep: FC<{
   setCustomised: any;
   getCustomisedDays: any;
   customised: any;
-}> = ({ stateBranch, setStateBranch, setStep, state, setState, typeSchedule, setTypeSchedule, typeScheduleArr, setCustomised, getCustomisedDays, customised }) => {
+}> = ({
+  stateBranch,
+  setStateBranch,
+  setStep,
+  state,
+  setState,
+  typeSchedule,
+  setTypeSchedule,
+  typeScheduleArr,
+  setCustomised,
+  getCustomisedDays,
+  customised,
+}) => {
   const [disabled, setDisabled] = useState(false);
   const [startingDate, setStartingDate] = useAtom(startingDateAtom);
   const [endingDate, setEndingDate] = useAtom(endingDateAtom);

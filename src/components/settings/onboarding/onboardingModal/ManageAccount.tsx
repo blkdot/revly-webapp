@@ -98,10 +98,7 @@ const ManageAccount: FC<{
                 }}
               >
                 <img
-                  src={
-                    platformObject[obj.platform].srcWhite ||
-                    platformObject[obj.platform].src
-                  }
+                  src={platformObject[obj.platform].srcWhite || platformObject[obj.platform].src}
                   alt={obj.platform}
                 />
               </TypographyKit>

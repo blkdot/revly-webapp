@@ -135,8 +135,8 @@ const VerifyCode = () => {
         </p>
         <p className='__title'>Please check your phone message!</p>
         <p className='__subtitle'>
-          We&apos;ve texted a 6-digit confirmation code to {n.includes('+') ? n : `+${n}`}, please enter the code in below box
-          to update your phone number.
+          We&apos;ve texted a 6-digit confirmation code to {n.includes('+') ? n : `+${n}`}, please
+          enter the code in below box to update your phone number.
         </p>
         <div className='__form'>
           <VerifyCodeForm

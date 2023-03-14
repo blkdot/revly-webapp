@@ -76,7 +76,7 @@ const App = () => {
         <Route path='/verify-code' element={<VerifyCode />} />
         <Route element={<ProtectedOnboardRoutes />}>
           <Route element={<MainLayout />}>
-          <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/planning' element={<Planning />} />
             <Route path='/competition/listing' element={<CompetitionListing />} />
             <Route path='/competition/alerts' element={<CompetitionAlerts />} />
