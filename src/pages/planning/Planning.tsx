@@ -59,6 +59,8 @@ type TAds = {
 const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
+  const filtersParamsObject = JSON.parse(filtersSaved || '{}');
+
   const { date } = useDate();
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
@@ -87,11 +89,8 @@ const Planning = () => {
 
   const ads = useMemo(() => adsData?.ads || [], [adsData]);
   const offers = useMemo(() => offersData?.offers || [], [offersData]);
-  
-  const [filters, setFilters] = useState({
-    ...defaultFilterStateFormat,
-    ...JSON.parse(filtersSaved || '{}'),
-  });
+
+  const [filters, setFilters] = useState({ ...defaultFilterStateFormat, ...filtersParamsObject });
   const { userPlatformData } = usePlatform();
   const renderPlatformInsideFilter = (s: string) => (
     <div key={s}>
@@ -276,13 +275,12 @@ const Planning = () => {
         mono
       />
       <FilterBranch
-        items={chainData.filter(
-          (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
-        )}
+        items={filtersHead.vendors}
         values={filters.vendors}
         onChange={handleChangeFilter('vendors')}
         icon={<img src={Columns} alt='Platform' />}
         label='Show all branches'
+        multi
       />
       <FilterDropdown
         items={filtersHead.status}
@@ -330,6 +328,7 @@ const Planning = () => {
         onChange={handleChangeFilter('vendors')}
         icon={<img src={Columns} alt='Platform' />}
         label='Show all branches'
+        multi
       />
       <FilterDropdown
         items={filtersHead.status}
@@ -423,10 +422,10 @@ const Planning = () => {
 
         return { ...acc, platform, type_offer: discountType, discount_rate: procent, status };
       },
-      { type_offer: [], platform: [], discount_rate: [], status: [] }
+      { type_offer: [], platform: [], discount_rate: [], status: [], ...filtersParamsObject }
     );
 
-    const clonedFilters = { ...filters };
+    const clonedFilters = { ...filtersParamsObject, ...filters };
 
     clonedFilters.platform.forEach((fp, i) => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
@@ -473,7 +472,9 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
-      vendors: chainData,
+      vendors: chainData.filter(
+        (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+      ),
       type_offer: link === 'ads_planning' ? [] : preHeadTypeOffer,
       discount_rate: link === 'ads_planning' ? [] : preHeadProcent,
       status: preHeadStatus,
@@ -485,7 +486,7 @@ const Planning = () => {
   useEffect(() => {
     let filteredData = offers;
     let filteredDataAds = ads;
-
+    console.log(filters.vendors);
     if (filters.platform.length > 0) {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
       filteredDataAds = filteredDataAds.filter((f) => filters.platform.includes(f.platform));
@@ -508,6 +509,11 @@ const Planning = () => {
       filteredDataAds = filteredDataAds.filter((f) =>
         filters.status.includes(f.status.toLowerCase())
       );
+    }
+
+    if (filters.vendors.length > 0) {
+      filteredData = filteredData.filter((f) => f.vendor_ids.some((vId) => filters.vendors.includes(vId)));
+      filteredDataAds = filteredDataAds.filter((f) => f.vendor_ids.some((vId) => filters.vendors.includes(vId)));
     }
 
     setDataFiltered(

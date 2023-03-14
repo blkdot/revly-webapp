@@ -53,10 +53,10 @@ const MarketingOffer = () => {
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
   const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
-  const [filters, setFilters] = useState({
-    ...defaultFilterStateFormat,
-    ...JSON.parse((filtersSaved || '{}') as any),
-  });
+
+  const filtersParamsObject = JSON.parse((filtersSaved || '{}'));
+
+  const [filters, setFilters] = useState({ ...defaultFilterStateFormat, ...filtersParamsObject });
 
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
 
@@ -254,10 +254,10 @@ const MarketingOffer = () => {
           goal,
         };
       },
-      { type_offer: [], platform: [], discount_rate: [], status: [], goal: [] }
+      { type_offer: [], platform: [], discount_rate: [], status: [], goal: [], ...filtersParamsObject }
     );
 
-    const clonedFilters = { ...filters };
+    const clonedFilters = { ...filtersParamsObject, ...filters };
 
     clonedFilters.platform.forEach((fp, i) => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
