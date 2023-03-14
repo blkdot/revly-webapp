@@ -1,30 +1,28 @@
 import { FC, useState } from 'react';
 import { TypographyKit, SwitchKit } from 'kits';
 import { platformObject } from 'data/platformList';
+import { useAtom } from 'jotai';
+import { onboardingAccountsAtom, onboardingLoadingAtom } from 'store/onboardingAtom';
 import SwitchDeleteModal from './SwitchDeleteModal';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const ManageAccount: FC<{
-  propsVariables: {
-    openCloseModal: any;
-    accounts: any;
-    deleteAccount: any;
-    changeStatusAccount: any;
-    openSwitchDeleteModal: any;
-    openedSwitchDeleteModal: any;
-    loading: any;
-  };
-}> = ({ propsVariables }) => {
-  const {
-    openCloseModal,
-    accounts,
-    deleteAccount,
-    changeStatusAccount,
-    openSwitchDeleteModal,
-    openedSwitchDeleteModal,
-    loading,
-  } = propsVariables;
+  openCloseModal: any;
+  deleteAccount: any;
+  changeStatusAccount: any;
+  openSwitchDeleteModal: any;
+  openedSwitchDeleteModal: any;
+}> = ({
+  openCloseModal,
+  deleteAccount,
+  changeStatusAccount,
+  openSwitchDeleteModal,
+  openedSwitchDeleteModal,
+}) => {
+  const [accounts] = useAtom(onboardingAccountsAtom);
+  const [loading] = useAtom(onboardingLoadingAtom);
+
   const [selected, setSelected] = useState('');
   const [deleteObj, setDeleteObj] = useState(null);
   const [switchObj, setSwitchObj] = useState(null);

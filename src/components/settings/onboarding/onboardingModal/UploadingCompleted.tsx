@@ -1,16 +1,16 @@
 import { FC } from 'react';
 import { ButtonKit } from 'kits';
+import { useAtom } from 'jotai';
+import { onboardingConnectAccountAtom, onboardingConnectAtom } from 'store/onboardingAtom';
+import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 import Congrats from '../../../../assets/images/congrats.gif';
 
 const UploadingCompleted: FC<{
-  propsVariables: {
-    openCloseModal: any;
-    setConnectAccount: any;
-    connect: any;
-  };
-}> = ({ propsVariables }) => {
-  const { openCloseModal, setConnectAccount, connect } = propsVariables;
+  openCloseModal: any;
+}> = ({ openCloseModal }) => {
+  const [connect] = useAtom(onboardingConnectAtom);
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   return (
     <div
@@ -48,6 +48,16 @@ const UploadingCompleted: FC<{
           style={{ '--color': '#F9FAFB', color: 'black' } as React.CSSProperties}
         >
           Close
+        </ButtonKit>
+        <ButtonKit
+          onClick={() => {
+            setConnectAccount('account');
+          }}
+          className='onboarding-platform-buttons_confirm'
+          variant='contained'
+          style={{ '--color': '#9A6FFF' } as React.CSSProperties}
+        >
+          Add more platforms <Arrow />
         </ButtonKit>
       </div>
     </div>

@@ -458,7 +458,8 @@
         td {
           height: 32px;
           border-bottom: none !important;
-          padding: 5px 20px !important;
+          padding: 5px 10px 5px 20px !important;
+          min-width: 0 !important;
         }
       }
     }

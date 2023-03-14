@@ -16,6 +16,7 @@ import { useDate } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
+import { onboardingConnectAccountAtom, onboardingOpenedModalAtom } from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Dashboard.scss';
 
@@ -70,13 +71,9 @@ const Dashboard = () => {
     },
   ];
 
-  const [openedModal, setOpenedModal] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [branchDataUploading, setBranchDataUploading] = useState([]);
-  const [branchData, setBranchData] = useState([]);
-  const [accounts, setAccounts] = useState([]);
-  const [connectAccount, setConnectAccount] = useState('account');
-  const [connect, setConnect] = useState('');
+  const [openedModal, setOpenedModal] = useAtom(onboardingOpenedModalAtom);
+  const [connectAccount, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
     if (connectAccount === 'manageBranch' || connectAccount === 'completed') {
@@ -91,22 +88,7 @@ const Dashboard = () => {
     }
     body.style.overflowY = 'visible';
   };
-  const propsVariables = {
-    openCloseModal,
-    setConnect,
-    connect,
-    setAccounts,
-    accounts,
-    setBranchData,
-    branchData,
-    setBranchDataUploading,
-    branchDataUploading,
-    setActiveStep,
-    activeStep,
-    openedModal,
-    connectAccount,
-    setConnectAccount,
-  };
+
   const { userPlatformData } = usePlatform();
   const getDropdown = () => {
     if (!userPlatformData.onboarded) {
@@ -271,12 +253,8 @@ const Dashboard = () => {
       <ContainerKit>
         {!userPlatformData.onboarded && (
           <div className='dashboard-stepper'>
-            <OnboardingModal propsVariables={propsVariables} />
-            <OnboardingStepper
-              activeStep={activeStep}
-              accounts={accounts}
-              openCloseModal={openCloseModal}
-            />
+            <OnboardingModal openCloseModal={openCloseModal} />
+            <OnboardingStepper openCloseModal={openCloseModal} />
           </div>
         )}
         <div className='block'>

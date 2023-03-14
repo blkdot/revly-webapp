@@ -64,7 +64,7 @@ const PlanningOffersTable = ({ rows, type }) => {
     >
       <span style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]}
-         {/* TO-DO: delete .split('_')[0], changes from backend pending */}
+        {/* TO-DO: delete .split('_')[0], changes from backend pending */}
       </span>
     </TableCellKit>
   );
