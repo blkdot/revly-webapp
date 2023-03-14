@@ -144,12 +144,14 @@ export const Popup: FC<{
   const filteredOptions = useMemo(() => {
     const out = [];
     options.forEach((a) => {
-      if (a.label.includes(search)) {
+      if (a.label.toLowerCase().includes(search.toLowerCase())) {
         out.push(a);
         return;
       }
 
-      const children = a.children.filter((b) => b.label.includes(search));
+      const children = a.children.filter((b) =>
+        b.label.toLowerCase().includes(search.toLowerCase())
+      );
       if (children.length > 0) {
         out.push({ ...a, children });
       }

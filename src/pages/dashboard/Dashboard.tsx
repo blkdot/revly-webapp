@@ -1,6 +1,5 @@
 import { useMetrics } from 'api';
 import Dates from 'components/dates/Dates';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
@@ -17,12 +16,39 @@ import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
+import { TVendors } from 'types';
+import { VendorsDropdown } from 'v/VendorsDropdown';
 import './Dashboard.scss';
+
+const convert = (vendors: TVendors) => {
+  const out = [];
+
+  Object.keys(vendors.display).forEach((a) => {
+    const value = vendors.display[a];
+    out.push({
+      value: a,
+      title: a,
+      subTitle: `${Object.keys(value).length} Branches`,
+      label: a,
+      children: Object.keys(value).map((b) => ({
+        value: `${b.trim()}/${b.trim()}`,
+        title: b,
+        subTitle: b,
+        label: b,
+        disabled: !value[b].active,
+      })),
+    });
+  });
+
+  return out;
+};
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj, display, chainData } = vendors;
   const [table, setTable] = useState('revenue');
+
+  console.log(vendors);
 
   const { date: dateContext } = useDate();
   const { beforePeriod, afterPeriod } = dateContext;
@@ -108,11 +134,12 @@ const Dashboard = () => {
     setConnectAccount,
   };
   const { userPlatformData } = usePlatform();
+
   const getDropdown = () => {
     if (!userPlatformData.onboarded) {
       return <RestaurantDropdownEmpty />;
     }
-    return <RestaurantDropdown />;
+    return <VendorsDropdown values={[]} options={convert(vendors)} onChange={console.log} />;
   };
   const { date } = useDate();
   const { typeDate } = date;
