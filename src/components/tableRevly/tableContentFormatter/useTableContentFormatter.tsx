@@ -38,8 +38,7 @@ const useTableContentFormatter = () => {
     >
       <span className='table-text' style={{ textAlign: 'justify' }} key={h.id}>
         {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US').split('_')[0]}
-        {/* @Chiekh: introduced .split('_')[0] because we are using 'vendor_name' as a unique key.
-        to handle duplicates, now, we process keys: 'vendor_name'_'vendor_id' and then render only vendor_name */}
+        {/* TO-DO: delete .split('_'), changes from backend pending */}
       </span>
     </TableCellKit>
   );

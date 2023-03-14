@@ -82,9 +82,8 @@ const RestaurantCheckboxAccordion: FC<{
           tabIndex={-1}
           role='presentation'
           style={{ '--length': Object.keys(info).length } as React.CSSProperties}
-          className={`checkbox-accordion ${
-            Object.values(info).every((objV) => objV.deleted) && 'disabled'
-          } ${active && 'active'}`}
+          className={`checkbox-accordion ${Object.values(info).every((objV) => objV.deleted) && 'disabled'
+            } ${active && 'active'}`}
           onClick={() => setActive(!active)}
         >
           <div>
@@ -148,10 +147,11 @@ const RestaurantCheckboxAccordion: FC<{
                   interactive={1}
                   disableHoverListener={!getHoverStatusVendor(vendorName)}
                   id='category-tooltip'
-                  title={vendorName}
+                  title={vendorName.split('_')[0]}
                 >
                   <div role='presentation' tabIndex={-1} className='tooltip-vendor'>
-                    {vendorName}
+                    {vendorName.split('_')[0]}
+                    {/* TO-DO: delete .split('_'), changes from backend pending */}
                   </div>
                 </TooltipKit>
                 {pageType !== 'listing' ? (
@@ -213,10 +213,11 @@ const RestaurantCheckboxAccordion: FC<{
                 id='category-tooltip'
                 interactive={1}
                 disableHoverListener={!getHoverStatusVendor(vendorName)}
-                title={vendorName}
+                title={vendorName.split('_')[0]}
               >
                 <p className={`vendor-name ${info[vendorName]?.deactivated && 'disabled'}`}>
-                  {vendorName}
+                  {vendorName.split('_')[0]}
+                  {/* TO-DO: delete .split('_'), changes from backend pending */}
                 </p>
               </TooltipKit>
               <div className='restaurant-platforms'>
