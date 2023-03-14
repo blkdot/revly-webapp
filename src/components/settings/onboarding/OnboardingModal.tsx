@@ -37,39 +37,49 @@ const OnboardingModal = ({ propsVariables }: any) => {
   const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
   const [vendors] = useAtom(vendorsAtom);
+  
   const handleSubmitLogin = async (currentPlatform) => {
     setIsLoading(true);
-
-    await settingsOnboardPlatform(
-      {
-        master_email: user.email,
-        access_token: user.token,
-        credentials: {
-          email,
-          password,
-        },
-      },
-      currentPlatform
-    ).then((res) => {
-      setIsLoading(false);
-      setConnectAccount('active');
-      setBranchDataUploading(
-        res.vendors.map((obj) => ({
-          branch_name: obj.vendor_name,
-          accounts: [email],
-          linked_platforms: [{ platform: connect, status: 'active' }],
-          branch_status: 'in process',
-          id: obj.vendor_id,
-        }))
-      );
-    }).catch(() => {
+    if(accounts.filter((obj) => obj.platform === currentPlatform && obj.email === email).length === 0){
+      try {
+        const res = await settingsOnboardPlatform(
+          {
+            master_email: user.email,
+            access_token: user.token,
+            credentials: {
+              email,
+              password,
+            },
+          },
+          currentPlatform
+        )
+        if (!res?.vendors) {
+          throw new Error();
+        }
+        setIsLoading(false);
+        setConnectAccount('active');
+        setBranchDataUploading(
+          res.vendors.map((obj) => ({
+            branch_name: obj.vendor_name,
+            accounts: [email],
+            linked_platforms: [{ platform: connect, status: 'active' }],
+            branch_status: 'in process',
+            id: obj.vendor_id,
+          }))
+        );
+      }
+      catch (error) {
+        setIsLoading(false);
+        triggerAlertWithMessageError(
+          `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
+        );
+      }
+    } else {
       setIsLoading(false);
       triggerAlertWithMessageError(
-        `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
+        `This account already connected`
       );
-    })
-
-    
+    }
   };
 
   const [openedSwitchDeleteModal, setOpenedSwitchDeleteModal] = useState(false);
@@ -253,9 +263,8 @@ const OnboardingModal = ({ propsVariables }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal && 'active'} ${
-        openedSwitchDeleteModal && 'activeDelete'
-      }`}
+      className={`onboarding-modal_overlay ${openedModal && 'active'} ${openedSwitchDeleteModal && 'activeDelete'
+        }`}
       onClick={openCloseModal}
     >
       <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>
