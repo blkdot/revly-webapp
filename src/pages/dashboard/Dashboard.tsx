@@ -6,7 +6,7 @@ import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { VendorsDropdown } from 'components/vendorsDropdown/VendorsDropdown';
+import { VendorsDropdown } from 'components/vendorsDropdown/component/VendorsDropdown';
 import Widget from 'components/widget/Widget';
 import { usePlatform } from 'contexts';
 import { format, getYear } from 'date-fns';
