@@ -26,6 +26,7 @@ const ManageBranch: FC<{
     loading: any;
     setConnectAccount: any;
     deleteAccount: any;
+    setBranchDataFiltered: any;
   };
 }> = ({ propsVariables, unremovable }) => {
   const {
@@ -40,6 +41,7 @@ const ManageBranch: FC<{
     setLoading,
     setConnectAccount,
     deleteAccount,
+    setBranchDataFiltered,
   } = propsVariables;
   const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
   const user = useUser();
@@ -85,12 +87,12 @@ const ManageBranch: FC<{
 
     openCloseModal();
     setBranchData([...branchData]);
+    setBranchDataFiltered([...branchData])
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
 
   const changeStatusBranch = async () => {
-    setLoading(true);
     const clonedBranchData = [...branchData];
     await saveUser({
       access_token: user.token,
@@ -107,10 +109,10 @@ const ManageBranch: FC<{
         'suspended';
     } else {
       clonedBranchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
-        'active';
+        'in process';
     }
-    setLoading(false);
     setBranchData([...clonedBranchData]);
+    setBranchDataFiltered([...clonedBranchData])
     openCloseModal();
   };
   return (
@@ -186,7 +188,7 @@ const ManageBranch: FC<{
         </div>
       </div>
       <div className='manage-branch-buttons'>
-        {clickedBranch.branch_status === 'active' ? (
+        {clickedBranch.branch_status === 'active' || clickedBranch.branch_status === 'in process' ? (
           <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained'>
             <img src={PauseIcon} alt='pause' /> Suspend activity from this branch
           </ButtonKit>
