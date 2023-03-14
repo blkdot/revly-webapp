@@ -3,21 +3,22 @@ import { FC, useCallback, useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { TDisplayVendor } from 'types';
 import { VendorsDropdown } from '../component/VendorsDropdown';
+import { ReactComponent as DeliverooIcon } from './icons/deliveroo.svg';
+
+type Value = number | string;
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
 const cleanDisplay = (vendors: TDisplayVendor) => {
   const newVendors = copy(vendors);
-  Object.keys(newVendors).forEach((a) => {
-    Object.keys(newVendors[a]).forEach((b) => {
-      newVendors[a][b].checked = false;
+  Object.keys(newVendors).forEach((chain) => {
+    Object.keys(newVendors[chain]).forEach((vendor) => {
+      newVendors[chain][vendor].checked = false;
     });
   });
 
   return newVendors;
 };
-
-type Value = number | string;
 
 const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
 
@@ -26,13 +27,13 @@ const fromValue = (v: string) => {
   return { chain, vendor };
 };
 
-const convertToValues = (vendors: TDisplayVendor): string[] => {
+const toValues = (vendors: TDisplayVendor): string[] => {
   const values = [];
 
-  Object.keys(vendors).forEach((a) => {
-    Object.keys(vendors[a]).forEach((b) => {
-      if (vendors[a][b].checked) {
-        values.push(valueFor(a, b));
+  Object.keys(vendors).forEach((chain) => {
+    Object.keys(vendors[chain]).forEach((vendor) => {
+      if (vendors[chain][vendor].checked) {
+        values.push(valueFor(chain, vendor));
       }
     });
   });
@@ -40,28 +41,30 @@ const convertToValues = (vendors: TDisplayVendor): string[] => {
   return values;
 };
 
-const convertToOptions = (vendors: TDisplayVendor) => {
-  const options = [];
+const toChildrenNode = (chain: string, vendor: string, v: any) => ({
+  value: valueFor(chain, vendor),
+  title: vendor,
+  subTitle: vendor,
+  label: vendor,
+  disabled: !v.active,
+  extra: (
+    <div style={{ display: 'inline-flex', gap: 8 }}>
+      {v.platforms.talabat && <DeliverooIcon />}
+      {v.platforms.deliveroo && <DeliverooIcon />}
+    </div>
+  ),
+});
 
-  Object.keys(vendors).forEach((a) => {
-    const value = vendors[a];
-    options.push({
-      value: a,
-      title: a,
-      subTitle: `${Object.keys(value).length} Branches`,
-      label: a,
-      children: Object.keys(value).map((b) => ({
-        value: valueFor(a, b),
-        title: b,
-        subTitle: b,
-        label: b,
-        disabled: !value[b].active,
-      })),
-    });
-  });
+const toParentNode = (chain: string, value: any) => ({
+  value: chain,
+  title: chain,
+  subTitle: `${Object.keys(value).length} Branches`,
+  label: chain,
+  children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
+});
 
-  return options;
-};
+const toOptions = (vendors: TDisplayVendor) =>
+  Object.keys(vendors).map((chain) => toParentNode(chain, vendors[chain]));
 
 export const VendorsDropdownAdapter: FC = () => {
   const [vendors, setVendors] = useAtom(vendorsAtom);
@@ -90,8 +93,8 @@ export const VendorsDropdownAdapter: FC = () => {
     [vendors, setVendors]
   );
 
-  const values = useMemo(() => convertToValues(vendors.display), [vendors.display]);
-  const options = useMemo(() => convertToOptions(vendors.display), [vendors.display]);
+  const values = useMemo(() => toValues(vendors.display), [vendors.display]);
+  const options = useMemo(() => toOptions(vendors.display), [vendors.display]);
 
   return <VendorsDropdown values={values} options={options} onChange={onChange} />;
 };

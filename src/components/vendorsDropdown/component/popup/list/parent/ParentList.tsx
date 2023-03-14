@@ -1,7 +1,7 @@
 /* eslint-disable react/require-default-props */
 import { Button, Checkbox, Empty, List, Space } from 'antd';
 import { FC, ReactNode } from 'react';
-import { ReactComponent as ArrowRight } from './arrow-right.svg';
+import { ReactComponent as ArrowRightIcon } from './arrow-right.svg';
 import './ParentList.scss';
 
 const Title: FC<{ value: ReactNode }> = ({ value }) => (
@@ -29,24 +29,14 @@ const ParentListItem: FC<{
   onSelectOnly: (value: Value) => void;
   setSelected: (v: Value) => void;
 }> = ({ item, onSelect, onSelectOnly, setSelected }) => (
-  <List.Item
-    extra={
-      <Button
-        type='text'
-        onClick={() => setSelected(item.value)}
-        disabled={item.disabled}
-        className='expand-button'
-      >
-        <ArrowRight />
-      </Button>
-    }
-  >
+  <List.Item>
     <div
       style={{
         display: 'flex',
         justifyContent: 'space-between',
         width: '100%',
         alignItems: 'center',
+        marginRight: 30,
       }}
     >
       <Checkbox
@@ -60,9 +50,19 @@ const ParentListItem: FC<{
           <SubTitle value={item.subTitle} />
         </Space>
       </Checkbox>
-      <Button type='text' onClick={() => onSelectOnly(item.value)} disabled={item.disabled}>
-        Select Only
-      </Button>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Button type='text' onClick={() => onSelectOnly(item.value)} disabled={item.disabled}>
+          Select Only
+        </Button>
+        <Button
+          type='text'
+          onClick={() => setSelected(item.value)}
+          disabled={item.disabled}
+          className='expand-button'
+        >
+          <ArrowRightIcon />
+        </Button>
+      </div>
     </div>
   </List.Item>
 );

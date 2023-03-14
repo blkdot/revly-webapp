@@ -19,6 +19,7 @@ type Option = {
     subTitle: ReactNode;
     label: string;
     disabled?: boolean;
+    extra?: ReactNode;
   }[];
 };
 
@@ -195,6 +196,7 @@ export const Popup: FC<{
           subTitle: v.subTitle,
           disabled: v.disabled,
           checked: valuesSet.has(v.value),
+          extra: v.extra,
         });
       });
 

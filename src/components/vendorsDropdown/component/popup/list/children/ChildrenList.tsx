@@ -9,6 +9,7 @@ type Item = {
   subTitle: ReactNode;
   disabled?: boolean;
   checked: boolean;
+  extra?: ReactNode;
 };
 
 const Title: FC<{ value: ReactNode }> = ({ value }) => (
@@ -31,6 +32,7 @@ const ChildrenListItem: FC<{
         justifyContent: 'space-between',
         width: '100%',
         alignItems: 'center',
+        marginRight: 30,
       }}
     >
       <Checkbox
@@ -46,6 +48,7 @@ const ChildrenListItem: FC<{
       <Button type='text' onClick={() => onSelectOnly(item.value)} disabled={item.disabled}>
         Select Only
       </Button>
+      {item.extra}
     </div>
   </List.Item>
 );
