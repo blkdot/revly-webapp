@@ -111,7 +111,7 @@ const TableRevlyNew: FC<{
     }
     return '';
   };
-
+  
   const renderNoData = () => {
     if (!rows || (rows.length < 1 && !isLoading)) {
       if (noEmptyMessage) {

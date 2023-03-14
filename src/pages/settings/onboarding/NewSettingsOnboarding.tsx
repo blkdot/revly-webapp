@@ -47,7 +47,7 @@ const NewSettingsOnboarding = () => {
         arr.push({ name: vName, data: vendors.display[cName][vName], chainName: cName });
       });
     });
-
+    
     const vendorsAccounts = (obj: any) =>
       Object.keys(obj.data.platforms).map((plat) => obj.data.platforms[plat].email);
 
@@ -86,7 +86,7 @@ const NewSettingsOnboarding = () => {
       chain_name: obj.chainName,
     }));
   };
-
+  
   useEffect(() => {
     setAccounts(getAccounts());
   }, [JSON.stringify(userPlatformData.platforms)]);
@@ -137,7 +137,7 @@ const NewSettingsOnboarding = () => {
     loading,
     setBranchDataFiltered,
   };
-
+  
   return (
     <div>
       <OnboardingModal propsVariables={propsVariables} />

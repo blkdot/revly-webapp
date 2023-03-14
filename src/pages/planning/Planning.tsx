@@ -1,5 +1,5 @@
 import { usePlanningAds, usePlanningOffers } from 'api';
-import { Switch, Tag } from 'assets/icons';
+import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -290,22 +290,6 @@ const Planning = () => {
         onChange={handleChangeFilter('status')}
         label='Statuses'
         icon={<Switch />}
-        maxShowned={1}
-      />
-      <FilterDropdown
-        items={filtersHead.type_offer}
-        values={filters.type_offer}
-        onChange={handleChangeFilter('type_offer')}
-        label='Discount type'
-        icon={<Tag />}
-        maxShowned={1}
-      />
-      <FilterDropdown
-        items={filtersHead.discount_rate}
-        values={filters.discount_rate}
-        onChange={handleChangeFilter('discount_rate')}
-        label='Discount rate'
-        icon={<Tag />}
         maxShowned={1}
       />
     </div>
