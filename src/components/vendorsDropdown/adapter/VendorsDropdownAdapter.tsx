@@ -1,4 +1,5 @@
 import { useAtom } from 'jotai';
+import pluralize from 'pluralize';
 import { FC, useCallback, useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { TDisplayVendor } from 'types';
@@ -58,7 +59,7 @@ const toChildrenNode = (chain: string, vendor: string, v: any) => ({
 const toParentNode = (chain: string, value: any) => ({
   value: chain,
   title: chain,
-  subTitle: `${Object.keys(value).length} Branches`,
+  subTitle: pluralize('Branches', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
 });
