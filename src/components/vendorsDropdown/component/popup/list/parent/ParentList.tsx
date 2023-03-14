@@ -2,6 +2,7 @@
 import { Button, Checkbox, Empty, List, Space } from 'antd';
 import { FC, ReactNode } from 'react';
 import { ReactComponent as ArrowRight } from './arrow-right.svg';
+import './ParentList.scss';
 
 const Title: FC<{ value: ReactNode }> = ({ value }) => (
   <span className='vendors-select-title'>{value}</span>
@@ -30,7 +31,12 @@ const ParentListItem: FC<{
 }> = ({ item, onSelect, onSelectOnly, setSelected }) => (
   <List.Item
     extra={
-      <Button type='text' onClick={() => setSelected(item.value)} disabled={item.disabled}>
+      <Button
+        type='text'
+        onClick={() => setSelected(item.value)}
+        disabled={item.disabled}
+        className='expand-button'
+      >
         <ArrowRight />
       </Button>
     }
