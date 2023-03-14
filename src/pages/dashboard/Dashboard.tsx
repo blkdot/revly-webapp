@@ -6,6 +6,7 @@ import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { VendorsDropdown } from 'components/vendorsDropdown/VendorsDropdown';
 import Widget from 'components/widget/Widget';
 import { usePlatform } from 'contexts';
 import { format, getYear } from 'date-fns';
@@ -17,7 +18,6 @@ import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { TVendors } from 'types';
-import { VendorsDropdown } from 'v/VendorsDropdown';
 import './Dashboard.scss';
 
 const convert = (vendors: TVendors) => {
