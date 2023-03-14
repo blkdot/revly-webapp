@@ -6,7 +6,7 @@ import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { VendorsDropdown } from 'components/vendorsDropdown/component/VendorsDropdown';
+import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import Widget from 'components/widget/Widget';
 import { usePlatform } from 'contexts';
 import { format, getYear } from 'date-fns';
@@ -17,38 +17,12 @@ import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { TVendors } from 'types';
 import './Dashboard.scss';
-
-const convert = (vendors: TVendors) => {
-  const out = [];
-
-  Object.keys(vendors.display).forEach((a) => {
-    const value = vendors.display[a];
-    out.push({
-      value: a,
-      title: a,
-      subTitle: `${Object.keys(value).length} Branches`,
-      label: a,
-      children: Object.keys(value).map((b) => ({
-        value: `${b.trim()}/${b.trim()}`,
-        title: b,
-        subTitle: b,
-        label: b,
-        disabled: !value[b].active,
-      })),
-    });
-  });
-
-  return out;
-};
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj, display, chainData } = vendors;
   const [table, setTable] = useState('revenue');
-
-  console.log(vendors);
 
   const { date: dateContext } = useDate();
   const { beforePeriod, afterPeriod } = dateContext;
@@ -139,7 +113,7 @@ const Dashboard = () => {
     if (!userPlatformData.onboarded) {
       return <RestaurantDropdownEmpty />;
     }
-    return <VendorsDropdown values={[]} options={convert(vendors)} onChange={console.log} />;
+    return <VendorsDropdownAdapter />;
   };
   const { date } = useDate();
   const { typeDate } = date;
