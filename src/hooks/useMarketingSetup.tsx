@@ -144,10 +144,13 @@ const useMarketingSetup = () => {
                 }
 
                 if (Object.keys(displayTemp[chainName][vendorName].platforms).length === 2) {
-                  displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active =
-                    false;
+                  displayTemp[chainName][vendorName].platforms.deliveroo.metadata.is_active = false;
+
+                  return;
                 }
 
+                displayTemp[chainName][vendorName].deactivated = true;
+                displayTemp[chainName][vendorName].checked = false;
                 return;
               }
             }
@@ -157,10 +160,14 @@ const useMarketingSetup = () => {
               displayTemp[chainName][vendorName].checked = false;
             }
 
-            if (!displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active) {
+            if (
+              !displayTemp[chainName][vendorName].platforms[platform[0]]?.metadata.is_active &&
+              platform.length === 1
+            ) {
               displayTemp[chainName][vendorName].deleted = true;
               displayTemp[chainName][vendorName].checked = false;
             }
+
             if (!platform.includes(platformV)) {
               displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
             }
@@ -175,7 +182,11 @@ const useMarketingSetup = () => {
             });
           }
 
-          if (!displayTemp[chainName][vendorName].deleted && !defaultSelection && !displayTemp[chainName][vendorName].deactivated) {
+          if (
+            !displayTemp[chainName][vendorName].deleted &&
+            !defaultSelection &&
+            !displayTemp[chainName][vendorName].deactivated
+          ) {
             defaultSelection = {
               chainName,
               vendorName,

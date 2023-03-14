@@ -274,13 +274,13 @@
   &.activeDelete {
     z-index: 101;
   }
-.onboarding-connect-content{
-  display: flex;
-  align-items: center;
-  &.loading{
-    opacity: 0;
+  .onboarding-connect-content {
+    display: flex;
+    align-items: center;
+    &.loading {
+      opacity: 0;
+    }
   }
-}
   .main-modal > div {
     position: fixed;
     right: 0;

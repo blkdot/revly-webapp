@@ -691,7 +691,6 @@
         ~ div {
           text-transform: capitalize;
         }
-
       }
 
       &.deliveroo {
@@ -702,7 +701,8 @@
         }
       }
 
-      img,svg {
+      img,
+      svg {
         width: 23px;
         height: 23px;
         object-fit: contain;

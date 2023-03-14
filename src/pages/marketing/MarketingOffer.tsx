@@ -54,7 +54,7 @@ const MarketingOffer = () => {
 
   const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
 
-  const filtersParamsObject = JSON.parse((filtersSaved || '{}'));
+  const filtersParamsObject = JSON.parse(filtersSaved || '{}');
 
   const [filters, setFilters] = useState({ ...defaultFilterStateFormat, ...filtersParamsObject });
 
@@ -254,7 +254,14 @@ const MarketingOffer = () => {
           goal,
         };
       },
-      { type_offer: [], platform: [], discount_rate: [], status: [], goal: [], ...filtersParamsObject }
+      {
+        type_offer: [],
+        platform: [],
+        discount_rate: [],
+        status: [],
+        goal: [],
+        ...filtersParamsObject,
+      }
     );
 
     const clonedFilters = { ...filtersParamsObject, ...filters };
@@ -472,7 +479,9 @@ const MarketingOffer = () => {
               </div>
             </div>
           </div>
-          <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>Create new offer</ButtonAction>
+          <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>
+            Create new offer
+          </ButtonAction>
         </div>
         {openedOffer ? (
           <OfferDetailComponent

@@ -29,7 +29,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
     setBranchData,
     setLoading,
     loading,
-    setBranchDataFiltered
+    setBranchDataFiltered,
   } = propsVariables;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,26 +50,26 @@ const OnboardingModal = ({ propsVariables }: any) => {
         },
       },
       currentPlatform
-    ).then((res) => {
-      setIsLoading(false);
-      setConnectAccount('active');
-      setBranchDataUploading(
-        res.vendors.map((obj) => ({
-          branch_name: obj.vendor_name,
-          accounts: [email],
-          linked_platforms: [{ platform: connect, status: 'active' }],
-          branch_status: 'in process',
-          id: obj.vendor_id,
-        }))
-      );
-    }).catch(() => {
-      setIsLoading(false);
-      triggerAlertWithMessageError(
-        `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
-      );
-    })
-
-    
+    )
+      .then((res) => {
+        setIsLoading(false);
+        setConnectAccount('active');
+        setBranchDataUploading(
+          res.vendors.map((obj) => ({
+            branch_name: obj.vendor_name,
+            accounts: [email],
+            linked_platforms: [{ platform: connect, status: 'active' }],
+            branch_status: 'in process',
+            id: obj.vendor_id,
+          }))
+        );
+      })
+      .catch(() => {
+        setIsLoading(false);
+        triggerAlertWithMessageError(
+          `We couldn’t connect to your ${currentPlatform} account. Please double check your credentials or contact customer support`
+        );
+      });
   };
 
   const [openedSwitchDeleteModal, setOpenedSwitchDeleteModal] = useState(false);
@@ -108,7 +108,7 @@ const OnboardingModal = ({ propsVariables }: any) => {
           1
         );
       });
-    setBranchData(branchData.filter((obj) => obj.accounts.length > 0))
+    setBranchData(branchData.filter((obj) => obj.accounts.length > 0));
     setBranchDataFiltered(branchData.filter((obj) => obj.accounts.length > 0));
     setAccounts([...accounts]);
     setLoading(false);

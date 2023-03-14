@@ -438,7 +438,7 @@ const Planning = () => {
       userPlatformData.platforms[plat].some((obj) => obj.active)
     );
 
-    if(!filtersSaved){
+    if (!filtersSaved) {
       if (clonedFilters.platform.length < 1 && defaultPlatform) {
         clonedFilters.platform.push(defaultPlatform);
       }
@@ -515,8 +515,12 @@ const Planning = () => {
     }
 
     if (filters.vendors.length > 0) {
-      filteredData = filteredData.filter((f) => f.vendor_ids.some((vId) => filters.vendors.includes(vId)));
-      filteredDataAds = filteredDataAds.filter((f) => f.vendor_ids.some((vId) => filters.vendors.includes(vId)));
+      filteredData = filteredData.filter((f) =>
+        f.vendor_ids.some((vId) => filters.vendors.includes(vId))
+      );
+      filteredDataAds = filteredDataAds.filter((f) =>
+        f.vendor_ids.some((vId) => filters.vendors.includes(vId))
+      );
     }
 
     setDataFiltered(
