@@ -37,6 +37,39 @@ const itemMenuObj = {
   },
 };
 
+// const itemMenuObj = {
+//   'Flash Deal': {
+//     discount: ['50%'],
+//     mov: ['0 AED', '10 AED'],
+//     type: 'flash-deals',
+//   },
+//   'Order more , save more': {
+//     discount: ['30%', '50%'],
+//     mov: ['60 AED'],
+//     type: 'groups',
+//   },
+//   'Restaurant Pick': {
+//     discount: ['20%', '25%', '30%', '35%', '40%', '45%', '50%'],
+//     mov: ['0 AED', '15 AED', '30 AED'],
+//     type: 'restaurant-picks',
+//   },
+//   'Free Items': {
+//     discount: ['100%'],
+//     mov: ['15 AED', '30 AED', '60 AED'],
+//     type: 'free-items',
+//   },
+//   'Free Delivery': {
+//     mov: ['0 AED', '30 AED', '50 AED', '75 AED', '100 AED', '125 AED'],
+//     type: 'free-delivery',
+//   },
+//  'Buy-One-Get-One': {
+//     mov: ['15 AED', '30 AED', '60 AED'],
+//     type: '"buy-one-get-one-free"',
+//  }
+// };
+
+// DON'T SHOW `DELIVEROO PLUS` IN AUDIENCE WHEN `FREE DELIVERY` IS SELECTED
+
 const targetAudienceObj = {
   'New customer': 'new_customers',
   'Deliveroo plus': 'subscribers',
