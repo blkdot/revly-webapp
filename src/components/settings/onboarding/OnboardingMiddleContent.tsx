@@ -1,4 +1,4 @@
-import { PageHeader } from 'components/pageHeader/PageHeader';
+import { PageHeader } from 'components';
 import { useAtom } from 'jotai';
 import { ButtonKit } from 'kits';
 import { FC, useEffect, useState } from 'react';
