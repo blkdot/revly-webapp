@@ -4,7 +4,10 @@ import { FC, useCallback, useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { TDisplayVendor } from 'types';
 import { VendorsDropdown } from '../component/VendorsDropdown';
+import { ReactComponent as CareemIcon } from './icons/careem.svg';
 import { ReactComponent as DeliverooIcon } from './icons/deliveroo.svg';
+import { ReactComponent as NoonIcon } from './icons/noon.svg';
+import { ReactComponent as TalabatIcon } from './icons/talabat.svg';
 
 type Value = number | string;
 
@@ -50,8 +53,10 @@ const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   disabled: !v.active,
   extra: (
     <div style={{ display: 'inline-flex', gap: 8 }}>
-      {v.platforms.talabat && <DeliverooIcon />}
-      {v.platforms.deliveroo && <DeliverooIcon />}
+      {v.platforms.noon && <NoonIcon height={24} width={24} />}
+      {v.platforms.careem && <CareemIcon height={24} width={24} />}
+      {v.platforms.talabat && <TalabatIcon height={24} width={24} />}
+      {v.platforms.deliveroo && <DeliverooIcon height={24} width={24} />}
     </div>
   ),
 });
