@@ -86,7 +86,7 @@ export const ProtectedOnboardRoutes = () => {
   useEffect(() => {
     if (response?.data) {
       setUserPlatformData({
-        onboarded: response?.data.onboarded,
+        onboarded: false,
         platforms: { ...userPlatformData.platforms, ...response?.data.platforms },
       });
     }

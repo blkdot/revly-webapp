@@ -2,17 +2,18 @@ import { useState, FC, useEffect } from 'react';
 import { ButtonKit } from 'kits';
 import { useAtom } from 'jotai';
 import { vendorsAtom } from 'store/vendorsAtom';
+import { onboardingAccountsAtom, onboardingBranchDataAtom, onboardingBranchDataFilteredAtom, onboardingConnectAccountAtom } from 'store/onboardingAtom';
 import OnboardingDropdown from './OnboardingDropdown';
 import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
 
 const OnboardingMiddleContent: FC<{
   openCloseModal: () => void;
-  accounts: any;
-  setConnectAccount: any;
-  branchData: any;
-  setBranchDataFiltered: any;
-}> = ({ openCloseModal, accounts, setConnectAccount, setBranchDataFiltered, branchData }) => {
+}> = ({ openCloseModal }) => {
+  const [accounts] = useAtom(onboardingAccountsAtom);
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const [branchData] = useAtom(onboardingBranchDataAtom);
   const [vendors] = useAtom(vendorsAtom);
   const filteredChains = () => {
     const arr = [];

@@ -1,14 +1,18 @@
 import { FC } from 'react';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { useAtom } from 'jotai';
+import { onboardingBranchDataAtom, onboardingBranchDataFilteredAtom, onboardingClickedBranchAtom, onboardingConnectAccountAtom, onboardingLoadingAtom, TOnboardingBranchData } from 'store/onboardingAtom';
 
 const OnboardingTable: FC<{
-  branchData: any;
-  openCloseModal: any;
-  setConnectAccount: any;
-  setClickedBranch: any;
-  loading: boolean;
-}> = ({ branchData, openCloseModal, setConnectAccount, setClickedBranch, loading }) => {
+  openCloseModal: () => void;
+}> = ({ openCloseModal }) => {
+  const[branchDataAtom] = useAtom(onboardingBranchDataAtom);
+  const [branchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const branchData = branchDataFiltered.length > 0 ? branchDataFiltered : branchDataAtom;  
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [, setClickedBranch] = useAtom(onboardingClickedBranchAtom);
+  const [loading] = useAtom(onboardingLoadingAtom);
   const {
     renderAccountsRow,
     renderStatus,
@@ -78,9 +82,9 @@ const OnboardingTable: FC<{
       {}
     );
   const onClickRow = (id: any) => {
-    const { data } = branchData
+    const { data }: any = branchData
       .map(renderRowsByHeader)
-      .find((obj) => `${obj.data.id}_branch` === id);
+      .find((obj: any) => `${obj.data.id}_branch` === id);
     setConnectAccount('manageBranch');
     openCloseModal();
     setClickedBranch(data);

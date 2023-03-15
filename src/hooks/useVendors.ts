@@ -27,7 +27,7 @@ const useVendors = (isSign = false) => {
     master_email: user.email,
     access_token: user.token,
   };
-
+  
   const { data, isLoading, isError } = useQuery(
     ['getVendors', requestVendorsDefaultParam],
     () => {
@@ -83,17 +83,6 @@ const useVendors = (isSign = false) => {
     const { display, ...rest } = newData;
 
     const chainData = [];
-
-    Object.keys(rest).forEach((platform) => {
-      // Do not delete, the code commented out is the real one, the one under it is just a fast fix.
-      // if (!userPlatformData.platforms[platform]?.some((obj) => obj.active)) {
-      //   delete rest[platform];
-      // }
-
-      if (userPlatformData.platforms[platform].length === 0) {
-        delete rest[platform];
-      }
-    });
 
     Object.keys(display).forEach((chainName) => {
       Object.keys(display[chainName]).forEach((vendorName) => {

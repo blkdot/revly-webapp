@@ -15,11 +15,11 @@ import CloseIcon from '../../../../assets/images/ic_close.svg';
 import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ConnectAccount: FC<{
-  openCloseModal: any;
-  deleteAccount: any;
-  changeStatusAccount: any;
-  openSwitchDeleteModal: any;
-  openedSwitchDeleteModal: any;
+  openCloseModal: () => void;
+  deleteAccount: (platform: string, email: string) => void;
+  changeStatusAccount: (v: any) => void;
+  openSwitchDeleteModal: (event: any) => void;
+  openedSwitchDeleteModal: boolean;
 }> = ({
   openCloseModal,
   deleteAccount,
@@ -118,7 +118,7 @@ const ConnectAccount: FC<{
         ''
       )}
       <div className='onboarding-accounts_wrapper'>
-        {accounts.map((obj: any, index: number) => (
+        {accounts.map((obj: any) => (
           <div
             key={`${obj.platform}-${obj.email}`}
             className={`onboarding-account ${obj.active && 'connected'}`}

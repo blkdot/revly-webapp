@@ -1,15 +1,15 @@
 import { BaseIcon } from 'assets/icons';
 import { ButtonKit } from 'kits';
 import LodaingButtonKit from 'kits/loadingButton/LoadingButtonKit';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 const SwitchDeleteModal: FC<{
-  openSwitchDeleteModal: any;
-  openedSwitchDeleteModal: any;
+  openSwitchDeleteModal: (event: any) => void;
+  openedSwitchDeleteModal: boolean;
   onClick: any;
   title: string;
   button: string;
-  loading: any;
+  loading: boolean;
 }> = ({ openSwitchDeleteModal, openedSwitchDeleteModal, onClick, title, button, loading }) => (
   <div
     className={`onboarding-delete-modal-overlay ${openedSwitchDeleteModal && 'active'}`}

@@ -47,8 +47,6 @@ const App = () => {
         if (pathname === '/') {
           navigate('/dashboard');
         }
-      } else {
-        navigate('/');
       }
     });
   }, []);

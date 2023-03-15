@@ -7,12 +7,12 @@ import { ButtonKit, ButtonLoadingKit, TextfieldKit } from 'kits';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const ConnectPlatform: FC<{
-  openCloseModal: any;
-  setEmail: any;
-  setPassword: any;
+  openCloseModal: () => void;
+  setEmail: (v: string) => void;
+  setPassword: (v: string) => void;
   email: string;
   password: string;
-  handleSubmitLogin: any;
+  handleSubmitLogin: (platform: string) => void;
   isLoading: boolean;
 }> = ({ openCloseModal, setEmail, setPassword, email, password, handleSubmitLogin, isLoading }) => {
   const [connect, setConnect] = useAtom(onboardingConnectAtom);
@@ -75,9 +75,8 @@ const ConnectPlatform: FC<{
           style={{ '--color': platformObj.color }}
           disabled={!(email && password)}
           loading={isLoading}
-          className={`connect-account-btn ${!platformObj?.color && 'onboarding-platform-border '} ${
-            platformObj.name
-          }`}
+          className={`connect-account-btn ${!platformObj?.color && 'onboarding-platform-border '} ${platformObj.name
+            }`}
         >
           <img src={platformObj.srcNoBg} alt={platform} />
           <p className={`onboarding-connect-content ${isLoading && 'loading'}`}>
