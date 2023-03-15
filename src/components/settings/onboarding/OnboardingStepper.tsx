@@ -3,7 +3,7 @@ import { usePlatform } from 'contexts';
 import { platformList } from 'data/platformList';
 import { useAtom } from 'jotai';
 import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kits';
-import { FC, useEffect, useState, CSSProperties } from 'react';
+import { CSSProperties, FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { onboardingAccountsAtom, onboardingActiveStepAtom } from 'store/onboardingAtom';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.svg';

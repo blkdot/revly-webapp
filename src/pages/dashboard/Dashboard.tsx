@@ -1,4 +1,5 @@
 import { useMetrics } from 'api';
+import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
@@ -14,16 +15,20 @@ import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useDate } from 'hooks';
 import { useAtom } from 'jotai';
-import { ContainerKit, TypographyKit } from 'kits';
+import { ContainerKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
-import { onboardingActiveStepAtom, onboardingConnectAccountAtom, onboardingOpenedModalAtom } from 'store/onboardingAtom';
+import {
+  onboardingActiveStepAtom,
+  onboardingConnectAccountAtom,
+  onboardingOpenedModalAtom,
+} from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Dashboard.scss';
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { vendorsObj, display } = vendors;
-  
+
   const [table, setTable] = useState('revenue');
 
   const { date: dateContext } = useDate();
@@ -74,7 +79,7 @@ const Dashboard = () => {
 
   const [openedModal, setOpenedModal] = useAtom(onboardingOpenedModalAtom);
   const [connectAccount, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
-  const [activeStep] = useAtom(onboardingActiveStepAtom)
+  const [activeStep] = useAtom(onboardingActiveStepAtom);
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
     if (connectAccount === 'manageBranch' || connectAccount === 'completed') {
@@ -246,6 +251,12 @@ const Dashboard = () => {
     }
     return selectedVendors('name', display).join(', ');
   };
+
+  const title = `${
+    getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
+    getPeriod(date.titleDate, date.beforePeriod).slice(1)
+  } results for ${isDisplay()}`;
+
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
@@ -260,14 +271,10 @@ const Dashboard = () => {
           </div>
         )}
         <div className='block'>
-          <TypographyKit className='dashboard-title'>
-            {getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
-              getPeriod(date.titleDate, date.beforePeriod).slice(1)}{' '}
-            results for {isDisplay()}
-          </TypographyKit>
-          <TypographyKit className='dashboard-subtitle'>
-            360° view of your restaurant revenue and profits
-          </TypographyKit>
+          <PageHeader
+            title={title}
+            description='360° view of your restaurant revenue and profits'
+          />
           <div className='dashboard-wrapper'>
             {links.map((obj: { title: string; link: string; tooltip?: string }) => (
               <Widget
