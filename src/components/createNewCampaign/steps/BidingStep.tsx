@@ -1,11 +1,13 @@
 import { ButtonKit, InputKit, RadioKit, TooltipKit } from 'kits';
 import { FC, useEffect, useState } from 'react';
-import { Arrow } from 'assets/icons';
 import { useAtom } from 'jotai';
-import { branchAtom } from 'store/marketingSetupAtom';
-import { getBidRecommendations } from 'api';
+import { branchAtom, endingDateAtom, startingDateAtom, timesAtom } from 'store/marketingSetupAtom';
+import { getBidRecommendations, triggerAds } from 'api';
 import { useUser } from 'contexts';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import LodaingButtonKit from 'kits/loadingButton/LoadingButtonKit';
+import { format } from 'date-fns';
+import { useAlert } from 'hooks';
 import Graph from '../../../assets/images/graph.svg';
 import Chart from '../../../assets/images/chart.svg';
 import TooltipIcon from '../../../assets/images/tooltip-ic.svg';
@@ -33,7 +35,8 @@ const BidingStep: FC<{
   setStateAdverts: (v: StateType) => void;
   stateBranch: StateBranchType;
   setStateBranch: (v: StateBranchType) => void;
-}> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch }) => {
+  typeScheduleArr: any;
+}> = ({ setStep, stateAdverts, setStateAdverts, stateBranch, setStateBranch, typeScheduleArr }) => {
   const stateTemp = { ...stateAdverts };
   const stateBranchTemp = { ...stateBranch };
   const [branchVendors] = useAtom(branchAtom);
@@ -75,7 +78,38 @@ const BidingStep: FC<{
   useEffect(() => {
     getBid();
   }, []);
+  const [loading, setLoading] = useState(false);
+  const [startingDate] = useAtom(startingDateAtom);
+  const [endingDate] = useAtom(endingDateAtom);
+  const [times] = useAtom(timesAtom);
+  const { triggerAlertWithMessageError } = useAlert();
 
+  const handleSubmit = async () => {
+    setLoading(true);
+    await triggerAds('deliveroo', {
+      master_email: user.email,
+      access_token: user.token,
+      chain_id: String(branchVendors.vendorsObj.deliveroo[0].chain_id),
+      vendors: branchVendors.vendorsObj.deliveroo,
+      bid: Number(stateAdverts.content[3].value.toString().replace('AED ', '')) || 0,
+      budget: Number(stateAdverts.content[0].value.toString().replace('AED ', '')) || 0,
+      type_schedule: typeScheduleArr.find((obj) => obj.title === stateAdverts.content[2].value)
+        .type,
+      start_date: format(new Date(startingDate), 'yyyy-MM-dd'),
+      end_date: format(new Date(endingDate), 'yyyy-MM-dd'),
+      start_hour: [format(new Date(times[0].startTime), 'HH:mm')],
+      end_hour: [format(new Date(times[0].endTime), 'HH:mm')],
+      chain_drn_id: String(branchVendors.vendorsObj.deliveroo[0].metadata.org_id),
+    })
+      .then(() => {
+        setStep('congrats');
+        setLoading(false);
+      })
+      .catch((error) => {
+        triggerAlertWithMessageError(error.message);
+        setLoading(false);
+      });
+  };
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>
@@ -214,6 +248,8 @@ const BidingStep: FC<{
             stateBranchTemp.content.forEach((arr, index) => {
               stateBranchTemp.content[index][1].value = '';
             });
+            stateTemp.content[3].value = '';
+            setStateAdverts({ ...stateTemp });
             setStateBranch({ ...stateBranchTemp });
           }}
           className='adverts-cancel'
@@ -221,16 +257,15 @@ const BidingStep: FC<{
         >
           Back
         </ButtonKit>
-        <ButtonKit
-          onClick={() => {
-            setStep('congrats');
-          }}
+        <LodaingButtonKit
+          loading={loading}
+          onClick={handleSubmit}
           disabled={getDisabled()}
           className='adverts-continue'
           variant='contained'
         >
-          Continue <Arrow />
-        </ButtonKit>
+          Launch
+        </LodaingButtonKit>
       </div>
     </div>
   );

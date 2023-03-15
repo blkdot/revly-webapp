@@ -4,6 +4,13 @@ import { platformList } from 'data/platformList';
 import { useAtom } from 'jotai';
 import { ButtonKit, TypographyKit } from 'kits';
 import { FC } from 'react';
+import {
+  onboardingBranchDataAtom,
+  onboardingBranchDataFilteredAtom,
+  onboardingClickedBranchAtom,
+  onboardingConnectAccountAtom,
+  onboardingLoadingAtom,
+} from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import Arrow from '../../../../assets/images/arrow.svg';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
@@ -14,33 +21,25 @@ import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{
   unremovable: boolean;
-  propsVariables: {
-    openCloseModal: any;
-    clickedBranch: any;
-    setBranchData: any;
-    branchData: any;
-    openSwitchDeleteModal: any;
-    setOpenedSwitchDeleteModal: any;
-    openedSwitchDeleteModal: any;
-    setLoading: any;
-    loading: any;
-    setConnectAccount: any;
-    deleteAccount: any;
-  };
-}> = ({ propsVariables, unremovable }) => {
-  const {
-    openCloseModal,
-    clickedBranch,
-    loading,
-    setBranchData,
-    branchData,
-    openSwitchDeleteModal,
-    setOpenedSwitchDeleteModal,
-    openedSwitchDeleteModal,
-    setLoading,
-    setConnectAccount,
-    deleteAccount,
-  } = propsVariables;
+  openCloseModal: any;
+  openSwitchDeleteModal: any;
+  setOpenedSwitchDeleteModal: any;
+  openedSwitchDeleteModal: any;
+  deleteAccount: any;
+}> = ({
+  unremovable,
+  openCloseModal,
+  openSwitchDeleteModal,
+  setOpenedSwitchDeleteModal,
+  openedSwitchDeleteModal,
+  deleteAccount,
+}) => {
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [branchData, setBranchData] = useAtom(onboardingBranchDataAtom);
+  const [loading, setLoading] = useAtom(onboardingLoadingAtom);
+  const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const [clickedBranch] = useAtom(onboardingClickedBranchAtom);
+
   const getPlatform = (plat: string) => platformList.find((obj) => obj.name === plat);
   const user = useUser();
   const [vendors] = useAtom(vendorsAtom);
@@ -85,12 +84,12 @@ const ManageBranch: FC<{
 
     openCloseModal();
     setBranchData([...branchData]);
+    setBranchDataFiltered([...branchData]);
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
 
   const changeStatusBranch = async () => {
-    setLoading(true);
     const clonedBranchData = [...branchData];
     await saveUser({
       access_token: user.token,
@@ -107,10 +106,10 @@ const ManageBranch: FC<{
         'suspended';
     } else {
       clonedBranchData[branchData.findIndex((obj) => obj.id === clickedBranch.id)].branch_status =
-        'active';
+        'in process';
     }
-    setLoading(false);
     setBranchData([...clonedBranchData]);
+    setBranchDataFiltered([...clonedBranchData]);
     openCloseModal();
   };
   return (
@@ -168,10 +167,7 @@ const ManageBranch: FC<{
                   className={`render-linked-platforms-row ${obj.status}`}
                 >
                   <img
-                    src={
-                      getPlatform(obj.platform).srcFaviconWhite ||
-                      getPlatform(obj.platform).srcFavicon
-                    }
+                    src={getPlatform(obj.platform).srcWhite || getPlatform(obj.platform).src}
                     alt={obj.platform}
                   />
                 </TypographyKit>
@@ -186,7 +182,8 @@ const ManageBranch: FC<{
         </div>
       </div>
       <div className='manage-branch-buttons'>
-        {clickedBranch.branch_status === 'active' ? (
+        {clickedBranch.branch_status === 'active' ||
+        clickedBranch.branch_status === 'in process' ? (
           <ButtonKit onClick={changeStatusBranch} className='pause' variant='contained'>
             <img src={PauseIcon} alt='pause' /> Suspend activity from this branch
           </ButtonKit>

@@ -11,7 +11,7 @@ import { useUser } from 'contexts';
 import { platformList, platformObject } from 'data/platformList';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useVendors } from 'hooks';
+import { useAlert, useVendors, useQueryState } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, PaperKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
@@ -89,6 +89,28 @@ const CompetitionListing = () => {
   const [selectedCuisine, setSelectedCuisine] = useState([]);
   const [selectedArea, setSelectedArea] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState([]);
+  const [filtersSaved, setFilteredSaved] = useQueryState('branch');
+  const filtersParamsObject = useMemo(() => JSON.parse(filtersSaved || '{}'), []);
+
+  useEffect(() => {
+    setSelectedPlatform((prev) => {
+      if (filtersParamsObject.platform) {
+        return [filtersParamsObject.platform];
+      }
+
+      return prev;
+    });
+  }, []);
+
+  useEffect(() => {
+    setFilteredSaved({
+      branch: branchSelected[0],
+      platform: selectedPlatform[0],
+      cuisine: selectedCuisine[0],
+      area: selectedArea[0],
+      time: selectedTimeSlot[0],
+    } as any);
+  }, [branchSelected, selectedPlatform, selectedCuisine, selectedArea, selectedTimeSlot]);
 
   const branchActive = useMemo(
     () =>
@@ -154,6 +176,17 @@ const CompetitionListing = () => {
     if (!branchSelected[0] && selectedPlatform[0]) {
       const chainDefault = chainData.find((chain) => chain.platform === selectedPlatform[0]);
 
+      if (
+        filtersParamsObject.branch &&
+        chainData.find(
+          (chain) =>
+            chain.vendor_id === filtersParamsObject.branch && chain.platform === selectedPlatform[0]
+        )
+      ) {
+        setBranchSelected([filtersParamsObject.branch]);
+        return;
+      }
+
       if (!chainDefault) {
         setBranchSelected([]);
         return;
@@ -208,6 +241,16 @@ const CompetitionListing = () => {
       return '';
     }
 
+    if (filtersParamsObject.cuisine) {
+      const cuisineQuery = cuisines.find((cuis) => cuis === filtersParamsObject.cuisine);
+
+      if (cuisineQuery) {
+        setSelectedCuisine([cuisineQuery]);
+        return cuisineQuery;
+      }
+    }
+
+
     setSelectedCuisine([cuisines[0]]);
 
     return cuisines[0] || '';
@@ -235,6 +278,17 @@ const CompetitionListing = () => {
 
       return arr;
     });
+
+    if (filtersParamsObject.area) {
+      const areaQuery = areas.find((are) => are === filtersParamsObject.area);
+
+      if (areaQuery) {
+        setSelectedArea([areaQuery]);
+        setSelectedTimeSlot([filtersParamsObject.time]);
+        return areaQuery;
+      }
+    }
+
     return areas[0] || 'Everywhere';
   };
 
@@ -310,6 +364,18 @@ const CompetitionListing = () => {
               chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
           );
 
+          if (
+            filtersParamsObject.branch &&
+            chainData.find(
+              (chain) =>
+                chain.vendor_id === filtersParamsObject.branch &&
+                chain.platform === selectedPlatform[0]
+            )
+          ) {
+            setBranchSelected([filtersParamsObject.branch]);
+            return;
+          }
+
           if (!localBranch) {
             setBranchSelected([]);
             return;
@@ -333,6 +399,18 @@ const CompetitionListing = () => {
             (chain) =>
               chain.vendor_id === branchSelected[0] && chain.platform === selectedPlatform[0]
           );
+
+          if (
+            filtersParamsObject.branch &&
+            chainData.find(
+              (chain) =>
+                chain.vendor_id === filtersParamsObject.branch &&
+                chain.platform === selectedPlatform[0]
+            )
+          ) {
+            setBranchSelected([filtersParamsObject.branch]);
+            return;
+          }
 
           if (!localBranch) {
             setBranchSelected([]);

@@ -1,6 +1,13 @@
 import { FC, useState } from 'react';
 import { platformList, platformObject } from 'data/platformList';
 import { TypographyKit } from 'kits';
+import { useAtom } from 'jotai';
+import {
+  onboardingAccountsAtom,
+  onboardingConnectAccountAtom,
+  onboardingConnectAtom,
+  onboardingLoadingAtom,
+} from 'store/onboardingAtom';
 import TrashIcon from '../../../../assets/images/ic_trash.png';
 import SwitchKit from '../../../../kits/switch/SwitchKit';
 import ButtonKit from '../../../../kits/button/ButtonKit';
@@ -8,29 +15,23 @@ import CloseIcon from '../../../../assets/images/ic_close.svg';
 import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ConnectAccount: FC<{
-  propsVariables: {
-    openCloseModal: any;
-    accounts: any;
-    setConnect: any;
-    setConnectAccount: any;
-    deleteAccount: any;
-    changeStatusAccount: any;
-    openSwitchDeleteModal: any;
-    openedSwitchDeleteModal: any;
-    loading: any;
-  };
-}> = ({ propsVariables }) => {
-  const {
-    openCloseModal,
-    accounts,
-    setConnect,
-    setConnectAccount,
-    deleteAccount,
-    changeStatusAccount,
-    openSwitchDeleteModal,
-    openedSwitchDeleteModal,
-    loading,
-  } = propsVariables;
+  openCloseModal: any;
+  deleteAccount: any;
+  changeStatusAccount: any;
+  openSwitchDeleteModal: any;
+  openedSwitchDeleteModal: any;
+}> = ({
+  openCloseModal,
+  deleteAccount,
+  changeStatusAccount,
+  openSwitchDeleteModal,
+  openedSwitchDeleteModal,
+}) => {
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [, setConnect] = useAtom(onboardingConnectAtom);
+  const [accounts] = useAtom(onboardingAccountsAtom);
+  const [loading] = useAtom(onboardingLoadingAtom);
+
   const [selected, setSelected] = useState('');
   const [deleteObj, setDeleteObj] = useState(null);
   const [switchObj, setSwitchObj] = useState(null);
@@ -95,10 +96,12 @@ const ConnectAccount: FC<{
             disabled={obj?.disabled}
             variant='contained'
             key={obj.name}
-            className={`${!obj?.color && 'onboarding-platform-border'}`}
+            className={`connect-account-btn ${!obj?.color && 'onboarding-platform-border '} ${
+              obj.name
+            }`}
             style={{ '--color': obj?.color } as React.CSSProperties}
           >
-            <img src={obj.srcFaviconWhite || obj.srcFavicon} alt={obj.name} />
+            <img src={obj.srcNoBg} alt={obj.name} />
             Connect with {obj.name.charAt(0).toUpperCase() + obj.name.slice(1)}
           </ButtonKit>
         ))}
@@ -129,10 +132,7 @@ const ConnectAccount: FC<{
                 }}
               >
                 <img
-                  src={
-                    platformObject[obj.platform].srcFaviconWhite ||
-                    platformObject[obj.platform].srcFavicon
-                  }
+                  src={platformObject[obj.platform].srcWhite || platformObject[obj.platform].src}
                   alt={obj.platform}
                 />
               </TypographyKit>

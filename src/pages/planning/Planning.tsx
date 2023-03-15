@@ -1,5 +1,5 @@
 import { usePlanningAds, usePlanningOffers } from 'api';
-import { Switch, Tag } from 'assets/icons';
+import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -59,6 +59,8 @@ type TAds = {
 const Planning = () => {
   const [dateSaved, setDateSaved] = useQueryState('date');
   const [filtersSaved, setFiltersSaved] = useQueryState('filters');
+  const filtersParamsObject = JSON.parse(filtersSaved || '{}');
+
   const { date } = useDate();
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
@@ -88,10 +90,7 @@ const Planning = () => {
   const ads = useMemo(() => adsData?.ads || [], [adsData]);
   const offers = useMemo(() => offersData?.offers || [], [offersData]);
 
-  const [filters, setFilters] = useState({
-    ...defaultFilterStateFormat,
-    ...JSON.parse(filtersSaved || '{}'),
-  });
+  const [filters, setFilters] = useState({ ...defaultFilterStateFormat, ...filtersParamsObject });
   const { userPlatformData } = usePlatform();
   const renderPlatformInsideFilter = (s: string) => (
     <div key={s}>
@@ -283,6 +282,7 @@ const Planning = () => {
         onChange={handleChangeFilter('vendors')}
         icon={<img src={Columns} alt='Platform' />}
         label='Show all branches'
+        multi
       />
       <FilterDropdown
         items={filtersHead.status}
@@ -290,22 +290,6 @@ const Planning = () => {
         onChange={handleChangeFilter('status')}
         label='Statuses'
         icon={<Switch />}
-        maxShowned={1}
-      />
-      <FilterDropdown
-        items={filtersHead.type_offer}
-        values={filters.type_offer}
-        onChange={handleChangeFilter('type_offer')}
-        label='Discount type'
-        icon={<Tag />}
-        maxShowned={1}
-      />
-      <FilterDropdown
-        items={filtersHead.discount_rate}
-        values={filters.discount_rate}
-        onChange={handleChangeFilter('discount_rate')}
-        label='Discount rate'
-        icon={<Tag />}
         maxShowned={1}
       />
     </div>
@@ -330,6 +314,7 @@ const Planning = () => {
         onChange={handleChangeFilter('vendors')}
         icon={<img src={Columns} alt='Platform' />}
         label='Show all branches'
+        multi
       />
       <FilterDropdown
         items={filtersHead.status}
@@ -341,6 +326,13 @@ const Planning = () => {
       />
     </div>
   );
+
+  const isEmptyList = () => {
+    const source = link === 'ads_planning' ? ads : offers;
+
+    return source.length < 1;
+  };
+
   const renderTable = () => {
     if (link === 'ads_planning') {
       return (
@@ -388,12 +380,6 @@ const Planning = () => {
     setOpenedFilter(false);
   };
 
-  const isEmptyList = () => {
-    const source = link === 'ads_planning' ? ads : offers;
-
-    return source.length < 1;
-  };
-
   const renderStatusFilter = (s: string) => {
     if (!s) return null;
 
@@ -423,10 +409,10 @@ const Planning = () => {
 
         return { ...acc, platform, type_offer: discountType, discount_rate: procent, status };
       },
-      { type_offer: [], platform: [], discount_rate: [], status: [] }
+      { type_offer: [], platform: [], discount_rate: [], status: [], ...filtersParamsObject }
     );
 
-    const clonedFilters = { ...filters };
+    const clonedFilters = { ...filtersParamsObject, ...filters };
 
     clonedFilters.platform.forEach((fp, i) => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
@@ -436,8 +422,10 @@ const Planning = () => {
       userPlatformData.platforms[plat].some((obj) => obj.active)
     );
 
-    if (clonedFilters.platform.length < 1 && defaultPlatform) {
-      clonedFilters.platform.push(defaultPlatform);
+    if (!filtersSaved) {
+      if (clonedFilters.platform.length < 1 && defaultPlatform) {
+        clonedFilters.platform.push(defaultPlatform);
+      }
     }
 
     clonedFilters.type_offer.forEach((fp, i) => {
@@ -452,7 +440,10 @@ const Planning = () => {
       if (!preHead.status.includes(fp)) clonedFilters.status.splice(i, 1);
     });
 
-    setFilters(clonedFilters);
+    setFilters({
+      ...clonedFilters,
+      ...JSON.parse(filtersSaved || '{}'),
+    });
 
     const preHeadPlatform = preHead.platform.map((s: string) => ({
       value: s.toLowerCase(),
@@ -468,7 +459,9 @@ const Planning = () => {
 
     setFiltersHead({
       platform: preHeadPlatform,
-      vendors: chainData,
+      vendors: chainData.filter(
+        (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
+      ),
       type_offer: link === 'ads_planning' ? [] : preHeadTypeOffer,
       discount_rate: link === 'ads_planning' ? [] : preHeadProcent,
       status: preHeadStatus,
@@ -502,6 +495,15 @@ const Planning = () => {
       filteredData = filteredData.filter((f) => filters.status.includes(f.status.toLowerCase()));
       filteredDataAds = filteredDataAds.filter((f) =>
         filters.status.includes(f.status.toLowerCase())
+      );
+    }
+
+    if (filters.vendors.length > 0) {
+      filteredData = filteredData.filter((f) =>
+        f.vendor_ids.some((vId) => filters.vendors.includes(vId))
+      );
+      filteredDataAds = filteredDataAds.filter((f) =>
+        f.vendor_ids.some((vId) => filters.vendors.includes(vId))
       );
     }
 

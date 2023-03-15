@@ -4,7 +4,7 @@ import { usePlatform, useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { SpinnerKit } from 'kits';
 import { useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import { vendorsAtom } from 'store/vendorsAtom';
 
@@ -27,30 +27,50 @@ export const ProtectedOnboardRoutes = () => {
   );
 
   const requestEligibilityDeliveroo = () => {
-    const reqEligibilities = userPlatformData.platforms.deliveroo.map((platformData) => {
-      const vendorIds = platformData.vendor_ids;
+    try {
+      const selectedChainData = [];
+      userPlatformData.platforms.deliveroo.forEach((platformData) => {
+        const vendorIds = platformData.vendor_ids;
 
-      const firstVendorData = chainData.find(
-        (chain) =>
-          vendorIds.includes(String(chain.vendor_id)) &&
-          chain.platform.toLocaleLowerCase() === 'deliveroo'
-      );
+        vendorIds.forEach((vendorId) => {
+          const firstVendorData = chainData.find(
+            (chain) =>
+              vendorId === chain.vendor_id && chain.platform.toLocaleLowerCase() === 'deliveroo'
+          );
 
-      if (!firstVendorData) return null;
+          if (!firstVendorData) return;
 
-      return getElligibilityDeliveroo({
-        master_email: user.email,
-        access_token: user.token,
-        chain_id: String(firstVendorData?.data.chain_id),
-        vendors: [firstVendorData?.data],
+          selectedChainData.push(firstVendorData);
+        });
       });
-    });
 
-    Promise.all(reqEligibilities).then((responses) => {
-      responses.forEach((res) => {
-        setEligibilityDeliverooState((prev) => ({ ...prev, ...res?.data }));
+      const reqEligibilities = selectedChainData
+        .filter(
+          (value, index, self) =>
+            index ===
+            self.findIndex(
+              (t) =>
+                t?.data.data.chain_name === value?.data.data.chain_name ||
+                t?.data.chain_id === value?.data.chain_id
+            )
+        )
+        .map((chain) =>
+          getElligibilityDeliveroo({
+            master_email: user.email,
+            access_token: user.token,
+            chain_id: String(chain?.data.chain_id),
+            vendors: [chain?.data],
+          })
+        );
+
+      Promise.all(reqEligibilities).then((responses) => {
+        responses.forEach((res) => {
+          setEligibilityDeliverooState((prev) => ({ ...prev, ...res?.data }));
+        });
       });
-    });
+    } catch (error) {
+      setEligibilityDeliverooState((prev) => ({ ...prev }));
+    }
   };
 
   useEffect(() => {
@@ -66,17 +86,18 @@ export const ProtectedOnboardRoutes = () => {
   useEffect(() => {
     if (response?.data) {
       setUserPlatformData({
-        onboarded: true,
+        onboarded: response?.data.onboarded,
         platforms: { ...userPlatformData.platforms, ...response?.data.platforms },
       });
     }
   }, [JSON.stringify(response?.data)]);
-
+  const location = useLocation();
   if (
     !response?.isLoading &&
+    location.pathname !== '/dashboard' &&
     (response?.isError || !response?.data?.onboarded || !response?.data?.platforms)
   ) {
-    return <Navigate to='/dashboardOnboard' />;
+    return <Navigate to='/dashboard' />;
   }
 
   if (response?.isLoading) {

@@ -80,7 +80,7 @@ const getMenuItem = (
   category.forEach((obj) =>
     checked.forEach((c) => {
       if (!obj.name && obj.item_name !== c) return;
-      arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata.drn_id });
+      arr.push({ id: obj.id || obj.item_id, drn_id: obj.metadata?.drn_id });
     })
   );
   return arr;

@@ -1,4 +1,4 @@
-const create = jest.fn();
+const create = jest.fn(() => ({ interceptors: { request: { use: jest.fn() } } }));
 
 const axios = { create };
 

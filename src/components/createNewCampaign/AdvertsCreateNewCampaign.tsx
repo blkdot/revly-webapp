@@ -2,6 +2,10 @@ import AdvertsWidgetCustom from 'components/advertsWidget/AdvertsWidgetCustom';
 import { FC, useState } from 'react';
 import { SkeletonKit } from 'kits';
 import './AdvertsCreateNewCampaign.scss';
+import { countDaysOfWeekBetweenDates } from 'utlls/date/getAllDateSetup';
+import { differenceInBusinessDays, differenceInDays } from 'date-fns';
+import { useAtom } from 'jotai';
+import { endingDateAtom, startingDateAtom } from 'store/marketingSetupAtom';
 import LaunchStep from './steps/LaunchStep';
 import RecurencyStep from './steps/RecurencyStep';
 import BudgetStep from './steps/BudgetStep';
@@ -70,7 +74,46 @@ const AdvertsCreateNewCampaign: FC<{
     ],
   });
   const [typeSchedule, setTypeSchedule] = useState('Every day');
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const [startingDate] = useAtom(startingDateAtom);
+  const [endingDate] = useAtom(endingDateAtom);
+  const [customised, setCustomised] = useState([]);
+  const getCustomisedDays = (type: string, newValue: Date, customisedArr: string[]) => {
+    let count = 0;
+    customisedArr.forEach((day) => {
+      count += countDaysOfWeekBetweenDates(
+        new Date(type === 'start' ? newValue : startingDate),
+        new Date(type === 'end' ? newValue : endingDate)
+      )[days.findIndex((d) => day === d) + 1 === 7 ? 0 : days.findIndex((d) => d === day) + 1];
+    });
 
+    return count;
+  };
+
+  const typeScheduleArr = [
+    {
+      type: 'everyday',
+      title: 'Every day',
+      days: Math.abs(differenceInDays(new Date(startingDate), new Date(endingDate))),
+    },
+    {
+      type: 'workweek',
+      title: 'Work week',
+      days: Math.abs(differenceInBusinessDays(new Date(startingDate), new Date(endingDate))),
+    },
+    {
+      type: 'weekend',
+      title: 'Week-end days',
+      days:
+        countDaysOfWeekBetweenDates(new Date(startingDate), new Date(endingDate))[0] +
+        countDaysOfWeekBetweenDates(new Date(startingDate), new Date(endingDate))[6],
+    },
+    {
+      type: customised.toString().toLowerCase().replace(/,/g, '.'),
+      title: 'Customised',
+      days: getCustomisedDays('custom', new Date(), customised),
+    },
+  ];
   const stepsObject = {
     launch: (
       <LaunchStep
@@ -89,6 +132,10 @@ const AdvertsCreateNewCampaign: FC<{
         setTypeSchedule={setTypeSchedule}
         stateBranch={branchDetailsWidget}
         setStateBranch={setBranchDetailsWidget}
+        typeScheduleArr={typeScheduleArr}
+        setCustomised={setCustomised}
+        getCustomisedDays={getCustomisedDays}
+        customised={customised}
       />
     ),
     budget: (
@@ -107,6 +154,7 @@ const AdvertsCreateNewCampaign: FC<{
         setStateAdverts={setAdvertDetailsWidget}
         stateBranch={branchDetailsWidget}
         setStateBranch={setBranchDetailsWidget}
+        typeScheduleArr={typeScheduleArr}
       />
     ),
     congrats: <CongratStep setStep={setStep} setOpened={setOpened} />,

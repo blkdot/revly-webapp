@@ -6,15 +6,37 @@ import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
 import { usePlatform } from 'contexts';
 import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import {
+  onboardingAccountsAtom,
+  onboardingActiveStepAtom,
+  onboardingBranchDataAtom,
+  onboardingBranchDataFilteredAtom,
+  onboardingBranchDataUploadingAtom,
+  onboardingClickedBranchAtom,
+  onboardingConnectAccountAtom,
+  onboardingConnectAtom,
+  onboardingLoadingAtom,
+  onboardingOpenedModalAtom,
+} from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './SettingOnboarding.scss';
 
 const NewSettingsOnboarding = () => {
   const { userPlatformData } = usePlatform();
   const [, setVendors] = useAtom(vendorsAtom);
-  const { vendors } = useVendors(undefined);
-  const [loading, setLoading] = useState(true);
+  const { vendors } = useVendors();
+  const [loading, setLoading] = useAtom(onboardingLoadingAtom);
+  const [openedModal, setOpenedModal] = useAtom(onboardingOpenedModalAtom);
+  const [activeStep] = useAtom(onboardingActiveStepAtom);
+  // const [branchDataUploading, setBranchDataUploading] = useAtom(onboardingBranchDataUploadingAtom);
+  const [branchData, setBranchData] = useAtom(onboardingBranchDataAtom);
+  const [branchDataFiltered, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const [connectAccount, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  // const [connect, setConnect] = useAtom(onboardingConnectAtom);
+  const [, setClickedBranch] = useAtom(onboardingClickedBranchAtom);
+  const [accounts, setAccounts] = useAtom(onboardingAccountsAtom);
+
   const getAccounts = () => {
     const arr = [];
 
@@ -28,17 +50,6 @@ const NewSettingsOnboarding = () => {
 
     return arr;
   };
-
-  const [openedModal, setOpenedModal] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [branchDataUploading, setBranchDataUploading] = useState([]);
-  const [branchData, setBranchData] = useState([]);
-  const [branchDataFiltered, setBranchDataFiltered] = useState([]);
-  const [connectAccount, setConnectAccount] = useState('account');
-  const [connect, setConnect] = useState('');
-  const [clickedBranch, setClickedBranch] = useState({});
-  const [accounts, setAccounts] = useState([]);
-
   const getBranchData = () => {
     setLoading(true);
     const arr = [];
@@ -78,7 +89,7 @@ const NewSettingsOnboarding = () => {
     };
     setLoading(false);
     return arr.map((obj) => ({
-      branch_name: obj.name,
+      branch_name: obj.name.split('_')[0],
       accounts: vendorsAccounts(obj),
       linked_platforms: vendorPlatform(obj),
       branch_status: vendorsStatus(obj),
@@ -117,34 +128,10 @@ const NewSettingsOnboarding = () => {
     body.style.overflowY = 'visible';
   };
 
-  const propsVariables = {
-    openCloseModal,
-    setConnect,
-    connect,
-    setAccounts,
-    accounts,
-    setBranchData,
-    branchData,
-    setBranchDataUploading,
-    branchDataUploading,
-    setActiveStep,
-    activeStep,
-    openedModal,
-    clickedBranch,
-    connectAccount,
-    setConnectAccount,
-    setLoading,
-    loading,
-  };
-
   return (
     <div>
-      <OnboardingModal propsVariables={propsVariables} />
-      <OnboardingStepper
-        activeStep={activeStep}
-        accounts={accounts}
-        openCloseModal={openCloseModal}
-      />
+      <OnboardingModal openCloseModal={openCloseModal} />
+      <OnboardingStepper openCloseModal={openCloseModal} />
       <OnboardingMiddleContent
         openCloseModal={openCloseModal}
         accounts={accounts}

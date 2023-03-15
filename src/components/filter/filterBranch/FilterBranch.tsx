@@ -4,7 +4,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { ListItemText } from '@mui/material';
 import List from '@mui/material/List';
 import { useClickAwayListener, useVendors } from 'hooks';
-import { ButtonKit, RadioKit } from 'kits';
+import { ButtonKit, CheckboxKit, RadioKit } from 'kits';
 import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { TChainData } from 'types';
@@ -16,7 +16,8 @@ const FilterBranch: React.FC<{
   icon?: ReactNode;
   onChange: (k: string) => void;
   label: string;
-}> = ({ items, values, onChange, label, icon }) => {
+  multi?: boolean;
+}> = ({ items, values, onChange, label, icon, multi }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState('');
   const { vendors } = useVendors();
@@ -61,6 +62,23 @@ const FilterBranch: React.FC<{
 
   useClickAwayListener(refDropdown, () => setIsOpen(false));
 
+  const renderSelection = (value) => {
+    if (multi)
+      return (
+        <CheckboxKit
+          checked={values.includes(String(value))}
+          onChange={() => selectItem(String(value))}
+        />
+      );
+
+    return (
+      <RadioKit
+        checked={values.includes(String(value))}
+        onChange={() => selectItem(String(value))}
+      />
+    );
+  };
+
   const renderItem = (branches: TChainData[]) =>
     branches.map((item) => (
       <div
@@ -74,10 +92,7 @@ const FilterBranch: React.FC<{
         tabIndex={0}
         style={{ width: '100%' }}
       >
-        <RadioKit
-          checked={values.includes(String(item.vendor_id))}
-          onChange={() => selectItem(String(item.vendor_id))}
-        />
+        {renderSelection(String(item.vendor_id))}
         <span>{String(item.vendor_name)}</span>
       </div>
     ));

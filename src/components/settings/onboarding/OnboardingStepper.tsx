@@ -1,8 +1,11 @@
 import { styled } from '@mui/system';
 import { usePlatform } from 'contexts';
+import { platformList } from 'data/platformList';
+import { useAtom } from 'jotai';
 import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kits';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
+import { onboardingAccountsAtom, onboardingActiveStepAtom } from 'store/onboardingAtom';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.svg';
 import ClockIcon from '../../../assets/images/clock.svg';
 import CloseIcon from '../../../assets/images/ic_close.svg';
@@ -45,9 +48,9 @@ const ColorlibStepIcon = (props: any) => {
 };
 const OnboardingStepper: FC<{
   openCloseModal: any;
-  activeStep: number;
-  accounts: any;
-}> = ({ openCloseModal, activeStep, accounts }) => {
+}> = ({ openCloseModal }) => {
+  const [accounts] = useAtom(onboardingAccountsAtom);
+  const [activeStep] = useAtom(onboardingActiveStepAtom);
   const { userPlatformData } = usePlatform();
   const [active, setActive] = useState(userPlatformData.onboarded);
   useEffect(() => {
@@ -123,6 +126,23 @@ const OnboardingStepper: FC<{
               />
               <p className='__title'>{`${index + 1}. ${obj.label}`}</p>
               <div className='__subtitle'>{obj.subtitle}</div>
+              {index === 0 && (
+                <div className='stepper-platforms'>
+                  {platformList.map((objP) => (
+                    <img
+                      className='planning-platform'
+                      key={objP.name}
+                      style={
+                        {
+                          '--color': objP.color,
+                        } as CSSProperties
+                      }
+                      src={objP.srcNoBg || objP.src}
+                      alt={objP.name}
+                    />
+                  ))}
+                </div>
+              )}
               {getButton(index)}
             </StepLabelKit>
           </StepKit>

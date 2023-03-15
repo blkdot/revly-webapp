@@ -53,10 +53,10 @@ const MarketingOffer = () => {
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
   const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
-  const [filters, setFilters] = useState({
-    ...defaultFilterStateFormat,
-    ...JSON.parse((filtersSaved || '{}') as any),
-  });
+
+  const filtersParamsObject = JSON.parse(filtersSaved || '{}');
+
+  const [filters, setFilters] = useState({ ...defaultFilterStateFormat, ...filtersParamsObject });
 
   const [filtersHead, setFiltersHead] = useState(defaultFilterStateFormat);
 
@@ -113,6 +113,7 @@ const MarketingOffer = () => {
       label: 'Slot',
       tooltip: 'Daily start and end hour of your offer, and the # of hours it is running daily.',
     },
+    { id: 'platform', disablePadding: true, label: 'Platform' },
     {
       id: 'revenue',
       disablePadding: true,
@@ -254,10 +255,17 @@ const MarketingOffer = () => {
           goal,
         };
       },
-      { type_offer: [], platform: [], discount_rate: [], status: [], goal: [] }
+      {
+        type_offer: [],
+        platform: [],
+        discount_rate: [],
+        status: [],
+        goal: [],
+        ...filtersParamsObject,
+      }
     );
 
-    const clonedFilters = { ...filters };
+    const clonedFilters = { ...filtersParamsObject, ...filters };
 
     clonedFilters.platform.forEach((fp, i) => {
       if (!preHead.platform.includes(fp)) clonedFilters.platform.splice(i, 1);
@@ -472,7 +480,9 @@ const MarketingOffer = () => {
               </div>
             </div>
           </div>
-          <ButtonAction onClick={() => OpenSetup()}>Set up an offer</ButtonAction>
+          <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>
+            Create new offer
+          </ButtonAction>
         </div>
         {openedOffer ? (
           <OfferDetailComponent

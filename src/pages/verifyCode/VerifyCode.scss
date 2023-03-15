@@ -15,17 +15,18 @@
     position: absolute;
     left: 3em;
     top: 2.2em;
+    cursor: pointer;
   }
 
   .__title {
     color: $color-second-third;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 24px;
   }
 
   .__subtitle {
     color: $color-table-th;
-    font-size: 16px;
+    font-size: 14px;
     margin: 1em 0;
   }
 

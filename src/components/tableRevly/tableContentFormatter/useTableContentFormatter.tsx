@@ -37,7 +37,8 @@ const useTableContentFormatter = () => {
       style={{ marginTop: '0.5rem', minWidth: '14rem', textAlign: 'left', cursor: 'pointer' }}
     >
       <span className='table-text' style={{ textAlign: 'justify' }} key={h.id}>
-        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US')}
+        {r[h.id] === null ? '-' : r[h.id]?.toLocaleString('en-US').split('_')[0]}
+        {/* TO-DO: delete .split('_'), changes from backend pending */}
       </span>
     </TableCellKit>
   );
@@ -276,8 +277,8 @@ const useTableContentFormatter = () => {
             } as CSSProperties
           }
           src={
-            platformObject[r[h.id].toLowerCase()].srcFaviconWhite ||
-            platformObject[r[h.id].toLowerCase()].srcFavicon
+            platformObject[r[h.id].toLowerCase()].srcWhite ||
+            platformObject[r[h.id].toLowerCase()].src
           }
           alt={platformObject[r[h.id].toLowerCase()].name}
         />
@@ -442,8 +443,8 @@ const useTableContentFormatter = () => {
           >
             <img
               src={
-                getPlatform(obj.platform.toLowerCase()).srcFaviconWhite ||
-                getPlatform(obj.platform.toLowerCase()).srcFavicon
+                getPlatform(obj.platform.toLowerCase()).srcWhite ||
+                getPlatform(obj.platform.toLowerCase()).src
               }
               alt={obj.platform.toLowerCase()}
             />

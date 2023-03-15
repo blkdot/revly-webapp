@@ -1,53 +1,43 @@
-import { settingsOnboarded, settingsOnboardPlatformStatus } from 'api';
-import { usePlatform, useUser } from 'contexts';
+import { settingsOnboardPlatformStatus } from 'api';
+import { useUser } from 'contexts';
 import { useAlert } from 'hooks';
+import { useAtom } from 'jotai';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  onboardingAccountsAtom,
+  onboardingActiveStepAtom,
+  onboardingBranchDataAtom,
+  onboardingBranchDataFilteredAtom,
+  onboardingBranchDataUploadingAtom,
+  onboardingConnectAccountAtom,
+  onboardingConnectAtom,
+  onboardingLoadingAtom,
+} from 'store/onboardingAtom';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const UploadingActive: FC<{
-  propsVariables: {
-    branchDataUploading: any;
-    setBranchDataUploading: any;
-    setEmail: any;
-    setPassword: any;
-    setBranchData: any;
-    openCloseModal: any;
-    setAccounts: any;
-    accounts: any;
-    branchData: any;
-    connect: any;
-    email: any;
-    setConnectAccount: any;
-    setActiveStep: any;
-    deleteAccount: any;
-  };
-}> = ({ propsVariables }) => {
-  const {
-    branchDataUploading,
-    setBranchDataUploading,
-    setEmail,
-    setPassword,
-    setBranchData,
-    openCloseModal,
-    setAccounts,
-    accounts,
-    branchData,
-    connect,
-    email,
-    setConnectAccount,
-    setActiveStep,
-    deleteAccount,
-  } = propsVariables;
+  openCloseModal: any;
+  email: any;
+  setEmail: any;
+  setPassword: any;
+  deleteAccount: any;
+}> = ({ email, setEmail, setPassword, deleteAccount, openCloseModal }) => {
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [connect] = useAtom(onboardingConnectAtom);
+  const [branchDataUploading, setBranchDataUploading] = useAtom(onboardingBranchDataUploadingAtom);
+  const [accounts, setAccounts] = useAtom(onboardingAccountsAtom);
+  const [branchData, setBranchData] = useAtom(onboardingBranchDataAtom);
+  const [, setLoading] = useAtom(onboardingLoadingAtom);
+  const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const [, setActiveStep] = useAtom(onboardingActiveStepAtom);
+
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { triggerAlertWithMessageError } = useAlert();
-  const { userPlatformData, setUserPlatformData } = usePlatform();
   const user = useUser();
-  const location = useLocation();
-  const navigate = useNavigate();
   const confirm = async () => {
+    setLoading(true);
     const res = await settingsOnboardPlatformStatus(
       {
         master_email: user.email,
@@ -57,19 +47,18 @@ const UploadingActive: FC<{
       },
       connect
     );
+    setLoading(false);
     if (res instanceof Error) {
       triggerAlertWithMessageError(res.message);
       return;
     }
     setBranchData([...branchDataUploading, ...branchData]);
+    setBranchDataFiltered([...branchDataUploading, ...branchData]);
     setActiveStep(100);
     setConnectAccount('completed');
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
-    if (location.pathname === '/dashboardOnboard') {
-      navigate('/dashboard');
-    }
   };
   return (
     <div

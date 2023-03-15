@@ -84,7 +84,7 @@ const SignUpForm = (props: any) => {
             error={errorPointOfSale}
           />
         </div>
-        <div className='signup-form__flex phone'>
+        {/* <div className='signup-form__flex phone'>
           <PhoneInputKit
             inputProps={{ readOnly: true }}
             country='ae'
@@ -99,7 +99,7 @@ const SignUpForm = (props: any) => {
             onKeyDown={onlyNumber}
             fullWidth
           />
-        </div>
+        </div> */}
         <TextfieldKit
           error={errorEmail}
           label='Email address'
