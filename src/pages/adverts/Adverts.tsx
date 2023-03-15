@@ -1,7 +1,7 @@
 import { usePlanningAds } from 'api';
 import { Switch } from 'assets/icons';
-import arrow from 'assets/images/arrow.svg';
 import { pascalCase } from 'change-case';
+import { PageHeader } from 'components';
 import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreateNewCampaign';
 import Dates from 'components/dates/Dates';
 import AdvertsDetails from 'components/details/AdvertsDetails';
@@ -17,7 +17,7 @@ import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useMarketingSetup, useQueryState, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ButtonAction, ButtonKit, ContainerKit } from 'kits';
+import { ButtonAction, ContainerKit } from 'kits';
 import { defaultFilterStateFormat } from 'pages/marketing/marketingOfferData';
 import { useEffect, useMemo, useState } from 'react';
 import { branchAtom } from 'store/marketingSetupAtom';
@@ -357,21 +357,20 @@ const Adverts = () => {
     return (
       <ContainerKit>
         <div>
-          <div className='adverts_top-titles'>
-            <div>
-              <div className='dashboard-title'>Marketing - Ads</div>
-              <div className='dashboard-subtitle'>
-                Create and manage all your ads. Set personalised rules to automatically trigger your
-                ads.
-              </div>
-            </div>
-            <ButtonAction
-              className='adverts-btn'
-              disabled={disabled}
-              onClick={() => !disabled && setOpenedCampaign(true)}
-            >
-              Create new campaign
-            </ButtonAction>
+          <div className='adverts-top'>
+            <PageHeader
+              title='Marketing - Ads'
+              description='Create and manage all your ads. Set personalised rules to automatically trigger your ads'
+              extra={
+                <ButtonAction
+                  className='adverts-btn'
+                  disabled={disabled}
+                  onClick={() => !disabled && setOpenedCampaign(true)}
+                >
+                  Create new campaign
+                </ButtonAction>
+              }
+            />
           </div>
           <TableRevlyNew
             onClickRow={(id) => {

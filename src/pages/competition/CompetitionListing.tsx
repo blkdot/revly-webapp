@@ -1,5 +1,6 @@
 import { getAreas, getCuisines, getRanking } from 'api';
 import { pascalCase } from 'change-case';
+import { PageHeader } from 'components';
 import Competitor from 'components/competitor/Competitor';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -11,11 +12,9 @@ import { useUser } from 'contexts';
 import { platformList, platformObject } from 'data/platformList';
 import { subDays } from 'date-fns';
 import dayjs from 'dayjs';
-import { useAlert, useVendors, useQueryState } from 'hooks';
+import { useAlert, useQueryState, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, PaperKit } from 'kits';
-import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
-import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import AreaIcon from '../../assets/images/area.svg';
 import Columns from '../../assets/images/columns.svg';
@@ -250,7 +249,6 @@ const CompetitionListing = () => {
       }
     }
 
-
     setSelectedCuisine([cuisines[0]]);
 
     return cuisines[0] || '';
@@ -454,15 +452,10 @@ const CompetitionListing = () => {
         />
       </div>
       <ContainerKit>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div>
-            <MainTitle>Competition - Listing</MainTitle>
-            <DescriptionTitle>
-              Stay one step ahead of the game by tracking your listing and visibility against your
-              competitors.
-            </DescriptionTitle>
-          </div>
-          <div style={{ marginTop: '2rem' }}>
+        <PageHeader
+          title='Competition - Listing'
+          description='Stay one step ahead of the game by tracking your listing and visibility against your competitors'
+          extra={
             <Competitor
               platformListProps={platformList
                 .filter((obj) => !obj?.disabled)
@@ -470,8 +463,8 @@ const CompetitionListing = () => {
               open={Open}
               opened={opened}
             />
-          </div>
-        </div>
+          }
+        />
         <PaperKit className='competition-paper'>
           <div className='competition-top-input'>
             <div className='dropdowns'>
