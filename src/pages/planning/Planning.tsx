@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import { useDate, useQueryState, useVendors } from 'hooks';
 import { ContainerKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
-import { capitalize } from 'utlls';
+import { capitalize } from 'utils';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';

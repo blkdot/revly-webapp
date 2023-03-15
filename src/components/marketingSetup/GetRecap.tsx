@@ -1,32 +1,32 @@
 import RemoveIcon from '@mui/icons-material/Remove';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import { format } from 'date-fns';
+import { useAtom } from 'jotai';
 import { BoxKit, ButtonKit, TextfieldKit, TypographyKit } from 'kits';
+import { FC, type ChangeEvent } from 'react';
 import {
-  platformAtom,
-  selectedAtom,
-  menuAtom,
-  discountPercentageAtom,
-  minOrderPercentageAtom,
-  durationAtom,
   branchAtom,
-  endingDateAtom,
-  typeScheduleAtom,
+  createdAtom,
   customisedDayAtom,
-  timesAtom,
+  discountPercentageAtom,
+  durationAtom,
+  endingDateAtom,
   everyWeekAtom,
   itemMenuAtom,
-  targetAudienceAtom,
-  createdAtom,
-  recapAtom,
   launchOrderAtom,
-  stepsAtom,
+  menuAtom,
+  minOrderPercentageAtom,
+  platformAtom,
+  recapAtom,
+  selectedAtom,
   smRuleAtom,
-  stopOrderAtom,
   startingDateAtom,
+  stepsAtom,
+  stopOrderAtom,
+  targetAudienceAtom,
+  timesAtom,
+  typeScheduleAtom,
 } from 'store/marketingSetupAtom';
-import { useAtom } from 'jotai';
-import { FC, type ChangeEvent } from 'react';
 import ArrowIcon from '../../assets/images/arrow.svg';
 import deliveroo from '../../assets/images/deliveroo.png';
 import AudienceIcon from '../../assets/images/ic_audience.png';
@@ -42,7 +42,7 @@ import TimerCloseGrayIcon from '../../assets/images/ic_timer-close-gray.png';
 import TimerIcon from '../../assets/images/ic_timer.png';
 import plus from '../../assets/images/plus.png';
 import talabat from '../../assets/images/talabat.png';
-import { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
+import { getFormatedEndDate } from '../../utils/heatmap/heatmapSelected';
 import MarketingSetupStepper from '../marketingSetupStepper/MarketingSetupStepper';
 import GetProgress from './MarketingGetProgress';
 import MarketingPlaceholderDropdown from './MarketingPlaceholderDropdown';

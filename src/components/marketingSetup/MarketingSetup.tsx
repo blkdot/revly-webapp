@@ -59,8 +59,8 @@ import {
 import RevenueHeatMapIcon from '../../assets/images/ic_revenue-heatmap.png';
 import PlatformIcon from '../../assets/images/ic_select_platform.png';
 import OpacityLogo from '../../assets/images/opacity-logo.png';
-import heatmapSelected, { getFormatedEndDate } from '../../utlls/heatmap/heatmapSelected';
-import { maxHour, minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
+import heatmapSelected, { getFormatedEndDate } from '../../utils/heatmap/heatmapSelected';
+import { maxHour, minHour, rangeHoursOpenedDay } from '../../utils/heatmap/heatmapSelectedData';
 import Dates from '../dates/Dates';
 import GetRecap from './GetRecap';
 import './MarketingSetup.scss';

@@ -1,8 +1,11 @@
 import { Arrow } from 'assets/icons';
 import trash from 'assets/images/ic_trash.png';
-import { useMarketingSetup } from 'hooks';
+import MarketingCheckmarkDropdownOld from 'components/marketingSetup/MarketingCheckmarkDropdownOld';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import TimePickerDropdown from 'components/timePicker/TimePickerDropdown';
-import { addDays, differenceInBusinessDays, differenceInDays, isSameDay } from 'date-fns';
+import { addDays, differenceInDays, isSameDay } from 'date-fns';
+import { useMarketingSetup } from 'hooks';
+import { useAtom } from 'jotai';
 import {
   ButtonKit,
   DatePickerDayKit,
@@ -11,12 +14,9 @@ import {
   TextfieldKit,
   TooltipKit,
 } from 'kits';
-import { branchAtom, endingDateAtom, startingDateAtom, timesAtom } from 'store/marketingSetupAtom';
-import { useAtom } from 'jotai';
 import { FC, useState } from 'react';
-import { countDaysOfWeekBetweenDates } from 'utlls/date/getAllDateSetup';
-import MarketingCheckmarkDropdownOld from 'components/marketingSetup/MarketingCheckmarkDropdownOld';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
+import { branchAtom, endingDateAtom, startingDateAtom, timesAtom } from 'store/marketingSetupAtom';
+import { countDaysOfWeekBetweenDates } from 'utils/date/getAllDateSetup';
 import CalendarCheckGrayIcon from '../../../assets/images/ic_calendar-check-gray.svg';
 import CalendarEventIcon from '../../../assets/images/ic_calendar-event.png';
 import TooltipIcon from '../../../assets/images/tooltip-ic.svg';
