@@ -2,7 +2,7 @@ import { useAtom } from 'jotai';
 import pluralize from 'pluralize';
 import { FC, useCallback, useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { TDisplayVendor } from 'types';
+import { TDisplayVendor, TVendorsObj } from 'types';
 import { VendorsDropdown } from '../component/VendorsDropdown';
 import { ReactComponent as CareemIcon } from './icons/careem.svg';
 import { ReactComponent as DeliverooIcon } from './icons/deliveroo.svg';
@@ -13,7 +13,7 @@ type Value = number | string;
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
-const cleanDisplay = (vendors: TDisplayVendor) => {
+function cleanDisplay(vendors: TDisplayVendor): TDisplayVendor {
   const newVendors = copy(vendors);
   Object.keys(newVendors).forEach((chain) => {
     Object.keys(newVendors[chain]).forEach((vendor) => {
@@ -22,7 +22,9 @@ const cleanDisplay = (vendors: TDisplayVendor) => {
   });
 
   return newVendors;
-};
+}
+
+const cleanVendorsObj = (): TVendorsObj => ({ deliveroo: [], talabat: [] });
 
 const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
 
@@ -63,14 +65,28 @@ const toChildrenNode = (chain: string, vendor: string, v: any) => ({
 
 const toParentNode = (chain: string, value: any) => ({
   value: chain,
-  title: chain,
+  title: chain || 'In Process',
   subTitle: pluralize('Branches', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
 });
 
+const vendorsSorter = (a: string, b: string) => {
+  // keep unmatched vendors on the bottom
+  if (a === '') {
+    return Number.MAX_SAFE_INTEGER;
+  }
+  if (b === '') {
+    return -Number.MAX_SAFE_INTEGER;
+  }
+
+  return a.trim().localeCompare(b.trim());
+};
+
 const toOptions = (vendors: TDisplayVendor) =>
-  Object.keys(vendors).map((chain) => toParentNode(chain, vendors[chain]));
+  Object.keys(vendors)
+    .sort(vendorsSorter)
+    .map((chain) => toParentNode(chain, vendors[chain]));
 
 export const VendorsDropdownAdapter: FC = () => {
   const [vendors, setVendors] = useAtom(vendorsAtom);
@@ -78,19 +94,14 @@ export const VendorsDropdownAdapter: FC = () => {
   const onChange = useCallback(
     (values: Value[]) => {
       const newDisplay = cleanDisplay(vendors.display);
-      const newVendorsObj = copy(vendors.vendorsObj);
+      const newVendorsObj = cleanVendorsObj();
 
       values.forEach((value) => {
         const { chain, vendor } = fromValue(value as string);
 
         newDisplay[chain][vendor].checked = true;
-        Object.keys(newDisplay[chain][vendor].platforms).forEach((p) => {
-          newVendorsObj[p].splice(
-            newVendorsObj[p].findIndex(
-              (obj) => obj.vendor_id === newDisplay[chain][vendor].platforms[p].vendor_id
-            ),
-            1
-          );
+        Object.keys(newDisplay[chain][vendor].platforms).forEach((platform) => {
+          newVendorsObj[platform].push(newDisplay[chain][vendor].platforms[platform]);
         });
       });
 
