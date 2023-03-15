@@ -24,7 +24,7 @@ function cleanDisplay(vendors: TDisplayVendor): TDisplayVendor {
   return newVendors;
 }
 
-const cleanVendorsObj = (): TVendorsObj => ({ deliveroo: [], talabat: [] });
+const cleanVendorsObj = (): TVendorsObj => ({ deliveroo: [], talabat: [], noon: [], careem: [] });
 
 const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
 
