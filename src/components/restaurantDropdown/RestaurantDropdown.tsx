@@ -1,8 +1,8 @@
 import { useAtom } from 'jotai';
 import { ButtonKit, FormControlKit, SelectKit, TypographyKit } from 'kits';
 import { FC } from 'react';
-import { vendorsAtom } from 'store/vendorsAtom';
 import { platformAtom } from 'store/marketingSetupAtom';
+import { vendorsAtom } from 'store/vendorsAtom';
 import selectIcon from '../../assets/images/ic_select.png';
 import RestaurantCheckboxAccordion from './RestaurantCheckboxAccardion';
 import './RestaurantDropdown.scss';

@@ -1,12 +1,12 @@
 import { useMetrics } from 'api';
 import Dates from 'components/dates/Dates';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import Widget from 'components/widget/Widget';
 import { usePlatform } from 'contexts';
 import { format, getYear } from 'date-fns';
@@ -91,11 +91,12 @@ const Dashboard = () => {
   };
 
   const { userPlatformData } = usePlatform();
+
   const getDropdown = () => {
     if (!userPlatformData.onboarded) {
       return <RestaurantDropdownEmpty />;
     }
-    return <RestaurantDropdown />;
+    return <VendorsDropdownAdapter />;
   };
   const { date } = useDate();
   const { typeDate } = date;
