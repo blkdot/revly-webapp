@@ -16,13 +16,14 @@ import { useDate } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, TypographyKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
-import { onboardingConnectAccountAtom, onboardingOpenedModalAtom } from 'store/onboardingAtom';
+import { onboardingActiveStepAtom, onboardingConnectAccountAtom, onboardingOpenedModalAtom } from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import './Dashboard.scss';
 
 const Dashboard = () => {
   const [vendors] = useAtom(vendorsAtom);
-  const { vendorsObj, display, chainData } = vendors;
+  const { vendorsObj, display } = vendors;
+  
   const [table, setTable] = useState('revenue');
 
   const { date: dateContext } = useDate();
@@ -73,7 +74,7 @@ const Dashboard = () => {
 
   const [openedModal, setOpenedModal] = useAtom(onboardingOpenedModalAtom);
   const [connectAccount, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
-
+  const [activeStep] = useAtom(onboardingActiveStepAtom)
   const openCloseModal = () => {
     setOpenedModal(!openedModal);
     if (connectAccount === 'manageBranch' || connectAccount === 'completed') {
@@ -251,7 +252,7 @@ const Dashboard = () => {
         <Dates isDashboard />
       </div>
       <ContainerKit>
-        {!userPlatformData.onboarded && (
+        {(!userPlatformData.onboarded || activeStep !== 0) && (
           <div className='dashboard-stepper'>
             <OnboardingModal openCloseModal={openCloseModal} />
             <OnboardingStepper openCloseModal={openCloseModal} />

@@ -9,13 +9,9 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import {
   onboardingAccountsAtom,
-  onboardingActiveStepAtom,
   onboardingBranchDataAtom,
   onboardingBranchDataFilteredAtom,
-  onboardingBranchDataUploadingAtom,
-  onboardingClickedBranchAtom,
   onboardingConnectAccountAtom,
-  onboardingConnectAtom,
   onboardingLoadingAtom,
   onboardingOpenedModalAtom,
 } from 'store/onboardingAtom';
@@ -26,16 +22,12 @@ const NewSettingsOnboarding = () => {
   const { userPlatformData } = usePlatform();
   const [, setVendors] = useAtom(vendorsAtom);
   const { vendors } = useVendors();
-  const [loading, setLoading] = useAtom(onboardingLoadingAtom);
+  const [, setLoading] = useAtom(onboardingLoadingAtom);
   const [openedModal, setOpenedModal] = useAtom(onboardingOpenedModalAtom);
-  const [activeStep] = useAtom(onboardingActiveStepAtom);
-  // const [branchDataUploading, setBranchDataUploading] = useAtom(onboardingBranchDataUploadingAtom);
-  const [branchData, setBranchData] = useAtom(onboardingBranchDataAtom);
-  const [branchDataFiltered, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const [, setBranchData] = useAtom(onboardingBranchDataAtom);
+  const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
   const [connectAccount, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
-  // const [connect, setConnect] = useAtom(onboardingConnectAtom);
-  const [, setClickedBranch] = useAtom(onboardingClickedBranchAtom);
-  const [accounts, setAccounts] = useAtom(onboardingAccountsAtom);
+  const [, setAccounts] = useAtom(onboardingAccountsAtom);
 
   const getAccounts = () => {
     const arr = [];
@@ -134,17 +126,9 @@ const NewSettingsOnboarding = () => {
       <OnboardingStepper openCloseModal={openCloseModal} />
       <OnboardingMiddleContent
         openCloseModal={openCloseModal}
-        accounts={accounts}
-        setConnectAccount={setConnectAccount}
-        setBranchDataFiltered={setBranchDataFiltered}
-        branchData={branchData}
       />
       <OnboardingTable
-        loading={loading}
-        branchData={branchDataFiltered.length > 0 ? branchDataFiltered : branchData}
         openCloseModal={openCloseModal}
-        setClickedBranch={setClickedBranch}
-        setConnectAccount={setConnectAccount}
       />
     </div>
   );
