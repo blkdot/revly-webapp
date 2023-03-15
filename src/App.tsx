@@ -51,8 +51,6 @@ const App = () => {
     });
   }, []);
 
-  const [values, setValues] = useState([11, 12]);
-
   if (loading) {
     return (
       <div className='main-loading'>

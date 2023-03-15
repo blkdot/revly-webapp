@@ -1,0 +1,29 @@
+.page-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  & > .page-header-text {
+    display: flex;
+    flex-direction: column;
+
+    & > .page-header-title {
+      font-family: 'Public Sans';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 36px;
+      color: #212b36;
+    }
+
+    & > .page-header-description {
+      font-family: 'Public Sans';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      color: #637381;
+    }
+  }
+}

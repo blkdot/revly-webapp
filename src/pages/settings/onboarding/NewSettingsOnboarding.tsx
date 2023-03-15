@@ -124,12 +124,8 @@ const NewSettingsOnboarding = () => {
     <div>
       <OnboardingModal openCloseModal={openCloseModal} />
       <OnboardingStepper openCloseModal={openCloseModal} />
-      <OnboardingMiddleContent
-        openCloseModal={openCloseModal}
-      />
-      <OnboardingTable
-        openCloseModal={openCloseModal}
-      />
+      <OnboardingMiddleContent openCloseModal={openCloseModal} />
+      <OnboardingTable openCloseModal={openCloseModal} />
     </div>
   );
 };

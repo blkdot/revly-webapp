@@ -2,6 +2,7 @@
 import { usePlanningOffers } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
@@ -14,8 +15,6 @@ import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useQueryState } from 'hooks';
 import { ButtonAction, ContainerKit } from 'kits';
-import DescriptionTitle from 'kits/title/DescriptionTitle';
-import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useState } from 'react';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
@@ -469,20 +468,15 @@ const MarketingOffer = () => {
       </div>
       <ContainerKit>
         <div className='marketing-top'>
-          <div className='marketing-top-text'>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div>
-                <MainTitle>Marketing - Offers</MainTitle>
-                <DescriptionTitle>
-                  Create and manage all your offers. Set personalised rules to automatically trigger
-                  your offers
-                </DescriptionTitle>
-              </div>
-            </div>
-          </div>
-          <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>
-            Create new offer
-          </ButtonAction>
+          <PageHeader
+            title='Marketing - Offers'
+            description='Create and manage all your offers. Set personalised rules to automatically trigger your offers'
+            extra={
+              <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>
+                Create new offer
+              </ButtonAction>
+            }
+          />
         </div>
         {openedOffer ? (
           <OfferDetailComponent
