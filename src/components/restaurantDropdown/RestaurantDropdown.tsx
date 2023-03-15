@@ -40,7 +40,6 @@ const RestaurantDropdown: FC<{
 
   // function for vendor
   const handleChangeVendor = (target, chainName) => {
-    console.log(target, chainName);
     const { value, checked } = target;
     const displayTemp = JSON.parse(JSON.stringify(display));
     const vendorsObjTemp = JSON.parse(JSON.stringify(vendorsObj));
