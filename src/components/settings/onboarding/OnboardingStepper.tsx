@@ -47,7 +47,7 @@ const ColorlibStepIcon = (props: any) => {
   );
 };
 const OnboardingStepper: FC<{
-  openCloseModal: any;
+  openCloseModal: () => void;
 }> = ({ openCloseModal }) => {
   const [accounts] = useAtom(onboardingAccountsAtom);
   const [activeStep] = useAtom(onboardingActiveStepAtom);
@@ -83,7 +83,7 @@ const OnboardingStepper: FC<{
     if (activeStep < 100 && index === 0) {
       return (
         <ButtonKit
-          onClick={(e) => openCloseModal(e)}
+          onClick={() => openCloseModal()}
           className='settings-onboarding-btn connect'
           variant='contained'
         >

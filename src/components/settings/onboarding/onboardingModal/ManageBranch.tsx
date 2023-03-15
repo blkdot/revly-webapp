@@ -21,11 +21,11 @@ import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{
   unremovable: boolean;
-  openCloseModal: any;
-  openSwitchDeleteModal: any;
-  setOpenedSwitchDeleteModal: any;
-  openedSwitchDeleteModal: any;
-  deleteAccount: any;
+  openCloseModal: () => void;
+  openSwitchDeleteModal: (event: any) => void;
+  setOpenedSwitchDeleteModal: (v: boolean) => void;
+  openedSwitchDeleteModal: boolean;
+  deleteAccount: (platform: string, email: string) => void;
 }> = ({
   unremovable,
   openCloseModal,

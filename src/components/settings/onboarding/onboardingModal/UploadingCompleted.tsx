@@ -1,17 +1,27 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { ButtonKit } from 'kits';
 import { useAtom } from 'jotai';
 import { onboardingConnectAccountAtom, onboardingConnectAtom } from 'store/onboardingAtom';
+import { useVendors } from 'hooks';
+import { vendorsAtom } from 'store/vendorsAtom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 import Congrats from '../../../../assets/images/congrats.gif';
 
 const UploadingCompleted: FC<{
-  openCloseModal: any;
+  openCloseModal: () => void;
 }> = ({ openCloseModal }) => {
   const [connect] = useAtom(onboardingConnectAtom);
+  const { vendors } = useVendors();
+  const [, setVendors] = useAtom(vendorsAtom)
+  useEffect(() => {
+    setVendors(vendors)
+  }, [])
   const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
+  const navigate = useNavigate();
+  const location = useLocation();
   return (
     <div
       className='onboarding-connect-account'
@@ -52,6 +62,9 @@ const UploadingCompleted: FC<{
         <ButtonKit
           onClick={() => {
             setConnectAccount('account');
+            if(location.pathname === '/dashboard'){
+              navigate('/settings/onboarding')
+            }
           }}
           className='onboarding-platform-buttons_confirm'
           variant='contained'

@@ -12,9 +12,9 @@ const MenuProps = {
   },
 };
 const OnboardingDropdown: FC<{
-  state: any;
-  handleChange: any;
-  rows: any;
+  state: string[];
+  handleChange: (event: any) => void;
+  rows: string[];
 }> = ({ state, handleChange, rows }) => (
   <FormControlKit
     className={`onboarding-dropdown ${rows.length === 0 && 'onboarding-dropdown_skeleton'}`}
