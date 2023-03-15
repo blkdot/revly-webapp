@@ -4,13 +4,12 @@ import {
   CheckboxKit,
   FormControlLabelKit,
   FormGroupKit,
-  PhoneInputKit,
   TextfieldKit,
   TypographyKit,
 } from 'kits';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import onlyNumber from '../../../../utlls/input/onlyNumber';
+import onlyNumber from '../../../../utils/input/onlyNumber';
 import './SignUpForm.scss';
 
 const SignUpForm = (props: any) => {

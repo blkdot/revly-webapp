@@ -1,6 +1,6 @@
 import { AutoCompleteKit, PhoneInputKit, TextfieldKit } from 'kits';
 import country from '../../../data/country.json';
-import onlyNumber from '../../../utlls/input/onlyNumber';
+import onlyNumber from '../../../utils/input/onlyNumber';
 import './AccountSettingForm.scss';
 
 const AccountSettingForm = (props: any) => {

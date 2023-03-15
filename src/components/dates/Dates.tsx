@@ -38,7 +38,7 @@ import React, { useEffect, useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import switchIcon from '../../assets/images/Switch.png';
-import { getAllDateSetup } from '../../utlls/date/getAllDateSetup';
+import { getAllDateSetup } from '../../utils/date/getAllDateSetup';
 import AfterPeriodSelect from './AfterPeriodSelect';
 import './Dates.scss';
 import DateSelect from './DateSelect';

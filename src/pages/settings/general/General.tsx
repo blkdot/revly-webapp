@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import country from '../../../data/country.json';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
-import validator from '../../../utlls/input/validator';
+import validator from '../../../utils/input/validator';
 import './General.scss';
 
 const General = () => {

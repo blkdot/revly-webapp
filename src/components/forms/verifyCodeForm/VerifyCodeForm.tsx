@@ -1,5 +1,5 @@
 import { ButtonKit, TextfieldKit } from 'kits';
-import onlyNumber from '../../../utlls/input/onlyNumber';
+import onlyNumber from '../../../utils/input/onlyNumber';
 import './VerifyCodeForm.scss';
 
 const VerifyCodeForm = (props: any) => {
