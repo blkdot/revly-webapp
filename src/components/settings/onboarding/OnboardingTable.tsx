@@ -2,14 +2,21 @@ import { FC } from 'react';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useAtom } from 'jotai';
-import { onboardingBranchDataAtom, onboardingBranchDataFilteredAtom, onboardingClickedBranchAtom, onboardingConnectAccountAtom, onboardingLoadingAtom, TOnboardingBranchData } from 'store/onboardingAtom';
+import {
+  onboardingBranchDataAtom,
+  onboardingBranchDataFilteredAtom,
+  onboardingClickedBranchAtom,
+  onboardingConnectAccountAtom,
+  onboardingLoadingAtom,
+  TOnboardingBranchData,
+} from 'store/onboardingAtom';
 
 const OnboardingTable: FC<{
   openCloseModal: () => void;
 }> = ({ openCloseModal }) => {
-  const[branchDataAtom] = useAtom(onboardingBranchDataAtom);
+  const [branchDataAtom] = useAtom(onboardingBranchDataAtom);
   const [branchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
-  const branchData = branchDataFiltered.length > 0 ? branchDataFiltered : branchDataAtom;  
+  const branchData = branchDataFiltered.length > 0 ? branchDataFiltered : branchDataAtom;
   const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
   const [, setClickedBranch] = useAtom(onboardingClickedBranchAtom);
   const [loading] = useAtom(onboardingLoadingAtom);

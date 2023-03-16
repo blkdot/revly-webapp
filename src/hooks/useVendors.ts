@@ -27,7 +27,7 @@ const useVendors = (isSign = false) => {
     master_email: user.email,
     access_token: user.token,
   };
-  
+
   const { data, isLoading, isError } = useQuery(
     ['getVendors', requestVendorsDefaultParam],
     () => {

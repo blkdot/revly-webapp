@@ -1,5 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { settingsOnboarded, settingsOnboardPlatform, settingsOnboardPlatformStatus, settingsSave } from 'api';
+import {
+  settingsOnboarded,
+  settingsOnboardPlatform,
+  settingsOnboardPlatformStatus,
+  settingsSave,
+} from 'api';
 import { saveUser } from 'api/userApi';
 import { usePlatform, useUser } from 'contexts';
 import { useAlert } from 'hooks';
