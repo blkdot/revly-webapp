@@ -6,8 +6,8 @@ import { daysOrder, maxHour, minHour, rangeHoursOpenedDay } from './heatmapSelec
 const getHour = (h) => {
   let hour = getHours(h);
 
-  if (hour < 5) {
-    hour = 24 + hour;
+  if (hour === 0) {
+    hour = 24;
   }
 
   return hour;
