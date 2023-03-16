@@ -9,7 +9,7 @@ type TDaysObject = {
 };
 
 export const rangeHoursOpenedDay = {
-  0: { hour: 0, value: 0, label: '12AM', isNext: false },
+  0: { hour: 0, value: 0, label: '0AM', isNext: false },
   1: { hour: 1, value: 1, label: '1AM', isNext: false },
   2: { hour: 2, value: 2, label: '2AM', isNext: false },
   3: { hour: 3, value: 3, label: '3AM', isNext: false },
@@ -33,15 +33,15 @@ export const rangeHoursOpenedDay = {
   21: { hour: 21, value: 21, label: '21PM', isNext: false },
   22: { hour: 22, value: 22, label: '22PM', isNext: false },
   23: { hour: 23, value: 23, label: '23PM', isNext: false },
-  24: { hour: 24, value: 0, label: '24PM', isNext: false },
+  24: { hour: 24, value: 0, label: '24PM', isNext: true },
   25: { hour: 25, value: 1, label: 'J+1 1AM', isNext: true },
   26: { hour: 26, value: 2, label: 'J+1 2AM', isNext: true },
   27: { hour: 27, value: 3, label: 'J+1 3AM', isNext: true },
   28: { hour: 28, value: 4, label: 'J+1 4AM', isNext: true },
 };
 
-export const maxHour = 27;
-export const minHour = 5;
+export const maxHour = 23;
+export const minHour = 0;
 
 export const daysOrder = [
   'Monday',

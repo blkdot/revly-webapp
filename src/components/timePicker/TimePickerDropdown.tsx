@@ -4,7 +4,7 @@ import setHours from 'date-fns/setHours';
 import { FormControlKit, MenuItemKit, OutlinedInputKit, SelectKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { minHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
+import { minHour, maxHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
 
 const TimePickerDropdown = (props: any) => {
   const { value, setValue, times, type, index, startLimit } = props;
@@ -14,11 +14,21 @@ const TimePickerDropdown = (props: any) => {
   const getHour = (h) => {
     let hour = getHours(h);
 
-    if (hour < 5) {
-      hour = 24 + hour;
+    if (hour === 0) {
+      hour = 24;
     }
 
     return hour;
+  };
+
+  const setTimes = ({ target }) => {
+    const formatedValue = setHours(new Date(setMinutes(new Date(), 0)), target.value);
+    if (type) {
+      times.splice(index, 1, { ...times[index], [type]: formatedValue });
+      setValue([...times]);
+    } else {
+      setValue(formatedValue);
+    }
   };
 
   useEffect(() => {
@@ -38,16 +48,6 @@ const TimePickerDropdown = (props: any) => {
     setDisabledTimes(rangeDisabled);
   }, [startLimit]);
 
-  const setTimes = ({ target }) => {
-    const formatedValue = setHours(new Date(setMinutes(new Date(), 0)), target.value);
-    if (type) {
-      times.splice(index, 1, { ...times[index], [type]: formatedValue });
-      setValue([...times]);
-    } else {
-      setValue(formatedValue);
-    }
-  };
-
   const isDisabledItem = (k) => disabledTimes.includes(k);
 
   return (
@@ -59,7 +59,7 @@ const TimePickerDropdown = (props: any) => {
         inputProps={{ 'aria-label': 'Without label' }}
         style={{ width: '100%' }}
       >
-        {Object.keys(rangeHoursOpenedDay).map((k) => (
+        {_.range(minHour + 1, maxHour + 2).map((k) => (
           <MenuItemKit
             key={k}
             value={rangeHoursOpenedDay[k].value}
