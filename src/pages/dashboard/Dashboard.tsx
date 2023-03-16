@@ -1,7 +1,6 @@
 import { useMetrics } from 'api';
 import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
-import RestaurantDropdownEmpty from 'components/restaurantDropdown/RestaurantDropdownEmpty';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -97,12 +96,6 @@ const Dashboard = () => {
 
   const { userPlatformData } = usePlatform();
 
-  const getDropdown = () => {
-    if (!userPlatformData.onboarded) {
-      return <RestaurantDropdownEmpty />;
-    }
-    return <VendorsDropdownAdapter />;
-  };
   const { date } = useDate();
   const { typeDate } = date;
   const getPeriod = (title, period) => {
@@ -260,7 +253,7 @@ const Dashboard = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        {getDropdown()}
+        <VendorsDropdownAdapter />
         <Dates isDashboard />
       </div>
       <ContainerKit>

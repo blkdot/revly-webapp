@@ -1,9 +1,9 @@
 import { getElligibilityDeliveroo } from 'api/elligibilityDeliverooApi';
-import { useSettingsOnboarded } from 'api/settingsApi';
+import { settingsOnboarded } from 'api';
 import { usePlatform, useUser } from 'contexts';
 import { useAtom } from 'jotai';
 import { SpinnerKit } from 'kits';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import { vendorsAtom } from 'store/vendorsAtom';
@@ -14,17 +14,30 @@ export const ProtectedOnboardRoutes = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { chainData } = vendors;
   const [, setEligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
-
-  const response = useSettingsOnboarded(
-    {
-      master_email: user.email,
-      access_token: user.token,
-    },
-    {
-      launcher: 'ProtectedOnboardRoutes',
-      user,
-    }
-  );
+  const [loading,setLoading] = useState(true)
+  const [errorOnboard,setErrorOnboard] = useState('');
+  const onboard = async () => {
+    setLoading(true);
+    await settingsOnboarded(
+      {
+        master_email: user.email,
+        access_token: user.token,
+      }
+    ).then((response) => {
+      setUserPlatformData({
+        onboarded: response?.onboarded,
+        platforms: { ...userPlatformData.platforms, ...response?.platforms },
+      });
+      setLoading(false);
+    }).catch((err) => {
+      setErrorOnboard(err)
+    });
+    
+  }
+  useEffect(() => {
+    onboard()
+  }, []);
+  
 
   const requestEligibilityDeliveroo = () => {
     try {
@@ -83,24 +96,17 @@ export const ProtectedOnboardRoutes = () => {
 
   // TODO: replace it with a better approach
   // extend useSettingsOnboarded to include react-query options and add a hook for onSuccess
-  useEffect(() => {
-    if (response?.data) {
-      setUserPlatformData({
-        onboarded: response?.data.onboarded,
-        platforms: { ...userPlatformData.platforms, ...response?.data.platforms },
-      });
-    }
-  }, [JSON.stringify(response?.data)]);
+
   const location = useLocation();
   if (
-    !response?.isLoading &&
+    !loading &&
     location.pathname !== '/dashboard' &&
-    (response?.isError || !response?.data?.onboarded || !response?.data?.platforms)
+    (errorOnboard || !userPlatformData.onboarded || !userPlatformData.platforms)
   ) {
     return <Navigate to='/dashboard' />;
   }
 
-  if (response?.isLoading) {
+  if (loading) {
     return (
       <div className='main-loading'>
         <SpinnerKit style={{ display: 'flex', margin: 'auto' }} />

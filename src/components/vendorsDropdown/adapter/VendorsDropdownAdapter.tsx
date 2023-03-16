@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import pluralize from 'pluralize';
+import pluralize from 'pluralize'
 import { FC, useCallback, useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { TDisplayVendor, TVendorsObj } from 'types';
