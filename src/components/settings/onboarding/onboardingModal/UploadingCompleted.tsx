@@ -14,10 +14,10 @@ const UploadingCompleted: FC<{
 }> = ({ openCloseModal }) => {
   const [connect] = useAtom(onboardingConnectAtom);
   const { vendors } = useVendors();
-  const [, setVendors] = useAtom(vendorsAtom)
+  const [, setVendors] = useAtom(vendorsAtom);
   useEffect(() => {
-    setVendors(vendors)
-  }, [])
+    setVendors(vendors);
+  }, []);
   const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const navigate = useNavigate();
@@ -62,8 +62,8 @@ const UploadingCompleted: FC<{
         <ButtonKit
           onClick={() => {
             setConnectAccount('account');
-            if(location.pathname === '/dashboard'){
-              navigate('/settings/onboarding')
+            if (location.pathname === '/dashboard') {
+              navigate('/settings/onboarding');
             }
           }}
           className='onboarding-platform-buttons_confirm'

@@ -37,7 +37,7 @@ const UploadingActive: FC<{
   const { triggerAlertWithMessageError } = useAlert();
   const user = useUser();
   const { setUserPlatformData } = usePlatform();
-  
+
   const confirm = async () => {
     setLoading(true);
     const res = await settingsOnboardPlatformStatus(
@@ -57,7 +57,7 @@ const UploadingActive: FC<{
     const onboard = await settingsOnboarded({
       master_email: user.email,
       access_token: user.token,
-    })
+    });
     setBranchData([...branchDataUploading, ...branchData]);
     setBranchDataFiltered([...branchDataUploading, ...branchData]);
     setActiveStep(100);
@@ -66,7 +66,7 @@ const UploadingActive: FC<{
     setEmail('');
     setPassword('');
     setLoading(false);
-    setUserPlatformData(onboard)
+    setUserPlatformData(onboard);
   };
   return (
     <div

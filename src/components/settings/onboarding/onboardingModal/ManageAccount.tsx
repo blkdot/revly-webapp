@@ -20,116 +20,116 @@ const ManageAccount: FC<{
   openSwitchDeleteModal,
   openedSwitchDeleteModal,
 }) => {
-    const [accounts] = useAtom(onboardingAccountsAtom);
-    const [loading] = useAtom(onboardingLoadingAtom);
+  const [accounts] = useAtom(onboardingAccountsAtom);
+  const [loading] = useAtom(onboardingLoadingAtom);
 
-    const [selected, setSelected] = useState('');
-    const [deleteObj, setDeleteObj] = useState(null);
-    const [switchObj, setSwitchObj] = useState(null);
+  const [selected, setSelected] = useState('');
+  const [deleteObj, setDeleteObj] = useState(null);
+  const [switchObj, setSwitchObj] = useState(null);
 
-    const renderModalBySelection = () => {
-      if (selected === 'delete')
-        return (
-          <SwitchDeleteModal
-            loading={loading}
-            title='Are you sure you want to delete this account ?'
-            button='Delete this Account'
-            onClick={() => deleteAccount(deleteObj.platform, deleteObj.email)}
-            openSwitchDeleteModal={openSwitchDeleteModal}
-            openedSwitchDeleteModal={openedSwitchDeleteModal}
-          />
-        );
-      if (selected === 'switch')
-        return (
-          <SwitchDeleteModal
-            loading={loading}
-            title='Are you sure you want to change status this account ?'
-            button='Change Status'
-            onClick={() => changeStatusAccount(switchObj)}
-            openSwitchDeleteModal={openSwitchDeleteModal}
-            openedSwitchDeleteModal={openedSwitchDeleteModal}
-          />
-        );
-
-      return null;
-    };
-
-    const handleClickDelete = (obj) => (e) => {
-      openSwitchDeleteModal(e);
-      setSelected('delete');
-      setDeleteObj(obj);
-    };
-
-    return (
-      <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
-        <img
-          className='onboarding-close_icon modal'
-          tabIndex={-1}
-          role='presentation'
-          src={CloseIcon}
-          alt='close icon'
-          onClick={openCloseModal}
+  const renderModalBySelection = () => {
+    if (selected === 'delete')
+      return (
+        <SwitchDeleteModal
+          loading={loading}
+          title='Are you sure you want to delete this account ?'
+          button='Delete this Account'
+          onClick={() => deleteAccount(deleteObj.platform, deleteObj.email)}
+          openSwitchDeleteModal={openSwitchDeleteModal}
+          openedSwitchDeleteModal={openedSwitchDeleteModal}
         />
-        {accounts.length > 0 ? (
-          <div>
-            <p className='__title'>Manage your connected accounts</p>
-            <span className='__subtitle'>
-              This allows you to enable, disable or delete your connected accounts , once an account
-              is delated the brands and branches associated to it will be removed .
-            </span>
-          </div>
-        ) : (
-          ''
-        )}
-        <div className='onboarding-accounts_wrapper'>
-          {accounts.map((obj) => (
-            <div
-              key={`${obj.platform}-${obj.email}`}
-              className={`onboarding-account ${obj.active && 'connected'}`}
-            >
-              <div>
-                <TypographyKit
-                  components='span'
-                  className='onboarding-account_platform-logo'
-                  style={{
-                    '--color': platformObject[obj.platform].color,
+      );
+    if (selected === 'switch')
+      return (
+        <SwitchDeleteModal
+          loading={loading}
+          title='Are you sure you want to change status this account ?'
+          button='Change Status'
+          onClick={() => changeStatusAccount(switchObj)}
+          openSwitchDeleteModal={openSwitchDeleteModal}
+          openedSwitchDeleteModal={openedSwitchDeleteModal}
+        />
+      );
+
+    return null;
+  };
+
+  const handleClickDelete = (obj) => (e) => {
+    openSwitchDeleteModal(e);
+    setSelected('delete');
+    setDeleteObj(obj);
+  };
+
+  return (
+    <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
+      <img
+        className='onboarding-close_icon modal'
+        tabIndex={-1}
+        role='presentation'
+        src={CloseIcon}
+        alt='close icon'
+        onClick={openCloseModal}
+      />
+      {accounts.length > 0 ? (
+        <div>
+          <p className='__title'>Manage your connected accounts</p>
+          <span className='__subtitle'>
+            This allows you to enable, disable or delete your connected accounts , once an account
+            is delated the brands and branches associated to it will be removed .
+          </span>
+        </div>
+      ) : (
+        ''
+      )}
+      <div className='onboarding-accounts_wrapper'>
+        {accounts.map((obj) => (
+          <div
+            key={`${obj.platform}-${obj.email}`}
+            className={`onboarding-account ${obj.active && 'connected'}`}
+          >
+            <div>
+              <TypographyKit
+                components='span'
+                className='onboarding-account_platform-logo'
+                style={{
+                  '--color': platformObject[obj.platform].color,
+                }}
+              >
+                <img
+                  src={platformObject[obj.platform].srcWhite || platformObject[obj.platform].src}
+                  alt={obj.platform}
+                />
+              </TypographyKit>
+              <p>{obj.email}</p>
+            </div>
+            <div>
+              <span
+                tabIndex={-1}
+                role='button'
+                onKeyDown={handleClickDelete(obj)}
+                onClick={handleClickDelete(obj)}
+                className='onboarding-account_trash-icon'
+              >
+                <img src={TrashIcon} alt='trash' />
+              </span>
+              <div className='onboarding-account_switch'>
+                <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
+                <SwitchKit
+                  onChange={(e) => {
+                    openSwitchDeleteModal(e);
+                    setSelected('switch');
+                    setSwitchObj(obj);
                   }}
-                >
-                  <img
-                    src={platformObject[obj.platform].srcWhite || platformObject[obj.platform].src}
-                    alt={obj.platform}
-                  />
-                </TypographyKit>
-                <p>{obj.email}</p>
-              </div>
-              <div>
-                <span
-                  tabIndex={-1}
-                  role='button'
-                  onKeyDown={handleClickDelete(obj)}
-                  onClick={handleClickDelete(obj)}
-                  className='onboarding-account_trash-icon'
-                >
-                  <img src={TrashIcon} alt='trash' />
-                </span>
-                <div className='onboarding-account_switch'>
-                  <p>{obj.active ? 'Connected' : 'Disconnected'}</p>
-                  <SwitchKit
-                    onChange={(e) => {
-                      openSwitchDeleteModal(e);
-                      setSelected('switch');
-                      setSwitchObj(obj);
-                    }}
-                    checked={obj.active}
-                  />
-                </div>
+                  checked={obj.active}
+                />
               </div>
             </div>
-          ))}
-        </div>
-        {renderModalBySelection()}
+          </div>
+        ))}
       </div>
-    );
-  };
+      {renderModalBySelection()}
+    </div>
+  );
+};
 
 export default ManageAccount;

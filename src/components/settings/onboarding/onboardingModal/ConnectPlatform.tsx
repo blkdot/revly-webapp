@@ -75,8 +75,9 @@ const ConnectPlatform: FC<{
           style={{ '--color': platformObj.color }}
           disabled={!(email && password)}
           loading={isLoading}
-          className={`connect-account-btn ${!platformObj?.color && 'onboarding-platform-border '} ${platformObj.name
-            }`}
+          className={`connect-account-btn ${!platformObj?.color && 'onboarding-platform-border '} ${
+            platformObj.name
+          }`}
         >
           <img src={platformObj.srcNoBg} alt={platform} />
           <p className={`onboarding-connect-content ${isLoading && 'loading'}`}>

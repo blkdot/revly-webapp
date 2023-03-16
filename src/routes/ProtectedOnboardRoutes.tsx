@@ -14,30 +14,28 @@ export const ProtectedOnboardRoutes = () => {
   const [vendors] = useAtom(vendorsAtom);
   const { chainData } = vendors;
   const [, setEligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
-  const [loading,setLoading] = useState(true)
-  const [errorOnboard,setErrorOnboard] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [errorOnboard, setErrorOnboard] = useState('');
   const onboard = async () => {
     setLoading(true);
-    await settingsOnboarded(
-      {
-        master_email: user.email,
-        access_token: user.token,
-      }
-    ).then((response) => {
-      setUserPlatformData({
-        onboarded: response?.onboarded,
-        platforms: { ...userPlatformData.platforms, ...response?.platforms },
+    await settingsOnboarded({
+      master_email: user.email,
+      access_token: user.token,
+    })
+      .then((response) => {
+        setUserPlatformData({
+          onboarded: response?.onboarded,
+          platforms: { ...userPlatformData.platforms, ...response?.platforms },
+        });
+        setLoading(false);
+      })
+      .catch((err) => {
+        setErrorOnboard(err);
       });
-      setLoading(false);
-    }).catch((err) => {
-      setErrorOnboard(err)
-    });
-    
-  }
+  };
   useEffect(() => {
-    onboard()
+    onboard();
   }, []);
-  
 
   const requestEligibilityDeliveroo = () => {
     try {
