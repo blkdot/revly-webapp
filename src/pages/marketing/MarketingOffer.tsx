@@ -463,7 +463,7 @@ const MarketingOffer = () => {
   return (
     <div className='wrapper marketing-wrapper'>
       <div className='top-inputs'>
-        <VendorsDropdownAdapter/>
+        <VendorsDropdownAdapter />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <ContainerKit>

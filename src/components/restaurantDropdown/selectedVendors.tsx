@@ -7,7 +7,7 @@ const selectedVendors = (name: string, display: any, plat?: string) => {
       if (display[cName][vName].checked) {
         if (name === 'name') {
           arr.push(vName);
-        } else if (name === 'full') {          
+        } else if (name === 'full') {
           if (display[cName][vName].platforms[plat]) {
             arr.push(display[cName][vName].platforms[plat]);
           }

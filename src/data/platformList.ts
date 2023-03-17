@@ -43,7 +43,7 @@ export const platformList = [
 
 export type TPlatformObject = {
   [x: string]: {
-    srcNoBG: string;
+    srcNoBg: string;
     srcWhite?: string;
     src: string;
     name: string;

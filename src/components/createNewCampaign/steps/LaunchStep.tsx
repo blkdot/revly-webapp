@@ -5,7 +5,12 @@ import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
-import { cleanDisplay, cleanVendorsObj, fromValue, VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
+import {
+  cleanDisplay,
+  cleanVendorsObj,
+  fromValue,
+  VendorsDropdownAdapter,
+} from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 
 type StateType = {
   title: string;
@@ -15,7 +20,7 @@ type StateType = {
     disabled?: boolean;
   }[];
 };
-type Value = string | number
+type Value = string | number;
 const LaunchStep: FC<{
   setStep: (v: string) => void;
   setOpened: (v: boolean) => void;
@@ -33,15 +38,17 @@ const LaunchStep: FC<{
     stateTemp.content.find((obj) => obj.title === 'Reccurence').value = 'Every day';
     setState({ ...stateTemp });
   };
-  const [platform] = useAtom(platformAtom)
-  const [vendors] = useAtom(vendorsAtom)
+  const [platform] = useAtom(platformAtom);
+  const [vendors] = useAtom(vendorsAtom);
   const handleChange = (values: Value[]) => {
     const newDisplay = cleanDisplay(branchVendors.display);
     const newVendorsObj = cleanVendorsObj();
-    values.map((value) => {
-      const { chain } = fromValue(value as string);
-      return chain
-    }).filter((chain) => chain)
+    values
+      .map((value) => {
+        const { chain } = fromValue(value as string);
+        return chain;
+      })
+      .filter((chain) => chain);
     const { chain: chainClicked } = fromValue(values[values.length - 1] as string);
 
     values.forEach((value) => {
@@ -52,12 +59,12 @@ const LaunchStep: FC<{
         newDisplay[chain][vendor].checked = true;
         platform.forEach((plat) => {
           newVendorsObj[plat].push(newDisplay[chain][vendor].platforms[plat]);
-        })
+        });
       }
     });
 
     setBranchVendors({ ...vendors, display: newDisplay, vendorsObj: newVendorsObj });
-  }
+  };
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>

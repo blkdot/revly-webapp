@@ -6,6 +6,7 @@ export type PlatformContextType = {
   cleanPlatformData: () => void;
   userPlatformData: TPlatformUserData;
   setUserPlatformData: (v: TPlatformUserData) => void;
+  exception: string[];
 };
 
 const PlatformContext = createContext<PlatformContextType>(undefined);
@@ -20,12 +21,12 @@ export const PlatformProvider = ({ children }) => {
 
     setUserPlatformData(platformContextDefaultFormat);
   };
-
+  const exception = ['careem', 'noon'];
   const getActivePlatform = (): string | null => {
     let activePlatform: string | null = null;
 
     Object.keys(userPlatformData.platforms).forEach((pl) => {
-      if (userPlatformData.platforms[pl].some((obj) => obj.active)) {
+      if (userPlatformData.platforms[pl].some((obj) => obj.active) && !exception.includes(pl)) {
         activePlatform = pl;
       }
     });
@@ -39,6 +40,7 @@ export const PlatformProvider = ({ children }) => {
       setUserPlatformData,
       cleanPlatformData,
       getActivePlatform,
+      exception,
     }),
     [userPlatformData]
   );

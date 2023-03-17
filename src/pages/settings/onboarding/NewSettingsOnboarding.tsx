@@ -1,9 +1,10 @@
+import { settingsOnboard } from 'api';
 import sortedVendors from 'components/restaurantDropdown/soretedVendors';
 import OnboardingMiddleContent from 'components/settings/onboarding/OnboardingMiddleContent';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
 import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
-import { usePlatform } from 'contexts';
+import { usePlatform, useUser } from 'contexts';
 import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
@@ -99,11 +100,16 @@ const NewSettingsOnboarding = () => {
     setBranchData(getBranchData());
     setBranchDataFiltered(getBranchData());
   }, [vendors, JSON.stringify(userPlatformData.platforms)]);
-
-  const openCloseModal = () => {
+  const user = useUser();
+  const openCloseModal = async () => {
     setOpenedModal(!openedModal);
     const clearArr = ['manageBranch', 'completed', 'manageAccount'];
 
+    if (connectAccount === 'completed') {
+      await settingsOnboard({
+        master_email: user.email,
+      });
+    }
     if (clearArr.find((str) => str === connectAccount)) {
       setConnectAccount('account');
     }

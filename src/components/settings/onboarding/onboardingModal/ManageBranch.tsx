@@ -167,7 +167,11 @@ const ManageBranch: FC<{
                   className={`render-linked-platforms-row ${obj.status}`}
                 >
                   <img
-                    src={getPlatform(obj.platform).srcWhite || getPlatform(obj.platform).src}
+                    src={
+                      getPlatform(obj.platform).srcNoBg ||
+                      getPlatform(obj.platform).srcWhite ||
+                      getPlatform(obj.platform).src
+                    }
                     alt={obj.platform}
                   />
                 </TypographyKit>

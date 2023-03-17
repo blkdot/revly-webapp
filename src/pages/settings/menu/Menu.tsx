@@ -2,7 +2,12 @@ import { getMenu } from 'api';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
-import { cleanDisplay, cleanVendorsObj, fromValue, VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
+import {
+  cleanDisplay,
+  cleanVendorsObj,
+  fromValue,
+  VendorsDropdownAdapter,
+} from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { usePlatform, useUser } from 'contexts';
 import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
@@ -18,7 +23,7 @@ import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import './Menu.scss';
 import MenuDropdown from './menuDropdown/MenuDropdown';
 
-type Value = string | number
+type Value = string | number;
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -88,23 +93,23 @@ const Menu = () => {
   }, [userPlatformData]);
 
   useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendors.display))
-    const vendorsObjTemp = {}
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
+    const vendorsObjTemp = {};
     Object.keys(vendors.display).forEach((chainName) => {
       Object.keys(vendors.display[chainName]).forEach((vendorName) => {
         Object.keys(vendors.display[chainName][vendorName].platforms).forEach((platV) => {
-          if (platV !== platform) {            
-            displayTemp[chainName][vendorName].platforms[platV].metadata.is_active = false
+          if (platV !== platform) {
+            displayTemp[chainName][vendorName].platforms[platV].metadata.is_active = false;
           }
-        })
+        });
         if (!Object.keys(vendors.display[chainName][vendorName].platforms).includes(platform)) {
           displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
         }
-      })
-    })
-    vendorsObjTemp[platform] = selectedVendors('full', displayTemp, platform)
-    setBranch({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp, });
+      });
+    });
+    vendorsObjTemp[platform] = selectedVendors('full', displayTemp, platform);
+    setBranch({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp });
   }, [vendors, platform]);
 
   useEffect(() => {

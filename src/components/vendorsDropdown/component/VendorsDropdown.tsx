@@ -42,14 +42,14 @@ export const VendorsDropdown: FC<{
 }> = ({ values, options, onChange }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = (value) => {
-    setOpen(value)
+    setOpen(value);
     const body = document.querySelector('body');
-    if(value){
-      body.style.overflowY = 'hidden'
+    if (value) {
+      body.style.overflowY = 'hidden';
       return;
     }
-    body.style.overflowY = 'visible'
-  }
+    body.style.overflowY = 'visible';
+  };
   const selected = useMemo(() => getSelectedParents(values, options), [values, options]);
 
   return (

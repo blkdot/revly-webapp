@@ -10,14 +10,14 @@
   align-items: center;
   cursor: pointer;
 
-  &>.content {
+  & > .content {
     display: flex;
     flex-direction: row;
     width: 100%;
     padding-left: 26px;
     padding-right: 26px;
 
-    &>.text {
+    & > .text {
       font-family: 'SF Pro Display';
       font-style: normal;
       font-weight: 400;
@@ -83,12 +83,31 @@
     }
   }
 
-  &>.ant-popover-content {
+  & > .ant-popover-content {
     width: 820px;
 
-    &>.ant-popover-inner {
+    & > .ant-popover-inner {
       margin: 0;
       padding: 0;
     }
+  }
+}
+
+.ant-list {
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f3f3f3;
+    border-radius: 31px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #637381;
+    border-radius: 31px;
   }
 }

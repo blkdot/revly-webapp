@@ -533,8 +533,9 @@ const Planning = () => {
 
   const [period, setPeriod] = useState('');
 
-  const title = `Planning for ${link === 'offers_planning' ? 'discounts' : 'ads'
-    } scheduled for ${capitalize(period)}`;
+  const title = `Planning for ${
+    link === 'offers_planning' ? 'discounts' : 'ads'
+  } scheduled for ${capitalize(period)}`;
 
   return (
     <div className='wrapper'>

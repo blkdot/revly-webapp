@@ -7,11 +7,9 @@ import Dates from 'components/dates/Dates';
 import AdvertsDetails from 'components/details/AdvertsDetails';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
-import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
-import { usePlatform } from 'contexts';
 import { platformObject } from 'data/platformList';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
@@ -30,32 +28,28 @@ const Adverts = () => {
   const { vendors } = useVendors();
   const [disabled, setDisabled] = useState(true);
   const [branchVendors] = useAtom(branchAtom);
-  const [availblePlatform, setAvailblePlatform] = useAtom(platformAtom)
+  const [availblePlatform, setAvailblePlatform] = useAtom(platformAtom);
   const { setVendors } = useMarketingSetup();
   const [openedCampaign, setOpenedCampaign] = useState(false);
-  const { userPlatformData } = usePlatform();
   const [step, setStep] = useState('launch');
-
   useEffect(() => {
-    if (step === 'launch' && !openedCampaign) {
-      setVendors(['deliveroo']);
-      const displayTemp = JSON.parse(JSON.stringify(branchVendors?.display || {}));
-      if (branchVendors?.vendorsArr?.length === 0) {
-        setAvailblePlatform(['deliveroo'])
-      }
-      if (
-        selectedVendors('name', displayTemp).length > 0 &&
-        ['deliveroo'].some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
-      ) {
-        setTimeout(() => {
-          setDisabled(false);
-        }, 1500);
-      } else {
-        setDisabled(true);
-      }
+    setAvailblePlatform(['deliveroo']);
+  }, []);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    setVendors(['deliveroo']);
+    const vendorsObjLength = Object.keys(branchVendors.vendorsObj || {}).flatMap(
+      (plat) => branchVendors.vendorsObj[plat]
+    ).length;
+    if (vendorsObjLength === 0) {
+      setCount(count + 1);
+    }
+
+    if (vendorsObjLength > 0) {
+      setDisabled(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vendors, availblePlatform]);
+  }, [vendors, availblePlatform, count]);
 
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
@@ -351,7 +345,9 @@ const Adverts = () => {
   ];
   const renderLayout = () => {
     if (openedCampaign) {
-      return <AdvertsCreateNewCampaign step={step} setStep={setStep} setOpened={setOpenedCampaign} />;
+      return (
+        <AdvertsCreateNewCampaign step={step} setStep={setStep} setOpened={setOpenedCampaign} />
+      );
     }
     if (opened) {
       return (

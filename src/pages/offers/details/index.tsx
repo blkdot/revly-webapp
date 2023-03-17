@@ -243,7 +243,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className='offer-visibility-title'>Orders</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
-                      {n_orders === 0 || n_orders ? n_orders : '-'}
+                      {n_orders === 0 || n_orders ? parseFloat(n_orders.toFixed(2)) : '-'}
                     </div>
                   </div>
                   <div className='offer-visibility-block'>
@@ -251,7 +251,9 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className='offer-visibility-title'>Avg. Basket</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
-                      {average_basket === 0 || average_basket ? `${average_basket} AED` : '-'}
+                      {average_basket === 0 || average_basket
+                        ? `${parseFloat(average_basket.toFixed(2))} AED`
+                        : '-'}
                     </div>
                   </div>
                   <div className='offer-visibility-block'>
@@ -259,7 +261,9 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className='offer-visibility-title'>Accrued Discount</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
-                      {accrued_discount === 0 || accrued_discount ? `${accrued_discount} AED` : '-'}
+                      {accrued_discount === 0 || accrued_discount
+                        ? `${parseFloat(accrued_discount.toFixed(2))} AED`
+                        : '-'}
                     </div>
                   </div>
                   <div className='offer-visibility-block'>
@@ -267,7 +271,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className='offer-visibility-title'>ROI</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
-                      {roi === 0 || roi ? `${roi} AED` : '-'}
+                      {roi === 0 || roi ? `${parseFloat(roi.toFixed(2))} AED` : '-'}
                       <p>for every 1 AED spend on discount</p>
                     </div>
                   </div>
@@ -276,7 +280,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className='offer-visibility-title'>Revenue</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
-                      {revenue === 0 || revenue ? `${revenue} AED` : '-'}
+                      {revenue === 0 || revenue ? `${parseFloat(revenue.toFixed(2))} AED` : '-'}
                     </div>
                   </div>
                   <div className='offer-visibility-block'>
@@ -284,7 +288,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
                       <span className='offer-visibility-title'>Net Revenue</span>
                     </div>
                     <div className='offer-visibility-sub-title'>
-                      {profit === 0 || profit ? `${profit} AED` : '-'}
+                      {profit === 0 || profit ? `${parseFloat(profit.toFixed(2))} AED` : '-'}
                     </div>
                   </div>
                 </div>

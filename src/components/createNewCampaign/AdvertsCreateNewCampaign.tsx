@@ -32,7 +32,7 @@ const AdvertsCreateNewCampaign: FC<{
   setOpened: (v: boolean) => void;
   step: string;
   setStep: (v: string) => void;
-}> = ({ setOpened,step,setStep }) => {
+}> = ({ setOpened, step, setStep }) => {
   const [advertDetailsWidget, setAdvertDetailsWidget] = useState<StateType>({
     title: 'Your Advert details',
     content: [

@@ -25,7 +25,12 @@ export function cleanDisplay(vendors: TDisplayVendor): TDisplayVendor {
   return newVendors;
 }
 
-export const cleanVendorsObj = (): TVendorsObj => ({ deliveroo: [], talabat: [], noon: [], careem: [] });
+export const cleanVendorsObj = (): TVendorsObj => ({
+  deliveroo: [],
+  talabat: [],
+  noon: [],
+  careem: [],
+});
 
 export const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
 
@@ -71,7 +76,9 @@ const toParentNode = (chain: string, value: any) => ({
   subTitle: pluralize('Branches', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
-  deleted: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])).every((v) => v.deleted),
+  deleted: Object.keys(value)
+    .map((branch) => toChildrenNode(chain, branch, value[branch]))
+    .every((v) => v.deleted),
 });
 
 export const vendorsSorter = (a: string, b: string) => {
@@ -116,14 +123,24 @@ export const VendorsDropdownAdapter: FC<{
     [vendors, setVendors]
   );
 
-  const values = useMemo(() => toValues(state?.display || vendors.display), [state?.display || vendors.display]);
-  const options = useMemo(() => toOptions(state?.display || vendors.display), [state?.display || vendors.display]);
-  return (<div className='date-picker_wrapper'>
-    {!state && <TypographyKit className='top-text-inputs' variant='subtitle'>
-      Select a Vendor
-    </TypographyKit>}
-    <VendorsDropdown values={values} options={options} onChange={handleChange || onChange} />
-  </div>);
+  const values = useMemo(
+    () => toValues(state?.display || vendors.display),
+    [state?.display || vendors.display]
+  );
+  const options = useMemo(
+    () => toOptions(state?.display || vendors.display),
+    [state?.display || vendors.display]
+  );
+  return (
+    <div className='date-picker_wrapper'>
+      {!state && (
+        <TypographyKit className='top-text-inputs' variant='subtitle'>
+          Select a Vendor
+        </TypographyKit>
+      )}
+      <VendorsDropdown values={values} options={options} onChange={handleChange || onChange} />
+    </div>
+  );
 };
 
 VendorsDropdownAdapter.defaultProps = {

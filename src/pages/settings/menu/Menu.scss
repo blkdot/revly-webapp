@@ -5,18 +5,18 @@
 
     .__select {
       width: 31%;
-      >div{
+      > div {
         height: 48px;
-        >label{
-          transition: .3s;
+        > label {
+          transition: 0.3s;
           opacity: 1;
         }
-        >label[data-shrink="true"]{
+        > label[data-shrink='true'] {
           opacity: 0;
         }
-        >div{
+        > div {
           background-color: #fff;
-          fieldset{
+          fieldset {
             border: none !important;
           }
         }

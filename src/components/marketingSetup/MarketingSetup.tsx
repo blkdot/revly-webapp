@@ -163,7 +163,6 @@ const MarketingSetup: React.FC<{
   const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
   const { vendors } = useVendors();
   const { vendorsObj } = vendors;
-
   useEffect(() => {
     setPlatform([getActivePlatform()]);
   }, [getActivePlatform()]);
@@ -404,20 +403,20 @@ const MarketingSetup: React.FC<{
     setHeatmapRangeFromState();
   }, [heatmapLoading]);
   useEffect(() => {
-    setVendors(platform);    
+    setVendors(platform);
     setMenu('Offer on the whole Menu');
   }, [platform, vendors]);
   const getHeatmapData = () => {
     if (heatmapLoading) return;
-    
+
     setHeatmapLoading(true);
-    const vendorsObjTemp = {...branch.vendorsObj}
-    
+    const vendorsObjTemp = { ...branch.vendorsObj };
+
     Object.keys(vendorsObjTemp).forEach((plat) => {
-      if(vendorsObjTemp[plat].length === 0){
-        delete vendorsObjTemp[plat]
+      if (vendorsObjTemp[plat].length === 0) {
+        delete vendorsObjTemp[plat];
       }
-    })
+    });
     if (Object.keys(vendorsObjTemp).length === 0) {
       setHeatmapLoading(false);
       setHeatmapData({

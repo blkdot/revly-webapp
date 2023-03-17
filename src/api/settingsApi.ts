@@ -28,3 +28,6 @@ export const useSettingsOnboarded = (body: Record<string, unknown>, key?: any) =
     () => fetcher(`/settingsv2/onboarded`, body),
     { retry: false }
   );
+
+export const settingsOnboard = (body) =>
+  api.post(`/settingsv2/onboard`, body).then(handleResponse).catch(handleResponse);

@@ -141,96 +141,100 @@ const useMarketingSetup = () => {
 
   const [elligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
   const { vendors } = useVendors();
-  const [branch,setBranch] = useAtom(branchAtom)
+  const [branch, setBranch] = useAtom(branchAtom);
 
-  const setVendors = (
-    platform: string[]
-  ) => {
+  const setVendors = (platform: string[]) => {
     const vendorsObjTemp = {};
     const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     let counter = 0;
     let defaultSelection = null;
 
-    Object.keys(displayTemp).sort(vendorsSorter).forEach((chainName) => {
-      Object.keys(displayTemp[chainName]).forEach((vendorName) => {
-        displayTemp[chainName][vendorName].checked =
-          branch?.display?.[chainName]?.[vendorName]?.checked || false;
-        if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
-          displayTemp[chainName][vendorName].deleted = true;
-          displayTemp[chainName][vendorName].checked = false;
-        } else {
-          const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
-          platformsDisplay.forEach((platformV) => {
-            displayTemp[chainName][vendorName].deactivated = false;
+    Object.keys(displayTemp)
+      .sort(vendorsSorter)
+      .forEach((chainName) => {
+        Object.keys(displayTemp[chainName]).forEach((vendorName) => {
+          displayTemp[chainName][vendorName].checked =
+            branch?.display?.[chainName]?.[vendorName]?.checked || false;
+          if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
+            displayTemp[chainName][vendorName].deleted = true;
+            displayTemp[chainName][vendorName].checked = false;
+          } else {
+            const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
+            platformsDisplay.forEach((platformV) => {
+              displayTemp[chainName][vendorName].deactivated = false;
 
-            if (platformV?.toLocaleLowerCase() === 'deliveroo' && platform.includes('deliveroo')) {
-              const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
+              if (
+                platformV?.toLocaleLowerCase() === 'deliveroo' &&
+                platform.includes('deliveroo')
+              ) {
+                const vId = displayTemp[chainName][vendorName].platforms[platformV].vendor_id;
 
-              const exists = elligibilityDeliverooState?.[vId];
+                const exists = elligibilityDeliverooState?.[vId];
 
-              if (!exists) {
-                if (platform.length === 1) {
+                if (!exists) {
+                  if (platform.length === 1) {
+                    displayTemp[chainName][vendorName].deactivated = true;
+                    displayTemp[chainName][vendorName].checked = false;
+                    return;
+                  }
+
+                  if (Object.keys(displayTemp[chainName][vendorName].platforms).length === 2) {
+                    displayTemp[chainName][vendorName].platforms.deliveroo.metadata.is_active =
+                      false;
+
+                    return;
+                  }
+
                   displayTemp[chainName][vendorName].deactivated = true;
                   displayTemp[chainName][vendorName].checked = false;
                   return;
                 }
-
-                if (Object.keys(displayTemp[chainName][vendorName].platforms).length === 2) {
-                  displayTemp[chainName][vendorName].platforms.deliveroo.metadata.is_active = false;
-
-                  return;
-                }
-
-                displayTemp[chainName][vendorName].deactivated = true;
-                displayTemp[chainName][vendorName].checked = false;
-                return;
               }
-            }
 
-            if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
-              displayTemp[chainName][vendorName].deleted = true;
-              displayTemp[chainName][vendorName].checked = false;
-            }
-
-            if (
-              !displayTemp[chainName][vendorName].platforms[platform[0]]?.metadata.is_active &&
-              platform.length === 1
-            ) {
-              displayTemp[chainName][vendorName].deleted = true;
-              displayTemp[chainName][vendorName].checked = false;
-            }
-
-            if (!platform.includes(platformV)) {
-              displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
-            }
-          });
-
-          if (platform.length === 1) {
-            platform.forEach((p) => {
-              if (!platformsDisplay.includes(p)) {
+              if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
                 displayTemp[chainName][vendorName].deleted = true;
                 displayTemp[chainName][vendorName].checked = false;
               }
+
+              if (
+                !displayTemp[chainName][vendorName].platforms[platform[0]]?.metadata.is_active &&
+                platform.length === 1
+              ) {
+                displayTemp[chainName][vendorName].deleted = true;
+                displayTemp[chainName][vendorName].checked = false;
+              }
+
+              if (!platform.includes(platformV)) {
+                displayTemp[chainName][vendorName].platforms[platformV].metadata.is_active = false;
+              }
             });
-          }
 
-          if (
-            !displayTemp[chainName][vendorName].deleted &&
-            !defaultSelection &&
-            !displayTemp[chainName][vendorName].deactivated
-          ) {
-            defaultSelection = {
-              chainName,
-              vendorName,
-            };
-          }
+            if (platform.length === 1) {
+              platform.forEach((p) => {
+                if (!platformsDisplay.includes(p)) {
+                  displayTemp[chainName][vendorName].deleted = true;
+                  displayTemp[chainName][vendorName].checked = false;
+                }
+              });
+            }
 
-          if (displayTemp[chainName][vendorName].checked) {
-            counter += 1;
+            if (
+              !displayTemp[chainName][vendorName].deleted &&
+              !defaultSelection &&
+              !displayTemp[chainName][vendorName].deactivated
+            ) {
+              defaultSelection = {
+                chainName,
+                vendorName,
+              };
+            }
+
+            if (displayTemp[chainName][vendorName].checked) {
+              counter += 1;
+            }
           }
-        }
+        });
       });
-    });
 
     if (counter === 0 && defaultSelection?.chainName && defaultSelection?.vendorName) {
       displayTemp[defaultSelection?.chainName][defaultSelection?.vendorName].checked = true;
@@ -238,13 +242,12 @@ const useMarketingSetup = () => {
     platform.forEach((plat) => {
       vendorsObjTemp[plat] = selectedVendors('full', displayTemp, plat);
     });
-    
+
     setBranch({
       ...vendors,
       display: displayTemp,
       vendorsObj: vendorsObjTemp,
     });
-    
   };
 
   return {

@@ -29,7 +29,10 @@ const ParentListItem: FC<{
   onSelectOnly: (value: Value) => void;
   setSelected: (v: Value) => void;
 }> = ({ item, onSelect, onSelectOnly, setSelected }) => (
-  <List.Item onClick={() => setSelected(item.value)} className={`list-item ${item.checked && 'checked'}`}>
+  <List.Item
+    onClick={() => setSelected(item.value)}
+    className={`list-item ${item.checked && 'checked'}`}
+  >
     <div className='parent-list-item-container'>
       <div>
         <Checkbox
@@ -45,17 +48,18 @@ const ParentListItem: FC<{
         </Space>
       </div>
       <div className='action-buttons'>
-        <Button className='list-item-select-only' type='text' onClick={(e) => {
-          e.stopPropagation();
-          onSelectOnly(item.value)
-        }} disabled={item.disabled}>
+        <Button
+          className='list-item-select-only'
+          type='text'
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelectOnly(item.value);
+          }}
+          disabled={item.disabled}
+        >
           Select Only
         </Button>
-        <Button
-          type='text'
-          disabled={item.disabled}
-          className='expand-button'
-        >
+        <Button type='text' disabled={item.disabled} className='expand-button'>
           <ArrowRightIcon />
         </Button>
       </div>

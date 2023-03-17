@@ -44,7 +44,8 @@ const ChildrenListItem: FC<{
         className='list-item-select-only'
         type='text'
         onClick={() => onSelectOnly(item.value)}
-        disabled={item.disabled}>
+        disabled={item.disabled}
+      >
         Select Only
       </Button>
       {item.extra}
@@ -58,7 +59,12 @@ export const ChildrenList: FC<{
   onSelectOnly: (value: Value) => void;
 }> = ({ items, onSelect, onSelectOnly }) => {
   if (items.length === 0) {
-    return <Empty description='Select a brand to see the list of your branches' image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    return (
+      <Empty
+        description='Select a brand to see the list of your branches'
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+      />
+    );
   }
 
   return (
