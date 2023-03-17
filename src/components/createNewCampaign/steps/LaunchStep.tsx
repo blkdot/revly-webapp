@@ -1,16 +1,16 @@
 import { Arrow } from 'assets/icons';
-import { differenceInDays } from 'date-fns';
-import { useAtom } from 'jotai';
-import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
-import { vendorsAtom } from 'store/vendorsAtom';
-import { ButtonKit } from 'kits';
-import { FC } from 'react';
+import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import {
   cleanDisplay,
   cleanVendorsObj,
   fromValue,
-  VendorsDropdownAdapter,
 } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
+import { differenceInDays } from 'date-fns';
+import { useAtom } from 'jotai';
+import { ButtonKit } from 'kits';
+import { FC } from 'react';
+import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
+import { vendorsAtom } from 'store/vendorsAtom';
 
 type StateType = {
   title: string;
@@ -71,7 +71,7 @@ const LaunchStep: FC<{
         <p>1. Launch a New Adverts </p>
         <span>Schedule ads at the right slot and boost your visibility and sales.</span>
         <div className='advert-branches'>
-          <VendorsDropdownAdapter handleChange={handleChange} state={branchVendors} />
+          <RestaurantDropdown pageType='branch' setState={setBranchVendors} state={branchVendors} />
         </div>
       </div>
       <div className='adverts-buttons'>

@@ -1,9 +1,9 @@
+import { TopInputItem } from 'components';
 import { useAtom } from 'jotai';
-import { TypographyKit } from 'kits';
 import pluralize from 'pluralize';
 import { FC, useCallback, useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
-import { TDisplayVendor, TVendors, TVendorsObj } from 'types';
+import { TDisplayVendor, TVendorsObj } from 'types';
 import { VendorsDropdown } from '../component/VendorsDropdown';
 import { ReactComponent as CareemIcon } from './icons/careem.svg';
 import { ReactComponent as DeliverooIcon } from './icons/deliveroo.svg';
@@ -98,10 +98,7 @@ const toOptions = (vendors: TDisplayVendor) =>
     .sort(vendorsSorter)
     .map((chain) => toParentNode(chain, vendors[chain]));
 
-export const VendorsDropdownAdapter: FC<{
-  handleChange?: (v: Value[]) => void;
-  state?: TVendors | Record<string, never>;
-}> = ({ handleChange, state }) => {
+export const VendorsDropdownAdapter: FC = () => {
   const [vendors, setVendors] = useAtom(vendorsAtom);
 
   const onChange = useCallback(
@@ -123,27 +120,12 @@ export const VendorsDropdownAdapter: FC<{
     [vendors, setVendors]
   );
 
-  const values = useMemo(
-    () => toValues(state?.display || vendors.display),
-    [state?.display || vendors.display]
-  );
-  const options = useMemo(
-    () => toOptions(state?.display || vendors.display),
-    [state?.display || vendors.display]
-  );
-  return (
-    <div className='date-picker_wrapper'>
-      {!state && (
-        <TypographyKit className='top-text-inputs' variant='subtitle'>
-          Select a Vendor
-        </TypographyKit>
-      )}
-      <VendorsDropdown values={values} options={options} onChange={handleChange || onChange} />
-    </div>
-  );
-};
+  const values = useMemo(() => toValues(vendors.display), [vendors.display]);
+  const options = useMemo(() => toOptions(vendors.display), [vendors.display]);
 
-VendorsDropdownAdapter.defaultProps = {
-  handleChange: null,
-  state: null,
+  return (
+    <TopInputItem title='Select a vendor'>
+      <VendorsDropdown values={values} options={options} onChange={onChange} />
+    </TopInputItem>
+  );
 };

@@ -1,5 +1,5 @@
 import { useMetrics } from 'api';
-import { PageHeader, TopInputItem } from 'components';
+import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
@@ -253,9 +253,7 @@ const Dashboard = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        <TopInputItem title='Select a Vendor'>
-          <VendorsDropdownAdapter />
-        </TopInputItem>
+        <VendorsDropdownAdapter />
         <Dates isDashboard />
       </div>
       <ContainerKit>
