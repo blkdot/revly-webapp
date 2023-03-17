@@ -1,0 +1,21 @@
+.top-input-item-container {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+
+  & > .top-input-item-header {
+    gap: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & > .top-input-item-title {
+      font-family: 'Public Sans';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 22px;
+      color: #1a202c;
+    }
+  }
+}
