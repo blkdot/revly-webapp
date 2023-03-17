@@ -1,5 +1,5 @@
 import MarketingRadio from 'components/marketingSetup/MarketingRadio';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import { cleanDisplay, cleanVendorsObj, fromValue, VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { usePlatform } from 'contexts';
 import { platformList } from 'data/platformList';
 import { RadioGroupKit, TypographyKit } from 'kits';
@@ -7,6 +7,7 @@ import { FC } from 'react';
 import { TVendors } from 'types';
 import { Subtitle } from './components/Subtitle';
 
+type Value = string | number
 // eslint-disable-next-line import/prefer-default-export
 export const PlatformStep: FC<{
   index: number;
@@ -19,6 +20,29 @@ export const PlatformStep: FC<{
 
   if (!branch || Object.keys(branch).length < 1) return null;
 
+  const handleChange = (values: Value[]) => {
+    const newDisplay = cleanDisplay(branch.display);
+    const newVendorsObj = cleanVendorsObj();
+    values.map((value) => {
+      const { chain } = fromValue(value as string);
+      return chain
+    }).filter((chain) => chain)
+    const { chain: chainClicked } = fromValue(values[values.length - 1] as string);
+    
+    values.forEach((value) => {
+      const { chain, vendor } = fromValue(value as string);
+      
+      newDisplay[chain][vendor].checked = false;
+      if(chainClicked === chain){
+        newDisplay[chain][vendor].checked = true;
+        platform.forEach((plat) => {
+          newVendorsObj[plat].push(newDisplay[chain][vendor].platforms[plat]);
+        })
+      }
+    });
+
+    setBranch({ ...branch, display: newDisplay, vendorsObj: newVendorsObj });
+  }
   return (
     <div className='left-part-middle'>
       <TypographyKit variant='h6'>{index}. Select platform and branches</TypographyKit>
@@ -47,11 +71,9 @@ export const PlatformStep: FC<{
             ))}
         </RadioGroupKit>
       </div>
-      <RestaurantDropdown
-        className='offer-setup-dropdown'
-        pageType='branch'
-        setState={setBranch}
-        state={branch}
+      <VendorsDropdownAdapter
+      handleChange={handleChange}
+      state={branch}
       />
     </div>
   );

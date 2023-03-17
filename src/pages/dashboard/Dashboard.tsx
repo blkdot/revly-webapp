@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   const { date: dateContext } = useDate();
   const { beforePeriod, afterPeriod } = dateContext;
-
+  
   const m1 = useMetrics(
     { from: dayjs(beforePeriod.startDate), until: dayjs(beforePeriod.endDate) },
     vendorsObj

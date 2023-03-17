@@ -1,20 +1,23 @@
+@import '../../../library.scss';
+
 .dropdown-header {
   height: 48px;
-  width: 370px;
+  max-width: 370px;
+  width: 100%;
   background: #f8f9fb;
   border-radius: 10px;
   display: flex;
   align-items: center;
   cursor: pointer;
 
-  & > .content {
+  &>.content {
     display: flex;
     flex-direction: row;
     width: 100%;
     padding-left: 26px;
     padding-right: 26px;
 
-    & > .text {
+    &>.text {
       font-family: 'SF Pro Display';
       font-style: normal;
       font-weight: 400;
@@ -32,10 +35,58 @@
 }
 
 .dropdown-popup {
-  & > .ant-popover-content {
+  .ant-checkbox-indeterminate {
+    .ant-checkbox-inner {
+      &::after {
+        background-color: $color-main !important;
+      }
+    }
+  }
+
+  .ant-checkbox-checked {
+    &::after {
+      border-color: $color-main !important;
+    }
+
+    .ant-checkbox-inner {
+      border-color: $color-main;
+      background-color: $color-main;
+    }
+  }
+
+  .ant-checkbox-wrapper {
+    .ant-checkbox-checked {
+      &::after {
+        border-color: $color-main !important;
+      }
+
+      .ant-checkbox-inner {
+        border-color: $color-main;
+        background-color: $color-main;
+      }
+    }
+
+    &:hover {
+      .ant-checkbox-checked {
+        &::after {
+          border-color: $color-main !important;
+        }
+
+        .ant-checkbox-inner {
+          background-color: $color-main !important;
+        }
+      }
+
+      .ant-checkbox-inner {
+        border-color: $color-main !important;
+      }
+    }
+  }
+
+  &>.ant-popover-content {
     width: 820px;
 
-    & > .ant-popover-inner {
+    &>.ant-popover-inner {
       margin: 0;
       padding: 0;
     }

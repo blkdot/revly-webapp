@@ -1,9 +1,10 @@
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
-import sortedVendors from 'components/restaurantDropdown/soretedVendors';
+import { vendorsSorter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { addHours, addMinutes, format } from 'date-fns';
 import { useAtom } from 'jotai';
 import { elligibilityDeliverooAtom } from 'store/eligibilityDeliveroo';
 import {
+  branchAtom,
   customisedDayAtom,
   everyWeekAtom,
   itemMenuAtom,
@@ -11,7 +12,7 @@ import {
   timesAtom,
   typeScheduleAtom,
 } from 'store/marketingSetupAtom';
-import { TDisplayVendor, TVendors } from 'types';
+import { TDisplayVendor } from 'types';
 import useVendors from './useVendors';
 
 const itemMenuObj = {
@@ -140,22 +141,20 @@ const useMarketingSetup = () => {
 
   const [elligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
   const { vendors } = useVendors();
+  const [branch,setBranch] = useAtom(branchAtom)
 
   const setVendors = (
-    display: TDisplayVendor,
-    setState: (value: TVendors | Record<string, never>) => void,
-    state: TVendors | Record<string, never>,
     platform: string[]
   ) => {
-    const vendorsObjTemp = JSON.parse(JSON.stringify(vendors.vendorsObj));
-    const displayTemp = JSON.parse(JSON.stringify(display));
+    const vendorsObjTemp = {};
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
     let counter = 0;
     let defaultSelection = null;
 
-    sortedVendors(displayTemp).forEach((chainName) => {
+    Object.keys(displayTemp).sort(vendorsSorter).forEach((chainName) => {
       Object.keys(displayTemp[chainName]).forEach((vendorName) => {
         displayTemp[chainName][vendorName].checked =
-          state?.display?.[chainName]?.[vendorName]?.checked || false;
+          branch?.display?.[chainName]?.[vendorName]?.checked || false;
         if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
           displayTemp[chainName][vendorName].deleted = true;
           displayTemp[chainName][vendorName].checked = false;
@@ -239,11 +238,13 @@ const useMarketingSetup = () => {
     platform.forEach((plat) => {
       vendorsObjTemp[plat] = selectedVendors('full', displayTemp, plat);
     });
-    setState({
+    
+    setBranch({
       ...vendors,
       display: displayTemp,
       vendorsObj: vendorsObjTemp,
     });
+    
   };
 
   return {

@@ -7,10 +7,10 @@ import Dates from 'components/dates/Dates';
 import AdvertsDetails from 'components/details/AdvertsDetails';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { usePlatform } from 'contexts';
 import { platformObject } from 'data/platformList';
 import { endOfMonth, endOfWeek } from 'date-fns';
@@ -20,7 +20,7 @@ import { useAtom } from 'jotai';
 import { ButtonAction, ContainerKit } from 'kits';
 import { defaultFilterStateFormat } from 'pages/marketing/marketingOfferData';
 import { useEffect, useMemo, useState } from 'react';
-import { branchAtom } from 'store/marketingSetupAtom';
+import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
 import Columns from '../../assets/images/columns.svg';
 import './Adverts.scss';
 
@@ -29,27 +29,33 @@ const Adverts = () => {
   const { beforePeriod } = date;
   const { vendors } = useVendors();
   const [disabled, setDisabled] = useState(true);
-  const [branchVendors, setBranchVendors] = useAtom(branchAtom);
-  const AvailablePlatform = ['deliveroo'];
+  const [branchVendors] = useAtom(branchAtom);
+  const [availblePlatform, setAvailblePlatform] = useAtom(platformAtom)
   const { setVendors } = useMarketingSetup();
   const [openedCampaign, setOpenedCampaign] = useState(false);
   const { userPlatformData } = usePlatform();
-  useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
-    setVendors(displayTemp, setBranchVendors, branchVendors, AvailablePlatform);
+  const [step, setStep] = useState('launch');
 
-    if (
-      selectedVendors('name', displayTemp).length > 0 &&
-      AvailablePlatform.some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
-    ) {
-      setTimeout(() => {
-        setDisabled(false);
-      }, 1500);
-    } else {
-      setDisabled(true);
+  useEffect(() => {
+    if (step === 'launch' && !openedCampaign) {
+      setVendors(['deliveroo']);
+      const displayTemp = JSON.parse(JSON.stringify(branchVendors?.display || {}));
+      if (branchVendors?.vendorsArr?.length === 0) {
+        setAvailblePlatform(['deliveroo'])
+      }
+      if (
+        selectedVendors('name', displayTemp).length > 0 &&
+        ['deliveroo'].some((plat) => userPlatformData.platforms[plat].some((obj) => obj.active))
+      ) {
+        setTimeout(() => {
+          setDisabled(false);
+        }, 1500);
+      } else {
+        setDisabled(true);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vendors, openedCampaign]);
+  }, [vendors, availblePlatform]);
 
   const getOfferDate = () => {
     if (date.typeDate === 'month') {
@@ -345,7 +351,7 @@ const Adverts = () => {
   ];
   const renderLayout = () => {
     if (openedCampaign) {
-      return <AdvertsCreateNewCampaign setOpened={setOpenedCampaign} />;
+      return <AdvertsCreateNewCampaign step={step} setStep={setStep} setOpened={setOpenedCampaign} />;
     }
     if (opened) {
       return (
@@ -403,7 +409,7 @@ const Adverts = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        <RestaurantDropdown />
+        <VendorsDropdownAdapter />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       {renderLayout()}

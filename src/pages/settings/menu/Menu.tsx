@@ -1,12 +1,14 @@
 import { getMenu } from 'api';
+import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { cleanDisplay, cleanVendorsObj, fromValue, VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { usePlatform, useUser } from 'contexts';
 import { useAlert, useVendors } from 'hooks';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import { TVendorsArr } from 'types';
+import { branchAtom } from 'store/marketingSetupAtom';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
-import icbranch from '../../../assets/images/ic_menu-branch.png';
 import iccategory from '../../../assets/images/ic_menu-category.png';
 import icplatform from '../../../assets/images/ic_select_platform.png';
 import ictalabat from '../../../assets/images/talabat-favicon.png';
@@ -15,6 +17,8 @@ import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
 import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import './Menu.scss';
 import MenuDropdown from './menuDropdown/MenuDropdown';
+
+type Value = string | number
 
 const Menu = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -28,8 +32,7 @@ const Menu = () => {
   const { userPlatformData } = usePlatform();
   const { triggerAlertWithMessageError } = useAlert();
   const { vendors } = useVendors();
-  const { vendorsArr: vendorList } = vendors;
-  const [branch, setBranch] = useState<string | TVendorsArr>('');
+  const [branch, setBranch] = useAtom(branchAtom);
   const user = useUser();
 
   const getMenuData = async (vendor, platforms) => {
@@ -85,20 +88,46 @@ const Menu = () => {
   }, [userPlatformData]);
 
   useEffect(() => {
-    if (vendorList && vendorList.length) {
-      const ve = vendorList?.filter((v) => v.platform === platform);
-      setBranch(ve[0] || '');
-    }
-  }, [vendorList, platform]);
+    const displayTemp = JSON.parse(JSON.stringify(vendors.display))
+    const vendorsObjTemp = {}
+    Object.keys(vendors.display).forEach((chainName) => {
+      Object.keys(vendors.display[chainName]).forEach((vendorName) => {
+        Object.keys(vendors.display[chainName][vendorName].platforms).forEach((platV) => {
+          if (platV !== platform) {            
+            displayTemp[chainName][vendorName].platforms[platV].metadata.is_active = false
+          }
+        })
+        if (!Object.keys(vendors.display[chainName][vendorName].platforms).includes(platform)) {
+          displayTemp[chainName][vendorName].deleted = true;
+          displayTemp[chainName][vendorName].checked = false;
+        }
+      })
+    })
+    vendorsObjTemp[platform] = selectedVendors('full', displayTemp, platform)
+    setBranch({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp, });
+  }, [vendors, platform]);
 
   useEffect(() => {
-    if (branch) {
-      getMenuData(branch, platform);
+    if (branch.vendorsArr) {
+      getMenuData(branch.vendorsArr, platform);
     }
-  }, [branch, platform]);
-
+  }, [branch.vendorsArr, platform]);
   const handleSelectChange = (e, set) => {
     set(e.target.value);
+  };
+  const handleChange = (values: Value[]) => {
+    const newDisplay = cleanDisplay(branch.display);
+    const newVendorsObj = cleanVendorsObj();
+
+    values.forEach((value) => {
+      const { chain, vendor } = fromValue(value as string);
+
+      newDisplay[chain][vendor].checked = true;
+      Object.keys(newDisplay[chain][vendor].platforms).forEach((plat) => {
+        newVendorsObj[plat].push(newDisplay[chain][vendor].platforms[plat]);
+      });
+    });
+    setBranch({ ...vendors, display: newDisplay, vendorsObj: newVendorsObj });
   };
 
   const handleCategoryChange = (e) => {
@@ -193,7 +222,7 @@ const Menu = () => {
           />
         </div>
         <div className='__select'>
-          <MenuDropdown
+          {/* <MenuDropdown
             onChange={(e) => handleSelectChange(e, setBranch)}
             startIcon={
               <img src={icbranch} alt='category' style={{ position: 'relative', bottom: '2px' }} />
@@ -215,7 +244,8 @@ const Menu = () => {
                 </div>
               </MenuItemKit>
             )}
-          />
+          /> */}
+          <VendorsDropdownAdapter state={branch} handleChange={handleChange} />
         </div>
         <div className='__select'>
           <MenuDropdown

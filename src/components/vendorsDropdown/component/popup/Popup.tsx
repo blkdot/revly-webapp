@@ -46,7 +46,7 @@ export const Popup: FC<{
   onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<Value>(null);
+  const [selected, setSelected] = useState<Value>(options[0].value || null);
 
   const valuesSet = useMemo(() => new Set(values), [values]);
 
@@ -163,15 +163,16 @@ export const Popup: FC<{
 
   const parentListItems = useMemo(() => {
     const items = [];
-    filteredOptions.forEach((v) => {
-      const checked = v.children.filter((c) => !c.disabled).every((c) => valuesSet.has(c.value));
+    filteredOptions.filter((v) => !v.deleted).forEach((v) => {
+      const checked = v.children.filter((c) => !c.disabled || !c.deleted).every((c) => valuesSet.has(c.value));
       const intermediate =
-        !checked && v.children.filter((c) => !c.disabled).some((c) => valuesSet.has(c.value));
+        !checked && v.children.filter((c) => !c.disabled || !c.deleted).some((c) => valuesSet.has(c.value));
 
       items.push({
         value: v.value,
         title: v.title,
         subTitle: v.subTitle,
+        deleted: v.deleted,
         disabled: v.disabled,
         checked,
         intermediate,
@@ -189,12 +190,13 @@ export const Popup: FC<{
     const items = [];
     filteredOptions
       .find((v) => v.value === selected)
-      ?.children.forEach((v) => {
+      ?.children.filter((v) => !v.deleted).forEach((v) => {
         items.push({
           value: v.value,
           title: v.title,
           subTitle: v.subTitle,
           disabled: v.disabled,
+          deleted: v.deleted,
           checked: valuesSet.has(v.value),
           extra: v.extra,
         });

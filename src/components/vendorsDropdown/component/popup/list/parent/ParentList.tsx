@@ -29,26 +29,30 @@ const ParentListItem: FC<{
   onSelectOnly: (value: Value) => void;
   setSelected: (v: Value) => void;
 }> = ({ item, onSelect, onSelectOnly, setSelected }) => (
-  <List.Item>
+  <List.Item onClick={() => setSelected(item.value)} className={`list-item ${item.checked && 'checked'}`}>
     <div className='parent-list-item-container'>
-      <Checkbox
-        checked={item.checked}
-        indeterminate={item.intermediate}
-        onChange={(v) => onSelect(v.target.checked, item.value)}
-        disabled={item.disabled}
-      >
-        <Space size={0} direction='vertical'>
+      <div>
+        <Checkbox
+          checked={item.checked}
+          indeterminate={item.intermediate}
+          onChange={(v) => onSelect(v.target.checked, item.value)}
+          onClick={(e) => e.stopPropagation()}
+          disabled={item.disabled}
+        />
+        <Space className='parent-space' size={0} direction='vertical'>
           <Title value={item.title} />
           <SubTitle value={item.subTitle} />
         </Space>
-      </Checkbox>
+      </div>
       <div className='action-buttons'>
-        <Button type='text' onClick={() => onSelectOnly(item.value)} disabled={item.disabled}>
+        <Button className='list-item-select-only' type='text' onClick={(e) => {
+          e.stopPropagation();
+          onSelectOnly(item.value)
+        }} disabled={item.disabled}>
           Select Only
         </Button>
         <Button
           type='text'
-          onClick={() => setSelected(item.value)}
           disabled={item.disabled}
           className='expand-button'
         >

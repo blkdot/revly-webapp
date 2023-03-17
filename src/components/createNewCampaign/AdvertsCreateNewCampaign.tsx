@@ -30,8 +30,9 @@ type StateBranchType = {
 
 const AdvertsCreateNewCampaign: FC<{
   setOpened: (v: boolean) => void;
-}> = ({ setOpened }) => {
-  const [step, setStep] = useState('launch');
+  step: string;
+  setStep: (v: string) => void;
+}> = ({ setOpened,step,setStep }) => {
   const [advertDetailsWidget, setAdvertDetailsWidget] = useState<StateType>({
     title: 'Your Advert details',
     content: [
