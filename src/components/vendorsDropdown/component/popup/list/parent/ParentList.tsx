@@ -17,7 +17,7 @@ type Value = number | string;
 type Item = {
   value: Value;
   title: ReactNode;
-  subTitle: ReactNode;
+  subTitle?: ReactNode;
   disabled?: boolean;
   checked: boolean;
   intermediate: boolean;
@@ -44,7 +44,7 @@ const ParentListItem: FC<{
         />
         <Space className='parent-space' size={0} direction='vertical'>
           <Title value={item.title} />
-          <SubTitle value={item.subTitle} />
+          {item.subTitle && <SubTitle value={item.subTitle} />}
         </Space>
       </div>
       <div className='action-buttons'>

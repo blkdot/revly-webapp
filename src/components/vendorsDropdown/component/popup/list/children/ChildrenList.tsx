@@ -7,7 +7,7 @@ type Value = number | string;
 type Item = {
   value: Value;
   title: ReactNode;
-  subTitle: ReactNode;
+  subTitle?: ReactNode;
   disabled?: boolean;
   checked: boolean;
   extra?: ReactNode;
@@ -36,8 +36,7 @@ const ChildrenListItem: FC<{
         />
         <Space className='children-space' size={0} direction='vertical'>
           <Title value={item.title} />
-          {/* commented until we get the address of branches */}
-          {/* <SubTitle value={item.subTitle} /> */}
+          {item.subTitle && <SubTitle value={item.subTitle} />}
         </Space>
       </div>
       <Button
@@ -61,7 +60,7 @@ export const ChildrenList: FC<{
   if (items.length === 0) {
     return (
       <Empty
-        description='Select a brand to see the list of your branches'
+        description='Select a brand to see the list of branches'
         image={Empty.PRESENTED_IMAGE_SIMPLE}
       />
     );

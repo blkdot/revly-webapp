@@ -56,7 +56,6 @@ export const toValues = (vendors: TDisplayVendor): string[] => {
 const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   value: valueFor(chain, vendor),
   title: vendor,
-  subTitle: vendor,
   label: vendor,
   disabled: !v.active,
   deleted: v.deleted,
@@ -73,7 +72,7 @@ const toChildrenNode = (chain: string, vendor: string, v: any) => ({
 const toParentNode = (chain: string, value: any) => ({
   value: chain,
   title: chain || 'In Process',
-  subTitle: pluralize('Branches', Object.keys(value).length, true),
+  subTitle: pluralize('Branch', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
   deleted: Object.keys(value)
