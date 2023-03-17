@@ -1,16 +1,10 @@
 import { Arrow } from 'assets/icons';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
-import {
-  cleanDisplay,
-  cleanVendorsObj,
-  fromValue,
-} from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { differenceInDays } from 'date-fns';
 import { useAtom } from 'jotai';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
-import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
-import { vendorsAtom } from 'store/vendorsAtom';
+import { branchAtom } from 'store/marketingSetupAtom';
 
 type StateType = {
   title: string;
@@ -20,7 +14,7 @@ type StateType = {
     disabled?: boolean;
   }[];
 };
-type Value = string | number;
+
 const LaunchStep: FC<{
   setStep: (v: string) => void;
   setOpened: (v: boolean) => void;
@@ -38,33 +32,7 @@ const LaunchStep: FC<{
     stateTemp.content.find((obj) => obj.title === 'Reccurence').value = 'Every day';
     setState({ ...stateTemp });
   };
-  const [platform] = useAtom(platformAtom);
-  const [vendors] = useAtom(vendorsAtom);
-  const handleChange = (values: Value[]) => {
-    const newDisplay = cleanDisplay(branchVendors.display);
-    const newVendorsObj = cleanVendorsObj();
-    values
-      .map((value) => {
-        const { chain } = fromValue(value as string);
-        return chain;
-      })
-      .filter((chain) => chain);
-    const { chain: chainClicked } = fromValue(values[values.length - 1] as string);
 
-    values.forEach((value) => {
-      const { chain, vendor } = fromValue(value as string);
-
-      newDisplay[chain][vendor].checked = false;
-      if (chainClicked === chain) {
-        newDisplay[chain][vendor].checked = true;
-        platform.forEach((plat) => {
-          newVendorsObj[plat].push(newDisplay[chain][vendor].platforms[plat]);
-        });
-      }
-    });
-
-    setBranchVendors({ ...vendors, display: newDisplay, vendorsObj: newVendorsObj });
-  };
   return (
     <div className='adverts-step'>
       <div className='adverts-step_top'>
