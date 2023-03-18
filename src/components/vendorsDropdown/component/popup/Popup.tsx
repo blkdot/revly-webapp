@@ -13,6 +13,7 @@ type Option = {
   subTitle?: ReactNode;
   label: string;
   disabled?: boolean;
+  deleted?: boolean;
   children: {
     value: Value;
     title: ReactNode;
@@ -163,20 +164,26 @@ export const Popup: FC<{
 
   const parentListItems = useMemo(() => {
     const items = [];
-    filteredOptions.forEach((v) => {
-      const checked = v.children.filter((c) => !c.disabled).every((c) => valuesSet.has(c.value));
-      const intermediate =
-        !checked && v.children.filter((c) => !c.disabled).some((c) => valuesSet.has(c.value));
+    filteredOptions
+      .filter((v) => !v.deleted)
+      .forEach((v) => {
+        const checked = v.children
+          .filter((c) => !c.disabled || !c.deleted)
+          .every((c) => valuesSet.has(c.value));
+        const intermediate =
+          !checked &&
+          v.children.filter((c) => !c.disabled || !c.deleted).some((c) => valuesSet.has(c.value));
 
-      items.push({
-        value: v.value,
-        title: v.title,
-        subTitle: v.subTitle,
-        disabled: v.disabled,
-        checked,
-        intermediate,
+        items.push({
+          value: v.value,
+          title: v.title,
+          subTitle: v.subTitle,
+          disabled: v.disabled,
+          deleted: v.deleted,
+          checked,
+          intermediate,
+        });
       });
-    });
 
     return items;
   }, [valuesSet, filteredOptions]);
@@ -189,12 +196,14 @@ export const Popup: FC<{
     const items = [];
     filteredOptions
       .find((v) => v.value === selected)
-      ?.children.forEach((v) => {
+      ?.children.filter((v) => !v.deleted)
+      .forEach((v) => {
         items.push({
           value: v.value,
           title: v.title,
           subTitle: v.subTitle,
           disabled: v.disabled,
+          deleted: v.deleted,
           checked: valuesSet.has(v.value),
           extra: v.extra,
         });

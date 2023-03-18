@@ -13,7 +13,8 @@
   & > .content {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    max-width: 370px;
+    width: 1000px;
     padding-left: 26px;
     padding-right: 26px;
 

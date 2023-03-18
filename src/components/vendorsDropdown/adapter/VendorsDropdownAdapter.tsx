@@ -1,4 +1,5 @@
 import { TopInputItem } from 'components';
+import { platformList } from 'data/platformList';
 import { useAtom } from 'jotai';
 import pluralize from 'pluralize';
 import { FC, useCallback, useMemo } from 'react';
@@ -25,12 +26,8 @@ export function cleanDisplay(vendors: TDisplayVendor): TDisplayVendor {
   return newVendors;
 }
 
-export const cleanVendorsObj = (): TVendorsObj => ({
-  deliveroo: [],
-  talabat: [],
-  noon: [],
-  careem: [],
-});
+export const cleanVendorsObj = (): TVendorsObj =>
+  platformList.map((obj) => obj.name).reduce((a, v) => ({ ...a, [v]: [] }), {});
 
 export const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
 
@@ -53,7 +50,7 @@ export const toValues = (vendors: TDisplayVendor): string[] => {
   return values;
 };
 
-const toChildrenNode = (chain: string, vendor: string, v: any) => ({
+export const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   value: valueFor(chain, vendor),
   title: vendor,
   label: vendor,
@@ -69,7 +66,7 @@ const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   ),
 });
 
-const toParentNode = (chain: string, value: any) => ({
+export const toParentNode = (chain: string, value: any) => ({
   value: chain,
   title: chain || 'In Process',
   subTitle: pluralize('Branch', Object.keys(value).length, true),
@@ -92,7 +89,7 @@ export const vendorsSorter = (a: string, b: string) => {
   return a.trim().localeCompare(b.trim());
 };
 
-const toOptions = (vendors: TDisplayVendor) =>
+export const toOptions = (vendors: TDisplayVendor) =>
   Object.keys(vendors)
     .sort(vendorsSorter)
     .map((chain) => toParentNode(chain, vendors[chain]));

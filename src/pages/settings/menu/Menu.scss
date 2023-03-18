@@ -16,8 +16,21 @@
         }
         > div {
           background-color: #fff;
+          height: 100%;
           fieldset {
             border: none !important;
+          }
+        }
+      }
+      &.vendor {
+        > div {
+          background-color: #fff;
+          .content {
+            width: 100% !important;
+          }
+          > div {
+            height: fit-content;
+            background: none;
           }
         }
       }

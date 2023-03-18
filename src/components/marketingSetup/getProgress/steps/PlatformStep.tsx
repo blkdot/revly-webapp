@@ -6,15 +6,15 @@ import { RadioGroupKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { TVendors } from 'types';
 import { Subtitle } from './components/Subtitle';
+import VendorsDropdownOffer from './components/VendorsDropdownOffer';
 
 // eslint-disable-next-line import/prefer-default-export
 export const PlatformStep: FC<{
   index: number;
   branch: TVendors | Record<string, never>;
   getPlatform: any;
-  setBranch: any;
   platform: any;
-}> = ({ index, branch, getPlatform, setBranch, platform }) => {
+}> = ({ index, branch, getPlatform, platform }) => {
   const { userPlatformData, exception } = usePlatform();
 
   if (!branch || Object.keys(branch).length < 1) return null;
@@ -48,12 +48,7 @@ export const PlatformStep: FC<{
             ))}
         </RadioGroupKit>
       </div>
-      <RestaurantDropdown
-        className='offer-setup-dropdown'
-        pageType='branch'
-        setState={setBranch}
-        state={branch}
-      />
+      <VendorsDropdownOffer />
     </div>
   );
 };

@@ -185,7 +185,6 @@ const GetProgress: FC = () => {
         index={selected}
         branch={branch}
         getPlatform={getPlatform}
-        setBranch={setBranch}
         platform={platform}
       />
     );

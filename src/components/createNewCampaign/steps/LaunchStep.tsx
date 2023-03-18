@@ -1,4 +1,5 @@
 import { Arrow } from 'assets/icons';
+import VendorsDropdownOffer from 'components/marketingSetup/getProgress/steps/components/VendorsDropdownOffer';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import { differenceInDays } from 'date-fns';
 import { useAtom } from 'jotai';
@@ -21,7 +22,6 @@ const LaunchStep: FC<{
   setState: (v: StateType) => void;
   state: StateType;
 }> = ({ setStep, setOpened, setState, state }) => {
-  const [branchVendors, setBranchVendors] = useAtom(branchAtom);
   const handleClick = () => {
     const stateTemp = { ...state };
     setStep('recurency');
@@ -39,7 +39,7 @@ const LaunchStep: FC<{
         <p>1. Launch a New Adverts </p>
         <span>Schedule ads at the right slot and boost your visibility and sales.</span>
         <div className='advert-branches'>
-          <RestaurantDropdown pageType='branch' setState={setBranchVendors} state={branchVendors} />
+          <VendorsDropdownOffer />
         </div>
       </div>
       <div className='adverts-buttons'>
