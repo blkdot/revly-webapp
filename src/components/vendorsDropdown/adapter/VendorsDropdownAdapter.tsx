@@ -50,9 +50,11 @@ export const toValues = (vendors: TDisplayVendor): string[] => {
   return values;
 };
 
+const trimTitle = (v: string) => v.split('_')[0];
+
 export const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   value: valueFor(chain, vendor),
-  title: vendor,
+  title: trimTitle(vendor),
   label: vendor,
   disabled: !v.active,
   extra: (
@@ -67,7 +69,7 @@ export const toChildrenNode = (chain: string, vendor: string, v: any) => ({
 
 export const toParentNode = (chain: string, value: any) => ({
   value: chain,
-  title: chain || 'In Process',
+  title: trimTitle(chain) || 'In Process',
   subTitle: pluralize('Branch', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),

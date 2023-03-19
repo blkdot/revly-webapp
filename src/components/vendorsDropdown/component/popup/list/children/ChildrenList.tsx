@@ -14,11 +14,11 @@ type Item = {
 };
 
 const Title: FC<{ value: ReactNode }> = ({ value }) => (
-  <span className='vendors-select-title'>{value.toString().split('_')[0]}</span>
+  <span className='vendors-select-title'>{value}</span>
 );
 
 const SubTitle: FC<{ value: ReactNode }> = ({ value }) => (
-  <span className='vendors-select-sub-title'>{value.toString().split('_')[0]}</span>
+  <span className='vendors-select-sub-title'>{value}</span>
 );
 
 const ChildrenListItem: FC<{
