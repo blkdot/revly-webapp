@@ -55,7 +55,6 @@ export const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   title: vendor,
   label: vendor,
   disabled: !v.active,
-  deleted: v.deleted,
   extra: (
     <div className='children-extra'>
       {v.platforms.noon?.metadata?.is_active && <NoonIcon height={24} width={24} />}
@@ -72,9 +71,6 @@ export const toParentNode = (chain: string, value: any) => ({
   subTitle: pluralize('Branch', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
-  deleted: Object.keys(value)
-    .map((branch) => toChildrenNode(chain, branch, value[branch]))
-    .every((v) => v.deleted),
 });
 
 export const vendorsSorter = (a: string, b: string) => {
