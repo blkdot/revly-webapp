@@ -145,7 +145,7 @@ const MarketingSetup: React.FC<{
   const [endingDate] = useAtom(endingDateAtom);
   const [typeSchedule, setTypeSchedule] = useAtom(typeScheduleAtom);
   const [disabledDate] = useAtom(disabledDateAtom);
-  const [branch, setBranch] = useAtom(branchAtom);
+  const [branch] = useAtom(branchAtom);
   const [customisedDay, setCustomisedDay] = useAtom(customisedDayAtom);
   const [everyWeek, setEveryWeek] = useAtom(everyWeekAtom);
   const [itemMenu, setItemMenu] = useAtom(itemMenuAtom);
@@ -163,14 +163,9 @@ const MarketingSetup: React.FC<{
   const [, setCategoryLoading] = useAtom(categoryLoadingAtom);
   const { vendors } = useVendors();
   const { vendorsObj } = vendors;
-
   useEffect(() => {
     setPlatform([getActivePlatform()]);
   }, [getActivePlatform()]);
-
-  useEffect(() => {
-    setBranch({ ...vendors });
-  }, [vendors]);
 
   const user = useUser();
   const { triggerAlertWithMessageError } = useAlert();
@@ -257,12 +252,6 @@ const MarketingSetup: React.FC<{
       timeSelected();
     }
   }, [times, startingDate, endingDate, selected, typeSchedule]);
-
-  useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
-    setVendors(displayTemp, setBranch, branch, platform);
-    setMenu('Offer on the whole Menu');
-  }, [platform, vendors]);
 
   const handleSchedule = async () => {
     let isStartingFromZero = true;
@@ -413,19 +402,22 @@ const MarketingSetup: React.FC<{
     setHeatmatDataFromState();
     setHeatmapRangeFromState();
   }, [heatmapLoading]);
-
+  useEffect(() => {
+    setVendors(platform);
+    setMenu('Offer on the whole Menu');
+  }, [platform, vendors]);
   const getHeatmapData = () => {
     if (heatmapLoading) return;
 
     setHeatmapLoading(true);
-    const selectedVendorsDeliveroo = selectedVendors('full', branch.display, 'deliveroo');
-    const selectedVendorsDataTalabat = selectedVendors('full', branch.display, 'talabat');
+    const vendorsObjTemp = { ...branch.vendorsObj };
 
-    if (
-      ((!selectedVendorsDeliveroo || selectedVendorsDeliveroo.length === 0) &&
-        !selectedVendorsDataTalabat) ||
-      selectedVendorsDataTalabat.length === 0
-    ) {
+    Object.keys(vendorsObjTemp).forEach((plat) => {
+      if (vendorsObjTemp[plat].length === 0) {
+        delete vendorsObjTemp[plat];
+      }
+    });
+    if (Object.keys(vendorsObjTemp).length === 0) {
       setHeatmapLoading(false);
       setHeatmapData({
         revenue: defaultHeatmapState,
@@ -444,18 +436,19 @@ const MarketingSetup: React.FC<{
       start_date: dayjs(beforePeriodBtn.startDate).format('YYYY-MM-DD'),
       end_date: dayjs(beforePeriodBtn.endDate).format('YYYY-MM-DD'),
       colors: ['#EDE7FF', '#CAB8FF', '#906BFF', '#7E5BE5'],
-      vendors: {
-        ...(selectedVendorsDeliveroo &&
-        selectedVendorsDeliveroo.length > 0 &&
-        selectedVendorsDeliveroo.some((d) => d)
-          ? { deliveroo: selectedVendorsDeliveroo.filter((d) => d) }
-          : {}),
-        ...(selectedVendorsDataTalabat &&
-        selectedVendorsDataTalabat.length > 0 &&
-        selectedVendorsDataTalabat.some((d) => d)
-          ? { talabat: selectedVendorsDataTalabat.filter((d) => d) }
-          : {}),
-      },
+      // vendors: {
+      //   ...(selectedVendorsDeliveroo &&
+      //   selectedVendorsDeliveroo.length > 0 &&
+      //   selectedVendorsDeliveroo.some((d) => d)
+      //     ? { deliveroo: selectedVendorsDeliveroo.filter((d) => d) }
+      //     : {}),
+      //   ...(selectedVendorsDataTalabat &&
+      //   selectedVendorsDataTalabat.length > 0 &&
+      //   selectedVendorsDataTalabat.some((d) => d)
+      //     ? { talabat: selectedVendorsDataTalabat.filter((d) => d) }
+      //     : {}),
+      // },
+      vendors: vendorsObjTemp,
     };
 
     Promise.all([getHeatmap('revenue', body), getHeatmap('orders', body)])
@@ -504,7 +497,7 @@ const MarketingSetup: React.FC<{
     if (!active) return;
 
     getHeatmapData();
-  }, [beforePeriodBtn, vendors, active, branch.display]);
+  }, [beforePeriodBtn, vendors, active, branch.vendorsObj]);
 
   const getMenuData = async (vendor, platforms) => {
     try {

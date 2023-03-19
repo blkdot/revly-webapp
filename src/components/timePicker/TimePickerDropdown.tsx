@@ -17,7 +17,7 @@ const TimePickerDropdown = (props: any) => {
     if (hour === 0) {
       hour = 24;
     }
-  
+
     return hour;
   };
 

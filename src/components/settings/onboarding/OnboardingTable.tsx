@@ -8,7 +8,6 @@ import {
   onboardingClickedBranchAtom,
   onboardingConnectAccountAtom,
   onboardingLoadingAtom,
-  TOnboardingBranchData,
 } from 'store/onboardingAtom';
 
 const OnboardingTable: FC<{

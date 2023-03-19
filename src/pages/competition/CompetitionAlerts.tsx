@@ -5,9 +5,9 @@ import Competitor from 'components/competitor/Competitor';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { useUser } from 'contexts';
 import { platformObject } from 'data/platformList';
 import dayjs from 'dayjs';
@@ -317,7 +317,7 @@ const CompetitionAlerts = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        <RestaurantDropdown />
+        <VendorsDropdownAdapter />
         <Dates
           defaultTypeDate='day'
           defaultTitle='today'

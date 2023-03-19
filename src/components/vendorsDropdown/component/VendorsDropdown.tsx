@@ -11,13 +11,13 @@ type Value = number | string;
 type Option = {
   value: Value;
   title: ReactNode;
-  subTitle: ReactNode;
+  subTitle?: ReactNode;
   label: string;
   disabled?: boolean;
   children: {
     value: Value;
     title: ReactNode;
-    subTitle: ReactNode;
+    subTitle?: ReactNode;
     label: string;
     disabled?: boolean;
   }[];
@@ -41,14 +41,23 @@ export const VendorsDropdown: FC<{
   onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
   const [open, setOpen] = useState(false);
-
+  const handleOpen = (value) => {
+    setOpen(value);
+    const body = document.querySelector('body');
+    if (value) {
+      body.style.overflowY = 'hidden';
+      return;
+    }
+    body.style.overflowY = 'visible';
+  };
   const selected = useMemo(() => getSelectedParents(values, options), [values, options]);
 
   return (
     <Popover
+      placement='bottomRight'
       open={open}
       trigger='click'
-      onOpenChange={setOpen}
+      onOpenChange={handleOpen}
       rootClassName='dropdown-popup'
       content={<Popup values={values} options={options} onChange={onChange} />}
     >

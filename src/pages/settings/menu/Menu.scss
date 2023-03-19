@@ -5,6 +5,35 @@
 
     .__select {
       width: 31%;
+      > div {
+        height: 48px;
+        > label {
+          transition: 0.3s;
+          opacity: 1;
+        }
+        > label[data-shrink='true'] {
+          opacity: 0;
+        }
+        > div {
+          background-color: #fff;
+          height: 100%;
+          fieldset {
+            border: none !important;
+          }
+        }
+      }
+      &.vendor {
+        > div {
+          background-color: #fff;
+          .content {
+            width: 100% !important;
+          }
+          > div {
+            height: fit-content;
+            background: none;
+          }
+        }
+      }
     }
   }
 

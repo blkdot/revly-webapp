@@ -49,7 +49,7 @@ const OnboardingModal: FC<{
   const { triggerAlertWithMessageError } = useAlert();
   const [vendors] = useAtom(vendorsAtom);
 
-  const handleSubmitLogin = async (currentPlatform) => {
+  const handleSubmitLogin = async (currentPlatform: string) => {
     setIsLoading(true);
     if (
       accounts.filter((obj) => obj.platform === currentPlatform && obj.email === email).length === 0

@@ -7,7 +7,7 @@ type Value = number | string;
 type Item = {
   value: Value;
   title: ReactNode;
-  subTitle: ReactNode;
+  subTitle?: ReactNode;
   disabled?: boolean;
   checked: boolean;
   extra?: ReactNode;
@@ -26,19 +26,25 @@ const ChildrenListItem: FC<{
   onSelect: (v: boolean, value: Value) => void;
   onSelectOnly: (value: Value) => void;
 }> = ({ item, onSelect, onSelectOnly }) => (
-  <List.Item>
+  <List.Item className={`list-item ${item.checked && 'checked'}`}>
     <div className='children-list-item-container'>
-      <Checkbox
-        checked={item.checked}
-        onChange={(v) => onSelect(v.target.checked, item.value)}
+      <div>
+        <Checkbox
+          checked={item.checked}
+          onChange={(v) => onSelect(v.target.checked, item.value)}
+          disabled={item.disabled}
+        />
+        <Space className='children-space' size={0} direction='vertical'>
+          <Title value={item.title} />
+          {item.subTitle && <SubTitle value={item.subTitle} />}
+        </Space>
+      </div>
+      <Button
+        className='list-item-select-only'
+        type='text'
+        onClick={() => onSelectOnly(item.value)}
         disabled={item.disabled}
       >
-        <Space size={0} direction='vertical'>
-          <Title value={item.title} />
-          <SubTitle value={item.subTitle} />
-        </Space>
-      </Checkbox>
-      <Button type='text' onClick={() => onSelectOnly(item.value)} disabled={item.disabled}>
         Select Only
       </Button>
       {item.extra}
@@ -52,7 +58,12 @@ export const ChildrenList: FC<{
   onSelectOnly: (value: Value) => void;
 }> = ({ items, onSelect, onSelectOnly }) => {
   if (items.length === 0) {
-    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    return (
+      <Empty
+        description='Select a brand to see the list of branches'
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+      />
+    );
   }
 
   return (

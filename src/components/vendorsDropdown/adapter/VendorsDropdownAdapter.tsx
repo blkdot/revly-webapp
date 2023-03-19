@@ -1,3 +1,5 @@
+import { TopInputItem } from 'components';
+import { platformList } from 'data/platformList';
 import { useAtom } from 'jotai';
 import pluralize from 'pluralize';
 import { FC, useCallback, useMemo } from 'react';
@@ -13,7 +15,7 @@ type Value = number | string;
 
 const copy = <T,>(v: T) => JSON.parse(JSON.stringify(v)) as T;
 
-function cleanDisplay(vendors: TDisplayVendor): TDisplayVendor {
+export function cleanDisplay(vendors: TDisplayVendor): TDisplayVendor {
   const newVendors = copy(vendors);
   Object.keys(newVendors).forEach((chain) => {
     Object.keys(newVendors[chain]).forEach((vendor) => {
@@ -24,16 +26,17 @@ function cleanDisplay(vendors: TDisplayVendor): TDisplayVendor {
   return newVendors;
 }
 
-const cleanVendorsObj = (): TVendorsObj => ({ deliveroo: [], talabat: [], noon: [], careem: [] });
+export const cleanVendorsObj = (): TVendorsObj =>
+  platformList.map((obj) => obj.name).reduce((a, v) => ({ ...a, [v]: [] }), {});
 
-const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
+export const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
 
-const fromValue = (v: string) => {
+export const fromValue = (v: string) => {
   const [chain, vendor] = v.split('/');
   return { chain, vendor };
 };
 
-const toValues = (vendors: TDisplayVendor): string[] => {
+export const toValues = (vendors: TDisplayVendor): string[] => {
   const values = [];
 
   Object.keys(vendors).forEach((chain) => {
@@ -47,31 +50,32 @@ const toValues = (vendors: TDisplayVendor): string[] => {
   return values;
 };
 
-const toChildrenNode = (chain: string, vendor: string, v: any) => ({
+const trimTitle = (v: string) => v.split('_')[0];
+
+export const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   value: valueFor(chain, vendor),
-  title: vendor,
-  subTitle: vendor,
+  title: trimTitle(vendor),
   label: vendor,
   disabled: !v.active,
   extra: (
-    <div style={{ display: 'inline-flex', gap: 8 }}>
-      {v.platforms.noon && <NoonIcon height={24} width={24} />}
-      {v.platforms.careem && <CareemIcon height={24} width={24} />}
-      {v.platforms.talabat && <TalabatIcon height={24} width={24} />}
-      {v.platforms.deliveroo && <DeliverooIcon height={24} width={24} />}
+    <div className='children-extra'>
+      {v.platforms.noon?.metadata?.is_active && <NoonIcon height={24} width={24} />}
+      {v.platforms.careem?.metadata?.is_active && <CareemIcon height={24} width={24} />}
+      {v.platforms.talabat?.metadata?.is_active && <TalabatIcon height={24} width={24} />}
+      {v.platforms.deliveroo?.metadata?.is_active && <DeliverooIcon height={24} width={24} />}
     </div>
   ),
 });
 
-const toParentNode = (chain: string, value: any) => ({
+export const toParentNode = (chain: string, value: any) => ({
   value: chain,
-  title: chain || 'In Process',
-  subTitle: pluralize('Branches', Object.keys(value).length, true),
+  title: trimTitle(chain) || 'In Process',
+  subTitle: pluralize('Branch', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
 });
 
-const vendorsSorter = (a: string, b: string) => {
+export const vendorsSorter = (a: string, b: string) => {
   // keep unmatched vendors on the bottom
   if (a === '') {
     return Number.MAX_SAFE_INTEGER;
@@ -83,7 +87,7 @@ const vendorsSorter = (a: string, b: string) => {
   return a.trim().localeCompare(b.trim());
 };
 
-const toOptions = (vendors: TDisplayVendor) =>
+export const toOptions = (vendors: TDisplayVendor) =>
   Object.keys(vendors)
     .sort(vendorsSorter)
     .map((chain) => toParentNode(chain, vendors[chain]));
@@ -113,5 +117,9 @@ export const VendorsDropdownAdapter: FC = () => {
   const values = useMemo(() => toValues(vendors.display), [vendors.display]);
   const options = useMemo(() => toOptions(vendors.display), [vendors.display]);
 
-  return <VendorsDropdown values={values} options={options} onChange={onChange} />;
+  return (
+    <TopInputItem title='Select a vendor'>
+      <VendorsDropdown values={values} options={options} onChange={onChange} />
+    </TopInputItem>
+  );
 };

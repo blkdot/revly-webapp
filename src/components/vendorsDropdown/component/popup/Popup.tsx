@@ -10,13 +10,13 @@ type Value = number | string;
 type Option = {
   value: Value;
   title: ReactNode;
-  subTitle: ReactNode;
+  subTitle?: ReactNode;
   label: string;
   disabled?: boolean;
   children: {
     value: Value;
     title: ReactNode;
-    subTitle: ReactNode;
+    subTitle?: ReactNode;
     label: string;
     disabled?: boolean;
     extra?: ReactNode;
@@ -46,7 +46,7 @@ export const Popup: FC<{
   onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<Value>(null);
+  const [selected, setSelected] = useState<Value>(options[0].value || null);
 
   const valuesSet = useMemo(() => new Set(values), [values]);
 
