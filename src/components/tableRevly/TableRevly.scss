@@ -19,7 +19,9 @@
   object-fit: contain;
   display: flex;
   align-items: center;
-
+  &.disabled {
+    filter: invert(65%) sepia(0%) saturate(0%) hue-rotate(6deg) brightness(200%) contrast(90%);
+  }
   &.offer {
     width: 40px;
     height: 40px;

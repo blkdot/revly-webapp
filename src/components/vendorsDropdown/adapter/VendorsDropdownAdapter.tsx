@@ -1,15 +1,13 @@
 import { TopInputItem } from 'components';
-import { platformList } from 'data/platformList';
+import { platformList, platformObject } from 'data/platformList';
 import { useAtom } from 'jotai';
+import { TooltipKit } from 'kits';
 import pluralize from 'pluralize';
-import { FC, useCallback, useMemo } from 'react';
+import { CSSProperties, FC, useCallback, useMemo } from 'react';
 import { vendorsAtom } from 'store/vendorsAtom';
 import { TDisplayVendor, TVendorsObj } from 'types';
 import { VendorsDropdown } from '../component/VendorsDropdown';
-import { ReactComponent as CareemIcon } from './icons/careem.svg';
-import { ReactComponent as DeliverooIcon } from './icons/deliveroo.svg';
-import { ReactComponent as NoonIcon } from './icons/noon.svg';
-import { ReactComponent as TalabatIcon } from './icons/talabat.svg';
+import { ReactComponent as AlertIcon } from './icons/alert.svg';
 
 type Value = number | string;
 
@@ -32,7 +30,7 @@ export const cleanVendorsObj = (): TVendorsObj =>
 export const valueFor = (chain: string, vendor: string) => `${chain}/${vendor}`;
 
 export const fromValue = (v: string) => {
-  const [chain, vendor] = v.split('/');
+  const [chain, vendor] = v.toString().split('/');
   return { chain, vendor };
 };
 
@@ -59,10 +57,35 @@ export const toChildrenNode = (chain: string, vendor: string, v: any) => ({
   disabled: !v.active,
   extra: (
     <div className='children-extra'>
-      {v.platforms.noon?.metadata?.is_active && <NoonIcon height={24} width={24} />}
-      {v.platforms.careem?.metadata?.is_active && <CareemIcon height={24} width={24} />}
-      {v.platforms.talabat?.metadata?.is_active && <TalabatIcon height={24} width={24} />}
-      {v.platforms.deliveroo?.metadata?.is_active && <DeliverooIcon height={24} width={24} />}
+      {Object.keys(v.platforms)
+        .sort((a, b) => b.localeCompare(a))
+        .map((plat) => (
+          <img
+            key={plat}
+            style={{ '--color': platformObject[plat].color } as CSSProperties}
+            className={`planning-platform ${!v.platforms[plat].metadata.is_active && 'disabled'}`}
+            src={
+              platformObject[plat].srcNoBg ||
+              platformObject[plat].srcWhite ||
+              platformObject[plat].src
+            }
+            alt={plat}
+          />
+        ))}
+      {!v.active && (
+        <TooltipKit
+          onClick={(e) => e.stopPropagation()}
+          interactive={1}
+          id='tooltip-alert'
+          placement='right'
+          arrow
+          title='Branch does not meet the marketer criteria'
+        >
+          <span className='criteria-alert'>
+            <AlertIcon />
+          </span>
+        </TooltipKit>
+      )}
     </div>
   ),
 });
@@ -73,6 +96,9 @@ export const toParentNode = (chain: string, value: any) => ({
   subTitle: pluralize('Branch', Object.keys(value).length, true),
   label: chain,
   children: Object.keys(value).map((branch) => toChildrenNode(chain, branch, value[branch])),
+  disabled: Object.keys(value)
+    .map((branch) => toChildrenNode(chain, branch, value[branch]))
+    .every((branch) => branch.disabled),
 });
 
 export const vendorsSorter = (a: string, b: string) => {

@@ -70,8 +70,8 @@ const NewSettingsOnboarding = () => {
       if (
         Object.keys(obj.data.platforms).every(
           (plat) =>
-            obj.data.platforms[plat].metadata.is_active !== 'True' &&
-            obj.data.platforms[plat].metadata.is_active !== true
+            obj.data.platforms[plat].metadata.is_active === 'False' ||
+            obj.data.platforms[plat].metadata.is_active === false
         )
       )
         return 'suspended';
@@ -87,6 +87,7 @@ const NewSettingsOnboarding = () => {
       linked_platforms: vendorPlatform(obj),
       branch_status: vendorsStatus(obj),
       id: obj.data.platforms[Object.keys(obj.data.platforms)[0]].vendor_id,
+      ids: Object.keys(obj.data.platforms).map((plat) => obj.data.platforms[plat].vendor_id),
       chain_name: obj.chainName,
     }));
   };

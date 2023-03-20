@@ -1,5 +1,6 @@
+import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { Button, Checkbox, Empty, List, Space } from 'antd';
-import { FC, ReactNode } from 'react';
+import { CSSProperties, FC, ReactNode } from 'react';
 import './ChildrenList.scss';
 
 type Value = number | string;
@@ -10,7 +11,7 @@ type Item = {
   subTitle?: ReactNode;
   disabled?: boolean;
   checked: boolean;
-  extra?: ReactNode;
+  extra?: ReactJSXElement;
 };
 
 const Title: FC<{ value: ReactNode }> = ({ value }) => (
@@ -26,7 +27,16 @@ const ChildrenListItem: FC<{
   onSelect: (v: boolean, value: Value) => void;
   onSelectOnly: (value: Value) => void;
 }> = ({ item, onSelect, onSelectOnly }) => (
-  <List.Item className={`list-item ${item.checked && 'checked'}`}>
+  <List.Item
+    style={
+      {
+        '--length': `${
+          item.disabled ? item.extra.props.children.length + 1.2 : item.extra.props.children.length
+        }px`,
+      } as CSSProperties
+    }
+    className={`list-item ${item.checked && 'checked'} ${item.disabled && 'disabled'}`}
+  >
     <div className='children-list-item-container'>
       <div>
         <Checkbox
@@ -39,15 +49,17 @@ const ChildrenListItem: FC<{
           {item.subTitle && <SubTitle value={item.subTitle} />}
         </Space>
       </div>
-      <Button
-        className='list-item-select-only'
-        type='text'
-        onClick={() => onSelectOnly(item.value)}
-        disabled={item.disabled}
-      >
-        Select Only
-      </Button>
-      {item.extra}
+      <div className='action-buttons'>
+        <Button
+          className='list-item-select-only'
+          type='text'
+          onClick={() => onSelectOnly(item.value)}
+          disabled={item.disabled}
+        >
+          Only
+        </Button>
+        {item.extra}
+      </div>
     </div>
   </List.Item>
 );

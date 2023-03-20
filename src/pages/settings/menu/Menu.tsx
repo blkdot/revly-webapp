@@ -2,9 +2,10 @@ import { getMenu } from 'api';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { usePlatform, useUser } from 'contexts';
+import { platformObject } from 'data/platformList';
 import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
 import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
 import iccategory from '../../../assets/images/ic_menu-category.png';
@@ -84,8 +85,8 @@ const Menu = () => {
   }, [userPlatformData]);
 
   useEffect(() => {
-    if (branch) {
-      getMenuData(branch, platform);
+    if (branch.vendorsObj) {
+      getMenuData(branch.vendorsObj, platform);
     }
   }, [branch, platform]);
 
@@ -205,11 +206,14 @@ const Menu = () => {
                   }}
                 >
                   <img
-                    src={v.name === 'deliveroo' ? icdeliveroo : ictalabat}
-                    width={24}
-                    height={24}
-                    style={{ objectFit: 'contain' }}
-                    alt='icon'
+                    className='planning-platform'
+                    style={{ '--color': platformObject[v.name].color } as CSSProperties}
+                    src={
+                      platformObject[v.name].srcNoBg ||
+                      platformObject[v.name].srcWhite ||
+                      platformObject[v.name].src
+                    }
+                    alt={v.name}
                   />
                   <ListItemTextKit primary={v.name} />
                 </div>

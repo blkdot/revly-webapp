@@ -443,6 +443,7 @@ const useTableContentFormatter = () => {
           >
             <img
               src={
+                getPlatform(obj.platform.toLowerCase()).srcNoBg ||
                 getPlatform(obj.platform.toLowerCase()).srcWhite ||
                 getPlatform(obj.platform.toLowerCase()).src
               }

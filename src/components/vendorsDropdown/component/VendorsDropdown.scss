@@ -9,7 +9,9 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-
+  &.disabled {
+    pointer-events: none;
+  }
   & > .content {
     display: flex;
     flex-direction: row;
@@ -85,7 +87,7 @@
   }
 
   & > .ant-popover-content {
-    width: 820px;
+    width: 650px;
 
     & > .ant-popover-inner {
       margin: 0;
@@ -110,5 +112,20 @@
   &::-webkit-scrollbar-thumb {
     background: #637381;
     border-radius: 31px;
+  }
+}
+
+.ant-space-item {
+  line-height: 10px;
+}
+.criteria-alert {
+  cursor: default;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+
+  svg {
+    width: 27px;
+    height: 27px;
   }
 }
