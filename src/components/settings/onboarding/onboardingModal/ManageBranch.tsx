@@ -49,8 +49,9 @@ const ManageBranch: FC<{
       Object.keys(vendors.display[cName]).forEach((vName) => {
         Object.keys(vendors.display[cName][vName].platforms).forEach((plat) => {
           if (
-            Number(clickedBranch.id) ===
-            Number(vendors.display[cName][vName].platforms[plat].vendor_id)
+            clickedBranch.ids.includes(
+              String(vendors.display[cName][vName].platforms[plat].vendor_id)
+            )
           ) {
             object[plat] = [vendors.display[cName][vName].platforms[plat]];
           }

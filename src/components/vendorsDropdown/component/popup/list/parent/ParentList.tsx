@@ -30,8 +30,8 @@ const ParentListItem: FC<{
   setSelected: (v: Value) => void;
 }> = ({ item, onSelect, onSelectOnly, setSelected }) => (
   <List.Item
-    onClick={() => setSelected(item.value)}
-    className={`list-item ${item.checked && 'checked'}`}
+    onClick={() => !item.disabled && setSelected(item.value)}
+    className={`list-item ${item.checked && 'checked'} ${item.disabled && 'disabled'}`}
   >
     <div className='parent-list-item-container'>
       <div>
@@ -57,7 +57,7 @@ const ParentListItem: FC<{
           }}
           disabled={item.disabled}
         >
-          Select Only
+          Only
         </Button>
         <Button type='text' disabled={item.disabled} className='expand-button'>
           <ArrowRightIcon />

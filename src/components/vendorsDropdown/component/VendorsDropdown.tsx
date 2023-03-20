@@ -54,14 +54,14 @@ export const VendorsDropdown: FC<{
 
   return (
     <Popover
-      placement='bottomRight'
+      placement='bottomLeft'
       open={open}
       trigger='click'
       onOpenChange={handleOpen}
       rootClassName='dropdown-popup'
       content={<Popup values={values} options={options} onChange={onChange} />}
     >
-      <div className='dropdown-header'>
+      <div className={`dropdown-header ${!selected.length && 'disabled'}`}>
         <div className='content'>
           <VendorIcon />
           <div className='text'>

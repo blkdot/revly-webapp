@@ -90,7 +90,11 @@ const PlanningOffersTable = ({ rows, type }) => {
       <img
         className='planning-platform'
         style={{ marginRight: '1.5rem' }}
-        src={platformObject[r.platform].src}
+        src={
+          platformObject[r.platform].srcNoBg ||
+          platformObject[r.platform].srcWhite ||
+          platformObject[r.platform].src
+        }
         alt={platformObject[r.platform].name}
       />
     </TableCellKit>

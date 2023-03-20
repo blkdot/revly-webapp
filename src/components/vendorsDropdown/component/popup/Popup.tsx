@@ -1,6 +1,7 @@
 import { Checkbox, Divider, Input, Typography } from 'antd';
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { ReactComponent as SearchIcon } from './icons/search.svg';
+import { ReactComponent as CleanIcon } from './icons/clean.svg';
 import { ChildrenList } from './list/children/ChildrenList';
 import { ParentList } from './list/parent/ParentList';
 import './Popup.scss';
@@ -173,7 +174,7 @@ export const Popup: FC<{
         title: v.title,
         subTitle: v.subTitle,
         disabled: v.disabled,
-        checked,
+        checked: !v.disabled && checked,
         intermediate,
       });
     });
@@ -208,6 +209,17 @@ export const Popup: FC<{
       <Input
         value={search}
         prefix={<SearchIcon />}
+        suffix={
+          search.length && (
+            <CleanIcon
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSearch('');
+              }}
+            />
+          )
+        }
         placeholder='Search by brand or branch name'
         onChange={(v) => setSearch(v.target.value)}
         className='search-input'

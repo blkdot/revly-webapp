@@ -23,3 +23,19 @@
   grid-gap: 8px;
   z-index: 2;
 }
+
+#tooltip-alert {
+  > div {
+    background-color: #e47b1a;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    width: fit-content;
+
+    > span {
+      &::before {
+        background-color: #e47b1a !important;
+      }
+    }
+  }
+}

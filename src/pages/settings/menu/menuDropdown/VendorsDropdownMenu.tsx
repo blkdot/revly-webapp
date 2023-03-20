@@ -29,7 +29,7 @@ const VendorsDropdownMenu = () => {
           }
         });
         if (!Object.keys(vendors.display[chainName][vendorName].platforms).includes(platform[0])) {
-          displayTemp[chainName][vendorName].deleted = true;
+          displayTemp[chainName][vendorName].active = false;
           displayTemp[chainName][vendorName].checked = false;
         }
       });

@@ -156,12 +156,12 @@ const useMarketingSetup = () => {
           displayTemp[chainName][vendorName].checked =
             branch?.display?.[chainName]?.[vendorName]?.checked || false;
           if (platform.length > 1 && !displayTemp[chainName][vendorName].is_matched) {
-            displayTemp[chainName][vendorName].deleted = true;
+            displayTemp[chainName][vendorName].active = true;
             displayTemp[chainName][vendorName].checked = false;
           } else {
             const platformsDisplay = Object.keys(displayTemp[chainName][vendorName].platforms);
             platformsDisplay.forEach((platformV) => {
-              displayTemp[chainName][vendorName].deactivated = false;
+              displayTemp[chainName][vendorName].active = true;
 
               if (
                 platformV?.toLocaleLowerCase() === 'deliveroo' &&
@@ -173,7 +173,7 @@ const useMarketingSetup = () => {
 
                 if (!exists) {
                   if (platform.length === 1) {
-                    displayTemp[chainName][vendorName].deactivated = true;
+                    displayTemp[chainName][vendorName].active = false;
                     displayTemp[chainName][vendorName].checked = false;
                     return;
                   }
@@ -185,14 +185,14 @@ const useMarketingSetup = () => {
                     return;
                   }
 
-                  displayTemp[chainName][vendorName].deactivated = true;
+                  displayTemp[chainName][vendorName].active = false;
                   displayTemp[chainName][vendorName].checked = false;
                   return;
                 }
               }
 
               if (platform[0] !== platformV && !displayTemp[chainName][vendorName].is_matched) {
-                displayTemp[chainName][vendorName].deleted = true;
+                displayTemp[chainName][vendorName].active = false;
                 displayTemp[chainName][vendorName].checked = false;
               }
 
@@ -200,7 +200,7 @@ const useMarketingSetup = () => {
                 !displayTemp[chainName][vendorName].platforms[platform[0]]?.metadata.is_active &&
                 platform.length === 1
               ) {
-                displayTemp[chainName][vendorName].deleted = true;
+                displayTemp[chainName][vendorName].active = false;
                 displayTemp[chainName][vendorName].checked = false;
               }
 
@@ -212,17 +212,13 @@ const useMarketingSetup = () => {
             if (platform.length === 1) {
               platform.forEach((p) => {
                 if (!platformsDisplay.includes(p)) {
-                  displayTemp[chainName][vendorName].deleted = true;
+                  displayTemp[chainName][vendorName].active = false;
                   displayTemp[chainName][vendorName].checked = false;
                 }
               });
             }
 
-            if (
-              !displayTemp[chainName][vendorName].deleted &&
-              !defaultSelection &&
-              !displayTemp[chainName][vendorName].deactivated
-            ) {
+            if (displayTemp[chainName][vendorName].active && !defaultSelection) {
               defaultSelection = {
                 chainName,
                 vendorName,

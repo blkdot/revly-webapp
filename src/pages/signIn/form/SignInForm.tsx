@@ -2,8 +2,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   ButtonKit,
   CheckboxKit,
-  DividerKit,
   FormControlLabelKit,
+  FormControlKit,
   FormGroupKit,
   TextfieldKit,
   TypographyKit,
@@ -23,7 +23,7 @@ const SignInForm: FC<{
   onPasswordBlur: () => void;
   remember: boolean;
   setRemember: (v: boolean) => void;
-  onSubmit: () => Promise<unknown>;
+  onSubmit: (e: any) => Promise<unknown>;
   disabled: boolean;
 }> = ({
   email,
@@ -49,7 +49,7 @@ const SignInForm: FC<{
           Get started
         </Link>
       </TypographyKit>
-      <div className='signin-form__block'>
+      <form onSubmit={onSubmit} className='signin-form__block'>
         <div className='__block-head'>
           <TypographyKit variant='h5' className='__block-head__title'>
             Sign in to Revly
@@ -120,13 +120,13 @@ const SignInForm: FC<{
             fullWidth
             size='large'
             variant='contained'
-            onClick={onSubmit}
+            type='submit'
             disabled={disabled}
           >
             Login
           </ButtonKit>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
