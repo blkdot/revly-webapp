@@ -47,9 +47,11 @@ const App = () => {
         if (pathname === '/') {
           navigate('/dashboard');
         }
-      } else {
-        navigate('/');
-      }
+      } 
+      // not verify email,forgot-password because it always redirect to main page (sign in)
+      // else {
+      //   navigate('/');
+      // }
     });
   }, []);
 
