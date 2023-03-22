@@ -6,13 +6,14 @@ import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import LinkRevly from 'components/linkRevly/LinkRevly';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { usePlatform } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useQueryState, useVendors } from 'hooks';
-import { ContainerKit, TypographyKit } from 'kits';
+import { ContainerKit, TypographyKit, BoxKit, PaperKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
@@ -333,6 +334,14 @@ const Planning = () => {
     return source.length < 1;
   };
 
+  const renderFilter = () => {
+    if (link === 'ads_planning') {
+      return !isEmptyList() && renderAdsFilters();
+    }
+    
+    return !isEmptyList() && renderOffersFilters();
+  };
+
   const renderTable = () => {
     if (link === 'ads_planning') {
       return (
@@ -557,6 +566,13 @@ const Planning = () => {
             <TypographyKit className='dashboard-subtitle'>
               Plan and visualize all the scheduled and past discounts and campaigns.
             </TypographyKit>
+            <LinkRevly
+              links={links}
+              setLink={setLink}
+              link={link}
+              filters={renderFilter()}
+              setOpenedFilter={setOpenedFilter}
+            />
             {renderTable()}
           </div>
         )}

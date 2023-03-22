@@ -8,6 +8,7 @@ import AdvertsDetails from 'components/details/AdvertsDetails';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import LinkRevly from 'components/linkRevly/LinkRevly';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
@@ -373,6 +374,13 @@ const Adverts = () => {
               Create new campaign
             </ButtonAction>
           </div>
+          <LinkRevly
+            links={links}
+            setLink={setLink}
+            link={link}
+            filters={!isEmptyList() && renderFilters()}
+            setOpenedFilter={setOpenedFilter}
+          />
           <TableRevlyNew
             onClickRow={(id) => {
               setClickedRow(adsData.find((obj) => `${obj.ad_ids.join('')}_ads` === id));

@@ -4,11 +4,12 @@ import { pascalCase } from 'change-case';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import LinkRevly from 'components/linkRevly/LinkRevly';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate } from 'hooks';
-import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit } from 'kits';
+import { ButtonAction, ButtonKit, ContainerKit, PaperKit, TypographyKit, BoxKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useMemo, useState } from 'react';
@@ -432,6 +433,18 @@ const MarketingAds = () => {
             Create new campaign
           </ButtonAction>
         </div>
+        <BoxKit className='competition-box' sx={{ width: '100%' }}>
+          <PaperKit className='table-paper' sx={{ width: '100%', mb: 2 }}>
+            <LinkRevly
+              links={links}
+              setLink={setLink}
+              link={link}
+              filters={!isEmptyList() && renderFilters()}
+              setOpenedFilter={setOpenedFilter}
+            />
+            {!isEmptyList() && renderFilters()}
+          </PaperKit>
+        </BoxKit>
         {renderTable()}
         <MarketingSetup ads active={active} setActive={setActive} />
         <div

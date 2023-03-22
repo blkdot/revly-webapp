@@ -9,11 +9,12 @@ import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOffer
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
+import LinkRevly from 'components/linkRevly/LinkRevly';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useQueryState } from 'hooks';
-import { ButtonAction, ContainerKit } from 'kits';
+import { ButtonAction, ContainerKit, BoxKit, PaperKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle';
 import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useState } from 'react';
@@ -491,7 +492,16 @@ const MarketingOffer = () => {
             setOpened={setOpenedOffer}
           />
         ) : (
-          renderTable()
+          <>
+            <LinkRevly
+              links={links}
+              setLink={setLink}
+              link={link}
+              filters={!isEmptyList() && renderFilters()}
+              setOpenedFilter={setOpenedFilter}
+            />
+            {renderTable()}
+          </>
         )}
         <MarketingSetup active={active} setActive={setActive} />
         <MarketingOfferRemove setOpened={setOpened} opened={opened} CancelOffer={CancelOffer} />

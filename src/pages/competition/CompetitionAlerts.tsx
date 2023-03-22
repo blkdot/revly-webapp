@@ -5,6 +5,7 @@ import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
+import LinkRevly from 'components/linkRevly/LinkRevly';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useUser } from 'contexts';
@@ -12,7 +13,7 @@ import { platformObject } from 'data/platformList';
 import dayjs from 'dayjs';
 import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
-import { ContainerKit, PaperKit } from 'kits';
+import { ContainerKit, BoxKit, PaperKit } from 'kits';
 import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
 import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
 import { useEffect, useMemo, useState } from 'react';

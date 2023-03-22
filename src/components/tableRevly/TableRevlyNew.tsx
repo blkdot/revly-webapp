@@ -127,30 +127,24 @@ const TableRevlyNew: FC<{
     return null;
   };
   return (
-    <BoxKit className={`competition-box ${className || ''}`} sx={{ width: '100%' }}>
-      <PaperKit className='table-paper' sx={{ width: '100%', mb: 2 }}>
-        {renderTop()}
-        {filters}
-        <TableContainerKit className='table-container'>
-          <TableKit
-            sx={{ minWidth: 750, maxHeight: 250 }}
-            aria-labelledby='tableTitle'
-            size='medium'
-            style={{ '--length': Object.keys(headers).length }}
-          >
-            <EnhancedTableHead
-              header={headers}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length ?? 0}
-            />
-            <TableBodyKit>{renderRows()}</TableBodyKit>
-          </TableKit>
-          {renderNoData()}
-        </TableContainerKit>
-      </PaperKit>
-    </BoxKit>
+    <TableContainerKit className='table-container'>
+      <TableKit
+        sx={{ minWidth: 750, maxHeight: 250 }}
+        aria-labelledby='tableTitle'
+        size='medium'
+        style={{ '--length': Object.keys(headers).length }}
+      >
+        <EnhancedTableHead
+          header={headers}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          rowCount={rows.length ?? 0}
+        />
+        <TableBodyKit>{renderRows()}</TableBodyKit>
+      </TableKit>
+      {renderNoData()}
+    </TableContainerKit>
   );
 };
 TableRevlyNew.defaultProps = {
