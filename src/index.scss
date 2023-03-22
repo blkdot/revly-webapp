@@ -47,11 +47,11 @@ html {
 
   > .opened.opened ~ div {
     position: relative;
-    width: calc(100% - 280px);
+    width: calc(100% - 220px);
 
     .delete-overlay {
-      width: calc(100% - 280px);
-      left: 280px;
+      width: calc(100% - 220px);
+      left: 220px;
     }
   }
 
@@ -110,7 +110,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 280px;
+  width: 220px;
   height: 100vh;
 }
 .main-loading {

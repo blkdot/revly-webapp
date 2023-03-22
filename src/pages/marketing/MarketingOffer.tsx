@@ -5,6 +5,7 @@ import { pascalCase } from 'change-case';
 import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
@@ -464,7 +465,10 @@ const MarketingOffer = () => {
     <div className='wrapper marketing-wrapper'>
       <div className='top-inputs'>
         <VendorsDropdownAdapter />
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+          <HeaderDropdowns />
+        </div>
       </div>
       <ContainerKit>
         <div className='marketing-top'>

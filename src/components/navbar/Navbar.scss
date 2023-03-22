@@ -8,7 +8,7 @@
   z-index: 100;
 
   &.opened {
-    width: 280px;
+    width: 220px;
   }
 }
 
@@ -25,13 +25,15 @@
   padding: 15px 12px 0 12px;
   overflow: hidden;
   transition: 0.5s;
+
   &.openedModal {
     background-color: #fff;
   }
+
   transition: 0.5s;
 
   &.opened {
-    width: 280px;
+    width: 220px;
 
     .nav-double-arrow.nav-double-arrow {
       opacity: 1;
@@ -49,6 +51,7 @@
         opacity: 1;
         width: fit-content;
         display: inline;
+        color: #212b36;
       }
     }
   }
@@ -70,26 +73,26 @@
     }
 
     a.active button {
-      background-color: rgba(144, 107, 255, 0.08);
+      background-color: #5e5adb0d;
 
       span {
-        color: #906bff;
+        color: #5e5adb !important;
       }
 
-      .nav-icon {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
-          contrast(102%);
+      svg {
+        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
+          contrast(176%);
       }
     }
 
     a.active button:hover {
       span {
-        color: #906bff;
+        color: #5e5adb !important;
       }
 
-      .nav-icon {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
-          contrast(102%);
+      svg {
+        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
+          contrast(176%);
       }
     }
 
@@ -101,22 +104,22 @@
       background-color: rgba(144, 107, 255, 0.08) !important;
 
       span {
-        color: #906bff;
+        color: #5e5adb !important;
       }
 
-      .nav-icon {
-        filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
-          contrast(102%);
+      svg {
+        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
+          contrast(176%);
       }
 
       &:hover {
         span {
-          color: #906bff;
+          color: #5e5adb !important;
         }
 
-        .nav-icon {
-          filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
-            contrast(102%);
+        svg {
+          filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
+            contrast(176%);
         }
       }
     }
@@ -173,11 +176,6 @@
   }
 }
 
-.nav-icon {
-  width: 25px;
-  height: 25px;
-}
-
 .accordion-sum.accordion-sum {
   padding: 0;
   justify-content: space-between;
@@ -220,12 +218,12 @@
 
   &:hover {
     span {
-      color: #906bff;
+      color: #5e5adb !important;
     }
 
-    .nav-icon {
-      filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
-        contrast(102%);
+    svg {
+      filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
+        contrast(176%);
     }
   }
 }
@@ -246,10 +244,12 @@
     }
   }
 }
+
 .navlink-disabled {
   pointer-events: none;
   opacity: 0.5;
 }
+
 .navbar-accordion-details.navbar-accordion-details {
   position: relative;
   padding: 8px 16px 0px 5px;
@@ -311,11 +311,24 @@
   }
 }
 
-.nav-lines {
+.nav-line {
+  background-color: #5e5adb;
+  height: 40px;
+  width: 600px;
   position: absolute;
-  right: 0;
-  width: 250px;
-  top: 45%;
+  bottom: 60px;
+  left: -50px;
+  transform: rotate(15deg);
+
+  &::before {
+    content: '';
+    background-color: rgba(94, 90, 219, 0.2);
+    height: 40px;
+    width: 600px;
+    position: absolute;
+    top: -40px;
+    left: 0;
+  }
 }
 
 @media (max-width: 900px) {
@@ -337,29 +350,5 @@
         width: fit-content;
       }
     }
-  }
-}
-
-@media (min-height: 1100px) {
-  .nav-lines {
-    top: 35%;
-  }
-}
-
-@media (max-height: 900px) {
-  .nav-lines {
-    top: 50%;
-  }
-}
-
-@media (max-height: 800px) {
-  .nav-lines {
-    top: 55%;
-  }
-}
-
-@media (max-height: 700px) {
-  .nav-lines {
-    top: 67%;
   }
 }

@@ -1,50 +1,23 @@
-import adsIcon from '../assets/images/ic_ads.png';
-import alertsIcon from '../assets/images/ic_alerts.png';
-import competitionIcon from '../assets/images/ic_competiton.png';
-import dashboardIcon from '../assets/images/ic_dashboard.png';
-import marketingIcon from '../assets/images/ic_marketing.png';
-import offerIcon from '../assets/images/ic_offers.png';
-import planningIcon from '../assets/images/ic_planning.png';
-import rankingIcon from '../assets/images/ic_ranking.png';
-import settingsIcon from '../assets/images/ic_settings.png';
+import { ReactComponent as DashboardIcon } from 'assets/linkIcons/dashboard.svg';
+import { ReactComponent as PlanningIcon } from 'assets/linkIcons/planning.svg';
+import { ReactComponent as OffersIcon } from 'assets/linkIcons/offers.svg';
+import { ReactComponent as AdvertsIcon } from 'assets/linkIcons/adverts.svg';
+import { ReactComponent as ListingIcon } from 'assets/linkIcons/listing.svg';
+import { ReactComponent as Alerts } from 'assets/linkIcons/alerts.svg';
 
 export const simpleLink = [
-  { title: 'Dashboard', path: '/dashboard', src: dashboardIcon },
-  { title: 'Planning', path: '/planning', src: planningIcon },
-];
-
-export const accordionLink = [
-  {
-    id: 'marketing',
-    title: ' Marketing',
-    src: marketingIcon,
-    subs: [
-      { title: 'Offers', path: '/marketing/offer', src: offerIcon },
-      { title: 'Ads', path: '/marketing/ads', src: adsIcon },
-    ],
-  },
-  {
-    id: 'competition',
-    title: ' Competition',
-    src: competitionIcon,
-    subs: [
-      { title: 'Listing', path: '/competition/listing', src: rankingIcon },
-      { title: 'Alerts', path: '/competition/alerts', src: alertsIcon },
-    ],
-  },
+  { title: 'Dashboard', path: '/dashboard', image: <DashboardIcon /> },
+  { title: 'Planning', path: '/planning', image: <PlanningIcon /> },
+  { title: 'Offers', path: '/offer', image: <OffersIcon /> },
+  { title: 'Adverts', path: '/adverts', image: <AdvertsIcon /> },
+  { title: 'Listing', path: '/listing', image: <ListingIcon /> },
+  { title: 'Alerts', path: '/alerts', image: <Alerts /> },
 ];
 
 export const settingsLink = [
-  {
-    id: 'settings',
-    title: ' Settings',
-    src: settingsIcon,
-    subs: [
-      { title: 'General', path: '/settings/general' },
-      { title: 'Onboarding', path: '/settings/onboarding' },
-      { title: 'Change Password', path: '/settings/change-password' },
-      { title: 'Menu Settings', path: '/settings/menu' },
-      { title: 'Cost Settings', path: '/settings/cost' },
-    ],
-  },
+  { title: 'General', path: '/settings/general' },
+  { title: 'Onboarding', path: '/settings/onboarding' },
+  { title: 'Change Password', path: '/settings/change-password' },
+  { title: 'Menu Settings', path: '/settings/menu' },
+  { title: 'Cost Settings', path: '/settings/cost' },
 ];

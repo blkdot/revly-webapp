@@ -9,7 +9,7 @@ import {
   onboardingConnectAccountAtom,
 } from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
-import SettingsIcon from '../../../assets/images/ic_settings.png';
+import SettingsIcon from '../../../assets/linkIcons/settings.svg';
 import plus from '../../../assets/images/plus.png';
 import OnboardingDropdown from './OnboardingDropdown';
 
