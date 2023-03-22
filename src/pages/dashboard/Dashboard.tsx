@@ -1,6 +1,7 @@
 import { useMetrics } from 'api';
 import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
+import HeaderNotifications from 'components/header/headerNotifications/HeaderNotifications';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -245,16 +246,16 @@ const Dashboard = () => {
     return selectedVendors('name', display).join(', ');
   };
 
-  const title = `${
-    getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
+  const title = `${getPeriod(date.titleDate, date.beforePeriod).charAt(0).toUpperCase() +
     getPeriod(date.titleDate, date.beforePeriod).slice(1)
-  } results for ${isDisplay()}`;
+    } results for ${isDisplay()}`;
 
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
         <VendorsDropdownAdapter />
         <Dates isDashboard />
+        <HeaderNotifications />
       </div>
       <ContainerKit>
         {(!userPlatformData.onboarded || activeStep !== 0) && (
