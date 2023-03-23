@@ -1,8 +1,8 @@
 import { BoxKit, TypographyKit, PaperKit, ButtonKit } from 'kits';
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import Arrow from '../../assets/images/arrow.svg';
-import CalendarViewIcon from '../../assets/images/Calendar.svg';
-import TableViewIcon from '../../assets/images/Table.svg';
+import CalendarViewIcon from '../../assets/images/calendar_view.svg';
+import TableViewIcon from '../../assets/images/table_view.svg';
 import './LinkRevly.scss';
 
 const TableLink: FC<{
@@ -27,6 +27,9 @@ const TableLink: FC<{
     tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(index, 'width')}px`);
     tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(index, 'scroll')}px`);
   };
+
+  const [viewType, setViewType] = useState('table');
+
   useEffect(() => {
     const tableLinks = document.querySelector('.table-links') as HTMLElement;
     tableLinks?.style.setProperty(
@@ -104,15 +107,17 @@ const TableLink: FC<{
           </div>
           <div style={{ display: 'flex' }}>
             <ButtonKit
-              className='view-option-btn white'
+              className={`view-option-btn white ${viewType === 'calendar' && 'active'}`}
+              onClick={() => setViewType('calendar')}
             >
-              <img src={CalendarViewIcon} alt='' style={{marginRight: '12px'}} />
+              <img className='view-icon' src={CalendarViewIcon} alt='' style={{marginRight: '12px'}} />
               Calendar view
             </ButtonKit>
             <ButtonKit
-              className='view-option-btn white'
+              className={`view-option-btn white ${viewType === 'table' && 'active'}`}
+              onClick={() => setViewType('table')}
             >
-              <img src={TableViewIcon} alt='' style={{marginRight: '12px'}} />
+              <img className='view-icon' src={TableViewIcon} alt='' style={{marginRight: '12px'}} />
               Table view
             </ButtonKit>
             {filters ? (

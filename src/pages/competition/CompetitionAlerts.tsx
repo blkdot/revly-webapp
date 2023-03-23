@@ -16,8 +16,6 @@ import dayjs from 'dayjs';
 import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, BoxKit, PaperKit } from 'kits';
-import DescriptionTitle from 'kits/title/DescriptionTitle'; // TODO: add to kits export
-import MainTitle from 'kits/title/MainTitle'; // TODO: add to kits export
 import { useEffect, useMemo, useState } from 'react';
 import Columns from '../../assets/images/columns.svg';
 import competitorIcon from '../../assets/images/ic_competitor.png';

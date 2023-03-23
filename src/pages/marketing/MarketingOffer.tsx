@@ -16,8 +16,6 @@ import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useQueryState } from 'hooks';
 import { ButtonAction, ContainerKit, BoxKit, PaperKit } from 'kits';
-import DescriptionTitle from 'kits/title/DescriptionTitle';
-import MainTitle from 'kits/title/MainTitle';
 import { useEffect, useState } from 'react';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';

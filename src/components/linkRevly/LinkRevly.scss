@@ -410,9 +410,10 @@
     .view-option-btn {
       cursor: pointer;
       font-size: 14px !important;
+      line-height: 20px;
       text-transform: none !important;
       box-shadow: none !important;
-      font-family: 'Public Sans';
+      font-family: 'Public Sans' !important;
       font-style: normal;
       font-weight: 500;
       padding: 5px 10px;
@@ -423,9 +424,13 @@
         background-color: #fff !important;
         color: #637381;
       }
-      &:active {
+      &.active {
         color: #5E5ADB;
         border-color: #5E5ADB;
+        .view-icon {
+          filter: invert(55%) sepia(36%) saturate(7491%) hue-rotate(235deg) brightness(100%)
+          contrast(102%);
+        }
       }
       &:hover {
         color: #5E5ADB;
