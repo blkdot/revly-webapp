@@ -1,0 +1,149 @@
+@import '../../../../../../library.scss';
+
+.list-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 16px 0 !important;
+
+  &.children {
+    border: none !important;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    .vendors-select-title {
+      opacity: 0.5;
+      max-width: 140px !important;
+    }
+
+    &:hover {
+      .vendors-select-title {
+        max-width: 140px !important;
+      }
+
+      .list-item-select-only.list-item-select-only {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+      &::before {
+        opacity: 0 !important;
+      }
+    }
+  }
+
+  label {
+    z-index: 2;
+
+    &.ant-checkbox-wrapper-disabled {
+      &:hover {
+        .ant-checkbox-inner {
+          border-color: #d9d9d9 !important;
+        }
+      }
+    }
+  }
+
+  .list-item-select-only.list-item-select-only {
+    padding: 0;
+    margin-right: 10px;
+    background: none;
+    position: absolute;
+    left: -45px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+
+    > span {
+      font-weight: 500;
+      color: #724aeb;
+    }
+  }
+
+  &::before {
+    content: '';
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    transition: 0.4s ease-in-out;
+    left: 0;
+    top: 0;
+    border-radius: 4px;
+  }
+
+  &:hover {
+    .list-item-select-only.list-item-select-only {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .vendors-select-title {
+      max-width: calc(165px - (var(--length) * 20)) !important;
+      transition: 0.3s;
+    }
+
+    &::before {
+      left: 10px;
+      width: calc(100% - 20px);
+      top: 8px;
+      height: calc(100% - 16px);
+      opacity: 1;
+      background-color: #f8f9fb;
+    }
+  }
+
+  &.checked {
+    &::before {
+      left: 10px;
+      width: calc(100% - 20px);
+      top: 8px;
+      height: calc(100% - 16px);
+      opacity: 1;
+      background-color: #f6f3ff;
+    }
+
+    &:hover {
+      &::before {
+        background-color: #f6f3ff;
+      }
+    }
+  }
+}
+
+.parent-list-item-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+
+  > div {
+    z-index: 1;
+    display: flex;
+    grid-gap: 8px;
+  }
+
+  .parent-space {
+    z-index: 1;
+  }
+}
+
+.action-buttons {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  & > .expand-button.expand-button {
+    height: 24px;
+    width: 24px;
+    padding: 0;
+    margin: 0;
+    background: none;
+  }
+}

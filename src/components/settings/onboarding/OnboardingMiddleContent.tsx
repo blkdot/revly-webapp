@@ -1,18 +1,25 @@
-import { useState, FC, useEffect } from 'react';
-import { ButtonKit } from 'kits';
+import { PageHeader } from 'components';
 import { useAtom } from 'jotai';
+import { ButtonKit } from 'kits';
+import { FC, useEffect, useState } from 'react';
+import {
+  onboardingAccountsAtom,
+  onboardingBranchDataAtom,
+  onboardingBranchDataFilteredAtom,
+  onboardingConnectAccountAtom,
+} from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
-import OnboardingDropdown from './OnboardingDropdown';
-import plus from '../../../assets/images/plus.png';
 import SettingsIcon from '../../../assets/images/ic_settings.png';
+import plus from '../../../assets/images/plus.png';
+import OnboardingDropdown from './OnboardingDropdown';
 
 const OnboardingMiddleContent: FC<{
   openCloseModal: () => void;
-  accounts: any;
-  setConnectAccount: any;
-  branchData: any;
-  setBranchDataFiltered: any;
-}> = ({ openCloseModal, accounts, setConnectAccount, setBranchDataFiltered, branchData }) => {
+}> = ({ openCloseModal }) => {
+  const [accounts] = useAtom(onboardingAccountsAtom);
+  const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
+  const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
+  const [branchData] = useAtom(onboardingBranchDataAtom);
   const [vendors] = useAtom(vendorsAtom);
   const filteredChains = () => {
     const arr = [];
@@ -33,12 +40,10 @@ const OnboardingMiddleContent: FC<{
   }, [filteredChains().length, branchData]);
   return (
     <div className='settings-onboarding-middle_content'>
-      <div>
-        <p className='dashboard-title'>Your branches list</p>
-        <span className='dashboard-subtitle'>
-          Add and manage all your chains and branches. Monitor the activity of your branches.
-        </span>
-      </div>
+      <PageHeader
+        title='Your branches list'
+        description='Add and manage all your chains and branches. Monitor the activity of your branches'
+      />
       <div className='settings-onboarding-btn_wrapper'>
         {accounts.length > 0 && (
           <OnboardingDropdown

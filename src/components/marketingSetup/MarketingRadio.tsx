@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { CSSProperties, FC } from 'react';
 import { BoxKit, CheckboxKit, FormControlLabelKit, RadioKit } from 'kits';
 
 const MarketingRadio: FC<{
@@ -10,7 +10,8 @@ const MarketingRadio: FC<{
   onChange?: any;
   state?: any;
   radio?: boolean;
-}> = ({ title, subtitle, icon, className, disabled, onChange, state, radio }) => {
+  color?: string;
+}> = ({ title, subtitle, icon, className, disabled, onChange, state, radio, color }) => {
   const getButton = () => {
     if (radio) {
       return <FormControlLabelKit onChange={onChange} value={title} control={<RadioKit />} />;
@@ -21,12 +22,19 @@ const MarketingRadio: FC<{
     <BoxKit className={`left-part-radio ${disabled && 'disabled'} ${!icon && 'reversed'}`}>
       <div>
         {icon && (
-          <span className={className}>
-            <img src={icon} alt='Box Icon' />
-          </span>
+          <img
+            className='planning-platform'
+            style={
+              {
+                '--color': color,
+              } as CSSProperties
+            }
+            src={icon}
+            alt='Box Icon'
+          />
         )}
         <div>
-          {title}
+          {title.charAt(0).toUpperCase() + title.slice(1)}
           {subtitle && <p>{subtitle}</p>}
         </div>
       </div>
@@ -43,5 +51,6 @@ MarketingRadio.defaultProps = {
   onChange: null,
   state: null,
   radio: false,
+  color: '',
 };
 export default MarketingRadio;

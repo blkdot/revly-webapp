@@ -4,7 +4,7 @@ import setHours from 'date-fns/setHours';
 import { FormControlKit, MenuItemKit, OutlinedInputKit, SelectKit } from 'kits';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { minHour, maxHour, rangeHoursOpenedDay } from '../../utlls/heatmap/heatmapSelectedData';
+import { minHour, maxHour, rangeHoursOpenedDay } from '../../utils/heatmap/heatmapSelectedData';
 
 const TimePickerDropdown = (props: any) => {
   const { value, setValue, times, type, index, startLimit } = props;

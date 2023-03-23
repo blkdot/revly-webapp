@@ -1,6 +1,7 @@
 import { usePlanningAds, usePlanningOffers } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
@@ -9,12 +10,14 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import LinkRevly from 'components/linkRevly/LinkRevly';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { usePlatform } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useQueryState, useVendors } from 'hooks';
 import { ContainerKit, TypographyKit, BoxKit, PaperKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
+import { capitalize } from 'utils';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
@@ -540,10 +543,14 @@ const Planning = () => {
 
   const [period, setPeriod] = useState('');
 
+  const title = `Planning for ${
+    link === 'offers_planning' ? 'discounts' : 'ads'
+  } scheduled for ${capitalize(period)}`;
+
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        <RestaurantDropdown />
+        <VendorsDropdownAdapter />
         <Dates
           setPeriodProps={setPeriod}
           offer

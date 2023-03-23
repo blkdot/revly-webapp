@@ -78,42 +78,45 @@ const SignIn = () => {
     }
   }, [oobCode, mode]);
 
-  const handleSubmit = useCallback(async () => {
-    //  if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
-    //   triggerAlertWithMessageError('Unauthorized email address');
-    //    return;
-    //  }
+  const handleSubmit = useCallback(
+    async (e) => {
+      //  if (!emailWhitelisted.includes(email.toLocaleLowerCase().trim())) {
+      //   triggerAlertWithMessageError('Unauthorized email address');
+      //    return;
+      //  }
+      e.preventDefault();
+      setProcessing(true);
+      try {
+        const res = await signIn(email, password, remember);
 
-    setProcessing(true);
-    try {
-      const res = await signIn(email, password, remember);
-
-      if (!res.user.emailVerified) {
-        await logout();
-        setProcessing(false);
-        throw new Error(
-          'Email not verified, please check your email (include spam) for verification'
-        );
-      }
-
-      navigate('/dashboard');
-    } catch (error) {
-      const message = firebaseCodeError[error.code]
-        ? firebaseCodeError[error.code].message
-        : error.message;
-
-      if (firebaseCodeError[error.code] && firebaseCodeError[error.code].field) {
-        if (firebaseCodeError[error.code].field === 'email') {
-          setEmailError(true);
-        } else if (firebaseCodeError[error.code].field === 'password') {
-          setPasswordError(true);
+        if (!res.user.emailVerified) {
+          await logout();
+          setProcessing(false);
+          throw new Error(
+            'Email not verified, please check your email (include spam) for verification'
+          );
         }
-      }
 
-      triggerAlertWithMessageError(message);
-      setProcessing(false);
-    }
-  }, [email, navigate, password, remember, triggerAlertWithMessageError]);
+        navigate('/dashboard');
+      } catch (error) {
+        const message = firebaseCodeError[error.code]
+          ? firebaseCodeError[error.code].message
+          : error.message;
+
+        if (firebaseCodeError[error.code] && firebaseCodeError[error.code].field) {
+          if (firebaseCodeError[error.code].field === 'email') {
+            setEmailError(true);
+          } else if (firebaseCodeError[error.code].field === 'password') {
+            setPasswordError(true);
+          }
+        }
+
+        triggerAlertWithMessageError(message);
+        setProcessing(false);
+      }
+    },
+    [email, navigate, password, remember, triggerAlertWithMessageError]
+  );
 
   const onEmailBlur = useCallback(() => setEmailError(!email), [email]);
   const onPasswordBlur = useCallback(() => setPasswordError(!password), [password]);

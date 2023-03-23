@@ -9,7 +9,7 @@ import {
   TableRowKit,
 } from 'kits';
 import { useState } from 'react';
-import { getComparator, stableSort } from '../../utlls/scripts/scripts';
+import { getComparator, stableSort } from '../../utils/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import './TableRevly.scss';
 

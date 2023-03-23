@@ -1,6 +1,7 @@
 import { usePlanningAds } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
@@ -418,20 +419,15 @@ const MarketingAds = () => {
       </div>
       <ContainerKit>
         <div className='marketing-top'>
-          <div className='marketing-top-text'>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div>
-                <MainTitle>Marketing - Ads</MainTitle>
-                <DescriptionTitle>
-                  Create and manage all your ads. Set personalised rules to automatically trigger
-                  your ads.
-                </DescriptionTitle>
-              </div>
-            </div>
-          </div>
-          <ButtonAction disabled onClick={() => /* */ null}>
-            Create new campaign
-          </ButtonAction>
+          <PageHeader
+            title='Marketing - Ads'
+            description='Create and manage all your ads. Set personalised rules to automatically trigger your ads'
+            extra={
+              <ButtonAction disabled onClick={() => /* */ null}>
+                Create new campaign
+              </ButtonAction>
+            }
+          />
         </div>
         <BoxKit className='competition-box' sx={{ width: '100%' }}>
           <PaperKit className='table-paper' sx={{ width: '100%', mb: 2 }}>

@@ -84,17 +84,6 @@ const useVendors = (isSign = false) => {
 
     const chainData = [];
 
-    Object.keys(rest).forEach((platform) => {
-      // Do not delete, the code commented out is the real one, the one under it is just a fast fix.
-      // if (!userPlatformData.platforms[platform]?.some((obj) => obj.active)) {
-      //   delete rest[platform];
-      // }
-
-      if (userPlatformData.platforms[platform].length === 0) {
-        delete rest[platform];
-      }
-    });
-
     Object.keys(display).forEach((chainName) => {
       Object.keys(display[chainName]).forEach((vendorName) => {
         Object.keys(display[chainName][vendorName].platforms).forEach((platform) => {

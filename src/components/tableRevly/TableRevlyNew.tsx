@@ -1,6 +1,5 @@
 import {
   BoxKit,
-  ButtonKit,
   PaperKit,
   SkeletonKit,
   TableBodyKit,
@@ -9,9 +8,9 @@ import {
   TableKit,
   TableRowKit,
 } from 'kits';
-import { FC, useState, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import noData from '../../assets/images/no-result.svg';
-import { getComparator, stableSort } from '../../utlls/scripts/scripts';
+import { getComparator, stableSort } from '../../utils/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 import TableLink from './tableLink/TableLink';
 import './TableRevly.scss';

@@ -1,6 +1,6 @@
-import { settingsOnboardPlatformStatus } from 'api';
-import { useUser } from 'contexts';
-import { useAlert } from 'hooks';
+import { settingsOnboardPlatformStatus, settingsOnboarded } from 'api';
+import { usePlatform, useUser } from 'contexts';
+import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ButtonKit } from 'kits';
 import { FC } from 'react';
@@ -14,15 +14,16 @@ import {
   onboardingConnectAtom,
   onboardingLoadingAtom,
 } from 'store/onboardingAtom';
+import { vendorsAtom } from 'store/vendorsAtom';
 import Arrow from '../../../../assets/icons/Arrow';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const UploadingActive: FC<{
-  openCloseModal: any;
-  email: any;
-  setEmail: any;
-  setPassword: any;
-  deleteAccount: any;
+  openCloseModal: () => void;
+  email: string;
+  setEmail: (v: string) => void;
+  setPassword: (v: string) => void;
+  deleteAccount: (platform: string, email: string) => void;
 }> = ({ email, setEmail, setPassword, deleteAccount, openCloseModal }) => {
   const [, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
   const [connect] = useAtom(onboardingConnectAtom);
@@ -32,10 +33,11 @@ const UploadingActive: FC<{
   const [, setLoading] = useAtom(onboardingLoadingAtom);
   const [, setBranchDataFiltered] = useAtom(onboardingBranchDataFilteredAtom);
   const [, setActiveStep] = useAtom(onboardingActiveStepAtom);
-
   const platform = connect.charAt(0).toUpperCase() + connect.slice(1);
   const { triggerAlertWithMessageError } = useAlert();
   const user = useUser();
+  const { setUserPlatformData } = usePlatform();
+
   const confirm = async () => {
     setLoading(true);
     const res = await settingsOnboardPlatformStatus(
@@ -47,11 +49,15 @@ const UploadingActive: FC<{
       },
       connect
     );
-    setLoading(false);
     if (res instanceof Error) {
+      setLoading(false);
       triggerAlertWithMessageError(res.message);
       return;
     }
+    const onboard = await settingsOnboarded({
+      master_email: user.email,
+      access_token: user.token,
+    });
     setBranchData([...branchDataUploading, ...branchData]);
     setBranchDataFiltered([...branchDataUploading, ...branchData]);
     setActiveStep(100);
@@ -59,6 +65,8 @@ const UploadingActive: FC<{
     setAccounts([...accounts, { platform: connect, active: true, email }]);
     setEmail('');
     setPassword('');
+    setLoading(false);
+    setUserPlatformData(onboard);
   };
   return (
     <div

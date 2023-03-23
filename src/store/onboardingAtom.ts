@@ -10,6 +10,7 @@ export type TOnboardingBranchData = {
   }[];
   branch_status?: string;
   id?: string | number;
+  ids?: string[];
   chain_name?: string;
 };
 

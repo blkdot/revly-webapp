@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { headCellsAds, headCellsOffre, ignoredFields } from '../../data/planningOffers';
 import { platformObject } from '../../data/platformList';
-import { getComparator, stableSort } from '../../utlls/scripts/scripts';
+import { getComparator, stableSort } from '../../utils/scripts/scripts';
 import EnhancedTableHead from '../enhancedTableHead/EnhancedTableHead';
 
 const columnLabel = {
@@ -90,7 +90,11 @@ const PlanningOffersTable = ({ rows, type }) => {
       <img
         className='planning-platform'
         style={{ marginRight: '1.5rem' }}
-        src={platformObject[r.platform].src}
+        src={
+          platformObject[r.platform].srcNoBg ||
+          platformObject[r.platform].srcWhite ||
+          platformObject[r.platform].src
+        }
         alt={platformObject[r.platform].name}
       />
     </TableCellKit>

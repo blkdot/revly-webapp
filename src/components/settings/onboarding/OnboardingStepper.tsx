@@ -3,7 +3,7 @@ import { usePlatform } from 'contexts';
 import { platformList } from 'data/platformList';
 import { useAtom } from 'jotai';
 import { ButtonKit, StepKit, StepLabelKit, StepperKit, TypographyKit } from 'kits';
-import { FC, useEffect, useState, CSSProperties } from 'react';
+import { CSSProperties, FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { onboardingAccountsAtom, onboardingActiveStepAtom } from 'store/onboardingAtom';
 import CheckedIcon from '../../../assets/images/checked-settings_ic.svg';
@@ -47,7 +47,7 @@ const ColorlibStepIcon = (props: any) => {
   );
 };
 const OnboardingStepper: FC<{
-  openCloseModal: any;
+  openCloseModal: () => void;
 }> = ({ openCloseModal }) => {
   const [accounts] = useAtom(onboardingAccountsAtom);
   const [activeStep] = useAtom(onboardingActiveStepAtom);
@@ -83,7 +83,7 @@ const OnboardingStepper: FC<{
     if (activeStep < 100 && index === 0) {
       return (
         <ButtonKit
-          onClick={(e) => openCloseModal(e)}
+          onClick={() => openCloseModal()}
           className='settings-onboarding-btn connect'
           variant='contained'
         >

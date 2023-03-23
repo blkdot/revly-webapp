@@ -6,16 +6,16 @@ import { RadioGroupKit, TypographyKit } from 'kits';
 import { FC } from 'react';
 import { TVendors } from 'types';
 import { Subtitle } from './components/Subtitle';
+import VendorsDropdownOffer from './components/VendorsDropdownOffer';
 
 // eslint-disable-next-line import/prefer-default-export
 export const PlatformStep: FC<{
   index: number;
   branch: TVendors | Record<string, never>;
   getPlatform: any;
-  setBranch: any;
   platform: any;
-}> = ({ index, branch, getPlatform, setBranch, platform }) => {
-  const { userPlatformData } = usePlatform();
+}> = ({ index, branch, getPlatform, platform }) => {
+  const { userPlatformData, exception } = usePlatform();
 
   if (!branch || Object.keys(branch).length < 1) return null;
 
@@ -31,7 +31,7 @@ export const PlatformStep: FC<{
         >
           {platformList
             .filter((pf) =>
-              userPlatformData.platforms[pf.name].length > 0
+              userPlatformData.platforms[pf.name].length > 0 && !exception.includes(pf.name)
                 ? userPlatformData.platforms[pf.name].some((obj) => obj.active)
                 : false
             )
@@ -41,18 +41,14 @@ export const PlatformStep: FC<{
                 state={platform}
                 key={p.name}
                 className={p.name}
-                icon={p.src}
+                icon={p.srcNoBg || p.srcWhite || p.src}
+                color={p.color}
                 title={p.name}
               />
             ))}
         </RadioGroupKit>
       </div>
-      <RestaurantDropdown
-        className='offer-setup-dropdown'
-        pageType='branch'
-        setState={setBranch}
-        state={branch}
-      />
+      <VendorsDropdownOffer />
     </div>
   );
 };

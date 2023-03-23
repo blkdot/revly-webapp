@@ -21,11 +21,11 @@ import SwitchDeleteModal from './SwitchDeleteModal';
 
 const ManageBranch: FC<{
   unremovable: boolean;
-  openCloseModal: any;
-  openSwitchDeleteModal: any;
-  setOpenedSwitchDeleteModal: any;
-  openedSwitchDeleteModal: any;
-  deleteAccount: any;
+  openCloseModal: () => void;
+  openSwitchDeleteModal: (event: any) => void;
+  setOpenedSwitchDeleteModal: (v: boolean) => void;
+  openedSwitchDeleteModal: boolean;
+  deleteAccount: (platform: string, email: string) => void;
 }> = ({
   unremovable,
   openCloseModal,
@@ -49,8 +49,9 @@ const ManageBranch: FC<{
       Object.keys(vendors.display[cName]).forEach((vName) => {
         Object.keys(vendors.display[cName][vName].platforms).forEach((plat) => {
           if (
-            Number(clickedBranch.id) ===
-            Number(vendors.display[cName][vName].platforms[plat].vendor_id)
+            clickedBranch.ids.includes(
+              String(vendors.display[cName][vName].platforms[plat].vendor_id)
+            )
           ) {
             object[plat] = [vendors.display[cName][vName].platforms[plat]];
           }
@@ -167,7 +168,11 @@ const ManageBranch: FC<{
                   className={`render-linked-platforms-row ${obj.status}`}
                 >
                   <img
-                    src={getPlatform(obj.platform).srcWhite || getPlatform(obj.platform).src}
+                    src={
+                      getPlatform(obj.platform).srcNoBg ||
+                      getPlatform(obj.platform).srcWhite ||
+                      getPlatform(obj.platform).src
+                    }
                     alt={obj.platform}
                   />
                 </TypographyKit>

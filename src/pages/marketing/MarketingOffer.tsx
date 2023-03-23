@@ -2,15 +2,16 @@
 import { usePlanningOffers } from 'api';
 import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
+import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
-import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import LinkRevly from 'components/linkRevly/LinkRevly';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { endOfMonth, endOfWeek } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDate, useQueryState } from 'hooks';
@@ -465,25 +466,20 @@ const MarketingOffer = () => {
   return (
     <div className='wrapper marketing-wrapper'>
       <div className='top-inputs'>
-        <RestaurantDropdown />
+        <VendorsDropdownAdapter />
         <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
       </div>
       <ContainerKit>
         <div className='marketing-top'>
-          <div className='marketing-top-text'>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div>
-                <MainTitle>Marketing - Offers</MainTitle>
-                <DescriptionTitle>
-                  Create and manage all your offers. Set personalised rules to automatically trigger
-                  your offers
-                </DescriptionTitle>
-              </div>
-            </div>
-          </div>
-          <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>
-            Create new offer
-          </ButtonAction>
+          <PageHeader
+            title='Marketing - Offers'
+            description='Create and manage all your offers. Set personalised rules to automatically trigger your offers'
+            extra={
+              <ButtonAction className='adverts-btn' onClick={() => OpenSetup()}>
+                Create new offer
+              </ButtonAction>
+            }
+          />
         </div>
         {openedOffer ? (
           <OfferDetailComponent

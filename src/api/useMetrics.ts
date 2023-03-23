@@ -9,17 +9,12 @@ export const useMetrics = (period: DatePeriod, vendors: TVendorsObj) => {
 
   const v = useMemo(() => prepareVendors(vendors), [vendors]);
 
-  return useQuery<unknown, ApiError, any>(
-    ['user', 'metricsv2', period, v],
-    async () =>
-      fetcher('/user/metricsv2', {
-        master_email: user.email,
-        vendors: v,
-        start_date: period.from.format('YYYY-MM-DD'),
-        end_date: period.until.format('YYYY-MM-DD'),
-      }),
-    {
-      enabled: Object.keys(v).length > 0,
-    }
+  return useQuery<unknown, ApiError, any>(['user', 'metricsv2', period, v], async () =>
+    fetcher('/user/metricsv2', {
+      master_email: user.email,
+      vendors: v,
+      start_date: period.from.format('YYYY-MM-DD'),
+      end_date: period.until.format('YYYY-MM-DD'),
+    })
   );
 };

@@ -1,16 +1,16 @@
 import AdvertsWidgetCustom from 'components/advertsWidget/AdvertsWidgetCustom';
-import { FC, useState } from 'react';
-import { SkeletonKit } from 'kits';
-import './AdvertsCreateNewCampaign.scss';
-import { countDaysOfWeekBetweenDates } from 'utlls/date/getAllDateSetup';
 import { differenceInBusinessDays, differenceInDays } from 'date-fns';
 import { useAtom } from 'jotai';
+import { SkeletonKit } from 'kits';
+import { FC, useState } from 'react';
 import { endingDateAtom, startingDateAtom } from 'store/marketingSetupAtom';
+import { countDaysOfWeekBetweenDates } from 'utils/date/getAllDateSetup';
+import './AdvertsCreateNewCampaign.scss';
+import BidingStep from './steps/BidingStep';
+import BudgetStep from './steps/BudgetStep';
+import CongratStep from './steps/CongratStep';
 import LaunchStep from './steps/LaunchStep';
 import RecurencyStep from './steps/RecurencyStep';
-import BudgetStep from './steps/BudgetStep';
-import BidingStep from './steps/BidingStep';
-import CongratStep from './steps/CongratStep';
 
 type StateType = {
   title: string;
@@ -30,8 +30,9 @@ type StateBranchType = {
 
 const AdvertsCreateNewCampaign: FC<{
   setOpened: (v: boolean) => void;
-}> = ({ setOpened }) => {
-  const [step, setStep] = useState('launch');
+  step: string;
+  setStep: (v: string) => void;
+}> = ({ setOpened, step, setStep }) => {
   const [advertDetailsWidget, setAdvertDetailsWidget] = useState<StateType>({
     title: 'Your Advert details',
     content: [

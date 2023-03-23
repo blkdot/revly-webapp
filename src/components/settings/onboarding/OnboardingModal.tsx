@@ -1,10 +1,15 @@
 /* eslint-disable no-unused-vars */
-import { settingsOnboardPlatform, settingsOnboardPlatformStatus, settingsSave } from 'api';
+import {
+  settingsOnboarded,
+  settingsOnboardPlatform,
+  settingsOnboardPlatformStatus,
+  settingsSave,
+} from 'api';
 import { saveUser } from 'api/userApi';
-import { useUser } from 'contexts';
+import { usePlatform, useUser } from 'contexts';
 import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import {
   onboardingAccountsAtom,
   onboardingBranchDataAtom,
@@ -25,7 +30,9 @@ import UploadingCompleted from './onboardingModal/UploadingCompleted';
 
 const isUnRemovableBranch = (branchData: any[]): boolean => branchData.length < 2; // TODO: allow reactivation
 
-const OnboardingModal = ({ openCloseModal }: any) => {
+const OnboardingModal: FC<{
+  openCloseModal: () => void;
+}> = ({ openCloseModal }) => {
   const [openedModal] = useAtom(onboardingOpenedModalAtom);
   const [connectAccount, setConnectAccount] = useAtom(onboardingConnectAccountAtom);
   const [connect] = useAtom(onboardingConnectAtom);
@@ -42,7 +49,7 @@ const OnboardingModal = ({ openCloseModal }: any) => {
   const { triggerAlertWithMessageError } = useAlert();
   const [vendors] = useAtom(vendorsAtom);
 
-  const handleSubmitLogin = async (currentPlatform) => {
+  const handleSubmitLogin = async (currentPlatform: string) => {
     setIsLoading(true);
     if (
       accounts.filter((obj) => obj.platform === currentPlatform && obj.email === email).length === 0

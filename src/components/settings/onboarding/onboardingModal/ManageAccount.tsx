@@ -8,11 +8,11 @@ import TrashIcon from '../../../../assets/images/ic_trash.png';
 import CloseIcon from '../../../../assets/images/ic_close.svg';
 
 const ManageAccount: FC<{
-  openCloseModal: any;
-  deleteAccount: any;
-  changeStatusAccount: any;
-  openSwitchDeleteModal: any;
-  openedSwitchDeleteModal: any;
+  openCloseModal: () => void;
+  deleteAccount: (platform: string, email: string) => void;
+  changeStatusAccount: (value: any) => void;
+  openSwitchDeleteModal: (event: any) => void;
+  openedSwitchDeleteModal: boolean;
 }> = ({
   openCloseModal,
   deleteAccount,
@@ -96,7 +96,11 @@ const ManageAccount: FC<{
                 }}
               >
                 <img
-                  src={platformObject[obj.platform].srcWhite || platformObject[obj.platform].src}
+                  src={
+                    platformObject[obj.platform].srcNoBg ||
+                    platformObject[obj.platform].srcWhite ||
+                    platformObject[obj.platform].src
+                  }
                   alt={obj.platform}
                 />
               </TypographyKit>

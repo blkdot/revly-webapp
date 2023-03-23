@@ -1,5 +1,6 @@
 import { getAlerts, getCompetitors } from 'api';
 import { pascalCase } from 'change-case';
+import { PageHeader } from 'components';
 import Competitor from 'components/competitor/Competitor';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
@@ -8,6 +9,7 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import LinkRevly from 'components/linkRevly/LinkRevly';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { useUser } from 'contexts';
 import { platformObject } from 'data/platformList';
 import dayjs from 'dayjs';
@@ -319,7 +321,7 @@ const CompetitionAlerts = () => {
   return (
     <div className='wrapper'>
       <div className='top-inputs'>
-        <RestaurantDropdown />
+        <VendorsDropdownAdapter />
         <Dates
           defaultTypeDate='day'
           defaultTitle='today'
@@ -328,17 +330,13 @@ const CompetitionAlerts = () => {
         />
       </div>
       <ContainerKit>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div>
-            <MainTitle>Competition - Alerts</MainTitle>
-            <DescriptionTitle>
-              Stay one step ahead of the game by tracking your competitors marketing actions.
-            </DescriptionTitle>
-          </div>
-          <div style={{ marginTop: '2rem' }}>
+        <PageHeader
+          title='Competition - Alerts'
+          description='Stay one step ahead of the game by tracking your competitors marketing actions'
+          extra={
             <Competitor platformListProps={['deliveroo', 'talabat']} open={Open} opened={opened} />
-          </div>
-        </div>
+          }
+        />
         <PaperKit className='competition-paper'>
           <div className='competition-top-input alerts-top-inputs'>
             <div className='competition-dropdowns'>
