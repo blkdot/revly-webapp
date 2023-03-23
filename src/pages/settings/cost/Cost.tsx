@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { PageHeader } from 'components';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useCost, useVendors } from 'hooks';
@@ -42,7 +43,11 @@ const Cost = () => {
     }))
     .filter((obj) =>
       Object.keys(display[obj.chain_name]).some((vName) => display[obj.chain_name][vName].active)
-    );
+    )
+    .map((obj) => ({
+      ...obj,
+      chain_name: obj.chain_name || 'In Process',
+    }));
   useEffect(() => {
     setCost(data);
   }, [vendors]);
@@ -117,32 +122,30 @@ const Cost = () => {
     <div className='wrapper'>
       <SettingsTopInputs />
       <ContainerKit className='billing'>
-        <div className='billing__invoice __card'>
-          <div className='__flex'>
-            <div className='__head cost'>
-              <div>
-                <p className='billing__card-title'>Your Cost Information</p>
-                <span>
-                  Insert and update the average cost of food per chain to calculate your net revenue
-                  in the dashboard
-                </span>
-              </div>
+        <div className='marketing-top'>
+          <PageHeader
+            title='Your Cost Information'
+            description='Insert and update the average cost of food per chain to calculate your net revenue in the dashboard'
+            extra={
               <LodaingButtonKit
                 loading={isLoadingMutation}
                 onClick={handleChange}
                 variant='contained'
                 disabled={!cost.some((obj) => obj.changed)}
+                className='cost_btn'
               >
                 Save changes
               </LodaingButtonKit>
-            </div>
-          </div>
+            }
+          />
+        </div>
+        <div className='__table-block'>
           <TableRevlyNew
             renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
             isLoading={isLoading}
             headers={headers}
             rows={cost.map(renderRowsByHeader)}
-            className='competition-alerts'
+            className='onboarding-table'
           />
         </div>
       </ContainerKit>

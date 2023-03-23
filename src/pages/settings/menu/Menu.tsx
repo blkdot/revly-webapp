@@ -1,4 +1,5 @@
 import { getMenu } from 'api';
+import { PageHeader } from 'components';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { usePlatform, useUser } from 'contexts';
@@ -160,71 +161,75 @@ const Menu = () => {
       }),
       {}
     );
-
+  const renderDropdowns = () => (
+    <div className='__select-block'>
+      <div className='__select'>
+        <MenuDropdown
+          onChange={handleCategoryChange}
+          startIcon={
+            <img src={iccategory} alt='category' style={{ position: 'relative', bottom: '5px' }} />
+          }
+          value={category}
+          multiple
+          renderValue={(selected) => selected.join(', ')}
+          items={categoryList}
+          label='All Categories'
+          renderOption={(v) => (
+            <MenuItemKit key={v} value={v}>
+              <CheckboxKit checked={category.indexOf(v) > -1} />
+              <ListItemTextKit primary={v} />
+            </MenuItemKit>
+          )}
+        />
+      </div>
+      <div className='__select vendor'>
+        <VendorsDropdownMenu />
+      </div>
+      <div className='__select'>
+        <MenuDropdown
+          onChange={(e) => handleSelectChangePlatform(e)}
+          startIcon={<img width={25} height={25} src={icplatform} alt='category' />}
+          items={platformList}
+          label='Select a Platform'
+          value={platform}
+          renderOption={(v) => (
+            <MenuItemKit key={v.name} value={v.name}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  textTransform: 'capitalize',
+                }}
+              >
+                <img
+                  className='planning-platform'
+                  style={{ '--color': platformObject[v.name].color } as CSSProperties}
+                  src={
+                    platformObject[v.name].srcNoBg ||
+                    platformObject[v.name].srcWhite ||
+                    platformObject[v.name].src
+                  }
+                  alt={v.name}
+                />
+                <ListItemTextKit primary={v.name} />
+              </div>
+            </MenuItemKit>
+          )}
+        />
+      </div>
+    </div>
+  );
   return (
     <div className='wrapper'>
       <SettingsTopInputs />
-      <ContainerKit>
-        <div className='__select-block'>
-          <div className='__select'>
-            <MenuDropdown
-              onChange={handleCategoryChange}
-              startIcon={
-                <img
-                  src={iccategory}
-                  alt='category'
-                  style={{ position: 'relative', bottom: '5px' }}
-                />
-              }
-              value={category}
-              multiple
-              renderValue={(selected) => selected.join(', ')}
-              items={categoryList}
-              label='All Categories'
-              renderOption={(v) => (
-                <MenuItemKit key={v} value={v}>
-                  <CheckboxKit checked={category.indexOf(v) > -1} />
-                  <ListItemTextKit primary={v} />
-                </MenuItemKit>
-              )}
-            />
-          </div>
-          <div className='__select vendor'>
-            <VendorsDropdownMenu />
-          </div>
-          <div className='__select'>
-            <MenuDropdown
-              onChange={(e) => handleSelectChangePlatform(e)}
-              startIcon={<img width={25} height={25} src={icplatform} alt='category' />}
-              items={platformList}
-              label='Select a Platform'
-              value={platform}
-              renderOption={(v) => (
-                <MenuItemKit key={v.name} value={v.name}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    <img
-                      className='planning-platform'
-                      style={{ '--color': platformObject[v.name].color } as CSSProperties}
-                      src={
-                        platformObject[v.name].srcNoBg ||
-                        platformObject[v.name].srcWhite ||
-                        platformObject[v.name].src
-                      }
-                      alt={v.name}
-                    />
-                    <ListItemTextKit primary={v.name} />
-                  </div>
-                </MenuItemKit>
-              )}
-            />
-          </div>
+      <ContainerKit className='menu'>
+        <div className='marketing-top'>
+          <PageHeader
+            title='Settings - Menu'
+            description='View your menu across all platforms and branches.'
+            extra={renderDropdowns()}
+          />
         </div>
         <div className='__table-block'>
           <TableRevlyNew

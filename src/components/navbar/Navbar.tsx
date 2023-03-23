@@ -4,7 +4,6 @@ import { ButtonKit } from 'kits';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as LogoutIcon } from 'assets/linkIcons/logout.svg';
-import lines from '../../assets/images/lines.png';
 import logo from '../../assets/images/logo.png';
 import arrow from '../../assets/images/navbar-arrow.png';
 import smallLogo from '../../assets/images/small-logo.png';
@@ -64,7 +63,6 @@ const Navbar = () => {
           </li>
           {renderSimpleLink(simpleLink)}
         </ul>
-        {/* <img className='nav-lines' src={lines} alt='Gradient lines' /> */}
         <span className='nav-line' />
         <ul className='Navbar-footer'>
           <li>
