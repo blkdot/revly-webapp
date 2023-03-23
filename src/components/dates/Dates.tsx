@@ -1,7 +1,6 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TopInputItem } from 'components';
 import {
   addYears,
   endOfMonth,
@@ -38,7 +37,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import switchIcon from '../../assets/images/Switch.png';
 import { getAllDateSetup } from '../../utils/date/getAllDateSetup';
 import AfterPeriodSelect from './AfterPeriodSelect';
 import './Dates.scss';
@@ -965,22 +963,20 @@ const Dates = (props: any) => {
   };
   return (
     <div className='dates'>
-      <TopInputItem title='Show Data from'>
-        <div className='date-picker_wrapper'>
-          <PaperKit
-            onClick={() => setOpened(true)}
-            style={{ background: '#fff' }}
-            component='div'
-            className='date-input'
-          >
-            <TypographyKit className='date-typography'>
-              <CalendarMonthIcon />
-              <span>{getbeforePeriod()}</span>
-            </TypographyKit>
-            <ExpandMoreIcon className={`expand-img ${opened && 'active'}`} />
-          </PaperKit>
-        </div>
-      </TopInputItem>
+      <div className='date-picker_wrapper'>
+        <PaperKit
+          onClick={() => setOpened(true)}
+          style={{ background: '#fff' }}
+          component='div'
+          className='date-input'
+        >
+          <TypographyKit className='date-typography'>
+            <CalendarMonthIcon />
+            <span>{getbeforePeriod()}</span>
+          </TypographyKit>
+          <ExpandMoreIcon className={`expand-img ${opened && 'active'}`} />
+        </PaperKit>
+      </div>
       <div
         role='presentation'
         tabIndex={-1}
@@ -1000,39 +996,36 @@ const Dates = (props: any) => {
       </div>
       {isDashboard && (
         <div className='dashboard-date '>
-          <img src={switchIcon} alt='Compare' />
           <div className='date-picker_wrapper'>
-            <TopInputItem title='Compare to'>
-              <TypographyKit component='div' className='date-input-wrapper'>
-                <PaperKit
-                  style={{ background: '#fff' }}
-                  onClick={() => setSelected(isDashboard ? !selected : false)}
-                  className={`date-input ${selected && 'selected'}`}
-                >
-                  <TypographyKit component='div' className='date-typography'>
-                    <CalendarMonthIcon />
-                    <span>{getDateAfterPeriod()}</span>
-                  </TypographyKit>
-                  <ExpandMoreIcon className={`expand-img ${selected && 'active'}`} />
-                </PaperKit>
-                <AfterPeriodSelect
-                  setafterPeriodBtn={setAfterPeriodContext}
-                  setOpenedAfterPeriod={setOpenedAfterPeriod}
-                  setafterPeriod={setafterPeriod}
-                  selected={selected}
-                  afterPeriod={afterPeriodContext}
-                  setTitleAfterPeriod={setTitleafterPeriod}
-                  beforePeriod={beforePeriodContext}
-                  titlebeforePeriodContext={titleDate}
-                  typeDate={typeDate}
-                  setSelected={setSelected}
-                  setDateContext={setDateContext}
-                  dateContext={dateContext}
-                  year={year}
-                  setYear={setYearAfterPeriod}
-                />
-              </TypographyKit>
-            </TopInputItem>
+            <TypographyKit component='div' className='date-input-wrapper'>
+              <PaperKit
+                style={{ background: '#fff' }}
+                onClick={() => setSelected(isDashboard ? !selected : false)}
+                className={`date-input ${selected && 'selected'}`}
+              >
+                <TypographyKit component='div' className='date-typography'>
+                  <CalendarMonthIcon />
+                  <span>{getDateAfterPeriod()}</span>
+                </TypographyKit>
+                <ExpandMoreIcon className={`expand-img ${selected && 'active'}`} />
+              </PaperKit>
+              <AfterPeriodSelect
+                setafterPeriodBtn={setAfterPeriodContext}
+                setOpenedAfterPeriod={setOpenedAfterPeriod}
+                setafterPeriod={setafterPeriod}
+                selected={selected}
+                afterPeriod={afterPeriodContext}
+                setTitleAfterPeriod={setTitleafterPeriod}
+                beforePeriod={beforePeriodContext}
+                titlebeforePeriodContext={titleDate}
+                typeDate={typeDate}
+                setSelected={setSelected}
+                setDateContext={setDateContext}
+                dateContext={dateContext}
+                year={year}
+                setYear={setYearAfterPeriod}
+              />
+            </TypographyKit>
           </div>
           <div
             role='presentation'

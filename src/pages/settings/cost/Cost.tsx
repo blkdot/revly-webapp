@@ -3,9 +3,11 @@ import useTableContentFormatter from 'components/tableRevly/tableContentFormatte
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { useCost, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
+import { ContainerKit } from 'kits';
 import LodaingButtonKit from 'kits/loadingButton/LoadingButtonKit';
 import { useEffect } from 'react';
 import costAtom from 'store/costAtom';
+import SettingsTopInputs from '../component/SettingsTopInputs';
 import './Cost.scss';
 
 const Cost = () => {
@@ -112,35 +114,38 @@ const Cost = () => {
     );
 
   return (
-    <div className='billing'>
-      <div className='billing__invoice __card'>
-        <div className='__flex'>
-          <div className='__head cost'>
-            <div>
-              <p className='billing__card-title'>Your Cost Information</p>
-              <span>
-                Insert and update the average cost of food per chain to calculate your net revenue
-                in the dashboard
-              </span>
+    <div className='wrapper'>
+      <SettingsTopInputs />
+      <ContainerKit className='billing'>
+        <div className='billing__invoice __card'>
+          <div className='__flex'>
+            <div className='__head cost'>
+              <div>
+                <p className='billing__card-title'>Your Cost Information</p>
+                <span>
+                  Insert and update the average cost of food per chain to calculate your net revenue
+                  in the dashboard
+                </span>
+              </div>
+              <LodaingButtonKit
+                loading={isLoadingMutation}
+                onClick={handleChange}
+                variant='contained'
+                disabled={!cost.some((obj) => obj.changed)}
+              >
+                Save changes
+              </LodaingButtonKit>
             </div>
-            <LodaingButtonKit
-              loading={isLoadingMutation}
-              onClick={handleChange}
-              variant='contained'
-              disabled={!cost.some((obj) => obj.changed)}
-            >
-              Save changes
-            </LodaingButtonKit>
           </div>
+          <TableRevlyNew
+            renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
+            isLoading={isLoading}
+            headers={headers}
+            rows={cost.map(renderRowsByHeader)}
+            className='competition-alerts'
+          />
         </div>
-        <TableRevlyNew
-          renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
-          isLoading={isLoading}
-          headers={headers}
-          rows={cost.map(renderRowsByHeader)}
-          className='competition-alerts'
-        />
-      </div>
+      </ContainerKit>
     </div>
   );
 };

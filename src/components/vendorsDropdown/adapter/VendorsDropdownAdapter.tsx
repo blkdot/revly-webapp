@@ -143,9 +143,5 @@ export const VendorsDropdownAdapter: FC = () => {
   const values = useMemo(() => toValues(vendors.display), [vendors.display]);
   const options = useMemo(() => toOptions(vendors.display), [vendors.display]);
 
-  return (
-    <TopInputItem title='Select a vendor'>
-      <VendorsDropdown values={values} options={options} onChange={onChange} />
-    </TopInputItem>
-  );
+  return <VendorsDropdown values={values} options={options} onChange={onChange} />;
 };

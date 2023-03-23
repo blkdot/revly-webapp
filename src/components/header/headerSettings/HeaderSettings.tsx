@@ -1,0 +1,40 @@
+import { FC, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { Popover } from 'antd';
+import { settingsLink } from 'data/navbarData';
+import { ReactComponent as SettingsIcon } from './icons/settings.svg';
+import './HeaderSettings.scss';
+
+const HeaderSettings: FC = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = (value) => {
+    setOpen(value);
+    const body = document.querySelector('body');
+    if (value) {
+      body.style.overflowY = 'hidden';
+      return;
+    }
+    body.style.overflowY = 'visible';
+  };
+  const renderContent = () =>
+    settingsLink.map((obj) => (
+      <NavLink key={obj.title} className='header-settings__nav-item' to={obj.path}>
+        {obj.title}
+      </NavLink>
+    ));
+  return (
+    <Popover
+      placement='bottomLeft'
+      open={open}
+      trigger='click'
+      onOpenChange={handleOpen}
+      rootClassName='header-settings__content'
+      content={renderContent()}
+    >
+      <div className='header-settings__block'>
+        <SettingsIcon />
+      </div>
+    </Popover>
+  );
+};
+export default HeaderSettings;

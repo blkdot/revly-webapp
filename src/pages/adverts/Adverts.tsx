@@ -6,6 +6,7 @@ import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreate
 import Dates from 'components/dates/Dates';
 import AdvertsDetails from 'components/details/AdvertsDetails';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown';
 import LinkRevly from 'components/linkRevly/LinkRevly';
@@ -416,7 +417,10 @@ const Adverts = () => {
     <div className='wrapper'>
       <div className='top-inputs'>
         <VendorsDropdownAdapter />
-        <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Dates offer beforePeriodBtn={beforePeriodBtn} setbeforePeriodBtn={setbeforePeriodBtn} />
+          <HeaderDropdowns />
+        </div>
       </div>
       {renderLayout()}
     </div>
