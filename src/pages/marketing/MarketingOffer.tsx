@@ -53,6 +53,8 @@ const MarketingOffer = () => {
   const [offersData, setOffersData] = useState(data?.offers || []);
   const [offersDataFiltered, setOffersDataFiltered] = useState([]);
 
+  const [viewType, setViewType] = useState('table');
+
   const [filtersSaved, setFiltersSaved] = useQueryState('filters') as any;
 
   const filtersParamsObject = JSON.parse(filtersSaved || '{}');
@@ -492,13 +494,15 @@ const MarketingOffer = () => {
         ) : (
           <>
             <LinkRevly
+              viewType={viewType}
+              setViewType={setViewType}
               links={links}
               setLink={setLink}
               link={link}
               filters={!isEmptyList() && renderFilters()}
               setOpenedFilter={setOpenedFilter}
             />
-            {renderTable()}
+            {viewType === 'table' && renderTable()}
           </>
         )}
         <MarketingSetup active={active} setActive={setActive} />

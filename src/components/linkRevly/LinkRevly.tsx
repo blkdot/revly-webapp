@@ -6,12 +6,14 @@ import TableViewIcon from '../../assets/images/table_view.svg';
 import './LinkRevly.scss';
 
 const TableLink: FC<{
+  viewType?: string;
   links: { link: string; title: string; tooltip?: string }[];
   link: string;
   filters: ReactNode;
+  setViewType?: (v: string) => void;
   setLink: (v: string) => void;
   setOpenedFilter: (v: boolean) => void;
-}> = ({ links, setLink, link, filters, setOpenedFilter }) => {
+}> = ({ viewType, setViewType, links, setLink, link, filters, setOpenedFilter }) => {
   const getActiveLinkWidth = (index: number, type: string) => {
     const tableLink = document.querySelectorAll('.table-link')[index] as HTMLElement;
     if (type === 'scroll') {
@@ -27,8 +29,6 @@ const TableLink: FC<{
     tableLinks?.style.setProperty('--length', `${getActiveLinkWidth(index, 'width')}px`);
     tableLinks?.style.setProperty('--left', `${getActiveLinkWidth(index, 'scroll')}px`);
   };
-
-  const [viewType, setViewType] = useState('table');
 
   useEffect(() => {
     const tableLinks = document.querySelector('.table-links') as HTMLElement;

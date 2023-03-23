@@ -11,6 +11,7 @@ import RestaurantDropdown from 'components/restaurantDropdown/RestaurantDropdown
 import LinkRevly from 'components/linkRevly/LinkRevly';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
+import Calendar from 'components/calendar/Calendar';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { usePlatform } from 'contexts';
 import { endOfMonth, endOfWeek } from 'date-fns';
@@ -402,6 +403,8 @@ const Planning = () => {
       </span>
     );
   };
+  
+  const [viewType, setViewType] = useState('table');
 
   useEffect(() => {
     const source = link === 'ads_planning' ? ads : offers;
@@ -578,13 +581,16 @@ const Planning = () => {
               Plan and visualize all the scheduled and past discounts and campaigns.
             </TypographyKit>
             <LinkRevly
+              viewType={viewType}
+              setViewType={setViewType}
               links={links}
               setLink={setLink}
               link={link}
               filters={renderFilter()}
               setOpenedFilter={setOpenedFilter}
             />
-            {renderTable()}
+            {viewType === 'table' && renderTable()}
+            {viewType === 'calendar' && <Calendar />}
           </div>
         )}
         <MarketingOfferFilter
