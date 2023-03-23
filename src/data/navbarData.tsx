@@ -17,7 +17,7 @@ export const simpleLink = [
 export const settingsLink = [
   { title: 'General', path: '/settings/general' },
   { title: 'Onboarding', path: '/settings/onboarding' },
-  { title: 'Change Password', path: '/settings/change-password' },
+  // { title: 'Change Password', path: '/settings/change-password' },
   { title: 'Menu Settings', path: '/settings/menu' },
   { title: 'Cost Settings', path: '/settings/cost' },
 ];

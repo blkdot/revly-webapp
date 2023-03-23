@@ -2,10 +2,11 @@ import Dates from 'components/dates/Dates';
 import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { endOfMonth, endOfWeek } from 'date-fns';
-import { useDate } from 'hooks';
+import { useDate, useVendors } from 'hooks';
 import { FC, useState } from 'react';
 
 const SettingsTopInputs: FC = () => {
+  const { vendors } = useVendors();
   const { date } = useDate();
   const getOfferDate = () => {
     if (date.typeDate === 'month') {

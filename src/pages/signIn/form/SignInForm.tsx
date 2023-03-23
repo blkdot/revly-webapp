@@ -3,7 +3,6 @@ import {
   ButtonKit,
   CheckboxKit,
   FormControlLabelKit,
-  FormControlKit,
   FormGroupKit,
   TextfieldKit,
   TypographyKit,

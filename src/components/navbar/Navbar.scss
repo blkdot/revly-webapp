@@ -80,8 +80,14 @@
       }
 
       svg {
-        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-          contrast(176%);
+        path {
+          fill: #5e5adb;
+        }
+
+        path[data-stroke='true'] {
+          stroke: #5e5adb;
+          fill: none;
+        }
       }
     }
 
@@ -91,8 +97,14 @@
       }
 
       svg {
-        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-          contrast(176%);
+        path {
+          fill: #5e5adb;
+        }
+
+        path[data-stroke='true'] {
+          stroke: #5e5adb;
+          fill: none;
+        }
       }
     }
 
@@ -108,8 +120,14 @@
       }
 
       svg {
-        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-          contrast(176%);
+        path {
+          fill: #5e5adb;
+        }
+
+        path[data-stroke='true'] {
+          stroke: #5e5adb;
+          fill: none;
+        }
       }
 
       &:hover {
@@ -118,8 +136,14 @@
         }
 
         svg {
-          filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-            contrast(176%);
+          path {
+            fill: #5e5adb;
+          }
+
+          path[data-stroke='true'] {
+            stroke: #5e5adb;
+            fill: none;
+          }
         }
       }
     }
@@ -222,8 +246,14 @@
     }
 
     svg {
-      filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-        contrast(176%);
+      path {
+        fill: #5e5adb;
+      }
+
+      path[data-stroke='true'] {
+        stroke: #5e5adb;
+        fill: none;
+      }
     }
   }
 }
@@ -334,21 +364,37 @@
 @media (max-width: 900px) {
   .navbar_wrapper {
     &.opened {
-      width: 200px;
+      width: 70px;
     }
   }
 
   .Navbar.Navbar {
     &.opened {
-      width: 200px;
+      width: 70px;
     }
   }
 
-  .Navbar.Navbar.opened {
-    .navbar-accordion-details.navbar-accordion-details {
-      .navbar-button-kit.navbar-button-kit span {
-        width: fit-content;
-      }
-    }
+  .nav-double-arrow.nav-double-arrow {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  .nav-small-logo {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .nav-logo {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  .navbar-button-kit.navbar-button-kit {
+    width: fit-content !important;
+    border-radius: 50% !important;
+  }
+
+  .navbar-button-kit.navbar-button-kit span {
+    display: none !important;
   }
 }

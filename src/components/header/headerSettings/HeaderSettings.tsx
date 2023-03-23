@@ -2,6 +2,8 @@ import { FC, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Popover } from 'antd';
 import { settingsLink } from 'data/navbarData';
+import { ReactComponent as ArrowUp } from './icons/arrow-up.svg';
+import { ReactComponent as ArrowDown } from './icons/arrow-down.svg';
 import { ReactComponent as SettingsIcon } from './icons/settings.svg';
 import './HeaderSettings.scss';
 
@@ -23,18 +25,29 @@ const HeaderSettings: FC = () => {
       </NavLink>
     ));
   return (
-    <Popover
-      placement='bottomLeft'
-      open={open}
-      trigger='click'
-      onOpenChange={handleOpen}
-      rootClassName='header-settings__content'
-      content={renderContent()}
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        handleOpen(!open);
+      }}
+      tabIndex={-1}
+      role='presentation'
+      className='header-settings__wrapper'
     >
-      <div className='header-settings__block'>
-        <SettingsIcon />
-      </div>
-    </Popover>
+      <Popover
+        placement='bottomLeft'
+        open={open}
+        trigger='click'
+        onOpenChange={handleOpen}
+        rootClassName='header-settings__content'
+        content={renderContent()}
+      >
+        <div className='header-settings__block'>
+          <SettingsIcon />
+        </div>
+      </Popover>
+      {open ? <ArrowUp /> : <ArrowDown />}
+    </div>
   );
 };
 export default HeaderSettings;
