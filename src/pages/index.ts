@@ -4,7 +4,6 @@ export { default as CompetitionAlerts } from './competition/CompetitionAlerts';
 export { default as CompetitionListing } from './competition/CompetitionListing';
 export { default as Dashboard } from './dashboard/Dashboard';
 export { default as ForgotPassword } from './forgotPassword/ForgotPassword';
-export { default as MarketingAds } from './marketing/MarketingAds';
 export { default as MarketingOffer } from './marketing/MarketingOffer';
 export { default as Planning } from './planning/Planning';
 export { default as ResetPassword } from './resetPassword/ResetPassword';

@@ -95,23 +95,6 @@
       background-color: #f8f9fb;
     }
   }
-
-  &.checked {
-    &::before {
-      left: 10px;
-      width: calc(100% - 20px);
-      top: 8px;
-      height: calc(100% - 16px);
-      opacity: 1;
-      background-color: #f6f3ff;
-    }
-
-    &:hover {
-      &::before {
-        background-color: #f6f3ff;
-      }
-    }
-  }
 }
 
 .parent-list-item-container {

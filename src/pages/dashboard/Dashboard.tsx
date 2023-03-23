@@ -1,6 +1,7 @@
 import { useMetrics } from 'api';
 import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
+import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import selectedVendors from 'components/restaurantDropdown/selectedVendors';
 import OnboardingModal from 'components/settings/onboarding/OnboardingModal';
 import OnboardingStepper from 'components/settings/onboarding/OnboardingStepper';
@@ -254,7 +255,10 @@ const Dashboard = () => {
     <div className='wrapper'>
       <div className='top-inputs'>
         <VendorsDropdownAdapter />
-        <Dates isDashboard />
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Dates isDashboard />
+          <HeaderDropdowns />
+        </div>
       </div>
       <ContainerKit>
         {(!userPlatformData.onboarded || activeStep !== 0) && (

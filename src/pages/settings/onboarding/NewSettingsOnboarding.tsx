@@ -7,6 +7,7 @@ import OnboardingTable from 'components/settings/onboarding/OnboardingTable';
 import { usePlatform, useUser } from 'contexts';
 import { useVendors } from 'hooks';
 import { useAtom } from 'jotai';
+import { ContainerKit } from 'kits';
 import { useEffect } from 'react';
 import {
   onboardingAccountsAtom,
@@ -17,6 +18,7 @@ import {
   onboardingOpenedModalAtom,
 } from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
+import SettingsTopInputs from '../component/SettingsTopInputs';
 import './SettingOnboarding.scss';
 
 const NewSettingsOnboarding = () => {
@@ -128,11 +130,14 @@ const NewSettingsOnboarding = () => {
   };
 
   return (
-    <div>
-      <OnboardingModal openCloseModal={openCloseModal} />
-      <OnboardingStepper openCloseModal={openCloseModal} />
-      <OnboardingMiddleContent openCloseModal={openCloseModal} />
-      <OnboardingTable openCloseModal={openCloseModal} />
+    <div className='wrapper'>
+      <SettingsTopInputs />
+      <ContainerKit>
+        <OnboardingModal openCloseModal={openCloseModal} />
+        <OnboardingStepper openCloseModal={openCloseModal} />
+        <OnboardingMiddleContent openCloseModal={openCloseModal} />
+        <OnboardingTable openCloseModal={openCloseModal} />
+      </ContainerKit>
     </div>
   );
 };

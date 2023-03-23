@@ -1,9 +1,10 @@
 import { auth, reAuth, reAuthGoogle } from 'firebase-config';
 import { updatePassword } from 'firebase/auth';
 import { useAlert } from 'hooks';
-import { ButtonLoadingKit, TextfieldKit } from 'kits';
+import { ButtonLoadingKit, ContainerKit, TextfieldKit } from 'kits';
 import { useState } from 'react';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
+import SettingsTopInputs from '../component/SettingsTopInputs';
 import './ChangePassword.scss';
 
 const defaultValues = {
@@ -122,9 +123,12 @@ const ChangePassword = () => {
   );
 
   return (
-    <div className='change-password'>
-      <p className='__title'>Type your current password to change it</p>
-      {renderForm()}
+    <div className='wrapper'>
+      <SettingsTopInputs />
+      <ContainerKit className='change-password'>
+        <p className='__title'>Type your current password to change it</p>
+        {renderForm()}
+      </ContainerKit>
     </div>
   );
 };

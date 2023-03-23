@@ -5,6 +5,7 @@ import Competitor from 'components/competitor/Competitor';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
@@ -318,12 +319,15 @@ const CompetitionAlerts = () => {
     <div className='wrapper'>
       <div className='top-inputs'>
         <VendorsDropdownAdapter />
-        <Dates
-          defaultTypeDate='day'
-          defaultTitle='today'
-          beforePeriodBtn={beforePeriodBtn}
-          setbeforePeriodBtn={setbeforePeriodBtn}
-        />
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Dates
+            defaultTypeDate='day'
+            defaultTitle='today'
+            beforePeriodBtn={beforePeriodBtn}
+            setbeforePeriodBtn={setbeforePeriodBtn}
+          />
+          <HeaderDropdowns />
+        </div>
       </div>
       <ContainerKit>
         <PageHeader

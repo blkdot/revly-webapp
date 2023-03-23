@@ -75,12 +75,10 @@ const App = () => {
           <Route element={<MainLayout />}>
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/planning' element={<Planning />} />
-            <Route path='/competition/listing' element={<CompetitionListing />} />
-            <Route path='/competition/alerts' element={<CompetitionAlerts />} />
-            <Route path='/marketing/offer' element={<MarketingOffer />} />
-            <Route path='/marketing/ads' element={<Adverts />} />
-          </Route>
-          <Route element={<SettingsLayout />}>
+            <Route path='/listing' element={<CompetitionListing />} />
+            <Route path='/alerts' element={<CompetitionAlerts />} />
+            <Route path='/offer' element={<MarketingOffer />} />
+            <Route path='/adverts' element={<Adverts />} />
             <Route path='/settings/general' element={<SettingsGeneral />} />
             <Route path='/settings/onboarding' element={<SettingsOnboarding />} />
             <Route path='/settings/menu' element={<SettingsMenu />} />

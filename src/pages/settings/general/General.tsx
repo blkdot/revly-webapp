@@ -5,12 +5,13 @@ import { useUser, useUserAuth } from 'contexts';
 import { auth, verifyPhone } from 'firebase-config';
 import { updateProfile } from 'firebase/auth';
 import { useAlert } from 'hooks';
-import { ButtonKit } from 'kits';
+import { ButtonKit, ContainerKit } from 'kits';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import country from '../../../data/country.json';
 import { firebaseCodeError } from '../../../data/firebaseCodeError';
 import validator from '../../../utils/input/validator';
+import SettingsTopInputs from '../component/SettingsTopInputs';
 import './General.scss';
 
 const General = () => {
@@ -185,27 +186,30 @@ const General = () => {
   };
 
   return (
-    <div className='general'>
-      <p className='__title'>Your personal data</p>
-      <AccountSettingForm
-        valueName={{ value: inputValue.name, error: inputError.name }}
-        valuePhone={inputValue.phone}
-        valueCountry={inputValue.country || null}
-        valueCity={{ value: inputValue.city, error: inputError.city }}
-        valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
-        valueDial={dial}
-        onDialChange={(v) => setDial(v)}
-        handleInputChange={handleInputChange}
-        valueRole={{ value: inputValue.role, error: inputError.role }}
-        handleCountryChange={handleSelectCountry}
-        inputCountryValue={inputCountryValue}
-        onInputCountryChange={(e, v) => setInputCountryValue(v)}
-      />
-      <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
-        <ButtonKit disabled={disableSave()} variant='contained' onClick={handleSave}>
-          Save changes
-        </ButtonKit>
-      </div>
+    <div className='wrapper'>
+      <SettingsTopInputs />
+      <ContainerKit className='general'>
+        <p className='__title'>Your personal data</p>
+        <AccountSettingForm
+          valueName={{ value: inputValue.name, error: inputError.name }}
+          valuePhone={inputValue.phone}
+          valueCountry={inputValue.country || null}
+          valueCity={{ value: inputValue.city, error: inputError.city }}
+          valueRestoName={{ value: inputValue.restoName, error: inputError.restoName }}
+          valueDial={dial}
+          onDialChange={(v) => setDial(v)}
+          handleInputChange={handleInputChange}
+          valueRole={{ value: inputValue.role, error: inputError.role }}
+          handleCountryChange={handleSelectCountry}
+          inputCountryValue={inputCountryValue}
+          onInputCountryChange={(e, v) => setInputCountryValue(v)}
+        />
+        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+          <ButtonKit disabled={disableSave()} variant='contained' onClick={handleSave}>
+            Save changes
+          </ButtonKit>
+        </div>
+      </ContainerKit>
     </div>
   );
 };

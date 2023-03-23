@@ -5,6 +5,7 @@ import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
+import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
@@ -541,12 +542,15 @@ const Planning = () => {
     <div className='wrapper'>
       <div className='top-inputs'>
         <VendorsDropdownAdapter />
-        <Dates
-          setPeriodProps={setPeriod}
-          offer
-          beforePeriodBtn={dateRange}
-          setbeforePeriodBtn={setDateRange}
-        />
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Dates
+            setPeriodProps={setPeriod}
+            offer
+            beforePeriodBtn={dateRange}
+            setbeforePeriodBtn={setDateRange}
+          />
+          <HeaderDropdowns />
+        </div>
       </div>
       <ContainerKit>
         {opened ? (
