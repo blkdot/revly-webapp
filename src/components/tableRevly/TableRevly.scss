@@ -412,57 +412,58 @@
   .MuiSkeleton-pulse {
     transform: scale(1);
   }
+}
+
+.table-container {
+  padding: 0px 20px;
+  overflow: auto;
+  max-height: 60vh;
+  scroll-behavior: smooth;
+  background: #fff;
 
   table {
     border-collapse: separate;
     border-spacing: 0 15px;
   }
 
-  .table-container {
-    padding: 0px 20px;
-    overflow: auto;
-    max-height: 60vh;
-    scroll-behavior: smooth;
+  thead {
+    tr {
+      position: sticky;
+      // top: 15px;
+      background: #fff;
+      z-index: 90;
+    }
+  }
 
-    thead {
-      tr {
-        position: sticky;
-        top: 15px;
-        background: #fff;
-        z-index: 90;
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f3f3f3;
+    border-radius: 31px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #637381;
+    border-radius: 31px;
+  }
+
+  tbody {
+    tr {
+      border-bottom: none !important;
+
+      &:hover {
+        background-color: #f8f9fd !important;
+        border-radius: 8px !important;
       }
-    }
 
-    &::-webkit-scrollbar {
-      height: 6px;
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background-color: #f3f3f3;
-      border-radius: 31px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #637381;
-      border-radius: 31px;
-    }
-
-    tbody {
-      tr {
+      td {
+        height: 32px;
         border-bottom: none !important;
-
-        &:hover {
-          background-color: #f8f9fd !important;
-          border-radius: 8px !important;
-        }
-
-        td {
-          height: 32px;
-          border-bottom: none !important;
-          padding: 5px 10px 5px 20px !important;
-          min-width: 0 !important;
-        }
+        padding: 5px 10px 5px 20px !important;
+        min-width: 0 !important;
       }
     }
   }

@@ -110,13 +110,17 @@ const Calendar: FC = () => {
       paddingRight: '8px',
       position: 'relative',
     }}>
-      <TypographyKit sx={{
+      <BoxKit sx={{
         position: 'relative',
         bottom: '0px',
         height: timeslotHeight,
+        display: 'flex',
+        justifyContent: 'center'
       }}>
-        {time}
-      </TypographyKit>
+        <TypographyKit sx={{position: 'absolute', bottom: '0px'}}>
+          {time}
+        </TypographyKit>
+      </BoxKit>
     </BoxKit>
   ));
 
@@ -175,10 +179,95 @@ const Calendar: FC = () => {
           </div>
         </BoxKit>
         <BoxKit sx={{borderRadius: '50%', width: '28px', height: '28px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <TypographyKit sx={{fontFamily: 'Public Sans', fontWeight: '500', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E'}}>-15</TypographyKit>
-          <TypographyKit sx={{fontFamily: 'Public Sans', fontWeight: '500', fontSize: '8px', lineHeight: '8px', color: '#1E1E1E'}}>%</TypographyKit>
+          <BoxKit sx={{display: 'flex', alignItems: 'baseline'}}>
+            <TypographyKit sx={{fontFamily: 'Public Sans', fontWeight: '500', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E'}}>-15</TypographyKit>
+            <TypographyKit sx={{fontFamily: 'Public Sans', fontWeight: '500', fontSize: '8px', lineHeight: '8px', color: '#1E1E1E'}}>%</TypographyKit>
+          </BoxKit>
         </BoxKit>
       </BoxKit>
+      <BoxKit sx={{marginTop: '1px', display: 'flex', flexWrap: 'wrap'}}>
+        <TypographyKit sx={{padding: '3px 7px', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E', backgroundColor: '#A4C2FF', borderRadius: '30px', width: 'fit-content', marginTop: '4px', marginRight: '5px'}}>
+          Hola Keto
+        </TypographyKit>
+        <TypographyKit sx={{padding: '3px 7px', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E', backgroundColor: '#A4C2FF', borderRadius: '30px', width: 'fit-content', marginTop: '4px'}}>
+          Hola Keto 2
+        </TypographyKit>
+        <TypographyKit sx={{padding: '3px 7px', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E', backgroundColor: '#A4C2FF', borderRadius: '30px', width: 'fit-content', marginTop: '4px'}}>
+          Hola Keto long
+        </TypographyKit>
+        <TypographyKit sx={{padding: '3px 7px', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E', backgroundColor: '#A4C2FF', borderRadius: '30px', width: 'fit-content', marginTop: '4px'}}>
+          +2 more
+        </TypographyKit>
+      </BoxKit>
+      <BoxKit sx={{marginLeft: '8px', marginTop: '7px'}}>
+        <BoxKit sx={{display: 'flex'}}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px'}}>
+            <path d="M6 3.99998V5.99998L7.5 7.49998" stroke="#1E1E1E" stroke-width="1.16667" stroke-linecap="round"/>
+            <circle cx="6" cy="5.99998" r="4.5" stroke="#1E1E1E" stroke-width="1.16667"/>
+          </svg>
+          <TypographyKit sx={{fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E'}}>10h00 - 14h00 (4h)</TypographyKit>
+        </BoxKit>
+        <BoxKit sx={{marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <BoxKit sx={{display: 'flex', alignItems: 'center'}}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px'}}>
+              <g clip-path="url(#clip0_349_14339)">
+              <path d="M8.88447 0.239243H2.51767C2.09432 0.239243 1.75 0.583539 1.75 1.00673L1.75546 10.2063C1.75546 10.3858 1.88029 10.5416 2.05567 10.5803L7.35421 11.754C7.46758 11.7791 7.58624 11.7514 7.67695 11.6789C7.76741 11.6061 7.82017 11.496 7.82017 11.38V10.4849H8.88447C9.30782 10.4849 9.65214 10.1406 9.65214 9.71739V1.00673C9.65214 0.583539 9.30782 0.239243 8.88447 0.239243ZM6.53109 5.78359L2.92023 4.87335C2.80989 4.84553 2.73259 4.74632 2.73259 4.63253V3.43811C2.73259 3.27634 2.8848 3.15775 3.04166 3.19729L6.65252 4.10753C6.76286 4.13535 6.84016 4.23459 6.84016 4.34835V5.54277C6.84013 5.70454 6.68793 5.82313 6.53109 5.78359ZM7.82015 9.71617V2.17745C7.82015 1.99534 7.69211 1.83841 7.5138 1.80196L3.63149 1.00795L8.88316 1.00673L8.88355 9.71589L7.82015 9.71617ZM8.88447 9.71589H8.88487H8.88447Z" fill="#1E1E1E"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_349_14339">
+              <rect width="12" height="12" fill="white"/>
+              </clipPath>
+              </defs>
+            </svg>
+            <TypographyKit sx={{fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E'}}>Menu discount</TypographyKit>
+          </BoxKit>
+          <TypographyKit sx={{padding: '3px 7px', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E', backgroundColor: '#A4C2FF', borderRadius: '30px', width: 'fit-content', marginTop: '4px'}}>
+            -25%
+          </TypographyKit>
+        </BoxKit>
+        <BoxKit sx={{marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <BoxKit sx={{display: 'flex', alignItems: 'center'}}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px'}}>
+              <path d="M7 7.49998L8.586 5.91398C8.8513 5.64892 9.21097 5.50001 9.586 5.49998H10C10.2652 5.49998 10.5196 5.60534 10.7071 5.79288C10.8946 5.98041 11 6.23477 11 6.49998C11 6.7652 10.8946 7.01955 10.7071 7.20709C10.5196 7.39463 10.2652 7.49998 10 7.49998H2C1.73478 7.49998 1.48043 7.39463 1.29289 7.20709C1.10536 7.01955 1 6.7652 1 6.49998C1 6.23477 1.10536 5.98041 1.29289 5.79288C1.48043 5.60534 1.73478 5.49998 2 5.49998H3.8285C4.5785 5.49998 5.298 5.79798 5.8285 6.32848L7 7.49998Z" stroke="#14181F" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1.5 7.49998H10.5V8.49998C10.5 8.8978 10.342 9.27933 10.0607 9.56064C9.77936 9.84194 9.39782 9.99998 9 9.99998H3C2.60218 9.99998 2.22064 9.84194 1.93934 9.56064C1.65804 9.27933 1.5 8.8978 1.5 8.49998V7.49998Z" fill="#14181F" stroke="#14181F" stroke-linecap="round" stroke-linejoin="round"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2.73351 2.27698C3.63501 1.72848 4.79001 1.49998 6.00001 1.49998C7.21001 1.49998 8.36501 1.72848 9.26651 2.27698C10.1885 2.83748 10.821 3.71998 10.9675 4.94098C11.041 5.55298 10.5335 5.99998 10 5.99998H2.00001C1.46651 5.99998 0.959012 5.55298 1.03251 4.94098C1.17901 3.71998 1.81151 2.83748 2.73351 2.27698ZM3.50001 2.99998C3.3674 2.99998 3.24023 3.05266 3.14646 3.14643C3.05269 3.2402 3.00001 3.36738 3.00001 3.49998C3.00001 3.63259 3.05269 3.75977 3.14646 3.85354C3.24023 3.94731 3.3674 3.99998 3.50001 3.99998C3.63262 3.99998 3.7603 3.94731 3.85406 3.85354C3.94783 3.75977 4.00051 3.63259 4.00051 3.49998C4.00051 3.36738 3.94783 3.2402 3.85406 3.14643C3.7603 3.05266 3.63262 2.99998 3.50001 2.99998ZM7.50001 3.49998C7.50001 3.36738 7.55269 3.2402 7.64646 3.14643C7.74023 3.05266 7.8674 2.99998 8.00001 2.99998C8.13262 2.99998 8.2603 3.05266 8.35406 3.14643C8.44783 3.2402 8.50051 3.36738 8.50051 3.49998C8.50051 3.63259 8.44783 3.75977 8.35406 3.85354C8.2603 3.94731 8.13312 3.99998 8.00051 3.99998C7.8679 3.99998 7.74023 3.94731 7.64646 3.85354C7.55269 3.75977 7.50001 3.63259 7.50001 3.49998ZM5.50001 3.99998C5.3674 3.99998 5.24023 4.05266 5.14646 4.14643C5.05269 4.2402 5.00001 4.36738 5.00001 4.49998C5.00001 4.63259 5.05269 4.75977 5.14646 4.85354C5.24023 4.94731 5.3674 4.99998 5.50001 4.99998H5.50051C5.63312 4.99998 5.7603 4.94731 5.85406 4.85354C5.94783 4.75977 6.00051 4.63259 6.00051 4.49998C6.00051 4.36738 5.94783 4.2402 5.85406 4.14643C5.7603 4.05266 5.63312 3.99998 5.50051 3.99998H5.50001Z" fill="#14181F"/>
+            </svg>
+            <TypographyKit sx={{fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E'}}>Item discount</TypographyKit>
+          </BoxKit>
+          <TypographyKit sx={{padding: '3px 7px', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E', backgroundColor: '#A4C2FF', borderRadius: '30px', width: 'fit-content', marginTop: '4px'}}>
+            6 items
+          </TypographyKit>
+        </BoxKit>
+        <BoxKit sx={{marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <BoxKit sx={{display: 'flex', alignItems: 'center'}}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px'}}>
+              <path d="M7 7.49998L8.586 5.91398C8.8513 5.64892 9.21097 5.50001 9.586 5.49998H10C10.2652 5.49998 10.5196 5.60534 10.7071 5.79288C10.8946 5.98041 11 6.23477 11 6.49998C11 6.7652 10.8946 7.01955 10.7071 7.20709C10.5196 7.39463 10.2652 7.49998 10 7.49998H2C1.73478 7.49998 1.48043 7.39463 1.29289 7.20709C1.10536 7.01955 1 6.7652 1 6.49998C1 6.23477 1.10536 5.98041 1.29289 5.79288C1.48043 5.60534 1.73478 5.49998 2 5.49998H3.8285C4.5785 5.49998 5.298 5.79798 5.8285 6.32848L7 7.49998Z" stroke="#14181F" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1.5 7.49998H10.5V8.49998C10.5 8.8978 10.342 9.27933 10.0607 9.56064C9.77936 9.84194 9.39782 9.99998 9 9.99998H3C2.60218 9.99998 2.22064 9.84194 1.93934 9.56064C1.65804 9.27933 1.5 8.8978 1.5 8.49998V7.49998Z" fill="#14181F" stroke="#14181F" stroke-linecap="round" stroke-linejoin="round"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2.73351 2.27698C3.63501 1.72848 4.79001 1.49998 6.00001 1.49998C7.21001 1.49998 8.36501 1.72848 9.26651 2.27698C10.1885 2.83748 10.821 3.71998 10.9675 4.94098C11.041 5.55298 10.5335 5.99998 10 5.99998H2.00001C1.46651 5.99998 0.959012 5.55298 1.03251 4.94098C1.17901 3.71998 1.81151 2.83748 2.73351 2.27698ZM3.50001 2.99998C3.3674 2.99998 3.24023 3.05266 3.14646 3.14643C3.05269 3.2402 3.00001 3.36738 3.00001 3.49998C3.00001 3.63259 3.05269 3.75977 3.14646 3.85354C3.24023 3.94731 3.3674 3.99998 3.50001 3.99998C3.63262 3.99998 3.7603 3.94731 3.85406 3.85354C3.94783 3.75977 4.00051 3.63259 4.00051 3.49998C4.00051 3.36738 3.94783 3.2402 3.85406 3.14643C3.7603 3.05266 3.63262 2.99998 3.50001 2.99998ZM7.50001 3.49998C7.50001 3.36738 7.55269 3.2402 7.64646 3.14643C7.74023 3.05266 7.8674 2.99998 8.00001 2.99998C8.13262 2.99998 8.2603 3.05266 8.35406 3.14643C8.44783 3.2402 8.50051 3.36738 8.50051 3.49998C8.50051 3.63259 8.44783 3.75977 8.35406 3.85354C8.2603 3.94731 8.13312 3.99998 8.00051 3.99998C7.8679 3.99998 7.74023 3.94731 7.64646 3.85354C7.55269 3.75977 7.50001 3.63259 7.50001 3.49998ZM5.50001 3.99998C5.3674 3.99998 5.24023 4.05266 5.14646 4.14643C5.05269 4.2402 5.00001 4.36738 5.00001 4.49998C5.00001 4.63259 5.05269 4.75977 5.14646 4.85354C5.24023 4.94731 5.3674 4.99998 5.50001 4.99998H5.50051C5.63312 4.99998 5.7603 4.94731 5.85406 4.85354C5.94783 4.75977 6.00051 4.63259 6.00051 4.49998C6.00051 4.36738 5.94783 4.2402 5.85406 4.14643C5.7603 4.05266 5.63312 3.99998 5.50051 3.99998H5.50001Z" fill="#14181F"/>
+            </svg>
+            <TypographyKit sx={{fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E'}}>Free Item</TypographyKit>
+          </BoxKit>
+          <TypographyKit sx={{padding: '3px 7px', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E', backgroundColor: '#A4C2FF', borderRadius: '30px', width: 'fit-content', marginTop: '4px'}}>
+            6 items
+          </TypographyKit>
+        </BoxKit>
+        <BoxKit sx={{marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <BoxKit sx={{display: 'flex', alignItems: 'center'}}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px'}}>
+              <path d="M3.5 9.99999C3.5 9.17157 4.61929 8.49999 6 8.49999C7.38071 8.49999 8.5 9.17157 8.5 9.99999" stroke="#14181F" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 7.12474C9.88295 7.35621 10.5 7.88483 10.5 8.49993" stroke="#14181F" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 7.12474C2.11705 7.35621 1.5 7.88483 1.5 8.49993" stroke="#14181F" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 6.99999C6.82843 6.99999 7.5 6.32841 7.5 5.49998C7.5 4.67156 6.82843 3.99998 6 3.99998C5.17157 3.99998 4.5 4.67156 4.5 5.49998C4.5 6.32841 5.17157 6.99999 6 6.99999Z" stroke="#14181F" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 5.11803C9.30687 4.84337 9.5 4.44423 9.5 3.99998C9.5 3.17155 8.82843 2.49998 8 2.49998C7.61582 2.49998 7.26538 2.6444 7 2.88192" stroke="#14181F" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 5.11803C2.69313 4.84337 2.5 4.44423 2.5 3.99998C2.5 3.17155 3.17157 2.49998 4 2.49998C4.38418 2.49998 4.73462 2.6444 5 2.88192" stroke="#14181F" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <TypographyKit sx={{fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '14px', color: '#1E1E1E'}}>All customers</TypographyKit>
+          </BoxKit>
+        </BoxKit>
+      </BoxKit>
+      <ButtonKit sx={{width: '100%', marginTop: '8px', padding: '4px', backgroundColor: '#2F74FF', fontFamily: 'Public Sans', fontSize: '12px', lineHeight: '16px', color: '#FFF', borderRadius: '14px'}}>
+        Live
+      </ButtonKit>
     </BoxKit>
   );
 

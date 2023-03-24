@@ -128,24 +128,26 @@ const TableRevlyNew: FC<{
     return null;
   };
   return (
-    <TableContainerKit className='table-container'>
-      <TableKit
-        sx={{ minWidth: 750, maxHeight: 250 }}
-        aria-labelledby='tableTitle'
-        size='medium'
-        style={{ '--length': Object.keys(headers).length }}
-      >
-        <EnhancedTableHead
-          header={headers}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          rowCount={rows.length ?? 0}
-        />
-        <TableBodyKit>{renderRows()}</TableBodyKit>
-      </TableKit>
-      {renderNoData()}
-    </TableContainerKit>
+    <BoxKit className={className} sx={{ width: '100%' }}>
+      <TableContainerKit className='table-container'>
+        <TableKit
+          sx={{ minWidth: 750, maxHeight: 250 }}
+          aria-labelledby='tableTitle'
+          size='medium'
+          style={{ '--length': Object.keys(headers).length }}
+        >
+          <EnhancedTableHead
+            header={headers}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            rowCount={rows.length ?? 0}
+          />
+          <TableBodyKit>{renderRows()}</TableBodyKit>
+        </TableKit>
+        {renderNoData()}
+      </TableContainerKit>
+    </BoxKit>
   );
 };
 TableRevlyNew.defaultProps = {
