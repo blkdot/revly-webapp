@@ -7,6 +7,7 @@ import {
   toValues,
 } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
 import { VendorsDropdown } from 'components/vendorsDropdown/component/VendorsDropdown';
+import { useMarketingSetup } from 'hooks';
 import { useAtom } from 'jotai';
 import { useEffect, useMemo } from 'react';
 import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
@@ -18,24 +19,9 @@ const VendorsDropdownMenu = () => {
   const [vendors] = useAtom(vendorsAtom);
   const [branch, setBranch] = useAtom(branchAtom);
   const [platform] = useAtom(platformAtom);
+  const { setVendors } = useMarketingSetup();
   useEffect(() => {
-    const displayTemp = JSON.parse(JSON.stringify(vendors.display));
-    const vendorsObjTemp = {};
-    Object.keys(vendors.display).forEach((chainName) => {
-      Object.keys(vendors.display[chainName]).forEach((vendorName) => {
-        Object.keys(vendors.display[chainName][vendorName].platforms).forEach((platV) => {
-          if (platV !== platform[0]) {
-            displayTemp[chainName][vendorName].platforms[platV].metadata.is_active = false;
-          }
-        });
-        if (!Object.keys(vendors.display[chainName][vendorName].platforms).includes(platform[0])) {
-          displayTemp[chainName][vendorName].active = false;
-          displayTemp[chainName][vendorName].checked = false;
-        }
-      });
-    });
-    vendorsObjTemp[platform[0]] = selectedVendors('full', displayTemp, platform[0]);
-    setBranch({ ...vendors, display: displayTemp, vendorsObj: vendorsObjTemp });
+    setVendors(platform);
   }, [vendors, platform]);
   const onChange = (values: Value[]) => {
     const newDisplay = cleanDisplay(branch.display);
@@ -46,7 +32,6 @@ const VendorsDropdownMenu = () => {
     values.forEach((value) => {
       const { chain, vendor } = fromValue(value as string);
 
-      newDisplay[chain][vendor].checked = false;
       if (chainClicked === chain) {
         newDisplay[chain][vendor].checked = true;
         platform.forEach((plat) => {

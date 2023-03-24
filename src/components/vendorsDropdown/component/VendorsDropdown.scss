@@ -9,9 +9,11 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+
   &.disabled {
     pointer-events: none;
   }
+
   & > .content {
     display: flex;
     flex-direction: row;
@@ -118,11 +120,12 @@
 .ant-space-item {
   line-height: 10px;
 }
+
 .criteria-alert {
   cursor: default;
-  z-index: 10;
-  display: flex;
-  align-items: center;
+  z-index: 10 !important;
+  height: 27px;
+  display: block;
 
   svg {
     width: 27px;

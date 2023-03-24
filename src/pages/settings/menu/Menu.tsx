@@ -1,24 +1,18 @@
 import { getMenu } from 'api';
 import { PageHeader } from 'components';
+import SimpleDropdown from 'components/simpleDropdown/SimpleDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { usePlatform, useUser } from 'contexts';
-import { platformObject } from 'data/platformList';
 import { useAlert } from 'hooks';
 import { useAtom } from 'jotai';
-import { ContainerKit } from 'kits';
-import { CSSProperties, useEffect, useState } from 'react';
+import { ContainerKit, FormControlLabelKit } from 'kits';
+import { useEffect, useState } from 'react';
 import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
-import icdeliveroo from '../../../assets/images/deliveroo-favicon.webp';
-import iccategory from '../../../assets/images/ic_menu-category.png';
-import icplatform from '../../../assets/images/ic_select_platform.png';
-import ictalabat from '../../../assets/images/talabat-favicon.png';
+import { renderPlatformOption, renderPlatformValue } from 'store/renderDropdown';
 import CheckboxKit from '../../../kits/checkbox/CheckboxKit';
-import ListItemTextKit from '../../../kits/listItemtext/ListItemTextKit';
-import MenuItemKit from '../../../kits/menuItem/MenuItemKit';
 import SettingsTopInputs from '../component/SettingsTopInputs';
 import './Menu.scss';
-import MenuDropdown from './menuDropdown/MenuDropdown';
 import VendorsDropdownMenu from './menuDropdown/VendorsDropdownMenu';
 
 const Menu = () => {
@@ -39,8 +33,12 @@ const Menu = () => {
     setLoading(true);
     try {
       const res = await getMenu(
-        { master_email: user.email, access_token: user.token, vendor: vendor || [] },
-        platforms
+        {
+          master_email: user.email,
+          access_token: user.token,
+          vendor: vendor[platform[0]][0] || {},
+        },
+        platforms[0]
       );
 
       const resp = Object.keys(res.data.menu_items || {})
@@ -71,43 +69,50 @@ const Menu = () => {
         .map((v) => {
           if (pl[v].find((obj) => obj.active)) {
             return {
-              name: v,
+              value: v,
               registered: true,
             };
           }
           return {
-            name: v,
+            value: v,
             registered: false,
           };
         })
         .filter((k) => k.registered === true);
 
-      setPlatform([list[0]?.name]);
+      setPlatform([list[0]?.value]);
       setPlatformList(list);
     }
   }, [userPlatformData]);
 
   useEffect(() => {
-    if (branch.vendorsObj) {
+    if ((branch.vendorsObj?.[platform[0]] || []).length) {
       getMenuData(branch.vendorsObj, platform);
     }
   }, [branch, platform]);
 
-  const handleSelectChangePlatform = (e) => {
-    setPlatform([e.target.value]);
+  const handleSelectChangePlatform = (value) => {
+    setPlatform([value]);
   };
 
-  const handleCategoryChange = (e) => {
-    const { value } = e.target;
-    if (value.length > 0) {
-      const arr = value
+  const handleCategoryChange = (e, value) => {
+    if (e.target.checked) {
+      category.push(value);
+    } else {
+      category.splice(
+        category.findIndex((c) => c === value),
+        1
+      );
+    }
+    if (category.length > 0) {
+      const arr = category
         .map((v) => data.filter((k) => k.category === v || k.category_name === v))
         .flat();
       setFilteredCategoryData(arr);
     } else {
       setFilteredCategoryData([]);
     }
-    setCategory(value);
+    setCategory([...category]);
   };
   const { renderSimpleRow, renderSimpleRowSkeleton, renderCurrency } = useTableContentFormatter();
   const headers = [
@@ -161,61 +166,32 @@ const Menu = () => {
       }),
       {}
     );
+
   const renderDropdowns = () => (
     <div className='__select-block'>
-      <div className='__select'>
-        <MenuDropdown
-          onChange={handleCategoryChange}
-          startIcon={
-            <img src={iccategory} alt='category' style={{ position: 'relative', bottom: '5px' }} />
-          }
-          value={category}
-          multiple
-          renderValue={(selected) => selected.join(', ')}
+      <div className='__select vendor'>
+        <SimpleDropdown
           items={categoryList}
-          label='All Categories'
+          selected={category}
           renderOption={(v) => (
-            <MenuItemKit key={v} value={v}>
-              <CheckboxKit checked={category.indexOf(v) > -1} />
-              <ListItemTextKit primary={v} />
-            </MenuItemKit>
+            <FormControlLabelKit
+              key={v}
+              onChange={(e) => handleCategoryChange(e, v)}
+              control={<CheckboxKit checked={category.indexOf(v) > -1} />}
+              label={v}
+            />
           )}
         />
       </div>
       <div className='__select vendor'>
         <VendorsDropdownMenu />
       </div>
-      <div className='__select'>
-        <MenuDropdown
-          onChange={(e) => handleSelectChangePlatform(e)}
-          startIcon={<img width={25} height={25} src={icplatform} alt='category' />}
+      <div className='__select vendor'>
+        <SimpleDropdown
+          renderValue={() => renderPlatformValue(platform)}
           items={platformList}
-          label='Select a Platform'
-          value={platform}
-          renderOption={(v) => (
-            <MenuItemKit key={v.name} value={v.name}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  textTransform: 'capitalize',
-                }}
-              >
-                <img
-                  className='planning-platform'
-                  style={{ '--color': platformObject[v.name].color } as CSSProperties}
-                  src={
-                    platformObject[v.name].srcNoBg ||
-                    platformObject[v.name].srcWhite ||
-                    platformObject[v.name].src
-                  }
-                  alt={v.name}
-                />
-                <ListItemTextKit primary={v.name} />
-              </div>
-            </MenuItemKit>
-          )}
+          selected={platform}
+          renderOption={(v) => renderPlatformOption(v, platform, handleSelectChangePlatform)}
         />
       </div>
     </div>

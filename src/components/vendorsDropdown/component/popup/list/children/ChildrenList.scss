@@ -20,8 +20,12 @@
 
 .children-extra {
   display: inline-flex;
-  grid-gap: 8px;
   z-index: 2;
+
+  > span {
+    width: 20px;
+    z-index: 1;
+  }
 }
 
 #tooltip-alert {

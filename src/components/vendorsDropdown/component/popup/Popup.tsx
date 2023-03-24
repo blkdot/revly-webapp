@@ -47,7 +47,9 @@ export const Popup: FC<{
   onChange: (v: Value[]) => void;
 }> = ({ values, options, onChange }) => {
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<Value>(options[0].value || null);
+  const [selected, setSelected] = useState<Value>(
+    options.filter((obj) => !obj.disabled)[0].value || null
+  );
 
   const valuesSet = useMemo(() => new Set(values), [values]);
 

@@ -60,17 +60,18 @@ export const toChildrenNode = (chain: string, vendor: string, v: any) => ({
       {Object.keys(v.platforms)
         .sort((a, b) => b.localeCompare(a))
         .map((plat) => (
-          <img
-            key={plat}
-            style={{ '--color': platformObject[plat].color } as CSSProperties}
-            className={`planning-platform ${!v.platforms[plat].metadata.is_active && 'disabled'}`}
-            src={
-              platformObject[plat].srcNoBg ||
-              platformObject[plat].srcWhite ||
-              platformObject[plat].src
-            }
-            alt={plat}
-          />
+          <span key={plat}>
+            <img
+              style={{ '--color': platformObject[plat].color } as CSSProperties}
+              className={`planning-platform ${!v.platforms[plat].metadata.is_active && 'disabled'}`}
+              src={
+                platformObject[plat].srcNoBg ||
+                platformObject[plat].srcWhite ||
+                platformObject[plat].src
+              }
+              alt={plat}
+            />
+          </span>
         ))}
       {!v.active && (
         <TooltipKit
