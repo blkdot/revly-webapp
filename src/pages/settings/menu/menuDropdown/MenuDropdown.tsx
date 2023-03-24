@@ -1,39 +1,25 @@
-import { FormControlKit, InputLabelKit, SelectKit } from 'kits';
+import { FormControlKit, SelectKit } from 'kits';
 
 import './MenuDropdown.scss';
 
 const MenuDropdown = (props: any) => {
-  const {
-    label,
-    items,
-    startIcon,
-    onChange,
-    renderOption,
-    renderValue,
-    multiple,
-    value,
-    defaultValue,
-  } = props;
+  const { items, onChange, renderOption, renderValue, multiple, value, defaultValue, placeholder } =
+    props;
 
   const renderSelectItem = (arr) => arr?.map((v) => renderOption(v));
 
   return (
-    <FormControlKit fullWidth>
-      <InputLabelKit>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          {startIcon}
-          {label}
-        </div>
-      </InputLabelKit>
+    <FormControlKit className='menu-dropdown__form-control' fullWidth>
+      {!value.length && <span className='menu-dropdown__placeholder'>{placeholder}</span>}
       <SelectKit
-        renderValue={renderValue}
+        renderValue={value.length ? renderValue : placeholder}
         multiple={multiple}
         value={value}
         defaultValue={defaultValue}
         sx={{ height: '55px' }}
         onChange={onChange}
-        label={label}
       >
+        <div className='ant-popover-arrow' />
         {renderSelectItem(items)}
       </SelectKit>
     </FormControlKit>

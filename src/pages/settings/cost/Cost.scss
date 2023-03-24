@@ -121,12 +121,6 @@
               color: #637381;
             }
           }
-          button {
-            height: 46px;
-            font-size: 14px;
-            padding: 0 30px;
-            text-transform: none;
-          }
         }
       }
 
@@ -198,4 +192,11 @@
   height: 40px;
   text-align: center;
   border-radius: 30px;
+}
+
+.cost_btn.cost_btn {
+  height: 46px;
+  font-size: 14px;
+  padding: 0 30px;
+  text-transform: none;
 }

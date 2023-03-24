@@ -1,19 +1,7 @@
 @import '../../library.scss';
 
-.navbar_wrapper {
-  position: relative;
-  width: 70px;
-  transition: 0.5s;
-  height: 100vh;
-  z-index: 100;
-
-  &.opened {
-    width: 220px;
-  }
-}
-
 .Navbar.Navbar {
-  background: #fff;
+  background-color: #fff;
   backdrop-filter: blur(10px);
   position: fixed;
   top: 0px;
@@ -25,36 +13,6 @@
   padding: 15px 12px 0 12px;
   overflow: hidden;
   transition: 0.5s;
-
-  &.openedModal {
-    background-color: #fff;
-  }
-
-  transition: 0.5s;
-
-  &.opened {
-    width: 220px;
-
-    .nav-double-arrow.nav-double-arrow {
-      opacity: 1;
-      visibility: visible;
-      transition: 0.4s;
-    }
-
-    .navbar-button-kit.navbar-button-kit {
-      width: 100%;
-      border-radius: 8px;
-
-      span {
-        visibility: visible;
-        transition: 0.5s;
-        opacity: 1;
-        width: fit-content;
-        display: inline;
-        color: #212b36;
-      }
-    }
-  }
 
   ul {
     display: flex;
@@ -80,8 +38,14 @@
       }
 
       svg {
-        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-          contrast(176%);
+        path {
+          fill: #5e5adb;
+        }
+
+        path[data-stroke='true'] {
+          stroke: #5e5adb;
+          fill: none;
+        }
       }
     }
 
@@ -91,8 +55,14 @@
       }
 
       svg {
-        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-          contrast(176%);
+        path {
+          fill: #5e5adb;
+        }
+
+        path[data-stroke='true'] {
+          stroke: #5e5adb;
+          fill: none;
+        }
       }
     }
 
@@ -108,8 +78,14 @@
       }
 
       svg {
-        filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-          contrast(176%);
+        path {
+          fill: #5e5adb;
+        }
+
+        path[data-stroke='true'] {
+          stroke: #5e5adb;
+          fill: none;
+        }
       }
 
       &:hover {
@@ -118,8 +94,14 @@
         }
 
         svg {
-          filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-            contrast(176%);
+          path {
+            fill: #5e5adb;
+          }
+
+          path[data-stroke='true'] {
+            stroke: #5e5adb;
+            fill: none;
+          }
         }
       }
     }
@@ -132,6 +114,33 @@
   }
 }
 
+.navbar_wrapper {
+  background: #fff;
+  position: relative;
+  width: 70px;
+  transition: 0.5s;
+  height: 100vh;
+  z-index: 100;
+
+  &:hover {
+    .Navbar.Navbar {
+      width: 220px;
+
+      .navbar-button-kit.navbar-button-kit {
+        width: 100%;
+        border-radius: 8px;
+        span {
+          visibility: visible;
+          opacity: 1;
+          width: fit-content;
+          display: inline;
+          color: #212b36;
+        }
+      }
+    }
+  }
+}
+
 .card_bottom {
   display: flex;
   grid-gap: 5px;
@@ -139,53 +148,13 @@
   margin-top: 10px;
 }
 
-.Navbar_logo.Navbar_logo {
-  position: relative;
-  height: 70px;
-  padding: 0;
-  border: none;
-  cursor: default;
-  display: flex;
-  justify-content: flex-end;
-  transition: 0.3s;
-
-  .nav-logo {
-    width: 120px;
-    left: 10px;
-    position: absolute;
-    top: 20px;
-    opacity: 0;
-  }
-
-  .nav-small-logo {
-    position: absolute;
-    width: 38.5px;
-    left: 5px;
-    top: 16.5px;
-    opacity: 1;
-  }
-
-  &.opened {
-    .nav-logo {
-      opacity: 1;
-    }
-
-    .nav-small-logo {
-      opacity: 0;
-    }
-  }
+.Navbar_logo {
+  width: fit-content;
 }
 
-.accordion-sum.accordion-sum {
-  padding: 0;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 25px;
-  height: 25px;
-
-  &.Mui-expanded.Mui-expanded {
-    min-height: 25px;
-  }
+.nav-small-logo {
+  position: relative;
+  width: 38.5px;
 }
 
 .navbar-button-kit.navbar-button-kit {
@@ -195,11 +164,12 @@
   padding: 10px 10px 10px 10px;
   border-radius: 50%;
   justify-content: flex-start;
-  width: fit-content;
+  width: 40px;
   min-width: fit-content;
   font-size: 13px;
   grid-gap: 16px;
   color: rgba(144, 107, 255, 0.08);
+  transition: 0.5s;
 
   span {
     text-transform: capitalize;
@@ -214,6 +184,7 @@
     line-height: 20px;
     display: none;
     font-weight: 600;
+    transition: 0.5s;
   }
 
   &:hover {
@@ -222,25 +193,14 @@
     }
 
     svg {
-      filter: invert(36%) sepia(16%) saturate(4907%) hue-rotate(183deg) brightness(115%)
-        contrast(176%);
-    }
-  }
-}
+      path {
+        fill: #5e5adb;
+      }
 
-.navbar-accordion.navbar-accordion {
-  background: none !important;
-  border: none;
-  box-shadow: none;
-  margin: 0 !important;
-
-  &::before {
-    content: none;
-  }
-
-  &.disabled {
-    .navbar-button-kit {
-      pointer-events: none;
+      path[data-stroke='true'] {
+        stroke: #5e5adb;
+        fill: none;
+      }
     }
   }
 }
@@ -248,67 +208,6 @@
 .navlink-disabled {
   pointer-events: none;
   opacity: 0.5;
-}
-
-.navbar-accordion-details.navbar-accordion-details {
-  position: relative;
-  padding: 8px 16px 0px 5px;
-  display: flex;
-  flex-direction: column;
-  grid-gap: 10px;
-
-  > a {
-    position: relative;
-
-    button {
-      padding-left: 40px;
-    }
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 15px;
-      border-radius: 50%;
-      top: 45%;
-      width: 5px;
-      height: 5px;
-      background: #637381;
-    }
-  }
-}
-
-.nav-double-arrow.nav-double-arrow {
-  &:hover {
-    transition: 0.4s;
-    transform: rotate(0deg) scale(1.2);
-  }
-
-  transition: 0.4s;
-  border-radius: 50%;
-  padding: 4px;
-  width: 40px;
-  height: 40px;
-  opacity: 0;
-  visibility: hidden;
-  min-width: 32px;
-  transform: rotate(0deg) scale(1);
-  color: #fff;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  &.active {
-    &:hover {
-      transition: 0.4s;
-      transform: rotate(-180deg) scale(1.2);
-    }
-
-    transform: rotate(-180deg) scale(1);
-    transition: 0.4s;
-  }
 }
 
 .nav-line {
@@ -334,21 +233,22 @@
 @media (max-width: 900px) {
   .navbar_wrapper {
     &.opened {
-      width: 200px;
+      width: 70px;
     }
   }
 
   .Navbar.Navbar {
     &.opened {
-      width: 200px;
+      width: 70px;
     }
   }
 
-  .Navbar.Navbar.opened {
-    .navbar-accordion-details.navbar-accordion-details {
-      .navbar-button-kit.navbar-button-kit span {
-        width: fit-content;
-      }
-    }
+  .navbar-button-kit.navbar-button-kit {
+    width: fit-content !important;
+    border-radius: 50% !important;
+  }
+
+  .navbar-button-kit.navbar-button-kit span {
+    display: none !important;
   }
 }

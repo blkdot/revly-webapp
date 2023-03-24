@@ -181,7 +181,7 @@ const useTableContentFormatter = () => {
             ? '-'
             : r[h.id].map((vendor) => (
                 <span key={`${vendor}${shortid.generate()}`} className='render-row-tooltip column'>
-                  {vendor}
+                  {vendor.split('_')[0]}
                 </span>
               ))
         }

@@ -2,7 +2,7 @@
   .__select-block {
     display: flex;
     justify-content: space-between;
-
+    width: 50%;
     .__select {
       width: 31%;
       > div {
@@ -39,5 +39,20 @@
 
   .__table-block {
     margin: 2em 0;
+  }
+}
+.menu__platform-select {
+  display: flex;
+  align-items: center;
+  grid-gap: 5px;
+}
+.menu__platform-selected {
+  display: flex;
+  align-items: center;
+  grid-gap: 15px;
+  .platform-join {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
   }
 }
