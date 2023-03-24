@@ -2,96 +2,185 @@ import React, {FC, useState, useMemo, useCallback} from 'react';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import {
-  TypographyKit
+  BoxKit,
+  TypographyKit,
+  ButtonKit,
 } from '../../kits';
-import './Calendar.scss';
 
 dayjs.extend(duration);
 
-const days = ['SUN', 'MON', 'THE', 'WEN', 'THU', 'FRI', 'SAT'];
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const timesOfDay = [
-  "",
-  "1 AM",
-  "2 AM",
-  "3 AM",
-  "4 AM",
-  "5 AM",
-  "6 AM",
-  "7 AM",
-  "8 AM",
-  "9 AM",
-  "10 AM",
-  "11 AM",
-  "12 PM",
-  "1 PM",
-  "2 PM",
-  "3 PM",
-  "4 PM",
-  "5 PM",
-  "6 PM",
-  "7 PM",
-  "8 PM",
-  "9 PM",
-  "10 PM",
-  "11 PM",
+  '1 AM',
+  '2 AM',
+  '3 AM',
+  '4 AM',
+  '5 AM',
+  '6 AM',
+  '7 AM',
+  '8 AM',
+  '9 AM',
+  '10 AM',
+  '11 AM',
+  '12 PM',
+  '1 PM',
+  '2 PM',
+  '3 PM',
+  '4 PM',
+  '5 PM',
+  '6 PM',
+  '7 PM',
+  '8 PM',
+  '9 PM',
+  '10 PM',
+  '11 PM',
+  '0 AM'
 ];
 
 const Calendar: FC = () => {
 
   const [startDate, setStartDate] = useState<Date>(dayjs().startOf('week').toDate());
 
-  const timeslotHeight = useMemo(() => 48, []);
+  const timeslotHeight = useMemo(() => 70, []);
 
-  const renderDates = () => (
-    <TypographyKit className='calendar-dates-container' variant='div'>
-      <TypographyKit className='calendar-dates-gap' variant='div'/>
+  const datesOfWeek = useMemo(() => {
+    const dates = [];
+
+    for (let i = 1; i <= 7; ++i) {
+      dates.push(dayjs(startDate).add(i, 'day'));
+    }
+
+    return dates;
+  }, [startDate]);
+
+  const today = useMemo(() => dayjs().startOf('day'), []);
+
+  const renderHeaderDates = () => (
+    <BoxKit sx={{
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'row',
+    }}>
+      <BoxKit width='88px' />
       {days.map((day, index) => (
-        <TypographyKit className='calendar-dates' variant='div' key={day}>
-          <TypographyKit style={{position: 'relative'}} variant='div'>
-            <TypographyKit variant='div'>{day}</TypographyKit>
-            <TypographyKit variant='div'>{dayjs(startDate).add(index + 1, 'day').date()}</TypographyKit>
-          </TypographyKit>
-        </TypographyKit>
+        <BoxKit key={day} sx={{
+          flex: '1 1',
+          borderRight: '1px solid #FAFAFA',
+          borderBottom: '1px solid #FAFAFA',
+          textAlign: 'center',
+          height: '68px',
+          padding: '10px',
+        }}>
+          <BoxKit position='relative'>
+            <ButtonKit
+              variant={dayjs(today).isSame(datesOfWeek[index]) ? 'contained' : 'text'}
+              sx={{
+                borderRadius: '50%',
+                width: '30px',
+                minWidth: 0,
+                height: '30px',
+                fontFamily: 'Lato',
+                fontWeight: 400,
+                fontSize: '14px',
+                lineHeight: '16.8px',
+                mb: '3px',
+              }}
+            >
+              {dayjs(datesOfWeek[index]).date()}
+            </ButtonKit>
+            <TypographyKit
+              sx={{
+                fontSize: '12px',
+                lineHeight: '15px',
+                fontFamily: 'Lato',
+                fontWeight: 400,
+              }}
+            >
+              {day}
+            </TypographyKit>
+          </BoxKit>
+        </BoxKit>
       ))}
-    </TypographyKit>
+    </BoxKit>
   );
 
   const renderTimeslotLabels = () => timesOfDay.map((time, index) => (
-    <TypographyKit className='time-slots' variant='div' key={time}>
-      <div className='slots-label' style={{height: timeslotHeight}}>{time}</div>
-    </TypographyKit>
+    <BoxKit key={time} sx={{
+      textAlign: 'right',
+      paddingRight: '8px',
+      position: 'relative',
+    }}>
+      <TypographyKit sx={{
+        position: 'relative',
+        bottom: '0px',
+        height: timeslotHeight,
+      }}>
+        {time}
+      </TypographyKit>
+    </BoxKit>
   ));
 
   const renderTimeGrid = () => (
-    <TypographyKit className='time-grid' variant='div'>
-      <TypographyKit className='time-slots-line-container' variant='div'>
+    <BoxKit sx={{
+      flex: '1 1',
+      display: 'flex',
+      flexDirection: 'row',
+      position: 'relative',
+    }}>
+      <BoxKit>
         {timesOfDay.map((day, index) => (
-          <div key={day} className='time-slots-line' style={{height: timeslotHeight}} />
+          <BoxKit key={day} sx={{
+            height: timeslotHeight,
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              width: '100%',
+              borderBottom: '1px solid #FAFAFA',
+            }
+          }}/>
         ))}
-      </TypographyKit>
-      {days.map((timeslot, index) => (
+      </BoxKit>
+      {datesOfWeek.map((date, index) => (
         // TODO: render items here
-        <TypographyKit className='grid-date' variant='div' key={timeslot} />
+        <BoxKit
+          key={date.toString()}
+          flex='1 1'
+          borderRight='1px solid #FAFAFA'
+          backgroundColor={dayjs(date).isBefore(today) ? '#FAFAFA' : undefined}
+        />
       ))}
-    </TypographyKit>
+    </BoxKit>
   );
 
   return (
-    <TypographyKit className='page-container' variant='div'>
-      <TypographyKit className='calendar-container' variant='div'>
-        <TypographyKit className='calendar-header' variant='div'>
-          {renderDates()}
-        </TypographyKit>
-        <TypographyKit className='calendar-body' variant='div'>
-          <TypographyKit className='time-slot-labels-container' variant='div'>
+    <BoxKit p='0 20px 20px 20px' backgroundColor='#fff'>
+      <BoxKit>
+        <BoxKit sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'row',
+          borderRadius: '4px 4px 0 0',
+          background: '#FAFAFA',
+        }}>
+          {renderHeaderDates()}
+        </BoxKit>
+        <BoxKit sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          borderRadius: '0 0 4px 4px',
+        }}>
+          <BoxKit sx={{
+            background: '#FAFAFA',
+            width: '88px',
+          }}>
             {renderTimeslotLabels()}
-          </TypographyKit>
-          <TypographyKit className='time-grid-container' variant='div'>
+          </BoxKit>
+          <BoxKit flex='1 1'>
             {renderTimeGrid()}
-          </TypographyKit>
-        </TypographyKit>
-      </TypographyKit>
-    </TypographyKit>
+          </BoxKit>
+        </BoxKit>
+      </BoxKit>
+    </BoxKit>
   );
 };
 

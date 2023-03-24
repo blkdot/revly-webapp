@@ -49,6 +49,8 @@ const TableRevlyNew: FC<{
   noDataText,
   filters,
 }) => {
+  console.log('headers', headers);
+  console.log('rows', rows);
   const [order, setOrder] = useState(mainOrder || 'asc');
   const [orderBy, setOrderBy] = useState(mainFieldOrdered || 'name');
 
