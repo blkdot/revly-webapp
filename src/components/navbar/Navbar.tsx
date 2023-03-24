@@ -37,9 +37,7 @@ const Navbar = () => {
 
   return (
     <div className='navbar_wrapper'>
-      <div
-        className='Navbar'
-      >
+      <div className='Navbar'>
         <ul>
           <Link to='/dashboard' className='Navbar_logo'>
             <img className='nav-small-logo' src={smallLogo} alt='Revly' />
