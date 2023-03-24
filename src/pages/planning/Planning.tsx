@@ -489,7 +489,7 @@ const Planning = () => {
   useEffect(() => {
     let filteredData = offers;
     let filteredDataAds = ads;
-
+    
     if (filters.platform.length > 0) {
       filteredData = filteredData.filter((f) => filters.platform.includes(f.platform));
       filteredDataAds = filteredDataAds.filter((f) => filters.platform.includes(f.platform));
