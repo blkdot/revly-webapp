@@ -5,9 +5,9 @@ import { PageHeader } from 'components';
 import AdvertsCreateNewCampaign from 'components/createNewCampaign/AdvertsCreateNewCampaign';
 import Dates from 'components/dates/Dates';
 import AdvertsDetails from 'components/details/AdvertsDetails';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
+import SimpleDropdown from 'components/simpleDropdown/SimpleDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
@@ -20,6 +20,12 @@ import { ButtonAction, ContainerKit } from 'kits';
 import { defaultFilterStateFormat } from 'pages/marketing/marketingOfferData';
 import { useEffect, useMemo, useState } from 'react';
 import { branchAtom, platformAtom } from 'store/marketingSetupAtom';
+import {
+  renderPlatformOption,
+  renderPlatformValue,
+  renderFilterCheckboxOption,
+  renderSimpleValue,
+} from 'store/renderDropdown';
 import Columns from '../../assets/images/columns.svg';
 import './Adverts.scss';
 
@@ -277,10 +283,15 @@ const Adverts = () => {
       end_hour: [],
     });
   }, [JSON.stringify(adsData)]);
-  const handleChangeMultipleFilter = (k) => (v) => {
+  const handleChangeFilter = (k: string, type?: string) => (v: string) => {
     const propertyFilter = filters[k];
 
-    const index = propertyFilter.findIndex((p) => p === v);
+    if (type === 'single') {
+      setFilters({ ...filters, [k]: [v] });
+      return;
+    }
+
+    const index = propertyFilter.findIndex((p: string) => p === v);
 
     if (index < 0) {
       setFilters({ ...filters, [k]: [...propertyFilter, v] });
@@ -321,22 +332,21 @@ const Adverts = () => {
   }, [JSON.stringify(filters), adsData]);
   const renderFilters = () => (
     <div className='table-filters'>
-      <FilterDropdown
+      <SimpleDropdown
+        renderValue={() => renderPlatformValue(filters.platform)}
         items={filtersHead.platform}
-        values={filters.platform}
-        onChange={handleChangeMultipleFilter('platform')}
-        label='Platforms'
-        icon={<img src={Columns} alt='Clock' />}
-        internalIconOnActive={platformObject}
-        maxShowned={1}
+        selected={filters.platform}
+        renderOption={(v) =>
+          renderPlatformOption(v, filters.platform, handleChangeFilter('platform', 'single'))
+        }
       />
-      <FilterDropdown
+      <SimpleDropdown
         items={filtersHead.status}
-        values={filters.status}
-        onChange={handleChangeMultipleFilter('status')}
-        label='Statuses'
-        icon={<Switch />}
-        maxShowned={1}
+        selected={filters.status}
+        renderValue={() => renderSimpleValue(filters.status, <Switch />, 'Statuses')}
+        renderOption={(v) =>
+          renderFilterCheckboxOption(v, filters.status, handleChangeFilter('status'))
+        }
       />
     </div>
   );
@@ -397,7 +407,7 @@ const Adverts = () => {
           openedFilter={openedFilter}
           filtersHead={filtersHead}
           filters={filters}
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          handleChangeMultipleFilter={handleChangeFilter}
         />
       </ContainerKit>
     );

@@ -1,6 +1,6 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { platformList, platformObject } from 'data/platformList';
-import { TypographyKit } from 'kits';
+import { TooltipKit, TypographyKit } from 'kits';
 import { useAtom } from 'jotai';
 import {
   onboardingAccountsAtom,
@@ -68,7 +68,28 @@ const ConnectAccount: FC<{
     setSelected('delete');
     setDeleteObj(obj);
   };
+  const [hover, setHover] = useState([]);
+  const compareSize = () => {
+    const textElement = document.querySelectorAll('.onboarding-account__email');
+    const compareArr = [];
+    textElement.forEach((el) => {
+      if (el?.scrollWidth > el.clientWidth) {
+        compareArr.push(el.textContent);
+      }
+    });
+    setHover(compareArr);
+  };
+  useEffect(() => {
+    compareSize();
+    window.addEventListener('resize', compareSize);
+  }, []);
 
+  useEffect(
+    () => () => {
+      window.removeEventListener('resize', compareSize);
+    },
+    []
+  );
   return (
     <div tabIndex={-1} role='presentation' onClick={(e) => e.stopPropagation()}>
       <img
@@ -140,7 +161,16 @@ const ConnectAccount: FC<{
                   alt={obj.platform}
                 />
               </TypographyKit>
-              <p>{obj.email}</p>
+              <TooltipKit
+                placement='right'
+                arrow
+                id='account-tooltip'
+                interactive={1}
+                disableHoverListener={!hover.includes(obj.email)}
+                title={obj.email}
+              >
+                <p className='onboarding-account__email'>{obj.email}</p>
+              </TooltipKit>
             </div>
             <div>
               <span

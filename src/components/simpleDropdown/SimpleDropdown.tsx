@@ -4,14 +4,18 @@ import { ReactComponent as ArrowDownIcon } from './icons/arrow-down.svg';
 import { ReactComponent as ArrowUpIcon } from './icons/arrow-up.svg';
 import './SimpleDropdown.scss';
 
-const SimpleDropdown: FC<{ selected: any; renderOption: any; items: any; renderValue?: any }> = ({
-  selected,
-  renderOption,
-  items,
-  renderValue,
-}) => {
+const SimpleDropdown: FC<{
+  selected: any;
+  renderOption: any;
+  items: any;
+  renderValue?: any;
+  disabled?: boolean;
+  rootClassName?: string;
+  className?: string;
+}> = ({ selected, renderOption, items, renderValue, disabled, rootClassName, className }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = (value) => {
+    if (!items.length || disabled) return;
     setOpen(value);
     const body = document.querySelector('body');
     if (value) {
@@ -22,11 +26,11 @@ const SimpleDropdown: FC<{ selected: any; renderOption: any; items: any; renderV
   };
   const renderSelectItem = (arr) => arr?.map((v, index) => renderOption(v, index));
   const renderValues = () => {
-    if (!selected.length) {
-      return 'No Item Selected';
-    }
     if (renderValue) {
       return renderValue();
+    }
+    if (!selected.length) {
+      return 'No Item Selected';
     }
     return selected.join(', ');
   };
@@ -36,10 +40,10 @@ const SimpleDropdown: FC<{ selected: any; renderOption: any; items: any; renderV
       open={open}
       trigger='click'
       onOpenChange={handleOpen}
-      rootClassName='simple-dropdown__content'
+      rootClassName={`simple-dropdown__content ${rootClassName}`}
       content={renderSelectItem(items)}
     >
-      <div className={`dropdown-header ${!items.length && 'disabled'}`}>
+      <div className={`dropdown-header ${(!items.length || disabled) && 'disabled'} ${className}`}>
         <div className='content'>
           <div className='text'>{renderValues()}</div>
           {open ? (

@@ -6,6 +6,7 @@ import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import HeaderDropdowns from 'components/header/HeaderDropdowns';
+import SimpleDropdown from 'components/simpleDropdown/SimpleDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
@@ -16,6 +17,13 @@ import { useAlert, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, PaperKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
+import {
+  renderPlatformOption,
+  renderPlatformValue,
+  renderFilterCheckboxOption,
+  renderFilterRadioOption,
+  renderSimpleValue,
+} from 'store/renderDropdown';
 import Columns from '../../assets/images/columns.svg';
 import competitorIcon from '../../assets/images/ic_competitor.png';
 import './Competition.scss';
@@ -340,18 +348,16 @@ const CompetitionAlerts = () => {
         <PaperKit className='competition-paper'>
           <div className='competition-top-input alerts-top-inputs'>
             <div className='competition-dropdowns'>
-              <FilterDropdown
+              <SimpleDropdown
+                renderValue={() => renderPlatformValue(selectedPlatform)}
                 items={[
                   { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
                   // { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
                 ]}
-                values={selectedPlatform}
-                onChange={(v) => setSelectedPlatform([v])}
-                label='Show all platforms'
-                icon={<img src={Columns} alt='Platform' />}
-                internalIconOnActive={platformObject}
-                maxShowned={1}
-                mono
+                selected={selectedPlatform}
+                renderOption={(v) =>
+                  renderPlatformOption(v, selectedPlatform, (p) => setSelectedPlatform([p]))
+                }
               />
               <FilterBranch
                 items={chainData.filter(
@@ -362,21 +368,26 @@ const CompetitionAlerts = () => {
                 icon={<img src={Columns} alt='Platform' />}
                 label='Show all branches'
               />
-              <FilterDropdown
+              <SimpleDropdown
+                renderValue={() =>
+                  renderSimpleValue(
+                    selectedCompetitors,
+                    <img src={competitorIcon} alt='Competitor' />,
+                    'Competitors'
+                  )
+                }
                 items={
                   filterCompetitionList?.map((compets) => ({
                     value: compets.vendor_name,
                     text: compets.vendor_name,
                   })) || []
                 }
-                values={selectedCompetitors}
-                onChange={handleCompetitorChange}
-                label='Show all competitors'
-                customTag='competitors'
-                icon={<img src={competitorIcon} alt='Competitor' />}
+                selected={selectedCompetitors}
+                renderOption={(v) =>
+                  renderFilterCheckboxOption(v, selectedCompetitors, handleCompetitorChange)
+                }
                 disabled={!(filterCompetitionList?.length > 0)}
-                maxShowned={1}
-                toRight
+                rootClassName='competition-dropdown__time-slot-root'
               />
             </div>
           </div>

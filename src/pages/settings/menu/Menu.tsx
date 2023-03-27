@@ -200,13 +200,11 @@ const Menu = () => {
     <div className='wrapper'>
       <SettingsTopInputs />
       <ContainerKit className='menu'>
-        <div className='marketing-top'>
-          <PageHeader
-            title='Settings - Menu'
-            description='View your menu across all platforms and branches.'
-            extra={renderDropdowns()}
-          />
-        </div>
+        <PageHeader
+          title='Settings - Menu'
+          description='View your menu across all platforms and branches.'
+          extra={renderDropdowns()}
+        />
         <div className='__table-block'>
           <TableRevlyNew
             renderCustomSkelton={[0, 1, 2, 3, 4, 5].map(renderRowsByHeaderLoading)}
