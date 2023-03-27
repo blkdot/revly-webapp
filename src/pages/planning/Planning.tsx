@@ -590,7 +590,12 @@ const Planning = () => {
               setOpenedFilter={setOpenedFilter}
             />
             {viewType === 'table' && renderTable()}
-            {viewType === 'calendar' && <Calendar />}
+            {viewType === 'calendar' && (
+              <Calendar
+                dateRange={dateRange}
+                events={dataFiltered}
+              />
+            )}
           </div>
         )}
         <MarketingOfferFilter
