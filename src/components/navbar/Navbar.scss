@@ -12,7 +12,7 @@
   width: 70px;
   padding: 15px 12px 0 12px;
   overflow: hidden;
-  transition: 0.5s;
+  transition: 0.5s ease-in-out;
 
   ul {
     display: flex;
@@ -118,7 +118,7 @@
   background: #fff;
   position: relative;
   width: 70px;
-  transition: 0.5s;
+  transition: 0.5s ease-in-out;
   height: 100vh;
   z-index: 100;
 
@@ -129,11 +129,14 @@
       .navbar-button-kit.navbar-button-kit {
         width: 100%;
         border-radius: 8px;
+        grid-gap: 16px;
+        transition: 0.3s ease-in-out;
+
         span {
+          transition: 0.3s ease-in-out;
           visibility: visible;
           opacity: 1;
-          width: fit-content;
-          display: inline;
+          width: 30%;
           color: #212b36;
         }
       }
@@ -158,18 +161,19 @@
 }
 
 .navbar-button-kit.navbar-button-kit {
+  overflow: hidden;
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 11px;
   border-radius: 50%;
   justify-content: flex-start;
-  width: 40px;
-  min-width: fit-content;
+  width: 45px;
+  min-width: 0;
   font-size: 13px;
-  grid-gap: 16px;
+  grid-gap: 0;
   color: rgba(144, 107, 255, 0.08);
-  transition: 0.5s;
+  transition: 0.3s ease-in-out;
 
   span {
     text-transform: capitalize;
@@ -182,22 +186,27 @@
     width: 0px;
     height: auto;
     line-height: 20px;
-    display: none;
     font-weight: 600;
-    transition: 0.5s;
+    transition: 0.3s ease-in-out;
   }
 
   &:hover {
+    transition: 0.3s ease-in-out;
+
     span {
       color: #5e5adb !important;
     }
 
     svg {
+      transition: .3s;
+
       path {
+        transition: .3s;
         fill: #5e5adb;
       }
 
       path[data-stroke='true'] {
+        transition: .3s;
         stroke: #5e5adb;
         fill: none;
       }
