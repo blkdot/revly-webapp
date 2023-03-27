@@ -67,7 +67,25 @@ export const VendorsDropdown: FC<{
           <div className='text'>
             {selected.length ? selected.join(', ') : 'No Vendors Selected'}
           </div>
-          {open ? <ArrowUpIcon /> : <ArrowDownIcon />}
+          {open ? (
+            <ArrowUpIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpen(!open);
+              }}
+              tabIndex={-1}
+              role='presentation'
+            />
+          ) : (
+            <ArrowDownIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpen(!open);
+              }}
+              tabIndex={-1}
+              role='presentation'
+            />
+          )}
         </div>
       </div>
     </Popover>

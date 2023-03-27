@@ -42,7 +42,25 @@ const SimpleDropdown: FC<{ selected: any; renderOption: any; items: any; renderV
       <div className={`dropdown-header ${!items.length && 'disabled'}`}>
         <div className='content'>
           <div className='text'>{renderValues()}</div>
-          {open ? <ArrowUpIcon /> : <ArrowDownIcon />}
+          {open ? (
+            <ArrowUpIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpen(!open);
+              }}
+              tabIndex={-1}
+              role='presentation'
+            />
+          ) : (
+            <ArrowDownIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpen(!open);
+              }}
+              tabIndex={-1}
+              role='presentation'
+            />
+          )}
         </div>
       </div>
     </Popover>

@@ -46,7 +46,25 @@ const HeaderSettings: FC = () => {
           <SettingsIcon />
         </div>
       </Popover>
-      {open ? <ArrowUp /> : <ArrowDown />}
+      {open ? (
+        <ArrowUp
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpen(!open);
+          }}
+          tabIndex={-1}
+          role='presentation'
+        />
+      ) : (
+        <ArrowDown
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpen(!open);
+          }}
+          tabIndex={-1}
+          role='presentation'
+        />
+      )}
     </div>
   );
 };
