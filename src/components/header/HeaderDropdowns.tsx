@@ -5,7 +5,7 @@ import './HeaderDropdowns.scss';
 
 const HeaderDropdowns: FC = () => (
   <div className='header-dropdowns__wrapper'>
-    <HeaderNotifications />
+    {/* <HeaderNotifications /> */}
     <HeaderSettings />
   </div>
 );

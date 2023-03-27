@@ -140,6 +140,10 @@
     .top-competition {
       width: 200px !important;
     }
+
+    .dropdown-header {
+      max-width: 280px;
+    }
   }
 
   .competitor-wrapper {
@@ -157,6 +161,10 @@
 
     .top-competition {
       width: 45% !important;
+    }
+
+    .dropdown-header {
+      max-width: 280px;
     }
   }
 }
@@ -513,11 +521,15 @@
 
 .competition-alerts {
   .table-paper.table-paper {
-    margin-top: 10px !important;
-
     .table-container {
       border-top: none !important;
       padding: 0 !important;
     }
   }
+}
+.competition-dropdown__area-root {
+  width: 300px;
+}
+.competition-dropdown__time-slot-root {
+  width: 310px;
 }

@@ -11,7 +11,7 @@
   cursor: pointer;
 
   &.disabled {
-    pointer-events: none;
+    cursor: not-allowed !important;
   }
 
   & > .content {
@@ -21,6 +21,7 @@
     width: 1000px;
     padding-left: 26px;
     padding-right: 26px;
+    align-items: center;
 
     & > .text {
       font-family: 'SF Pro Display';

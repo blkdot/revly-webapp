@@ -4,11 +4,11 @@ import { Switch } from 'assets/icons';
 import { pascalCase } from 'change-case';
 import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
 import MarketingOfferRemove from 'components/marketingOfferRemove/MarketingOfferRemove';
 import MarketingSetup from 'components/marketingSetup/MarketingSetup';
+import SimpleDropdown from 'components/simpleDropdown/SimpleDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
@@ -17,7 +17,12 @@ import dayjs from 'dayjs';
 import { useDate, useQueryState } from 'hooks';
 import { ButtonAction, ContainerKit } from 'kits';
 import { useEffect, useState } from 'react';
-import Columns from '../../assets/images/columns.svg';
+import {
+  renderPlatformOption,
+  renderPlatformValue,
+  renderFilterCheckboxOption,
+  renderSimpleValue,
+} from 'store/renderDropdown';
 import { platformObject } from '../../data/platformList';
 import OfferDetailComponent from '../offers/details';
 import './Marketing.scss';
@@ -373,10 +378,15 @@ const MarketingOffer = () => {
     );
   }, [JSON.stringify(filters), offersData]);
 
-  const handleChangeMultipleFilter = (k) => (v) => {
+  const handleChangeFilter = (k: string, type?: string) => (v: string) => {
     const propertyFilter = filters[k];
 
-    const index = propertyFilter.findIndex((p) => p === v);
+    if (type === 'single') {
+      setFilters({ ...filters, [k]: [v] });
+      return;
+    }
+
+    const index = propertyFilter.findIndex((p: string) => p === v);
 
     if (index < 0) {
       setFilters({ ...filters, [k]: [...propertyFilter, v] });
@@ -405,22 +415,21 @@ const MarketingOffer = () => {
   const isEmptyList = () => offersData.length < 1;
   const renderFilters = () => (
     <div className='table-filters'>
-      <FilterDropdown
+      <SimpleDropdown
+        renderValue={() => renderPlatformValue(filters.platform)}
         items={filtersHead.platform}
-        values={filters.platform}
-        onChange={handleChangeMultipleFilter('platform')}
-        label='Platforms'
-        icon={<img src={Columns} alt='Clock' />}
-        internalIconOnActive={platformObject}
-        maxShowned={1}
+        selected={filters.platform}
+        renderOption={(v) =>
+          renderPlatformOption(v, filters.platform, handleChangeFilter('platform', 'single'))
+        }
       />
-      <FilterDropdown
+      <SimpleDropdown
         items={filtersHead.status}
-        values={filters.status}
-        onChange={handleChangeMultipleFilter('status')}
-        label='Statuses'
-        icon={<Switch />}
-        maxShowned={1}
+        selected={filters.status}
+        renderValue={() => renderSimpleValue(filters.status, <Switch />, 'Statuses')}
+        renderOption={(v) =>
+          renderFilterCheckboxOption(v, filters.status, handleChangeFilter('status'))
+        }
       />
     </div>
   );
@@ -498,7 +507,7 @@ const MarketingOffer = () => {
           openedFilter={openedFilter}
           filtersHead={filtersHead}
           filters={filters}
-          handleChangeMultipleFilter={handleChangeMultipleFilter}
+          handleChangeMultipleFilter={handleChangeFilter}
         />
       </ContainerKit>
     </div>

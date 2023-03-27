@@ -460,9 +460,30 @@ const useTableContentFormatter = () => {
       id={`${h.id}_${i}`}
       key={`${h.id}_${r.id}`}
     >
-      <div className={`render-accounts-row ${r.branch_status.replace(/\s/g, '')}`}>
-        {r[h.id] && r[h.id].length > 1 ? `${r[h.id][0]} + ${r[h.id].length - 1} more` : r[h.id][0]}
-      </div>
+      {r[h.id].length > 1 ? (
+        <TooltipKit
+          onClick={(e) => e.stopPropagation()}
+          interactive={1}
+          id='account-tooltip'
+          placement='right'
+          arrow
+          title={r[h.id].map((email: string) => (
+            <span>{email}</span>
+          ))}
+        >
+          <div className={`render-accounts-row ${r.branch_status.replace(/\s/g, '')}`}>
+            {r[h.id] && r[h.id].length > 1
+              ? `${r[h.id][0]} + ${r[h.id].length - 1} more`
+              : r[h.id][0]}
+          </div>
+        </TooltipKit>
+      ) : (
+        <div className={`render-accounts-row ${r.branch_status.replace(/\s/g, '')}`}>
+          {r[h.id] && r[h.id].length > 1
+            ? `${r[h.id][0]} + ${r[h.id].length - 1} more`
+            : r[h.id][0]}
+        </div>
+      )}
     </TableCellKit>
   );
   const [cost, setCost] = useAtom(costAtom);

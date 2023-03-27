@@ -9,9 +9,10 @@ import {
   onboardingConnectAccountAtom,
 } from 'store/onboardingAtom';
 import { vendorsAtom } from 'store/vendorsAtom';
-import SettingsIcon from '../../../assets/linkIcons/settings.svg';
-import plus from '../../../assets/images/plus.png';
-import OnboardingDropdown from './OnboardingDropdown';
+import SimpleDropdown from 'components/simpleDropdown/SimpleDropdown';
+import { renderSimpleCheckboxOption } from 'store/renderDropdown';
+import SettingsIcon from 'assets/linkIcons/settings.svg';
+import plus from 'assets/images/plus.png';
 
 const OnboardingMiddleContent: FC<{
   openCloseModal: () => void;
@@ -24,11 +25,9 @@ const OnboardingMiddleContent: FC<{
   const filteredChains = () => {
     const arr = [];
     Object.keys(vendors.display).forEach((cName) => {
-      if (
-        Object.keys(vendors.display[cName]).every(
-          (vName) => vendors.display[cName][vName].is_matched
-        )
-      ) {
+      if (cName === '') {
+        arr.push('In process');
+      } else {
         arr.push(cName);
       }
     });
@@ -46,15 +45,32 @@ const OnboardingMiddleContent: FC<{
       />
       <div className='settings-onboarding-btn_wrapper'>
         {accounts.length > 0 && (
-          <OnboardingDropdown
-            rows={filteredChains()}
-            state={kitchen}
-            handleChange={({ target }) => {
-              setBranchDataFiltered(
-                branchData.filter((obj) => target.value.includes(obj.chain_name))
-              );
-              setKitchen(target.value);
-            }}
+          <SimpleDropdown
+            items={filteredChains()}
+            selected={kitchen}
+            renderOption={(v) =>
+              renderSimpleCheckboxOption(v, kitchen, () => {
+                if (kitchen.includes(v)) {
+                  kitchen.splice(
+                    kitchen.findIndex((k) => k === v),
+                    1
+                  );
+                } else {
+                  kitchen.splice(
+                    filteredChains().findIndex((k) => k === v),
+                    0,
+                    v
+                  );
+                }
+                setKitchen([...kitchen]);
+                setBranchDataFiltered(
+                  branchData.filter((obj) =>
+                    kitchen.includes(obj.chain_name === '' ? 'In process' : obj.chain_name)
+                  )
+                );
+              })
+            }
+            className='settings-onboarding__dropdown'
           />
         )}
         {accounts.length > 0 && (

@@ -6,6 +6,7 @@ import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
 import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import HeaderDropdowns from 'components/header/HeaderDropdowns';
+import SimpleDropdown from 'components/simpleDropdown/SimpleDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
@@ -17,6 +18,12 @@ import { useAlert, useQueryState, useVendors } from 'hooks';
 import { useAtom } from 'jotai';
 import { ContainerKit, PaperKit } from 'kits';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  renderPlatformOption,
+  renderPlatformValue,
+  renderFilterRadioOption,
+  renderSimpleValue,
+} from 'store/renderDropdown';
 import AreaIcon from '../../assets/images/area.svg';
 import Columns from '../../assets/images/columns.svg';
 import Iccuisine from '../../assets/images/ic_cuisine.png';
@@ -472,18 +479,16 @@ const CompetitionListing = () => {
         <PaperKit className='competition-paper'>
           <div className='competition-top-input'>
             <div className='dropdowns'>
-              <FilterDropdown
+              <SimpleDropdown
+                renderValue={() => renderPlatformValue(selectedPlatform)}
                 items={[
                   { text: renderPlatformInsideFilter('deliveroo'), value: 'deliveroo' },
                   { text: renderPlatformInsideFilter('talabat'), value: 'talabat' },
                 ]}
-                values={selectedPlatform}
-                onChange={(v) => setSelectedPlatform([v])}
-                label='Show all platforms'
-                icon={<img src={Columns} alt='Platform' />}
-                internalIconOnActive={platformObject}
-                maxShowned={1}
-                mono
+                selected={selectedPlatform}
+                renderOption={(v) =>
+                  renderPlatformOption(v, selectedPlatform, (p) => setSelectedPlatform([p]))
+                }
               />
               <FilterBranch
                 items={chainData.filter(
@@ -494,34 +499,48 @@ const CompetitionListing = () => {
                 icon={<img src={Columns} alt='Platform' />}
                 label='Show all branches'
               />
-              <FilterDropdown
+              <SimpleDropdown
+                renderValue={() =>
+                  renderSimpleValue(
+                    selectedCuisine,
+                    <img src={Iccuisine} alt='Cuisine' />,
+                    'Cuisines'
+                  )
+                }
                 items={
                   cuisinesData.length > 0
                     ? cuisinesData.map((cuisineItem) => ({ value: cuisineItem, text: cuisineItem }))
-                    : [{ value: '—', text: '—' }]
+                    : []
                 }
-                values={selectedCuisine}
-                onChange={(v) => setSelectedCuisine([v])}
-                label='Show all cuisines'
-                maxShowned={1}
+                selected={selectedCuisine}
+                renderOption={(v) =>
+                  renderFilterRadioOption(v, selectedCuisine, (p) => setSelectedCuisine([p]))
+                }
                 disabled={cuisinesData.length < 1}
-                icon={<img src={Iccuisine} alt='Platform' />}
-                mono
               />
-              <FilterDropdown
+              <SimpleDropdown
+                renderValue={() =>
+                  renderSimpleValue(selectedArea, <img src={AreaIcon} alt='Area' />, 'Areas')
+                }
                 items={
                   areasData.length > 0
                     ? areasData.map((areaItem) => ({ value: areaItem, text: areaItem }))
                     : [{ value: 'Everywhere', text: 'Everywhere' }]
                 }
-                values={selectedArea}
-                onChange={(v) => setSelectedArea([v])}
-                label='Show all areas'
-                maxShowned={1}
-                icon={<img src={AreaIcon} alt='Area' />}
-                mono
+                selected={selectedArea}
+                renderOption={(v) =>
+                  renderFilterRadioOption(v, selectedArea, (p) => setSelectedArea([p]))
+                }
+                rootClassName='competition-dropdown__area-root'
               />
-              <FilterDropdown
+              <SimpleDropdown
+                renderValue={() =>
+                  renderSimpleValue(
+                    selectedTimeSlot,
+                    <img src={TimeSlotIcon} alt='Slot' />,
+                    'Slots'
+                  )
+                }
                 items={
                   selectedArea[0] === 'Everywhere'
                     ? [{ value: 'Throughout Day', text: 'Throughout Day' }]
@@ -530,13 +549,12 @@ const CompetitionListing = () => {
                         text: timeSlotObj[timeslot],
                       }))
                 }
-                values={selectedTimeSlot}
-                onChange={(v) => setSelectedTimeSlot([v])}
-                label='Show all slots'
-                maxShowned={1}
-                icon={<img src={TimeSlotIcon} alt='Slot' />}
+                selected={selectedTimeSlot}
+                renderOption={(v) =>
+                  renderFilterRadioOption(v, selectedTimeSlot, (p) => setSelectedTimeSlot([p]))
+                }
                 disabled={selectedArea.length < 1}
-                mono
+                rootClassName='competition-dropdown__time-slot-root'
               />
             </div>
           </div>

@@ -4,9 +4,9 @@ import { pascalCase } from 'change-case';
 import { PageHeader } from 'components';
 import Dates from 'components/dates/Dates';
 import FilterBranch from 'components/filter/filterBranch/FilterBranch';
-import FilterDropdown from 'components/filter/filterDropdown/FilterDropdown';
 import HeaderDropdowns from 'components/header/HeaderDropdowns';
 import MarketingOfferFilter from 'components/marketingOfferFilter/MarketingOfferFilter';
+import SimpleDropdown from 'components/simpleDropdown/SimpleDropdown';
 import useTableContentFormatter from 'components/tableRevly/tableContentFormatter/useTableContentFormatter';
 import TableRevlyNew from 'components/tableRevly/TableRevlyNew';
 import { VendorsDropdownAdapter } from 'components/vendorsDropdown/adapter/VendorsDropdownAdapter';
@@ -16,6 +16,12 @@ import dayjs from 'dayjs';
 import { useDate, useQueryState, useVendors } from 'hooks';
 import { ContainerKit } from 'kits';
 import { useEffect, useMemo, useState } from 'react';
+import {
+  renderPlatformOption,
+  renderPlatformValue,
+  renderFilterCheckboxOption,
+  renderSimpleValue,
+} from 'store/renderDropdown';
 import { capitalize } from 'utils';
 import Columns from '../../assets/images/columns.svg';
 import { platformObject } from '../../data/platformList';
@@ -249,10 +255,15 @@ const Planning = () => {
   const handleChangeFilter = (k: string, type?: string) => (v: string) => {
     const propertyFilter = filters[k];
 
+    if (type === 'single') {
+      setFilters({ ...filters, [k]: [v] });
+      return;
+    }
+
     const index = propertyFilter.findIndex((p: string) => p === v);
 
     if (index < 0) {
-      setFilters({ ...filters, [k]: type === 'single' ? [v] : [...propertyFilter, v] });
+      setFilters({ ...filters, [k]: [...propertyFilter, v] });
       return;
     }
 
@@ -265,17 +276,15 @@ const Planning = () => {
 
   const { vendors } = useVendors();
   const { chainData } = vendors;
-  const renderOffersFilters = () => (
+  const renderFilters = () => (
     <div className='table-filters'>
-      <FilterDropdown
+      <SimpleDropdown
+        renderValue={() => renderPlatformValue(filters.platform)}
         items={filtersHead.platform}
-        values={filters.platform}
-        onChange={handleChangeFilter('platform', 'single')}
-        label='Platforms'
-        icon={<img src={Columns} alt='Clock' />}
-        internalIconOnActive={platformObject}
-        maxShowned={1}
-        mono
+        selected={filters.platform}
+        renderOption={(v) =>
+          renderPlatformOption(v, filters.platform, handleChangeFilter('platform', 'single'))
+        }
       />
       <FilterBranch
         items={chainData.filter(
@@ -287,45 +296,13 @@ const Planning = () => {
         label='Show all branches'
         multi
       />
-      <FilterDropdown
+      <SimpleDropdown
         items={filtersHead.status}
-        values={filters.status}
-        onChange={handleChangeFilter('status')}
-        label='Statuses'
-        icon={<Switch />}
-        maxShowned={1}
-      />
-    </div>
-  );
-  const renderAdsFilters = () => (
-    <div className='table-filters'>
-      <FilterDropdown
-        items={filtersHead.platform}
-        values={filters.platform}
-        onChange={handleChangeFilter('platform', 'single')}
-        label='Platforms'
-        icon={<img src={Columns} alt='Clock' />}
-        internalIconOnActive={platformObject}
-        maxShowned={1}
-        mono
-      />
-      <FilterBranch
-        items={chainData.filter(
-          (chainD) => chainD.platform === filters.platform[0] && chainD.is_active
-        )}
-        values={filters.vendors}
-        onChange={handleChangeFilter('vendors')}
-        icon={<img src={Columns} alt='Platform' />}
-        label='Show all branches'
-        multi
-      />
-      <FilterDropdown
-        items={filtersHead.status}
-        values={filters.status}
-        onChange={handleChangeFilter('status')}
-        label='Statuses'
-        icon={<Switch />}
-        maxShowned={1}
+        selected={filters.status}
+        renderValue={() => renderSimpleValue(filters.status, <Switch />, 'Statuses')}
+        renderOption={(v) =>
+          renderFilterCheckboxOption(v, filters.status, handleChangeFilter('status'))
+        }
       />
     </div>
   );
@@ -349,7 +326,7 @@ const Planning = () => {
           rows={dataFilteredAds.map(renderRowsByHeaderAds)}
           mainFieldOrdered='start_date'
           setOpenedFilter={setOpenedFilter}
-          filters={!isEmptyList() && renderAdsFilters()}
+          filters={!isEmptyList() && renderFilters()}
           noDataText='No ads has been retrieved.'
         />
       );
@@ -367,7 +344,7 @@ const Planning = () => {
         mainFieldOrdered='start_date'
         onClickRow={handleRowClick}
         setOpenedFilter={setOpenedFilter}
-        filters={!isEmptyList() && renderOffersFilters()}
+        filters={!isEmptyList() && renderFilters()}
         noDataText='No offer has been retrieved.'
       />
     );

@@ -246,22 +246,20 @@ const General = () => {
     <div className='wrapper'>
       <SettingsTopInputs />
       <ContainerKit>
-        <div className='marketing-top'>
-          <PageHeader
-            title='Your General Information'
-            description='Description  here'
-            extra={
-              <ButtonKit
-                className='cost_btn'
-                disabled={disableSave()}
-                variant='contained'
-                onClick={handleSave}
-              >
-                Save changes
-              </ButtonKit>
-            }
-          />
-        </div>
+        <PageHeader
+          title='Your General Information'
+          description='Description  here'
+          extra={
+            <ButtonKit
+              className='cost_btn'
+              disabled={disableSave()}
+              variant='contained'
+              onClick={handleSave}
+            >
+              Save changes
+            </ButtonKit>
+          }
+        />
         <PaperKit className='general__paper'>
           <p className='__title'>Your personal data</p>
           <AccountSettingForm

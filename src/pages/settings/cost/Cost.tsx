@@ -122,23 +122,21 @@ const Cost = () => {
     <div className='wrapper'>
       <SettingsTopInputs />
       <ContainerKit className='billing'>
-        <div className='marketing-top'>
-          <PageHeader
-            title='Your Cost Information'
-            description='Insert and update the average cost of food per chain to calculate your net revenue in the dashboard'
-            extra={
-              <LodaingButtonKit
-                loading={isLoadingMutation}
-                onClick={handleChange}
-                variant='contained'
-                disabled={!cost.some((obj) => obj.changed)}
-                className='cost_btn'
-              >
-                Save changes
-              </LodaingButtonKit>
-            }
-          />
-        </div>
+        <PageHeader
+          title='Your Cost Information'
+          description='Insert and update the average cost of food per chain to calculate your net revenue in the dashboard'
+          extra={
+            <LodaingButtonKit
+              loading={isLoadingMutation}
+              onClick={handleChange}
+              variant='contained'
+              disabled={!cost.some((obj) => obj.changed)}
+              className='cost_btn'
+            >
+              Save changes
+            </LodaingButtonKit>
+          }
+        />
         <div className='__table-block'>
           <TableRevlyNew
             renderCustomSkelton={[0, 1, 2, 3, 4].map(renderRowsByHeaderLoading)}
