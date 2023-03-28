@@ -111,7 +111,7 @@ export const Popup: FC<{
     if (v) {
       onChange(findAllValues(options));
     } else {
-      onChange([]);
+      onChange(findAllValues([options.filter((obj) => !obj.disabled)[0]]));
     }
   };
 

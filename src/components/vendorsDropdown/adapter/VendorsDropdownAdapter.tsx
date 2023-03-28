@@ -136,7 +136,9 @@ export const VendorsDropdownAdapter: FC = () => {
         });
       });
 
-      setVendors({ ...vendors, display: newDisplay, vendorsObj: newVendorsObj });
+      if (values.length > 0) {
+        setVendors({ ...vendors, display: newDisplay, vendorsObj: newVendorsObj });
+      }
     },
     [vendors, setVendors]
   );

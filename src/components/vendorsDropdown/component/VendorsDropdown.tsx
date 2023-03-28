@@ -57,7 +57,7 @@ export const VendorsDropdown: FC<{
       placement='bottomLeft'
       open={open}
       trigger='click'
-      onOpenChange={handleOpen}
+      onOpenChange={selected.length && handleOpen}
       rootClassName='dropdown-popup'
       content={<Popup values={values} options={options} onChange={onChange} />}
     >
@@ -68,13 +68,9 @@ export const VendorsDropdown: FC<{
             {selected.length ? selected.join(', ') : 'No Vendors Selected'}
           </div>
           {open ? (
-            <ArrowUpIcon
-              className='dropdown__arrow'
-            />
+            <ArrowUpIcon className='dropdown__arrow' />
           ) : (
-            <ArrowDownIcon
-              className='dropdown__arrow'
-            />
+            <ArrowDownIcon className='dropdown__arrow' />
           )}
         </div>
       </div>

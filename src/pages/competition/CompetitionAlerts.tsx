@@ -401,6 +401,7 @@ const CompetitionAlerts = () => {
                 : competitionAlertsData.map(renderRowsByHeader)
             }
             className='competition-alerts'
+            noDataText='We didn’t find any alerts , add a competitor from the button above or change your filters to get results'
           />
         </PaperKit>
       </ContainerKit>

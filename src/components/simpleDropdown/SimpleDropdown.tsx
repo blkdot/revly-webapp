@@ -48,13 +48,9 @@ const SimpleDropdown: FC<{
         <div className='content'>
           <div className='text'>{renderValues()}</div>
           {open ? (
-            <ArrowUpIcon
-            className='dropdown__arrow'
-            />
+            <ArrowUpIcon className='dropdown__arrow' />
           ) : (
-            <ArrowDownIcon
-                className='dropdown__arrow'
-            />
+            <ArrowDownIcon className='dropdown__arrow' />
           )}
         </div>
       </div>

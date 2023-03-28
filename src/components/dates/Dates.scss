@@ -14,7 +14,7 @@
     align-items: center;
     grid-gap: 20px;
 
-    > span {
+    >span {
       width: 80px;
     }
   }
@@ -37,6 +37,7 @@
   height: 48px;
   border-radius: 10px;
   background-color: #f8f9fb !important;
+
   &.ending-date {
     width: 200px;
   }
@@ -182,12 +183,12 @@
   .rdrDateDisplay.rdrDateDisplay {
     color: #704cfc !important;
 
-    > span {
+    >span {
       box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px -1px rgb(145 158 171 / 24%);
     }
   }
 
-  > div:nth-of-type(2) {
+  >div:nth-of-type(2) {
     overflow: hidden;
     border-radius: 0 8px 8px 0;
     box-shadow: 0 0 1px 0 rgb(145 158 171 / 48%), 0 2px 4px 0px rgb(145 158 171 / 24%);
@@ -259,14 +260,14 @@
     height: 20px;
   }
 
-  > div {
+  >div {
     padding: 15px 15px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 
-    > button {
+    >button {
       color: grey;
       width: 100%;
       display: flex;
@@ -302,6 +303,16 @@
 
   .Mui-expanded.Mui-expanded {
     margin: 0;
+    width: 100%;
+  }
+
+  .MuiAccordionSummary-root.MuiAccordionSummary-root {
+    width: 100%;
+    padding: 5px 0;
+  }
+
+  .MuiAccordion-rounded {
+    box-shadow: none;
   }
 
   span {
@@ -315,6 +326,7 @@
     padding: 5px 10px 5px 10px;
     border-radius: 8px;
     color: #636363;
+    height: 40px;
 
     &.active {
       background-color: #ebdbeb;
@@ -374,7 +386,7 @@
   align-items: center;
   grid-gap: 20px;
 
-  > img {
+  >img {
     width: 40px;
     height: 40px;
   }
@@ -406,7 +418,7 @@
 @media (max-width: 1260px) {
   .date-range.date-range {
     .rdrMonths {
-      > div:nth-of-type(2) {
+      >div:nth-of-type(2) {
         display: none;
       }
     }
@@ -441,7 +453,7 @@
 
 @media (max-width: 918px) {
   .dashboard-date {
-    > img {
+    >img {
       opacity: 0;
       display: none;
     }
@@ -460,10 +472,10 @@
     .date-picker_wrapper {
       width: 100%;
 
-      > div {
+      >div {
         width: 100% !important;
 
-        > div:nth-of-type(1) {
+        >div:nth-of-type(1) {
           width: 100%;
         }
       }

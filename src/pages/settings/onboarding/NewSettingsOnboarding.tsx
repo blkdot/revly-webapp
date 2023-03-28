@@ -34,10 +34,10 @@ const NewSettingsOnboarding = () => {
 
   const getAccounts = () => {
     const arr = [];
-    
+
     Object.keys(userPlatformData.platforms).forEach((plat: string) => {
       userPlatformData.platforms[plat].forEach((obj: any) => {
-        if (obj.email && obj.vendor_ids.length > 0) {          
+        if (obj.email && obj.vendor_ids.length > 0) {
           arr.push({ ...obj, platform: plat });
         }
       });
@@ -82,7 +82,7 @@ const NewSettingsOnboarding = () => {
 
       return 'active';
     };
-    setLoading(false);    
+    setLoading(false);
     return arr.map((obj) => ({
       branch_name: obj.name.split('_')[0],
       accounts: vendorsAccounts(obj),

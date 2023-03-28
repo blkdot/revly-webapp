@@ -570,6 +570,7 @@ const CompetitionListing = () => {
             className='competition-alerts'
             mainFieldOrdered='name'
             mainOrder='desc'
+            noDataText='Looks like your competitors list is still empty , click on the button to Add a new competitor'
           />
         </PaperKit>
       </ContainerKit>
