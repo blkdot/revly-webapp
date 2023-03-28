@@ -467,8 +467,8 @@ const useTableContentFormatter = () => {
           id='account-tooltip'
           placement='right'
           arrow
-          title={r[h.id].map((email: string) => (
-            <span>{email}</span>
+          title={r.linked_platforms.map((obj) => (
+            <span key={`${obj.email}_${obj.platform}`}>{obj.email}</span>
           ))}
         >
           <div className={`render-accounts-row ${r.branch_status.replace(/\s/g, '')}`}>
