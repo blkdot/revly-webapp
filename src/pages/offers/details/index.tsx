@@ -102,7 +102,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
       Object.keys(display[cName]).forEach((vName) => {
         if (
           vendor_ids.includes(
-            Number(display[cName][vName].platforms[platform.toLowerCase()]?.vendor_id || 0)
+            String(display[cName][vName].platforms[platform.toLowerCase()]?.vendor_id || 0)
           )
         ) {
           token = display[cName][vName].platforms[platform.toLowerCase()].access_token;
@@ -118,7 +118,7 @@ const OfferDetailComponent = ({ data, setOpened }) => {
 
   const handleCancelOfferMaster = () => {
     const vendor = vendorsObj[platform.toLowerCase()]?.filter((v) =>
-      vendor_ids?.includes(Number(v.vendor_id))
+      vendor_ids?.includes(String(v.vendor_id))
     );
 
     cancelOfferMaster(

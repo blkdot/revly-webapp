@@ -13,7 +13,8 @@ export const ProtectedOnboardRoutes = () => {
   const { userPlatformData, setUserPlatformData } = usePlatform();
   const [vendors] = useAtom(vendorsAtom);
   const { chainData } = vendors;
-  const [, setEligibilityDeliverooState] = useAtom(elligibilityDeliverooAtom);
+  const [elligibilityDeliverooState, setEligibilityDeliverooState] =
+    useAtom(elligibilityDeliverooAtom);
 
   const response = useSettingsOnboarded(
     {
@@ -27,6 +28,17 @@ export const ProtectedOnboardRoutes = () => {
   );
 
   const requestEligibilityDeliveroo = () => {
+    const deliverooVendors = [];
+
+    userPlatformData.platforms.deliveroo.forEach((platformData) => {
+      deliverooVendors.push(...platformData.vendor_ids);
+    });
+
+    const deliverooVendorsObject = deliverooVendors.reduce(
+      (acc, cur) => ({ ...acc, [cur]: true }),
+      {}
+    );
+
     try {
       const selectedChainData = [];
       userPlatformData.platforms.deliveroo.forEach((platformData) => {
@@ -65,11 +77,20 @@ export const ProtectedOnboardRoutes = () => {
 
       Promise.all(reqEligibilities).then((responses) => {
         responses.forEach((res) => {
-          setEligibilityDeliverooState((prev) => ({ ...prev, ...res?.data }));
+          if (res?.data) {
+            setEligibilityDeliverooState((prev) => ({
+              ...deliverooVendorsObject,
+              ...prev,
+              ...res?.data,
+            }));
+            return;
+          }
+
+          setEligibilityDeliverooState((prev) => ({ ...prev, ...deliverooVendorsObject }));
         });
       });
     } catch (error) {
-      setEligibilityDeliverooState((prev) => ({ ...prev }));
+      setEligibilityDeliverooState((prev) => ({ ...prev, ...deliverooVendorsObject }));
     }
   };
 
