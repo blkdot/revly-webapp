@@ -34,3 +34,10 @@ Before every push, run `yarn prettify`
 ## Error or task waiting to be fixed/done
 
 Search or use this type of comment to notify other coders about things need to be done/fixed `// TODO: xxx`
+
+## credential
+email: amine@revly.ae
+pwd: @Revly2022
+
+Revly website (prod): app.revly.ae
+Revly website (develop): https://webapp-git-develop-revly.vercel.app/dashboard
