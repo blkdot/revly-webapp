@@ -5,6 +5,7 @@ import { SkeletonKit } from 'kits';
 import { FC, useState } from 'react';
 import { endingDateAtom, startingDateAtom } from 'store/marketingSetupAtom';
 import { countDaysOfWeekBetweenDates } from 'utils/date/getAllDateSetup';
+import CloseIcon from 'assets/images/ic_close.svg';
 import './AdvertsCreateNewCampaign.scss';
 import BidingStep from './steps/BidingStep';
 import BudgetStep from './steps/BudgetStep';
@@ -189,6 +190,14 @@ const AdvertsCreateNewCampaign: FC<{
   );
   return (
     <div className='adverts_create_new_campaign-wrapper'>
+      <img
+        className='onboarding-close_icon modal'
+        tabIndex={-1}
+        role='presentation'
+        src={CloseIcon}
+        alt='close icon'
+        onClick={() => setOpened(false)}
+      />
       <div className={`adverts-step-wrapper ${step || ''}`}>{stepsObject[step]}</div>
       <div className='adverts_create_new_campaign_widgets'>
         <AdvertsWidgetCustom {...advertDetailsWidget} content={advertDetails()} />

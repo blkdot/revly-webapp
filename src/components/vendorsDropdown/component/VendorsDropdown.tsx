@@ -69,21 +69,11 @@ export const VendorsDropdown: FC<{
           </div>
           {open ? (
             <ArrowUpIcon
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOpen(!open);
-              }}
-              tabIndex={-1}
-              role='presentation'
+              className='dropdown__arrow'
             />
           ) : (
             <ArrowDownIcon
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOpen(!open);
-              }}
-              tabIndex={-1}
-              role='presentation'
+              className='dropdown__arrow'
             />
           )}
         </div>

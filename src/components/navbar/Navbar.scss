@@ -31,7 +31,7 @@
     }
 
     a.active button {
-      background-color: #5e5adb0d;
+      background-color: #F6F3FF;
 
       span {
         color: #5e5adb !important;
@@ -71,7 +71,7 @@
     }
 
     .navbar-button-kit.navbar-button-kit.active {
-      background-color: rgba(144, 107, 255, 0.08) !important;
+      background-color: #F6F3FF !important;
 
       span {
         color: #5e5adb !important;
@@ -153,6 +153,7 @@
 
 .Navbar_logo {
   width: fit-content;
+  margin-bottom: 7px;
 }
 
 .nav-small-logo {
@@ -192,7 +193,7 @@
 
   &:hover {
     transition: 0.3s ease-in-out;
-
+    background-color: #f8f9fb;
     > span:nth-of-type(1) {
       color: #5e5adb !important;
     }

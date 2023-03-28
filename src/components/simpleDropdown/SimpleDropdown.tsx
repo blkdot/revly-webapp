@@ -42,27 +42,18 @@ const SimpleDropdown: FC<{
       onOpenChange={handleOpen}
       rootClassName={`simple-dropdown__content ${rootClassName}`}
       content={renderSelectItem(items)}
+      popupVisible={false}
     >
       <div className={`dropdown-header ${(!items.length || disabled) && 'disabled'} ${className}`}>
         <div className='content'>
           <div className='text'>{renderValues()}</div>
           {open ? (
             <ArrowUpIcon
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOpen(!open);
-              }}
-              tabIndex={-1}
-              role='presentation'
+            className='dropdown__arrow'
             />
           ) : (
             <ArrowDownIcon
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOpen(!open);
-              }}
-              tabIndex={-1}
-              role='presentation'
+                className='dropdown__arrow'
             />
           )}
         </div>
