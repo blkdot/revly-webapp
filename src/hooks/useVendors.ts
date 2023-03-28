@@ -102,7 +102,7 @@ const useVendors = (isSign = false) => {
           const platformArr = Object.keys(display[chainName][vendorName].platforms);
           const userPlatform = userPlatformData.platforms[platform].find((obj) =>
             obj.vendor_ids.some(
-              (id: number | string) => Number(id) === Number(platformObj.vendor_id)
+              (id: number | string) => String(id) === String(platformObj.vendor_id)
             )
           );
           display[chainName][vendorName].email = userPlatform?.email;

@@ -160,7 +160,7 @@ const OnboardingModal = ({ openCloseModal }: any) => {
       (objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
     ).active = !obj.active;
     setAccounts([...accounts]);
-    setBranchData(
+    const newBranchData =
       branchData.map((objB) => {
         const linkedPlatform = [...objB.linked_platforms];
         if (objB.accounts.find((emailAcc: string) => emailAcc === obj.email)) {
@@ -187,8 +187,9 @@ const OnboardingModal = ({ openCloseModal }: any) => {
           return { ...objB, branch_status: 'in process', linkedPlatform };
         }
         return objB;
-      })
-    );
+      });
+    setBranchData(newBranchData);
+    setBranchDataFiltered(newBranchData);
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };
@@ -249,9 +250,8 @@ const OnboardingModal = ({ openCloseModal }: any) => {
     <div
       tabIndex={-1}
       role='presentation'
-      className={`onboarding-modal_overlay ${openedModal && 'active'} ${
-        openedSwitchDeleteModal && 'activeDelete'
-      }`}
+      className={`onboarding-modal_overlay ${openedModal && 'active'} ${openedSwitchDeleteModal && 'activeDelete'
+        }`}
       onClick={openCloseModal}
     >
       <div className='main-modal'>{connectAccountModalObject[connectAccount]}</div>
