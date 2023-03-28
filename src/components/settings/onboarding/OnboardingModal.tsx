@@ -167,35 +167,19 @@ const OnboardingModal: FC<{
       (objAcc) => objAcc.email === obj.email && objAcc.platform === obj.platform
     ).active = !obj.active;
     setAccounts([...accounts]);
-    setBranchData(
-      branchData.map((objB) => {
-        const linkedPlatform = [...objB.linked_platforms];
-        if (objB.accounts.find((emailAcc: string) => emailAcc === obj.email)) {
-          if (!obj.active) {
-            (
-              linkedPlatform.find((objLink) => objLink.platform === obj.platform) || {
-                status: '',
-              }
-            ).status = 'suspended';
-            if (objB.linked_platforms.every((objLink) => objLink.status !== 'active')) {
-              return { ...objB, branch_status: 'suspended', linkedPlatform };
-            }
-            if (objB.linked_platforms.length === 1) {
-              return { ...objB, branch_status: 'suspended', linkedPlatform };
-            }
-            return { ...objB, linkedPlatform };
+    branchData.forEach((objB,indexB) => {
+      objB.linked_platforms.forEach((objL, index) => {
+        if (objL.email === obj.email && objL.platform === obj.platform){
+          if(obj.active){
+            branchData[indexB].linked_platforms[index].status = 'active'
+          } else {
+            branchData[indexB].linked_platforms[index].status = 'suspended'
           }
-          (
-            linkedPlatform.find((objLink) => objLink.platform === obj.platform) || { status: '' }
-          ).status = 'active';
-          if (objB.linked_platforms.length > 1) {
-            return { ...objB, branch_status: 'active', linkedPlatform };
-          }
-          return { ...objB, branch_status: 'in process', linkedPlatform };
         }
-        return objB;
       })
-    );
+    })
+    setBranchData([...branchData]);
+    setBranchDataFiltered([...branchData])
     setLoading(false);
     setOpenedSwitchDeleteModal(!openedSwitchDeleteModal);
   };

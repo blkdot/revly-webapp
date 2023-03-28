@@ -52,15 +52,15 @@ export const renderPlatformOption = (
   >
     <img
       className='planning-platform'
-      style={{ '--color': platformObject[v.value].color } as CSSProperties}
+      style={{ '--color': platformObject[v.value]?.color } as CSSProperties}
       src={
-        platformObject[v.value].srcNoBg ||
-        platformObject[v.value].srcWhite ||
-        platformObject[v.value].src
+        platformObject[v.value]?.srcNoBg ||
+        platformObject[v.value]?.srcWhite ||
+        platformObject[v.value]?.src
       }
       alt={v.value}
     />
-    {v.value.charAt(0).toUpperCase() + v.value.slice(1)}
+    {(v.value || '').charAt(0).toUpperCase() + (v.value || '').slice(1)}
   </div>
 );
 
